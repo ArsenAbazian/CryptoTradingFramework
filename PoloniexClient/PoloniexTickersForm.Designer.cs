@@ -1,5 +1,5 @@
 ﻿namespace PoloniexClient {
-    partial class TickersForm {
+    partial class PoloniexTickersForm {
         /// <summary>
         /// Required designer variable.
         /// </summary>
@@ -42,31 +42,11 @@
             DevExpress.XtraEditors.FormatConditionIconSetIcon formatConditionIconSetIcon8 = new DevExpress.XtraEditors.FormatConditionIconSetIcon();
             DevExpress.XtraEditors.FormatConditionIconSetIcon formatConditionIconSetIcon9 = new DevExpress.XtraEditors.FormatConditionIconSetIcon();
             DevExpress.Sparkline.LineSparklineView lineSparklineView1 = new DevExpress.Sparkline.LineSparklineView();
-            DevExpress.XtraEditors.TableLayout.TableColumnDefinition tableColumnDefinition1 = new DevExpress.XtraEditors.TableLayout.TableColumnDefinition();
-            DevExpress.XtraEditors.TableLayout.TableColumnDefinition tableColumnDefinition2 = new DevExpress.XtraEditors.TableLayout.TableColumnDefinition();
-            DevExpress.XtraEditors.TableLayout.TableColumnDefinition tableColumnDefinition3 = new DevExpress.XtraEditors.TableLayout.TableColumnDefinition();
-            DevExpress.XtraEditors.TableLayout.TableRowDefinition tableRowDefinition1 = new DevExpress.XtraEditors.TableLayout.TableRowDefinition();
-            DevExpress.XtraEditors.TableLayout.TableRowDefinition tableRowDefinition2 = new DevExpress.XtraEditors.TableLayout.TableRowDefinition();
-            DevExpress.XtraEditors.TableLayout.TableRowDefinition tableRowDefinition3 = new DevExpress.XtraEditors.TableLayout.TableRowDefinition();
-            DevExpress.XtraGrid.Views.Tile.TileViewItemElement tileViewItemElement1 = new DevExpress.XtraGrid.Views.Tile.TileViewItemElement();
-            DevExpress.XtraGrid.Views.Tile.TileViewItemElement tileViewItemElement2 = new DevExpress.XtraGrid.Views.Tile.TileViewItemElement();
-            DevExpress.XtraGrid.Views.Tile.TileViewItemElement tileViewItemElement3 = new DevExpress.XtraGrid.Views.Tile.TileViewItemElement();
-            DevExpress.XtraGrid.Views.Tile.TileViewItemElement tileViewItemElement4 = new DevExpress.XtraGrid.Views.Tile.TileViewItemElement();
-            DevExpress.XtraGrid.Views.Tile.TileViewItemElement tileViewItemElement5 = new DevExpress.XtraGrid.Views.Tile.TileViewItemElement();
-            DevExpress.XtraGrid.Views.Tile.TileViewItemElement tileViewItemElement6 = new DevExpress.XtraGrid.Views.Tile.TileViewItemElement();
-            DevExpress.XtraGrid.Views.Tile.TileViewItemElement tileViewItemElement7 = new DevExpress.XtraGrid.Views.Tile.TileViewItemElement();
             this.gcPercentChange = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gcDeltaBid = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gcHighestBid = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gcDeltaAsk = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gcLowestAsk = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.colCurrencyPair = new DevExpress.XtraGrid.Columns.TileViewColumn();
-            this.colLast = new DevExpress.XtraGrid.Columns.TileViewColumn();
-            this.colLowesAsk = new DevExpress.XtraGrid.Columns.TileViewColumn();
-            this.colHighestBid = new DevExpress.XtraGrid.Columns.TileViewColumn();
-            this.colPercentChange = new DevExpress.XtraGrid.Columns.TileViewColumn();
-            this.colBaseVolume = new DevExpress.XtraGrid.Columns.TileViewColumn();
-            this.colQuoteVolume = new DevExpress.XtraGrid.Columns.TileViewColumn();
             this.gridControl1 = new DevExpress.XtraGrid.GridControl();
             this.gridView1 = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.gcCurrencyPair = new DevExpress.XtraGrid.Columns.GridColumn();
@@ -80,13 +60,6 @@
             this.gcFirst = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gcSecond = new DevExpress.XtraGrid.Columns.GridColumn();
             this.repositoryItemSparklineEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemSparklineEdit();
-            this.tileView1 = new DevExpress.XtraGrid.Views.Tile.TileView();
-            this.colIsFrozen = new DevExpress.XtraGrid.Columns.TileViewColumn();
-            this.colHr24High = new DevExpress.XtraGrid.Columns.TileViewColumn();
-            this.colHr24Low = new DevExpress.XtraGrid.Columns.TileViewColumn();
-            this.colTime = new DevExpress.XtraGrid.Columns.TileViewColumn();
-            this.colFirst = new DevExpress.XtraGrid.Columns.TileViewColumn();
-            this.colSecond = new DevExpress.XtraGrid.Columns.TileViewColumn();
             this.ribbonControl1 = new DevExpress.XtraBars.Ribbon.RibbonControl();
             this.barCheckItem1 = new DevExpress.XtraBars.BarCheckItem();
             this.barCheckItem2 = new DevExpress.XtraBars.BarCheckItem();
@@ -96,7 +69,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemSparklineEdit1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.tileView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -136,76 +108,20 @@
             this.gcLowestAsk.Visible = true;
             this.gcLowestAsk.VisibleIndex = 2;
             // 
-            // colCurrencyPair
-            // 
-            this.colCurrencyPair.Caption = "Currency Pair";
-            this.colCurrencyPair.FieldName = "CurrencyPair";
-            this.colCurrencyPair.Name = "colCurrencyPair";
-            this.colCurrencyPair.Visible = true;
-            this.colCurrencyPair.VisibleIndex = 0;
-            // 
-            // colLast
-            // 
-            this.colLast.Caption = "Last";
-            this.colLast.FieldName = "Last";
-            this.colLast.Name = "colLast";
-            this.colLast.Visible = true;
-            this.colLast.VisibleIndex = 1;
-            // 
-            // colLowesAsk
-            // 
-            this.colLowesAsk.Caption = "Lowest Ask";
-            this.colLowesAsk.DisplayFormat.FormatString = "F";
-            this.colLowesAsk.FieldName = "LowestAsk";
-            this.colLowesAsk.Name = "colLowesAsk";
-            this.colLowesAsk.Visible = true;
-            this.colLowesAsk.VisibleIndex = 2;
-            // 
-            // colHighestBid
-            // 
-            this.colHighestBid.Caption = "Highest Bid";
-            this.colHighestBid.FieldName = "HighestBid";
-            this.colHighestBid.Name = "colHighestBid";
-            this.colHighestBid.Visible = true;
-            this.colHighestBid.VisibleIndex = 3;
-            // 
-            // colPercentChange
-            // 
-            this.colPercentChange.Caption = "Percent Change";
-            this.colPercentChange.FieldName = "PercentChange";
-            this.colPercentChange.Name = "colPercentChange";
-            this.colPercentChange.Visible = true;
-            this.colPercentChange.VisibleIndex = 4;
-            // 
-            // colBaseVolume
-            // 
-            this.colBaseVolume.Caption = "Base Volume";
-            this.colBaseVolume.FieldName = "BaseVolume";
-            this.colBaseVolume.Name = "colBaseVolume";
-            this.colBaseVolume.Visible = true;
-            this.colBaseVolume.VisibleIndex = 5;
-            // 
-            // colQuoteVolume
-            // 
-            this.colQuoteVolume.Caption = "Quote Volume";
-            this.colQuoteVolume.FieldName = "QuoteVolume";
-            this.colQuoteVolume.Name = "colQuoteVolume";
-            this.colQuoteVolume.Visible = true;
-            this.colQuoteVolume.VisibleIndex = 6;
-            // 
             // gridControl1
             // 
             this.gridControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gridControl1.Location = new System.Drawing.Point(0, 141);
+            this.gridControl1.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.gridControl1.Location = new System.Drawing.Point(0, 278);
             this.gridControl1.MainView = this.gridView1;
+            this.gridControl1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.gridControl1.Name = "gridControl1";
             this.gridControl1.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repositoryItemSparklineEdit1});
-            this.gridControl1.Size = new System.Drawing.Size(938, 450);
+            this.gridControl1.Size = new System.Drawing.Size(1876, 859);
             this.gridControl1.TabIndex = 0;
             this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
-            this.gridView1,
-            this.tileView1});
+            this.gridView1});
             // 
             // gridView1
             // 
@@ -387,144 +303,6 @@
             lineSparklineView1.Color = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
             this.repositoryItemSparklineEdit1.View = lineSparklineView1;
             // 
-            // tileView1
-            // 
-            this.tileView1.Columns.AddRange(new DevExpress.XtraGrid.Columns.GridColumn[] {
-            this.colCurrencyPair,
-            this.colLast,
-            this.colLowesAsk,
-            this.colHighestBid,
-            this.colPercentChange,
-            this.colBaseVolume,
-            this.colQuoteVolume,
-            this.colIsFrozen,
-            this.colHr24High,
-            this.colHr24Low,
-            this.colTime,
-            this.colFirst,
-            this.colSecond});
-            this.tileView1.GridControl = this.gridControl1;
-            this.tileView1.Name = "tileView1";
-            this.tileView1.OptionsTiles.IndentBetweenGroups = 0;
-            this.tileView1.OptionsTiles.IndentBetweenItems = 0;
-            this.tileView1.OptionsTiles.ItemSize = new System.Drawing.Size(1008, 67);
-            this.tileView1.OptionsTiles.LayoutMode = DevExpress.XtraGrid.Views.Tile.TileViewLayoutMode.List;
-            this.tileView1.OptionsTiles.Orientation = System.Windows.Forms.Orientation.Vertical;
-            this.tileView1.OptionsTiles.Padding = new System.Windows.Forms.Padding(0);
-            this.tileView1.OptionsTiles.RowCount = 0;
-            this.tileView1.TileColumns.Add(tableColumnDefinition1);
-            this.tileView1.TileColumns.Add(tableColumnDefinition2);
-            this.tileView1.TileColumns.Add(tableColumnDefinition3);
-            tableRowDefinition1.Length.Value = 21D;
-            tableRowDefinition2.Length.Value = 15D;
-            tableRowDefinition3.Length.Value = 15D;
-            this.tileView1.TileRows.Add(tableRowDefinition1);
-            this.tileView1.TileRows.Add(tableRowDefinition2);
-            this.tileView1.TileRows.Add(tableRowDefinition3);
-            tileViewItemElement1.Appearance.Normal.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            tileViewItemElement1.Appearance.Normal.Options.UseFont = true;
-            tileViewItemElement1.Column = this.colCurrencyPair;
-            tileViewItemElement1.ImageAlignment = DevExpress.XtraEditors.TileItemContentAlignment.MiddleCenter;
-            tileViewItemElement1.ImageScaleMode = DevExpress.XtraEditors.TileItemImageScaleMode.ZoomInside;
-            tileViewItemElement1.Text = "colCurrencyPair";
-            tileViewItemElement1.TextAlignment = DevExpress.XtraEditors.TileItemContentAlignment.MiddleCenter;
-            tileViewItemElement2.Column = this.colLast;
-            tileViewItemElement2.ColumnIndex = 1;
-            tileViewItemElement2.ImageAlignment = DevExpress.XtraEditors.TileItemContentAlignment.MiddleCenter;
-            tileViewItemElement2.ImageScaleMode = DevExpress.XtraEditors.TileItemImageScaleMode.ZoomInside;
-            tileViewItemElement2.Text = "colLast";
-            tileViewItemElement2.TextAlignment = DevExpress.XtraEditors.TileItemContentAlignment.MiddleCenter;
-            tileViewItemElement3.Column = this.colLowesAsk;
-            tileViewItemElement3.ColumnIndex = 2;
-            tileViewItemElement3.ImageAlignment = DevExpress.XtraEditors.TileItemContentAlignment.MiddleCenter;
-            tileViewItemElement3.ImageScaleMode = DevExpress.XtraEditors.TileItemImageScaleMode.ZoomInside;
-            tileViewItemElement3.RowIndex = 1;
-            tileViewItemElement3.Text = "colLowesAsk";
-            tileViewItemElement3.TextAlignment = DevExpress.XtraEditors.TileItemContentAlignment.MiddleCenter;
-            tileViewItemElement4.Column = this.colHighestBid;
-            tileViewItemElement4.ColumnIndex = 2;
-            tileViewItemElement4.ImageAlignment = DevExpress.XtraEditors.TileItemContentAlignment.MiddleCenter;
-            tileViewItemElement4.ImageScaleMode = DevExpress.XtraEditors.TileItemImageScaleMode.ZoomInside;
-            tileViewItemElement4.RowIndex = 2;
-            tileViewItemElement4.Text = "colHighestBid";
-            tileViewItemElement4.TextAlignment = DevExpress.XtraEditors.TileItemContentAlignment.MiddleCenter;
-            tileViewItemElement5.Column = this.colPercentChange;
-            tileViewItemElement5.ColumnIndex = 2;
-            tileViewItemElement5.ImageAlignment = DevExpress.XtraEditors.TileItemContentAlignment.MiddleCenter;
-            tileViewItemElement5.ImageScaleMode = DevExpress.XtraEditors.TileItemImageScaleMode.ZoomInside;
-            tileViewItemElement5.Text = "colPercentChange";
-            tileViewItemElement5.TextAlignment = DevExpress.XtraEditors.TileItemContentAlignment.MiddleCenter;
-            tileViewItemElement6.Column = this.colBaseVolume;
-            tileViewItemElement6.ImageAlignment = DevExpress.XtraEditors.TileItemContentAlignment.MiddleCenter;
-            tileViewItemElement6.ImageScaleMode = DevExpress.XtraEditors.TileItemImageScaleMode.ZoomInside;
-            tileViewItemElement6.RowIndex = 2;
-            tileViewItemElement6.Text = "colBaseVolume";
-            tileViewItemElement6.TextAlignment = DevExpress.XtraEditors.TileItemContentAlignment.MiddleCenter;
-            tileViewItemElement7.Column = this.colQuoteVolume;
-            tileViewItemElement7.ColumnIndex = 1;
-            tileViewItemElement7.ImageAlignment = DevExpress.XtraEditors.TileItemContentAlignment.MiddleCenter;
-            tileViewItemElement7.ImageScaleMode = DevExpress.XtraEditors.TileItemImageScaleMode.ZoomInside;
-            tileViewItemElement7.RowIndex = 2;
-            tileViewItemElement7.Text = "colQuoteVolume";
-            tileViewItemElement7.TextAlignment = DevExpress.XtraEditors.TileItemContentAlignment.MiddleCenter;
-            this.tileView1.TileTemplate.Add(tileViewItemElement1);
-            this.tileView1.TileTemplate.Add(tileViewItemElement2);
-            this.tileView1.TileTemplate.Add(tileViewItemElement3);
-            this.tileView1.TileTemplate.Add(tileViewItemElement4);
-            this.tileView1.TileTemplate.Add(tileViewItemElement5);
-            this.tileView1.TileTemplate.Add(tileViewItemElement6);
-            this.tileView1.TileTemplate.Add(tileViewItemElement7);
-            // 
-            // colIsFrozen
-            // 
-            this.colIsFrozen.Caption = "Is Frozen";
-            this.colIsFrozen.FieldName = "IsFrozen";
-            this.colIsFrozen.Name = "colIsFrozen";
-            this.colIsFrozen.Visible = true;
-            this.colIsFrozen.VisibleIndex = 7;
-            // 
-            // colHr24High
-            // 
-            this.colHr24High.Caption = "24 Hour High";
-            this.colHr24High.FieldName = "Hr24High";
-            this.colHr24High.Name = "colHr24High";
-            this.colHr24High.Visible = true;
-            this.colHr24High.VisibleIndex = 8;
-            // 
-            // colHr24Low
-            // 
-            this.colHr24Low.Caption = "24 Hour Low";
-            this.colHr24Low.FieldName = "Hr24Low";
-            this.colHr24Low.Name = "colHr24Low";
-            this.colHr24Low.Visible = true;
-            this.colHr24Low.VisibleIndex = 9;
-            // 
-            // colTime
-            // 
-            this.colTime.Caption = "Time";
-            this.colTime.DisplayFormat.FormatString = "G";
-            this.colTime.DisplayFormat.FormatType = DevExpress.Utils.FormatType.DateTime;
-            this.colTime.FieldName = "Time";
-            this.colTime.Name = "colTime";
-            this.colTime.Visible = true;
-            this.colTime.VisibleIndex = 10;
-            // 
-            // colFirst
-            // 
-            this.colFirst.Caption = "First Currency";
-            this.colFirst.FieldName = "FirstCurrency";
-            this.colFirst.Name = "colFirst";
-            this.colFirst.Visible = true;
-            this.colFirst.VisibleIndex = 11;
-            // 
-            // colSecond
-            // 
-            this.colSecond.Caption = "Second Currency";
-            this.colSecond.FieldName = "SecondCurrency";
-            this.colSecond.Name = "colSecond";
-            this.colSecond.Visible = true;
-            this.colSecond.VisibleIndex = 12;
-            // 
             // ribbonControl1
             // 
             this.ribbonControl1.ExpandCollapseItem.Id = 0;
@@ -534,11 +312,12 @@
             this.barCheckItem2,
             this.ShowDetailsForSelectedItem});
             this.ribbonControl1.Location = new System.Drawing.Point(0, 0);
+            this.ribbonControl1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.ribbonControl1.MaxItemId = 6;
             this.ribbonControl1.Name = "ribbonControl1";
             this.ribbonControl1.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
             this.ribbonPage1});
-            this.ribbonControl1.Size = new System.Drawing.Size(938, 141);
+            this.ribbonControl1.Size = new System.Drawing.Size(1876, 278);
             // 
             // barCheckItem1
             // 
@@ -570,19 +349,19 @@
             this.ribbonPageGroup1.Name = "ribbonPageGroup1";
             this.ribbonPageGroup1.Text = "Currencies";
             // 
-            // TickersForm
+            // PoloniexTickersForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(938, 591);
+            this.ClientSize = new System.Drawing.Size(1876, 1137);
             this.Controls.Add(this.gridControl1);
             this.Controls.Add(this.ribbonControl1);
-            this.Name = "TickersForm";
+            this.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.Name = "PoloniexTickersForm";
             this.Text = "Currencies";
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemSparklineEdit1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.tileView1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -592,18 +371,6 @@
         #endregion
 
         private DevExpress.XtraGrid.GridControl gridControl1;
-        private DevExpress.XtraGrid.Views.Tile.TileView tileView1;
-        private DevExpress.XtraGrid.Columns.TileViewColumn colCurrencyPair;
-        private DevExpress.XtraGrid.Columns.TileViewColumn colLast;
-        private DevExpress.XtraGrid.Columns.TileViewColumn colLowesAsk;
-        private DevExpress.XtraGrid.Columns.TileViewColumn colHighestBid;
-        private DevExpress.XtraGrid.Columns.TileViewColumn colPercentChange;
-        private DevExpress.XtraGrid.Columns.TileViewColumn colBaseVolume;
-        private DevExpress.XtraGrid.Columns.TileViewColumn colQuoteVolume;
-        private DevExpress.XtraGrid.Columns.TileViewColumn colIsFrozen;
-        private DevExpress.XtraGrid.Columns.TileViewColumn colHr24High;
-        private DevExpress.XtraGrid.Columns.TileViewColumn colHr24Low;
-        private DevExpress.XtraGrid.Columns.TileViewColumn colTime;
         private DevExpress.XtraGrid.Views.Grid.GridView gridView1;
         private DevExpress.XtraGrid.Columns.GridColumn gcCurrencyPair;
         private DevExpress.XtraGrid.Columns.GridColumn gcLast;
@@ -618,8 +385,6 @@
         private DevExpress.XtraGrid.Columns.GridColumn gcTime;
         private DevExpress.XtraGrid.Columns.GridColumn gcFirst;
         private DevExpress.XtraGrid.Columns.GridColumn gcSecond;
-        private DevExpress.XtraGrid.Columns.TileViewColumn colFirst;
-        private DevExpress.XtraGrid.Columns.TileViewColumn colSecond;
         private DevExpress.XtraBars.Ribbon.RibbonControl ribbonControl1;
         private DevExpress.XtraBars.Ribbon.RibbonPage ribbonPage1;
         private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup1;

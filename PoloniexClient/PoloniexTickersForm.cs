@@ -12,8 +12,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace PoloniexClient {
-    public partial class TickersForm : XtraForm {
-        public TickersForm() {
+    public partial class PoloniexTickersForm : XtraForm {
+        public PoloniexTickersForm() {
             InitializeComponent();
         }
 

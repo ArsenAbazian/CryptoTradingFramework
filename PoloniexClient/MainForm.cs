@@ -14,6 +14,7 @@ using WampSharp.V2.Realm;
 using System.Reactive.Subjects;
 using System.Diagnostics;
 using DevExpress.XtraWaitForm;
+using PoloniexClient.Bittrex;
 
 namespace PoloniexClient {
     public partial class MainForm : DevExpress.XtraBars.Ribbon.RibbonForm {
@@ -23,19 +24,34 @@ namespace PoloniexClient {
             InitializeComponent();
         }
 
-        TickersForm tickersForm;
-        public TickersForm TickersForm {
+        PoloniexTickersForm tickersForm;
+        public PoloniexTickersForm TickersForm {
             get {
-                if(tickersForm == null) {
-                    tickersForm = new TickersForm();
+                if(tickersForm == null || tickersForm.IsDisposed) {
+                    tickersForm = new PoloniexTickersForm();
                     tickersForm.MdiParent = this;
                 }
                 return tickersForm;
             }
         }
 
+        BittrexMarketsForm bittrexMarketsForm;
+        public BittrexMarketsForm BittrextMarketsForm {
+            get {
+                if(bittrexMarketsForm == null || bittrexMarketsForm.IsDisposed) {
+                    bittrexMarketsForm = new BittrexMarketsForm();
+                    bittrexMarketsForm.MdiParent = this;
+                }
+                return bittrexMarketsForm;
+            }
+        }
+
         private void barButtonItem1_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
             TickersForm.Show();
+        }
+
+        private void btConnectBitrix_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
+            BittrextMarketsForm.Show();
         }
     }
 }
