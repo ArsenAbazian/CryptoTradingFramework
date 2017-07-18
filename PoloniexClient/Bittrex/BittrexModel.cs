@@ -85,7 +85,7 @@ namespace PoloniexClient.Bittrex {
                 }
             }
         }
-        public void GetMarketInfo(BittrexMarketInfo info) {
+        public void GetTicker(BittrexMarketInfo info) {
             string address = string.Format("https://bittrex.com/api/v1.1/public/getticker?market={0}", Uri.EscapeDataString(info.MarketName));
             string text;
             using(WebClient client = new WebClient()) {
@@ -105,6 +105,45 @@ namespace PoloniexClient.Bittrex {
                     info.LowestAsk = obj.Value<double>("Ask");
                     info.Last = obj.Value<double>("Last");
                     info.Time = DateTime.Now;
+                }
+            }
+        }
+
+        public void GetMarketsSummaryInfo() {
+            string address = string.Format("https://bittrex.com/api/v1.1/public/getmarketsummaries");
+            string text;
+            using(WebClient client = new WebClient()) {
+                text = client.DownloadString(address);
+            }
+            JObject res = (JObject)JsonConvert.DeserializeObject(text);
+            foreach(JProperty prop in res.Children()) {
+                if(prop.Name == "success") {
+                    if(prop.Value.Value<bool>() == false)
+                        break;
+                }
+                if(prop.Name == "message")
+                    continue;
+                if(prop.Name == "result") {
+                    JArray markets = (JArray)prop.Value;
+                    foreach(JObject obj in markets) {
+                        string marketName = obj.Value<string>("MarketName");
+                        BittrexMarketInfo info = Markets.FirstOrDefault((m) => m.MarketName == marketName);
+                        if(info == null)
+                            continue;
+                        info.Hr24High = obj.Value<double>("High");
+                        info.Hr24Low = obj.Value<double>("Low");
+                        info.Volume = obj.Value<double>("Volume");
+                        info.Last = obj.Value<double>("Last");
+                        info.BaseVolume = obj.Value<double>("BaseVolume");
+                        info.TimeStamp = obj.Value<DateTime>("TimeStamp");
+                        info.HighestBid = obj.Value<double>("Bid");
+                        info.LowestAsk = obj.Value<double>("Ask");
+                        info.OpenBuyOrders = obj.Value<int>("OpenBuyOrders");
+                        info.OpenSellOrders = obj.Value<int>("OpenSellOrders");
+                        info.PrevDay = obj.Value<double>("PrevDay");
+                        info.Created = obj.Value<DateTime>("Created");
+                        info.DisplayMarketName = obj.Value<string>("DisplayMarketName");
+                    }
                 }
             }
         }

@@ -19,6 +19,7 @@ namespace PoloniexClient.Bittrex {
         protected override void OnShown(EventArgs e) {
             base.OnShown(e);
             BittrexModel.Default.GetMarketsInfo();
+            BittrexModel.Default.GetMarketsSummaryInfo();
             this.gridControl1.DataSource = BittrexModel.Default.Markets;
             HasShown = true;
             StartBidAskThread();
@@ -38,18 +39,18 @@ namespace PoloniexClient.Bittrex {
         }
         void OnBidAskUpdate() {
             while(true) {
-                foreach(BittrexMarketInfo info in BittrexModel.Default.Markets) {
-                    lock(info) {
-                        BittrexModel.Default.GetMarketInfo(info);
-                        BeginInvoke(new Action<BittrexMarketInfo>(UpdateGrid), info);
-                    }
+                BittrexModel.Default.GetMarketsSummaryInfo();
+                lock(BittrexModel.Default.Markets) {
+                    BeginInvoke(new Action(UpdateGridAll));
                 }
-                
             }
         }
         void UpdateGrid(BittrexMarketInfo info) {
             int rowHandle = this.gridView1.GetRowHandle(info.Index);
             this.gridView1.RefreshRow(rowHandle);
+        }
+        void UpdateGridAll() {
+            this.gridView1.RefreshData();
         }
 
         protected override void OnDeactivate(EventArgs e) {
@@ -70,6 +71,10 @@ namespace PoloniexClient.Bittrex {
             BittrexCurrenciesForm form = new BittrexCurrenciesForm();
             form.MdiParent = MdiParent;
             form.Show();
+        }
+
+        private void btShowDetails_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
+
         }
     }
 }
