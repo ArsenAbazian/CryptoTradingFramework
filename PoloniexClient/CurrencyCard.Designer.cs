@@ -1,4 +1,4 @@
-﻿namespace PoloniexClient {
+﻿namespace CryptoMarketClient {
     partial class CurrencyCard {
         /// <summary> 
         /// Required designer variable.

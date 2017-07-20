@@ -9,10 +9,10 @@ using System.Text;
 using System.Threading.Tasks;
 using WampSharp.V2;
 
-namespace PoloniexClient {
-    public class PoloniexTicker {
+namespace CryptoMarketClient {
+    public class PoloniexTicker : ITicker {
         public PoloniexTicker() {
-            History = new List<PoloniexTickerHistory>();
+            History = new List<TickerHistoryItem>();
         }
 
         public int Id { get; set; }
@@ -67,7 +67,7 @@ namespace PoloniexClient {
 
         public double DeltaAsk { get; set; }
         public double DeltaBid { get; set; }
-        public List<PoloniexTickerHistory> History { get; }
+        public List<TickerHistoryItem> History { get; }
 
         public void Assign(PoloniexTicker ticker) {
             CurrencyPair = ticker.CurrencyPair;
@@ -86,7 +86,7 @@ namespace PoloniexClient {
         public void UpdateHistoryItem() {
             if(History.Count > 10000)
                 History.RemoveAt(0);
-            History.Add(new PoloniexTickerHistory() { Time = Time, Ask = LowestAsk, Bid = HighestBid, Current = Last });
+            History.Add(new TickerHistoryItem() { Time = Time, Ask = LowestAsk, Bid = HighestBid, Current = Last });
             RaiseHistoryItemAdded();
         }
         public event EventHandler HistoryItemAdd;
@@ -95,11 +95,11 @@ namespace PoloniexClient {
                 HistoryItemAdd(this, EventArgs.Empty);
         }
 
-        PoloniexOrderBook orderBook;
-        public PoloniexOrderBook OrderBook {
+        OrderBook orderBook;
+        public OrderBook OrderBook {
             get {
                 if(orderBook == null)
-                    orderBook = new PoloniexOrderBook(this);
+                    orderBook = new OrderBook(this);
                 return orderBook;
             }
         }
@@ -107,11 +107,15 @@ namespace PoloniexClient {
         public void OnChanged() {
             RaiseChanged();   
         }
+        void ITicker.OnChanged(OrderBookUpdateInfo info) {
+            RaiseChanged();
+        }
         protected internal void RaiseChanged() {
             if(Changed != null)
                 Changed(this, EventArgs.Empty);
         }
 
         public event EventHandler Changed;
+        string ITicker.Name { get { return CurrencyPair; } }
     }
 }

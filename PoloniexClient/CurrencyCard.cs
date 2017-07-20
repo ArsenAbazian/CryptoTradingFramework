@@ -9,24 +9,24 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
 
-namespace PoloniexClient {
+namespace CryptoMarketClient {
     public partial class CurrencyCard : XtraUserControl {
         public CurrencyCard() {
             InitializeComponent();
         }
 
-        PoloniexTicker ticker;
-        public PoloniexTicker Ticker {
+        ITicker ticker;
+        public ITicker Ticker {
             get { return ticker; }
             set {
                 if(Ticker == value)
                     return;
-                PoloniexTicker prev = Ticker;
+                ITicker prev = Ticker;
                 ticker = value;
                 OnTickerChanged(prev);
             }
         }
-        void OnTickerChanged(PoloniexTicker prev) {
+        void OnTickerChanged(ITicker prev) {
             if(prev != null)
                 prev.Changed -= Ticker_Changed;
             if(Ticker != null)
@@ -35,7 +35,7 @@ namespace PoloniexClient {
                 this.gridControl1.DataSource = null;
                 return;
             }
-            List<PoloniexTicker> list = new List<PoloniexTicker>();
+            List<ITicker> list = new List<ITicker>();
             list.Add(Ticker);
             this.gridControl1.DataSource = list;
         }

@@ -1,5 +1,5 @@
-﻿namespace PoloniexClient {
-    partial class CurrencyInfoForm {
+﻿namespace CryptoMarketClient {
+    partial class TickerInfoForm {
         /// <summary>
         /// Required designer variable.
         /// </summary>
@@ -44,7 +44,7 @@
             this.gcRate = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gcAmount = new DevExpress.XtraGrid.Columns.GridColumn();
             this.sidePanel2 = new DevExpress.XtraEditors.SidePanel();
-            this.currencyCard1 = new PoloniexClient.CurrencyCard();
+            this.currencyCard1 = new CryptoMarketClient.CurrencyCard();
             ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).BeginInit();
             this.sidePanel1.SuspendLayout();
             this.sidePanel3.SuspendLayout();

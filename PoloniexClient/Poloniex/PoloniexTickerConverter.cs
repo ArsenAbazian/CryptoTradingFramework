@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WampSharp.V2;
 
-namespace PoloniexClient {
+namespace CryptoMarketClient {
     public class PoloniexTickerConverter : IWampEventValueTupleConverter<PoloniexTicker> {
         public PoloniexTickerConverter() { }
 

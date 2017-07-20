@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PoloniexClient {
+namespace CryptoMarketClient {
     public class CandleStickData {
         public DateTime Time { get; set; }
         public double Open { get; set; }
@@ -14,11 +14,11 @@ namespace PoloniexClient {
     }
 
     public static class CandleStickChartHelper {
-        public static List<CandleStickData> CreateCandleStickData(List<PoloniexTickerHistory> list, long rangeInSeconds) {
+        public static List<CandleStickData> CreateCandleStickData(List<TickerHistoryItem> list, long rangeInSeconds) {
             List<CandleStickData> res = new List<CandleStickData>();
             CandleStickData candleItem = null;
             long maxTickCount = rangeInSeconds * TimeSpan.TicksPerSecond;
-            foreach(PoloniexTickerHistory item in list) {
+            foreach(TickerHistoryItem item in list) {
                 if(candleItem == null || (item.Time.Ticks - candleItem.Time.Ticks > maxTickCount)) {
                     candleItem = new CandleStickData();
                     candleItem.Time = item.Time;
@@ -33,7 +33,7 @@ namespace PoloniexClient {
             }
             return res;
         }
-        public static void AddCandleStickData(List<CandleStickData> list, PoloniexTickerHistory item, long rangeInSeconds) {
+        public static void AddCandleStickData(List<CandleStickData> list, TickerHistoryItem item, long rangeInSeconds) {
             CandleStickData candleItem = null;
             long maxTickCount = rangeInSeconds * TimeSpan.TicksPerSecond;
             if(list.Count == 0 || (item.Time.Ticks - list[list.Count - 1].Time.Ticks) > maxTickCount) {

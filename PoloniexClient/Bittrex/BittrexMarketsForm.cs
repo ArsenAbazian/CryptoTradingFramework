@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DevExpress.XtraGrid;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -9,7 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace PoloniexClient.Bittrex {
+namespace CryptoMarketClient.Bittrex {
     public partial class BittrexMarketsForm : Form {
         public BittrexMarketsForm() {
             InitializeComponent();
@@ -74,7 +75,16 @@ namespace PoloniexClient.Bittrex {
         }
 
         private void btShowDetails_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
-
+            ShowDetailsForSelectedItemCore();
+        }
+        void ShowDetailsForSelectedItemCore() {
+            if(this.gridView1.FocusedRowHandle == GridControl.InvalidRowHandle)
+                return;
+            ITicker t = (ITicker)this.gridView1.GetRow(this.gridView1.FocusedRowHandle);
+            TickerInfoForm form = new TickerInfoForm();
+            form.Ticker = t;
+            form.MdiParent = MdiParent;
+            form.Show();
         }
     }
 }

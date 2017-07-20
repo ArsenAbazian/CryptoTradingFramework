@@ -11,7 +11,7 @@ using WampSharp.Binding;
 using WampSharp.V2;
 using WampSharp.V2.Rpc;
 
-namespace PoloniexClient {
+namespace CryptoMarketClient {
     public class PoloniexModel {
         const string PoloniexServerAddress = "wss://api.poloniex.com";
 
@@ -79,7 +79,7 @@ namespace PoloniexClient {
                 TickerUpdate(this, e);
             t.RaiseChanged();
         }
-        public IDisposable ConnectOrderBook(PoloniexOrderBook orderBook) {
+        public IDisposable ConnectOrderBook(OrderBook orderBook) {
             orderBook.Updates.Clear();
             DefaultWampChannelFactory channelFactory =
                new DefaultWampChannelFactory();
@@ -87,7 +87,7 @@ namespace PoloniexClient {
             IWampChannel wampChannel = channelFactory.CreateJsonChannel(PoloniexServerAddress, "realm1");
             wampChannel.Open().Wait();
 
-            ISubject<PoloniexOrderBookUpdateInfo> subject = wampChannel.RealmProxy.Services.GetSubject<PoloniexOrderBookUpdateInfo>(orderBook.Owner.CurrencyPair, new OrderBookUpdateInfoConverter());
+            ISubject<OrderBookUpdateInfo> subject = wampChannel.RealmProxy.Services.GetSubject<OrderBookUpdateInfo>(orderBook.Owner.Name, new OrderBookUpdateInfoConverter());
             return subject.Subscribe(x => orderBook.OnRecvUpdate(x));
         }
         public void GetTickerSnapshot() {
@@ -115,15 +115,15 @@ namespace PoloniexClient {
                 Tickers.Add(t);
             }
         }
-        public void GetSnapshot(PoloniexOrderBook poloniexOrderBook) {
+        public void GetSnapshot(OrderBook orderBook) {
             string address = string.Format("https://poloniex.com/public?command=returnOrderBook&currencyPair={0}&depth=10000",
-                Uri.EscapeDataString(poloniexOrderBook.Owner.CurrencyPair));
+                Uri.EscapeDataString(orderBook.Owner.Name));
             string text;
             using(WebClient client = new WebClient()) {
                 text = client.DownloadString(address);
             }
-            poloniexOrderBook.Bids.Clear();
-            poloniexOrderBook.Asks.Clear();
+            orderBook.Bids.Clear();
+            orderBook.Asks.Clear();
 
             JObject res = (JObject)JsonConvert.DeserializeObject(text);
             foreach(JProperty prop in res.Children()) {
@@ -131,29 +131,29 @@ namespace PoloniexClient {
                     OrderBookEntryType type = prop.Name == "asks" ? OrderBookEntryType.Ask : OrderBookEntryType.Bid;
                     JArray items = prop.Value.ToObject<JArray>();
                     foreach(JArray item in items.Children()) {
-                        PoloniexOrderBookUpdateInfo info = new PoloniexOrderBookUpdateInfo();
+                        OrderBookUpdateInfo info = new OrderBookUpdateInfo();
                         info.Type = prop.Name == "asks" ? OrderBookEntryType.Ask : OrderBookEntryType.Bid;
-                        info.Entry = new PoloniexOrderBookEntry();
+                        info.Entry = new OrderBookEntry();
                         info.Update = OrderBookUpdateType.Modify;
                         JEnumerable<JToken> values = (JEnumerable<JToken>)item.Children();
                         JValue rateValue = (JValue)values.First();
-                        info.Entry.Rate = rateValue.ToObject<double>();
+                        info.Entry.Value = rateValue.ToObject<double>();
                         info.Entry.Amount = rateValue.Next.ToObject<double>();
                         if(type == OrderBookEntryType.Ask)
-                            poloniexOrderBook.ForceAddAsk(info);
+                            orderBook.ForceAddAsk(info);
                         else
-                            poloniexOrderBook.ForceAddBid(info);
+                            orderBook.ForceAddBid(info);
                     }
                 }
                 else if(prop.Name == "seq") {
-                    poloniexOrderBook.SeqNumber = prop.Value.ToObject<int>();
-                    Console.WriteLine("Snapshot seq no = " + poloniexOrderBook.SeqNumber);
+                    orderBook.SeqNumber = prop.Value.ToObject<int>();
+                    Console.WriteLine("Snapshot seq no = " + orderBook.SeqNumber);
                 }
                 else if(prop.Name == "isFrozen") {
-                    poloniexOrderBook.Owner.IsFrozen = prop.Value.ToObject<int>() == 0;
+                    ((PoloniexTicker)orderBook.Owner).IsFrozen = prop.Value.ToObject<int>() == 0;
                 }
             }
-            poloniexOrderBook.ApplyQueueUpdates();
+            orderBook.ApplyQueueUpdates();
         }
     }
 

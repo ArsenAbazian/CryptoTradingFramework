@@ -14,9 +14,9 @@ using WampSharp.V2.Realm;
 using System.Reactive.Subjects;
 using System.Diagnostics;
 using DevExpress.XtraWaitForm;
-using PoloniexClient.Bittrex;
+using CryptoMarketClient.Bittrex;
 
-namespace PoloniexClient {
+namespace CryptoMarketClient {
     public partial class MainForm : DevExpress.XtraBars.Ribbon.RibbonForm {
         
 

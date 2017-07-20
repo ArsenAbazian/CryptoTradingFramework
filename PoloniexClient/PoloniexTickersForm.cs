@@ -11,7 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace PoloniexClient {
+namespace CryptoMarketClient {
     public partial class PoloniexTickersForm : XtraForm {
         public PoloniexTickersForm() {
             InitializeComponent();
@@ -44,8 +44,8 @@ namespace PoloniexClient {
         void ShowDetailsForSelectedItemCore() {
             if(this.gridView1.FocusedRowHandle == GridControl.InvalidRowHandle)
                 return;
-            PoloniexTicker t = (PoloniexTicker)this.gridView1.GetRow(this.gridView1.FocusedRowHandle);
-            CurrencyInfoForm form = new CurrencyInfoForm();
+            ITicker t = (ITicker)this.gridView1.GetRow(this.gridView1.FocusedRowHandle);
+            TickerInfoForm form = new TickerInfoForm();
             form.Ticker = t;
             form.MdiParent = MdiParent;
             form.Show();

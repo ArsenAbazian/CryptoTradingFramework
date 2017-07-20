@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PoloniexClient {
-    public class PoloniexTickerHistory {
+namespace CryptoMarketClient {
+    public class TickerHistoryItem {
         public DateTime Time { get; set; }
         public double Bid { get; set; }
         public double Ask { get; set; }

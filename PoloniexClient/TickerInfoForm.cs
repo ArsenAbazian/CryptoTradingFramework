@@ -11,9 +11,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace PoloniexClient {
-    public partial class CurrencyInfoForm : XtraForm {
-        public CurrencyInfoForm() {
+namespace CryptoMarketClient {
+    public partial class TickerInfoForm : XtraForm {
+        public TickerInfoForm() {
             InitializeComponent();
         }
 
@@ -21,15 +21,15 @@ namespace PoloniexClient {
             Ticker = null;
         }
 
-        PoloniexTicker ticker;
-        public PoloniexTicker Ticker {
+        ITicker ticker;
+        public ITicker Ticker {
             get {
                 return ticker;
             }
             set {
                 if(Ticker == value)
                     return;
-                PoloniexTicker prev = Ticker;
+                ITicker prev = Ticker;
                 ticker = value;
                 OnTickerChanged(prev);
             }
@@ -38,7 +38,7 @@ namespace PoloniexClient {
         static Color bidColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
         static Color askColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
         static Color currentColor = Color.BlueViolet;
-        void OnTickerChanged(PoloniexTicker prev) {
+        void OnTickerChanged(ITicker prev) {
             if(prev != null) {
                 this.ribbonPageGroup1.Text = "";
                 this.askGridControl.DataSource = null;
@@ -50,8 +50,8 @@ namespace PoloniexClient {
             if(Ticker == null)
                 return;
             CandleStickData = CandleStickChartHelper.CreateCandleStickData(Ticker.History, 60);
-            Text = Ticker.CurrencyPair;
-            this.ribbonPageGroup1.Text = Ticker.CurrencyPair;
+            Text = Ticker.Name;
+            this.ribbonPageGroup1.Text = Ticker.Name;
             this.askGridControl.DataSource = Ticker.OrderBook.Asks;
             this.bidGridControl.DataSource = Ticker.OrderBook.Bids;
             Ticker.OrderBook.OnChanged += OrderBook_OnChanged;
@@ -79,7 +79,7 @@ namespace PoloniexClient {
             BeginInvoke(new MethodInvoker(this.chartControl1.RefreshData));
         }
 
-        Series CreateLineSeries(List<PoloniexTickerHistory> list, string str, Color color) {
+        Series CreateLineSeries(List<TickerHistoryItem> list, string str, Color color) {
             Series s = new Series();
             s.ArgumentDataMember = "Time";
             s.ValueDataMembers.AddRange(str);

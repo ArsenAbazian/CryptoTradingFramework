@@ -1,4 +1,4 @@
-﻿namespace PoloniexClient {
+﻿namespace CryptoMarketClient {
     partial class MainForm {
         /// <summary>
         /// Required designer variable.

@@ -1,4 +1,4 @@
-﻿namespace PoloniexClient.Bittrex {
+﻿namespace CryptoMarketClient.Bittrex {
     partial class BittrexCurrenciesForm {
         /// <summary>
         /// Required designer variable.

@@ -7,7 +7,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PoloniexClient.Bittrex {
+namespace CryptoMarketClient.Bittrex {
     public class BittrexModel {
         static BittrexModel defaultModel;
         public static BittrexModel Default {
@@ -143,6 +143,42 @@ namespace PoloniexClient.Bittrex {
                         info.PrevDay = obj.Value<double>("PrevDay");
                         info.Created = obj.Value<DateTime>("Created");
                         info.DisplayMarketName = obj.Value<string>("DisplayMarketName");
+                    }
+                }
+            }
+        }
+
+        public void GetOrderBook(BittrexMarketInfo info, int depth) {
+            string address = string.Format("https://bittrex.com/api/v1.1/public/getticker?market={0}&type=both&depth={1}", Uri.EscapeDataString(info.MarketName), depth);
+            string text;
+            using(WebClient client = new WebClient()) {
+                text = client.DownloadString(address);
+            }
+            JObject res = (JObject)JsonConvert.DeserializeObject(text);
+            foreach(JProperty prop in res.Children()) {
+                if(prop.Name == "success") {
+                    if(prop.Value.Value<bool>() == false)
+                        break;
+                }
+                if(prop.Name == "message")
+                    continue;
+                if(prop.Name == "result") {
+                    lock(info) {
+                        info.OrderBook.Clear();
+                        JArray bids = ((JObject)prop.Value).Value<JArray>("buy");
+                        JArray asks = ((JObject)prop.Value).Value<JArray>("sell");
+                        foreach(JObject obj in bids) {
+                            OrderBookEntry e = new OrderBookEntry();
+                            e.Value = obj.Value<double>("Rate");
+                            e.Amount = obj.Value<double>("Quantity");
+                            info.OrderBook.Bids.Add(e);
+                        }
+                        foreach(JObject obj in asks) {
+                            OrderBookEntry e = new OrderBookEntry();
+                            e.Value = obj.Value<double>("Rate");
+                            e.Amount = obj.Value<double>("Quantity");
+                            info.OrderBook.Asks.Add(e);
+                        }
                     }
                 }
             }

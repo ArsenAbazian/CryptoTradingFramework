@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace PoloniexClient.Bittrex {
+namespace CryptoMarketClient.Bittrex {
     public partial class BittrexCurrenciesForm : Form {
         public BittrexCurrenciesForm() {
             InitializeComponent();

@@ -5,47 +5,28 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PoloniexClient {
-
-    public enum OrderBookEntryType {
-        Bid,
-        Ask
-    }
-
-    public enum OrderBookUpdateType {
-        Add,
-        Modify,
-        Remove
-    }
-
-    public class PoloniexOrderBookEntry {
-        public double Rate { get; set; }
-        public double Amount { get; set; }
-    }
-
-    public class PoloniexOrderBookUpdateInfo {
-        public PoloniexOrderBookEntry Entry { get; set; }
-        public OrderBookEntryType Type { get; set; }
-        public int SeqNo { get; set; }
-        public OrderBookUpdateType Update { get; set; }
-    }
-
-    public class PoloniexOrderBook {
-        public PoloniexOrderBook(PoloniexTicker owner) {
+namespace CryptoMarketClient {
+    public class OrderBook {
+        public OrderBook(ITicker owner) {
             Owner = owner;
-            Bids = new List<PoloniexOrderBookEntry>();
-            Asks = new List<PoloniexOrderBookEntry>();
-            Updates = new List<PoloniexOrderBookUpdateInfo>();
+            Bids = new List<OrderBookEntry>();
+            Asks = new List<OrderBookEntry>();
+            Updates = new List<OrderBookUpdateInfo>();
         }
 
-        public PoloniexTicker Owner { get; private set; }
+        public ITicker Owner { get; private set; }
         public int SeqNumber { get; set; }
-        public List<PoloniexOrderBookEntry> Bids { get; private set; }
-        public List<PoloniexOrderBookEntry> Asks { get; private set; }
-        public List<PoloniexOrderBookUpdateInfo> Updates { get; private set; }
+        public List<OrderBookEntry> Bids { get; private set; }
+        public List<OrderBookEntry> Asks { get; private set; }
+        public List<OrderBookUpdateInfo> Updates { get; private set; }
         public bool IsActualState { get { return SeqNumber != 0 && Updates.Count == 0; } }
 
-        public void OnRecvUpdate(PoloniexOrderBookUpdateInfo info) {
+        public void Clear() {
+            Asks.Clear();
+            Bids.Clear();
+        }
+
+        public void OnRecvUpdate(OrderBookUpdateInfo info) {
             bool prevActualState = IsActualState;
             if(IsExpected(info.SeqNo)) {
                 ApplyInfo(info);
@@ -62,7 +43,7 @@ namespace PoloniexClient {
                 return;
             }
         }
-        void AddUpdateToQueue(PoloniexOrderBookUpdateInfo info) {
+        void AddUpdateToQueue(OrderBookUpdateInfo info) {
             if(Updates.Count == 0)
                 GetSnapshot();
             Updates.Add(info);
@@ -74,7 +55,7 @@ namespace PoloniexClient {
             if(Updates.Count == 0)
                 return;
             while(Updates.Count > 0) {
-                PoloniexOrderBookUpdateInfo info = Updates.First();
+                OrderBookUpdateInfo info = Updates.First();
                 if(info.SeqNo <= SeqNumber) {
                     Updates.Remove(info);
                     continue;
@@ -88,16 +69,16 @@ namespace PoloniexClient {
         bool IsOutdated(int seqNo) {
             return seqNo <= SeqNumber;
         }
-        protected internal void ApplyInfo(PoloniexOrderBookUpdateInfo info) {
+        protected internal void ApplyInfo(OrderBookUpdateInfo info) {
             if(info.Update == OrderBookUpdateType.Remove)
                 OnRemove(info);
             else if(info.Update == OrderBookUpdateType.Modify)
                 OnModify(info);
         }
-        protected internal void OnModify(PoloniexOrderBookUpdateInfo info) {
-            PoloniexOrderBookEntry entry = info.Type == OrderBookEntryType.Ask ?
-                Asks.FirstOrDefault((e) => e.Rate == info.Entry.Rate) :
-                Bids.FirstOrDefault((e) => e.Rate == info.Entry.Rate);
+        protected internal void OnModify(OrderBookUpdateInfo info) {
+            OrderBookEntry entry = info.Type == OrderBookEntryType.Ask ?
+                Asks.FirstOrDefault((e) => e.Value == info.Entry.Value) :
+                Bids.FirstOrDefault((e) => e.Value == info.Entry.Value);
             if(entry == null) {
                 OnAdd(info);
                 return;
@@ -105,62 +86,63 @@ namespace PoloniexClient {
             entry.Amount = info.Entry.Amount;
             info.Entry = entry;
             RaiseOnChanged(info);
-            OnChangedCore();
+            OnChangedCore(info);
         }
-        protected internal void OnAdd(PoloniexOrderBookUpdateInfo info) {
+        protected internal void OnAdd(OrderBookUpdateInfo info) {
             info.Update = OrderBookUpdateType.Add;
             if(info.Type == OrderBookEntryType.Bid)
                 OnAddBid(info);
             else
                 OnAddAsk(info);
             RaiseOnChanged(info);
+            OnChangedCore(info);
         }
-        protected internal void OnAddAsk(PoloniexOrderBookUpdateInfo info) {
-            PoloniexOrderBookEntry before = Asks.FirstOrDefault((e) => e.Rate < info.Entry.Rate);
+        protected internal void OnAddAsk(OrderBookUpdateInfo info) {
+            OrderBookEntry before = Asks.FirstOrDefault((e) => e.Value < info.Entry.Value);
             if(before == null) {
                 Asks.Insert(0, info.Entry);
                 return;
             }
             Asks.Insert(Asks.IndexOf(before), info.Entry);
         }
-        protected internal void ForceAddAsk(PoloniexOrderBookUpdateInfo info) {
+        protected internal void ForceAddAsk(OrderBookUpdateInfo info) {
             Asks.Insert(0, info.Entry);
         }
-        protected internal void ForceAddBid(PoloniexOrderBookUpdateInfo info) {
+        protected internal void ForceAddBid(OrderBookUpdateInfo info) {
             Bids.Add(info.Entry);
         }
-        void OnAddBid(PoloniexOrderBookUpdateInfo info) {
-            PoloniexOrderBookEntry before = Bids.FirstOrDefault((e) => e.Rate < info.Entry.Rate);
+        void OnAddBid(OrderBookUpdateInfo info) {
+            OrderBookEntry before = Bids.FirstOrDefault((e) => e.Value < info.Entry.Value);
             if(before == null) {
                 Bids.Add(info.Entry);
                 return;
             }
             Bids.Insert(Bids.IndexOf(before), info.Entry);
         }
-        void OnRemove(PoloniexOrderBookUpdateInfo info) {
+        void OnRemove(OrderBookUpdateInfo info) {
             if(info.Type == OrderBookEntryType.Bid) {
-                PoloniexOrderBookEntry entry = Bids.FirstOrDefault((e) => e.Rate == info.Entry.Rate);
+                OrderBookEntry entry = Bids.FirstOrDefault((e) => e.Value == info.Entry.Value);
                 if(entry == null) {
-                    Debug.WriteLine("Error removing: '" + info.Type + "' with rate " + info.Entry.Rate + " not found");
+                    Debug.WriteLine("Error removing: '" + info.Type + "' with rate " + info.Entry.Value + " not found");
                     return;
                 }
                 Bids.Remove(entry);
             }
             else {
-                PoloniexOrderBookEntry entry = Asks.FirstOrDefault((e) => e.Rate == info.Entry.Rate);
+                OrderBookEntry entry = Asks.FirstOrDefault((e) => e.Value == info.Entry.Value);
                 if(entry == null) {
-                    Debug.WriteLine("Error removing: '" + info.Type + "' with rate " + info.Entry.Rate + " not found");
+                    Debug.WriteLine("Error removing: '" + info.Type + "' with rate " + info.Entry.Value + " not found");
                     return;
                 }
                 Asks.Remove(entry);
             }
             RaiseOnChanged(info);
-            OnChangedCore();
+            OnChangedCore(info);
         }
-        void OnChangedCore() {
-            Owner.OnChanged();
+        void OnChangedCore(OrderBookUpdateInfo info) {
+            Owner.OnChanged(info);
         }
-        void RaiseOnChanged(PoloniexOrderBookUpdateInfo info) {
+        void RaiseOnChanged(OrderBookUpdateInfo info) {
             OrderBookEventArgs e = new OrderBookEventArgs() { Update = info };
             if(OnChanged != null)
                 OnChanged(this, e);
@@ -178,6 +160,6 @@ namespace PoloniexClient {
     public delegate void OrderBookEventHandler(object sender, OrderBookEventArgs e);
 
     public class OrderBookEventArgs : EventArgs {
-        public PoloniexOrderBookUpdateInfo Update { get; set; }
+        public OrderBookUpdateInfo Update { get; set; }
     }
 }
