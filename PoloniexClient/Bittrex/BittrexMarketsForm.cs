@@ -35,11 +35,13 @@ namespace CryptoMarketClient.Bittrex {
 
         protected Thread BidAskThread { get; set; }
         void StartBidAskThread() {
+            AllowWorking = true;
             BidAskThread = new Thread(OnBidAskUpdate);
             BidAskThread.Start();
         }
+        protected bool AllowWorking { get; set; }
         void OnBidAskUpdate() {
-            while(true) {
+            while(AllowWorking) {
                 BittrexModel.Default.GetMarketsSummaryInfo();
                 lock(BittrexModel.Default.Markets) {
                     BeginInvoke(new Action(UpdateGridAll));
@@ -63,7 +65,7 @@ namespace CryptoMarketClient.Bittrex {
 
         private void StopBidAskThread() {
             if(BidAskThread != null) {
-                BidAskThread.Abort();
+                AllowWorking = false;
                 BidAskThread = null;
             }
         }
