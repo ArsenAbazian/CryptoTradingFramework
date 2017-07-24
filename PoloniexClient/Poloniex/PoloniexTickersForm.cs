@@ -19,7 +19,7 @@ namespace CryptoMarketClient {
 
         protected override void OnShown(EventArgs e) {
             base.OnShown(e);
-            PoloniexModel.Default.GetTickerSnapshot();
+            PoloniexModel.Default.GetTickersSnapshot();
             this.gridControl1.DataSource = PoloniexModel.Default.Tickers;
             PoloniexModel.Default.TickerUpdate += OnTickerUpdate;
             PoloniexModel.Default.Connect();
@@ -45,7 +45,7 @@ namespace CryptoMarketClient {
             if(this.gridView1.FocusedRowHandle == GridControl.InvalidRowHandle)
                 return;
             ITicker t = (ITicker)this.gridView1.GetRow(this.gridView1.FocusedRowHandle);
-            TickerInfoForm form = new TickerInfoForm();
+            TickerForm form = new TickerForm();
             form.Ticker = t;
             form.MdiParent = MdiParent;
             form.Show();

@@ -22,7 +22,7 @@ namespace CryptoMarketClient {
             JObject obj = objProp.Value.ToObject<JObject>();
 
             OrderBookUpdateInfo info = new OrderBookUpdateInfo();
-            info.Update = ((JValue)typeProp.Value).ToObject<string>() == "orderBookRemove" ? OrderBookUpdateType.Remove : OrderBookUpdateType.Modify;
+            info.Action = ((JValue)typeProp.Value).ToObject<string>() == "orderBookRemove" ? OrderBookUpdateType.Remove : OrderBookUpdateType.Modify;
             info.Entry = new OrderBookEntry();
             foreach(JProperty prop in obj.Children()) {
                 if(prop.Name == "type")

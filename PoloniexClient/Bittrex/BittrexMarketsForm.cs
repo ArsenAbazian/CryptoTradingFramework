@@ -83,7 +83,7 @@ namespace CryptoMarketClient.Bittrex {
             if(this.gridView1.FocusedRowHandle == GridControl.InvalidRowHandle)
                 return;
             ITicker t = (ITicker)this.gridView1.GetRow(this.gridView1.FocusedRowHandle);
-            TickerInfoForm form = new TickerInfoForm();
+            TickerForm form = new TickerForm();
             form.Ticker = t;
             form.MdiParent = MdiParent;
             form.Show();

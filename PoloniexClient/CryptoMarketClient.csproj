@@ -115,22 +115,24 @@
       <DependentUpon>BittrexMarketsForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Bittrex\BittrexModel.cs" />
-    <Compile Include="CandleStickChartHelper.cs" />
+    <Compile Include="Common\CandleStickChartHelper.cs" />
     <Compile Include="Common\ITicker.cs" />
     <Compile Include="Common\OrderBookEntry.cs" />
     <Compile Include="Common\OrderBookUpdateInfo.cs" />
     <Compile Include="Common\TickerHistoryItem.cs" />
+    <Compile Include="Common\TickerUpdateHelper.cs" />
+    <Compile Include="Common\TradeHistoryItem.cs" />
     <Compile Include="CurrencyCard.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="CurrencyCard.Designer.cs">
       <DependentUpon>CurrencyCard.cs</DependentUpon>
     </Compile>
-    <Compile Include="TickerInfoForm.cs">
+    <Compile Include="TickerForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="TickerInfoForm.Designer.cs">
-      <DependentUpon>TickerInfoForm.cs</DependentUpon>
+    <Compile Include="TickerForm.Designer.cs">
+      <DependentUpon>TickerForm.cs</DependentUpon>
     </Compile>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
@@ -138,17 +140,17 @@
     <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Poloniex\PoloniexOrderBook.cs" />
+    <Compile Include="Common\OrderBook.cs" />
     <Compile Include="Poloniex\PoloniexOrderBookUpdateInfoConverter.cs" />
     <Compile Include="Poloniex\PoloniexTicker.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Poloniex\PoloniexModel.cs" />
     <Compile Include="Poloniex\PoloniexTickerConverter.cs" />
-    <Compile Include="PoloniexTickersForm.cs">
+    <Compile Include="Poloniex\PoloniexTickersForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="PoloniexTickersForm.Designer.cs">
+    <Compile Include="Poloniex\PoloniexTickersForm.Designer.cs">
       <DependentUpon>PoloniexTickersForm.cs</DependentUpon>
     </Compile>
     <EmbeddedResource Include="Bittrex\BittrexCurrenciesForm.resx">
@@ -160,8 +162,9 @@
     <EmbeddedResource Include="CurrencyCard.resx">
       <DependentUpon>CurrencyCard.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="TickerInfoForm.resx">
-      <DependentUpon>TickerInfoForm.cs</DependentUpon>
+    <EmbeddedResource Include="Properties\licenses.licx" />
+    <EmbeddedResource Include="TickerForm.resx">
+      <DependentUpon>TickerForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
@@ -176,7 +179,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="PoloniexTickersForm.resx">
+    <EmbeddedResource Include="Poloniex\PoloniexTickersForm.resx">
       <DependentUpon>PoloniexTickersForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.manifest" />

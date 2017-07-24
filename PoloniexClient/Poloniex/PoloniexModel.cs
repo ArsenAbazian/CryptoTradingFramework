@@ -79,18 +79,18 @@ namespace CryptoMarketClient {
                 TickerUpdate(this, e);
             t.RaiseChanged();
         }
-        public IDisposable ConnectOrderBook(OrderBook orderBook) {
-            orderBook.Updates.Clear();
+        public IDisposable ConnectOrderBook(PoloniexTicker ticker) {
+            ticker.OrderBook.Updates.Clear();
             DefaultWampChannelFactory channelFactory =
                new DefaultWampChannelFactory();
 
             IWampChannel wampChannel = channelFactory.CreateJsonChannel(PoloniexServerAddress, "realm1");
             wampChannel.Open().Wait();
 
-            ISubject<OrderBookUpdateInfo> subject = wampChannel.RealmProxy.Services.GetSubject<OrderBookUpdateInfo>(orderBook.Owner.Name, new OrderBookUpdateInfoConverter());
-            return subject.Subscribe(x => orderBook.OnRecvUpdate(x));
+            ISubject<OrderBookUpdateInfo> subject = wampChannel.RealmProxy.Services.GetSubject<OrderBookUpdateInfo>(ticker.OrderBook.Owner.Name, new OrderBookUpdateInfoConverter());
+            return subject.Subscribe(x => ticker.OrderBook.OnRecvUpdate(x));
         }
-        public void GetTickerSnapshot() {
+        public void GetTickersSnapshot() {
             string address = "https://poloniex.com/public?command=returnTicker";
             string text;
             using(WebClient client = new WebClient()) {
@@ -115,15 +115,15 @@ namespace CryptoMarketClient {
                 Tickers.Add(t);
             }
         }
-        public void GetSnapshot(OrderBook orderBook) {
-            string address = string.Format("https://poloniex.com/public?command=returnOrderBook&currencyPair={0}&depth=10000",
-                Uri.EscapeDataString(orderBook.Owner.Name));
+        public void GetOrderBook(PoloniexTicker ticker, int depth) {
+            string address = string.Format("https://poloniex.com/public?command=returnOrderBook&currencyPair={0}&depth={1}",
+                Uri.EscapeDataString(ticker.CurrencyPair), depth);
             string text;
             using(WebClient client = new WebClient()) {
                 text = client.DownloadString(address);
             }
-            orderBook.Bids.Clear();
-            orderBook.Asks.Clear();
+            ticker.OrderBook.Bids.Clear();
+            ticker.OrderBook.Asks.Clear();
 
             JObject res = (JObject)JsonConvert.DeserializeObject(text);
             foreach(JProperty prop in res.Children()) {
@@ -134,26 +134,32 @@ namespace CryptoMarketClient {
                         OrderBookUpdateInfo info = new OrderBookUpdateInfo();
                         info.Type = prop.Name == "asks" ? OrderBookEntryType.Ask : OrderBookEntryType.Bid;
                         info.Entry = new OrderBookEntry();
-                        info.Update = OrderBookUpdateType.Modify;
+                        info.Action = OrderBookUpdateType.Modify;
                         JEnumerable<JToken> values = (JEnumerable<JToken>)item.Children();
                         JValue rateValue = (JValue)values.First();
                         info.Entry.Value = rateValue.ToObject<double>();
                         info.Entry.Amount = rateValue.Next.ToObject<double>();
                         if(type == OrderBookEntryType.Ask)
-                            orderBook.ForceAddAsk(info);
+                            ticker.OrderBook.ForceAddAsk(info);
                         else
-                            orderBook.ForceAddBid(info);
+                            ticker.OrderBook.ForceAddBid(info);
                     }
                 }
                 else if(prop.Name == "seq") {
-                    orderBook.SeqNumber = prop.Value.ToObject<int>();
-                    Console.WriteLine("Snapshot seq no = " + orderBook.SeqNumber);
+                    ticker.OrderBook.SeqNumber = prop.Value.ToObject<int>();
+                    Console.WriteLine("Snapshot seq no = " + ticker.OrderBook.SeqNumber);
                 }
                 else if(prop.Name == "isFrozen") {
-                    ((PoloniexTicker)orderBook.Owner).IsFrozen = prop.Value.ToObject<int>() == 0;
+                    ticker.IsFrozen = prop.Value.ToObject<int>() == 0;
                 }
             }
-            orderBook.ApplyQueueUpdates();
+            ticker.OrderBook.ApplyQueueUpdates();
+        }
+        public void UpdateTrades(PoloniexTicker ticker) {
+            throw new NotImplementedException();
+        }
+        public void GetTicker(ITicker ticker) {
+            throw new NotImplementedException();
         }
     }
 

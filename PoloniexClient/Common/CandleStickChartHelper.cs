@@ -34,6 +34,7 @@ namespace CryptoMarketClient {
             return res;
         }
         public static void AddCandleStickData(List<CandleStickData> list, TickerHistoryItem item, long rangeInSeconds) {
+            Console.WriteLine("Update candle stick data " + item.Time.ToLongTimeString());
             CandleStickData candleItem = null;
             long maxTickCount = rangeInSeconds * TimeSpan.TicksPerSecond;
             if(list.Count == 0 || (item.Time.Ticks - list[list.Count - 1].Time.Ticks) > maxTickCount) {

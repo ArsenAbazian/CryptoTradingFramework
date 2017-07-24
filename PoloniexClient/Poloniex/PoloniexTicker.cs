@@ -67,7 +67,8 @@ namespace CryptoMarketClient {
 
         public double DeltaAsk { get; set; }
         public double DeltaBid { get; set; }
-        public List<TickerHistoryItem> History { get; }
+        public List<TickerHistoryItem> History { get; } = new List<TickerHistoryItem>();
+        public List<TradeHistoryItem> TradeHistory { get; } = new List<TradeHistoryItem>();
 
         public void Assign(PoloniexTicker ticker) {
             CurrencyPair = ticker.CurrencyPair;
@@ -114,8 +115,51 @@ namespace CryptoMarketClient {
             if(Changed != null)
                 Changed(this, EventArgs.Empty);
         }
+        public void ConnectOrderBook(OrderBook orderBook) {
+            throw new NotImplementedException();
+        }
 
         public event EventHandler Changed;
+        public event EventHandler TradeHistoryAdd;
         string ITicker.Name { get { return CurrencyPair; } }
+        
+        public void GetOrderBookSnapshot() {
+            PoloniexModel.Default.GetOrderBook(this, 100);
+        }
+        TickerUpdateHelper updateHelper;
+        protected TickerUpdateHelper UpdateHelper {
+            get {
+                if(updateHelper == null)
+                    updateHelper = new TickerUpdateHelper(this);
+                return updateHelper;
+            }
+        }
+        void ITicker.SubscribeOrderBookUpdates() {
+            UpdateHelper.SubscribeOrderBookUpdates();
+        }
+        void ITicker.UnsubscribeOrderBookUpdates() {
+            UpdateHelper.UnsubscribeOrderBookUpdates();
+        }
+        void ITicker.SubscribeTickerUpdates() {
+            UpdateHelper.SubscribeTickerUpdates();
+        }
+        void ITicker.UnsubscribeTickerUpdates() {
+            UpdateHelper.UnsubscribeTickerUpdates();
+        }
+        void ITicker.SubscribeTradeUpdates() {
+            UpdateHelper.SubscribeTradeUpdates();
+        }
+        void ITicker.UnsubscribeTradeUpdates() {
+            UpdateHelper.UnsubscribeTradeUpdates();
+        }
+        void ITicker.UpdateOrderBook() {
+            PoloniexModel.Default.GetOrderBook(this, 100);
+        }
+        void ITicker.UpdateTicker() {
+            PoloniexModel.Default.GetTicker(this);
+        }
+        void ITicker.UpdateTrades() {
+            PoloniexModel.Default.UpdateTrades(this);
+        }
     }
 }

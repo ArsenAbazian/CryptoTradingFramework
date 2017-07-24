@@ -32,12 +32,11 @@
             this.rpPoloniex = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.rpgPoloniex = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.ribbonPageGroup1 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
+            this.ribbonPage2 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPageGroup2 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.ribbonStatusBar1 = new DevExpress.XtraBars.Ribbon.RibbonStatusBar();
             this.documentManager1 = new DevExpress.XtraBars.Docking2010.DocumentManager(this.components);
             this.tabbedView1 = new DevExpress.XtraBars.Docking2010.Views.Tabbed.TabbedView(this.components);
-            this.ribbonPage1 = new DevExpress.XtraBars.Ribbon.RibbonPage();
-            this.ribbonPage2 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.documentManager1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tabbedView1)).BeginInit();
@@ -52,15 +51,13 @@
             this.barButtonItem1,
             this.btConnectBitrix});
             this.ribbonControl1.Location = new System.Drawing.Point(0, 0);
-            this.ribbonControl1.Margin = new System.Windows.Forms.Padding(6);
             this.ribbonControl1.MaxItemId = 5;
             this.ribbonControl1.MdiMergeStyle = DevExpress.XtraBars.Ribbon.RibbonMdiMergeStyle.Always;
             this.ribbonControl1.Name = "ribbonControl1";
             this.ribbonControl1.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
             this.rpPoloniex,
-            this.ribbonPage1,
             this.ribbonPage2});
-            this.ribbonControl1.Size = new System.Drawing.Size(2068, 282);
+            this.ribbonControl1.Size = new System.Drawing.Size(1034, 143);
             this.ribbonControl1.StatusBar = this.ribbonStatusBar1;
             // 
             // skinRibbonGalleryBarItem1
@@ -91,9 +88,10 @@
             // rpPoloniex
             // 
             this.rpPoloniex.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] {
-            this.rpgPoloniex});
+            this.rpgPoloniex,
+            this.ribbonPageGroup1});
             this.rpPoloniex.Name = "rpPoloniex";
-            this.rpPoloniex.Text = "Poloniex";
+            this.rpPoloniex.Text = "Connect";
             // 
             // rpgPoloniex
             // 
@@ -109,6 +107,13 @@
             this.ribbonPageGroup1.Name = "ribbonPageGroup1";
             this.ribbonPageGroup1.Text = "Bittrex";
             // 
+            // ribbonPage2
+            // 
+            this.ribbonPage2.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] {
+            this.ribbonPageGroup2});
+            this.ribbonPage2.Name = "ribbonPage2";
+            this.ribbonPage2.Text = "Options";
+            // 
             // ribbonPageGroup2
             // 
             this.ribbonPageGroup2.ItemLinks.Add(this.skinRibbonGalleryBarItem1);
@@ -117,11 +122,10 @@
             // 
             // ribbonStatusBar1
             // 
-            this.ribbonStatusBar1.Location = new System.Drawing.Point(0, 946);
-            this.ribbonStatusBar1.Margin = new System.Windows.Forms.Padding(6);
+            this.ribbonStatusBar1.Location = new System.Drawing.Point(0, 493);
             this.ribbonStatusBar1.Name = "ribbonStatusBar1";
             this.ribbonStatusBar1.Ribbon = this.ribbonControl1;
-            this.ribbonStatusBar1.Size = new System.Drawing.Size(2068, 62);
+            this.ribbonStatusBar1.Size = new System.Drawing.Size(1034, 31);
             // 
             // documentManager1
             // 
@@ -135,30 +139,15 @@
             // 
             this.tabbedView1.RootContainer.Element = null;
             // 
-            // ribbonPage1
-            // 
-            this.ribbonPage1.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] {
-            this.ribbonPageGroup1});
-            this.ribbonPage1.Name = "ribbonPage1";
-            this.ribbonPage1.Text = "Bittrex";
-            // 
-            // ribbonPage2
-            // 
-            this.ribbonPage2.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] {
-            this.ribbonPageGroup2});
-            this.ribbonPage2.Name = "ribbonPage2";
-            this.ribbonPage2.Text = "Options";
-            // 
             // MainForm
             // 
             this.AllowFormGlass = DevExpress.Utils.DefaultBoolean.False;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(2068, 1008);
+            this.ClientSize = new System.Drawing.Size(1034, 524);
             this.Controls.Add(this.ribbonStatusBar1);
             this.Controls.Add(this.ribbonControl1);
             this.IsMdiContainer = true;
-            this.Margin = new System.Windows.Forms.Padding(6);
             this.Name = "MainForm";
             this.Ribbon = this.ribbonControl1;
             this.StatusBar = this.ribbonStatusBar1;
@@ -184,7 +173,6 @@
         private DevExpress.XtraBars.Docking2010.Views.Tabbed.TabbedView tabbedView1;
         private DevExpress.XtraBars.BarButtonItem btConnectBitrix;
         private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup1;
-        private DevExpress.XtraBars.Ribbon.RibbonPage ribbonPage1;
         private DevExpress.XtraBars.Ribbon.RibbonPage ribbonPage2;
     }
 }

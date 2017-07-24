@@ -10,6 +10,6 @@ namespace CryptoMarketClient {
         public OrderBookEntry Entry { get; set; }
         public OrderBookEntryType Type { get; set; }
         public int SeqNo { get; set; }
-        public OrderBookUpdateType Update { get; set; }
+        public OrderBookUpdateType Action { get; set; }
     }
 }

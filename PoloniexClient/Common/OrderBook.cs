@@ -49,7 +49,7 @@ namespace CryptoMarketClient {
             Updates.Add(info);
         }
         void GetSnapshot() {
-            PoloniexModel.Default.GetSnapshot(this);
+            Owner.GetOrderBookSnapshot();
         }
         protected internal void ApplyQueueUpdates() {
             if(Updates.Count == 0)
@@ -70,9 +70,9 @@ namespace CryptoMarketClient {
             return seqNo <= SeqNumber;
         }
         protected internal void ApplyInfo(OrderBookUpdateInfo info) {
-            if(info.Update == OrderBookUpdateType.Remove)
+            if(info.Action == OrderBookUpdateType.Remove)
                 OnRemove(info);
-            else if(info.Update == OrderBookUpdateType.Modify)
+            else if(info.Action == OrderBookUpdateType.Modify)
                 OnModify(info);
         }
         protected internal void OnModify(OrderBookUpdateInfo info) {
@@ -89,7 +89,7 @@ namespace CryptoMarketClient {
             OnChangedCore(info);
         }
         protected internal void OnAdd(OrderBookUpdateInfo info) {
-            info.Update = OrderBookUpdateType.Add;
+            info.Action = OrderBookUpdateType.Add;
             if(info.Type == OrderBookEntryType.Bid)
                 OnAddBid(info);
             else
@@ -142,7 +142,7 @@ namespace CryptoMarketClient {
         void OnChangedCore(OrderBookUpdateInfo info) {
             Owner.OnChanged(info);
         }
-        void RaiseOnChanged(OrderBookUpdateInfo info) {
+        protected internal void RaiseOnChanged(OrderBookUpdateInfo info) {
             OrderBookEventArgs e = new OrderBookEventArgs() { Update = info };
             if(OnChanged != null)
                 OnChanged(this, e);
@@ -150,10 +150,6 @@ namespace CryptoMarketClient {
         public event OrderBookEventHandler OnChanged;
         bool IsExpected(int seqNo) {
             return seqNo == SeqNumber + 1;
-        }
-        public void Connect() {
-            PoloniexModel.Default.GetSnapshot(this);
-            PoloniexModel.Default.ConnectOrderBook(this);
         }
     }
 
