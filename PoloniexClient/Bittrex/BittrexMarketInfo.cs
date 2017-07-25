@@ -109,7 +109,14 @@ namespace CryptoMarketClient.Bittrex {
             BittrexModel.Default.GetTicker(this);
         }
         void ITicker.UpdateTrades() {
-            BittrexModel.Default.UpdateTrades(this);
+            if(TradeHistory.Count == 0)
+                BittrexModel.Default.GetTrades(this);
+            else 
+                BittrexModel.Default.UpdateTrades(this);
+        }
+        public void RaiseTradeHistoryAdd() {
+            if(TradeHistoryAdd != null)
+                TradeHistoryAdd(this, EventArgs.Empty);
         }
     }
 

@@ -68,6 +68,8 @@ namespace CryptoMarketClient {
         void ClearGrid() {
             this.askGridControl.DataSource = null;
             this.bidGridControl.DataSource = null;
+            this.tradeHistoryItemBindingSource.DataSource = null;
+            //this.tradeGridControl.DataSource = null;
         }
         void UnsubscribeEvents(ITicker prev) {
             prev.OrderBook.OnChanged -= OnTickerOrderBookChanged;
@@ -76,10 +78,13 @@ namespace CryptoMarketClient {
             prev.TradeHistoryAdd -= OnTickerTradeHistoryAdd;
             prev.UnsubscribeOrderBookUpdates();
             prev.UnsubscribeTickerUpdates();
+            prev.UnsubscribeTradeUpdates();
         }
         void UpdateGrid() {
             this.askGridControl.DataSource = Ticker.OrderBook.Asks;
             this.bidGridControl.DataSource = Ticker.OrderBook.Bids;
+            this.tradeHistoryItemBindingSource.DataSource = Ticker.TradeHistory;
+            //this.tradeGridControl.DataSource = Ticker.TradeHistory;
         }
         void SubscribeEvents() {
             Ticker.OrderBook.OnChanged += OnTickerOrderBookChanged;
@@ -89,11 +94,13 @@ namespace CryptoMarketClient {
             if(IsHandleCreated) {
                 Ticker.SubscribeOrderBookUpdates();
                 Ticker.SubscribeTickerUpdates();
+                Ticker.SubscribeTradeUpdates();
             }
         }
 
         private void OnTickerTradeHistoryAdd(object sender, EventArgs e) {
-            
+            if(IsHandleCreated)
+                BeginInvoke(new MethodInvoker(this.tradeGridControl.RefreshDataSource));
         }
 
         void UpdateChart() {
@@ -123,7 +130,8 @@ namespace CryptoMarketClient {
             base.OnShown(e);
             if(Ticker != null) {
                 Ticker.SubscribeOrderBookUpdates();
-                Ticker.SubscribeTickerUpdates();    
+                Ticker.SubscribeTickerUpdates();
+                Ticker.SubscribeTradeUpdates();
             }
         }
 

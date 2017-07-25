@@ -190,8 +190,78 @@ namespace CryptoMarketClient.Bittrex {
             }
             info.OrderBook.RaiseOnChanged(new OrderBookUpdateInfo() { Action = OrderBookUpdateType.RefreshAll });
         }
+        public void GetTrades(BittrexMarketInfo info) {
+            string address = string.Format("https://bittrex.com/api/v1.1/public/getmarkethistory?market={0}", Uri.EscapeDataString(info.MarketName));
+            string text = GetDownloadString(address);
+            if(string.IsNullOrEmpty(text))
+                return;
+            JObject res = (JObject)JsonConvert.DeserializeObject(text);
+            foreach(JProperty prop in res.Children()) {
+                if(prop.Name == "success") {
+                    if(prop.Value.Value<bool>() == false)
+                        break;
+                }
+                if(prop.Name == "message")
+                    continue;
+                if(prop.Name == "result") {
+                    lock(info) {
+                        info.TradeHistory.Clear();
+                        JArray trades = (JArray)prop.Value;
+                        foreach(JObject obj in trades) {
+                            TradeHistoryItem item = new TradeHistoryItem();
+                            item.Id = obj.Value<int>("Id");
+                            item.Time = obj.Value<DateTime>("TimeStamp");
+                            item.Amount = obj.Value<double>("Quantity");
+                            item.Rate = obj.Value<double>("Price");
+                            item.Total = obj.Value<double>("Total");
+                            item.Type = obj.Value<string>("OrderType") == "BUY" ? TradeType.Buy : TradeType.Sell;
+                            item.Fill = obj.Value<string>("FillType") == "FILL" ? TradeFillType.Fill : TradeFillType.PartialFill;
+                            info.TradeHistory.Add(item);
+                        }
+                    }
+                    info.RaiseTradeHistoryAdd();
+                }
+            }
+        }
+        protected List<TradeHistoryItem> UpdateList { get; } = new List<TradeHistoryItem>(100);
         public void UpdateTrades(BittrexMarketInfo info) {
-            
+            string address = string.Format("https://bittrex.com/api/v1.1/public/getmarkethistory?market={0}", Uri.EscapeDataString(info.MarketName));
+            string text = GetDownloadString(address);
+            if(string.IsNullOrEmpty(text))
+                return;
+            JObject res = (JObject)JsonConvert.DeserializeObject(text);
+            foreach(JProperty prop in res.Children()) {
+                if(prop.Name == "success") {
+                    if(prop.Value.Value<bool>() == false)
+                        break;
+                }
+                if(prop.Name == "message")
+                    continue;
+                if(prop.Name == "result") {
+                    lock(info) {
+                        JArray trades = (JArray)prop.Value;
+                        UpdateList.Clear();
+                        int lastId = info.TradeHistory.Count > 0 ? info.TradeHistory.First().Id : -1;
+                        foreach(JObject obj in trades) {
+                            int id = obj.Value<int>("Id");
+                            if(id == lastId) {
+                                info.TradeHistory.InsertRange(0, UpdateList);
+                                break;
+                            }
+                            TradeHistoryItem item = new TradeHistoryItem();
+                            item.Id = id;
+                            item.Time = obj.Value<DateTime>("TimeStamp");
+                            item.Amount = obj.Value<double>("Quantity");
+                            item.Rate = obj.Value<double>("Price");
+                            item.Total = obj.Value<double>("Total");
+                            item.Type = obj.Value<string>("OrderType") == "BUY" ? TradeType.Buy : TradeType.Sell;
+                            item.Fill = obj.Value<string>("FillType") == "FILL" ? TradeFillType.Fill : TradeFillType.PartialFill;
+                            UpdateList.Add(item);
+                        }
+                    }
+                    info.RaiseTradeHistoryAdd();
+                }
+            }
         }
     }
 }
