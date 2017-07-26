@@ -22,6 +22,7 @@ namespace CryptoMarketClient {
         void UpdateOrderBook();
         void UpdateTicker();
         void UpdateTrades();
+        string DownloadString(string address);
 
         event EventHandler HistoryItemAdd;
         event EventHandler Changed;

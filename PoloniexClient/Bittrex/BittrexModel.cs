@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -18,17 +19,28 @@ namespace CryptoMarketClient.Bittrex {
             }
         }
 
-        string GetDownloadString(string address) {
-            using(WebClient client = new WebClient()) {
-                try {
-                    return client.DownloadString(address);
-                }
-                catch(Exception e) {
-                    Console.WriteLine("WebClient exception = " + e.ToString());
-                    return string.Empty;
-                }
+        string GetDownloadString(ITicker ticker, string address) {
+            try {
+                return ticker.DownloadString(address);
+            }
+            catch(Exception e) {
+                Console.WriteLine("WebClient exception = " + e.ToString());
+                return string.Empty;
             }
         }
+
+        protected WebClient WebClient { get; } = new WebClient();
+        string GetDownloadString(string address) {
+            try {
+                return WebClient.DownloadString(address);
+            }
+            catch(Exception e) {
+                Console.WriteLine("WebClient exception = " + e.ToString());
+                return string.Empty;
+            }
+        }
+
+        protected Stopwatch Timer { get; } = new Stopwatch();
 
         public List<BittrexMarketInfo> Markets { get; } = new List<BittrexMarketInfo>();
         public void GetMarketsInfo() {
@@ -94,8 +106,10 @@ namespace CryptoMarketClient.Bittrex {
             }
         }
         public void GetTicker(BittrexMarketInfo info) {
+            Timer.Reset();
+            Timer.Start();
             string address = string.Format("https://bittrex.com/api/v1.1/public/getticker?market={0}", Uri.EscapeDataString(info.MarketName));
-            string text = GetDownloadString(address);
+            string text = GetDownloadString(info, address);
             if(string.IsNullOrEmpty(text))
                 return;
             JObject res = (JObject)JsonConvert.DeserializeObject(text);
@@ -113,7 +127,8 @@ namespace CryptoMarketClient.Bittrex {
                     info.Last = obj.Value<double>("Last");
                     info.Time = DateTime.Now;
                     info.UpdateHistoryItem();
-                    //Console.WriteLine(info.Time.ToLongTimeString() + " ticker update last = " + info.Last + "  bid = " + info.HighestBid + "  ask = " + info.LowestAsk);
+                    Timer.Stop();
+                    Console.WriteLine(info.Time.ToString("hh:mm:ss.fff") + " ticker update last = " + info.Last + "  bid = " + info.HighestBid + "  ask = " + info.LowestAsk + ". process time = " + Timer.ElapsedMilliseconds);
                 }
             }
         }
@@ -142,7 +157,7 @@ namespace CryptoMarketClient.Bittrex {
                         info.Volume = obj.Value<double>("Volume");
                         info.Last = obj.Value<double>("Last");
                         info.BaseVolume = obj.Value<double>("BaseVolume");
-                        info.TimeStamp = obj.Value<DateTime>("TimeStamp");
+                        info.Time = obj.Value<DateTime>("TimeStamp");
                         info.HighestBid = obj.Value<double>("Bid");
                         info.LowestAsk = obj.Value<double>("Ask");
                         info.OpenBuyOrders = obj.Value<int>("OpenBuyOrders");
@@ -156,8 +171,10 @@ namespace CryptoMarketClient.Bittrex {
             }
         }
         public void GetOrderBook(BittrexMarketInfo info, int depth) {
+            Timer.Reset();
+            Timer.Start();
             string address = string.Format("https://bittrex.com/api/v1.1/public/getorderbook?market={0}&type=both&depth={1}", Uri.EscapeDataString(info.MarketName), depth);
-            string text = GetDownloadString(address);
+            string text = GetDownloadString(info, address);
             if(string.IsNullOrEmpty(text))
                 return;
             JObject res = (JObject)JsonConvert.DeserializeObject(text);
@@ -186,13 +203,17 @@ namespace CryptoMarketClient.Bittrex {
                             info.OrderBook.Asks.Add(e);
                         }
                     }
+                    Timer.Stop();
+                    Console.WriteLine(DateTime.Now.ToString("hh:mm:ss.fff") + " order book update. process time = " + Timer.ElapsedMilliseconds);
                 }
             }
             info.OrderBook.RaiseOnChanged(new OrderBookUpdateInfo() { Action = OrderBookUpdateType.RefreshAll });
         }
         public void GetTrades(BittrexMarketInfo info) {
+            Timer.Reset();
+            Timer.Start();
             string address = string.Format("https://bittrex.com/api/v1.1/public/getmarkethistory?market={0}", Uri.EscapeDataString(info.MarketName));
-            string text = GetDownloadString(address);
+            string text = GetDownloadString(info, address);
             if(string.IsNullOrEmpty(text))
                 return;
             JObject res = (JObject)JsonConvert.DeserializeObject(text);
@@ -217,6 +238,9 @@ namespace CryptoMarketClient.Bittrex {
                             item.Type = obj.Value<string>("OrderType") == "BUY" ? TradeType.Buy : TradeType.Sell;
                             item.Fill = obj.Value<string>("FillType") == "FILL" ? TradeFillType.Fill : TradeFillType.PartialFill;
                             info.TradeHistory.Add(item);
+                            TickerUpdateHelper.UpdateHistoryForTradeItem(item, info);
+                            Timer.Stop();
+                            Console.WriteLine(DateTime.Now.ToString("hh:mm:ss.fff") + " trade add. process time = " + Timer.ElapsedMilliseconds);
                         }
                     }
                     info.RaiseTradeHistoryAdd();
@@ -225,8 +249,10 @@ namespace CryptoMarketClient.Bittrex {
         }
         protected List<TradeHistoryItem> UpdateList { get; } = new List<TradeHistoryItem>(100);
         public void UpdateTrades(BittrexMarketInfo info) {
+            Timer.Reset();
+            Timer.Stop();
             string address = string.Format("https://bittrex.com/api/v1.1/public/getmarkethistory?market={0}", Uri.EscapeDataString(info.MarketName));
-            string text = GetDownloadString(address);
+            string text = GetDownloadString(info, address);
             if(string.IsNullOrEmpty(text))
                 return;
             JObject res = (JObject)JsonConvert.DeserializeObject(text);
@@ -256,7 +282,10 @@ namespace CryptoMarketClient.Bittrex {
                             item.Total = obj.Value<double>("Total");
                             item.Type = obj.Value<string>("OrderType") == "BUY" ? TradeType.Buy : TradeType.Sell;
                             item.Fill = obj.Value<string>("FillType") == "FILL" ? TradeFillType.Fill : TradeFillType.PartialFill;
+                            TickerUpdateHelper.UpdateHistoryForTradeItem(item, info);
                             UpdateList.Add(item);
+                            Timer.Stop();
+                            Console.WriteLine(info.Time.ToString("hh:mm:ss.fff") + " trade update. process time = " + Timer.ElapsedMilliseconds);
                         }
                     }
                     info.RaiseTradeHistoryAdd();

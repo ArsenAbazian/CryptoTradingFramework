@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -22,7 +23,6 @@ namespace CryptoMarketClient.Bittrex {
         public DateTime Time { get; set; }
         public double Volume { get; set; }
         public double BaseVolume { get; set; }
-        public DateTime TimeStamp { get; set; }
         public int OpenBuyOrders { get; set; }
         public int OpenSellOrders { get; set; }
         public double PrevDay { get; set; }
@@ -38,12 +38,12 @@ namespace CryptoMarketClient.Bittrex {
 
         public void UpdateHistoryItem() {
             TickerHistoryItem last = History.Count == 0? null: History.Last();
+            if(History.Count > 36000)
+                History.RemoveAt(0);
             if(last != null) {
-                if(last.Ask == LowestAsk && last.Bid == HighestBid && last.Current == Last && (Time.Ticks - last.Time.Ticks) < TimeSpan.TicksPerMinute)
+                if(last.Ask == LowestAsk && last.Bid == HighestBid && last.Current == Last)
                     return;
             }
-            if(History.Count > 10000)
-                History.RemoveAt(0);
             History.Add(new TickerHistoryItem() { Time = Time, Ask = LowestAsk, Bid = HighestBid, Current = Last });
             RaiseHistoryItemAdded();
         }
@@ -72,7 +72,7 @@ namespace CryptoMarketClient.Bittrex {
 
         string ITicker.Name => MarketName;
         void ITicker.GetOrderBookSnapshot() {
-            BittrexModel.Default.GetOrderBook(this, 500);
+            BittrexModel.Default.GetOrderBook(this, 50);
         }
 
         TickerUpdateHelper updateHelper;
@@ -103,7 +103,7 @@ namespace CryptoMarketClient.Bittrex {
             UpdateHelper.UnsubscribeTradeUpdates();
         }
         void ITicker.UpdateOrderBook() {
-            BittrexModel.Default.GetOrderBook(this, 100);
+            BittrexModel.Default.GetOrderBook(this, 50);
         }
         void ITicker.UpdateTicker() {
             BittrexModel.Default.GetTicker(this);
@@ -117,6 +117,14 @@ namespace CryptoMarketClient.Bittrex {
         public void RaiseTradeHistoryAdd() {
             if(TradeHistoryAdd != null)
                 TradeHistoryAdd(this, EventArgs.Empty);
+        }
+        protected WebClient WebClient { get; } = new WebClient();
+        public string DownloadString(string address) {
+            try {
+                return WebClient.DownloadString(address);
+            }
+            catch { }
+            return string.Empty;
         }
     }
 

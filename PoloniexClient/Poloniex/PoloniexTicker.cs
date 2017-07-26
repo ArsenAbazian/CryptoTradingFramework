@@ -85,7 +85,7 @@ namespace CryptoMarketClient {
         }
 
         public void UpdateHistoryItem() {
-            if(History.Count > 10000)
+            if(History.Count > 36000)
                 History.RemoveAt(0);
             History.Add(new TickerHistoryItem() { Time = Time, Ask = LowestAsk, Bid = HighestBid, Current = Last });
             RaiseHistoryItemAdded();
@@ -124,7 +124,7 @@ namespace CryptoMarketClient {
         string ITicker.Name { get { return CurrencyPair; } }
         
         public void GetOrderBookSnapshot() {
-            PoloniexModel.Default.GetOrderBook(this, 100);
+            PoloniexModel.Default.GetOrderBook(this, 50);
         }
         TickerUpdateHelper updateHelper;
         protected TickerUpdateHelper UpdateHelper {
@@ -153,13 +153,16 @@ namespace CryptoMarketClient {
             UpdateHelper.UnsubscribeTradeUpdates();
         }
         void ITicker.UpdateOrderBook() {
-            PoloniexModel.Default.GetOrderBook(this, 100);
+            PoloniexModel.Default.GetOrderBook(this, 50);
         }
         void ITicker.UpdateTicker() {
             PoloniexModel.Default.GetTicker(this);
         }
         void ITicker.UpdateTrades() {
             PoloniexModel.Default.UpdateTrades(this);
+        }
+        public string DownloadString(string address) {
+            throw new NotImplementedException();
         }
     }
 }

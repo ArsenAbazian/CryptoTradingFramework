@@ -16,5 +16,8 @@ namespace CryptoMarketClient {
         public TradeFillType Fill { get; set;}
         public TradeType Type { get; set; }
         public int Id { get; set; }
+        public double Bid { get; set; }
+        public double Ask { get; set; }
+        public double Current { get; set; }
     }
 }

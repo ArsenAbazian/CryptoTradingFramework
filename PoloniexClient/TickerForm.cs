@@ -106,6 +106,7 @@ namespace CryptoMarketClient {
         void UpdateChart() {
             this.chartControl1.Series.Add(CreateLineSeries(Ticker.History, "Ask", Color.Red));
             this.chartControl1.Series.Add(CreateLineSeries(Ticker.History, "Bid", Color.Blue));
+            this.chartControl1.Series.Add(CreateLineSeries(Ticker.History, "Current", Color.DarkGray));
             this.chartControl1.Series.Add(CreateCandleStickSeries(CandleStickData));
             ((XYDiagram)this.chartControl1.Diagram).EnableAxisXScrolling = true;
             ((XYDiagram)this.chartControl1.Diagram).EnableAxisXZooming = true;
@@ -137,10 +138,12 @@ namespace CryptoMarketClient {
 
         Series CreateLineSeries(List<TickerHistoryItem> list, string str, Color color) {
             Series s = new Series();
+            s.Name = str;
             s.ArgumentDataMember = "Time";
             s.ValueDataMembers.AddRange(str);
             s.ValueScaleType = ScaleType.Numerical;
-            LineSeriesView view = new LineSeriesView();
+            s.ShowInLegend = true;
+            StepLineSeriesView view = new StepLineSeriesView();
             view.Color = color;
             view.LineStyle.Thickness = 1;
             s.View = view;
@@ -152,6 +155,7 @@ namespace CryptoMarketClient {
         Series CreateCandleStickSeries(List<CandleStickData> list) {
             Series s = new Series("Last", ViewType.CandleStick);
             s.ArgumentDataMember = "Time";
+            s.ArgumentScaleType = ScaleType.DateTime;
             s.ValueDataMembers.AddRange("Low", "High", "Open", "Close");
             s.ValueScaleType = ScaleType.Numerical;
             CandleStickSeriesView view = new CandleStickSeriesView();

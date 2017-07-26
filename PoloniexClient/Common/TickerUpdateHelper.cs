@@ -58,5 +58,16 @@ namespace CryptoMarketClient {
                     Ticker.UpdateTrades();
             }
         }
+        public static void UpdateHistoryForTradeItem(TradeHistoryItem item, ITicker ticker) {
+            for(int i = ticker.History.Count - 1; i >= 0; i--) {
+                TickerHistoryItem h = ticker.History[i];
+                if(h.Time.Ticks <= item.Time.Ticks) {
+                    item.Bid = h.Bid;
+                    item.Ask = h.Ask;
+                    item.Current = h.Current;
+                    break;
+                }
+            }
+        }
     }
 }

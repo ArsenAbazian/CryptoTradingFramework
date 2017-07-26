@@ -51,13 +51,14 @@
             this.barButtonItem1,
             this.btConnectBitrix});
             this.ribbonControl1.Location = new System.Drawing.Point(0, 0);
+            this.ribbonControl1.Margin = new System.Windows.Forms.Padding(7, 7, 7, 7);
             this.ribbonControl1.MaxItemId = 5;
             this.ribbonControl1.MdiMergeStyle = DevExpress.XtraBars.Ribbon.RibbonMdiMergeStyle.Always;
             this.ribbonControl1.Name = "ribbonControl1";
             this.ribbonControl1.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
             this.rpPoloniex,
             this.ribbonPage2});
-            this.ribbonControl1.Size = new System.Drawing.Size(1034, 143);
+            this.ribbonControl1.Size = new System.Drawing.Size(2240, 319);
             this.ribbonControl1.StatusBar = this.ribbonStatusBar1;
             // 
             // skinRibbonGalleryBarItem1
@@ -122,10 +123,11 @@
             // 
             // ribbonStatusBar1
             // 
-            this.ribbonStatusBar1.Location = new System.Drawing.Point(0, 493);
+            this.ribbonStatusBar1.Location = new System.Drawing.Point(0, 1098);
+            this.ribbonStatusBar1.Margin = new System.Windows.Forms.Padding(7, 7, 7, 7);
             this.ribbonStatusBar1.Name = "ribbonStatusBar1";
             this.ribbonStatusBar1.Ribbon = this.ribbonControl1;
-            this.ribbonStatusBar1.Size = new System.Drawing.Size(1034, 31);
+            this.ribbonStatusBar1.Size = new System.Drawing.Size(2240, 71);
             // 
             // documentManager1
             // 
@@ -142,12 +144,13 @@
             // MainForm
             // 
             this.AllowFormGlass = DevExpress.Utils.DefaultBoolean.False;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(13F, 29F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1034, 524);
+            this.ClientSize = new System.Drawing.Size(2240, 1169);
             this.Controls.Add(this.ribbonStatusBar1);
             this.Controls.Add(this.ribbonControl1);
             this.IsMdiContainer = true;
+            this.Margin = new System.Windows.Forms.Padding(7, 7, 7, 7);
             this.Name = "MainForm";
             this.Ribbon = this.ribbonControl1;
             this.StatusBar = this.ribbonStatusBar1;

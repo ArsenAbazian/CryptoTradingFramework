@@ -44,7 +44,8 @@ namespace CryptoMarketClient.Bittrex {
             while(AllowWorking) {
                 BittrexModel.Default.GetMarketsSummaryInfo();
                 lock(BittrexModel.Default.Markets) {
-                    BeginInvoke(new Action(UpdateGridAll));
+                    if(!IsDisposed)
+                        BeginInvoke(new Action(UpdateGridAll));
                 }
             }
         }
