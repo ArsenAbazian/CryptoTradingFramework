@@ -46,13 +46,17 @@ namespace CryptoMarketClient {
                 ClearChart();
                 UnsubscribeEvents(prev);
             }
-            this.currencyCard1.Ticker = Ticker;
+            this.tickerInfoControl.Ticker = Ticker;
             if(Ticker == null)
                 return;
+            UpdateTickerInfoControlHeight();
             UpdateText();
             UpdateGrid();
             UpdateChart();
             SubscribeEvents();
+        }
+        void UpdateTickerInfoControlHeight() {
+            this.tickerInfoControl.UpdateBestHeight();
         }
         void UpdateChart() {
             this.tickerChartViewer1.Ticker = Ticker;

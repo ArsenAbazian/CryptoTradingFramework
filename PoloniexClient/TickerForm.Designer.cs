@@ -43,7 +43,7 @@
             this.ribbonPageGroup1 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.sidePanel1 = new DevExpress.XtraEditors.SidePanel();
             this.sidePanel3 = new DevExpress.XtraEditors.SidePanel();
-            this.currencyCard1 = new CryptoMarketClient.TickerInfo();
+            this.tickerInfoControl = new CryptoMarketClient.TickerInfo();
             this.orderBookPanel = new DevExpress.XtraEditors.SidePanel();
             this.bidPanel = new DevExpress.XtraEditors.SidePanel();
             this.bidGridControl = new DevExpress.XtraGrid.GridControl();
@@ -129,7 +129,7 @@
             // sidePanel1
             // 
             this.sidePanel1.Controls.Add(this.sidePanel3);
-            this.sidePanel1.Controls.Add(this.currencyCard1);
+            this.sidePanel1.Controls.Add(this.tickerInfoControl);
             this.sidePanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.sidePanel1.Location = new System.Drawing.Point(245, 141);
             this.sidePanel1.Name = "sidePanel1";
@@ -149,13 +149,13 @@
             // 
             // currencyCard1
             // 
-            this.currencyCard1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.currencyCard1.Location = new System.Drawing.Point(0, 0);
-            this.currencyCard1.Margin = new System.Windows.Forms.Padding(7);
-            this.currencyCard1.Name = "currencyCard1";
-            this.currencyCard1.Size = new System.Drawing.Size(610, 108);
-            this.currencyCard1.TabIndex = 0;
-            this.currencyCard1.Ticker = null;
+            this.tickerInfoControl.Dock = System.Windows.Forms.DockStyle.Top;
+            this.tickerInfoControl.Location = new System.Drawing.Point(0, 0);
+            this.tickerInfoControl.Margin = new System.Windows.Forms.Padding(7);
+            this.tickerInfoControl.Name = "currencyCard1";
+            this.tickerInfoControl.Size = new System.Drawing.Size(610, 108);
+            this.tickerInfoControl.TabIndex = 0;
+            this.tickerInfoControl.Ticker = null;
             // 
             // orderBookPanel
             // 
@@ -485,7 +485,7 @@
         private DevExpress.XtraGrid.Columns.GridColumn gridColumn2;
         private DevExpress.XtraGrid.Columns.GridColumn gridColumn3;
         private DevExpress.XtraEditors.SidePanel askPanel;
-        private TickerInfo currencyCard1;
+        private TickerInfo tickerInfoControl;
         private DevExpress.XtraEditors.SidePanel sidePanel2;
         private DevExpress.XtraGrid.GridControl tradeGridControl;
         private DevExpress.XtraGrid.Views.Grid.GridView gridView1;

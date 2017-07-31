@@ -56,13 +56,13 @@
             this.colLowestAsk = new DevExpress.XtraGrid.Columns.TileViewColumn();
             this.colHr24High = new DevExpress.XtraGrid.Columns.TileViewColumn();
             this.colHr24Low = new DevExpress.XtraGrid.Columns.TileViewColumn();
+            this.colBidChange = new DevExpress.XtraGrid.Columns.TileViewColumn();
+            this.colAskChange = new DevExpress.XtraGrid.Columns.TileViewColumn();
             this.gridControl1 = new DevExpress.XtraGrid.GridControl();
             this.bindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.tileView1 = new DevExpress.XtraGrid.Views.Tile.TileView();
             this.colBaseVolume = new DevExpress.XtraGrid.Columns.TileViewColumn();
             this.colVolume = new DevExpress.XtraGrid.Columns.TileViewColumn();
-            this.colBidChange = new DevExpress.XtraGrid.Columns.TileViewColumn();
-            this.colAskChange = new DevExpress.XtraGrid.Columns.TileViewColumn();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tileView1)).BeginInit();
@@ -134,16 +134,36 @@
             this.colHr24Low.Visible = true;
             this.colHr24Low.VisibleIndex = 7;
             // 
+            // colBidChange
+            // 
+            this.colBidChange.Caption = "Bid Change";
+            this.colBidChange.DisplayFormat.FormatString = "F3";
+            this.colBidChange.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+            this.colBidChange.FieldName = "BidChange";
+            this.colBidChange.Name = "colBidChange";
+            this.colBidChange.Visible = true;
+            this.colBidChange.VisibleIndex = 10;
+            // 
+            // colAskChange
+            // 
+            this.colAskChange.Caption = "Ask Change";
+            this.colAskChange.DisplayFormat.FormatString = "F3";
+            this.colAskChange.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+            this.colAskChange.FieldName = "AskChange";
+            this.colAskChange.Name = "colAskChange";
+            this.colAskChange.Visible = true;
+            this.colAskChange.VisibleIndex = 11;
+            // 
             // gridControl1
             // 
             this.gridControl1.DataSource = this.bindingSource;
             this.gridControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gridControl1.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(1);
+            this.gridControl1.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.gridControl1.Location = new System.Drawing.Point(0, 0);
             this.gridControl1.MainView = this.tileView1;
-            this.gridControl1.Margin = new System.Windows.Forms.Padding(1);
+            this.gridControl1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.gridControl1.Name = "gridControl1";
-            this.gridControl1.Size = new System.Drawing.Size(521, 286);
+            this.gridControl1.Size = new System.Drawing.Size(1303, 638);
             this.gridControl1.TabIndex = 0;
             this.gridControl1.UseDirectXPaint = false;
             this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
@@ -331,33 +351,14 @@
             this.colVolume.Visible = true;
             this.colVolume.VisibleIndex = 5;
             // 
-            // colBidChange
+            // TickerInfo
             // 
-            this.colBidChange.Caption = "Bid Change";
-            this.colBidChange.DisplayFormat.FormatString = "F3";
-            this.colBidChange.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
-            this.colBidChange.FieldName = "BidChange";
-            this.colBidChange.Name = "colBidChange";
-            this.colBidChange.Visible = true;
-            this.colBidChange.VisibleIndex = 10;
-            // 
-            // colAskChange
-            // 
-            this.colAskChange.Caption = "Ask Change";
-            this.colAskChange.DisplayFormat.FormatString = "F3";
-            this.colAskChange.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
-            this.colAskChange.FieldName = "AskChange";
-            this.colAskChange.Name = "colAskChange";
-            this.colAskChange.Visible = true;
-            this.colAskChange.VisibleIndex = 11;
-            // 
-            // CurrencyCard
-            // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(13F, 29F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.gridControl1);
-            this.Name = "CurrencyCard";
-            this.Size = new System.Drawing.Size(521, 286);
+            this.Margin = new System.Windows.Forms.Padding(7, 7, 7, 7);
+            this.Name = "TickerInfo";
+            this.Size = new System.Drawing.Size(1303, 638);
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tileView1)).EndInit();

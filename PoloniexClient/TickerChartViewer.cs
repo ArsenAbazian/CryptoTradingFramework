@@ -31,8 +31,8 @@ namespace CryptoMarketClient {
         }
         void OnTickerChanged(ITicker prev) {
             if(prev != null) {
-                prev.OrderBook.OnChanged += OrderBook_OnChanged;
-                prev.HistoryItemAdd += Ticker_HistoryItemAdd;
+                prev.OrderBook.OnChanged -= OrderBook_OnChanged;
+                prev.HistoryItemAdd -= Ticker_HistoryItemAdd;
             }
             if(Ticker != null) {
                 Ticker.OrderBook.OnChanged += OrderBook_OnChanged;

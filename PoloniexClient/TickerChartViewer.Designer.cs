@@ -45,6 +45,7 @@ namespace CryptoMarketClient {
             this.bcCandle = new DevExpress.XtraBars.BarCheckItem();
             this.bcColoredCandle = new DevExpress.XtraBars.BarCheckItem();
             this.bcLine = new DevExpress.XtraBars.BarCheckItem();
+            this.bcArea = new DevExpress.XtraBars.BarCheckItem();
             this.barDockControlTop = new DevExpress.XtraBars.BarDockControl();
             this.barDockControlBottom = new DevExpress.XtraBars.BarDockControl();
             this.barDockControlLeft = new DevExpress.XtraBars.BarDockControl();
@@ -54,11 +55,14 @@ namespace CryptoMarketClient {
             this.repositoryItemCheckedComboBoxEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemCheckedComboBoxEdit();
             this.repositoryItemComboBox1 = new DevExpress.XtraEditors.Repository.RepositoryItemComboBox();
             this.chartControl1 = new DevExpress.XtraCharts.ChartControl();
-            this.bcArea = new DevExpress.XtraBars.BarCheckItem();
+            this.sidePanel1 = new DevExpress.XtraEditors.SidePanel();
+            this.rangeControl1 = new DevExpress.XtraEditors.RangeControl();
             ((System.ComponentModel.ISupportInitialize)(this.barManager1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckedComboBoxEdit1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemComboBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chartControl1)).BeginInit();
+            this.sidePanel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.rangeControl1)).BeginInit();
             this.SuspendLayout();
             // 
             // barManager1
@@ -255,37 +259,49 @@ namespace CryptoMarketClient {
             this.bcLine.Name = "bcLine";
             this.bcLine.CheckedChanged += new DevExpress.XtraBars.ItemClickEventHandler(this.OnChartTypeChanged);
             // 
+            // bcArea
+            // 
+            this.bcArea.Caption = "Area";
+            this.bcArea.GroupIndex = 33;
+            this.bcArea.Id = 20;
+            this.bcArea.Name = "bcArea";
+            this.bcArea.CheckedChanged += new DevExpress.XtraBars.ItemClickEventHandler(this.OnChartTypeChanged);
+            // 
             // barDockControlTop
             // 
             this.barDockControlTop.CausesValidation = false;
             this.barDockControlTop.Dock = System.Windows.Forms.DockStyle.Top;
             this.barDockControlTop.Location = new System.Drawing.Point(0, 0);
             this.barDockControlTop.Manager = this.barManager1;
-            this.barDockControlTop.Size = new System.Drawing.Size(726, 31);
+            this.barDockControlTop.Margin = new System.Windows.Forms.Padding(7, 7, 7, 7);
+            this.barDockControlTop.Size = new System.Drawing.Size(1694, 68);
             // 
             // barDockControlBottom
             // 
             this.barDockControlBottom.CausesValidation = false;
             this.barDockControlBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.barDockControlBottom.Location = new System.Drawing.Point(0, 420);
+            this.barDockControlBottom.Location = new System.Drawing.Point(0, 937);
             this.barDockControlBottom.Manager = this.barManager1;
-            this.barDockControlBottom.Size = new System.Drawing.Size(726, 0);
+            this.barDockControlBottom.Margin = new System.Windows.Forms.Padding(7, 7, 7, 7);
+            this.barDockControlBottom.Size = new System.Drawing.Size(1694, 0);
             // 
             // barDockControlLeft
             // 
             this.barDockControlLeft.CausesValidation = false;
             this.barDockControlLeft.Dock = System.Windows.Forms.DockStyle.Left;
-            this.barDockControlLeft.Location = new System.Drawing.Point(0, 31);
+            this.barDockControlLeft.Location = new System.Drawing.Point(0, 68);
             this.barDockControlLeft.Manager = this.barManager1;
-            this.barDockControlLeft.Size = new System.Drawing.Size(0, 389);
+            this.barDockControlLeft.Margin = new System.Windows.Forms.Padding(7, 7, 7, 7);
+            this.barDockControlLeft.Size = new System.Drawing.Size(0, 869);
             // 
             // barDockControlRight
             // 
             this.barDockControlRight.CausesValidation = false;
             this.barDockControlRight.Dock = System.Windows.Forms.DockStyle.Right;
-            this.barDockControlRight.Location = new System.Drawing.Point(726, 31);
+            this.barDockControlRight.Location = new System.Drawing.Point(1694, 68);
             this.barDockControlRight.Manager = this.barManager1;
-            this.barDockControlRight.Size = new System.Drawing.Size(0, 389);
+            this.barDockControlRight.Margin = new System.Windows.Forms.Padding(7, 7, 7, 7);
+            this.barDockControlRight.Size = new System.Drawing.Size(0, 869);
             // 
             // barButtonItem1
             // 
@@ -322,35 +338,52 @@ namespace CryptoMarketClient {
             this.chartControl1.Legend.MarkerMode = DevExpress.XtraCharts.LegendMarkerMode.CheckBoxAndMarker;
             this.chartControl1.Legend.Name = "Default Legend";
             this.chartControl1.Legend.Visibility = DevExpress.Utils.DefaultBoolean.True;
-            this.chartControl1.Location = new System.Drawing.Point(0, 31);
+            this.chartControl1.Location = new System.Drawing.Point(0, 0);
+            this.chartControl1.Margin = new System.Windows.Forms.Padding(7, 7, 7, 7);
             this.chartControl1.Name = "chartControl1";
             this.chartControl1.SeriesSerializable = new DevExpress.XtraCharts.Series[0];
-            this.chartControl1.Size = new System.Drawing.Size(726, 389);
+            this.chartControl1.Size = new System.Drawing.Size(1694, 681);
             this.chartControl1.TabIndex = 4;
             // 
-            // bcArea
+            // sidePanel1
             // 
-            this.bcArea.Caption = "Area";
-            this.bcArea.GroupIndex = 33;
-            this.bcArea.Id = 20;
-            this.bcArea.Name = "bcArea";
-            this.bcArea.CheckedChanged += new DevExpress.XtraBars.ItemClickEventHandler(this.OnChartTypeChanged);
+            this.sidePanel1.Controls.Add(this.chartControl1);
+            this.sidePanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.sidePanel1.Location = new System.Drawing.Point(0, 68);
+            this.sidePanel1.Name = "sidePanel1";
+            this.sidePanel1.Size = new System.Drawing.Size(1694, 681);
+            this.sidePanel1.TabIndex = 9;
+            this.sidePanel1.Text = "sidePanel1";
+            // 
+            // rangeControl1
+            // 
+            this.rangeControl1.Client = this.chartControl1;
+            this.rangeControl1.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.rangeControl1.Location = new System.Drawing.Point(0, 749);
+            this.rangeControl1.Name = "rangeControl1";
+            this.rangeControl1.Size = new System.Drawing.Size(1694, 188);
+            this.rangeControl1.TabIndex = 10;
+            this.rangeControl1.Text = "rangeControl1";
             // 
             // TickerChartViewer
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(14F, 29F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.chartControl1);
+            this.Controls.Add(this.sidePanel1);
+            this.Controls.Add(this.rangeControl1);
             this.Controls.Add(this.barDockControlLeft);
             this.Controls.Add(this.barDockControlRight);
             this.Controls.Add(this.barDockControlBottom);
             this.Controls.Add(this.barDockControlTop);
+            this.Margin = new System.Windows.Forms.Padding(7, 7, 7, 7);
             this.Name = "TickerChartViewer";
-            this.Size = new System.Drawing.Size(726, 420);
+            this.Size = new System.Drawing.Size(1694, 937);
             ((System.ComponentModel.ISupportInitialize)(this.barManager1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckedComboBoxEdit1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemComboBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.chartControl1)).EndInit();
+            this.sidePanel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.rangeControl1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -386,5 +419,7 @@ namespace CryptoMarketClient {
         private BarButtonItem barButtonItem2;
         private BarCheckItem bcLine;
         private BarCheckItem bcArea;
+        private DevExpress.XtraEditors.SidePanel sidePanel1;
+        private DevExpress.XtraEditors.RangeControl rangeControl1;
     }
 }

@@ -15,6 +15,8 @@ namespace CryptoMarketClient {
     public partial class TickerInfo : XtraUserControl {
         public TickerInfo() {
             InitializeComponent();
+            this.gridControl1.ForceInitialize();
+            
         }
 
         ITicker ticker;
@@ -28,7 +30,7 @@ namespace CryptoMarketClient {
                 OnTickerChanged(prev);
             }
         }
-
+        
         void OnTickerChanged(ITicker prev) {
             if(prev != null)
                 prev.HistoryItemAdd -= Ticker_Changed;
@@ -53,8 +55,15 @@ namespace CryptoMarketClient {
             this.gridControl1.RefreshDataSource();
         }
 
-        public int CalcBestheight() {
-            return 0;
+        public int CalcBestHeight() {
+            TileViewInfo viewInfo = (TileViewInfo)this.tileView1.GetViewInfo();
+            TileItem item = viewInfo.DefaultGroup.Items[0];
+            return item.ItemInfo.GetOptimizedTableSettings().ItemHeight;
+        }
+
+        public void UpdateBestHeight() {
+            this.tileView1.OptionsTiles.ItemSize = new Size(this.tileView1.OptionsTiles.ItemSize.Width, this.CalcBestHeight());
+            Height = this.tileView1.OptionsTiles.ItemSize.Height + 20;
         }
     }
 }
