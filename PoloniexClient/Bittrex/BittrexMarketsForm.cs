@@ -89,5 +89,9 @@ namespace CryptoMarketClient.Bittrex {
             form.MdiParent = MdiParent;
             form.Show();
         }
+
+        private void gridView1_DoubleClick(object sender, EventArgs e) {
+            ShowDetailsForSelectedItemCore();
+        }
     }
 }

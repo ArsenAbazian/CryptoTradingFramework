@@ -38,25 +38,29 @@ namespace CryptoMarketClient {
                 OnTickerChanged(prev);
             }
         }
-        protected List<CandleStickData> CandleStickData { get; private set; }
+        
         void OnTickerChanged(ITicker prev) {
             if(prev != null) {
                 ClearText();
                 ClearGrid();
+                ClearChart();
                 UnsubscribeEvents(prev);
             }
             this.currencyCard1.Ticker = Ticker;
             if(Ticker == null)
                 return;
             UpdateText();
-            CreateCandleStickDataSource();
             UpdateGrid();
-            SubscribeEvents();
             UpdateChart();
+            SubscribeEvents();
         }
-        void CreateCandleStickDataSource() {
-            CandleStickData = CandleStickChartHelper.CreateCandleStickData(Ticker.History, 60);
+        void UpdateChart() {
+            this.tickerChartViewer1.Ticker = Ticker;
         }
+        void ClearChart() {
+            this.tickerChartViewer1.Ticker = null;
+        }
+
         void ClearText() {
             Text = string.Empty;
             this.ribbonPageGroup1.Text = string.Empty;
@@ -69,7 +73,6 @@ namespace CryptoMarketClient {
             this.askGridControl.DataSource = null;
             this.bidGridControl.DataSource = null;
             this.tradeHistoryItemBindingSource.DataSource = null;
-            //this.tradeGridControl.DataSource = null;
         }
         void UnsubscribeEvents(ITicker prev) {
             prev.OrderBook.OnChanged -= OnTickerOrderBookChanged;
@@ -84,7 +87,6 @@ namespace CryptoMarketClient {
             this.askGridControl.DataSource = Ticker.OrderBook.Asks;
             this.bidGridControl.DataSource = Ticker.OrderBook.Bids;
             this.tradeHistoryItemBindingSource.DataSource = Ticker.TradeHistory;
-            //this.tradeGridControl.DataSource = Ticker.TradeHistory;
         }
         void SubscribeEvents() {
             Ticker.OrderBook.OnChanged += OnTickerOrderBookChanged;
@@ -102,29 +104,11 @@ namespace CryptoMarketClient {
             if(IsHandleCreated)
                 BeginInvoke(new MethodInvoker(this.tradeGridControl.RefreshDataSource));
         }
-
-        void UpdateChart() {
-            this.chartControl1.Series.Add(CreateLineSeries(Ticker.History, "Ask", Color.Red));
-            this.chartControl1.Series.Add(CreateLineSeries(Ticker.History, "Bid", Color.Blue));
-            this.chartControl1.Series.Add(CreateLineSeries(Ticker.History, "Current", Color.DarkGray));
-            this.chartControl1.Series.Add(CreateCandleStickSeries(CandleStickData));
-            ((XYDiagram)this.chartControl1.Diagram).EnableAxisXScrolling = true;
-            ((XYDiagram)this.chartControl1.Diagram).EnableAxisXZooming = true;
-            ((XYDiagram)this.chartControl1.Diagram).EnableAxisYScrolling = true;
-            ((XYDiagram)this.chartControl1.Diagram).EnableAxisYZooming = true;
-            ((XYDiagram)this.chartControl1.Diagram).AxisX.DateTimeScaleOptions.MeasureUnit = DateTimeMeasureUnit.Second;
-            ((XYDiagram)this.chartControl1.Diagram).AxisY.WholeRange.AlwaysShowZeroLevel = false;
-        }
-
+        
         private void OnTickerHistoryItemAdded(object sender, EventArgs e) {
-            CandleStickChartHelper.AddCandleStickData(CandleStickData, Ticker.History[Ticker.History.Count - 1], 60);
-            if(IsHandleCreated)
-                BeginInvoke(new MethodInvoker(this.chartControl1.RefreshData));
         }
 
         private void OnTickerChanged(object sender, EventArgs e) {
-            if(IsHandleCreated)
-                BeginInvoke(new MethodInvoker(this.chartControl1.RefreshData));
         }
 
         protected override void OnShown(EventArgs e) {
@@ -135,43 +119,7 @@ namespace CryptoMarketClient {
                 Ticker.SubscribeTradeUpdates();
             }
         }
-
-        Series CreateLineSeries(List<TickerHistoryItem> list, string str, Color color) {
-            Series s = new Series();
-            s.Name = str;
-            s.ArgumentDataMember = "Time";
-            s.ValueDataMembers.AddRange(str);
-            s.ValueScaleType = ScaleType.Numerical;
-            s.ShowInLegend = true;
-            StepLineSeriesView view = new StepLineSeriesView();
-            view.Color = color;
-            view.LineStyle.Thickness = 1;
-            s.View = view;
-            s.DataSource = list;
-            return s;
-        }
-
         
-        Series CreateCandleStickSeries(List<CandleStickData> list) {
-            Series s = new Series("Last", ViewType.CandleStick);
-            s.ArgumentDataMember = "Time";
-            s.ArgumentScaleType = ScaleType.DateTime;
-            s.ValueDataMembers.AddRange("Low", "High", "Open", "Close");
-            s.ValueScaleType = ScaleType.Numerical;
-            CandleStickSeriesView view = new CandleStickSeriesView();
-
-            view.LineThickness = 2;
-            view.LevelLineLength = 0.25;
-            view.ReductionOptions.ColorMode = ReductionColorMode.OpenToCloseValue;
-            view.ReductionOptions.FillMode = CandleStickFillMode.FilledOnReduction;
-            view.ReductionOptions.Level = StockLevel.Open;
-            view.ReductionOptions.Visible = true;
-
-            s.View = view;
-            s.DataSource = list;
-            return s;
-        }
-
         private void OnTickerOrderBookChanged(object sender, OrderBookEventArgs e) {
             if(!IsHandleCreated)
                 return;
@@ -222,14 +170,14 @@ namespace CryptoMarketClient {
         }
         void RefreshBidGrid() {
             this.bidGridControl.RefreshDataSource();
-            this.bidGridControl.Invalidate();
-            this.bidGridControl.Update();
+            //this.bidGridControl.Invalidate();
+            //this.bidGridControl.Update();
         }
         void RefreshAskGrid() {
             this.askGridControl.RefreshDataSource();
             this.askGridView.TopRowIndex = Ticker.OrderBook.Asks.Count;
-            this.askGridControl.Invalidate();
-            this.askGridControl.Update();
+            //this.askGridControl.Invalidate();
+            //this.askGridControl.Update();
         }
 
         private void askGridControl_Resize(object sender, EventArgs e) {

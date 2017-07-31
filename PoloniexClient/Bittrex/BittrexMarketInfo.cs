@@ -29,26 +29,25 @@ namespace CryptoMarketClient.Bittrex {
         public string DisplayMarketName { get; set; }
         public double Hr24High { get; set; }
         public double Hr24Low { get; set; }
+        public double Change { get; set; }
+        public double Spread { get { return LowestAsk - HighestBid; } }
+        public double BidChange { get; set; }
+        public double AskChange { get; set; }
+        public int CandleStickPeriodMin { get; set; } = 1;
 
         public List<TickerHistoryItem> History { get; } = new List<TickerHistoryItem>();
         public List<TradeHistoryItem> TradeHistory { get; } = new List<TradeHistoryItem>();
+        public List<CandleStickData> CandleStickData { get; set; } = new List<CandleStickData>();
+
         public event EventHandler HistoryItemAdd;
         public event EventHandler Changed;
         public event EventHandler TradeHistoryAdd;
 
         public void UpdateHistoryItem() {
-            TickerHistoryItem last = History.Count == 0? null: History.Last();
-            if(History.Count > 36000)
-                History.RemoveAt(0);
-            if(last != null) {
-                if(last.Ask == LowestAsk && last.Bid == HighestBid && last.Current == Last)
-                    return;
-            }
-            History.Add(new TickerHistoryItem() { Time = Time, Ask = LowestAsk, Bid = HighestBid, Current = Last });
-            RaiseHistoryItemAdded();
+            TickerUpdateHelper.UpdateHistoryItem(this);
         }
 
-        void RaiseHistoryItemAdded() {
+        void ITicker.RaiseHistoryItemAdded() {
             if(HistoryItemAdd != null)
                 HistoryItemAdd(this, EventArgs.Empty);
         }

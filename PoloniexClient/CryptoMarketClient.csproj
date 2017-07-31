@@ -125,11 +125,17 @@
     <Compile Include="Common\TickerHistoryItem.cs" />
     <Compile Include="Common\TickerUpdateHelper.cs" />
     <Compile Include="Common\TradeHistoryItem.cs" />
-    <Compile Include="CurrencyCard.cs">
+    <Compile Include="TickerInfo.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="CurrencyCard.Designer.cs">
-      <DependentUpon>CurrencyCard.cs</DependentUpon>
+    <Compile Include="TickerInfo.Designer.cs">
+      <DependentUpon>TickerInfo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TickerChartViewer.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="TickerChartViewer.Designer.cs">
+      <DependentUpon>TickerChartViewer.cs</DependentUpon>
     </Compile>
     <Compile Include="TickerForm.cs">
       <SubType>Form</SubType>
@@ -162,10 +168,13 @@
     <EmbeddedResource Include="Bittrex\BittrexMarketsForm.resx">
       <DependentUpon>BittrexMarketsForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="CurrencyCard.resx">
-      <DependentUpon>CurrencyCard.cs</DependentUpon>
+    <EmbeddedResource Include="TickerInfo.resx">
+      <DependentUpon>TickerInfo.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\licenses.licx" />
+    <EmbeddedResource Include="TickerChartViewer.resx">
+      <DependentUpon>TickerChartViewer.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="TickerForm.resx">
       <DependentUpon>TickerForm.cs</DependentUpon>
     </EmbeddedResource>

@@ -239,10 +239,10 @@ namespace CryptoMarketClient.Bittrex {
                             item.Fill = obj.Value<string>("FillType") == "FILL" ? TradeFillType.Fill : TradeFillType.PartialFill;
                             info.TradeHistory.Add(item);
                             TickerUpdateHelper.UpdateHistoryForTradeItem(item, info);
-                            Timer.Stop();
-                            Console.WriteLine(DateTime.Now.ToString("hh:mm:ss.fff") + " trade add. process time = " + Timer.ElapsedMilliseconds);
                         }
                     }
+                    Timer.Stop();
+                    Console.WriteLine(DateTime.Now.ToString("hh:mm:ss.fff") + " trade add. process time = " + Timer.ElapsedMilliseconds);
                     info.RaiseTradeHistoryAdd();
                 }
             }
@@ -284,10 +284,10 @@ namespace CryptoMarketClient.Bittrex {
                             item.Fill = obj.Value<string>("FillType") == "FILL" ? TradeFillType.Fill : TradeFillType.PartialFill;
                             TickerUpdateHelper.UpdateHistoryForTradeItem(item, info);
                             UpdateList.Add(item);
-                            Timer.Stop();
-                            Console.WriteLine(info.Time.ToString("hh:mm:ss.fff") + " trade update. process time = " + Timer.ElapsedMilliseconds);
                         }
                     }
+                    Timer.Stop();
+                    Console.WriteLine(info.Time.ToString("hh:mm:ss.fff") + " trade update. process time = " + Timer.ElapsedMilliseconds);
                     info.RaiseTradeHistoryAdd();
                 }
             }

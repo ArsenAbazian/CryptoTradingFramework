@@ -43,8 +43,7 @@
             this.ribbonPageGroup1 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.sidePanel1 = new DevExpress.XtraEditors.SidePanel();
             this.sidePanel3 = new DevExpress.XtraEditors.SidePanel();
-            this.chartControl1 = new DevExpress.XtraCharts.ChartControl();
-            this.currencyCard1 = new CryptoMarketClient.CurrencyCard();
+            this.currencyCard1 = new CryptoMarketClient.TickerInfo();
             this.orderBookPanel = new DevExpress.XtraEditors.SidePanel();
             this.bidPanel = new DevExpress.XtraEditors.SidePanel();
             this.bidGridControl = new DevExpress.XtraGrid.GridControl();
@@ -67,10 +66,10 @@
             this.colBid = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colAsk = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colCurrent = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.tickerChartViewer1 = new CryptoMarketClient.TickerChartViewer();
             ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).BeginInit();
             this.sidePanel1.SuspendLayout();
             this.sidePanel3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.chartControl1)).BeginInit();
             this.orderBookPanel.SuspendLayout();
             this.bidPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.bidGridControl)).BeginInit();
@@ -99,7 +98,7 @@
             this.colAmount.FieldName = "Amount";
             this.colAmount.Name = "colAmount";
             this.colAmount.Visible = true;
-            this.colAmount.VisibleIndex = 2;
+            this.colAmount.VisibleIndex = 1;
             // 
             // ribbonControl1
             // 
@@ -107,12 +106,11 @@
             this.ribbonControl1.Items.AddRange(new DevExpress.XtraBars.BarItem[] {
             this.ribbonControl1.ExpandCollapseItem});
             this.ribbonControl1.Location = new System.Drawing.Point(0, 0);
-            this.ribbonControl1.Margin = new System.Windows.Forms.Padding(7);
             this.ribbonControl1.MaxItemId = 1;
             this.ribbonControl1.Name = "ribbonControl1";
             this.ribbonControl1.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
             this.rpPoloniex});
-            this.ribbonControl1.Size = new System.Drawing.Size(2455, 315);
+            this.ribbonControl1.Size = new System.Drawing.Size(1133, 141);
             // 
             // rpPoloniex
             // 
@@ -133,47 +131,29 @@
             this.sidePanel1.Controls.Add(this.sidePanel3);
             this.sidePanel1.Controls.Add(this.currencyCard1);
             this.sidePanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.sidePanel1.Location = new System.Drawing.Point(531, 315);
-            this.sidePanel1.Margin = new System.Windows.Forms.Padding(7);
+            this.sidePanel1.Location = new System.Drawing.Point(245, 141);
             this.sidePanel1.Name = "sidePanel1";
-            this.sidePanel1.Size = new System.Drawing.Size(1322, 907);
+            this.sidePanel1.Size = new System.Drawing.Size(610, 331);
             this.sidePanel1.TabIndex = 1;
             this.sidePanel1.Text = "sidePanel1";
             // 
             // sidePanel3
             // 
-            this.sidePanel3.Controls.Add(this.chartControl1);
+            this.sidePanel3.Controls.Add(this.tickerChartViewer1);
             this.sidePanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.sidePanel3.Location = new System.Drawing.Point(0, 241);
-            this.sidePanel3.Margin = new System.Windows.Forms.Padding(7);
+            this.sidePanel3.Location = new System.Drawing.Point(0, 108);
             this.sidePanel3.Name = "sidePanel3";
-            this.sidePanel3.Size = new System.Drawing.Size(1322, 666);
+            this.sidePanel3.Size = new System.Drawing.Size(610, 223);
             this.sidePanel3.TabIndex = 2;
             this.sidePanel3.Text = "sidePanel3";
-            // 
-            // chartControl1
-            // 
-            this.chartControl1.BorderOptions.Visibility = DevExpress.Utils.DefaultBoolean.False;
-            this.chartControl1.DataBindings = null;
-            this.chartControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chartControl1.Legend.Border.Visibility = DevExpress.Utils.DefaultBoolean.True;
-            this.chartControl1.Legend.MarkerMode = DevExpress.XtraCharts.LegendMarkerMode.CheckBoxAndMarker;
-            this.chartControl1.Legend.Name = "Default Legend";
-            this.chartControl1.Legend.Visibility = DevExpress.Utils.DefaultBoolean.True;
-            this.chartControl1.Location = new System.Drawing.Point(0, 0);
-            this.chartControl1.Margin = new System.Windows.Forms.Padding(7);
-            this.chartControl1.Name = "chartControl1";
-            this.chartControl1.SeriesSerializable = new DevExpress.XtraCharts.Series[0];
-            this.chartControl1.Size = new System.Drawing.Size(1322, 666);
-            this.chartControl1.TabIndex = 0;
             // 
             // currencyCard1
             // 
             this.currencyCard1.Dock = System.Windows.Forms.DockStyle.Top;
             this.currencyCard1.Location = new System.Drawing.Point(0, 0);
-            this.currencyCard1.Margin = new System.Windows.Forms.Padding(15, 16, 15, 16);
+            this.currencyCard1.Margin = new System.Windows.Forms.Padding(7);
             this.currencyCard1.Name = "currencyCard1";
-            this.currencyCard1.Size = new System.Drawing.Size(1322, 241);
+            this.currencyCard1.Size = new System.Drawing.Size(610, 108);
             this.currencyCard1.TabIndex = 0;
             this.currencyCard1.Ticker = null;
             // 
@@ -182,10 +162,9 @@
             this.orderBookPanel.Controls.Add(this.bidPanel);
             this.orderBookPanel.Controls.Add(this.askPanel);
             this.orderBookPanel.Dock = System.Windows.Forms.DockStyle.Left;
-            this.orderBookPanel.Location = new System.Drawing.Point(0, 315);
-            this.orderBookPanel.Margin = new System.Windows.Forms.Padding(7);
+            this.orderBookPanel.Location = new System.Drawing.Point(0, 141);
             this.orderBookPanel.Name = "orderBookPanel";
-            this.orderBookPanel.Size = new System.Drawing.Size(531, 907);
+            this.orderBookPanel.Size = new System.Drawing.Size(245, 331);
             this.orderBookPanel.TabIndex = 1;
             this.orderBookPanel.Text = "sidePanel2";
             this.orderBookPanel.Resize += new System.EventHandler(this.sidePanel2_Resize);
@@ -194,24 +173,22 @@
             // 
             this.bidPanel.Controls.Add(this.bidGridControl);
             this.bidPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.bidPanel.Location = new System.Drawing.Point(0, 558);
-            this.bidPanel.Margin = new System.Windows.Forms.Padding(7);
+            this.bidPanel.Location = new System.Drawing.Point(0, 250);
             this.bidPanel.Name = "bidPanel";
-            this.bidPanel.Size = new System.Drawing.Size(530, 349);
+            this.bidPanel.Size = new System.Drawing.Size(244, 81);
             this.bidPanel.TabIndex = 2;
             this.bidPanel.Text = "sidePanel5";
             // 
             // bidGridControl
             // 
             this.bidGridControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.bidGridControl.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(7);
             this.bidGridControl.Location = new System.Drawing.Point(0, 0);
             this.bidGridControl.MainView = this.bidGridView;
-            this.bidGridControl.Margin = new System.Windows.Forms.Padding(7);
             this.bidGridControl.MenuManager = this.ribbonControl1;
             this.bidGridControl.Name = "bidGridControl";
-            this.bidGridControl.Size = new System.Drawing.Size(530, 349);
+            this.bidGridControl.Size = new System.Drawing.Size(244, 81);
             this.bidGridControl.TabIndex = 1;
+            this.bidGridControl.UseDirectXPaint = false;
             this.bidGridControl.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.bidGridView});
             // 
@@ -253,23 +230,21 @@
             this.askPanel.Controls.Add(this.askGridControl);
             this.askPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.askPanel.Location = new System.Drawing.Point(0, 0);
-            this.askPanel.Margin = new System.Windows.Forms.Padding(7);
             this.askPanel.Name = "askPanel";
-            this.askPanel.Size = new System.Drawing.Size(530, 558);
+            this.askPanel.Size = new System.Drawing.Size(244, 250);
             this.askPanel.TabIndex = 1;
             this.askPanel.Text = "sidePanel4";
             // 
             // askGridControl
             // 
             this.askGridControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.askGridControl.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(7);
             this.askGridControl.Location = new System.Drawing.Point(0, 0);
             this.askGridControl.MainView = this.askGridView;
-            this.askGridControl.Margin = new System.Windows.Forms.Padding(7);
             this.askGridControl.MenuManager = this.ribbonControl1;
             this.askGridControl.Name = "askGridControl";
-            this.askGridControl.Size = new System.Drawing.Size(530, 557);
+            this.askGridControl.Size = new System.Drawing.Size(244, 249);
             this.askGridControl.TabIndex = 0;
+            this.askGridControl.UseDirectXPaint = false;
             this.askGridControl.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.askGridView});
             this.askGridControl.Resize += new System.EventHandler(this.askGridControl_Resize);
@@ -313,10 +288,9 @@
             // 
             this.sidePanel2.Controls.Add(this.tradeGridControl);
             this.sidePanel2.Dock = System.Windows.Forms.DockStyle.Right;
-            this.sidePanel2.Location = new System.Drawing.Point(1853, 315);
-            this.sidePanel2.Margin = new System.Windows.Forms.Padding(7);
+            this.sidePanel2.Location = new System.Drawing.Point(855, 141);
             this.sidePanel2.Name = "sidePanel2";
-            this.sidePanel2.Size = new System.Drawing.Size(602, 907);
+            this.sidePanel2.Size = new System.Drawing.Size(278, 331);
             this.sidePanel2.TabIndex = 3;
             this.sidePanel2.Text = "sidePanel2";
             // 
@@ -324,14 +298,13 @@
             // 
             this.tradeGridControl.DataSource = this.tradeHistoryItemBindingSource;
             this.tradeGridControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tradeGridControl.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(7);
             this.tradeGridControl.Location = new System.Drawing.Point(1, 0);
             this.tradeGridControl.MainView = this.gridView1;
-            this.tradeGridControl.Margin = new System.Windows.Forms.Padding(7);
             this.tradeGridControl.MenuManager = this.ribbonControl1;
             this.tradeGridControl.Name = "tradeGridControl";
-            this.tradeGridControl.Size = new System.Drawing.Size(601, 907);
+            this.tradeGridControl.Size = new System.Drawing.Size(277, 331);
             this.tradeGridControl.TabIndex = 0;
+            this.tradeGridControl.UseDirectXPaint = false;
             this.tradeGridControl.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridView1});
             // 
@@ -411,14 +384,14 @@
             this.colTime.FieldName = "Time";
             this.colTime.Name = "colTime";
             this.colTime.Visible = true;
-            this.colTime.VisibleIndex = 1;
+            this.colTime.VisibleIndex = 0;
             // 
             // colRate
             // 
             this.colRate.FieldName = "Rate";
             this.colRate.Name = "colRate";
             this.colRate.Visible = true;
-            this.colRate.VisibleIndex = 3;
+            this.colRate.VisibleIndex = 2;
             // 
             // colTotal
             // 
@@ -430,7 +403,7 @@
             this.colId.FieldName = "Id";
             this.colId.Name = "colId";
             this.colId.Visible = true;
-            this.colId.VisibleIndex = 4;
+            this.colId.VisibleIndex = 3;
             // 
             // colBid
             // 
@@ -438,7 +411,7 @@
             this.colBid.FieldName = "Bid";
             this.colBid.Name = "colBid";
             this.colBid.Visible = true;
-            this.colBid.VisibleIndex = 0;
+            this.colBid.VisibleIndex = 4;
             // 
             // colAsk
             // 
@@ -456,22 +429,28 @@
             this.colCurrent.Visible = true;
             this.colCurrent.VisibleIndex = 6;
             // 
+            // tickerChartViewer1
+            // 
+            this.tickerChartViewer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tickerChartViewer1.Location = new System.Drawing.Point(0, 0);
+            this.tickerChartViewer1.Name = "tickerChartViewer1";
+            this.tickerChartViewer1.Size = new System.Drawing.Size(610, 223);
+            this.tickerChartViewer1.TabIndex = 0;
+            // 
             // TickerForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(13F, 29F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(2455, 1222);
+            this.ClientSize = new System.Drawing.Size(1133, 472);
             this.Controls.Add(this.sidePanel1);
             this.Controls.Add(this.sidePanel2);
             this.Controls.Add(this.orderBookPanel);
             this.Controls.Add(this.ribbonControl1);
-            this.Margin = new System.Windows.Forms.Padding(7);
             this.Name = "TickerForm";
             this.Text = "ProcessWMPaint Msg = 15  Time = 8";
             ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).EndInit();
             this.sidePanel1.ResumeLayout(false);
             this.sidePanel3.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.chartControl1)).EndInit();
             this.orderBookPanel.ResumeLayout(false);
             this.bidPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.bidGridControl)).EndInit();
@@ -494,7 +473,6 @@
         private DevExpress.XtraBars.Ribbon.RibbonPage rpPoloniex;
         private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup1;
         private DevExpress.XtraEditors.SidePanel sidePanel1;
-        private DevExpress.XtraCharts.ChartControl chartControl1;
         private DevExpress.XtraGrid.GridControl askGridControl;
         private DevExpress.XtraGrid.Views.Grid.GridView askGridView;
         private DevExpress.XtraGrid.Columns.GridColumn gcRate;
@@ -507,7 +485,7 @@
         private DevExpress.XtraGrid.Columns.GridColumn gridColumn2;
         private DevExpress.XtraGrid.Columns.GridColumn gridColumn3;
         private DevExpress.XtraEditors.SidePanel askPanel;
-        private CurrencyCard currencyCard1;
+        private TickerInfo currencyCard1;
         private DevExpress.XtraEditors.SidePanel sidePanel2;
         private DevExpress.XtraGrid.GridControl tradeGridControl;
         private DevExpress.XtraGrid.Views.Grid.GridView gridView1;
@@ -522,5 +500,6 @@
         private DevExpress.XtraGrid.Columns.GridColumn colBid;
         private DevExpress.XtraGrid.Columns.GridColumn colAsk;
         private DevExpress.XtraGrid.Columns.GridColumn colCurrent;
+        private TickerChartViewer tickerChartViewer1;
     }
 }

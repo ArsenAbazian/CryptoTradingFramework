@@ -57,27 +57,32 @@ namespace CryptoMarketClient {
             }
         }
 
-        public double PercentChange { get; set; }
+        public double Change { get; set; }
         public double BaseVolume { get; set; }
-        public double QuoteVolume { get; set; }
+        public double Volume { get; set; }
         public bool IsFrozen { get; set; }
         public double Hr24High { get; set; }
         public double Hr24Low { get; set; }
         public DateTime Time { get; set; }
+        public double BidChange { get; set; }
+        public double AskChange { get; set; }
 
         public double DeltaAsk { get; set; }
         public double DeltaBid { get; set; }
+        public double Spread { get { return LowestAsk - HighestBid; } }
         public List<TickerHistoryItem> History { get; } = new List<TickerHistoryItem>();
         public List<TradeHistoryItem> TradeHistory { get; } = new List<TradeHistoryItem>();
+        public List<CandleStickData> CandleStickData { get; set; } = new List<CandleStickData>();
+        public int CandleStickPeriodMin { get; set; } = 1;
 
         public void Assign(PoloniexTicker ticker) {
             CurrencyPair = ticker.CurrencyPair;
             Last = ticker.Last;
             LowestAsk = ticker.LowestAsk;
             HighestBid = ticker.HighestBid;
-            PercentChange = ticker.PercentChange;
+            Change = ticker.Change;
             BaseVolume = ticker.BaseVolume;
-            QuoteVolume = ticker.QuoteVolume;
+            Volume = ticker.Volume;
             IsFrozen = ticker.IsFrozen;
             Hr24High = ticker.Hr24High;
             Hr24Low = ticker.Hr24Low;
@@ -85,13 +90,10 @@ namespace CryptoMarketClient {
         }
 
         public void UpdateHistoryItem() {
-            if(History.Count > 36000)
-                History.RemoveAt(0);
-            History.Add(new TickerHistoryItem() { Time = Time, Ask = LowestAsk, Bid = HighestBid, Current = Last });
-            RaiseHistoryItemAdded();
+            TickerUpdateHelper.UpdateHistoryItem(this);
         }
         public event EventHandler HistoryItemAdd;
-        void RaiseHistoryItemAdded() {
+        void ITicker.RaiseHistoryItemAdded() {
             if(HistoryItemAdd != null)
                 HistoryItemAdd(this, EventArgs.Empty);
         }
@@ -123,6 +125,11 @@ namespace CryptoMarketClient {
         public event EventHandler TradeHistoryAdd;
         string ITicker.Name { get { return CurrencyPair; } }
         
+        protected internal void RaiseTradeHistoryItemAdd() {
+            if(TradeHistoryAdd != null)
+                TradeHistoryAdd(this, EventArgs.Empty);
+        }
+
         public void GetOrderBookSnapshot() {
             PoloniexModel.Default.GetOrderBook(this, 50);
         }

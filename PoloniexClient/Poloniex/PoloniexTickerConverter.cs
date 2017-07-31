@@ -19,9 +19,9 @@ namespace CryptoMarketClient {
             res.Last = @event.Arguments[1].Deserialize<double>();
             res.LowestAsk = @event.Arguments[2].Deserialize<double>();
             res.HighestBid = @event.Arguments[3].Deserialize<double>();
-            res.PercentChange = @event.Arguments[4].Deserialize<double>();
+            res.Change = @event.Arguments[4].Deserialize<double>();
             res.BaseVolume = @event.Arguments[5].Deserialize<double>();
-            res.QuoteVolume = @event.Arguments[6].Deserialize<double>();
+            res.Volume = @event.Arguments[6].Deserialize<double>();
             res.IsFrozen = @event.Arguments[7].Deserialize<int>() > 0;
             res.Hr24High = @event.Arguments[8].Deserialize<double>();
             res.Hr24Low = @event.Arguments[9].Deserialize<double>();

@@ -14,6 +14,7 @@ namespace CryptoMarketClient {
         [STAThread]
         static void Main() {
             WindowsFormsSettings.DefaultFont = new System.Drawing.Font("Segoe UI", 9);
+            WindowsFormsSettings.ScrollUIMode = ScrollUIMode.Touch;
             UserLookAndFeel.Default.SetSkinStyle("Office 2013 Light Gray");
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
