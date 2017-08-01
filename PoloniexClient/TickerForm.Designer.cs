@@ -43,6 +43,7 @@
             this.ribbonPageGroup1 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.sidePanel1 = new DevExpress.XtraEditors.SidePanel();
             this.sidePanel3 = new DevExpress.XtraEditors.SidePanel();
+            this.tickerChartViewer1 = new CryptoMarketClient.TickerChartViewer();
             this.tickerInfoControl = new CryptoMarketClient.TickerInfo();
             this.orderBookPanel = new DevExpress.XtraEditors.SidePanel();
             this.bidPanel = new DevExpress.XtraEditors.SidePanel();
@@ -66,7 +67,6 @@
             this.colBid = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colAsk = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colCurrent = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.tickerChartViewer1 = new CryptoMarketClient.TickerChartViewer();
             ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).BeginInit();
             this.sidePanel1.SuspendLayout();
             this.sidePanel3.SuspendLayout();
@@ -106,11 +106,12 @@
             this.ribbonControl1.Items.AddRange(new DevExpress.XtraBars.BarItem[] {
             this.ribbonControl1.ExpandCollapseItem});
             this.ribbonControl1.Location = new System.Drawing.Point(0, 0);
+            this.ribbonControl1.Margin = new System.Windows.Forms.Padding(7, 7, 7, 7);
             this.ribbonControl1.MaxItemId = 1;
             this.ribbonControl1.Name = "ribbonControl1";
             this.ribbonControl1.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
             this.rpPoloniex});
-            this.ribbonControl1.Size = new System.Drawing.Size(1133, 141);
+            this.ribbonControl1.Size = new System.Drawing.Size(2455, 315);
             // 
             // rpPoloniex
             // 
@@ -131,9 +132,10 @@
             this.sidePanel1.Controls.Add(this.sidePanel3);
             this.sidePanel1.Controls.Add(this.tickerInfoControl);
             this.sidePanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.sidePanel1.Location = new System.Drawing.Point(245, 141);
+            this.sidePanel1.Location = new System.Drawing.Point(531, 315);
+            this.sidePanel1.Margin = new System.Windows.Forms.Padding(7, 7, 7, 7);
             this.sidePanel1.Name = "sidePanel1";
-            this.sidePanel1.Size = new System.Drawing.Size(610, 331);
+            this.sidePanel1.Size = new System.Drawing.Size(1322, 738);
             this.sidePanel1.TabIndex = 1;
             this.sidePanel1.Text = "sidePanel1";
             // 
@@ -141,19 +143,30 @@
             // 
             this.sidePanel3.Controls.Add(this.tickerChartViewer1);
             this.sidePanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.sidePanel3.Location = new System.Drawing.Point(0, 108);
+            this.sidePanel3.Location = new System.Drawing.Point(0, 241);
+            this.sidePanel3.Margin = new System.Windows.Forms.Padding(7, 7, 7, 7);
             this.sidePanel3.Name = "sidePanel3";
-            this.sidePanel3.Size = new System.Drawing.Size(610, 223);
+            this.sidePanel3.Size = new System.Drawing.Size(1322, 497);
             this.sidePanel3.TabIndex = 2;
             this.sidePanel3.Text = "sidePanel3";
             // 
-            // currencyCard1
+            // tickerChartViewer1
+            // 
+            this.tickerChartViewer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tickerChartViewer1.Location = new System.Drawing.Point(0, 0);
+            this.tickerChartViewer1.Margin = new System.Windows.Forms.Padding(15, 16, 15, 16);
+            this.tickerChartViewer1.Name = "tickerChartViewer1";
+            this.tickerChartViewer1.Size = new System.Drawing.Size(1322, 497);
+            this.tickerChartViewer1.TabIndex = 0;
+            this.tickerChartViewer1.Ticker = null;
+            // 
+            // tickerInfoControl
             // 
             this.tickerInfoControl.Dock = System.Windows.Forms.DockStyle.Top;
             this.tickerInfoControl.Location = new System.Drawing.Point(0, 0);
-            this.tickerInfoControl.Margin = new System.Windows.Forms.Padding(7);
-            this.tickerInfoControl.Name = "currencyCard1";
-            this.tickerInfoControl.Size = new System.Drawing.Size(610, 108);
+            this.tickerInfoControl.Margin = new System.Windows.Forms.Padding(15, 16, 15, 16);
+            this.tickerInfoControl.Name = "tickerInfoControl";
+            this.tickerInfoControl.Size = new System.Drawing.Size(1322, 241);
             this.tickerInfoControl.TabIndex = 0;
             this.tickerInfoControl.Ticker = null;
             // 
@@ -162,9 +175,10 @@
             this.orderBookPanel.Controls.Add(this.bidPanel);
             this.orderBookPanel.Controls.Add(this.askPanel);
             this.orderBookPanel.Dock = System.Windows.Forms.DockStyle.Left;
-            this.orderBookPanel.Location = new System.Drawing.Point(0, 141);
+            this.orderBookPanel.Location = new System.Drawing.Point(0, 315);
+            this.orderBookPanel.Margin = new System.Windows.Forms.Padding(7, 7, 7, 7);
             this.orderBookPanel.Name = "orderBookPanel";
-            this.orderBookPanel.Size = new System.Drawing.Size(245, 331);
+            this.orderBookPanel.Size = new System.Drawing.Size(531, 738);
             this.orderBookPanel.TabIndex = 1;
             this.orderBookPanel.Text = "sidePanel2";
             this.orderBookPanel.Resize += new System.EventHandler(this.sidePanel2_Resize);
@@ -173,20 +187,23 @@
             // 
             this.bidPanel.Controls.Add(this.bidGridControl);
             this.bidPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.bidPanel.Location = new System.Drawing.Point(0, 250);
+            this.bidPanel.Location = new System.Drawing.Point(0, 558);
+            this.bidPanel.Margin = new System.Windows.Forms.Padding(7, 7, 7, 7);
             this.bidPanel.Name = "bidPanel";
-            this.bidPanel.Size = new System.Drawing.Size(244, 81);
+            this.bidPanel.Size = new System.Drawing.Size(530, 180);
             this.bidPanel.TabIndex = 2;
             this.bidPanel.Text = "sidePanel5";
             // 
             // bidGridControl
             // 
             this.bidGridControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.bidGridControl.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(7, 7, 7, 7);
             this.bidGridControl.Location = new System.Drawing.Point(0, 0);
             this.bidGridControl.MainView = this.bidGridView;
+            this.bidGridControl.Margin = new System.Windows.Forms.Padding(7, 7, 7, 7);
             this.bidGridControl.MenuManager = this.ribbonControl1;
             this.bidGridControl.Name = "bidGridControl";
-            this.bidGridControl.Size = new System.Drawing.Size(244, 81);
+            this.bidGridControl.Size = new System.Drawing.Size(530, 180);
             this.bidGridControl.TabIndex = 1;
             this.bidGridControl.UseDirectXPaint = false;
             this.bidGridControl.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
@@ -195,7 +212,9 @@
             // bidGridView
             // 
             this.bidGridView.Appearance.Row.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.bidGridView.Appearance.Row.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.bidGridView.Appearance.Row.Options.UseBackColor = true;
+            this.bidGridView.Appearance.Row.Options.UseForeColor = true;
             this.bidGridView.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
             this.bidGridView.Columns.AddRange(new DevExpress.XtraGrid.Columns.GridColumn[] {
             this.gridColumn2,
@@ -230,19 +249,22 @@
             this.askPanel.Controls.Add(this.askGridControl);
             this.askPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.askPanel.Location = new System.Drawing.Point(0, 0);
+            this.askPanel.Margin = new System.Windows.Forms.Padding(7, 7, 7, 7);
             this.askPanel.Name = "askPanel";
-            this.askPanel.Size = new System.Drawing.Size(244, 250);
+            this.askPanel.Size = new System.Drawing.Size(530, 558);
             this.askPanel.TabIndex = 1;
             this.askPanel.Text = "sidePanel4";
             // 
             // askGridControl
             // 
             this.askGridControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.askGridControl.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(7, 7, 7, 7);
             this.askGridControl.Location = new System.Drawing.Point(0, 0);
             this.askGridControl.MainView = this.askGridView;
+            this.askGridControl.Margin = new System.Windows.Forms.Padding(7, 7, 7, 7);
             this.askGridControl.MenuManager = this.ribbonControl1;
             this.askGridControl.Name = "askGridControl";
-            this.askGridControl.Size = new System.Drawing.Size(244, 249);
+            this.askGridControl.Size = new System.Drawing.Size(530, 557);
             this.askGridControl.TabIndex = 0;
             this.askGridControl.UseDirectXPaint = false;
             this.askGridControl.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
@@ -252,7 +274,9 @@
             // askGridView
             // 
             this.askGridView.Appearance.Row.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
+            this.askGridView.Appearance.Row.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.askGridView.Appearance.Row.Options.UseBackColor = true;
+            this.askGridView.Appearance.Row.Options.UseForeColor = true;
             this.askGridView.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
             this.askGridView.Columns.AddRange(new DevExpress.XtraGrid.Columns.GridColumn[] {
             this.gcRate,
@@ -288,9 +312,10 @@
             // 
             this.sidePanel2.Controls.Add(this.tradeGridControl);
             this.sidePanel2.Dock = System.Windows.Forms.DockStyle.Right;
-            this.sidePanel2.Location = new System.Drawing.Point(855, 141);
+            this.sidePanel2.Location = new System.Drawing.Point(1853, 315);
+            this.sidePanel2.Margin = new System.Windows.Forms.Padding(7, 7, 7, 7);
             this.sidePanel2.Name = "sidePanel2";
-            this.sidePanel2.Size = new System.Drawing.Size(278, 331);
+            this.sidePanel2.Size = new System.Drawing.Size(602, 738);
             this.sidePanel2.TabIndex = 3;
             this.sidePanel2.Text = "sidePanel2";
             // 
@@ -298,11 +323,13 @@
             // 
             this.tradeGridControl.DataSource = this.tradeHistoryItemBindingSource;
             this.tradeGridControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tradeGridControl.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(7, 7, 7, 7);
             this.tradeGridControl.Location = new System.Drawing.Point(1, 0);
             this.tradeGridControl.MainView = this.gridView1;
+            this.tradeGridControl.Margin = new System.Windows.Forms.Padding(7, 7, 7, 7);
             this.tradeGridControl.MenuManager = this.ribbonControl1;
             this.tradeGridControl.Name = "tradeGridControl";
-            this.tradeGridControl.Size = new System.Drawing.Size(277, 331);
+            this.tradeGridControl.Size = new System.Drawing.Size(601, 738);
             this.tradeGridControl.TabIndex = 0;
             this.tradeGridControl.UseDirectXPaint = false;
             this.tradeGridControl.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
@@ -314,6 +341,8 @@
             // 
             // gridView1
             // 
+            this.gridView1.Appearance.Row.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.gridView1.Appearance.Row.Options.UseForeColor = true;
             this.gridView1.Columns.AddRange(new DevExpress.XtraGrid.Columns.GridColumn[] {
             this.colTime,
             this.colAmount,
@@ -429,23 +458,16 @@
             this.colCurrent.Visible = true;
             this.colCurrent.VisibleIndex = 6;
             // 
-            // tickerChartViewer1
-            // 
-            this.tickerChartViewer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tickerChartViewer1.Location = new System.Drawing.Point(0, 0);
-            this.tickerChartViewer1.Name = "tickerChartViewer1";
-            this.tickerChartViewer1.Size = new System.Drawing.Size(610, 223);
-            this.tickerChartViewer1.TabIndex = 0;
-            // 
             // TickerForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(13F, 29F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1133, 472);
+            this.ClientSize = new System.Drawing.Size(2455, 1053);
             this.Controls.Add(this.sidePanel1);
             this.Controls.Add(this.sidePanel2);
             this.Controls.Add(this.orderBookPanel);
             this.Controls.Add(this.ribbonControl1);
+            this.Margin = new System.Windows.Forms.Padding(7, 7, 7, 7);
             this.Name = "TickerForm";
             this.Text = "ProcessWMPaint Msg = 15  Time = 8";
             ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).EndInit();

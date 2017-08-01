@@ -140,7 +140,16 @@ namespace CryptoMarketClient {
                 return;
             this.chartControl1.Series.Add(CreateLineSeries(Ticker.History, "Ask", Color.Red));
             this.chartControl1.Series.Add(CreateLineSeries(Ticker.History, "Bid", Color.Blue));
+            this.chartControl1.Series.Add(CreateAreaSeries(Ticker.History, "Current", Color.DarkGray));
             this.chartControl1.Series.Add(CreateLastSeries());
+
+            ((LineSeriesView)this.chartControl1.Series[0].View).RangeControlOptions.Visible = false;
+            ((LineSeriesView)this.chartControl1.Series[1].View).RangeControlOptions.Visible = false;
+            ((XYDiagram2DSeriesViewBase)this.chartControl1.Series[3].View).RangeControlOptions.Visible = false;
+            //this.chartControl1.Series[2].Visible = false;
+            ((XYDiagram2DSeriesViewBase)this.chartControl1.Series[2].View).RangeControlOptions.Visible = true;
+            ((XYDiagram2DSeriesViewBase)this.chartControl1.Series[2].View).RangeControlOptions.ViewType = RangeControlViewType.Area;
+
             ((XYDiagram)this.chartControl1.Diagram).EnableAxisXScrolling = true;
             ((XYDiagram)this.chartControl1.Diagram).EnableAxisXZooming = true;
             ((XYDiagram)this.chartControl1.Diagram).EnableAxisYScrolling = true;
@@ -189,7 +198,7 @@ namespace CryptoMarketClient {
         private void OnChartTypeChanged(object sender, ItemClickEventArgs e) {
             if(!((BarCheckItem)e.Item).Checked)
                 return;
-            this.chartControl1.Series.RemoveAt(2);
+            this.chartControl1.Series.RemoveAt(3);
             this.chartControl1.Series.Add(CreateLastSeries());
         }
     }

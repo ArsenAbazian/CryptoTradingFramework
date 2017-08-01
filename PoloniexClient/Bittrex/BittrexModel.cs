@@ -165,7 +165,7 @@ namespace CryptoMarketClient.Bittrex {
                         info.PrevDay = obj.Value<double>("PrevDay");
                         info.Created = obj.Value<DateTime>("Created");
                         info.DisplayMarketName = obj.Value<string>("DisplayMarketName");
-                        info.UpdateHistoryItem();
+                        //info.UpdateHistoryItem();
                     }
                 }
             }
