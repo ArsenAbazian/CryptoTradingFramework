@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using DevExpress.XtraCharts;
 using DevExpress.XtraBars;
+using DevExpress.Skins;
 
 namespace CryptoMarketClient {
     public partial class TickerChartViewer : UserControl {
@@ -76,7 +77,21 @@ namespace CryptoMarketClient {
             s.ShowInLegend = true;
             StepLineSeriesView view = new StepLineSeriesView();
             view.Color = color;
-            view.LineStyle.Thickness = 1;
+            view.LineStyle.Thickness = (int)(1 * DpiProvider.Default.DpiScaleFactor);
+            s.View = view;
+            s.DataSource = list;
+            return s;
+        }
+
+        Series CreateStepAreaSeries(List<TickerHistoryItem> list, string str, Color color) {
+            Series s = new Series();
+            s.Name = str;
+            s.ArgumentDataMember = "Time";
+            s.ValueDataMembers.AddRange(str);
+            s.ValueScaleType = ScaleType.Numerical;
+            s.ShowInLegend = true;
+            StepAreaSeriesView view = new StepAreaSeriesView();
+            view.Color = color;
             s.View = view;
             s.DataSource = list;
             return s;
@@ -89,7 +104,7 @@ namespace CryptoMarketClient {
             s.ValueDataMembers.AddRange(str);
             s.ValueScaleType = ScaleType.Numerical;
             s.ShowInLegend = true;
-            StepAreaSeriesView view = new StepAreaSeriesView();
+            AreaSeriesView view = new AreaSeriesView();
             view.Color = color;
             s.View = view;
             s.DataSource = list;
@@ -140,7 +155,7 @@ namespace CryptoMarketClient {
                 return;
             this.chartControl1.Series.Add(CreateLineSeries(Ticker.History, "Ask", Color.Red));
             this.chartControl1.Series.Add(CreateLineSeries(Ticker.History, "Bid", Color.Blue));
-            this.chartControl1.Series.Add(CreateAreaSeries(Ticker.History, "Current", Color.DarkGray));
+            this.chartControl1.Series.Add(CreateAreaSeries(Ticker.History, "Current", Color.FromArgb(80, Color.DarkCyan)));
             this.chartControl1.Series.Add(CreateLastSeries());
 
             ((LineSeriesView)this.chartControl1.Series[0].View).RangeControlOptions.Visible = false;
@@ -169,7 +184,7 @@ namespace CryptoMarketClient {
             else if(this.bcColoredStock.Checked)
                 return CreateStockSeries();
             else if(this.bcArea.Checked)
-                return CreateAreaSeries(Ticker.History, "Current", Color.DarkGray);
+                return CreateStepAreaSeries(Ticker.History, "Current", Color.DarkGray);
             return null;
         }
 
