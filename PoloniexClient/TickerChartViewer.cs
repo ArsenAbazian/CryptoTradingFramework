@@ -10,13 +10,33 @@ using System.Windows.Forms;
 using DevExpress.XtraCharts;
 using DevExpress.XtraBars;
 using DevExpress.Skins;
+using DevExpress.Utils.Svg;
+using DevExpress.LookAndFeel;
+using DevExpress.XtraEditors;
 
 namespace CryptoMarketClient {
-    public partial class TickerChartViewer : UserControl {
+    public partial class TickerChartViewer : XtraUserControl {
         public TickerChartViewer() {
             InitializeComponent();
             SetCandleStickCheckItemValues();
             this.barManager1.ForceInitialize();
+            this.rangeControl1.Client = RangeChart;
+        }
+
+        protected override void OnHandleCreated(EventArgs e) {
+            base.OnHandleCreated(e);
+            RangeChart.CreateControl();
+        }
+
+        protected ChartControl RangeChart { get; } = new ChartControl();
+
+        protected override void OnLookAndFeelChanged() {
+            if(BidSeries != null)
+                ((XYDiagram2DSeriesViewBase)BidSeries.View).Color = BidColor;
+            if(AskSeries != null)
+                ((XYDiagram2DSeriesViewBase)AskSeries.View).Color = BidColor;
+            if(CurrentSeries != null)
+                ((XYDiagram2DSeriesViewBase)CurrentSeries.View).Color = CurrentColor;
         }
 
         ITicker ticker;
@@ -150,20 +170,40 @@ namespace CryptoMarketClient {
             return s;
         }
 
+        //static Color bidColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+        //static Color askColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
+        //static Color currentColor = Color.BlueViolet;
+
+        public Color AskColor {
+            get {
+                return System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
+                //return CommonSkins.GetSkin(UserLookAndFeel.Default).SvgPalettes[]
+            }
+        }
+
+        public Color BidColor {
+            get {
+                return System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            }
+        }
+
+        public Color CurrentColor {
+            get {
+                return Color.FromArgb(128, Color.BlueViolet);
+            }
+        }
+
+        protected Series BidSeries { get; set; }
+        protected Series AskSeries { get; set; }
+        protected Series CurrentSeries { get; set; }
+
         void UpdateChart() {
             if(Ticker == null)
                 return;
-            this.chartControl1.Series.Add(CreateLineSeries(Ticker.History, "Ask", Color.Red));
-            this.chartControl1.Series.Add(CreateLineSeries(Ticker.History, "Bid", Color.Blue));
-            this.chartControl1.Series.Add(CreateAreaSeries(Ticker.History, "Current", Color.FromArgb(80, Color.DarkCyan)));
+            this.chartControl1.Series.Add(AskSeries = CreateLineSeries(Ticker.History, "Ask", AskColor));
+            this.chartControl1.Series.Add(BidSeries = CreateLineSeries(Ticker.History, "Bid", BidColor));
             this.chartControl1.Series.Add(CreateLastSeries());
-
-            ((LineSeriesView)this.chartControl1.Series[0].View).RangeControlOptions.Visible = false;
-            ((LineSeriesView)this.chartControl1.Series[1].View).RangeControlOptions.Visible = false;
-            ((XYDiagram2DSeriesViewBase)this.chartControl1.Series[3].View).RangeControlOptions.Visible = false;
-            //this.chartControl1.Series[2].Visible = false;
-            ((XYDiagram2DSeriesViewBase)this.chartControl1.Series[2].View).RangeControlOptions.Visible = true;
-            ((XYDiagram2DSeriesViewBase)this.chartControl1.Series[2].View).RangeControlOptions.ViewType = RangeControlViewType.Area;
+            RangeChart.Series.Add(CurrentSeries = CreateAreaSeries(Ticker.History, "Current", CurrentColor));
 
             ((XYDiagram)this.chartControl1.Diagram).EnableAxisXScrolling = true;
             ((XYDiagram)this.chartControl1.Diagram).EnableAxisXZooming = true;
@@ -213,7 +253,7 @@ namespace CryptoMarketClient {
         private void OnChartTypeChanged(object sender, ItemClickEventArgs e) {
             if(!((BarCheckItem)e.Item).Checked)
                 return;
-            this.chartControl1.Series.RemoveAt(3);
+            this.chartControl1.Series.RemoveAt(2);
             this.chartControl1.Series.Add(CreateLastSeries());
         }
     }
