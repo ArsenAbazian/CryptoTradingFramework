@@ -42,6 +42,7 @@
             DevExpress.XtraEditors.FormatConditionIconSetIcon formatConditionIconSetIcon8 = new DevExpress.XtraEditors.FormatConditionIconSetIcon();
             DevExpress.XtraEditors.FormatConditionIconSetIcon formatConditionIconSetIcon9 = new DevExpress.XtraEditors.FormatConditionIconSetIcon();
             DevExpress.Sparkline.LineSparklineView lineSparklineView1 = new DevExpress.Sparkline.LineSparklineView();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PoloniexTickersForm));
             this.gcPercentChange = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gcDeltaBid = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gcHighestBid = new DevExpress.XtraGrid.Columns.GridColumn();
@@ -78,7 +79,7 @@
             this.gcPercentChange.FieldName = "PercentChange";
             this.gcPercentChange.Name = "gcPercentChange";
             this.gcPercentChange.Visible = true;
-            this.gcPercentChange.VisibleIndex = 4;
+            this.gcPercentChange.VisibleIndex = 8;
             // 
             // gcDeltaBid
             // 
@@ -92,7 +93,7 @@
             this.gcHighestBid.FieldName = "HighestBid";
             this.gcHighestBid.Name = "gcHighestBid";
             this.gcHighestBid.Visible = true;
-            this.gcHighestBid.VisibleIndex = 3;
+            this.gcHighestBid.VisibleIndex = 2;
             // 
             // gcDeltaAsk
             // 
@@ -106,20 +107,19 @@
             this.gcLowestAsk.FieldName = "LowestAsk";
             this.gcLowestAsk.Name = "gcLowestAsk";
             this.gcLowestAsk.Visible = true;
-            this.gcLowestAsk.VisibleIndex = 2;
+            this.gcLowestAsk.VisibleIndex = 3;
             // 
             // gridControl1
             // 
             this.gridControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gridControl1.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
-            this.gridControl1.Location = new System.Drawing.Point(0, 278);
+            this.gridControl1.Location = new System.Drawing.Point(0, 141);
             this.gridControl1.MainView = this.gridView1;
-            this.gridControl1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.gridControl1.Name = "gridControl1";
             this.gridControl1.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repositoryItemSparklineEdit1});
-            this.gridControl1.Size = new System.Drawing.Size(1876, 859);
+            this.gridControl1.Size = new System.Drawing.Size(1008, 407);
             this.gridControl1.TabIndex = 0;
+            this.gridControl1.UseDirectXPaint = true;
             this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridView1});
             // 
@@ -208,18 +208,22 @@
             this.gridView1.FormatRules.Add(gridFormatRule2);
             this.gridView1.FormatRules.Add(gridFormatRule3);
             this.gridView1.GridControl = this.gridControl1;
+            this.gridView1.GroupCount = 1;
             this.gridView1.Name = "gridView1";
             this.gridView1.OptionsBehavior.AllowPixelScrolling = DevExpress.Utils.DefaultBoolean.True;
             this.gridView1.OptionsBehavior.Editable = false;
             this.gridView1.OptionsDetail.EnableMasterViewMode = false;
+            this.gridView1.SortInfo.AddRange(new DevExpress.XtraGrid.Columns.GridColumnSortInfo[] {
+            new DevExpress.XtraGrid.Columns.GridColumnSortInfo(this.gcFirst, DevExpress.Data.ColumnSortOrder.Ascending)});
+            this.gridView1.DoubleClick += new System.EventHandler(this.gridView1_DoubleClick);
             // 
             // gcCurrencyPair
             // 
-            this.gcCurrencyPair.Caption = "Currency Pair";
+            this.gcCurrencyPair.Caption = "Market Name";
             this.gcCurrencyPair.FieldName = "CurrencyPair";
             this.gcCurrencyPair.Name = "gcCurrencyPair";
             this.gcCurrencyPair.Visible = true;
-            this.gcCurrencyPair.VisibleIndex = 0;
+            this.gcCurrencyPair.VisibleIndex = 1;
             // 
             // gcLast
             // 
@@ -227,7 +231,7 @@
             this.gcLast.FieldName = "Last";
             this.gcLast.Name = "gcLast";
             this.gcLast.Visible = true;
-            this.gcLast.VisibleIndex = 1;
+            this.gcLast.VisibleIndex = 4;
             // 
             // gcBaseVolume
             // 
@@ -243,15 +247,13 @@
             this.gcQuoteVolume.FieldName = "QuoteVolume";
             this.gcQuoteVolume.Name = "gcQuoteVolume";
             this.gcQuoteVolume.Visible = true;
-            this.gcQuoteVolume.VisibleIndex = 6;
+            this.gcQuoteVolume.VisibleIndex = 9;
             // 
             // gcIsFrozen
             // 
             this.gcIsFrozen.Caption = "Is Frozen";
             this.gcIsFrozen.FieldName = "IsFrozen";
             this.gcIsFrozen.Name = "gcIsFrozen";
-            this.gcIsFrozen.Visible = true;
-            this.gcIsFrozen.VisibleIndex = 7;
             // 
             // gcHr24High
             // 
@@ -259,7 +261,7 @@
             this.gcHr24High.FieldName = "Hr24High";
             this.gcHr24High.Name = "gcHr24High";
             this.gcHr24High.Visible = true;
-            this.gcHr24High.VisibleIndex = 8;
+            this.gcHr24High.VisibleIndex = 6;
             // 
             // gcHr24Low
             // 
@@ -267,7 +269,7 @@
             this.gcHr24Low.FieldName = "Hr24Low";
             this.gcHr24Low.Name = "gcHr24Low";
             this.gcHr24Low.Visible = true;
-            this.gcHr24Low.VisibleIndex = 9;
+            this.gcHr24Low.VisibleIndex = 7;
             // 
             // gcTime
             // 
@@ -276,12 +278,10 @@
             this.gcTime.DisplayFormat.FormatType = DevExpress.Utils.FormatType.DateTime;
             this.gcTime.FieldName = "Time";
             this.gcTime.Name = "gcTime";
-            this.gcTime.Visible = true;
-            this.gcTime.VisibleIndex = 10;
             // 
             // gcFirst
             // 
-            this.gcFirst.Caption = "First";
+            this.gcFirst.Caption = "Base Currency";
             this.gcFirst.FieldName = "FirstCurrency";
             this.gcFirst.Name = "gcFirst";
             this.gcFirst.Visible = true;
@@ -289,11 +289,11 @@
             // 
             // gcSecond
             // 
-            this.gcSecond.Caption = "Second";
+            this.gcSecond.Caption = "Market Currency";
             this.gcSecond.FieldName = "SecondCurrency";
             this.gcSecond.Name = "gcSecond";
             this.gcSecond.Visible = true;
-            this.gcSecond.VisibleIndex = 12;
+            this.gcSecond.VisibleIndex = 0;
             // 
             // repositoryItemSparklineEdit1
             // 
@@ -312,12 +312,11 @@
             this.barCheckItem2,
             this.ShowDetailsForSelectedItem});
             this.ribbonControl1.Location = new System.Drawing.Point(0, 0);
-            this.ribbonControl1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.ribbonControl1.MaxItemId = 6;
             this.ribbonControl1.Name = "ribbonControl1";
             this.ribbonControl1.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
             this.ribbonPage1});
-            this.ribbonControl1.Size = new System.Drawing.Size(1876, 278);
+            this.ribbonControl1.Size = new System.Drawing.Size(1008, 141);
             // 
             // barCheckItem1
             // 
@@ -331,8 +330,10 @@
             // 
             // ShowDetailsForSelectedItem
             // 
-            this.ShowDetailsForSelectedItem.Caption = "Show Details";
+            this.ShowDetailsForSelectedItem.Caption = "Enter Market";
             this.ShowDetailsForSelectedItem.Id = 3;
+            this.ShowDetailsForSelectedItem.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("ShowDetailsForSelectedItem.ImageOptions.Image")));
+            this.ShowDetailsForSelectedItem.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("ShowDetailsForSelectedItem.ImageOptions.LargeImage")));
             this.ShowDetailsForSelectedItem.Name = "ShowDetailsForSelectedItem";
             this.ShowDetailsForSelectedItem.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItem1_ItemClick);
             // 
@@ -341,24 +342,23 @@
             this.ribbonPage1.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] {
             this.ribbonPageGroup1});
             this.ribbonPage1.Name = "ribbonPage1";
-            this.ribbonPage1.Text = "Poloniex";
+            this.ribbonPage1.Text = "Connect";
             // 
             // ribbonPageGroup1
             // 
             this.ribbonPageGroup1.ItemLinks.Add(this.ShowDetailsForSelectedItem);
             this.ribbonPageGroup1.Name = "ribbonPageGroup1";
-            this.ribbonPageGroup1.Text = "Currencies";
+            this.ribbonPageGroup1.Text = "Poloniex";
             // 
             // PoloniexTickersForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1876, 1137);
+            this.ClientSize = new System.Drawing.Size(1008, 548);
             this.Controls.Add(this.gridControl1);
             this.Controls.Add(this.ribbonControl1);
-            this.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.Name = "PoloniexTickersForm";
-            this.Text = "Currencies";
+            this.Text = "Poloniex Markets";
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemSparklineEdit1)).EndInit();

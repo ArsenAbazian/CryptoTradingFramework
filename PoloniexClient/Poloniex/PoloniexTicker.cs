@@ -15,6 +15,7 @@ namespace CryptoMarketClient {
             History = new List<TickerHistoryItem>();
         }
 
+        public int Index { get; set; }
         public int Id { get; set; }
 
         string currensyPair;

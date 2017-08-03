@@ -12,7 +12,7 @@ using WampSharp.V2;
 using WampSharp.V2.Rpc;
 
 namespace CryptoMarketClient {
-    public class PoloniexModel {
+    public class PoloniexModel : ModelBase {
         const string PoloniexServerAddress = "wss://api.poloniex.com";
 
         static PoloniexModel defaultModel;
@@ -90,16 +90,27 @@ namespace CryptoMarketClient {
             ISubject<OrderBookUpdateInfo> subject = wampChannel.RealmProxy.Services.GetSubject<OrderBookUpdateInfo>(ticker.OrderBook.Owner.Name, new OrderBookUpdateInfoConverter());
             return subject.Subscribe(x => ticker.OrderBook.OnRecvUpdate(x));
         }
-        public void GetTickersSnapshot() {
-            string address = "https://poloniex.com/public?command=returnTicker";
-            string text;
-            using(WebClient client = new WebClient()) {
-                text = client.DownloadString(address);
+        protected WebClient WebClient { get; } = new WebClient();
+        string GetDownloadString(string address) {
+            try {
+                return WebClient.DownloadString(address);
             }
+            catch(Exception e) {
+                Console.WriteLine("WebClient exception = " + e.ToString());
+                return string.Empty;
+            }
+        }
+        public void GetTickersInfo() {
+            string address = "https://poloniex.com/public?command=returnTicker";
+            string text = GetDownloadString(address);
+            if(string.IsNullOrEmpty(text))
+                return;
             Tickers.Clear();
             JObject res = (JObject)JsonConvert.DeserializeObject(text);
+            int index = 0;
             foreach(JProperty prop in res.Children()) {
                 PoloniexTicker t = new PoloniexTicker();
+                t.Index = index;
                 t.CurrencyPair = prop.Name;
                 JObject obj = (JObject)prop.Value;
                 t.Id = obj.Value<int>("id");
@@ -113,6 +124,27 @@ namespace CryptoMarketClient {
                 t.Hr24High = obj.Value<double>("high24hr");
                 t.Hr24Low = obj.Value<double>("low24hr");
                 Tickers.Add(t);
+                index++;
+            }
+        }
+        public void UpdateTickersInfo() {
+            string address = "https://poloniex.com/public?command=returnTicker";
+            string text = GetDownloadString(address);
+            if(string.IsNullOrEmpty(text))
+                return;
+            JObject res = (JObject)JsonConvert.DeserializeObject(text);
+            foreach(JProperty prop in res.Children()) {
+                PoloniexTicker t = Tickers.FirstOrDefault((i) => i.CurrencyPair == prop.Name);
+                JObject obj = (JObject)prop.Value;
+                t.Last = obj.Value<double>("last");
+                t.LowestAsk = obj.Value<double>("lowestAsk");
+                t.HighestBid = obj.Value<double>("highestBid");
+                t.Change = obj.Value<double>("percentChange");
+                t.BaseVolume = obj.Value<double>("baseVolume");
+                t.Volume = obj.Value<double>("quoteVolume");
+                t.IsFrozen = obj.Value<int>("isFrozen") != 0;
+                t.Hr24High = obj.Value<double>("high24hr");
+                t.Hr24Low = obj.Value<double>("low24hr");
             }
         }
         public void GetOrderBook(PoloniexTicker ticker, int depth) {

@@ -21,12 +21,14 @@ namespace CryptoMarketClient {
             SetCandleStickCheckItemValues();
             this.barManager1.ForceInitialize();
             this.rangeControl1.Client = RangeChart;
+            RangeChart.Visible = false;
+            this.Controls.Add(RangeChart);
         }
 
-        protected override void OnHandleCreated(EventArgs e) {
-            base.OnHandleCreated(e);
-            RangeChart.CreateControl();
-        }
+        //protected override void OnHandleCreated(EventArgs e) {
+        //    base.OnHandleCreated(e);
+        //    RangeChart.CreateControl();
+        //}
 
         protected ChartControl RangeChart { get; } = new ChartControl();
 
@@ -34,7 +36,7 @@ namespace CryptoMarketClient {
             if(BidSeries != null)
                 ((XYDiagram2DSeriesViewBase)BidSeries.View).Color = BidColor;
             if(AskSeries != null)
-                ((XYDiagram2DSeriesViewBase)AskSeries.View).Color = BidColor;
+                ((XYDiagram2DSeriesViewBase)AskSeries.View).Color = AskColor;
             if(CurrentSeries != null)
                 ((XYDiagram2DSeriesViewBase)CurrentSeries.View).Color = CurrentColor;
         }
@@ -169,28 +171,17 @@ namespace CryptoMarketClient {
             s.DataSource = Ticker.CandleStickData;
             return s;
         }
-
-        //static Color bidColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-        //static Color askColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-        //static Color currentColor = Color.BlueViolet;
-
+        
         public Color AskColor {
-            get {
-                return System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-                //return CommonSkins.GetSkin(UserLookAndFeel.Default).SvgPalettes[]
-            }
+            get { return System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192))))); }
         }
 
         public Color BidColor {
-            get {
-                return System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            }
+            get { return System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192))))); }
         }
 
         public Color CurrentColor {
-            get {
-                return Color.FromArgb(128, Color.BlueViolet);
-            }
+            get { return Color.FromArgb(128, Color.BlueViolet); }
         }
 
         protected Series BidSeries { get; set; }
@@ -204,6 +195,7 @@ namespace CryptoMarketClient {
             this.chartControl1.Series.Add(BidSeries = CreateLineSeries(Ticker.History, "Bid", BidColor));
             this.chartControl1.Series.Add(CreateLastSeries());
             RangeChart.Series.Add(CurrentSeries = CreateAreaSeries(Ticker.History, "Current", CurrentColor));
+            ((XYDiagram2DSeriesViewBase)RangeChart.Series[0].View).RangeControlOptions.Visible = true;
 
             ((XYDiagram)this.chartControl1.Diagram).EnableAxisXScrolling = true;
             ((XYDiagram)this.chartControl1.Diagram).EnableAxisXZooming = true;

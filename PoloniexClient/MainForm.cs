@@ -25,7 +25,7 @@ namespace CryptoMarketClient {
         }
 
         PoloniexTickersForm tickersForm;
-        public PoloniexTickersForm TickersForm {
+        public PoloniexTickersForm PoloniexTickersForm {
             get {
                 if(tickersForm == null || tickersForm.IsDisposed) {
                     tickersForm = new PoloniexTickersForm();
@@ -47,11 +47,21 @@ namespace CryptoMarketClient {
         }
 
         private void barButtonItem1_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
-            TickersForm.Show();
+            PoloniexModel.Default.IsConnected = true;
+            PoloniexTickersForm.Show();
         }
 
         private void btConnectBitrix_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
+            BittrexModel.Default.IsConnected = true;
             BittrextMarketsForm.Show();
+        }
+
+        private void biDisconnectPoloniex_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
+            PoloniexModel.Default.IsConnected = false;
+        }
+
+        private void biDisconnectBittrex_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
+            BittrexModel.Default.IsConnected = false;
         }
     }
 }

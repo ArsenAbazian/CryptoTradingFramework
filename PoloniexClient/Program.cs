@@ -1,5 +1,6 @@
 ﻿using DevExpress.LookAndFeel;
 using DevExpress.XtraEditors;
+using DevExpress.XtraGrid;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +19,7 @@ namespace CryptoMarketClient {
             UserLookAndFeel.Default.SetSkinStyle("Office 2016 Black");
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            GridControl.DisableDirectXPaint = true;
             Application.Run(new MainForm());
         }
     }

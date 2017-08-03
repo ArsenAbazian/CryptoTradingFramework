@@ -165,7 +165,6 @@
             this.gridControl1.Name = "gridControl1";
             this.gridControl1.Size = new System.Drawing.Size(1303, 638);
             this.gridControl1.TabIndex = 0;
-            this.gridControl1.UseDirectXPaint = false;
             this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.tileView1});
             // 

@@ -23,25 +23,25 @@ namespace CryptoMarketClient.Bittrex {
             BittrexModel.Default.GetMarketsSummaryInfo();
             this.gridControl1.DataSource = BittrexModel.Default.Markets;
             HasShown = true;
-            StartBidAskThread();
+            StartUpdateTickerThread();
         }
 
         protected override void OnActivated(EventArgs e) {
             base.OnActivated(e);
             if(!HasShown)
                 return;
-            StartBidAskThread();
+            StartUpdateTickerThread();
         }
 
         protected Thread BidAskThread { get; set; }
-        void StartBidAskThread() {
+        void StartUpdateTickerThread() {
             AllowWorking = true;
             BidAskThread = new Thread(OnBidAskUpdate);
             BidAskThread.Start();
         }
         protected bool AllowWorking { get; set; }
         void OnBidAskUpdate() {
-            while(AllowWorking) {
+            while(AllowWorking && BittrexModel.Default.IsConnected) {
                 BittrexModel.Default.GetMarketsSummaryInfo();
                 lock(BittrexModel.Default.Markets) {
                     if(!IsDisposed)

@@ -125,6 +125,7 @@
     <Compile Include="Bittrex\BittrexModel.cs" />
     <Compile Include="Common\CandleStickChartHelper.cs" />
     <Compile Include="Common\ITicker.cs" />
+    <Compile Include="Common\ModelBase.cs" />
     <Compile Include="Common\OrderBookEntry.cs" />
     <Compile Include="Common\OrderBookUpdateInfo.cs" />
     <Compile Include="Common\TickerHistoryItem.cs" />

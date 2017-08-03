@@ -8,6 +8,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -19,12 +20,59 @@ namespace CryptoMarketClient {
 
         protected override void OnShown(EventArgs e) {
             base.OnShown(e);
-            PoloniexModel.Default.GetTickersSnapshot();
+            PoloniexModel.Default.GetTickersInfo();
             this.gridControl1.DataSource = PoloniexModel.Default.Tickers;
-            PoloniexModel.Default.TickerUpdate += OnTickerUpdate;
-            PoloniexModel.Default.Connect();
+            HasShown = true;
+            StartUpdateTickersThread();
+        }
+        protected override void OnActivated(EventArgs e) {
+            base.OnActivated(e);
+            if(!HasShown)
+                return;
+            StartUpdateTickersThread();
         }
 
+        protected Thread BidAskThread { get; set; }
+        void StartUpdateTickersThread() {
+            AllowWorking = true;
+            BidAskThread = new Thread(OnTickersUpdate);
+            BidAskThread.Start();
+        }
+        protected bool AllowWorking { get; set; }
+        void OnTickersUpdate() {
+            while(AllowWorking && PoloniexModel.Default.IsConnected) {
+                PoloniexModel.Default.UpdateTickersInfo();
+                lock(PoloniexModel.Default.Tickers) {
+                    if(!IsDisposed)
+                        BeginInvoke(new Action(UpdateGridAll));
+                }
+            }
+        }
+        void UpdateGrid(PoloniexTicker info) {
+            int rowHandle = this.gridView1.GetRowHandle(info.Index);
+            this.gridView1.RefreshRow(rowHandle);
+        }
+        void UpdateGridAll() {
+            this.gridView1.RefreshData();
+        }
+
+        protected override void OnDeactivate(EventArgs e) {
+            base.OnDeactivate(e);
+            if(!HasShown)
+                return;
+            StopBidAskThread();
+        }
+
+        private void StopBidAskThread() {
+            if(BidAskThread != null) {
+                AllowWorking = false;
+                BidAskThread = null;
+            }
+        }
+
+        protected bool HasShown { get; set; }
+        
+        /*
         TickerUpdateEventArgs LastTickerEventArgs { get; set; }
         private void OnTickerUpdate(object sender, TickerUpdateEventArgs e) {
             LastTickerEventArgs = e;
@@ -36,7 +84,7 @@ namespace CryptoMarketClient {
             int rowHandle = this.gridView1.GetRowHandle(index);
             this.gridView1.RefreshRow(rowHandle);
         }
-
+        */
         private void barButtonItem1_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
             ShowDetailsForSelectedItemCore();
         }
@@ -49,6 +97,10 @@ namespace CryptoMarketClient {
             form.Ticker = t;
             form.MdiParent = MdiParent;
             form.Show();
+        }
+
+        private void gridView1_DoubleClick(object sender, EventArgs e) {
+            ShowDetailsForSelectedItemCore();
         }
     }
 }

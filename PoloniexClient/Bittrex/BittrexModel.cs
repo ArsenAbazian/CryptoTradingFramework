@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace CryptoMarketClient.Bittrex {
-    public class BittrexModel {
+    public class BittrexModel : ModelBase {
         static BittrexModel defaultModel;
         public static BittrexModel Default {
             get {

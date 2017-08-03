@@ -205,7 +205,6 @@
             this.bidGridControl.Name = "bidGridControl";
             this.bidGridControl.Size = new System.Drawing.Size(530, 180);
             this.bidGridControl.TabIndex = 1;
-            this.bidGridControl.UseDirectXPaint = false;
             this.bidGridControl.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.bidGridView});
             // 
@@ -266,7 +265,6 @@
             this.askGridControl.Name = "askGridControl";
             this.askGridControl.Size = new System.Drawing.Size(530, 557);
             this.askGridControl.TabIndex = 0;
-            this.askGridControl.UseDirectXPaint = false;
             this.askGridControl.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.askGridView});
             this.askGridControl.Resize += new System.EventHandler(this.askGridControl_Resize);
@@ -331,7 +329,6 @@
             this.tradeGridControl.Name = "tradeGridControl";
             this.tradeGridControl.Size = new System.Drawing.Size(601, 738);
             this.tradeGridControl.TabIndex = 0;
-            this.tradeGridControl.UseDirectXPaint = false;
             this.tradeGridControl.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridView1});
             // 

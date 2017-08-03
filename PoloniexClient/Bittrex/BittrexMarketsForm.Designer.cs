@@ -24,6 +24,7 @@
         /// </summary>
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BittrexMarketsForm));
             DevExpress.XtraGrid.GridFormatRule gridFormatRule1 = new DevExpress.XtraGrid.GridFormatRule();
             DevExpress.XtraEditors.FormatConditionRuleIconSet formatConditionRuleIconSet1 = new DevExpress.XtraEditors.FormatConditionRuleIconSet();
             DevExpress.XtraEditors.FormatConditionIconSet formatConditionIconSet1 = new DevExpress.XtraEditors.FormatConditionIconSet();
@@ -49,8 +50,8 @@
             this.ribbonPage1 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPageGroup1 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.gridControl1 = new DevExpress.XtraGrid.GridControl();
-            this.gridView1 = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.bittrexMarketInfoBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.gridView1 = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.colIndex = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colMarketCurrency = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colBaseCurrency = new DevExpress.XtraGrid.Columns.GridColumn();
@@ -80,8 +81,8 @@
             this.colOrderBook = new DevExpress.XtraGrid.Columns.GridColumn();
             ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bittrexMarketInfoBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gridView1)).BeginInit();
             this.SuspendLayout();
             // 
             // ribbonControl1
@@ -98,12 +99,14 @@
             this.ribbonControl1.Name = "ribbonControl1";
             this.ribbonControl1.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
             this.ribbonPage1});
-            this.ribbonControl1.Size = new System.Drawing.Size(660, 141);
+            this.ribbonControl1.Size = new System.Drawing.Size(1147, 141);
             // 
             // btShowDetails
             // 
             this.btShowDetails.Caption = "Enter Market";
             this.btShowDetails.Id = 1;
+            this.btShowDetails.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("btShowDetails.ImageOptions.Image")));
+            this.btShowDetails.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("btShowDetails.ImageOptions.LargeImage")));
             this.btShowDetails.Name = "btShowDetails";
             this.btShowDetails.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btShowDetails_ItemClick);
             // 
@@ -131,7 +134,6 @@
             // ribbonPageGroup1
             // 
             this.ribbonPageGroup1.ItemLinks.Add(this.btShowDetails);
-            this.ribbonPageGroup1.ItemLinks.Add(this.btCurrencies);
             this.ribbonPageGroup1.Name = "ribbonPageGroup1";
             this.ribbonPageGroup1.Text = "Bittrex";
             // 
@@ -145,11 +147,15 @@
             this.gridControl1.Margin = new System.Windows.Forms.Padding(2);
             this.gridControl1.MenuManager = this.ribbonControl1;
             this.gridControl1.Name = "gridControl1";
-            this.gridControl1.Size = new System.Drawing.Size(660, 314);
+            this.gridControl1.Size = new System.Drawing.Size(1147, 314);
             this.gridControl1.TabIndex = 1;
-            this.gridControl1.UseDirectXPaint = false;
+            this.gridControl1.UseDirectXPaint = true;
             this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridView1});
+            // 
+            // bittrexMarketInfoBindingSource
+            // 
+            this.bittrexMarketInfoBindingSource.DataSource = typeof(CryptoMarketClient.Bittrex.BittrexMarketInfo);
             // 
             // gridView1
             // 
@@ -250,10 +256,6 @@
             this.gridView1.SortInfo.AddRange(new DevExpress.XtraGrid.Columns.GridColumnSortInfo[] {
             new DevExpress.XtraGrid.Columns.GridColumnSortInfo(this.colBaseCurrency, DevExpress.Data.ColumnSortOrder.Ascending)});
             this.gridView1.DoubleClick += new System.EventHandler(this.gridView1_DoubleClick);
-            // 
-            // bittrexMarketInfoBindingSource
-            // 
-            this.bittrexMarketInfoBindingSource.DataSource = typeof(CryptoMarketClient.Bittrex.BittrexMarketInfo);
             // 
             // colIndex
             // 
@@ -424,7 +426,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(660, 455);
+            this.ClientSize = new System.Drawing.Size(1147, 455);
             this.Controls.Add(this.gridControl1);
             this.Controls.Add(this.ribbonControl1);
             this.Margin = new System.Windows.Forms.Padding(2);
@@ -432,8 +434,8 @@
             this.Text = "Bittrex Markets";
             ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gridView1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.bittrexMarketInfoBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gridView1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
