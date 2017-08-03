@@ -161,6 +161,7 @@ namespace CryptoMarketClient {
             s.ValueScaleType = ScaleType.Numerical;
             StockSeriesView view = new StockSeriesView();
 
+            view.ShowOpenClose = StockType.Both;
             view.LineThickness = 2;
             view.LevelLineLength = 0.25;
             view.ReductionOptions.ColorMode = ReductionColorMode.OpenToCloseValue;

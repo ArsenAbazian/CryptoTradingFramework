@@ -19,7 +19,7 @@ namespace CryptoMarketClient {
             UserLookAndFeel.Default.SetSkinStyle("Office 2016 Black");
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            GridControl.DisableDirectXPaint = true;
+            GridControl.DisableDirectXPaint = false;
             Application.Run(new MainForm());
         }
     }
