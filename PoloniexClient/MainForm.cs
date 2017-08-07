@@ -45,23 +45,33 @@ namespace CryptoMarketClient {
                 return bittrexMarketsForm;
             }
         }
-
-        private void barButtonItem1_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
-            PoloniexModel.Default.IsConnected = true;
-            PoloniexTickersForm.Show();
+       
+        private void bcPoloniex_CheckedChanged(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
+            if(this.bcPoloniex.Checked) {
+                PoloniexModel.Default.IsConnected = true;
+                PoloniexTickersForm.Show();
+            }
+            else {
+                PoloniexModel.Default.IsConnected = false;
+                PoloniexTickersForm.Hide();
+            }
         }
 
-        private void btConnectBitrix_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
-            BittrexModel.Default.IsConnected = true;
-            BittrextMarketsForm.Show();
+        private void bcBittrex_CheckedChanged(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
+            if(this.bcBittrex.Checked) {
+                BittrexModel.Default.IsConnected = true;
+                BittrextMarketsForm.Show();
+            }
+            else {
+                BittrexModel.Default.IsConnected = false;
+                BittrextMarketsForm.Hide();
+            }
         }
 
-        private void biDisconnectPoloniex_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
-            PoloniexModel.Default.IsConnected = false;
-        }
-
-        private void biDisconnectBittrex_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
-            BittrexModel.Default.IsConnected = false;
+        private void btClassicArbitrage_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
+            TickerArbitrageForm form = new TickerArbitrageForm();
+            form.MdiParent = this;
+            form.Show();
         }
     }
 }

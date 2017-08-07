@@ -27,7 +27,7 @@ namespace CryptoMarketClient {
         }
         protected override void OnActivated(EventArgs e) {
             base.OnActivated(e);
-            if(!HasShown)
+            if(!HasShown || (BidAskThread != null && BidAskThread.IsAlive))
                 return;
             StartUpdateTickersThread();
         }
@@ -58,9 +58,9 @@ namespace CryptoMarketClient {
 
         protected override void OnDeactivate(EventArgs e) {
             base.OnDeactivate(e);
-            if(!HasShown)
-                return;
-            StopBidAskThread();
+            //if(!HasShown)
+            //    return;
+            //StopBidAskThread();
         }
 
         private void StopBidAskThread() {
@@ -94,6 +94,7 @@ namespace CryptoMarketClient {
                 return;
             ITicker t = (ITicker)this.gridView1.GetRow(this.gridView1.FocusedRowHandle);
             TickerForm form = new TickerForm();
+            form.MarketName = "Poloniex";
             form.Ticker = t;
             form.MdiParent = MdiParent;
             form.Show();

@@ -128,7 +128,7 @@ namespace CryptoMarketClient.Bittrex {
                     info.Time = DateTime.Now;
                     info.UpdateHistoryItem();
                     Timer.Stop();
-                    Console.WriteLine(info.Time.ToString("hh:mm:ss.fff") + " ticker update last = " + info.Last + "  bid = " + info.HighestBid + "  ask = " + info.LowestAsk + ". process time = " + Timer.ElapsedMilliseconds);
+                    //Console.WriteLine(info.Time.ToString("hh:mm:ss.fff") + " ticker update last = " + info.Last + "  bid = " + info.HighestBid + "  ask = " + info.LowestAsk + ". process time = " + Timer.ElapsedMilliseconds);
                 }
             }
         }
@@ -204,7 +204,7 @@ namespace CryptoMarketClient.Bittrex {
                         }
                     }
                     Timer.Stop();
-                    Console.WriteLine(DateTime.Now.ToString("hh:mm:ss.fff") + " order book update. process time = " + Timer.ElapsedMilliseconds);
+                    //Console.WriteLine(DateTime.Now.ToString("hh:mm:ss.fff") + " order book update. process time = " + Timer.ElapsedMilliseconds);
                 }
             }
             info.OrderBook.RaiseOnChanged(new OrderBookUpdateInfo() { Action = OrderBookUpdateType.RefreshAll });

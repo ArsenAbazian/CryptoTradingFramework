@@ -21,6 +21,8 @@ namespace CryptoMarketClient {
         double Spread { get; }
         double BidChange { get; set; }
         double AskChange { get; set; }
+        string BaseCurrency { get; set; }
+        string MarketCurrency { get; set; }
         DateTime Time { get; set; }
         int CandleStickPeriodMin { get; set; }
         List<CandleStickData> CandleStickData { get; set; }

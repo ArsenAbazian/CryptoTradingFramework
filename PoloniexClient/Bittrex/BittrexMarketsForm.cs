@@ -28,7 +28,7 @@ namespace CryptoMarketClient.Bittrex {
 
         protected override void OnActivated(EventArgs e) {
             base.OnActivated(e);
-            if(!HasShown)
+            if(!HasShown || (BidAskThread != null && BidAskThread.IsAlive))
                 return;
             StartUpdateTickerThread();
         }
@@ -59,9 +59,9 @@ namespace CryptoMarketClient.Bittrex {
 
         protected override void OnDeactivate(EventArgs e) {
             base.OnDeactivate(e);
-            if(!HasShown)
-                return;
-            StopBidAskThread();
+            //if(!HasShown)
+            //    return;
+            //StopBidAskThread();
         }
 
         private void StopBidAskThread() {
@@ -85,6 +85,7 @@ namespace CryptoMarketClient.Bittrex {
                 return;
             ITicker t = (ITicker)this.gridView1.GetRow(this.gridView1.FocusedRowHandle);
             TickerForm form = new TickerForm();
+            form.MarketName = "Bittrex";
             form.Ticker = t;
             form.MdiParent = MdiParent;
             form.Show();

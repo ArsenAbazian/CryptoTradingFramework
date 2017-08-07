@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Reactive.Subjects;
 using System.Text;
 using System.Threading.Tasks;
@@ -111,15 +112,14 @@ namespace CryptoMarketClient {
         public void OnChanged() {
             RaiseChanged();   
         }
+        string ITicker.BaseCurrency { get { return FirstCurrency; } set { FirstCurrency = value; } }
+        string ITicker.MarketCurrency { get { return SecondCurrency; } set { SecondCurrency = value; } }
         void ITicker.OnChanged(OrderBookUpdateInfo info) {
             RaiseChanged();
         }
         protected internal void RaiseChanged() {
             if(Changed != null)
                 Changed(this, EventArgs.Empty);
-        }
-        public void ConnectOrderBook(OrderBook orderBook) {
-            throw new NotImplementedException();
         }
 
         public event EventHandler Changed;
@@ -149,10 +149,11 @@ namespace CryptoMarketClient {
             UpdateHelper.UnsubscribeOrderBookUpdates();
         }
         void ITicker.SubscribeTickerUpdates() {
-            UpdateHelper.SubscribeTickerUpdates();
+            PoloniexModel.Default.Connect();
+            //UpdateHelper.SubscribeTickerUpdates();
         }
         void ITicker.UnsubscribeTickerUpdates() {
-            UpdateHelper.UnsubscribeTickerUpdates();
+            //UpdateHelper.UnsubscribeTickerUpdates();
         }
         void ITicker.SubscribeTradeUpdates() {
             UpdateHelper.SubscribeTradeUpdates();
@@ -164,13 +165,18 @@ namespace CryptoMarketClient {
             PoloniexModel.Default.GetOrderBook(this, 50);
         }
         void ITicker.UpdateTicker() {
-            PoloniexModel.Default.GetTicker(this);
+            //PoloniexModel.Default.GetTicker(this);
         }
         void ITicker.UpdateTrades() {
             PoloniexModel.Default.UpdateTrades(this);
         }
+        protected WebClient WebClient { get; } = new WebClient();
         public string DownloadString(string address) {
-            throw new NotImplementedException();
+            try {
+                return WebClient.DownloadString(address);
+            }
+            catch { }
+            return string.Empty;
         }
     }
 }

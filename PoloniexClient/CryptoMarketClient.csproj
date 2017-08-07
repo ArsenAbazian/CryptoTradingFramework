@@ -128,9 +128,17 @@
     <Compile Include="Common\ModelBase.cs" />
     <Compile Include="Common\OrderBookEntry.cs" />
     <Compile Include="Common\OrderBookUpdateInfo.cs" />
+    <Compile Include="Common\TickerArbitrageHelper.cs" />
+    <Compile Include="Common\TickerArbitrageInfo.cs" />
     <Compile Include="Common\TickerHistoryItem.cs" />
     <Compile Include="Common\TickerUpdateHelper.cs" />
     <Compile Include="Common\TradeHistoryItem.cs" />
+    <Compile Include="TickerArbitrageForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TickerArbitrageForm.Designer.cs">
+      <DependentUpon>TickerArbitrageForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="TickerInfo.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -173,6 +181,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Bittrex\BittrexMarketsForm.resx">
       <DependentUpon>BittrexMarketsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TickerArbitrageForm.resx">
+      <DependentUpon>TickerArbitrageForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="TickerInfo.resx">
       <DependentUpon>TickerInfo.cs</DependentUpon>

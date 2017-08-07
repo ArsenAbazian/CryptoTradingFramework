@@ -25,6 +25,8 @@ namespace CryptoMarketClient {
             Ticker = null;
         }
 
+        public string MarketName { get; set; }
+
         ITicker ticker;
         public ITicker Ticker {
             get {
@@ -70,7 +72,7 @@ namespace CryptoMarketClient {
             this.ribbonPageGroup1.Text = string.Empty;
         }
         void UpdateText() {
-            Text = Ticker.Name;
+            Text = MarketName + " - " + Ticker.Name;
             this.ribbonPageGroup1.Text = Ticker.Name;
         }
         void ClearGrid() {

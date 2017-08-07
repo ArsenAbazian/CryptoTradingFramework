@@ -27,18 +27,17 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.ribbonControl1 = new DevExpress.XtraBars.Ribbon.RibbonControl();
             this.skinRibbonGalleryBarItem1 = new DevExpress.XtraBars.SkinRibbonGalleryBarItem();
-            this.biConnectPoloniex = new DevExpress.XtraBars.BarButtonItem();
-            this.biConnectBittrex = new DevExpress.XtraBars.BarButtonItem();
+            this.bcPoloniex = new DevExpress.XtraBars.BarCheckItem();
+            this.bcBittrex = new DevExpress.XtraBars.BarCheckItem();
             this.rpPoloniex = new DevExpress.XtraBars.Ribbon.RibbonPage();
-            this.rpgPoloniex = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
-            this.ribbonPageGroup1 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
+            this.ribbonPageGroup3 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.ribbonPage2 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPageGroup2 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.ribbonStatusBar1 = new DevExpress.XtraBars.Ribbon.RibbonStatusBar();
             this.documentManager1 = new DevExpress.XtraBars.Docking2010.DocumentManager(this.components);
             this.tabbedView1 = new DevExpress.XtraBars.Docking2010.Views.Tabbed.TabbedView(this.components);
-            this.biDisconnectPoloniex = new DevExpress.XtraBars.BarButtonItem();
-            this.biDisconnectBittrex = new DevExpress.XtraBars.BarButtonItem();
+            this.ribbonPageGroup1 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
+            this.btClassicArbitrage = new DevExpress.XtraBars.BarButtonItem();
             ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.documentManager1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tabbedView1)).BeginInit();
@@ -47,16 +46,16 @@
             // ribbonControl1
             // 
             this.ribbonControl1.AllowGlyphSkinning = true;
+            this.ribbonControl1.AutoSizeItems = true;
             this.ribbonControl1.ExpandCollapseItem.Id = 0;
             this.ribbonControl1.Items.AddRange(new DevExpress.XtraBars.BarItem[] {
             this.ribbonControl1.ExpandCollapseItem,
             this.skinRibbonGalleryBarItem1,
-            this.biConnectPoloniex,
-            this.biConnectBittrex,
-            this.biDisconnectPoloniex,
-            this.biDisconnectBittrex});
+            this.bcPoloniex,
+            this.bcBittrex,
+            this.btClassicArbitrage});
             this.ribbonControl1.Location = new System.Drawing.Point(0, 0);
-            this.ribbonControl1.MaxItemId = 7;
+            this.ribbonControl1.MaxItemId = 10;
             this.ribbonControl1.MdiMergeStyle = DevExpress.XtraBars.Ribbon.RibbonMdiMergeStyle.Always;
             this.ribbonControl1.Name = "ribbonControl1";
             this.ribbonControl1.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
@@ -71,48 +70,38 @@
             this.skinRibbonGalleryBarItem1.Id = 1;
             this.skinRibbonGalleryBarItem1.Name = "skinRibbonGalleryBarItem1";
             // 
-            // biConnectPoloniex
+            // bcPoloniex
             // 
-            this.biConnectPoloniex.Caption = "Connect";
-            this.biConnectPoloniex.Id = 2;
-            this.biConnectPoloniex.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("barButtonItem1.ImageOptions.Image")));
-            this.biConnectPoloniex.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("barButtonItem1.ImageOptions.LargeImage")));
-            this.biConnectPoloniex.Name = "biConnectPoloniex";
-            this.biConnectPoloniex.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItem1_ItemClick);
+            this.bcPoloniex.Caption = "Poloniex";
+            this.bcPoloniex.Id = 7;
+            this.bcPoloniex.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bcPoloniex.ImageOptions.Image")));
+            this.bcPoloniex.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("bcPoloniex.ImageOptions.LargeImage")));
+            this.bcPoloniex.Name = "bcPoloniex";
+            this.bcPoloniex.CheckedChanged += new DevExpress.XtraBars.ItemClickEventHandler(this.bcPoloniex_CheckedChanged);
             // 
-            // biConnectBittrex
+            // bcBittrex
             // 
-            this.biConnectBittrex.Caption = "Connect";
-            this.biConnectBittrex.Id = 3;
-            this.biConnectBittrex.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("btConnectBitrix.ImageOptions.Image")));
-            this.biConnectBittrex.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("btConnectBitrix.ImageOptions.LargeImage")));
-            this.biConnectBittrex.Name = "biConnectBittrex";
-            this.biConnectBittrex.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large;
-            this.biConnectBittrex.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btConnectBitrix_ItemClick);
+            this.bcBittrex.Caption = "Bittrex";
+            this.bcBittrex.Id = 8;
+            this.bcBittrex.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bcBittrex.ImageOptions.Image")));
+            this.bcBittrex.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("bcBittrex.ImageOptions.LargeImage")));
+            this.bcBittrex.Name = "bcBittrex";
+            this.bcBittrex.CheckedChanged += new DevExpress.XtraBars.ItemClickEventHandler(this.bcBittrex_CheckedChanged);
             // 
             // rpPoloniex
             // 
             this.rpPoloniex.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] {
-            this.rpgPoloniex,
+            this.ribbonPageGroup3,
             this.ribbonPageGroup1});
             this.rpPoloniex.Name = "rpPoloniex";
             this.rpPoloniex.Text = "Connect";
             // 
-            // rpgPoloniex
+            // ribbonPageGroup3
             // 
-            this.rpgPoloniex.AllowTextClipping = false;
-            this.rpgPoloniex.ItemLinks.Add(this.biConnectPoloniex);
-            this.rpgPoloniex.ItemLinks.Add(this.biDisconnectPoloniex);
-            this.rpgPoloniex.Name = "rpgPoloniex";
-            this.rpgPoloniex.ShowCaptionButton = false;
-            this.rpgPoloniex.Text = "Poloniex";
-            // 
-            // ribbonPageGroup1
-            // 
-            this.ribbonPageGroup1.ItemLinks.Add(this.biConnectBittrex);
-            this.ribbonPageGroup1.ItemLinks.Add(this.biDisconnectBittrex);
-            this.ribbonPageGroup1.Name = "ribbonPageGroup1";
-            this.ribbonPageGroup1.Text = "Bittrex";
+            this.ribbonPageGroup3.ItemLinks.Add(this.bcPoloniex);
+            this.ribbonPageGroup3.ItemLinks.Add(this.bcBittrex);
+            this.ribbonPageGroup3.Name = "ribbonPageGroup3";
+            this.ribbonPageGroup3.Text = "Connect";
             // 
             // ribbonPage2
             // 
@@ -146,23 +135,20 @@
             // 
             this.tabbedView1.RootContainer.Element = null;
             // 
-            // biDisconnectPoloniex
+            // ribbonPageGroup1
             // 
-            this.biDisconnectPoloniex.Caption = "Disconnect";
-            this.biDisconnectPoloniex.Id = 5;
-            this.biDisconnectPoloniex.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("barButtonItem2.ImageOptions.Image")));
-            this.biDisconnectPoloniex.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("barButtonItem2.ImageOptions.LargeImage")));
-            this.biDisconnectPoloniex.Name = "biDisconnectPoloniex";
-            this.biDisconnectPoloniex.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.biDisconnectPoloniex_ItemClick);
+            this.ribbonPageGroup1.ItemLinks.Add(this.btClassicArbitrage);
+            this.ribbonPageGroup1.Name = "ribbonPageGroup1";
+            this.ribbonPageGroup1.Text = "Analytics";
             // 
-            // biDisconnectBittrex
+            // btClassicArbitrage
             // 
-            this.biDisconnectBittrex.Caption = "Disconnect";
-            this.biDisconnectBittrex.Id = 6;
-            this.biDisconnectBittrex.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("barButtonItem1.ImageOptions.Image1")));
-            this.biDisconnectBittrex.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("barButtonItem1.ImageOptions.LargeImage1")));
-            this.biDisconnectBittrex.Name = "biDisconnectBittrex";
-            this.biDisconnectBittrex.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.biDisconnectBittrex_ItemClick);
+            this.btClassicArbitrage.Caption = "Arbitrage Possibilities";
+            this.btClassicArbitrage.Id = 9;
+            this.btClassicArbitrage.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("barButtonItem1.ImageOptions.Image")));
+            this.btClassicArbitrage.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("barButtonItem1.ImageOptions.LargeImage")));
+            this.btClassicArbitrage.Name = "btClassicArbitrage";
+            this.btClassicArbitrage.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btClassicArbitrage_ItemClick);
             // 
             // MainForm
             // 
@@ -189,18 +175,17 @@
 
         private DevExpress.XtraBars.Ribbon.RibbonControl ribbonControl1;
         private DevExpress.XtraBars.Ribbon.RibbonPage rpPoloniex;
-        private DevExpress.XtraBars.Ribbon.RibbonPageGroup rpgPoloniex;
         private DevExpress.XtraBars.Ribbon.RibbonStatusBar ribbonStatusBar1;
         private DevExpress.XtraBars.SkinRibbonGalleryBarItem skinRibbonGalleryBarItem1;
         private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup2;
-        private DevExpress.XtraBars.BarButtonItem biConnectPoloniex;
         private DevExpress.XtraBars.Docking2010.DocumentManager documentManager1;
         private DevExpress.XtraBars.Docking2010.Views.Tabbed.TabbedView tabbedView1;
-        private DevExpress.XtraBars.BarButtonItem biConnectBittrex;
-        private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup1;
         private DevExpress.XtraBars.Ribbon.RibbonPage ribbonPage2;
-        private DevExpress.XtraBars.BarButtonItem biDisconnectPoloniex;
-        private DevExpress.XtraBars.BarButtonItem biDisconnectBittrex;
+        private DevExpress.XtraBars.BarCheckItem bcPoloniex;
+        private DevExpress.XtraBars.BarCheckItem bcBittrex;
+        private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup3;
+        private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup1;
+        private DevExpress.XtraBars.BarButtonItem btClassicArbitrage;
     }
 }
 

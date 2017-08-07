@@ -36,8 +36,7 @@ namespace CryptoMarketClient {
         protected IDisposable TickersSubscriber { get; set; }
         public void Connect() {
             if(TickersSubscriber != null)
-                TickersSubscriber.Dispose();
-            TickersSubscriber = null;
+                return;
             TickersSubscriber = SubscribeToTicker();
         }
 
@@ -150,10 +149,9 @@ namespace CryptoMarketClient {
         public void GetOrderBook(PoloniexTicker ticker, int depth) {
             string address = string.Format("https://poloniex.com/public?command=returnOrderBook&currencyPair={0}&depth={1}",
                 Uri.EscapeDataString(ticker.CurrencyPair), depth);
-            string text;
-            using(WebClient client = new WebClient()) {
-                text = client.DownloadString(address);
-            }
+            string text = ((ITicker)ticker).DownloadString(address);
+            if(string.IsNullOrEmpty(text))
+                return;
             ticker.OrderBook.Bids.Clear();
             ticker.OrderBook.Asks.Clear();
 
@@ -164,7 +162,7 @@ namespace CryptoMarketClient {
                     JArray items = prop.Value.ToObject<JArray>();
                     foreach(JArray item in items.Children()) {
                         OrderBookUpdateInfo info = new OrderBookUpdateInfo();
-                        info.Type = prop.Name == "asks" ? OrderBookEntryType.Ask : OrderBookEntryType.Bid;
+                        info.Type = type;
                         info.Entry = new OrderBookEntry();
                         info.Action = OrderBookUpdateType.Modify;
                         JEnumerable<JToken> values = (JEnumerable<JToken>)item.Children();
@@ -179,16 +177,34 @@ namespace CryptoMarketClient {
                 }
                 else if(prop.Name == "seq") {
                     ticker.OrderBook.SeqNumber = prop.Value.ToObject<int>();
-                    Console.WriteLine("Snapshot seq no = " + ticker.OrderBook.SeqNumber);
+                    //Console.WriteLine("Snapshot seq no = " + ticker.OrderBook.SeqNumber);
                 }
                 else if(prop.Name == "isFrozen") {
                     ticker.IsFrozen = prop.Value.ToObject<int>() == 0;
                 }
             }
             ticker.OrderBook.ApplyQueueUpdates();
+            ticker.OrderBook.RaiseOnChanged(new OrderBookUpdateInfo() { Action = OrderBookUpdateType.RefreshAll });
         }
+        protected List<TradeHistoryItem> UpdateList { get; } = new List<TradeHistoryItem>(100);
         public void UpdateTrades(PoloniexTicker ticker) {
-            throw new NotImplementedException();
+            string address = string.Format("https://poloniex.com/public?command=returnTradeHistory&currencyPair={0}", Uri.EscapeDataString(ticker.CurrencyPair));
+            string text = GetDownloadString(address);
+            if(string.IsNullOrEmpty(text))
+                return;
+            ticker.TradeHistory.Clear();
+            JArray trades = (JArray)JsonConvert.DeserializeObject(text);
+            foreach(JObject obj in trades) {
+                TradeHistoryItem item = new TradeHistoryItem();
+                item.Time = obj.Value<DateTime>("time");
+                item.Amount = obj.Value<double>("amount");
+                item.Rate = obj.Value<double>("rate");
+                item.Total = obj.Value<double>("total");
+                item.Type = obj.Value<string>("type") == "buy" ? TradeType.Buy : TradeType.Sell;
+                item.Fill = TradeFillType.Fill;
+                TickerUpdateHelper.UpdateHistoryForTradeItem(item, ticker);
+                ticker.TradeHistory.Add(item);
+            }
         }
         public void GetTicker(ITicker ticker) {
             throw new NotImplementedException();
