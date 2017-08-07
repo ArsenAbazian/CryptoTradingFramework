@@ -24,6 +24,12 @@ namespace CryptoMarketClient {
             InitializeComponent();
         }
 
+        protected override void OnShown(EventArgs e) {
+            base.OnShown(e);
+            ModelBase.AllowTradeHistory = this.bcAllowTradeHistory.Checked;
+            ModelBase.OrderBookDepth = Convert.ToInt32(this.beOrderBookDepth.EditValue);
+        }
+
         PoloniexTickersForm tickersForm;
         public PoloniexTickersForm PoloniexTickersForm {
             get {
@@ -72,6 +78,14 @@ namespace CryptoMarketClient {
             TickerArbitrageForm form = new TickerArbitrageForm();
             form.MdiParent = this;
             form.Show();
+        }
+
+        private void beOrderBookDepth_EditValueChanged(object sender, EventArgs e) {
+            ModelBase.OrderBookDepth = Convert.ToInt32(this.beOrderBookDepth.EditValue);
+        }
+
+        private void bcAllowTradeHistory_CheckedChanged(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
+            ModelBase.AllowTradeHistory = this.bcAllowTradeHistory.Checked;
         }
     }
 }

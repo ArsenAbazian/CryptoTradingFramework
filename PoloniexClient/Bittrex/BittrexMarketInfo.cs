@@ -34,6 +34,7 @@ namespace CryptoMarketClient.Bittrex {
         public double BidChange { get; set; }
         public double AskChange { get; set; }
         public int CandleStickPeriodMin { get; set; } = 1;
+        public double Fee { get { return 0.25 * 0.01; } }
 
         public List<TickerHistoryItem> History { get; } = new List<TickerHistoryItem>();
         public List<TradeHistoryItem> TradeHistory { get; } = new List<TradeHistoryItem>();
@@ -70,8 +71,11 @@ namespace CryptoMarketClient.Bittrex {
         }
 
         string ITicker.Name => MarketName;
+        void ITicker.GetOrderBookSnapshot(int depth) {
+            BittrexModel.Default.GetOrderBook(this, depth);
+        }
         void ITicker.GetOrderBookSnapshot() {
-            BittrexModel.Default.GetOrderBook(this, 50);
+            BittrexModel.Default.GetOrderBook(this, ModelBase.OrderBookDepth);
         }
 
         TickerUpdateHelper updateHelper;
@@ -125,6 +129,7 @@ namespace CryptoMarketClient.Bittrex {
             catch { }
             return string.Empty;
         }
+        public string HostName { get { return "Bittrex"; } }
     }
 
     public class BittrexCurrencyInfo {

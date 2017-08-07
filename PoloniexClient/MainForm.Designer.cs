@@ -29,18 +29,23 @@
             this.skinRibbonGalleryBarItem1 = new DevExpress.XtraBars.SkinRibbonGalleryBarItem();
             this.bcPoloniex = new DevExpress.XtraBars.BarCheckItem();
             this.bcBittrex = new DevExpress.XtraBars.BarCheckItem();
+            this.btClassicArbitrage = new DevExpress.XtraBars.BarButtonItem();
             this.rpPoloniex = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPageGroup3 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
+            this.ribbonPageGroup1 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.ribbonPage2 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPageGroup2 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.ribbonStatusBar1 = new DevExpress.XtraBars.Ribbon.RibbonStatusBar();
             this.documentManager1 = new DevExpress.XtraBars.Docking2010.DocumentManager(this.components);
             this.tabbedView1 = new DevExpress.XtraBars.Docking2010.Views.Tabbed.TabbedView(this.components);
-            this.ribbonPageGroup1 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
-            this.btClassicArbitrage = new DevExpress.XtraBars.BarButtonItem();
+            this.ribbonPageGroup4 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
+            this.beOrderBookDepth = new DevExpress.XtraBars.BarEditItem();
+            this.repositoryItemSpinEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemSpinEdit();
+            this.bcAllowTradeHistory = new DevExpress.XtraBars.BarCheckItem();
             ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.documentManager1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tabbedView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemSpinEdit1)).BeginInit();
             this.SuspendLayout();
             // 
             // ribbonControl1
@@ -53,15 +58,20 @@
             this.skinRibbonGalleryBarItem1,
             this.bcPoloniex,
             this.bcBittrex,
-            this.btClassicArbitrage});
+            this.btClassicArbitrage,
+            this.beOrderBookDepth,
+            this.bcAllowTradeHistory});
             this.ribbonControl1.Location = new System.Drawing.Point(0, 0);
-            this.ribbonControl1.MaxItemId = 10;
+            this.ribbonControl1.Margin = new System.Windows.Forms.Padding(7, 7, 7, 7);
+            this.ribbonControl1.MaxItemId = 12;
             this.ribbonControl1.MdiMergeStyle = DevExpress.XtraBars.Ribbon.RibbonMdiMergeStyle.Always;
             this.ribbonControl1.Name = "ribbonControl1";
             this.ribbonControl1.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
             this.rpPoloniex,
             this.ribbonPage2});
-            this.ribbonControl1.Size = new System.Drawing.Size(887, 143);
+            this.ribbonControl1.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
+            this.repositoryItemSpinEdit1});
+            this.ribbonControl1.Size = new System.Drawing.Size(1922, 319);
             this.ribbonControl1.StatusBar = this.ribbonStatusBar1;
             // 
             // skinRibbonGalleryBarItem1
@@ -88,6 +98,15 @@
             this.bcBittrex.Name = "bcBittrex";
             this.bcBittrex.CheckedChanged += new DevExpress.XtraBars.ItemClickEventHandler(this.bcBittrex_CheckedChanged);
             // 
+            // btClassicArbitrage
+            // 
+            this.btClassicArbitrage.Caption = "Arbitrage Possibilities";
+            this.btClassicArbitrage.Id = 9;
+            this.btClassicArbitrage.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("btClassicArbitrage.ImageOptions.Image")));
+            this.btClassicArbitrage.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("btClassicArbitrage.ImageOptions.LargeImage")));
+            this.btClassicArbitrage.Name = "btClassicArbitrage";
+            this.btClassicArbitrage.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btClassicArbitrage_ItemClick);
+            // 
             // rpPoloniex
             // 
             this.rpPoloniex.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] {
@@ -103,10 +122,17 @@
             this.ribbonPageGroup3.Name = "ribbonPageGroup3";
             this.ribbonPageGroup3.Text = "Connect";
             // 
+            // ribbonPageGroup1
+            // 
+            this.ribbonPageGroup1.ItemLinks.Add(this.btClassicArbitrage);
+            this.ribbonPageGroup1.Name = "ribbonPageGroup1";
+            this.ribbonPageGroup1.Text = "Analytics";
+            // 
             // ribbonPage2
             // 
             this.ribbonPage2.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] {
-            this.ribbonPageGroup2});
+            this.ribbonPageGroup2,
+            this.ribbonPageGroup4});
             this.ribbonPage2.Name = "ribbonPage2";
             this.ribbonPage2.Text = "Options";
             // 
@@ -118,10 +144,11 @@
             // 
             // ribbonStatusBar1
             // 
-            this.ribbonStatusBar1.Location = new System.Drawing.Point(0, 458);
+            this.ribbonStatusBar1.Location = new System.Drawing.Point(0, 1020);
+            this.ribbonStatusBar1.Margin = new System.Windows.Forms.Padding(7, 7, 7, 7);
             this.ribbonStatusBar1.Name = "ribbonStatusBar1";
             this.ribbonStatusBar1.Ribbon = this.ribbonControl1;
-            this.ribbonStatusBar1.Size = new System.Drawing.Size(887, 31);
+            this.ribbonStatusBar1.Size = new System.Drawing.Size(1922, 71);
             // 
             // documentManager1
             // 
@@ -135,30 +162,48 @@
             // 
             this.tabbedView1.RootContainer.Element = null;
             // 
-            // ribbonPageGroup1
+            // ribbonPageGroup4
             // 
-            this.ribbonPageGroup1.ItemLinks.Add(this.btClassicArbitrage);
-            this.ribbonPageGroup1.Name = "ribbonPageGroup1";
-            this.ribbonPageGroup1.Text = "Analytics";
+            this.ribbonPageGroup4.ItemLinks.Add(this.beOrderBookDepth);
+            this.ribbonPageGroup4.ItemLinks.Add(this.bcAllowTradeHistory);
+            this.ribbonPageGroup4.Name = "ribbonPageGroup4";
+            this.ribbonPageGroup4.Text = "Settings";
             // 
-            // btClassicArbitrage
+            // beOrderBookDepth
             // 
-            this.btClassicArbitrage.Caption = "Arbitrage Possibilities";
-            this.btClassicArbitrage.Id = 9;
-            this.btClassicArbitrage.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("barButtonItem1.ImageOptions.Image")));
-            this.btClassicArbitrage.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("barButtonItem1.ImageOptions.LargeImage")));
-            this.btClassicArbitrage.Name = "btClassicArbitrage";
-            this.btClassicArbitrage.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btClassicArbitrage_ItemClick);
+            this.beOrderBookDepth.Caption = "Order Book Depth";
+            this.beOrderBookDepth.Edit = this.repositoryItemSpinEdit1;
+            this.beOrderBookDepth.EditValue = ((short)(25));
+            this.beOrderBookDepth.EditWidth = 150;
+            this.beOrderBookDepth.Id = 10;
+            this.beOrderBookDepth.Name = "beOrderBookDepth";
+            this.beOrderBookDepth.EditValueChanged += new System.EventHandler(this.beOrderBookDepth_EditValueChanged);
+            // 
+            // repositoryItemSpinEdit1
+            // 
+            this.repositoryItemSpinEdit1.AutoHeight = false;
+            this.repositoryItemSpinEdit1.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.repositoryItemSpinEdit1.Name = "repositoryItemSpinEdit1";
+            // 
+            // bcAllowTradeHistory
+            // 
+            this.bcAllowTradeHistory.Caption = "Allow Trade History";
+            this.bcAllowTradeHistory.CheckBoxVisibility = DevExpress.XtraBars.CheckBoxVisibility.AfterText;
+            this.bcAllowTradeHistory.Id = 11;
+            this.bcAllowTradeHistory.Name = "bcAllowTradeHistory";
+            this.bcAllowTradeHistory.CheckedChanged += new DevExpress.XtraBars.ItemClickEventHandler(this.bcAllowTradeHistory_CheckedChanged);
             // 
             // MainForm
             // 
             this.AllowFormGlass = DevExpress.Utils.DefaultBoolean.False;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(13F, 29F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(887, 489);
+            this.ClientSize = new System.Drawing.Size(1922, 1091);
             this.Controls.Add(this.ribbonStatusBar1);
             this.Controls.Add(this.ribbonControl1);
             this.IsMdiContainer = true;
+            this.Margin = new System.Windows.Forms.Padding(7, 7, 7, 7);
             this.Name = "MainForm";
             this.Ribbon = this.ribbonControl1;
             this.StatusBar = this.ribbonStatusBar1;
@@ -166,6 +211,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.documentManager1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tabbedView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemSpinEdit1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -186,6 +232,10 @@
         private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup3;
         private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup1;
         private DevExpress.XtraBars.BarButtonItem btClassicArbitrage;
+        private DevExpress.XtraBars.BarEditItem beOrderBookDepth;
+        private DevExpress.XtraEditors.Repository.RepositoryItemSpinEdit repositoryItemSpinEdit1;
+        private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup4;
+        private DevExpress.XtraBars.BarCheckItem bcAllowTradeHistory;
     }
 }
 

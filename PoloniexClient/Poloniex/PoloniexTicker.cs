@@ -68,6 +68,8 @@ namespace CryptoMarketClient {
         public DateTime Time { get; set; }
         public double BidChange { get; set; }
         public double AskChange { get; set; }
+        public string HostName { get { return "Poloniex"; } }
+        public double Fee { get { return 0.25 * 0.01; } }
 
         public double DeltaAsk { get; set; }
         public double DeltaBid { get; set; }
@@ -132,7 +134,10 @@ namespace CryptoMarketClient {
         }
 
         public void GetOrderBookSnapshot() {
-            PoloniexModel.Default.GetOrderBook(this, 50);
+            PoloniexModel.Default.GetOrderBook(this, ModelBase.OrderBookDepth);
+        }
+        public void GetOrderBookSnapshot(int depth) {
+            PoloniexModel.Default.GetOrderBook(this, depth);
         }
         TickerUpdateHelper updateHelper;
         protected TickerUpdateHelper UpdateHelper {

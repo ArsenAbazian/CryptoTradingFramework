@@ -45,16 +45,18 @@ namespace CryptoMarketClient {
 
         public ITicker LowestAskTicker { get; private set; }
         public ITicker HighestBidTicker { get; private set; }
+        public double Amount { get; private set; }
+        public string LowestAskHost { get { return LowestAskTicker == null? string.Empty: LowestAskTicker.HostName; } }
+        public string HighestBidHost { get { return HighestBidTicker == null? string.Empty: HighestBidTicker.HostName; } }
 
         public double LowestAsk { get { return LowestAskTicker == null ? 0 : LowestAskTicker.LowestAsk; } }
         public double HighestBid { get { return HighestBidTicker == null ? 0 : HighestBidTicker.HighestBid; } }
-        public double Spread {
-            get {
-                if(LowestAskTicker == HighestBidTicker)
-                    return -10000000;
-                return HighestBidTicker.HighestBid - LowestAskTicker.LowestAsk;
-            }
-        }
+        public double Spread { get; set; }
+        public double Total { get; set; }
+        public double LowestAksFee { get { return LowestAskTicker == null ? 0 : LowestAskTicker.Fee; } }
+        public double HighestBidFee { get { return HighestBidTicker == null ? 0 : HighestBidTicker.Fee; } }
+        public double TotalFee { get { return Amount * (HighestBidFee * HighestBid + LowestAksFee * LowestAsk); } }
+        public double Earning { get { return Total - TotalFee; } }
 
         public void UpdateLowestAskTicker() {
             LowestAskTicker = GetLowestAskTicker();
@@ -67,6 +69,36 @@ namespace CryptoMarketClient {
         public void Update() {
             UpdateLowestAskTicker();
             UpdateHighestBidTicker();
+            UpdateSpread();
+            UpdateAmount();
+            UpdateTotal();
+        }
+        void UpdateTotal() {
+            if(LowestAskTicker == HighestBidTicker) {
+                Total = 0;
+                return;
+            }
+            if(Spread < 0) {
+                Total = 0;
+                return;
+            }
+            Total = Spread * Amount;
+        }
+        void UpdateSpread() {
+            if(LowestAskTicker == HighestBidTicker) {
+                Spread = -10000000;
+                return;
+            }
+            Spread = HighestBidTicker.HighestBid - LowestAskTicker.LowestAsk;
+        }
+        void UpdateAmount() {
+            if(LowestAskTicker == HighestBidTicker) {
+                Amount = 0;
+                return;
+            }
+            if(LowestAskTicker.OrderBook.Asks.Count == 0 || HighestBidTicker.OrderBook.Bids.Count == 0)
+                return;
+            Amount = Math.Min(LowestAskTicker.OrderBook.Asks[0].Amount, HighestBidTicker.OrderBook.Bids[0].Amount);
         }
     }
 }
