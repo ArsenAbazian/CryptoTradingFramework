@@ -146,12 +146,11 @@ namespace CryptoMarketClient {
                 t.Hr24Low = obj.Value<double>("low24hr");
             }
         }
-        public void GetOrderBook(PoloniexTicker ticker, int depth) {
-            string address = string.Format("https://poloniex.com/public?command=returnOrderBook&currencyPair={0}&depth={1}",
+        public string GetOrderBookString(PoloniexTicker ticker, int depth) {
+            return string.Format("https://poloniex.com/public?command=returnOrderBook&currencyPair={0}&depth={1}",
                 Uri.EscapeDataString(ticker.CurrencyPair), depth);
-            string text = ((ITicker)ticker).DownloadString(address);
-            if(string.IsNullOrEmpty(text))
-                return;
+        }
+        public void UpdateOrderBook(PoloniexTicker ticker, string text) {
             ticker.OrderBook.Bids.Clear();
             ticker.OrderBook.Asks.Clear();
 
@@ -185,6 +184,14 @@ namespace CryptoMarketClient {
             }
             ticker.OrderBook.ApplyQueueUpdates();
             ticker.OrderBook.RaiseOnChanged(new OrderBookUpdateInfo() { Action = OrderBookUpdateType.RefreshAll });
+        }
+        public void GetOrderBook(PoloniexTicker ticker, int depth) {
+            string address = string.Format("https://poloniex.com/public?command=returnOrderBook&currencyPair={0}&depth={1}",
+                Uri.EscapeDataString(ticker.CurrencyPair), depth);
+            string text = ((ITicker)ticker).DownloadString(address);
+            if(string.IsNullOrEmpty(text))
+                return;
+            UpdateOrderBook(ticker, text);
         }
         protected List<TradeHistoryItem> UpdateList { get; } = new List<TradeHistoryItem>(100);
         public void UpdateTrades(PoloniexTicker ticker) {

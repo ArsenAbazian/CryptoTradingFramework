@@ -170,13 +170,10 @@ namespace CryptoMarketClient.Bittrex {
                 }
             }
         }
-        public void GetOrderBook(BittrexMarketInfo info, int depth) {
-            Timer.Reset();
-            Timer.Start();
-            string address = string.Format("https://bittrex.com/api/v1.1/public/getorderbook?market={0}&type=both&depth={1}", Uri.EscapeDataString(info.MarketName), depth);
-            string text = GetDownloadString(info, address);
-            if(string.IsNullOrEmpty(text))
-                return;
+        public string GetOrderBookString(BittrexMarketInfo info, int depth) {
+            return string.Format("https://bittrex.com/api/v1.1/public/getorderbook?market={0}&type=both&depth={1}", Uri.EscapeDataString(info.MarketName), depth);
+        }
+        public void UpdateOrderBook(BittrexMarketInfo info, string text) {
             JObject res = (JObject)JsonConvert.DeserializeObject(text);
             foreach(JProperty prop in res.Children()) {
                 if(prop.Name == "success") {
@@ -208,6 +205,15 @@ namespace CryptoMarketClient.Bittrex {
                 }
             }
             info.OrderBook.RaiseOnChanged(new OrderBookUpdateInfo() { Action = OrderBookUpdateType.RefreshAll });
+        }
+        public void GetOrderBook(BittrexMarketInfo info, int depth) {
+            Timer.Reset();
+            Timer.Start();
+            string address = string.Format("https://bittrex.com/api/v1.1/public/getorderbook?market={0}&type=both&depth={1}", Uri.EscapeDataString(info.MarketName), depth);
+            string text = GetDownloadString(info, address);
+            if(string.IsNullOrEmpty(text))
+                return;
+            UpdateOrderBook(info, text);
         }
         public void GetTrades(BittrexMarketInfo info) {
             Timer.Reset();

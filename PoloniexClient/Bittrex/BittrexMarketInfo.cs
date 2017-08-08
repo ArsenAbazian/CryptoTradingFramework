@@ -129,6 +129,12 @@ namespace CryptoMarketClient.Bittrex {
             catch { }
             return string.Empty;
         }
+        public Task<string> GetOrderBookStringAsync() {
+            return WebClient.DownloadStringTaskAsync(BittrexModel.Default.GetOrderBookString(this, 5));
+        }
+        public void ProcessArbitrageOrderBook(string text) {
+            BittrexModel.Default.UpdateOrderBook(this, text);
+        }
         public string HostName { get { return "Bittrex"; } }
     }
 

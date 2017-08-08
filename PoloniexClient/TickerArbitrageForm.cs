@@ -28,25 +28,47 @@ namespace CryptoMarketClient {
             UpdateThread = new Thread(OnUpdateTickers);
             UpdateThread.Start();
         }
+        protected override void OnTextChanged(EventArgs e) {
+            base.OnTextChanged(e);
+        }
         void RefreshGrid() {
             this.gridControl1.RefreshDataSource();
         }
-        void OnUpdateTickers() {
-            //Stopwatch timer = new Stopwatch();
+        private async Task UpdateArbitrageInfo(TickerArbitrageInfo info) {
+            Task<string>[] tasks = new Task<string>[info.Count];
+            for(int i = 0; i < info.Count; i++) {
+                if(info.Tickers[i].OrderBook.Asks.Count > 7) {
+                    tasks[i] = null;
+                    continue;
+                }
+                tasks[i] = info.Tickers[i].GetOrderBookStringAsync();
+            }
+            for(int i = 0; i < info.Count; i++) {
+                if(tasks[i] != null) {
+                    string text = await tasks[i];
+                    info.Tickers[i].ProcessArbitrageOrderBook(text);
+                }
+                info.Tickers[i].HighestBid = info.Tickers[i].OrderBook.Bids[0].Value;
+                info.Tickers[i].LowestAsk = info.Tickers[i].OrderBook.Asks[0].Value;
+            }
+        }
+        async void OnUpdateTickers() {
+            Stopwatch timer = new Stopwatch();
             while(true) {
-                foreach(TickerArbitrageInfo info in ArbitrageList) {
-                    //timer.Reset();
-                    //timer.Start();
-                    for(int i = 0; i < info.Count; i++) {
-                        if(info.Tickers[i].OrderBook.Bids.Count > 5) // it is updated do not update it...
-                            continue;
-                        info.Tickers[i].GetOrderBookSnapshot(3);
-                        info.Tickers[i].HighestBid = info.Tickers[i].OrderBook.Bids[0].Value;
-                        info.Tickers[i].LowestAsk = info.Tickers[i].OrderBook.Asks[0].Value;
-                    }
-                    BeginInvoke(new Action<TickerArbitrageInfo>(OnUpdateTickerInfo), info);
-                    //timer.Stop();
-                    //Debug.WriteLine("arbitrage update " + info.BaseCurrency + "-" + info.MarketCurrency + " = " + timer.ElapsedMilliseconds);
+                int count = (ArbitrageList.Count / 2) * 2;
+                for(int i = 0; i < count; i += 2) {
+                    timer.Reset();
+                    timer.Start();
+                    Task task1 = UpdateArbitrageInfo(ArbitrageList[i]);
+                    Task task2 = UpdateArbitrageInfo(ArbitrageList[i+1]);
+
+                    await task1;
+                    await task2;
+                    timer.Stop();
+
+                    Debug.WriteLine("arbitrage update " + timer.ElapsedMilliseconds);
+                    BeginInvoke(new Action<TickerArbitrageInfo>(OnUpdateTickerInfo), ArbitrageList[i]);
+                    BeginInvoke(new Action<TickerArbitrageInfo>(OnUpdateTickerInfo), ArbitrageList[i+1]);
                 }
                 BeginInvoke(new Action(RefreshGrid));
             }
@@ -66,6 +88,22 @@ namespace CryptoMarketClient {
         private void UpdateTimer_Tick(object sender, EventArgs e) {
             TickerArbitrageHelper.Update(ArbitrageList);
             this.gridControl1.RefreshDataSource();
+        }
+
+        private void ShowDetails() {
+            TickerArbitrageInfo info = (TickerArbitrageInfo)this.gridView1.GetRow(this.gridView1.FocusedRowHandle);
+            ArbitrageHistoryForm form = new ArbitrageHistoryForm();
+            form.Text = "Arbitrage History - " + info.BaseCurrency + " - " + info.MarketCurrency;
+            form.MdiParent = MdiParent;
+            form.Show();
+        }
+
+        private void bbShowDetail_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
+            ShowDetails();
+        }
+
+        private void gridView1_DoubleClick(object sender, EventArgs e) {
+            ShowDetails();
         }
     }
 }

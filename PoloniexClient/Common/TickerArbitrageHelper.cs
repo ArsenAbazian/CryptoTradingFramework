@@ -39,6 +39,7 @@ namespace CryptoMarketClient {
                 }
                 if(!hasFound)
                     continue;
+                info.TickerInUSD = markets.First().FirstOrDefault((t) => t.MarketCurrency == info.BaseCurrency && t.BaseCurrency == "USDT");
                 arbitrageList.Add(info);
             }
             return arbitrageList;

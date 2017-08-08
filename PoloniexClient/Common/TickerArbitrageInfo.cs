@@ -9,7 +9,9 @@ namespace CryptoMarketClient {
         public string BaseCurrency { get; set; }
         public string MarketCurrency { get; set; }
 
+        public List<SimpleHistoryItem> History { get; } = new List<SimpleHistoryItem>();
         public ITicker[] Tickers { get; private set; } = new ITicker[16];
+        public ITicker TickerInUSD { get; set; }
         public int Count { get; private set; }
 
         public void Add(ITicker ticker) {
@@ -57,6 +59,15 @@ namespace CryptoMarketClient {
         public double HighestBidFee { get { return HighestBidTicker == null ? 0 : HighestBidTicker.Fee; } }
         public double TotalFee { get { return Amount * (HighestBidFee * HighestBid + LowestAksFee * LowestAsk); } }
         public double Earning { get { return Total - TotalFee; } }
+        public double EarningUSD {
+            get {
+                if(LowestAskTicker == HighestBidTicker)
+                    return -10000000;
+                if(TickerInUSD == null)
+                    return Earning;
+                return Earning * TickerInUSD.Last;
+            }
+        }
 
         public void UpdateLowestAskTicker() {
             LowestAskTicker = GetLowestAskTicker();
@@ -67,11 +78,14 @@ namespace CryptoMarketClient {
         }
      
         public void Update() {
+            double prev = History.Count == 0 ? -10000000 : History.Last().ValueUSD;
             UpdateLowestAskTicker();
             UpdateHighestBidTicker();
             UpdateSpread();
             UpdateAmount();
             UpdateTotal();
+            if(Math.Abs(EarningUSD - prev) > 0.0000001)
+                History.Add(new SimpleHistoryItem() { Time = DateTime.Now, Value = Earning, ValueUSD = EarningUSD });
         }
         void UpdateTotal() {
             if(LowestAskTicker == HighestBidTicker) {
@@ -100,5 +114,11 @@ namespace CryptoMarketClient {
                 return;
             Amount = Math.Min(LowestAskTicker.OrderBook.Asks[0].Amount, HighestBidTicker.OrderBook.Bids[0].Amount);
         }
+    }
+
+    public class SimpleHistoryItem {
+        public DateTime Time { get; set; }
+        public double Value { get; set; }
+        public double ValueUSD { get; set; }
     }
 }
