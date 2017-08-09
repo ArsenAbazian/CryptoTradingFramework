@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DevExpress.XtraCharts;
+using DevExpress.XtraGrid;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -14,6 +16,11 @@ namespace CryptoMarketClient {
     public partial class TickerArbitrageForm : Form {
         public TickerArbitrageForm() {
             InitializeComponent();
+            this.chartSidePanel.Visible = this.bbShowDetail.Checked;
+            ((XYDiagram)this.arbitrageHistoryChart.Diagram).EnableAxisXScrolling = true;
+            ((XYDiagram)this.arbitrageHistoryChart.Diagram).EnableAxisXZooming = true;
+            ((XYDiagram)this.arbitrageHistoryChart.Diagram).AxisX.DateTimeScaleOptions.MeasureUnit = DateTimeMeasureUnit.Second;
+            ((XYDiagram)this.arbitrageHistoryChart.Diagram).AxisY.WholeRange.AlwaysShowZeroLevel = true;
         }
 
         protected override void OnShown(EventArgs e) {
@@ -69,9 +76,18 @@ namespace CryptoMarketClient {
                     Debug.WriteLine("arbitrage update " + timer.ElapsedMilliseconds);
                     BeginInvoke(new Action<TickerArbitrageInfo>(OnUpdateTickerInfo), ArbitrageList[i]);
                     BeginInvoke(new Action<TickerArbitrageInfo>(OnUpdateTickerInfo), ArbitrageList[i+1]);
+                    if(this.arbitrageHistoryChart.DataSource == ArbitrageList[i].History)
+                        BeginInvoke(new Action(RefreshChartDataSource));
+                    else if(this.arbitrageHistoryChart.DataSource == ArbitrageList[i + 1].History)
+                        BeginInvoke(new Action(RefreshChartDataSource));
                 }
                 BeginInvoke(new Action(RefreshGrid));
             }
+        }
+        void RefreshChartDataSource() {
+            if(!this.chartSidePanel.Visible)
+                return;
+            this.arbitrageHistoryChart.RefreshData();
         }
         void OnUpdateTickerInfo(TickerArbitrageInfo info) {
             info.Update();
@@ -90,20 +106,24 @@ namespace CryptoMarketClient {
             this.gridControl1.RefreshDataSource();
         }
 
-        private void ShowDetails() {
+        private void bbShowDetail_CheckedChanged(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
+            this.chartSidePanel.Visible = this.bbShowDetail.Checked;
+            if(this.chartSidePanel.Visible) {
+                UpdateChartData();
+            }
+        }
+
+        void UpdateChartData() {
             TickerArbitrageInfo info = (TickerArbitrageInfo)this.gridView1.GetRow(this.gridView1.FocusedRowHandle);
-            ArbitrageHistoryForm form = new ArbitrageHistoryForm();
-            form.Text = "Arbitrage History - " + info.BaseCurrency + " - " + info.MarketCurrency;
-            form.MdiParent = MdiParent;
-            form.Show();
+            if(gridView1.FocusedRowHandle == GridControl.InvalidRowHandle)
+                return;
+            this.arbitrageHistoryChart.DataSource = info.History;
         }
 
-        private void bbShowDetail_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
-            ShowDetails();
-        }
-
-        private void gridView1_DoubleClick(object sender, EventArgs e) {
-            ShowDetails();
+        private void gridView1_FocusedRowChanged(object sender, DevExpress.XtraGrid.Views.Base.FocusedRowChangedEventArgs e) {
+            if(!this.chartSidePanel.Visible)
+                return;
+            UpdateChartData();
         }
     }
 }

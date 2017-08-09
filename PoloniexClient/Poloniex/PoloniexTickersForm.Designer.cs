@@ -119,7 +119,6 @@
             this.repositoryItemSparklineEdit1});
             this.gridControl1.Size = new System.Drawing.Size(1008, 407);
             this.gridControl1.TabIndex = 0;
-            this.gridControl1.UseDirectXPaint = true;
             this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridView1});
             // 

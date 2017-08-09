@@ -58,9 +58,9 @@ namespace CryptoMarketClient {
 
         protected override void OnDeactivate(EventArgs e) {
             base.OnDeactivate(e);
-            //if(!HasShown)
-            //    return;
-            //StopBidAskThread();
+            if(!HasShown)
+              return;
+            StopBidAskThread();
         }
 
         private void StopBidAskThread() {
