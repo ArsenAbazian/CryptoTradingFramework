@@ -1,4 +1,6 @@
-﻿using DevExpress.XtraCharts;
+﻿using DevExpress.Data.Filtering;
+using DevExpress.XtraBars;
+using DevExpress.XtraCharts;
 using DevExpress.XtraGrid;
 using System;
 using System.Collections.Generic;
@@ -16,6 +18,7 @@ namespace CryptoMarketClient {
     public partial class TickerArbitrageForm : Form {
         public TickerArbitrageForm() {
             InitializeComponent();
+            UpdateGridFilter(this.bbAllCurrencies.Checked);
             this.chartSidePanel.Visible = this.bbShowDetail.Checked;
             ((XYDiagram)this.arbitrageHistoryChart.Diagram).EnableAxisXScrolling = true;
             ((XYDiagram)this.arbitrageHistoryChart.Diagram).EnableAxisXZooming = true;
@@ -62,8 +65,8 @@ namespace CryptoMarketClient {
         async void OnUpdateTickers() {
             Stopwatch timer = new Stopwatch();
             while(true) {
-                int count = (ArbitrageList.Count / 2) * 2;
-                for(int i = 0; i < count; i += 2) {
+                int count = (ArbitrageList.Count / 4) * 4;
+                for(int i = 0; i < count; i += 4) {
                     timer.Reset();
                     timer.Start();
                     Task task1 = UpdateArbitrageInfo(ArbitrageList[i]);
@@ -74,14 +77,17 @@ namespace CryptoMarketClient {
                     timer.Stop();
 
                     Debug.WriteLine("arbitrage update " + timer.ElapsedMilliseconds);
-                    BeginInvoke(new Action<TickerArbitrageInfo>(OnUpdateTickerInfo), ArbitrageList[i]);
-                    BeginInvoke(new Action<TickerArbitrageInfo>(OnUpdateTickerInfo), ArbitrageList[i+1]);
+                    Invoke(new Action<TickerArbitrageInfo>(OnUpdateTickerInfo), ArbitrageList[i]);
+                    Invoke(new Action<TickerArbitrageInfo>(OnUpdateTickerInfo), ArbitrageList[i+1]);
                     if(this.arbitrageHistoryChart.DataSource == ArbitrageList[i].History)
-                        BeginInvoke(new Action(RefreshChartDataSource));
+                        Invoke(new Action(RefreshChartDataSource));
                     else if(this.arbitrageHistoryChart.DataSource == ArbitrageList[i + 1].History)
-                        BeginInvoke(new Action(RefreshChartDataSource));
+                        Invoke(new Action(RefreshChartDataSource));
+                    if(!this.bbAllCurrencies.Checked)
+                        Invoke(new Action(RefreshGrid));
                 }
-                BeginInvoke(new Action(RefreshGrid));
+                if(this.bbAllCurrencies.Checked)
+                    Invoke(new Action(RefreshGrid));
             }
         }
         void RefreshChartDataSource() {
@@ -97,7 +103,6 @@ namespace CryptoMarketClient {
         public List<TickerArbitrageInfo> ArbitrageList { get; private set; }
         void BuildCurrenciesList() {
             ArbitrageList = TickerArbitrageHelper.GetArbitrageInfoList();
-            TickerArbitrageHelper.Update(ArbitrageList);
             tickerArbitrageInfoBindingSource.DataSource = ArbitrageList;
         }
 
@@ -118,9 +123,24 @@ namespace CryptoMarketClient {
             if(gridView1.FocusedRowHandle == GridControl.InvalidRowHandle)
                 return;
             this.arbitrageHistoryChart.DataSource = info.History;
+            this.arbitrageHistoryChart.Legend.Title.Visible = true;
+            this.arbitrageHistoryChart.Legend.Title.Text = info.BaseCurrency + "-" + info.MarketCurrency;
         }
 
         private void gridView1_FocusedRowChanged(object sender, DevExpress.XtraGrid.Views.Base.FocusedRowChangedEventArgs e) {
+        }
+
+        private void bbAllCurrencies_CheckedChanged(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
+            UpdateGridFilter(((BarCheckItem)e.Item).Checked);
+        }
+        void UpdateGridFilter(bool showAll) {
+            if(showAll)
+                this.gridView1.ActiveFilterString = null;
+            else
+                this.gridView1.ActiveFilterCriteria = new BinaryOperator("Earning", 0, BinaryOperatorType.Greater);
+        }
+
+        private void gridView1_Click(object sender, EventArgs e) {
             if(!this.chartSidePanel.Visible)
                 return;
             UpdateChartData();
