@@ -43,6 +43,9 @@ namespace CryptoMarketClient.Bittrex {
         protected Stopwatch Timer { get; } = new Stopwatch();
 
         public List<BittrexMarketInfo> Markets { get; } = new List<BittrexMarketInfo>();
+        public List<BittrexOrderInfo> Orders { get; } = new List<BittrexOrderInfo>();
+        public List<BittrexAccountBalanceInfo> Balances { get; } = new List<BittrexAccountBalanceInfo>();
+
         public void GetMarketsInfo() {
             string address = "https://bittrex.com/api/v1.1/public/getmarkets";
             string text = GetDownloadString(address);
@@ -73,7 +76,6 @@ namespace CryptoMarketClient.Bittrex {
                 }
             }
         }
-
         public List<BittrexCurrencyInfo> Currencies { get; } = new List<BittrexCurrencyInfo>();
         public void GetCurrenciesInfo() {
             string address = "https://bittrex.com/api/v1.1/public/getcurrencies";
@@ -297,6 +299,178 @@ namespace CryptoMarketClient.Bittrex {
                     info.RaiseTradeHistoryAdd();
                 }
             }
+        }
+
+        public string ApiKey { get; set; }
+        public Task<string> BuyLimit(BittrexMarketInfo info, double rate, double amount) {
+            string address = string.Format("https://bittrex.com/api/v1.1/market/buylimit?apikey={0}&market={1}&quantity={2}&rate={3}", 
+                Uri.EscapeDataString(ApiKey),
+                Uri.EscapeDataString(info.MarketName),
+                amount.ToString("0.########"),
+                rate.ToString("0.########"));
+            return WebClient.DownloadStringTaskAsync(address);
+        }
+        public Task<string> SellLimit(BittrexMarketInfo info, double rate, double amount) {
+            string address = string.Format("https://bittrex.com/api/v1.1/market/selllimit?apikey={0}&market={1}&quantity={2}&rate={3}",
+                Uri.EscapeDataString(ApiKey),
+                Uri.EscapeDataString(info.MarketName),
+                amount.ToString("0.########"),
+                rate.ToString("0.########"));
+            return WebClient.DownloadStringTaskAsync(address);
+        }
+        public Task<string> CancelOrder(string uuid) {
+            string address = string.Format("https://bittrex.com/api/v1.1/market/cancel?apikey={0}&uuid={1}",
+                Uri.EscapeDataString(ApiKey), 
+                uuid);
+            return WebClient.DownloadStringTaskAsync(address);
+        }
+        public Task<string> GetOpenOrders(BittrexMarketInfo info) {
+            string address = string.Format("https://bittrex.com/api/v1.1/market/getopenorders?apikey={0}&market={1}",
+                Uri.EscapeDataString(ApiKey),
+                info.MarketName);
+            return WebClient.DownloadStringTaskAsync(address);
+        }
+
+        protected string OnUuidResult(string result) {
+            if(string.IsNullOrEmpty(result))
+                return null;
+            JObject res = (JObject)JsonConvert.DeserializeObject(result);
+            foreach(JProperty prop in res.Children()) {
+                if(prop.Name == "success") {
+                    if(prop.Value.Value<bool>() == false)
+                        return null;
+                }
+                if(prop.Name == "message")
+                    continue;
+                if(prop.Name == "result") {
+                    JObject obj = (JObject)prop.Value;
+                    return obj.Value<string>("uuid");
+                }
+            }
+            return null;
+        }
+        public string OnBuyLimit(string result) {
+            return OnUuidResult(result);
+        }
+        public string OnSellLimit(string result) {
+            return OnUuidResult(result);
+        }
+        public bool OnCancel(string result) {
+            if(string.IsNullOrEmpty(result))
+                return false;
+            JObject res = (JObject)JsonConvert.DeserializeObject(result);
+            foreach(JProperty prop in res.Children()) {
+                if(prop.Name == "success") {
+                    return prop.Value.Value<bool>();
+                }
+            }
+            return false;
+        }
+        public bool OnGetOpenOrders(string result) {
+            if(string.IsNullOrEmpty(result))
+                return false;
+            JObject res = (JObject)JsonConvert.DeserializeObject(result);
+            foreach(JProperty prop in res.Children()) {
+                if(prop.Name == "success") {
+                    if(prop.Value.Value<bool>() == false)
+                        return false;
+                }
+                if(prop.Name == "message")
+                    continue;
+                if(prop.Name == "result") {
+                    lock(Orders) {
+                        Orders.Clear();
+                        JArray orders = (JArray)prop.Value;
+                        foreach(JObject obj in orders) {
+                            BittrexOrderInfo info = new BittrexOrderInfo();
+
+                            info.OrderUuid = obj.Value<string>("OrderUuid");
+                            info.Exchange = obj.Value<string>("Exchange");
+                            info.OrderType = obj.Value<string>("OrderType") == "LIMIT_SELL" ? BittrexOrderType.LimitSell : BittrexOrderType.LimitBuy;
+                            info.Quantity = obj.Value<double>("Quantity");
+                            info.QuantityRemaining = obj.Value<double>("QuantityRemaining");
+                            info.Limit = obj.Value<double>("Limit");
+                            info.CommissionPaid = obj.Value<double>("CommissionPaid");
+                            info.Price = obj.Value<double>("Price");
+                            info.Opened = obj.Value<DateTime>("Opened");
+                            info.Closed = obj.Value<DateTime>("Closed");
+                            info.CancelInitiated = obj.Value<bool>("CancelInitiated");
+                            info.ImmediateOrCancel = obj.Value<bool>("ImmediateOrCancel");
+                            info.IsConditional = obj.Value<bool>("IsConditional");
+                            info.Condition = obj.Value<string>("Condition");
+                            info.ConditionTarget = obj.Value<string>("ConditionTarget");
+
+                            Orders.Add(info);
+                        }
+                    }
+                    RaiseOpenedOrdersChanged();
+                }
+            }
+            return true;
+        }
+        void RaiseOpenedOrdersChanged() {
+            throw new NotImplementedException();
+        }
+
+        public Task<string> GetBalances() {
+            string address = string.Format("https://bittrex.com/api/v1.1/account/getbalances?apikey={0}", Uri.EscapeDataString(ApiKey));
+            return WebClient.DownloadStringTaskAsync(address);
+        }
+        public bool OnGetBalances(string text) {
+            if(string.IsNullOrEmpty(text))
+                return false;
+            JObject res = (JObject)JsonConvert.DeserializeObject(text);
+            foreach(JProperty prop in res.Children()) {
+                if(prop.Name == "success") {
+                    if(prop.Value.Value<bool>() == false)
+                        return false;
+                }
+                if(prop.Name == "message")
+                    continue;
+                if(prop.Name == "result") {
+                    lock(Balances) {
+                        Balances.Clear();
+                        JArray balances = (JArray)prop.Value;
+                        foreach(JObject obj in balances) {
+                            BittrexAccountBalanceInfo item = new BittrexAccountBalanceInfo();
+                            item.Currency = obj.Value<string>("Currency");
+                            item.Balance = obj.Value<double>("Balance");
+                            item.Available = obj.Value<double>("Available");
+                            item.Pending = obj.Value<double>("Pending");
+                            item.CryptoAddress = obj.Value<string>("CryptoAddress");
+                            item.Requested = obj.Value<bool>("Requested");
+                            item.Uuid = obj.Value<string>("Uuid");
+                            Balances.Add(item);
+                        }
+                    }
+                    RaiseBalancesChanged();
+                }
+            }
+            return true;
+        }
+        void RaiseBalancesChanged() {
+            throw new NotImplementedException();
+        }
+
+        public Task<string> Withdraw(string currency, double amount, string address, string paymentId) {
+            string addr = string.Empty;
+            if(string.IsNullOrEmpty(paymentId)) {
+                addr = string.Format("https://bittrex.com/api/v1.1/account/withdraw?apikey={0}&currency={1}&quantity={2}",
+                    Uri.EscapeDataString(ApiKey),
+                    Uri.EscapeDataString(currency),
+                    amount.ToString("0.########"));
+            }
+            else {
+                addr = string.Format("https://bittrex.com/api/v1.1/account/withdraw?apikey={0}&currency={1}&quantity={2}&paymentid={3}",
+                        Uri.EscapeDataString(ApiKey),
+                        Uri.EscapeDataString(currency),
+                        amount.ToString("0.########"),
+                        Uri.EscapeDataString(paymentId));
+            }
+            return WebClient.DownloadStringTaskAsync(addr);
+        }
+        public string OnWithdraw(string result) {
+            return OnUuidResult(result);
         }
     }
 }

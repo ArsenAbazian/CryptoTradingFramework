@@ -20,7 +20,14 @@ namespace CryptoMarketClient {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             GridControl.DisableDirectXPaint = false;
+
+            CheckShowApiKeysForm();
+            
             Application.Run(new MainForm());
+        }
+        static void CheckShowApiKeysForm() {
+            if(string.IsNullOrEmpty(Bittrex.BittrexModel.Default.ApiKey) || string.IsNullOrEmpty(PoloniexModel.Default.ApiKey))
+                Application.Run(new EnterApiKeyForm());
         }
     }
 }

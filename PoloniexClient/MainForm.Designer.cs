@@ -33,16 +33,18 @@
             this.beOrderBookDepth = new DevExpress.XtraBars.BarEditItem();
             this.repositoryItemSpinEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemSpinEdit();
             this.bcAllowTradeHistory = new DevExpress.XtraBars.BarCheckItem();
-            this.rpPoloniex = new DevExpress.XtraBars.Ribbon.RibbonPage();
-            this.ribbonPageGroup3 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
-            this.ribbonPageGroup1 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
+            this.ribbonPageCategory1 = new DevExpress.XtraBars.Ribbon.RibbonPageCategory();
             this.ribbonPage2 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPageGroup2 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.ribbonPageGroup4 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
+            this.rpPoloniex = new DevExpress.XtraBars.Ribbon.RibbonPage();
+            this.ribbonPageGroup3 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
+            this.ribbonPageGroup1 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.ribbonStatusBar1 = new DevExpress.XtraBars.Ribbon.RibbonStatusBar();
             this.documentManager1 = new DevExpress.XtraBars.Docking2010.DocumentManager(this.components);
             this.tabbedView1 = new DevExpress.XtraBars.Docking2010.Views.Tabbed.TabbedView(this.components);
-            this.ribbonPageCategory1 = new DevExpress.XtraBars.Ribbon.RibbonPageCategory();
+            this.ribbonPageGroup5 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
+            this.btShowApiKeys = new DevExpress.XtraBars.BarButtonItem();
             ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemSpinEdit1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.documentManager1)).BeginInit();
@@ -61,10 +63,11 @@
             this.bcBittrex,
             this.btClassicArbitrage,
             this.beOrderBookDepth,
-            this.bcAllowTradeHistory});
+            this.bcAllowTradeHistory,
+            this.btShowApiKeys});
             this.ribbonControl1.Location = new System.Drawing.Point(0, 0);
             this.ribbonControl1.Margin = new System.Windows.Forms.Padding(7);
-            this.ribbonControl1.MaxItemId = 12;
+            this.ribbonControl1.MaxItemId = 13;
             this.ribbonControl1.MdiMergeStyle = DevExpress.XtraBars.Ribbon.RibbonMdiMergeStyle.Always;
             this.ribbonControl1.Name = "ribbonControl1";
             this.ribbonControl1.PageCategories.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageCategory[] {
@@ -136,6 +139,35 @@
             this.bcAllowTradeHistory.Name = "bcAllowTradeHistory";
             this.bcAllowTradeHistory.CheckedChanged += new DevExpress.XtraBars.ItemClickEventHandler(this.bcAllowTradeHistory_CheckedChanged);
             // 
+            // ribbonPageCategory1
+            // 
+            this.ribbonPageCategory1.Name = "ribbonPageCategory1";
+            this.ribbonPageCategory1.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
+            this.ribbonPage2});
+            this.ribbonPageCategory1.Text = "Tools";
+            // 
+            // ribbonPage2
+            // 
+            this.ribbonPage2.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] {
+            this.ribbonPageGroup2,
+            this.ribbonPageGroup4,
+            this.ribbonPageGroup5});
+            this.ribbonPage2.Name = "ribbonPage2";
+            this.ribbonPage2.Text = "Options";
+            // 
+            // ribbonPageGroup2
+            // 
+            this.ribbonPageGroup2.ItemLinks.Add(this.skinRibbonGalleryBarItem1);
+            this.ribbonPageGroup2.Name = "ribbonPageGroup2";
+            this.ribbonPageGroup2.Text = "Themes";
+            // 
+            // ribbonPageGroup4
+            // 
+            this.ribbonPageGroup4.ItemLinks.Add(this.beOrderBookDepth);
+            this.ribbonPageGroup4.ItemLinks.Add(this.bcAllowTradeHistory);
+            this.ribbonPageGroup4.Name = "ribbonPageGroup4";
+            this.ribbonPageGroup4.Text = "Settings";
+            // 
             // rpPoloniex
             // 
             this.rpPoloniex.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] {
@@ -157,27 +189,6 @@
             this.ribbonPageGroup1.Name = "ribbonPageGroup1";
             this.ribbonPageGroup1.Text = "Arbitrage";
             // 
-            // ribbonPage2
-            // 
-            this.ribbonPage2.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] {
-            this.ribbonPageGroup2,
-            this.ribbonPageGroup4});
-            this.ribbonPage2.Name = "ribbonPage2";
-            this.ribbonPage2.Text = "Options";
-            // 
-            // ribbonPageGroup2
-            // 
-            this.ribbonPageGroup2.ItemLinks.Add(this.skinRibbonGalleryBarItem1);
-            this.ribbonPageGroup2.Name = "ribbonPageGroup2";
-            this.ribbonPageGroup2.Text = "Themes";
-            // 
-            // ribbonPageGroup4
-            // 
-            this.ribbonPageGroup4.ItemLinks.Add(this.beOrderBookDepth);
-            this.ribbonPageGroup4.ItemLinks.Add(this.bcAllowTradeHistory);
-            this.ribbonPageGroup4.Name = "ribbonPageGroup4";
-            this.ribbonPageGroup4.Text = "Settings";
-            // 
             // ribbonStatusBar1
             // 
             this.ribbonStatusBar1.Location = new System.Drawing.Point(0, 1020);
@@ -198,12 +209,20 @@
             // 
             this.tabbedView1.RootContainer.Element = null;
             // 
-            // ribbonPageCategory1
+            // ribbonPageGroup5
             // 
-            this.ribbonPageCategory1.Name = "ribbonPageCategory1";
-            this.ribbonPageCategory1.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
-            this.ribbonPage2});
-            this.ribbonPageCategory1.Text = "Tools";
+            this.ribbonPageGroup5.ItemLinks.Add(this.btShowApiKeys);
+            this.ribbonPageGroup5.Name = "ribbonPageGroup5";
+            this.ribbonPageGroup5.Text = "Api Keys";
+            // 
+            // btShowApiKeys
+            // 
+            this.btShowApiKeys.Caption = "Show ApiKeys";
+            this.btShowApiKeys.Id = 12;
+            this.btShowApiKeys.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("btShowApiKeys.ImageOptions.Image")));
+            this.btShowApiKeys.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("btShowApiKeys.ImageOptions.LargeImage")));
+            this.btShowApiKeys.Name = "btShowApiKeys";
+            this.btShowApiKeys.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btShowApiKeys_ItemClick);
             // 
             // MainForm
             // 
@@ -248,6 +267,8 @@
         private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup4;
         private DevExpress.XtraBars.BarCheckItem bcAllowTradeHistory;
         private DevExpress.XtraBars.Ribbon.RibbonPageCategory ribbonPageCategory1;
+        private DevExpress.XtraBars.BarButtonItem btShowApiKeys;
+        private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup5;
     }
 }
 

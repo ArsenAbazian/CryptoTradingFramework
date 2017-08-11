@@ -79,6 +79,8 @@
             this.colAskChange = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colCandleStickPeriodMin = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colOrderBook = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.bcShowBalance = new DevExpress.XtraBars.BarCheckItem();
+            this.bcOpenOrders = new DevExpress.XtraBars.BarCheckItem();
             ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bittrexMarketInfoBindingSource)).BeginInit();
@@ -93,14 +95,16 @@
             this.ribbonControl1.ExpandCollapseItem,
             this.btShowDetails,
             this.barCheckItem1,
-            this.btCurrencies});
+            this.btCurrencies,
+            this.bcShowBalance,
+            this.bcOpenOrders});
             this.ribbonControl1.Location = new System.Drawing.Point(0, 0);
-            this.ribbonControl1.Margin = new System.Windows.Forms.Padding(2);
-            this.ribbonControl1.MaxItemId = 4;
+            this.ribbonControl1.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
+            this.ribbonControl1.MaxItemId = 7;
             this.ribbonControl1.Name = "ribbonControl1";
             this.ribbonControl1.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
             this.ribbonPage1});
-            this.ribbonControl1.Size = new System.Drawing.Size(1147, 141);
+            this.ribbonControl1.Size = new System.Drawing.Size(2676, 315);
             // 
             // btShowDetails
             // 
@@ -135,6 +139,8 @@
             // ribbonPageGroup1
             // 
             this.ribbonPageGroup1.ItemLinks.Add(this.btShowDetails);
+            this.ribbonPageGroup1.ItemLinks.Add(this.bcShowBalance);
+            this.ribbonPageGroup1.ItemLinks.Add(this.bcOpenOrders);
             this.ribbonPageGroup1.Name = "ribbonPageGroup1";
             this.ribbonPageGroup1.Text = "Bittrex";
             // 
@@ -142,13 +148,13 @@
             // 
             this.gridControl1.DataSource = this.bittrexMarketInfoBindingSource;
             this.gridControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gridControl1.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(2);
-            this.gridControl1.Location = new System.Drawing.Point(0, 141);
+            this.gridControl1.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
+            this.gridControl1.Location = new System.Drawing.Point(0, 315);
             this.gridControl1.MainView = this.gridView1;
-            this.gridControl1.Margin = new System.Windows.Forms.Padding(2);
+            this.gridControl1.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
             this.gridControl1.MenuManager = this.ribbonControl1;
             this.gridControl1.Name = "gridControl1";
-            this.gridControl1.Size = new System.Drawing.Size(1147, 314);
+            this.gridControl1.Size = new System.Drawing.Size(2676, 700);
             this.gridControl1.TabIndex = 1;
             this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridView1});
@@ -422,14 +428,30 @@
             this.colOrderBook.Name = "colOrderBook";
             this.colOrderBook.OptionsColumn.ReadOnly = true;
             // 
+            // bcShowBalance
+            // 
+            this.bcShowBalance.Caption = "Balances";
+            this.bcShowBalance.Id = 5;
+            this.bcShowBalance.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bcShowBalance.ImageOptions.Image")));
+            this.bcShowBalance.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("bcShowBalance.ImageOptions.LargeImage")));
+            this.bcShowBalance.Name = "bcShowBalance";
+            // 
+            // bcOpenOrders
+            // 
+            this.bcOpenOrders.Caption = "My Orders";
+            this.bcOpenOrders.Id = 6;
+            this.bcOpenOrders.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bcOpenOrders.ImageOptions.Image")));
+            this.bcOpenOrders.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("bcOpenOrders.ImageOptions.LargeImage")));
+            this.bcOpenOrders.Name = "bcOpenOrders";
+            // 
             // BittrexMarketsForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(14F, 29F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1147, 455);
+            this.ClientSize = new System.Drawing.Size(2676, 1015);
             this.Controls.Add(this.gridControl1);
             this.Controls.Add(this.ribbonControl1);
-            this.Margin = new System.Windows.Forms.Padding(2);
+            this.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
             this.Name = "BittrexMarketsForm";
             this.Text = "Bittrex Markets";
             ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).EndInit();
@@ -479,5 +501,7 @@
         private DevExpress.XtraGrid.Columns.GridColumn colAskChange;
         private DevExpress.XtraGrid.Columns.GridColumn colCandleStickPeriodMin;
         private DevExpress.XtraGrid.Columns.GridColumn colOrderBook;
+        private DevExpress.XtraBars.BarCheckItem bcShowBalance;
+        private DevExpress.XtraBars.BarCheckItem bcOpenOrders;
     }
 }

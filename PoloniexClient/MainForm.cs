@@ -87,5 +87,11 @@ namespace CryptoMarketClient {
         private void bcAllowTradeHistory_CheckedChanged(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
             ModelBase.AllowTradeHistory = this.bcAllowTradeHistory.Checked;
         }
+
+        private void btShowApiKeys_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
+            using(EnterApiKeyForm form = new EnterApiKeyForm()) {
+                form.ShowDialog();
+            }
+        }
     }
 }

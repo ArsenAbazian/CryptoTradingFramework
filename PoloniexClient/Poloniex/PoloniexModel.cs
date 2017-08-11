@@ -216,6 +216,7 @@ namespace CryptoMarketClient {
         public void GetTicker(ITicker ticker) {
             throw new NotImplementedException();
         }
+        public string ApiKey { get;set; }
     }
 
     public delegate void TickerUpdateEventHandler(object sender, TickerUpdateEventArgs e);
