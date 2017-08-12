@@ -44,8 +44,8 @@ namespace CryptoMarketClient.Bittrex {
             while(AllowWorking && BittrexModel.Default.IsConnected) {
                 BittrexModel.Default.GetMarketsSummaryInfo();
                 lock(BittrexModel.Default.Markets) {
-                    if(!IsDisposed)
-                        BeginInvoke(new Action(UpdateGridAll));
+                    if(!IsDisposed && IsHandleCreated)
+                        Invoke(new Action(UpdateGridAll));
                 }
             }
         }
@@ -93,6 +93,36 @@ namespace CryptoMarketClient.Bittrex {
 
         private void gridView1_DoubleClick(object sender, EventArgs e) {
             ShowDetailsForSelectedItemCore();
+        }
+
+        BittrexAccountBalancesForm accountForm;
+        protected BittrexAccountBalancesForm AccountForm {
+            get {
+                if(accountForm == null || accountForm.IsDisposed)
+                    accountForm = new BittrexAccountBalancesForm();
+                return accountForm;
+            }
+        }
+
+        private void bcShowBalance_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
+            AccountForm.MdiParent = MdiParent;
+            AccountForm.Show();
+            AccountForm.Activate();
+        }
+
+        BittrexOrdersForm ordersForm;
+        protected BittrexOrdersForm OrdersForm {
+            get {
+                if(ordersForm == null || ordersForm.IsDisposed)
+                    ordersForm = new BittrexOrdersForm();
+                return ordersForm;
+            }
+        }
+
+        private void bcOpenOrders_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
+            OrdersForm.MdiParent = MdiParent;
+            OrdersForm.Show();
+            OrdersForm.Activate();
         }
     }
 }

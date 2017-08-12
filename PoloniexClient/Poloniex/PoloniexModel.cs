@@ -18,11 +18,15 @@ namespace CryptoMarketClient {
         static PoloniexModel defaultModel;
         public static PoloniexModel Default {
             get {
-                if(defaultModel == null)
+                if(defaultModel == null) {
                     defaultModel = new PoloniexModel();
+                    defaultModel.Load();
+                }
                 return defaultModel;
             }
         }
+
+        public override string Name => "Poloniex";
 
         List<PoloniexTicker> tickers;
         public List<PoloniexTicker> Tickers {
@@ -89,16 +93,7 @@ namespace CryptoMarketClient {
             ISubject<OrderBookUpdateInfo> subject = wampChannel.RealmProxy.Services.GetSubject<OrderBookUpdateInfo>(ticker.OrderBook.Owner.Name, new OrderBookUpdateInfoConverter());
             return subject.Subscribe(x => ticker.OrderBook.OnRecvUpdate(x));
         }
-        protected WebClient WebClient { get; } = new WebClient();
-        string GetDownloadString(string address) {
-            try {
-                return WebClient.DownloadString(address);
-            }
-            catch(Exception e) {
-                Console.WriteLine("WebClient exception = " + e.ToString());
-                return string.Empty;
-            }
-        }
+        
         public void GetTickersInfo() {
             string address = "https://poloniex.com/public?command=returnTicker";
             string text = GetDownloadString(address);
@@ -216,7 +211,6 @@ namespace CryptoMarketClient {
         public void GetTicker(ITicker ticker) {
             throw new NotImplementedException();
         }
-        public string ApiKey { get;set; }
     }
 
     public delegate void TickerUpdateEventHandler(object sender, TickerUpdateEventArgs e);

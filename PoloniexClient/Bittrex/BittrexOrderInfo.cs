@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace CryptoMarketClient.Bittrex {
     public class BittrexOrderInfo {
+        public string MarketName { get; set; }
 		public string OrderUuid { get; set; }
 		public string Exchange { get; set; }
         public BittrexOrderType OrderType { get; set; }

@@ -43,23 +43,24 @@
             DevExpress.XtraEditors.FormatConditionIconSetIcon formatConditionIconSetIcon8 = new DevExpress.XtraEditors.FormatConditionIconSetIcon();
             DevExpress.XtraEditors.FormatConditionIconSetIcon formatConditionIconSetIcon9 = new DevExpress.XtraEditors.FormatConditionIconSetIcon();
             this.gridControl1 = new DevExpress.XtraGrid.GridControl();
-            this.gridView1 = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.apiKeyInfoBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.gridView1 = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.colMarket = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colApiKey = new DevExpress.XtraGrid.Columns.GridColumn();
             this.layoutControl1 = new DevExpress.XtraLayout.LayoutControl();
+            this.labelControl1 = new DevExpress.XtraEditors.LabelControl();
+            this.simpleButton1 = new DevExpress.XtraEditors.SimpleButton();
+            this.simpleButton2 = new DevExpress.XtraEditors.SimpleButton();
             this.layoutControlGroup1 = new DevExpress.XtraLayout.LayoutControlGroup();
             this.layoutControlItem1 = new DevExpress.XtraLayout.LayoutControlItem();
-            this.simpleButton1 = new DevExpress.XtraEditors.SimpleButton();
             this.layoutControlItem2 = new DevExpress.XtraLayout.LayoutControlItem();
-            this.simpleButton2 = new DevExpress.XtraEditors.SimpleButton();
             this.layoutControlItem3 = new DevExpress.XtraLayout.LayoutControlItem();
             this.emptySpaceItem1 = new DevExpress.XtraLayout.EmptySpaceItem();
-            this.labelControl1 = new DevExpress.XtraEditors.LabelControl();
             this.layoutControlItem4 = new DevExpress.XtraLayout.LayoutControlItem();
+            this.colSecret = new DevExpress.XtraGrid.Columns.GridColumn();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.apiKeyInfoBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControl1)).BeginInit();
             this.layoutControl1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup1)).BeginInit();
@@ -78,16 +79,21 @@
             this.gridControl1.MainView = this.gridView1;
             this.gridControl1.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
             this.gridControl1.Name = "gridControl1";
-            this.gridControl1.Size = new System.Drawing.Size(1099, 415);
+            this.gridControl1.Size = new System.Drawing.Size(1016, 415);
             this.gridControl1.TabIndex = 3;
             this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridView1});
+            // 
+            // apiKeyInfoBindingSource
+            // 
+            this.apiKeyInfoBindingSource.DataSource = typeof(CryptoMarketClient.ApiKeyInfo);
             // 
             // gridView1
             // 
             this.gridView1.Columns.AddRange(new DevExpress.XtraGrid.Columns.GridColumn[] {
             this.colMarket,
-            this.colApiKey});
+            this.colApiKey,
+            this.colSecret});
             gridFormatRule1.Name = "FormatRulePercentChange";
             formatConditionIconSet1.CategoryName = "Positive/Negative";
             formatConditionIconSetIcon1.PredefinedName = "Arrows3_3.png";
@@ -156,10 +162,6 @@
             this.gridView1.OptionsView.EnableAppearanceOddRow = true;
             this.gridView1.OptionsView.ShowGroupPanel = false;
             // 
-            // apiKeyInfoBindingSource
-            // 
-            this.apiKeyInfoBindingSource.DataSource = typeof(CryptoMarketClient.ApiKeyInfo);
-            // 
             // colMarket
             // 
             this.colMarket.FieldName = "Market";
@@ -188,9 +190,42 @@
             this.layoutControl1.Name = "layoutControl1";
             this.layoutControl1.OptionsCustomizationForm.DesignTimeCustomizationFormPositionAndSize = new System.Drawing.Rectangle(1829, 63, 1462, 900);
             this.layoutControl1.Root = this.layoutControlGroup1;
-            this.layoutControl1.Size = new System.Drawing.Size(1155, 567);
+            this.layoutControl1.Size = new System.Drawing.Size(1072, 567);
             this.layoutControl1.TabIndex = 4;
             this.layoutControl1.Text = "layoutControl1";
+            // 
+            // labelControl1
+            // 
+            this.labelControl1.Location = new System.Drawing.Point(28, 28);
+            this.labelControl1.Name = "labelControl1";
+            this.labelControl1.Size = new System.Drawing.Size(736, 29);
+            this.labelControl1.StyleController = this.layoutControl1;
+            this.labelControl1.TabIndex = 6;
+            this.labelControl1.Text = "Please enter API Key for every market if you want to make trading...";
+            // 
+            // simpleButton1
+            // 
+            this.simpleButton1.AutoWidthInLayoutControl = true;
+            this.simpleButton1.Location = new System.Drawing.Point(717, 492);
+            this.simpleButton1.Name = "simpleButton1";
+            this.simpleButton1.Padding = new System.Windows.Forms.Padding(56, 0, 56, 0);
+            this.simpleButton1.Size = new System.Drawing.Size(159, 47);
+            this.simpleButton1.StyleController = this.layoutControl1;
+            this.simpleButton1.TabIndex = 4;
+            this.simpleButton1.Text = "OK";
+            this.simpleButton1.Click += new System.EventHandler(this.simpleButton1_Click);
+            // 
+            // simpleButton2
+            // 
+            this.simpleButton2.AutoWidthInLayoutControl = true;
+            this.simpleButton2.Location = new System.Drawing.Point(886, 492);
+            this.simpleButton2.Name = "simpleButton2";
+            this.simpleButton2.Padding = new System.Windows.Forms.Padding(37, 0, 37, 0);
+            this.simpleButton2.Size = new System.Drawing.Size(158, 47);
+            this.simpleButton2.StyleController = this.layoutControl1;
+            this.simpleButton2.TabIndex = 5;
+            this.simpleButton2.Text = "Cancel";
+            this.simpleButton2.Click += new System.EventHandler(this.simpleButton2_Click);
             // 
             // layoutControlGroup1
             // 
@@ -205,7 +240,7 @@
             this.layoutControlGroup1.Location = new System.Drawing.Point(0, 0);
             this.layoutControlGroup1.Name = "Root";
             this.layoutControlGroup1.OptionsItemText.TextToControlDistance = 7;
-            this.layoutControlGroup1.Size = new System.Drawing.Size(1155, 567);
+            this.layoutControlGroup1.Size = new System.Drawing.Size(1072, 567);
             this.layoutControlGroup1.TextVisible = false;
             // 
             // layoutControlItem1
@@ -213,49 +248,25 @@
             this.layoutControlItem1.Control = this.gridControl1;
             this.layoutControlItem1.Location = new System.Drawing.Point(0, 39);
             this.layoutControlItem1.Name = "layoutControlItem1";
-            this.layoutControlItem1.Size = new System.Drawing.Size(1109, 425);
+            this.layoutControlItem1.Size = new System.Drawing.Size(1026, 425);
             this.layoutControlItem1.TextSize = new System.Drawing.Size(0, 0);
             this.layoutControlItem1.TextVisible = false;
-            // 
-            // simpleButton1
-            // 
-            this.simpleButton1.AutoWidthInLayoutControl = true;
-            this.simpleButton1.Location = new System.Drawing.Point(786, 492);
-            this.simpleButton1.Name = "simpleButton1";
-            this.simpleButton1.Padding = new System.Windows.Forms.Padding(60, 0, 60, 0);
-            this.simpleButton1.Size = new System.Drawing.Size(167, 47);
-            this.simpleButton1.StyleController = this.layoutControl1;
-            this.simpleButton1.TabIndex = 4;
-            this.simpleButton1.Text = "OK";
-            this.simpleButton1.Click += new System.EventHandler(this.simpleButton1_Click);
             // 
             // layoutControlItem2
             // 
             this.layoutControlItem2.Control = this.simpleButton1;
-            this.layoutControlItem2.Location = new System.Drawing.Point(758, 464);
+            this.layoutControlItem2.Location = new System.Drawing.Point(689, 464);
             this.layoutControlItem2.Name = "layoutControlItem2";
-            this.layoutControlItem2.Size = new System.Drawing.Size(177, 57);
+            this.layoutControlItem2.Size = new System.Drawing.Size(169, 57);
             this.layoutControlItem2.TextSize = new System.Drawing.Size(0, 0);
             this.layoutControlItem2.TextVisible = false;
-            // 
-            // simpleButton2
-            // 
-            this.simpleButton2.AutoWidthInLayoutControl = true;
-            this.simpleButton2.Location = new System.Drawing.Point(963, 492);
-            this.simpleButton2.Name = "simpleButton2";
-            this.simpleButton2.Padding = new System.Windows.Forms.Padding(40, 0, 40, 0);
-            this.simpleButton2.Size = new System.Drawing.Size(164, 47);
-            this.simpleButton2.StyleController = this.layoutControl1;
-            this.simpleButton2.TabIndex = 5;
-            this.simpleButton2.Text = "Cancel";
-            this.simpleButton2.Click += new System.EventHandler(this.simpleButton2_Click);
             // 
             // layoutControlItem3
             // 
             this.layoutControlItem3.Control = this.simpleButton2;
-            this.layoutControlItem3.Location = new System.Drawing.Point(935, 464);
+            this.layoutControlItem3.Location = new System.Drawing.Point(858, 464);
             this.layoutControlItem3.Name = "layoutControlItem3";
-            this.layoutControlItem3.Size = new System.Drawing.Size(174, 57);
+            this.layoutControlItem3.Size = new System.Drawing.Size(168, 57);
             this.layoutControlItem3.TextSize = new System.Drawing.Size(0, 0);
             this.layoutControlItem3.TextVisible = false;
             // 
@@ -264,38 +275,36 @@
             this.emptySpaceItem1.AllowHotTrack = false;
             this.emptySpaceItem1.Location = new System.Drawing.Point(0, 464);
             this.emptySpaceItem1.Name = "emptySpaceItem1";
-            this.emptySpaceItem1.Size = new System.Drawing.Size(758, 57);
+            this.emptySpaceItem1.Size = new System.Drawing.Size(689, 57);
             this.emptySpaceItem1.TextSize = new System.Drawing.Size(0, 0);
-            // 
-            // labelControl1
-            // 
-            this.labelControl1.Location = new System.Drawing.Point(28, 28);
-            this.labelControl1.Name = "labelControl1";
-            this.labelControl1.Size = new System.Drawing.Size(736, 29);
-            this.labelControl1.StyleController = this.layoutControl1;
-            this.labelControl1.TabIndex = 6;
-            this.labelControl1.Text = "Please enter API Key for every market if you want to make trading...";
             // 
             // layoutControlItem4
             // 
             this.layoutControlItem4.Control = this.labelControl1;
             this.layoutControlItem4.Location = new System.Drawing.Point(0, 0);
             this.layoutControlItem4.Name = "layoutControlItem4";
-            this.layoutControlItem4.Size = new System.Drawing.Size(1109, 39);
+            this.layoutControlItem4.Size = new System.Drawing.Size(1026, 39);
             this.layoutControlItem4.TextSize = new System.Drawing.Size(0, 0);
             this.layoutControlItem4.TextVisible = false;
             // 
+            // colSecret
+            // 
+            this.colSecret.FieldName = "Secret";
+            this.colSecret.Name = "colSecret";
+            this.colSecret.Visible = true;
+            this.colSecret.VisibleIndex = 2;
+            // 
             // EnterApiKeyForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(14F, 29F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(13F, 29F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1155, 567);
+            this.ClientSize = new System.Drawing.Size(1072, 567);
             this.Controls.Add(this.layoutControl1);
             this.Name = "EnterApiKeyForm";
             this.Text = "Api Keys";
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gridView1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.apiKeyInfoBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gridView1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControl1)).EndInit();
             this.layoutControl1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup1)).EndInit();
@@ -325,5 +334,6 @@
         private DevExpress.XtraLayout.EmptySpaceItem emptySpaceItem1;
         private DevExpress.XtraEditors.LabelControl labelControl1;
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItem4;
+        private DevExpress.XtraGrid.Columns.GridColumn colSecret;
     }
 }

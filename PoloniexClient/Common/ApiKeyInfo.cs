@@ -8,5 +8,6 @@ namespace CryptoMarketClient {
     public class ApiKeyInfo {
         public string Market { get; set; }
         public string ApiKey { get; set; }
+        public string Secret { get; set; }
     }
 }

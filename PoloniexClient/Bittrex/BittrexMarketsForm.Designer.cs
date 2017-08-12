@@ -47,6 +47,8 @@
             this.btShowDetails = new DevExpress.XtraBars.BarButtonItem();
             this.barCheckItem1 = new DevExpress.XtraBars.BarCheckItem();
             this.btCurrencies = new DevExpress.XtraBars.BarButtonItem();
+            this.bcShowBalance = new DevExpress.XtraBars.BarButtonItem();
+            this.bcOpenOrders = new DevExpress.XtraBars.BarButtonItem();
             this.ribbonPage1 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPageGroup1 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.gridControl1 = new DevExpress.XtraGrid.GridControl();
@@ -79,8 +81,6 @@
             this.colAskChange = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colCandleStickPeriodMin = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colOrderBook = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.bcShowBalance = new DevExpress.XtraBars.BarCheckItem();
-            this.bcOpenOrders = new DevExpress.XtraBars.BarCheckItem();
             ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bittrexMarketInfoBindingSource)).BeginInit();
@@ -128,6 +128,24 @@
             this.btCurrencies.Id = 3;
             this.btCurrencies.Name = "btCurrencies";
             this.btCurrencies.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btCurrencies_ItemClick);
+            // 
+            // bcShowBalance
+            // 
+            this.bcShowBalance.Caption = "Balances";
+            this.bcShowBalance.Id = 5;
+            this.bcShowBalance.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bcShowBalance.ImageOptions.Image")));
+            this.bcShowBalance.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("bcShowBalance.ImageOptions.LargeImage")));
+            this.bcShowBalance.Name = "bcShowBalance";
+            this.bcShowBalance.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bcShowBalance_ItemClick);
+            // 
+            // bcOpenOrders
+            // 
+            this.bcOpenOrders.Caption = "My Orders";
+            this.bcOpenOrders.Id = 6;
+            this.bcOpenOrders.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bcOpenOrders.ImageOptions.Image")));
+            this.bcOpenOrders.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("bcOpenOrders.ImageOptions.LargeImage")));
+            this.bcOpenOrders.Name = "bcOpenOrders";
+            this.bcOpenOrders.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bcOpenOrders_ItemClick);
             // 
             // ribbonPage1
             // 
@@ -428,22 +446,6 @@
             this.colOrderBook.Name = "colOrderBook";
             this.colOrderBook.OptionsColumn.ReadOnly = true;
             // 
-            // bcShowBalance
-            // 
-            this.bcShowBalance.Caption = "Balances";
-            this.bcShowBalance.Id = 5;
-            this.bcShowBalance.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bcShowBalance.ImageOptions.Image")));
-            this.bcShowBalance.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("bcShowBalance.ImageOptions.LargeImage")));
-            this.bcShowBalance.Name = "bcShowBalance";
-            // 
-            // bcOpenOrders
-            // 
-            this.bcOpenOrders.Caption = "My Orders";
-            this.bcOpenOrders.Id = 6;
-            this.bcOpenOrders.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bcOpenOrders.ImageOptions.Image")));
-            this.bcOpenOrders.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("bcOpenOrders.ImageOptions.LargeImage")));
-            this.bcOpenOrders.Name = "bcOpenOrders";
-            // 
             // BittrexMarketsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(14F, 29F);
@@ -501,7 +503,7 @@
         private DevExpress.XtraGrid.Columns.GridColumn colAskChange;
         private DevExpress.XtraGrid.Columns.GridColumn colCandleStickPeriodMin;
         private DevExpress.XtraGrid.Columns.GridColumn colOrderBook;
-        private DevExpress.XtraBars.BarCheckItem bcShowBalance;
-        private DevExpress.XtraBars.BarCheckItem bcOpenOrders;
+        private DevExpress.XtraBars.BarButtonItem bcShowBalance;
+        private DevExpress.XtraBars.BarButtonItem bcOpenOrders;
     }
 }
