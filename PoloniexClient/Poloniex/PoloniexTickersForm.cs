@@ -1,4 +1,5 @@
-﻿using DevExpress.XtraEditors;
+﻿using CryptoMarketClient.Poloniex;
+using DevExpress.XtraEditors;
 using DevExpress.XtraEditors.Repository;
 using DevExpress.XtraGrid;
 using System;
@@ -102,6 +103,21 @@ namespace CryptoMarketClient {
 
         private void gridView1_DoubleClick(object sender, EventArgs e) {
             ShowDetailsForSelectedItemCore();
+        }
+
+        PoloniexAccountBalancesForm accountForm;
+        protected PoloniexAccountBalancesForm AccountForm {
+            get {
+                if(accountForm == null || accountForm.IsDisposed)
+                    accountForm = new PoloniexAccountBalancesForm();
+                return accountForm;
+            }
+        }
+
+        private void bbShowBalances_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
+            AccountForm.MdiParent = MdiParent;
+            AccountForm.Show();
+            AccountForm.Activate();
         }
     }
 }

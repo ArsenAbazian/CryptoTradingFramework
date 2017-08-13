@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace CryptoMarketClient.Bittrex {
-    public partial class BittrexAccountBalancesForm : TimerUpdateForm {
+    public partial class BittrexAccountBalancesForm : ThreadUpdateForm {
         public BittrexAccountBalancesForm() {
             InitializeComponent();
             this.bittrexAccountBalanceInfoBindingSource.DataSource = BittrexModel.Default.Balances;
@@ -18,17 +18,16 @@ namespace CryptoMarketClient.Bittrex {
         protected override int UpdateInervalMs => 3000;
         protected override bool AllowUpdateInactive => false;
 
-        async protected void UpdateBalances() {
+        protected void UpdateBalances() {
             if(!BittrexModel.Default.IsConnected)
                 return;
             Task<string> task = BittrexModel.Default.GetBalances();
-            await task;
+            task.Wait();
             BittrexModel.Default.OnGetBalances(task.Result);
             this.gridControl1.RefreshDataSource();
         }
 
-        protected override void OnTimerUpdate(object sender, EventArgs e) {
-            base.OnTimerUpdate(sender, e);
+        protected override void OnThreadUpdate() {
             UpdateBalances();
         }
     }

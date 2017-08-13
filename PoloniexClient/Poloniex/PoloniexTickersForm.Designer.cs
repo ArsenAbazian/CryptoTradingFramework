@@ -41,7 +41,7 @@
             DevExpress.XtraEditors.FormatConditionIconSetIcon formatConditionIconSetIcon7 = new DevExpress.XtraEditors.FormatConditionIconSetIcon();
             DevExpress.XtraEditors.FormatConditionIconSetIcon formatConditionIconSetIcon8 = new DevExpress.XtraEditors.FormatConditionIconSetIcon();
             DevExpress.XtraEditors.FormatConditionIconSetIcon formatConditionIconSetIcon9 = new DevExpress.XtraEditors.FormatConditionIconSetIcon();
-            DevExpress.Sparkline.LineSparklineView lineSparklineView1 = new DevExpress.Sparkline.LineSparklineView();
+            DevExpress.Sparkline.LineSparklineView lineSparklineView3 = new DevExpress.Sparkline.LineSparklineView();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PoloniexTickersForm));
             this.gcPercentChange = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gcDeltaBid = new DevExpress.XtraGrid.Columns.GridColumn();
@@ -67,6 +67,7 @@
             this.ShowDetailsForSelectedItem = new DevExpress.XtraBars.BarButtonItem();
             this.ribbonPage1 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPageGroup1 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
+            this.bbShowBalances = new DevExpress.XtraBars.BarButtonItem();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemSparklineEdit1)).BeginInit();
@@ -112,12 +113,14 @@
             // gridControl1
             // 
             this.gridControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gridControl1.Location = new System.Drawing.Point(0, 141);
+            this.gridControl1.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(7, 7, 7, 7);
+            this.gridControl1.Location = new System.Drawing.Point(0, 315);
             this.gridControl1.MainView = this.gridView1;
+            this.gridControl1.Margin = new System.Windows.Forms.Padding(7, 7, 7, 7);
             this.gridControl1.Name = "gridControl1";
             this.gridControl1.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repositoryItemSparklineEdit1});
-            this.gridControl1.Size = new System.Drawing.Size(1008, 407);
+            this.gridControl1.Size = new System.Drawing.Size(2184, 907);
             this.gridControl1.TabIndex = 0;
             this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridView1});
@@ -299,8 +302,8 @@
             this.repositoryItemSparklineEdit1.EditValueMember = "Current";
             this.repositoryItemSparklineEdit1.Name = "repositoryItemSparklineEdit1";
             this.repositoryItemSparklineEdit1.PointValueMember = "Time";
-            lineSparklineView1.Color = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
-            this.repositoryItemSparklineEdit1.View = lineSparklineView1;
+            lineSparklineView3.Color = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
+            this.repositoryItemSparklineEdit1.View = lineSparklineView3;
             // 
             // ribbonControl1
             // 
@@ -310,13 +313,15 @@
             this.ribbonControl1.ExpandCollapseItem,
             this.barCheckItem1,
             this.barCheckItem2,
-            this.ShowDetailsForSelectedItem});
+            this.ShowDetailsForSelectedItem,
+            this.bbShowBalances});
             this.ribbonControl1.Location = new System.Drawing.Point(0, 0);
-            this.ribbonControl1.MaxItemId = 6;
+            this.ribbonControl1.Margin = new System.Windows.Forms.Padding(7, 7, 7, 7);
+            this.ribbonControl1.MaxItemId = 8;
             this.ribbonControl1.Name = "ribbonControl1";
             this.ribbonControl1.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
             this.ribbonPage1});
-            this.ribbonControl1.Size = new System.Drawing.Size(1008, 141);
+            this.ribbonControl1.Size = new System.Drawing.Size(2184, 315);
             // 
             // barCheckItem1
             // 
@@ -347,16 +352,27 @@
             // ribbonPageGroup1
             // 
             this.ribbonPageGroup1.ItemLinks.Add(this.ShowDetailsForSelectedItem);
+            this.ribbonPageGroup1.ItemLinks.Add(this.bbShowBalances);
             this.ribbonPageGroup1.Name = "ribbonPageGroup1";
             this.ribbonPageGroup1.Text = "Poloniex";
             // 
+            // bbShowBalances
+            // 
+            this.bbShowBalances.Caption = "Balances";
+            this.bbShowBalances.Id = 7;
+            this.bbShowBalances.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bbShowBalances.ImageOptions.Image")));
+            this.bbShowBalances.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("bbShowBalances.ImageOptions.LargeImage")));
+            this.bbShowBalances.Name = "bbShowBalances";
+            this.bbShowBalances.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bbShowBalances_ItemClick);
+            // 
             // PoloniexTickersForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(13F, 29F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1008, 548);
+            this.ClientSize = new System.Drawing.Size(2184, 1222);
             this.Controls.Add(this.gridControl1);
             this.Controls.Add(this.ribbonControl1);
+            this.Margin = new System.Windows.Forms.Padding(7, 7, 7, 7);
             this.Name = "PoloniexTickersForm";
             this.Text = "Poloniex Markets";
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).EndInit();
@@ -394,5 +410,6 @@
         private DevExpress.XtraGrid.Columns.GridColumn gcDeltaAsk;
         private DevExpress.XtraEditors.Repository.RepositoryItemSparklineEdit repositoryItemSparklineEdit1;
         private DevExpress.XtraBars.BarButtonItem ShowDetailsForSelectedItem;
+        private DevExpress.XtraBars.BarButtonItem bbShowBalances;
     }
 }
