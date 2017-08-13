@@ -20,6 +20,7 @@ namespace CryptoMarketClient {
             InitializeComponent();
             UpdateGridFilter(this.bbAllCurrencies.Checked);
             this.chartSidePanel.Visible = this.bbShowDetail.Checked;
+            this.orderBookSidePanel.Visible = this.bcShowOrderBook.Checked;
             ((XYDiagram)this.arbitrageHistoryChart.Diagram).EnableAxisXScrolling = true;
             ((XYDiagram)this.arbitrageHistoryChart.Diagram).EnableAxisXZooming = true;
             ((XYDiagram)this.arbitrageHistoryChart.Diagram).AxisX.DateTimeScaleOptions.MeasureUnit = DateTimeMeasureUnit.Second;
@@ -47,11 +48,7 @@ namespace CryptoMarketClient {
         private async Task UpdateArbitrageInfo(TickerArbitrageInfo info) {
             Task<string>[] tasks = new Task<string>[info.Count];
             for(int i = 0; i < info.Count; i++) {
-                if(info.Tickers[i].OrderBook.Asks.Count > 7) {
-                    tasks[i] = null;
-                    continue;
-                }
-                tasks[i] = info.Tickers[i].GetOrderBookStringAsync();
+                tasks[i] = info.Tickers[i].GetOrderBookStringAsync(TickerArbitrageInfo.Depth);
             }
             for(int i = 0; i < info.Count; i++) {
                 if(tasks[i] != null) {
@@ -83,6 +80,9 @@ namespace CryptoMarketClient {
                         Invoke(new Action(RefreshChartDataSource));
                     else if(this.arbitrageHistoryChart.DataSource == ArbitrageList[i + 1].History)
                         Invoke(new Action(RefreshChartDataSource));
+                    if(this.orderBookControl1.ArbitrageInfo == ArbitrageList[i] ||
+                        this.orderBookControl1.ArbitrageInfo == ArbitrageList[i + 1])
+                        Invoke(new Action(RefreshOrderBook));
                     if(!this.bbAllCurrencies.Checked)
                         Invoke(new Action(RefreshGrid));
                 }
@@ -94,6 +94,12 @@ namespace CryptoMarketClient {
             if(!this.chartSidePanel.Visible)
                 return;
             this.arbitrageHistoryChart.RefreshData();
+        }
+        void RefreshOrderBook() {
+            if(!this.orderBookSidePanel.Visible)
+                return;
+            this.orderBookControl1.RefreshAsks();
+            this.orderBookControl1.RefreshBids();
         }
         void OnUpdateTickerInfo(TickerArbitrageInfo info) {
             info.Update();
@@ -124,7 +130,7 @@ namespace CryptoMarketClient {
                 return;
             this.arbitrageHistoryChart.DataSource = info.History;
             this.arbitrageHistoryChart.Legend.Title.Visible = true;
-            this.arbitrageHistoryChart.Legend.Title.Text = info.BaseCurrency + "-" + info.MarketCurrency;
+            this.arbitrageHistoryChart.Legend.Title.Text = info.Name;
         }
 
         private void gridView1_FocusedRowChanged(object sender, DevExpress.XtraGrid.Views.Base.FocusedRowChangedEventArgs e) {
@@ -141,9 +147,26 @@ namespace CryptoMarketClient {
         }
 
         private void gridView1_Click(object sender, EventArgs e) {
-            if(!this.chartSidePanel.Visible)
+            if(this.chartSidePanel.Visible)
+                UpdateChartData();
+            if(this.orderBookSidePanel.Visible)
+                UpdateOrderBook();
+        }
+
+        private void TickerArbitrageForm_Load(object sender, EventArgs e) {
+
+        }
+
+        private void bcShowOrderBook_CheckedChanged(object sender, ItemClickEventArgs e) {
+            this.orderBookSidePanel.Visible = this.bcShowOrderBook.Checked;
+            UpdateOrderBook();
+        }
+        void UpdateOrderBook() {
+            if(!this.orderBookSidePanel.Visible)
                 return;
-            UpdateChartData();
+            if(this.gridView1.FocusedRowHandle == GridControl.InvalidRowHandle)
+                return;
+            this.orderBookControl1.ArbitrageInfo = (TickerArbitrageInfo)this.gridView1.GetRow(this.gridView1.FocusedRowHandle);
         }
     }
 }

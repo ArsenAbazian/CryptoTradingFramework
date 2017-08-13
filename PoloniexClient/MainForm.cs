@@ -15,6 +15,7 @@ using System.Reactive.Subjects;
 using System.Diagnostics;
 using DevExpress.XtraWaitForm;
 using CryptoMarketClient.Bittrex;
+using DevExpress.XtraEditors;
 
 namespace CryptoMarketClient {
     public partial class MainForm : DevExpress.XtraBars.Ribbon.RibbonForm {
@@ -75,6 +76,10 @@ namespace CryptoMarketClient {
         }
 
         private void btClassicArbitrage_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
+            if(!BittrexModel.Default.IsConnected || !PoloniexModel.Default.IsConnected) {
+                XtraMessageBox.Show("Please connect at least two markets to make arbitrage possible...");
+                return;
+            }
             TickerArbitrageForm form = new TickerArbitrageForm();
             form.MdiParent = this;
             form.Show();

@@ -176,6 +176,11 @@ namespace CryptoMarketClient {
             PoloniexModel.Default.UpdateTrades(this);
         }
         protected WebClient WebClient { get; } = new WebClient();
+        public string MarketName {
+            get {
+                throw new NotImplementedException();
+            }
+        }
         public string DownloadString(string address) {
             try {
                 return WebClient.DownloadString(address);
@@ -183,8 +188,8 @@ namespace CryptoMarketClient {
             catch { }
             return string.Empty;
         }
-        public Task<string> GetOrderBookStringAsync() {
-            return WebClient.DownloadStringTaskAsync(PoloniexModel.Default.GetOrderBookString(this, 5));
+        public Task<string> GetOrderBookStringAsync(int depth) {
+            return WebClient.DownloadStringTaskAsync(PoloniexModel.Default.GetOrderBookString(this, depth));
         }
         public void ProcessArbitrageOrderBook(string text) {
             PoloniexModel.Default.UpdateOrderBook(this, text);

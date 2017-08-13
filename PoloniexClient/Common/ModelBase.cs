@@ -23,8 +23,32 @@ namespace CryptoMarketClient {
         public string ApiKey { get; set; }
         [XtraSerializableProperty]
         public string ApiSecretEncoded { get; set; }
-        public string ApiSecret { get; set; }
+        string apiSecret;
+        public string ApiSecret {
+            get { return apiSecret; }
+            set {
+                if(ApiSecret == value)
+                    return;
+                apiSecret = value;
+                OnApiSecretChanged();
+            }
+        }
+        void OnApiSecretChanged() {
+            HmacSha.Key = Encoding.ASCII.GetBytes(ApiSecret);
+        }
+        public bool IsApiKeyExists { get { return !string.IsNullOrEmpty(ApiKey) && !string.IsNullOrEmpty(ApiSecret); } }
         public abstract string Name { get; }
+        protected HMACSHA512 HmacSha { get; } = new HMACSHA512();
+        readonly byte[] Buffer = new byte[8192];
+        protected string GetSign(string text) {
+            for(int i = 0; i < text.Length; i++)
+                Buffer[i] = (byte)text[i];
+            byte[] hash = HmacSha.ComputeHash(Buffer, 0, text.Length);
+            StringBuilder builder = new StringBuilder();
+            for(int i = 0; i < hash.Length; i++)
+                builder.Append(hash[i].ToString("x2"));
+            return builder.ToString();
+        }
 
         #region Settings
         public void Save() {
@@ -42,11 +66,11 @@ namespace CryptoMarketClient {
         }
 
         void IXtraSerializable.OnEndSerializing() {
-            
+
         }
 
         void IXtraSerializable.OnStartDeserializing(LayoutAllowEventArgs e) {
-            
+
         }
 
         void IXtraSerializable.OnStartSerializing() {
@@ -178,18 +202,29 @@ namespace CryptoMarketClient {
             }
         }
 
-        protected WebClient ImmediateClient { get; } = new WebClient();
+        protected WebClient[] WebClientBuffer { get; } = new WebClient[32];
+        protected int CurrentClientIndex { get; set; }
+        protected WebClient GetWebClient() {
+            //for(int i = 0; i < WebClientBuffer.Length; i++) { 
+            //    if(WebClientBuffer[CurrentClientIndex] == null)
+            //        WebClientBuffer[CurrentClientIndex] = new WebClient();
+            //    if(!WebClientBuffer[CurrentClientIndex].IsBusy)
+            //        return WebClientBuffer[CurrentClientIndex];
+            //    CurrentClientIndex++;
+            //    if(CurrentClientIndex >= WebClientBuffer.Length)
+            //        CurrentClientIndex = 0;
+            //}
+            return new WebClient();
+        }
+        protected Stopwatch Timer { get; } = new Stopwatch();
         protected string GetDownloadString(string address) {
             try {
-                return ImmediateClient.DownloadString(address);
+                return GetWebClient().DownloadString(address);
             }
             catch(Exception e) {
                 Console.WriteLine("WebClient exception = " + e.ToString());
                 return null;
             }
         }
-
-        protected WebClient WebClient { get; } = new WebClient();
-        protected Stopwatch Timer { get; } = new Stopwatch();
     }
 }

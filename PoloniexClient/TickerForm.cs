@@ -76,8 +76,8 @@ namespace CryptoMarketClient {
             this.ribbonPageGroup1.Text = Ticker.Name;
         }
         void ClearGrid() {
-            this.askGridControl.DataSource = null;
-            this.bidGridControl.DataSource = null;
+            this.orderBookControl1.Asks = null;
+            this.orderBookControl1.Bids = null;
             this.tradeHistoryItemBindingSource.DataSource = null;
         }
         void UnsubscribeEvents(ITicker prev) {
@@ -90,8 +90,8 @@ namespace CryptoMarketClient {
             prev.UnsubscribeTradeUpdates();
         }
         void UpdateGrid() {
-            this.askGridControl.DataSource = Ticker.OrderBook.Asks;
-            this.bidGridControl.DataSource = Ticker.OrderBook.Bids;
+            this.orderBookControl1.Bids = Ticker.OrderBook.Bids;
+            this.orderBookControl1.Asks = Ticker.OrderBook.Asks;
             this.tradeHistoryItemBindingSource.DataSource = Ticker.TradeHistory;
         }
         void SubscribeEvents() {
@@ -175,23 +175,10 @@ namespace CryptoMarketClient {
             RefreshAskGrid();
         }
         void RefreshBidGrid() {
-            this.bidGridControl.RefreshDataSource();
-            //this.bidGridControl.Invalidate();
-            //this.bidGridControl.Update();
+            this.orderBookControl1.RefreshBids();
         }
         void RefreshAskGrid() {
-            this.askGridControl.RefreshDataSource();
-            this.askGridView.TopRowIndex = Ticker.OrderBook.Asks.Count;
-            //this.askGridControl.Invalidate();
-            //this.askGridControl.Update();
-        }
-
-        private void askGridControl_Resize(object sender, EventArgs e) {
-            this.askGridView.TopRowIndex = this.askGridView.DataRowCount;
-        }
-
-        private void sidePanel2_Resize(object sender, EventArgs e) {
-            this.askPanel.Height = this.orderBookPanel.Height / 2;
+            this.orderBookControl1.RefreshAsks();
         }
     }
 }

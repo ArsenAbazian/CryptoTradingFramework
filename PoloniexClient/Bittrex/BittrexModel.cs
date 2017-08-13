@@ -284,32 +284,48 @@ namespace CryptoMarketClient.Bittrex {
         }
 
         public Task<string> BuyLimit(BittrexMarketInfo info, double rate, double amount) {
-            string address = string.Format("https://bittrex.com/api/v1.1/market/buylimit?apikey={0}&market={1}&quantity={2}&rate={3}",
+            string address = string.Format("https://bittrex.com/api/v1.1/market/buylimit?apikey={0}&nonce={1}&market={2}&quantity={3}&rate={4}",
                 Uri.EscapeDataString(ApiKey),
+                DateTime.Now,
                 Uri.EscapeDataString(info.MarketName),
                 amount.ToString("0.########"),
                 rate.ToString("0.########"));
-            return WebClient.DownloadStringTaskAsync(address);
+            WebClient client = GetWebClient();
+            client.Headers.Clear();
+            client.Headers.Add("apisign", GetSign(address));
+            return client.DownloadStringTaskAsync(address);
         }
         public Task<string> SellLimit(BittrexMarketInfo info, double rate, double amount) {
-            string address = string.Format("https://bittrex.com/api/v1.1/market/selllimit?apikey={0}&market={1}&quantity={2}&rate={3}",
+            string address = string.Format("https://bittrex.com/api/v1.1/market/selllimit?apikey={0}&nonce={1}&market={2}&quantity={3}&rate={4}",
                 Uri.EscapeDataString(ApiKey),
+                DateTime.Now,
                 Uri.EscapeDataString(info.MarketName),
                 amount.ToString("0.########"),
                 rate.ToString("0.########"));
-            return WebClient.DownloadStringTaskAsync(address);
+            WebClient client = GetWebClient();
+            client.Headers.Clear();
+            client.Headers.Add("apisign", GetSign(address));
+            return client.DownloadStringTaskAsync(address);
         }
         public Task<string> CancelOrder(string uuid) {
-            string address = string.Format("https://bittrex.com/api/v1.1/market/cancel?apikey={0}&uuid={1}",
+            string address = string.Format("https://bittrex.com/api/v1.1/market/cancel?apikey={0}&nonce={1}&uuid={2}",
                 Uri.EscapeDataString(ApiKey),
+                DateTime.Now,
                 uuid);
-            return WebClient.DownloadStringTaskAsync(address);
+            WebClient client = GetWebClient();
+            client.Headers.Clear();
+            client.Headers.Add("apisign", GetSign(address));
+            return client.DownloadStringTaskAsync(address);
         }
         public Task<string> GetOpenOrders(BittrexMarketInfo info) {
-            string address = string.Format("https://bittrex.com/api/v1.1/market/getopenorders?apikey={0}&market={1}",
+            string address = string.Format("https://bittrex.com/api/v1.1/market/getopenorders?apikey={0}&nonce={1}&market={2}",
                 Uri.EscapeDataString(ApiKey),
+                DateTime.Now,
                 info.MarketName);
-            return WebClient.DownloadStringTaskAsync(address);
+            WebClient client = GetWebClient();
+            client.Headers.Clear();
+            client.Headers.Add("apisign", GetSign(address));
+            return client.DownloadStringTaskAsync(address);
         }
 
         protected string OnUuidResult(string result) {
@@ -351,50 +367,46 @@ namespace CryptoMarketClient.Bittrex {
             if(string.IsNullOrEmpty(result))
                 return false;
             JObject res = (JObject)JsonConvert.DeserializeObject(result);
-            foreach(JProperty prop in res.Children()) {
-                if(prop.Name == "success") {
-                    if(prop.Value.Value<bool>() == false)
-                        return false;
-                }
-                if(prop.Name == "message")
-                    continue;
-                if(prop.Name == "result") {
-                    lock(Orders) {
-                        JArray orders = (JArray)prop.Value;
-                        foreach(JObject obj in orders) {
-                            BittrexOrderInfo info = new BittrexOrderInfo();
-
-                            info.OrderUuid = obj.Value<string>("OrderUuid");
-                            info.Exchange = obj.Value<string>("Exchange");
-                            info.OrderType = obj.Value<string>("OrderType") == "LIMIT_SELL" ? BittrexOrderType.LimitSell : BittrexOrderType.LimitBuy;
-                            info.Quantity = obj.Value<double>("Quantity");
-                            info.QuantityRemaining = obj.Value<double>("QuantityRemaining");
-                            info.Limit = obj.Value<double>("Limit");
-                            info.CommissionPaid = obj.Value<double>("CommissionPaid");
-                            info.Price = obj.Value<double>("Price");
-                            info.Opened = obj.Value<DateTime>("Opened");
-                            info.Closed = obj.Value<DateTime>("Closed");
-                            info.CancelInitiated = obj.Value<bool>("CancelInitiated");
-                            info.ImmediateOrCancel = obj.Value<bool>("ImmediateOrCancel");
-                            info.IsConditional = obj.Value<bool>("IsConditional");
-                            info.Condition = obj.Value<string>("Condition");
-                            info.ConditionTarget = obj.Value<string>("ConditionTarget");
-
-                            UpdateOrders.Add(info);
-                        }
-                    }
-                    RaiseOpenedOrdersChanged();
-                }
+            if(!res.Value<bool>("success")) {
+                Debug.WriteLine("OnAppendOpenOrders fails: " + res.Value<string>("message"));
+                return false;
             }
+
+            JArray orders = (JArray)res.Value<JArray>("result");
+            foreach(JObject obj in orders) {
+                BittrexOrderInfo info = new BittrexOrderInfo();
+
+                info.OrderUuid = obj.Value<string>("OrderUuid");
+                info.Exchange = obj.Value<string>("Exchange");
+                info.OrderType = obj.Value<string>("OrderType") == "LIMIT_SELL" ? BittrexOrderType.LimitSell : BittrexOrderType.LimitBuy;
+                info.Quantity = obj.Value<double>("Quantity");
+                info.QuantityRemaining = obj.Value<double>("QuantityRemaining");
+                info.Limit = obj.Value<double>("Limit");
+                info.CommissionPaid = obj.Value<double>("CommissionPaid");
+                info.Price = obj.Value<double>("Price");
+                info.Opened = obj.Value<DateTime>("Opened");
+                info.Closed = obj.Value<DateTime>("Closed");
+                info.CancelInitiated = obj.Value<bool>("CancelInitiated");
+                info.ImmediateOrCancel = obj.Value<bool>("ImmediateOrCancel");
+                info.IsConditional = obj.Value<bool>("IsConditional");
+                info.Condition = obj.Value<string>("Condition");
+                info.ConditionTarget = obj.Value<string>("ConditionTarget");
+
+                UpdateOrders.Add(info);
+            }
+            RaiseOpenedOrdersChanged();
             return true;
         }
         void RaiseOpenedOrdersChanged() {
-            throw new NotImplementedException();
+            
         }
 
         public Task<string> GetBalances() {
             string address = string.Format("https://bittrex.com/api/v1.1/account/getbalances?apikey={0}&nonce={1}", Uri.EscapeDataString(ApiKey), DateTime.Now);
-            return WebClient.DownloadStringTaskAsync(address);
+            WebClient client = GetWebClient();
+            client.Headers.Clear();
+            client.Headers.Add("apisign", GetSign(address));
+            return client.DownloadStringTaskAsync(address);
         }
         public bool OnGetBalances(string text) {
             if(string.IsNullOrEmpty(text))
@@ -405,7 +417,6 @@ namespace CryptoMarketClient.Bittrex {
                 return false;
             }
             JArray balances = res.Value<JArray>("result");
-
             lock(Balances) {
                 Balances.Clear();
                 foreach(JObject obj in balances) {
@@ -424,25 +435,30 @@ namespace CryptoMarketClient.Bittrex {
             return true;
         }
         void RaiseBalancesChanged() {
-            throw new NotImplementedException();
+            
         }
 
         public Task<string> Withdraw(string currency, double amount, string address, string paymentId) {
             string addr = string.Empty;
             if(string.IsNullOrEmpty(paymentId)) {
-                addr = string.Format("https://bittrex.com/api/v1.1/account/withdraw?apikey={0}&currency={1}&quantity={2}",
+                addr = string.Format("https://bittrex.com/api/v1.1/account/withdraw?apikey={0}&nonce={1}&currency={2}&quantity={3}",
                     Uri.EscapeDataString(ApiKey),
+                    DateTime.Now,
                     Uri.EscapeDataString(currency),
                     amount.ToString("0.########"));
             }
             else {
-                addr = string.Format("https://bittrex.com/api/v1.1/account/withdraw?apikey={0}&currency={1}&quantity={2}&paymentid={3}",
+                addr = string.Format("https://bittrex.com/api/v1.1/account/withdraw?apikey={0}&nonce={1}&currency={2}&quantity={3}&paymentid={4}",
                         Uri.EscapeDataString(ApiKey),
+                        DateTime.Now,
                         Uri.EscapeDataString(currency),
                         amount.ToString("0.########"),
                         Uri.EscapeDataString(paymentId));
             }
-            return WebClient.DownloadStringTaskAsync(addr);
+            WebClient client = GetWebClient();
+            client.Headers.Clear();
+            client.Headers.Add("apisign", GetSign(address));
+            return client.DownloadStringTaskAsync(addr);
         }
         public string OnWithdraw(string result) {
             return OnUuidResult(result);

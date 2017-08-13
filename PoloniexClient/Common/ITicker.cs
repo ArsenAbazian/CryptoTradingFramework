@@ -43,7 +43,7 @@ namespace CryptoMarketClient {
         void UpdateTrades();
         string DownloadString(string address);
         void RaiseHistoryItemAdded();
-        Task<string> GetOrderBookStringAsync();
+        Task<string> GetOrderBookStringAsync(int depth);
         void ProcessArbitrageOrderBook(string text);
 
         event EventHandler HistoryItemAdd;

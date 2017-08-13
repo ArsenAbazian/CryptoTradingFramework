@@ -1,4 +1,5 @@
-﻿using DevExpress.LookAndFeel;
+﻿using CryptoMarketClient.Bittrex;
+using DevExpress.LookAndFeel;
 using DevExpress.XtraEditors;
 using DevExpress.XtraGrid;
 using System;
@@ -26,7 +27,7 @@ namespace CryptoMarketClient {
             Application.Run(new MainForm());
         }
         static void CheckShowApiKeysForm() {
-            if(string.IsNullOrEmpty(Bittrex.BittrexModel.Default.ApiKey) || string.IsNullOrEmpty(PoloniexModel.Default.ApiKey))
+            if(!BittrexModel.Default.IsApiKeyExists || !PoloniexModel.Default.IsApiKeyExists)
                 Application.Run(new EnterApiKeyForm());
         }
     }

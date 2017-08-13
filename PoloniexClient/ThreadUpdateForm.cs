@@ -25,6 +25,11 @@ namespace CryptoMarketClient {
             UpdateThread.Start();
         }
 
+        protected override void OnShown(EventArgs e) {
+            base.OnShown(e);
+            StartUpdateThread();
+        }
+
         protected override void OnActivated(EventArgs e) {
             base.OnActivated(e);
             if(!AllowUpdateInactive)

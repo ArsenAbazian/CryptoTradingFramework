@@ -33,18 +33,18 @@
             this.beOrderBookDepth = new DevExpress.XtraBars.BarEditItem();
             this.repositoryItemSpinEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemSpinEdit();
             this.bcAllowTradeHistory = new DevExpress.XtraBars.BarCheckItem();
+            this.btShowApiKeys = new DevExpress.XtraBars.BarButtonItem();
             this.ribbonPageCategory1 = new DevExpress.XtraBars.Ribbon.RibbonPageCategory();
             this.ribbonPage2 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPageGroup2 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.ribbonPageGroup4 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
+            this.ribbonPageGroup5 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.rpPoloniex = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPageGroup3 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.ribbonPageGroup1 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.ribbonStatusBar1 = new DevExpress.XtraBars.Ribbon.RibbonStatusBar();
             this.documentManager1 = new DevExpress.XtraBars.Docking2010.DocumentManager(this.components);
             this.tabbedView1 = new DevExpress.XtraBars.Docking2010.Views.Tabbed.TabbedView(this.components);
-            this.ribbonPageGroup5 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
-            this.btShowApiKeys = new DevExpress.XtraBars.BarButtonItem();
             ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemSpinEdit1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.documentManager1)).BeginInit();
@@ -139,6 +139,15 @@
             this.bcAllowTradeHistory.Name = "bcAllowTradeHistory";
             this.bcAllowTradeHistory.CheckedChanged += new DevExpress.XtraBars.ItemClickEventHandler(this.bcAllowTradeHistory_CheckedChanged);
             // 
+            // btShowApiKeys
+            // 
+            this.btShowApiKeys.Caption = "Show ApiKeys";
+            this.btShowApiKeys.Id = 12;
+            this.btShowApiKeys.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("btShowApiKeys.ImageOptions.Image")));
+            this.btShowApiKeys.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("btShowApiKeys.ImageOptions.LargeImage")));
+            this.btShowApiKeys.Name = "btShowApiKeys";
+            this.btShowApiKeys.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btShowApiKeys_ItemClick);
+            // 
             // ribbonPageCategory1
             // 
             this.ribbonPageCategory1.Name = "ribbonPageCategory1";
@@ -167,6 +176,12 @@
             this.ribbonPageGroup4.ItemLinks.Add(this.bcAllowTradeHistory);
             this.ribbonPageGroup4.Name = "ribbonPageGroup4";
             this.ribbonPageGroup4.Text = "Settings";
+            // 
+            // ribbonPageGroup5
+            // 
+            this.ribbonPageGroup5.ItemLinks.Add(this.btShowApiKeys);
+            this.ribbonPageGroup5.Name = "ribbonPageGroup5";
+            this.ribbonPageGroup5.Text = "Api Keys";
             // 
             // rpPoloniex
             // 
@@ -208,21 +223,6 @@
             // tabbedView1
             // 
             this.tabbedView1.RootContainer.Element = null;
-            // 
-            // ribbonPageGroup5
-            // 
-            this.ribbonPageGroup5.ItemLinks.Add(this.btShowApiKeys);
-            this.ribbonPageGroup5.Name = "ribbonPageGroup5";
-            this.ribbonPageGroup5.Text = "Api Keys";
-            // 
-            // btShowApiKeys
-            // 
-            this.btShowApiKeys.Caption = "Show ApiKeys";
-            this.btShowApiKeys.Id = 12;
-            this.btShowApiKeys.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("btShowApiKeys.ImageOptions.Image")));
-            this.btShowApiKeys.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("btShowApiKeys.ImageOptions.LargeImage")));
-            this.btShowApiKeys.Name = "btShowApiKeys";
-            this.btShowApiKeys.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btShowApiKeys_ItemClick);
             // 
             // MainForm
             // 

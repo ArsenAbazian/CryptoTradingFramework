@@ -160,6 +160,12 @@
     <Compile Include="EnterApiKeyForm.Designer.cs">
       <DependentUpon>EnterApiKeyForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="OrderBookControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="OrderBookControl.Designer.cs">
+      <DependentUpon>OrderBookControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="ThreadUpdateForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -226,6 +232,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="EnterApiKeyForm.resx">
       <DependentUpon>EnterApiKeyForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OrderBookControl.resx">
+      <DependentUpon>OrderBookControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="TickerArbitrageForm.resx">
       <DependentUpon>TickerArbitrageForm.cs</DependentUpon>
