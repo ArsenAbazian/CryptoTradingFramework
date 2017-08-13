@@ -50,7 +50,7 @@ namespace CryptoMarketClient {
                 OnThreadUpdate();
             }
         }
-        async protected virtual void OnThreadUpdate() {
+        protected virtual void OnThreadUpdate() {
 
         }
     }

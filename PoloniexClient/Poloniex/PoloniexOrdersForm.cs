@@ -17,7 +17,7 @@ namespace CryptoMarketClient.Poloniex {
         protected override int UpdateInervalMs => 3000;
         protected override bool AllowUpdateInactive => true;
 
-        async protected override void OnThreadUpdate() {
+        protected override void OnThreadUpdate() {
             Task<byte[]> task1 = PoloniexModel.Default.GetOpenedOrders();
             task1.Wait();
             PoloniexModel.Default.OnGetOpenedOrders(task1.Result);

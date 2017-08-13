@@ -92,7 +92,7 @@ namespace CryptoMarketClient {
             ISubject<OrderBookUpdateInfo> subject = wampChannel.RealmProxy.Services.GetSubject<OrderBookUpdateInfo>(ticker.OrderBook.Owner.Name, new OrderBookUpdateInfoConverter());
             return subject.Subscribe(x => ticker.OrderBook.OnRecvUpdate(x));
         }
-        
+
         public void GetTickersInfo() {
             string address = "https://poloniex.com/public?command=returnTicker";
             string text = GetDownloadString(address);
@@ -344,6 +344,106 @@ namespace CryptoMarketClient {
                 }
             }
             return true;
+        }
+
+        public Task<byte[]> BuyLimit(PoloniexTicker ticker, double rate, double amount) {
+            string address = string.Format("https://poloniex.com/tradingApi");
+
+            NameValueCollection coll = new NameValueCollection();
+            coll.Add("command", "buy");
+            coll.Add("nonce", DateTime.Now.Ticks.ToString());
+            coll.Add("currencyPair", ticker.CurrencyPair);
+            coll.Add("rate", rate.ToString("0.########"));
+            coll.Add("amount", rate.ToString("0.########"));
+
+            WebClient client = GetWebClient();
+            client.Headers.Clear();
+            client.Headers.Add("Sign", GetSign(ToQueryString(coll)));
+            client.Headers.Add("Key", ApiKey);
+            return client.UploadValuesTaskAsync(address, coll);
+        }
+
+        public Task<byte[]> SellLimit(PoloniexTicker ticker, double rate, double amount) {
+            string address = string.Format("https://poloniex.com/tradingApi");
+
+            NameValueCollection coll = new NameValueCollection();
+            coll.Add("command", "sell");
+            coll.Add("nonce", DateTime.Now.Ticks.ToString());
+            coll.Add("currencyPair", ticker.CurrencyPair);
+            coll.Add("rate", rate.ToString("0.########"));
+            coll.Add("amount", rate.ToString("0.########"));
+
+            WebClient client = GetWebClient();
+            client.Headers.Clear();
+            client.Headers.Add("Sign", GetSign(ToQueryString(coll)));
+            client.Headers.Add("Key", ApiKey);
+            return client.UploadValuesTaskAsync(address, coll);
+        }
+
+        public int OnBuyLimit(byte[] data) {
+            string text = System.Text.Encoding.ASCII.GetString(data);
+            if(string.IsNullOrEmpty(text))
+                return -1;
+            JObject res = (JObject)JsonConvert.DeserializeObject(text);
+            return res.Value<int>("orderNumber");
+        }
+
+        public int OnSellLimit(byte[] data) {
+            string text = System.Text.Encoding.ASCII.GetString(data);
+            if(string.IsNullOrEmpty(text))
+                return -1;
+            JObject res = (JObject)JsonConvert.DeserializeObject(text);
+            return res.Value<int>("orderNumber");
+        }
+
+        public Task<byte[]> CancelOrder(int orderId) {
+            string address = string.Format("https://poloniex.com/tradingApi");
+
+            NameValueCollection coll = new NameValueCollection();
+            coll.Add("command", "cancelOrder");
+            coll.Add("nonce", DateTime.Now.Ticks.ToString());
+            coll.Add("orderNumber", orderId.ToString());
+
+            WebClient client = GetWebClient();
+            client.Headers.Clear();
+            client.Headers.Add("Sign", GetSign(ToQueryString(coll)));
+            client.Headers.Add("Key", ApiKey);
+            return client.UploadValuesTaskAsync(address, coll);
+        }
+
+        public bool OnCancel(byte[] data) {
+            string text = System.Text.Encoding.ASCII.GetString(data);
+            if(string.IsNullOrEmpty(text))
+                return false;
+            JObject res = (JObject)JsonConvert.DeserializeObject(text);
+            return res.Value<int>("success") == 1;
+        }
+
+        public Task<byte[]> Withdraw(string currency, double amount, string addr, string paymentId) {
+            string address = string.Format("https://poloniex.com/tradingApi");
+
+            NameValueCollection coll = new NameValueCollection();
+            coll.Add("command", "withdraw");
+            coll.Add("nonce", DateTime.Now.Ticks.ToString());
+            coll.Add("currency", currency);
+            coll.Add("amount", amount.ToString("0.########"));
+            coll.Add("address", address);
+            if(!string.IsNullOrEmpty(paymentId))
+                coll.Add("paymentId", paymentId);
+
+            WebClient client = GetWebClient();
+            client.Headers.Clear();
+            client.Headers.Add("Sign", GetSign(ToQueryString(coll)));
+            client.Headers.Add("Key", ApiKey);
+            return client.UploadValuesTaskAsync(address, coll);
+        }
+
+        public bool OnWithdraw(byte[] data) {
+            string text = System.Text.Encoding.ASCII.GetString(data);
+            if(string.IsNullOrEmpty(text))
+                return false;
+            JObject res = (JObject)JsonConvert.DeserializeObject(text);
+            return !string.IsNullOrEmpty(res.Value<string>("responce"));
         }
     }
 
