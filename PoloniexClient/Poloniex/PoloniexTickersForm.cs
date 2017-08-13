@@ -119,5 +119,20 @@ namespace CryptoMarketClient {
             AccountForm.Show();
             AccountForm.Activate();
         }
+
+        PoloniexOrdersForm ordersForm;
+        protected PoloniexOrdersForm OrdersForm {
+            get {
+                if(ordersForm == null || ordersForm.IsDisposed)
+                    ordersForm = new PoloniexOrdersForm();
+                return ordersForm;
+            }
+        }
+
+        private void barButtonItem1_ItemClick_1(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
+            OrdersForm.MdiParent = MdiParent;
+            OrdersForm.Show();
+            OrdersForm.Activate();
+        }
     }
 }

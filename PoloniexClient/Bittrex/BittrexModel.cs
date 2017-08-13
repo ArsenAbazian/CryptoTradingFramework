@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using CryptoMarketClient.Common;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -378,7 +379,7 @@ namespace CryptoMarketClient.Bittrex {
 
                 info.OrderUuid = obj.Value<string>("OrderUuid");
                 info.Exchange = obj.Value<string>("Exchange");
-                info.OrderType = obj.Value<string>("OrderType") == "LIMIT_SELL" ? BittrexOrderType.LimitSell : BittrexOrderType.LimitBuy;
+                info.OrderType = obj.Value<string>("OrderType") == "LIMIT_SELL" ? OrderType.LimitSell : OrderType.LimitBuy;
                 info.Quantity = obj.Value<double>("Quantity");
                 info.QuantityRemaining = obj.Value<double>("QuantityRemaining");
                 info.Limit = obj.Value<double>("Limit");

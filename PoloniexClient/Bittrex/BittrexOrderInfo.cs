@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CryptoMarketClient.Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +10,7 @@ namespace CryptoMarketClient.Bittrex {
         public string MarketName { get; set; }
 		public string OrderUuid { get; set; }
 		public string Exchange { get; set; }
-        public BittrexOrderType OrderType { get; set; }
+        public OrderType OrderType { get; set; }
         public double Quantity { get; set; }
         public double QuantityRemaining { get; set; }
         public double Limit { get; set; }
@@ -23,10 +24,5 @@ namespace CryptoMarketClient.Bittrex {
         public bool IsConditional { get; set; }
         public string Condition { get; set; }
         public string ConditionTarget { get; set; }
-    }
-
-    public enum BittrexOrderType {
-        LimitBuy,
-        LimitSell
     }
 }

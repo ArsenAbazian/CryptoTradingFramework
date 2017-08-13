@@ -149,6 +149,7 @@
     <Compile Include="Common\ModelBase.cs" />
     <Compile Include="Common\OrderBookEntry.cs" />
     <Compile Include="Common\OrderBookUpdateInfo.cs" />
+    <Compile Include="Common\OrderType.cs" />
     <Compile Include="Common\TickerArbitrageHelper.cs" />
     <Compile Include="Common\TickerArbitrageInfo.cs" />
     <Compile Include="Common\TickerHistoryItem.cs" />
@@ -172,6 +173,13 @@
     </Compile>
     <Compile Include="Poloniex\PoloniexAccountBalancesForm.Designer.cs">
       <DependentUpon>PoloniexAccountBalancesForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Poloniex\PoloniexOrderInfo.cs" />
+    <Compile Include="Poloniex\PoloniexOrdersForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Poloniex\PoloniexOrdersForm.Designer.cs">
+      <DependentUpon>PoloniexOrdersForm.cs</DependentUpon>
     </Compile>
     <Compile Include="ThreadUpdateForm.cs">
       <SubType>Form</SubType>
@@ -245,6 +253,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Poloniex\PoloniexAccountBalancesForm.resx">
       <DependentUpon>PoloniexAccountBalancesForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Poloniex\PoloniexOrdersForm.resx">
+      <DependentUpon>PoloniexOrdersForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="TickerArbitrageForm.resx">
       <DependentUpon>TickerArbitrageForm.cs</DependentUpon>

@@ -1,8 +1,10 @@
-﻿using CryptoMarketClient.Poloniex;
+﻿using CryptoMarketClient.Common;
+using CryptoMarketClient.Poloniex;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
@@ -32,6 +34,7 @@ namespace CryptoMarketClient {
 
         public List<PoloniexTicker> Tickers { get; } = new List<PoloniexTicker>();
         public List<PoloniexAccountBalanceInfo> Balances { get; } = new List<PoloniexAccountBalanceInfo>();
+        public List<PoloniexOrderInfo> Orders { get; } = new List<PoloniexOrderInfo>();
 
         protected IDisposable TickersSubscriber { get; set; }
         public void Connect() {
@@ -207,26 +210,39 @@ namespace CryptoMarketClient {
         public void GetTicker(ITicker ticker) {
             throw new NotImplementedException();
         }
+        public string ToQueryString(NameValueCollection nvc) {
+            StringBuilder sb = new StringBuilder();
 
-        public bool GetBalancesImmediate() {
-            string address = string.Format("https://poloniex.com/tradingApi/returnCompleteBalances");
+            foreach(string key in nvc.Keys) {
+                if(string.IsNullOrEmpty(key)) continue;
+
+                string[] values = nvc.GetValues(key);
+                if(values == null) continue;
+
+                foreach(string value in values) {
+                    if(sb.Length > 0) sb.Append("&");
+                    sb.AppendFormat("{0}={1}", Uri.EscapeDataString(key), Uri.EscapeDataString(value));
+                }
+            }
+
+            return sb.ToString();
+        }
+
+        public Task<byte[]> GetBalances() {
+            string address = string.Format("https://poloniex.com/tradingApi");
+
+            NameValueCollection coll = new NameValueCollection();
+            coll.Add("command", "returnCompleteBalances");
+            coll.Add("nonce", DateTime.Now.Ticks.ToString());
+
             WebClient client = GetWebClient();
             client.Headers.Clear();
+            client.Headers.Add("Sign", GetSign(ToQueryString(coll)));
             client.Headers.Add("Key", ApiKey);
-            client.Headers.Add("Sign", GetSign(address));
-            string text = client.UploadString(address, "");
-            return OnGetBalances(text);
+            return client.UploadValuesTaskAsync(address, coll);
         }
-        public Task<string> GetBalances() {
-            string address = string.Format("https://poloniex.com/tradingApi/returnCompleteBalances");
-            WebClient client = GetWebClient();
-            client.Headers.Clear();
-            client.Headers.Add("Key", ApiKey);
-            client.Headers.Add("Sign", GetSign(address));
-            return client.UploadStringTaskAsync(address, "");
-        }
-
-        public bool OnGetBalances(string text) {
+        public bool OnGetBalances(byte[] data) {
+            string text = System.Text.Encoding.ASCII.GetString(data);
             if(string.IsNullOrEmpty(text))
                 return false;
             JObject res = (JObject)JsonConvert.DeserializeObject(text);
@@ -237,13 +253,94 @@ namespace CryptoMarketClient {
                         Debug.WriteLine("OnGetBalances fails: " + prop.Value<string>());
                         return false;
                     }
-                    JObject obj = prop.Value<JObject>();
+                    JObject obj = (JObject)prop.Value;
                     PoloniexAccountBalanceInfo info = new PoloniexAccountBalanceInfo();
                     info.Currency = prop.Name;
                     info.Available = obj.Value<double>("available");
                     info.OnOrders = obj.Value<double>("onOrders");
                     info.BtcValue = obj.Value<double>("btcValue");
                     Balances.Add(info);
+                }
+            }
+            return true;
+        }
+
+        public Task<byte[]> GetDeposites() {
+            string address = string.Format("https://poloniex.com/tradingApi");
+
+            NameValueCollection coll = new NameValueCollection();
+            coll.Add("command", "returnDepositAddresses");
+            coll.Add("nonce", DateTime.Now.Ticks.ToString());
+
+            WebClient client = GetWebClient();
+            client.Headers.Clear();
+            client.Headers.Add("Sign", GetSign(ToQueryString(coll)));
+            client.Headers.Add("Key", ApiKey);
+            try {
+                return client.UploadValuesTaskAsync(address, coll);
+            }
+            catch(Exception e) {
+                Debug.WriteLine("GetDeposites failed:" + e.ToString());
+                return null;
+            }
+        }
+        public bool OnGetDeposites(byte[] data) {
+            string text = System.Text.Encoding.ASCII.GetString(data);
+            if(string.IsNullOrEmpty(text) || text == "[]")
+                return false;
+            JObject res = (JObject)JsonConvert.DeserializeObject(text);
+            lock(Balances) {
+                foreach(JProperty prop in res.Children()) {
+                    if(prop.Name == "error") {
+                        Debug.WriteLine("OnGetDeposites fails: " + prop.Value<string>());
+                        return false;
+                    }
+                    PoloniexAccountBalanceInfo info = Balances.FirstOrDefault((a) => a.Currency == prop.Name);
+                    if(info == null)
+                        continue;
+                    info.DepositAddress = prop.Value<string>();
+                }
+            }
+            return true;
+        }
+
+        public Task<byte[]> GetOpenedOrders() {
+            string address = string.Format("https://poloniex.com/tradingApi");
+
+            NameValueCollection coll = new NameValueCollection();
+            coll.Add("command", "returnOpenOrders");
+            coll.Add("nonce", DateTime.Now.Ticks.ToString());
+            coll.Add("currencyPair", "all");
+
+            WebClient client = GetWebClient();
+            client.Headers.Clear();
+            client.Headers.Add("Sign", GetSign(ToQueryString(coll)));
+            client.Headers.Add("Key", ApiKey);
+            return client.UploadValuesTaskAsync(address, coll);
+        }
+        public bool OnGetOpenedOrders(byte[] data) {
+            string text = System.Text.Encoding.ASCII.GetString(data);
+            if(string.IsNullOrEmpty(text))
+                return false;
+            JObject res = (JObject)JsonConvert.DeserializeObject(text);
+            lock(Orders) {
+                Orders.Clear();
+                foreach(JProperty prop in res.Children()) {
+                    if(prop.Name == "error") {
+                        Debug.WriteLine("OnGetOpenedOrders fails: " + prop.Value<string>());
+                        return false;
+                    }
+                    JArray array = (JArray)prop.Value;
+                    foreach(JObject obj in array) {
+                        PoloniexOrderInfo info = new PoloniexOrderInfo();
+                        info.Market = prop.Name;
+                        info.OrderNumber = obj.Value<int>("orderNumber");
+                        info.Type = obj.Value<string>("type") == "sell" ? OrderType.LimitSell : OrderType.LimitBuy;
+                        info.Value = obj.Value<double>("rate");
+                        info.Amount = obj.Value<double>("amount");
+                        info.Total = obj.Value<double>("total");
+                        Orders.Add(info);
+                    }
                 }
             }
             return true;

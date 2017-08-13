@@ -25,9 +25,8 @@
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
             this.gridControl1 = new DevExpress.XtraGrid.GridControl();
-            this.bittrexOrderInfoBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.gridView1 = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.bittrexOrderInfoBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
+            this.gridView1 = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.colMarketName = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colOrderUuid = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colExchange = new DevExpress.XtraGrid.Columns.GridColumn();
@@ -45,27 +44,30 @@
             this.colIsConditional = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colCondition = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colConditionTarget = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.bittrexOrderInfoBindingSource = new System.Windows.Forms.BindingSource(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.bittrexOrderInfoBindingSource)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bittrexOrderInfoBindingSource1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gridView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.bittrexOrderInfoBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // gridControl1
             // 
             this.gridControl1.DataSource = this.bittrexOrderInfoBindingSource1;
             this.gridControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gridControl1.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
             this.gridControl1.Location = new System.Drawing.Point(0, 0);
             this.gridControl1.MainView = this.gridView1;
+            this.gridControl1.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
             this.gridControl1.Name = "gridControl1";
-            this.gridControl1.Size = new System.Drawing.Size(1097, 947);
+            this.gridControl1.Size = new System.Drawing.Size(865, 425);
             this.gridControl1.TabIndex = 0;
             this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridView1});
             // 
-            // bittrexOrderInfoBindingSource
+            // bittrexOrderInfoBindingSource1
             // 
-            this.bittrexOrderInfoBindingSource.DataSource = typeof(CryptoMarketClient.Bittrex.BittrexOrderInfo);
+            this.bittrexOrderInfoBindingSource1.DataSource = typeof(CryptoMarketClient.Bittrex.BittrexOrderInfo);
             // 
             // gridView1
             // 
@@ -93,10 +95,6 @@
             this.gridView1.OptionsBehavior.Editable = false;
             this.gridView1.SortInfo.AddRange(new DevExpress.XtraGrid.Columns.GridColumnSortInfo[] {
             new DevExpress.XtraGrid.Columns.GridColumnSortInfo(this.colMarketName, DevExpress.Data.ColumnSortOrder.Ascending)});
-            // 
-            // bittrexOrderInfoBindingSource1
-            // 
-            this.bittrexOrderInfoBindingSource1.DataSource = typeof(CryptoMarketClient.Bittrex.BittrexOrderInfo);
             // 
             // colMarketName
             // 
@@ -217,18 +215,23 @@
             this.colConditionTarget.Visible = true;
             this.colConditionTarget.VisibleIndex = 15;
             // 
+            // bittrexOrderInfoBindingSource
+            // 
+            this.bittrexOrderInfoBindingSource.DataSource = typeof(CryptoMarketClient.Bittrex.BittrexOrderInfo);
+            // 
             // BittrexOrdersForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(14F, 29F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1097, 947);
+            this.ClientSize = new System.Drawing.Size(865, 425);
             this.Controls.Add(this.gridControl1);
+            this.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
             this.Name = "BittrexOrdersForm";
             this.Text = "Bittrex Opened Orders";
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.bittrexOrderInfoBindingSource)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gridView1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.bittrexOrderInfoBindingSource1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.bittrexOrderInfoBindingSource)).EndInit();
             this.ResumeLayout(false);
 
         }
