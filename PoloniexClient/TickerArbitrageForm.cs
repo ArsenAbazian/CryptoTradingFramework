@@ -26,11 +26,12 @@ namespace CryptoMarketClient {
             ((XYDiagram)this.arbitrageHistoryChart.Diagram).AxisX.DateTimeScaleOptions.MeasureUnit = DateTimeMeasureUnit.Second;
             ((XYDiagram)this.arbitrageHistoryChart.Diagram).AxisY.WholeRange.AlwaysShowZeroLevel = true;
         }
-
+        protected bool HasShown { get; set; }
         protected override void OnShown(EventArgs e) {
             base.OnShown(e);
             BuildCurrenciesList();
             StartUpdateThread();
+            HasShown = true;
         }
         protected Thread UpdateThread { get; private set; }
         void StartUpdateThread() {
@@ -39,52 +40,56 @@ namespace CryptoMarketClient {
             UpdateThread = new Thread(OnUpdateTickers);
             UpdateThread.Start();
         }
+        protected override void OnActivated(EventArgs e) {
+            base.OnActivated(e);
+            if(!HasShown)
+                return;
+            StartUpdateThread();
+        }
         protected override void OnTextChanged(EventArgs e) {
             base.OnTextChanged(e);
         }
         void RefreshGrid() {
             this.gridControl1.RefreshDataSource();
         }
+        Task<string>[] Tasks { get; set; }
         private async Task UpdateArbitrageInfo(TickerArbitrageInfo info) {
-            Task<string>[] tasks = new Task<string>[info.Count];
+            if(Tasks == null)
+                Tasks = new Task<string>[info.Count];
             for(int i = 0; i < info.Count; i++) {
-                tasks[i] = info.Tickers[i].GetOrderBookStringAsync(TickerArbitrageInfo.Depth);
+                Tasks[i] = info.Tickers[i].GetOrderBookStringAsync(TickerArbitrageInfo.Depth);
             }
             for(int i = 0; i < info.Count; i++) {
-                if(tasks[i] != null) {
-                    string text = await tasks[i];
-                    info.Tickers[i].ProcessArbitrageOrderBook(text);
+                if(Tasks[i] == null)
+                    continue;
+                string text = await Tasks[i];
+                if(Tasks[i] == null) {
+                    info.IsActual = false;
                 }
-                info.Tickers[i].HighestBid = info.Tickers[i].OrderBook.Bids[0].Value;
-                info.Tickers[i].LowestAsk = info.Tickers[i].OrderBook.Asks[0].Value;
+                info.Tickers[i].ProcessArbitrageOrderBook(Tasks[i].Result);
             }
+            info.IsActual = true;
+            info.LastUpdate = DateTime.Now;
         }
-        async void OnUpdateTickers() {
+        void OnUpdateTickers() {
             Stopwatch timer = new Stopwatch();
             while(true) {
-                int count = (ArbitrageList.Count / 4) * 4;
-                for(int i = 0; i < count; i += 4) {
+                int count = ArbitrageList.Count;
+                for(int i = 0; i < count; i++) {
                     timer.Reset();
                     timer.Start();
+                    Debug.WriteLine("arbitrage update " + i + " of " + count);
                     Task task1 = UpdateArbitrageInfo(ArbitrageList[i]);
-                    Task task2 = UpdateArbitrageInfo(ArbitrageList[i+1]);
-
-                    await task1;
-                    await task2;
+                    if(!task1.Wait(5000)) {
+                        ArbitrageList[i].IsActual = false;
+                        timer.Stop();
+                        Debug.WriteLine("arbitrage failed updat " + timer.ElapsedMilliseconds);
+                        continue;
+                    }
                     timer.Stop();
 
-                    Debug.WriteLine("arbitrage update " + timer.ElapsedMilliseconds);
+                    Debug.WriteLine("arbitrage updated " + timer.ElapsedMilliseconds);
                     Invoke(new Action<TickerArbitrageInfo>(OnUpdateTickerInfo), ArbitrageList[i]);
-                    Invoke(new Action<TickerArbitrageInfo>(OnUpdateTickerInfo), ArbitrageList[i+1]);
-                    if(this.arbitrageHistoryChart.DataSource == ArbitrageList[i].History)
-                        Invoke(new Action(RefreshChartDataSource));
-                    else if(this.arbitrageHistoryChart.DataSource == ArbitrageList[i + 1].History)
-                        Invoke(new Action(RefreshChartDataSource));
-                    if(this.orderBookControl1.ArbitrageInfo == ArbitrageList[i] ||
-                        this.orderBookControl1.ArbitrageInfo == ArbitrageList[i + 1])
-                        Invoke(new Action(RefreshOrderBook));
-                    if(!this.bbAllCurrencies.Checked)
-                        Invoke(new Action(RefreshGrid));
                 }
                 if(this.bbAllCurrencies.Checked)
                     Invoke(new Action(RefreshGrid));
@@ -103,12 +108,18 @@ namespace CryptoMarketClient {
         }
         void OnUpdateTickerInfo(TickerArbitrageInfo info) {
             info.Update();
-            if(info.Spread > 0)
-                this.gridView1.RefreshRow(this.gridView1.GetRowHandle(ArbitrageList.IndexOf(info)));
+            this.gridView1.RefreshRow(this.gridView1.GetRowHandle(ArbitrageList.IndexOf(info)));
+            if(this.arbitrageHistoryChart.DataSource == info.History)
+                RefreshChartDataSource();
+            if(this.orderBookControl1.ArbitrageInfo == info)
+                RefreshOrderBook();
+            if(!this.bbAllCurrencies.Checked)
+                RefreshGrid();
         }
         public List<TickerArbitrageInfo> ArbitrageList { get; private set; }
         void BuildCurrenciesList() {
             ArbitrageList = TickerArbitrageHelper.GetArbitrageInfoList();
+            ArbitrageList = ArbitrageList.Where((i) => i.BaseCurrency == "BTC").ToList();
             tickerArbitrageInfoBindingSource.DataSource = ArbitrageList;
         }
 

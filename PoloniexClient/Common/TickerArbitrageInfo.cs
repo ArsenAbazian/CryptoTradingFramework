@@ -9,6 +9,7 @@ namespace CryptoMarketClient {
         public static readonly int Depth = 7;
         public string BaseCurrency { get; set; }
         public string MarketCurrency { get; set; }
+        public bool IsActual { get; set; }
 
         public List<SimpleHistoryItem> History { get; } = new List<SimpleHistoryItem>();
         public ITicker[] Tickers { get; private set; } = new ITicker[16];
@@ -27,7 +28,7 @@ namespace CryptoMarketClient {
             Count++;
         }
 
-       ITicker GetLowestAskTicker() {
+        ITicker GetLowestAskTicker() {
             double lowAsk = Tickers[0].LowestAsk;
             ITicker lowTicker = Tickers[0];
             for(int i = 1; i < Count; i++) {
@@ -56,13 +57,15 @@ namespace CryptoMarketClient {
         public ITicker LowestAskTicker { get; private set; }
         public ITicker HighestBidTicker { get; private set; }
         public double Amount { get; private set; }
-        public string LowestAskHost { get { return LowestAskTicker == null? string.Empty: LowestAskTicker.HostName; } }
-        public string HighestBidHost { get { return HighestBidTicker == null? string.Empty: HighestBidTicker.HostName; } }
+        public string LowestAskHost { get { return LowestAskTicker == null ? string.Empty : LowestAskTicker.HostName; } }
+        public string HighestBidHost { get { return HighestBidTicker == null ? string.Empty : HighestBidTicker.HostName; } }
 
+        public double BuyTotal { get; set; }
         public double LowestAsk { get; set; }
         public double HighestBid { get; set; }
         public double Spread { get; set; }
         public double Total { get; set; }
+        public DateTime LastUpdate { get; set; }
         public double LowestAksFee { get { return LowestAskTicker == null ? 0 : LowestAskTicker.Fee; } }
         public double HighestBidFee { get { return HighestBidTicker == null ? 0 : HighestBidTicker.Fee; } }
         public double TotalFee { get { return Amount * (HighestBidFee * HighestBid + LowestAksFee * LowestAsk); } }
@@ -119,6 +122,7 @@ namespace CryptoMarketClient {
                         LowestAsk = ask;
                         Amount = amount;
                         Spread = spread;
+                        BuyTotal = LowestAsk * Amount;
                         Total = Spread * Amount;
                     }
                 } 

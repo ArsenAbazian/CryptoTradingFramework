@@ -56,6 +56,8 @@ namespace CryptoMarketClient {
             this.colLowestAksFee = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colHighestBidFee = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colTotalFee = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colBuyTotal = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colLastUpdate = new DevExpress.XtraGrid.Columns.GridColumn();
             this.ribbonControl1 = new DevExpress.XtraBars.Ribbon.RibbonControl();
             this.bbShowDetail = new DevExpress.XtraBars.BarCheckItem();
             this.bbAllCurrencies = new DevExpress.XtraBars.BarCheckItem();
@@ -90,7 +92,7 @@ namespace CryptoMarketClient {
             this.colEarning.Name = "colEarning";
             this.colEarning.OptionsColumn.ReadOnly = true;
             this.colEarning.Visible = true;
-            this.colEarning.VisibleIndex = 10;
+            this.colEarning.VisibleIndex = 12;
             // 
             // colEarningUSD
             // 
@@ -101,7 +103,7 @@ namespace CryptoMarketClient {
             this.colEarningUSD.Name = "colEarningUSD";
             this.colEarningUSD.OptionsColumn.ReadOnly = true;
             this.colEarningUSD.Visible = true;
-            this.colEarningUSD.VisibleIndex = 11;
+            this.colEarningUSD.VisibleIndex = 13;
             // 
             // gridControl1
             // 
@@ -126,6 +128,7 @@ namespace CryptoMarketClient {
             this.gridView1.Columns.AddRange(new DevExpress.XtraGrid.Columns.GridColumn[] {
             this.colBaseCurrency,
             this.colMarketCurrency,
+            this.colLastUpdate,
             this.colTickers,
             this.colCount,
             this.colLowestAskTicker,
@@ -136,6 +139,7 @@ namespace CryptoMarketClient {
             this.colHighestBid,
             this.colSpread,
             this.colAmount,
+            this.colBuyTotal,
             this.colTotal,
             this.colLowestAksFee,
             this.colHighestBidFee,
@@ -180,6 +184,15 @@ namespace CryptoMarketClient {
             this.colMarketCurrency.Visible = true;
             this.colMarketCurrency.VisibleIndex = 1;
             // 
+            // colLastUpdate
+            // 
+            this.colLastUpdate.DisplayFormat.FormatString = "HH:mm:ss.fff";
+            this.colLastUpdate.DisplayFormat.FormatType = DevExpress.Utils.FormatType.DateTime;
+            this.colLastUpdate.FieldName = "LastUpdate";
+            this.colLastUpdate.Name = "colLastUpdate";
+            this.colLastUpdate.Visible = true;
+            this.colLastUpdate.VisibleIndex = 2;
+            // 
             // colTickers
             // 
             this.colTickers.FieldName = "Tickers";
@@ -211,7 +224,7 @@ namespace CryptoMarketClient {
             this.colLowestAskHost.Name = "colLowestAskHost";
             this.colLowestAskHost.OptionsColumn.ReadOnly = true;
             this.colLowestAskHost.Visible = true;
-            this.colLowestAskHost.VisibleIndex = 2;
+            this.colLowestAskHost.VisibleIndex = 3;
             // 
             // colHighestBidHost
             // 
@@ -220,7 +233,7 @@ namespace CryptoMarketClient {
             this.colHighestBidHost.Name = "colHighestBidHost";
             this.colHighestBidHost.OptionsColumn.ReadOnly = true;
             this.colHighestBidHost.Visible = true;
-            this.colHighestBidHost.VisibleIndex = 3;
+            this.colHighestBidHost.VisibleIndex = 4;
             // 
             // colLowestAsk
             // 
@@ -230,7 +243,7 @@ namespace CryptoMarketClient {
             this.colLowestAsk.Name = "colLowestAsk";
             this.colLowestAsk.OptionsColumn.ReadOnly = true;
             this.colLowestAsk.Visible = true;
-            this.colLowestAsk.VisibleIndex = 4;
+            this.colLowestAsk.VisibleIndex = 5;
             // 
             // colHighestBid
             // 
@@ -240,7 +253,7 @@ namespace CryptoMarketClient {
             this.colHighestBid.Name = "colHighestBid";
             this.colHighestBid.OptionsColumn.ReadOnly = true;
             this.colHighestBid.Visible = true;
-            this.colHighestBid.VisibleIndex = 5;
+            this.colHighestBid.VisibleIndex = 6;
             // 
             // colSpread
             // 
@@ -249,7 +262,7 @@ namespace CryptoMarketClient {
             this.colSpread.FieldName = "Spread";
             this.colSpread.Name = "colSpread";
             this.colSpread.Visible = true;
-            this.colSpread.VisibleIndex = 6;
+            this.colSpread.VisibleIndex = 7;
             // 
             // colAmount
             // 
@@ -258,7 +271,16 @@ namespace CryptoMarketClient {
             this.colAmount.Name = "colAmount";
             this.colAmount.OptionsColumn.ReadOnly = true;
             this.colAmount.Visible = true;
-            this.colAmount.VisibleIndex = 7;
+            this.colAmount.VisibleIndex = 8;
+            // 
+            // colBuyTotal
+            // 
+            this.colBuyTotal.DisplayFormat.FormatString = "0.########";
+            this.colBuyTotal.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+            this.colBuyTotal.FieldName = "BuyTotal";
+            this.colBuyTotal.Name = "colBuyTotal";
+            this.colBuyTotal.Visible = true;
+            this.colBuyTotal.VisibleIndex = 9;
             // 
             // colTotal
             // 
@@ -267,7 +289,7 @@ namespace CryptoMarketClient {
             this.colTotal.FieldName = "Total";
             this.colTotal.Name = "colTotal";
             this.colTotal.Visible = true;
-            this.colTotal.VisibleIndex = 8;
+            this.colTotal.VisibleIndex = 10;
             // 
             // colLowestAksFee
             // 
@@ -289,7 +311,8 @@ namespace CryptoMarketClient {
             this.colTotalFee.Name = "colTotalFee";
             this.colTotalFee.OptionsColumn.ReadOnly = true;
             this.colTotalFee.Visible = true;
-            this.colTotalFee.VisibleIndex = 9;
+            this.colTotalFee.VisibleIndex = 11;
+            
             // 
             // ribbonControl1
             // 
@@ -482,6 +505,8 @@ namespace CryptoMarketClient {
         private DevExpress.XtraGrid.Columns.GridColumn colTotalFee;
         private DevExpress.XtraGrid.Columns.GridColumn colEarning;
         private DevExpress.XtraGrid.Columns.GridColumn colEarningUSD;
+        private DevExpress.XtraGrid.Columns.GridColumn colBuyTotal;
+        private DevExpress.XtraGrid.Columns.GridColumn colLastUpdate;
         private DevExpress.XtraBars.Ribbon.RibbonControl ribbonControl1;
         private DevExpress.XtraBars.Ribbon.RibbonPage rpPoloniex;
         private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup1;

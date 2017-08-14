@@ -130,6 +130,8 @@ namespace CryptoMarketClient.Bittrex {
             return string.Empty;
         }
         public Task<string> GetOrderBookStringAsync(int depth) {
+            if(WebClient.IsBusy)
+                return null;
             return WebClient.DownloadStringTaskAsync(BittrexModel.Default.GetOrderBookString(this, depth));
         }
         public void ProcessArbitrageOrderBook(string text) {

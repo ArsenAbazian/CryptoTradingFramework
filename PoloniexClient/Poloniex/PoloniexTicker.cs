@@ -189,6 +189,8 @@ namespace CryptoMarketClient {
             return string.Empty;
         }
         public Task<string> GetOrderBookStringAsync(int depth) {
+            if(WebClient.IsBusy)
+                return null;
             return WebClient.DownloadStringTaskAsync(PoloniexModel.Default.GetOrderBookString(this, depth));
         }
         public void ProcessArbitrageOrderBook(string text) {
