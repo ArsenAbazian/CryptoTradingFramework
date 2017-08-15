@@ -10,6 +10,7 @@ namespace CryptoMarketClient {
         public string BaseCurrency { get; set; }
         public string MarketCurrency { get; set; }
         public bool IsActual { get; set; }
+        
 
         public List<SimpleHistoryItem> History { get; } = new List<SimpleHistoryItem>();
         public ITicker[] Tickers { get; private set; } = new ITicker[16];
@@ -66,12 +67,14 @@ namespace CryptoMarketClient {
         public double Spread { get; set; }
         public double Total { get; set; }
         public DateTime LastUpdate { get; set; }
+        public int UpdateTimeMs { get; set; }
         public double LowestAksFee { get { return LowestAskTicker == null ? 0 : LowestAskTicker.Fee; } }
         public double HighestBidFee { get { return HighestBidTicker == null ? 0 : HighestBidTicker.Fee; } }
         public double TotalFee { get { return Amount * (HighestBidFee * HighestBid + LowestAksFee * LowestAsk); } }
         public double CalcTotalFee(double bid, double ask, double amount) {
             return amount * (HighestBidFee * bid + LowestAksFee * ask);
         }
+        public double ExpectedEarningUSD { get; set; }
         public double Earning { get { return Total - TotalFee; } }
         public double EarningUSD {
             get {
@@ -105,6 +108,10 @@ namespace CryptoMarketClient {
             Amount = 0.0;
             Spread = 0.0;
             Total = 0.0;
+            if(LowestAskTicker.OrderBook.Asks.Count == 0)
+                return;
+            if(HighestBidTicker.OrderBook.Bids.Count == 0)
+                return;
             for(int bidIndex = 0; bidIndex < Depth; bidIndex++) {
                 for(int askIndex = 0; askIndex < Depth; askIndex++) {
                     double bidAmount = CalcBidAmount(bidIndex);
@@ -166,6 +173,12 @@ namespace CryptoMarketClient {
         }
         void UpdateAmount() {
             Amount = Math.Min(LowestAskTicker.OrderBook.Asks[0].Amount, HighestBidTicker.OrderBook.Bids[0].Amount);
+        }
+        async public Task<byte[]> MakeBuy() {
+            return LowestAskTicker.Buy(LowestAsk, Amount);
+        }
+        async public Task<byte[]> MakeSell() {
+            return HighestBidTicker.Sell(HighestBid, Amount);
         }
     }
 

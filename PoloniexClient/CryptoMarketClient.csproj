@@ -146,6 +146,8 @@
     <Compile Include="Common\ApiKeyInfo.cs" />
     <Compile Include="Common\CandleStickChartHelper.cs" />
     <Compile Include="Common\ITicker.cs" />
+    <Compile Include="Common\LogManager.cs" />
+    <Compile Include="Common\LogMessage.cs" />
     <Compile Include="Common\ModelBase.cs" />
     <Compile Include="Common\OrderBookEntry.cs" />
     <Compile Include="Common\OrderBookUpdateInfo.cs" />
@@ -160,6 +162,12 @@
     </Compile>
     <Compile Include="EnterApiKeyForm.Designer.cs">
       <DependentUpon>EnterApiKeyForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="LogForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="LogForm.Designer.cs">
+      <DependentUpon>LogForm.cs</DependentUpon>
     </Compile>
     <Compile Include="OrderBookControl.cs">
       <SubType>UserControl</SubType>
@@ -247,6 +255,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="EnterApiKeyForm.resx">
       <DependentUpon>EnterApiKeyForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LogForm.resx">
+      <DependentUpon>LogForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="OrderBookControl.resx">
       <DependentUpon>OrderBookControl.cs</DependentUpon>

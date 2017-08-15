@@ -175,7 +175,6 @@ namespace CryptoMarketClient {
         void ITicker.UpdateTrades() {
             PoloniexModel.Default.UpdateTrades(this);
         }
-        protected WebClient WebClient { get; } = new WebClient();
         public string MarketName {
             get {
                 throw new NotImplementedException();
@@ -183,18 +182,22 @@ namespace CryptoMarketClient {
         }
         public string DownloadString(string address) {
             try {
-                return WebClient.DownloadString(address);
+                return PoloniexModel.Default.GetWebClient().DownloadString(address);
             }
             catch { }
             return string.Empty;
         }
         public Task<string> GetOrderBookStringAsync(int depth) {
-            if(WebClient.IsBusy)
-                return null;
-            return WebClient.DownloadStringTaskAsync(PoloniexModel.Default.GetOrderBookString(this, depth));
+            return PoloniexModel.Default.GetWebClient().DownloadStringTaskAsync(PoloniexModel.Default.GetOrderBookString(this, depth));
         }
         public void ProcessArbitrageOrderBook(string text) {
             PoloniexModel.Default.UpdateOrderBook(this, text);
+        }
+        public byte[] Buy(double lowestAsk, double amount) {
+            throw new NotImplementedException();
+        }
+        public byte[] Sell(double highestBid, double amount) {
+            throw new NotImplementedException();
         }
     }
 }

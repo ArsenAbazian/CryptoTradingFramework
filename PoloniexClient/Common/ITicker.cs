@@ -49,5 +49,8 @@ namespace CryptoMarketClient {
         event EventHandler HistoryItemAdd;
         event EventHandler Changed;
         event EventHandler TradeHistoryAdd;
+
+        byte[] Buy(double lowestAsk, double amount);
+        byte[] Sell(double highestBid, double amount);
     }
 }

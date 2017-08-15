@@ -204,7 +204,7 @@ namespace CryptoMarketClient {
 
         protected WebClient[] WebClientBuffer { get; } = new WebClient[32];
         protected int CurrentClientIndex { get; set; }
-        protected WebClient GetWebClient() {
+        public WebClient GetWebClient() {
             //for(int i = 0; i < WebClientBuffer.Length; i++) { 
             //    if(WebClientBuffer[CurrentClientIndex] == null)
             //        WebClientBuffer[CurrentClientIndex] = new WebClient();

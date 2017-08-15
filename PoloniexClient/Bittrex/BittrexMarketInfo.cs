@@ -124,18 +124,22 @@ namespace CryptoMarketClient.Bittrex {
         protected WebClient WebClient { get; } = new WebClient();
         public string DownloadString(string address) {
             try {
-                return WebClient.DownloadString(address);
+                return BittrexModel.Default.GetWebClient().DownloadString(address);
             }
             catch { }
             return string.Empty;
         }
         public Task<string> GetOrderBookStringAsync(int depth) {
-            if(WebClient.IsBusy)
-                return null;
-            return WebClient.DownloadStringTaskAsync(BittrexModel.Default.GetOrderBookString(this, depth));
+            return BittrexModel.Default.GetWebClient().DownloadStringTaskAsync(BittrexModel.Default.GetOrderBookString(this, depth));
         }
         public void ProcessArbitrageOrderBook(string text) {
             BittrexModel.Default.UpdateOrderBook(this, text);
+        }
+        public byte[] Buy(double lowestAsk, double amount) {
+            throw new NotImplementedException();
+        }
+        public byte[] Sell(double highestBid, double amount) {
+            throw new NotImplementedException();
         }
         public string HostName { get { return "Bittrex"; } }
     }
