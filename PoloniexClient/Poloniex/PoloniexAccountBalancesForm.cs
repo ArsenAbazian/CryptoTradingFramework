@@ -24,13 +24,8 @@ namespace CryptoMarketClient.Poloniex {
             UpdateBalances();
         }
         void UpdateBalances() {
-            Task<byte[]> task = PoloniexModel.Default.GetBalances();
-            task.Wait();
-            PoloniexModel.Default.OnGetBalances(task.Result);
-
-            Task<byte[]> task2 = PoloniexModel.Default.GetDeposites();
-            task2.Wait();
-            PoloniexModel.Default.OnGetDeposites(task2.Result);
+            PoloniexModel.Default.GetBalances();
+            PoloniexModel.Default.GetDeposites();
             this.gridControl1.RefreshDataSource();
         }
     }

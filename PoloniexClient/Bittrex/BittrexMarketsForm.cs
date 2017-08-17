@@ -21,6 +21,7 @@ namespace CryptoMarketClient.Bittrex {
             base.OnShown(e);
             BittrexModel.Default.GetMarketsInfo();
             BittrexModel.Default.GetMarketsSummaryInfo();
+            BittrexModel.Default.GetBalances();
             this.gridControl1.DataSource = BittrexModel.Default.Markets;
             HasShown = true;
             StartUpdateTickerThread();

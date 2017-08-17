@@ -1,4 +1,5 @@
-﻿using CryptoMarketClient.Common;
+﻿using CryptoMarketClient.Bittrex;
+using CryptoMarketClient.Common;
 using DevExpress.Data.Filtering;
 using DevExpress.XtraBars;
 using DevExpress.XtraCharts;
@@ -28,10 +29,13 @@ namespace CryptoMarketClient {
             ((XYDiagram)this.arbitrageHistoryChart.Diagram).AxisY.WholeRange.AlwaysShowZeroLevel = true;
         }
         protected bool HasShown { get; set; }
+        protected string[] Responses { get; set; }
         protected override void OnShown(EventArgs e) {
             base.OnShown(e);
             BuildCurrenciesList();
             StartUpdateThread();
+            Responses = new string[ArbitrageList[0].Count];
+            //Tasks = new Task<string>[ArbitrageList[0].Count];
             HasShown = true;
         }
         protected Thread UpdateThread { get; private set; }
@@ -50,78 +54,109 @@ namespace CryptoMarketClient {
         protected override void OnTextChanged(EventArgs e) {
             base.OnTextChanged(e);
         }
+        void RefreshGridRow(TickerArbitrageInfo info) {
+            this.gridView1.RefreshRow(this.gridView1.GetRowHandle(ArbitrageList.IndexOf(info)));
+        }
         void RefreshGrid() {
             this.gridControl1.RefreshDataSource();
         }
-        Task<string>[] Tasks { get; set; }
-        private async Task UpdateArbitrageInfo(TickerArbitrageInfo info) {
-            if(Tasks == null)
-                Tasks = new Task<string>[info.Count];
-            for(int i = 0; i < info.Count; i++) {
-                Tasks[i] = info.Tickers[i].GetOrderBookStringAsync(TickerArbitrageInfo.Depth);
-            }
-            for(int i = 0; i < info.Count; i++) {
-                if(Tasks[i] == null)
-                    continue;
-                string text = await Tasks[i];
-                if(Tasks[i] == null)
-                    info.IsActual = false;
-                info.Tickers[i].ProcessArbitrageOrderBook(Tasks[i].Result);
-            }
-            info.IsActual = true;
+        async Task UpdateArbitrageInfo(TickerArbitrageInfo info) {
+            for(int i = 0; i < info.Count; i++)
+                await info.Tickers[i].GetOrderBookStringAsync(TickerArbitrageInfo.Depth).ContinueWith(task => info.Tickers[i].ProcessArbitrageOrderBook(task.Result));
             info.LastUpdate = DateTime.Now;
         }
         void OnThreadUpdate() {
             OnUpdateTickers();
         }
-        protected TickerArbitrageInfo ActiveInfo { get; set; }
-        void ProcessArbitrageInfo() {
-            if(ActiveInfo == null) {
+        protected TickerArbitrageInfo SelectedArbitrage { get; set; }
+        void ProcessSelectedArbitrageInfo() {
+            ShouldProcessArbitrage = false;
+            if(SelectedArbitrage == null) {
                 LogManager.Default.AddWarning("There is no selected arbitrage info. Quit.");
-                LogManager.Default.Show();
+                Invoke(new MethodInvoker(ShowLog));
                 return;
             }
-            LogManager.Default.Add("Update arbitrage info values.", ActiveInfo.Name);
-            Task task = UpdateArbitrageInfo(ActiveInfo);
-            if(!task.Wait(5000)) {
-                LogManager.Default.AddError("Failed arbitrage update info values. Timeout.", ActiveInfo.Name);
-                LogManager.Default.Show();
-                ActiveInfo = null;
+            LogManager.Default.Add("Update buy on market balance info.", SelectedArbitrage.LowestAskHost + " - " + SelectedArbitrage.LowestAskTicker.BaseCurrency);
+            if(!SelectedArbitrage.LowestAskTicker.UpdateBalance(false)) {
+                LogManager.Default.AddError("Failed update buy on market currency balance. Quit.", SelectedArbitrage.LowestAskTicker.BaseCurrency);
+                Invoke(new MethodInvoker(ShowLog));
                 return;
             }
-            ActiveInfo.Update();
-            if(ActiveInfo.EarningUSD <= 0.0 || Math.Abs(ActiveInfo.EarningUSD - ActiveInfo.ExpectedEarningUSD) > 10) {
-                LogManager.Default.AddWarning("Arbitrage parameters changed since last time. Skip trading.", ActiveInfo.Name);
-                LogManager.Default.Show();
-                ActiveInfo = null;
-                return;
-            }
-            //Task<byte[]> buyResult = ActiveInfo.MakeBuy();
-            //Task<byte[]> sellResult = ActiveInfo.MakeSell();
 
-            LogManager.Default.AddSuccess("Arbitrage completed!!! Please check your balances.", ActiveInfo.Name + " earned " + ActiveInfo.EarningUSD);
-            LogManager.Default.Show();
-            ActiveInfo = null;
+            LogManager.Default.Add("Update buy on market balance info.", SelectedArbitrage.HighestBidHost + " - " + SelectedArbitrage.HighestBidTicker.MarketCurrency);
+            if(!SelectedArbitrage.HighestBidTicker.UpdateBalance(true)) {
+                LogManager.Default.AddError("Failed update sell on market currency balance. Quit.", SelectedArbitrage.HighestBidTicker.MarketCurrency);
+                Invoke(new MethodInvoker(ShowLog));
+                return;
+            }
+
+            LogManager.Default.Add("Update arbitrage info values.", SelectedArbitrage.Name);
+            if(!UpdateArbitrageInfo(SelectedArbitrage).Wait(5000)) {
+                LogManager.Default.AddError("Failed arbitrage update info values. Timeout.", SelectedArbitrage.Name);
+                Invoke(new MethodInvoker(ShowLog));
+                return;
+            }
+            SelectedArbitrage.IsActual = true;
+
+            SelectedArbitrage.Update();
+            SelectedArbitrage.UpateAmountByBalance();
+            if(SelectedArbitrage.ExpectedEarningUSD - SelectedArbitrage.EarningUSD > 10)
+                LogManager.Default.AddWarning("Arbitrage amount reduced because of balance not enough.", "New Amount = " + SelectedArbitrage.Amount + ", EarningUSD = " + SelectedArbitrage.EarningUSD);
+
+            if(SelectedArbitrage.EarningUSD < 0) {
+                LogManager.Default.AddWarning("Arbitrage earning reduced since last time. Skip trading.", SelectedArbitrage.Name + " expected " + SelectedArbitrage.ExpectedEarningUSD + " but after update" + SelectedArbitrage.EarningUSD);
+                Invoke(new MethodInvoker(ShowLog));
+                return;
+            }
+
+            if(!SelectedArbitrage.Buy()) {
+                LogManager.Default.AddError("FATAL ERROR! Could not buy!", SelectedArbitrage.Name);
+                return;
+            }
+            if(!SelectedArbitrage.Sell()) {
+                LogManager.Default.AddError("FATAL ERROR! Could not sell!", SelectedArbitrage.Name);
+                return;
+            }
+
+            LogManager.Default.AddSuccess("Arbitrage completed!!! Please check your balances.", SelectedArbitrage.Name + " earned " + SelectedArbitrage.EarningUSD);
+            Invoke(new MethodInvoker(ShowLog));
             return;
+        }
+        void ShowLog() {
+            LogManager.Default.Show();
         }
         void OnUpdateTickers() {
             Stopwatch timer = new Stopwatch();
+            timer.Start();
             while(true) {
                 int count = ArbitrageList.Count;
                 for(int i = 0; i < count; i++) {
-                    if(IsInArbitrageTrading) {
-                        while(IsInArbitrageTrading)
-                            Thread.Sleep(5000);
+                    if(ShouldProcessArbitrage)
+                        ProcessSelectedArbitrageInfo();
+                    if(this.bbMonitorSelected.Checked && !ArbitrageList[i].IsSelected)
+                        continue;
+                    TickerArbitrageInfo current = ArbitrageList[i];
+                    if(current.UpdateTask != null && !current.UpdateTask.IsCompleted) {
+                        current.UpdateTimeMs = (int)(timer.ElapsedMilliseconds - current.StartUpdateMs);
+                        if(current.UpdateTimeMs > current.NextOverdueMs) {
+                            current.IsActual = false;
+                            current.NextOverdueMs += 3000;
+                            Invoke(new Action<TickerArbitrageInfo>(RefreshGridRow), current);
+                        }
                     }
-                    timer.Start();
-                    Task task1 = UpdateArbitrageInfo(ArbitrageList[i]);
-                    if(!task1.Wait(3000)) ArbitrageList[i].IsActual = false;
-                    timer.Stop();
-                    ArbitrageList[i].UpdateTimeMs = (int)timer.ElapsedMilliseconds;
-                    Invoke(new Action<TickerArbitrageInfo>(OnUpdateTickerInfo), ArbitrageList[i]);
+                    else {
+                        current.NextOverdueMs = 3000;
+                        current.StartUpdateMs = timer.ElapsedMilliseconds;
+                        current.UpdateTask = UpdateArbitrageInfo(current);
+                        current.UpdateTask.ContinueWith((action, infoObject) => {
+                            TickerArbitrageInfo info = (TickerArbitrageInfo)infoObject;
+                            info.UpdateTask = null;
+                            info.IsActual = true;
+                            info.UpdateTimeMs = (int)(timer.ElapsedMilliseconds - info.StartUpdateMs);
+                            Invoke(new Action<TickerArbitrageInfo>(OnUpdateTickerInfo), info);
+                        }, ArbitrageList[i]);
+                    }
                 }
-                if(this.bbAllCurrencies.Checked)
-                    Invoke(new Action(RefreshGrid));
             }
         }
         void RefreshChartDataSource() {
@@ -137,13 +172,14 @@ namespace CryptoMarketClient {
         }
         void OnUpdateTickerInfo(TickerArbitrageInfo info) {
             info.Update();
+            info.SaveExpectedEarningUSD();
             this.gridView1.RefreshRow(this.gridView1.GetRowHandle(ArbitrageList.IndexOf(info)));
             if(this.arbitrageHistoryChart.DataSource == info.History)
                 RefreshChartDataSource();
             if(this.orderBookControl1.ArbitrageInfo == info)
                 RefreshOrderBook();
-            if(!this.bbAllCurrencies.Checked)
-                RefreshGrid();
+            //if(!this.bbAllCurrencies.Checked)
+            //    RefreshGrid();
         }
         public List<TickerArbitrageInfo> ArbitrageList { get; private set; }
         void BuildCurrenciesList() {
@@ -209,16 +245,10 @@ namespace CryptoMarketClient {
             this.orderBookControl1.ArbitrageInfo = (TickerArbitrageInfo)this.gridView1.GetRow(this.gridView1.FocusedRowHandle);
         }
 
-        protected bool IsInArbitrageTrading { get; set; }
+        protected bool ShouldProcessArbitrage { get; set; }
         private void bbTryArbitrage_ItemClick(object sender, ItemClickEventArgs e) {
-            ActiveInfo = (TickerArbitrageInfo)bbTryArbitrage.Tag;
-            IsInArbitrageTrading = ActiveInfo != null;
-            try {
-                ProcessArbitrageInfo();
-            }
-            finally {
-                IsInArbitrageTrading = false;
-            }
+            SelectedArbitrage = (TickerArbitrageInfo)bbTryArbitrage.Tag;
+            ShouldProcessArbitrage = SelectedArbitrage != null;
         }
     }
 }

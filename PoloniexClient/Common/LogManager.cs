@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace CryptoMarketClient.Common {
     public class LogManager {
@@ -15,22 +17,13 @@ namespace CryptoMarketClient.Common {
             }
         }
 
-        LogForm form;
-        protected LogForm Form {
-            get {
-                if(form == null) {
-                    form = new LogForm();
-                    form.Messages = Messages;
-                }
-                return form;
-            }
-        }
+        protected LogForm Form { get; set; }
 
         protected List<LogMessage> Messages { get; } = new List<LogMessage>();
         public void AddMessage(LogType type, string message, string description) {
             Messages.Add(new LogMessage() { Type = type, Text = message, Description = description, Time = DateTime.Now });
-            if(!Form.IsDisposed && Form.Visible)
-                Form.RefreshData();
+            if(Form != null && !Form.IsDisposed)
+                Form.Invoke(new MethodInvoker(Form.RefreshData));
         }
         public void Add(string message) { AddMessage(LogType.Log, message, ""); }
         public void Add(string message, string description) { AddMessage(LogType.Log, message, description); }
@@ -41,8 +34,9 @@ namespace CryptoMarketClient.Common {
         public void AddSuccess(string message) { AddMessage(LogType.Success, message, ""); }
         public void AddSuccess(string message, string description) { AddMessage(LogType.Success, message, description); }
         public void Show() {
-            if(Form.IsDisposed)
-                this.form = null;
+            if(Form == null || Form.IsDisposed) 
+                Form = new LogForm();
+            Form.Messages = Messages;
             Form.Show();
         }
     }

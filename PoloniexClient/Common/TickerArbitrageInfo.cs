@@ -7,11 +7,13 @@ using System.Threading.Tasks;
 namespace CryptoMarketClient {
     public class TickerArbitrageInfo {
         public static readonly int Depth = 7;
+
         public string BaseCurrency { get; set; }
         public string MarketCurrency { get; set; }
-        public bool IsActual { get; set; }
-        
+        public bool IsActual { get; set; } = true;
+        public bool IsSelected { get; set; }
 
+        public Task UpdateTask { get; set; }
         public List<SimpleHistoryItem> History { get; } = new List<SimpleHistoryItem>();
         public ITicker[] Tickers { get; private set; } = new ITicker[16];
         public ITicker TickerInUSD { get; set; }
@@ -67,7 +69,9 @@ namespace CryptoMarketClient {
         public double Spread { get; set; }
         public double Total { get; set; }
         public DateTime LastUpdate { get; set; }
-        public int UpdateTimeMs { get; set; }
+        public long StartUpdateMs { get; set; }
+        public long UpdateTimeMs { get; set; }
+        public long NextOverdueMs { get; set; }
         public double LowestAksFee { get { return LowestAskTicker == null ? 0 : LowestAskTicker.Fee; } }
         public double HighestBidFee { get { return HighestBidTicker == null ? 0 : HighestBidTicker.Fee; } }
         public double TotalFee { get { return Amount * (HighestBidFee * HighestBid + LowestAksFee * LowestAsk); } }
@@ -174,11 +178,23 @@ namespace CryptoMarketClient {
         void UpdateAmount() {
             Amount = Math.Min(LowestAskTicker.OrderBook.Asks[0].Amount, HighestBidTicker.OrderBook.Bids[0].Amount);
         }
-        async public Task<byte[]> MakeBuy() {
+        public bool Buy() {
             return LowestAskTicker.Buy(LowestAsk, Amount);
         }
-        async public Task<byte[]> MakeSell() {
+        public bool Sell() {
             return HighestBidTicker.Sell(HighestBid, Amount);
+        }
+        public void SaveExpectedEarningUSD() {
+            ExpectedEarningUSD = EarningUSD;
+        }
+        public void UpateAmountByBalance() {
+            double buyAmount = LowestAskTicker.BaseCurrencyBalance / LowestAsk;
+            double sellAmount = HighestBidTicker.MarketCurrencyBalance;
+            double maxAmount = Math.Min(buyAmount, sellAmount);
+
+            Amount = maxAmount;
+            BuyTotal = LowestAsk * Amount;
+            Total = Spread * Amount;
         }
     }
 

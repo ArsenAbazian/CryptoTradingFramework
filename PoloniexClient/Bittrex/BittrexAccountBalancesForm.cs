@@ -21,7 +21,7 @@ namespace CryptoMarketClient.Bittrex {
         protected void UpdateBalances() {
             if(!BittrexModel.Default.IsConnected)
                 return;
-            Task<string> task = BittrexModel.Default.GetBalances();
+            Task<string> task = BittrexModel.Default.GetBalancesAsync();
             task.Wait();
             BittrexModel.Default.OnGetBalances(task.Result);
             this.gridControl1.RefreshDataSource();

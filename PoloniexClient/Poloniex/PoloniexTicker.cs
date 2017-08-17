@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using CryptoMarketClient.Poloniex;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -59,6 +60,24 @@ namespace CryptoMarketClient {
             }
         }
 
+        PoloniexAccountBalanceInfo firstInfo, secondInfo;
+        protected PoloniexAccountBalanceInfo FirstCurrencyBalanceInfo {
+            get {
+                if(firstInfo == null)
+                    firstInfo = PoloniexModel.Default.Balances.FirstOrDefault((b) => b.Currency == FirstCurrency);
+                return firstInfo;
+            }
+        }
+        protected PoloniexAccountBalanceInfo SecondCurrencyBalanceInfo {
+            get {
+                if(secondInfo == null)
+                    secondInfo = PoloniexModel.Default.Balances.FirstOrDefault((b) => b.Currency == SecondCurrency);
+                return secondInfo;
+            }
+        }
+
+        public double BaseCurrencyBalance { get { return FirstCurrencyBalanceInfo == null? 0: FirstCurrencyBalanceInfo.Available; } }
+        public double MarketCurrencyBalance { get { return SecondCurrencyBalanceInfo == null? 0: SecondCurrencyBalanceInfo.Available; } }
         public double Change { get; set; }
         public double BaseVolume { get; set; }
         public double Volume { get; set; }
@@ -187,17 +206,23 @@ namespace CryptoMarketClient {
             catch { }
             return string.Empty;
         }
+        public bool UpdateArbitrageOrderBook(int depth) {
+            return PoloniexModel.Default.UpdateArbitrageOrderBook(this, depth);
+        }
         public Task<string> GetOrderBookStringAsync(int depth) {
             return PoloniexModel.Default.GetWebClient().DownloadStringTaskAsync(PoloniexModel.Default.GetOrderBookString(this, depth));
         }
         public void ProcessArbitrageOrderBook(string text) {
             PoloniexModel.Default.UpdateOrderBook(this, text);
         }
-        public byte[] Buy(double lowestAsk, double amount) {
-            throw new NotImplementedException();
+        public bool UpdateBalance(bool updateMarket) {
+            return PoloniexModel.Default.GetBalance(updateMarket ? SecondCurrency : FirstCurrency);
         }
-        public byte[] Sell(double highestBid, double amount) {
-            throw new NotImplementedException();
+        public bool Buy(double rate, double amount) {
+            return PoloniexModel.Default.BuyLimit(this, rate, amount) != -1;
+        }
+        public bool Sell(double rate, double amount) {
+            return PoloniexModel.Default.SellLimit(this, rate, amount) != -1;
         }
     }
 }

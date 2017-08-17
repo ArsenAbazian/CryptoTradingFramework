@@ -140,6 +140,32 @@ namespace CryptoMarketClient {
                 t.Hr24Low = obj.Value<double>("low24hr");
             }
         }
+        public bool UpdateArbitrageOrderBook(PoloniexTicker ticker, int depth) {
+            string address = GetOrderBookString(ticker, depth);
+            string text = ((ITicker)ticker).DownloadString(address);
+            if(string.IsNullOrEmpty(text))
+                return false;
+
+            ticker.OrderBook.Bids.Clear();
+            ticker.OrderBook.Asks.Clear();
+
+            JObject res = (JObject)JsonConvert.DeserializeObject(text);
+            JArray bids = res.Value<JArray>("bids");
+            JArray asks = res.Value<JArray>("asks");
+            foreach(JArray item in bids) {
+                OrderBookEntry entry = new OrderBookEntry();
+                entry.Value = item[0].Value<double>();
+                entry.Amount = item[1].Value<double>();
+                ticker.OrderBook.Bids.Add(entry);
+            }
+            foreach(JArray item in asks) {
+                OrderBookEntry entry = new OrderBookEntry();
+                entry.Value = item[0].Value<double>();
+                entry.Amount = item[1].Value<double>();
+                ticker.OrderBook.Asks.Add(entry);
+            }
+            return true;
+        }
         public string GetOrderBookString(PoloniexTicker ticker, int depth) {
             return string.Format("https://poloniex.com/public?command=returnOrderBook&currencyPair={0}&depth={1}",
                 Uri.EscapeDataString(ticker.CurrencyPair), depth);
@@ -179,13 +205,14 @@ namespace CryptoMarketClient {
             ticker.OrderBook.ApplyQueueUpdates();
             ticker.OrderBook.RaiseOnChanged(new OrderBookUpdateInfo() { Action = OrderBookUpdateType.RefreshAll });
         }
-        public void GetOrderBook(PoloniexTicker ticker, int depth) {
+        public bool GetOrderBook(PoloniexTicker ticker, int depth) {
             string address = string.Format("https://poloniex.com/public?command=returnOrderBook&currencyPair={0}&depth={1}",
                 Uri.EscapeDataString(ticker.CurrencyPair), depth);
             string text = ((ITicker)ticker).DownloadString(address);
             if(string.IsNullOrEmpty(text))
-                return;
+                return false;
             UpdateOrderBook(ticker, text);
+            return true;
         }
         protected List<TradeHistoryItem> UpdateList { get; } = new List<TradeHistoryItem>(100);
         public void UpdateTrades(PoloniexTicker ticker) {
@@ -227,8 +254,20 @@ namespace CryptoMarketClient {
 
             return sb.ToString();
         }
+        public bool GetBalances() {
+            string address = string.Format("https://poloniex.com/tradingApi");
 
-        public Task<byte[]> GetBalances() {
+            NameValueCollection coll = new NameValueCollection();
+            coll.Add("command", "returnCompleteBalances");
+            coll.Add("nonce", DateTime.Now.Ticks.ToString());
+
+            WebClient client = GetWebClient();
+            client.Headers.Clear();
+            client.Headers.Add("Sign", GetSign(ToQueryString(coll)));
+            client.Headers.Add("Key", ApiKey);
+            return OnGetBalances(client.UploadValues(address, coll));
+        }
+        public Task<byte[]> GetBalancesAsync() {
             string address = string.Format("https://poloniex.com/tradingApi");
 
             NameValueCollection coll = new NameValueCollection();
@@ -265,7 +304,12 @@ namespace CryptoMarketClient {
             return true;
         }
 
-        public Task<byte[]> GetDeposites() {
+        public bool GetDeposites() {
+            Task<byte[]> task = GetDepositesAsync();
+            task.Wait();
+            return OnGetDeposites(task.Result);
+        }
+        public Task<byte[]> GetDepositesAsync() {
             string address = string.Format("https://poloniex.com/tradingApi");
 
             NameValueCollection coll = new NameValueCollection();
@@ -346,7 +390,7 @@ namespace CryptoMarketClient {
             return true;
         }
 
-        public Task<byte[]> BuyLimit(PoloniexTicker ticker, double rate, double amount) {
+        public int BuyLimit(PoloniexTicker ticker, double rate, double amount) {
             string address = string.Format("https://poloniex.com/tradingApi");
 
             NameValueCollection coll = new NameValueCollection();
@@ -360,10 +404,10 @@ namespace CryptoMarketClient {
             client.Headers.Clear();
             client.Headers.Add("Sign", GetSign(ToQueryString(coll)));
             client.Headers.Add("Key", ApiKey);
-            return client.UploadValuesTaskAsync(address, coll);
+            return OnBuyLimit(client.UploadValues(address, coll));
         }
 
-        public Task<byte[]> SellLimit(PoloniexTicker ticker, double rate, double amount) {
+        public int SellLimit(PoloniexTicker ticker, double rate, double amount) {
             string address = string.Format("https://poloniex.com/tradingApi");
 
             NameValueCollection coll = new NameValueCollection();
@@ -377,7 +421,7 @@ namespace CryptoMarketClient {
             client.Headers.Clear();
             client.Headers.Add("Sign", GetSign(ToQueryString(coll)));
             client.Headers.Add("Key", ApiKey);
-            return client.UploadValuesTaskAsync(address, coll);
+            return OnSellLimit(client.UploadValues(address, coll));
         }
 
         public int OnBuyLimit(byte[] data) {
@@ -445,6 +489,10 @@ namespace CryptoMarketClient {
             JObject res = (JObject)JsonConvert.DeserializeObject(text);
             return !string.IsNullOrEmpty(res.Value<string>("responce"));
         }
+        public bool GetBalance(string str) {
+            return GetBalances();
+        }
+        
     }
 
     public delegate void TickerUpdateEventHandler(object sender, TickerUpdateEventArgs e);

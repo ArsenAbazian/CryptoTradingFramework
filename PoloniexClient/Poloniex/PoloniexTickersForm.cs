@@ -22,6 +22,7 @@ namespace CryptoMarketClient {
         protected override void OnShown(EventArgs e) {
             base.OnShown(e);
             PoloniexModel.Default.GetTickersInfo();
+            PoloniexModel.Default.GetBalances();
             this.gridControl1.DataSource = PoloniexModel.Default.Tickers;
             HasShown = true;
             StartUpdateTickersThread();

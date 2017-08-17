@@ -36,6 +36,26 @@ namespace CryptoMarketClient.Bittrex {
         public int CandleStickPeriodMin { get; set; } = 1;
         public double Fee { get { return 0.25 * 0.01; } }
 
+        public double BaseCurrencyBalance { get { return BaseBalanceInfo == null ? 0 : BaseBalanceInfo.Available; } }
+        public double MarketCurrencyBalance { get { return MarketBalanceInfo == null ? 0 : MarketBalanceInfo.Available; } }
+
+        BittrexAccountBalanceInfo baseBalanceInfo, marketBalanceInfo;
+        protected BittrexAccountBalanceInfo BaseBalanceInfo {
+            get {
+                if(baseBalanceInfo == null)
+                    baseBalanceInfo = BittrexModel.Default.Balances.FirstOrDefault((b) => b.Currency == BaseCurrency);
+                return baseBalanceInfo;
+            }
+        }
+
+        protected BittrexAccountBalanceInfo MarketBalanceInfo {
+            get {
+                if(marketBalanceInfo == null)
+                    marketBalanceInfo = BittrexModel.Default.Balances.FirstOrDefault((b) => b.Currency == MarketCurrency);
+                return marketBalanceInfo;
+            }
+        }
+
         public List<TickerHistoryItem> History { get; } = new List<TickerHistoryItem>();
         public List<TradeHistoryItem> TradeHistory { get; } = new List<TradeHistoryItem>();
         public List<CandleStickData> CandleStickData { get; set; } = new List<CandleStickData>();
@@ -129,17 +149,23 @@ namespace CryptoMarketClient.Bittrex {
             catch { }
             return string.Empty;
         }
+        public bool UpdateArbitrageOrderBook(int depth) {
+            return BittrexModel.Default.UpdateArbitrageOrderBook(this, depth);
+        }
         public Task<string> GetOrderBookStringAsync(int depth) {
             return BittrexModel.Default.GetWebClient().DownloadStringTaskAsync(BittrexModel.Default.GetOrderBookString(this, depth));
         }
         public void ProcessArbitrageOrderBook(string text) {
             BittrexModel.Default.UpdateOrderBook(this, text);
         }
-        public byte[] Buy(double lowestAsk, double amount) {
-            throw new NotImplementedException();
+        public bool UpdateBalance(bool updateMarket) {
+            return BittrexModel.Default.GetBalance(updateMarket? MarketCurrency: BaseCurrency);
         }
-        public byte[] Sell(double highestBid, double amount) {
-            throw new NotImplementedException();
+        public bool Buy(double rate, double amount) {
+            return BittrexModel.Default.BuyLimit(this, rate, amount) != null;
+        }
+        public bool Sell(double rate, double amount) {
+            return BittrexModel.Default.SellLimit(this, rate, amount) != null;
         }
         public string HostName { get { return "Bittrex"; } }
     }

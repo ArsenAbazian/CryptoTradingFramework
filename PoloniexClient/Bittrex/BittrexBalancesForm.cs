@@ -29,7 +29,7 @@ namespace CryptoMarketClient.Bittrex {
         protected bool AllowWorking { get; set; }
         async void OnUpdateBalances() {
             while(AllowWorking && BittrexModel.Default.IsConnected) {
-                Task<string> task = BittrexModel.Default.GetBalances();
+                Task<string> task = BittrexModel.Default.GetBalancesAsync();
                 await task;
                 BittrexModel.Default.OnGetBalances(task.Result);
                 Invoke(new MethodInvoker(UpdateGrid));                

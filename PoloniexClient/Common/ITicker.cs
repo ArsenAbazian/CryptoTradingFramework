@@ -22,6 +22,8 @@ namespace CryptoMarketClient {
         double BidChange { get; set; }
         double AskChange { get; set; }
         double Fee { get; }
+        double BaseCurrencyBalance { get; }
+        double MarketCurrencyBalance { get; }
         string BaseCurrency { get; set; }
         string MarketCurrency { get; set; }
         string HostName { get; }
@@ -43,6 +45,7 @@ namespace CryptoMarketClient {
         void UpdateTrades();
         string DownloadString(string address);
         void RaiseHistoryItemAdded();
+        bool UpdateArbitrageOrderBook(int depth);
         Task<string> GetOrderBookStringAsync(int depth);
         void ProcessArbitrageOrderBook(string text);
 
@@ -50,7 +53,8 @@ namespace CryptoMarketClient {
         event EventHandler Changed;
         event EventHandler TradeHistoryAdd;
 
-        byte[] Buy(double lowestAsk, double amount);
-        byte[] Sell(double highestBid, double amount);
+        bool UpdateBalance(bool updateMarket);
+        bool Buy(double lowestAsk, double amount);
+        bool Sell(double highestBid, double amount);
     }
 }
