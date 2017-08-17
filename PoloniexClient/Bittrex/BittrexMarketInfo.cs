@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CryptoMarketClient.Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -141,7 +142,7 @@ namespace CryptoMarketClient.Bittrex {
             if(TradeHistoryAdd != null)
                 TradeHistoryAdd(this, EventArgs.Empty);
         }
-        protected WebClient WebClient { get; } = new WebClient();
+        protected WebClient WebClient { get; } = new MyWebClient();
         public string DownloadString(string address) {
             try {
                 return BittrexModel.Default.GetWebClient().DownloadString(address);
@@ -156,7 +157,7 @@ namespace CryptoMarketClient.Bittrex {
             return BittrexModel.Default.GetWebClient().DownloadStringTaskAsync(BittrexModel.Default.GetOrderBookString(this, depth));
         }
         public void ProcessArbitrageOrderBook(string text) {
-            BittrexModel.Default.UpdateOrderBook(this, text);
+            BittrexModel.Default.UpdateOrderBook(this, text, TickerArbitrageInfo.Depth);
         }
         public bool UpdateBalance(bool updateMarket) {
             return BittrexModel.Default.GetBalance(updateMarket? MarketCurrency: BaseCurrency);
@@ -168,6 +169,7 @@ namespace CryptoMarketClient.Bittrex {
             return BittrexModel.Default.SellLimit(this, rate, amount) != null;
         }
         public string HostName { get { return "Bittrex"; } }
+        public string WebPageAddress { get { return "https://bittrex.com/Market/Index?MarketName=" + MarketName; } }
     }
 
     public class BittrexCurrencyInfo {

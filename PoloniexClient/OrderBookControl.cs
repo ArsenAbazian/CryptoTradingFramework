@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
+using DevExpress.XtraGrid.Views.Grid.ViewInfo;
 
 namespace CryptoMarketClient {
     public partial class OrderBookControl : XtraUserControl {
@@ -50,7 +51,17 @@ namespace CryptoMarketClient {
         }
 
         private void OrderBookControl_Resize(object sender, EventArgs e) {
-            this.askPanel.Height = 32 + (this.Height - 32) / 2;
+            UpdateAskTableHeight();
+            
+        }
+        void UpdateAskTableHeight() {
+            int height = 32 + (this.Height - 32) / 2;
+            this.askGridControl.Invalidate();
+            this.askGridControl.Update();
+            GridViewInfo vi = (GridViewInfo)this.askGridView.GetViewInfo();
+            if(vi.RowsInfo.Count > 0 && vi.RowsInfo[vi.RowsInfo.Count - 1].Bounds.Bottom < vi.Bounds.Bottom)
+                height = vi.RowsInfo[vi.RowsInfo.Count - 1].Bounds.Bottom + 2;
+            this.askPanel.Height = height;
         }
 
         public string OrderBookCaption { get { return this.askGridView.ViewCaption; } set { this.askGridView.ViewCaption = value; } }
@@ -68,6 +79,7 @@ namespace CryptoMarketClient {
             Bids = ArbitrageInfo.HighestBidTicker == null ? null : ArbitrageInfo.HighestBidTicker.OrderBook.Bids;
             Asks = ArbitrageInfo.LowestAskTicker == null ? null : ArbitrageInfo.LowestAskTicker.OrderBook.Asks;
             OrderBookCaption = ArbitrageInfo.Name;
+            UpdateAskTableHeight();
         }
     }
 }

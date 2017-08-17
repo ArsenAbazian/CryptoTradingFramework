@@ -149,6 +149,9 @@
     <Compile Include="Common\LogManager.cs" />
     <Compile Include="Common\LogMessage.cs" />
     <Compile Include="Common\ModelBase.cs" />
+    <Compile Include="Common\MyWebClient.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Common\OrderBookEntry.cs" />
     <Compile Include="Common\OrderBookUpdateInfo.cs" />
     <Compile Include="Common\OrderType.cs" />

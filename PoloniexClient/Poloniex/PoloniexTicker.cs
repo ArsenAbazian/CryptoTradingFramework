@@ -196,9 +196,10 @@ namespace CryptoMarketClient {
         }
         public string MarketName {
             get {
-                throw new NotImplementedException();
+                return FirstCurrency + "_" + SecondCurrency;
             }
         }
+        public string WebPageAddress { get { return "https://poloniex.com/exchange#" + MarketName.ToLower(); } }
         public string DownloadString(string address) {
             try {
                 return PoloniexModel.Default.GetWebClient().DownloadString(address);

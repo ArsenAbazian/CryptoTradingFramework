@@ -30,6 +30,7 @@ namespace CryptoMarketClient {
         DateTime Time { get; set; }
         int CandleStickPeriodMin { get; set; }
         List<CandleStickData> CandleStickData { get; set; }
+        string WebPageAddress { get; }
 
         void OnChanged(OrderBookUpdateInfo info);
         void GetOrderBookSnapshot();

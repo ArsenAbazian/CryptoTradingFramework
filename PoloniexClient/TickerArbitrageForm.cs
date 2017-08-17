@@ -3,6 +3,7 @@ using CryptoMarketClient.Common;
 using DevExpress.Data.Filtering;
 using DevExpress.XtraBars;
 using DevExpress.XtraCharts;
+using DevExpress.XtraEditors;
 using DevExpress.XtraGrid;
 using System;
 using System.Collections.Generic;
@@ -20,7 +21,7 @@ namespace CryptoMarketClient {
     public partial class TickerArbitrageForm : Form {
         public TickerArbitrageForm() {
             InitializeComponent();
-            UpdateGridFilter(this.bbAllCurrencies.Checked);
+            UpdateGridFilter(!this.bbAllCurrencies.Checked);
             this.chartSidePanel.Visible = this.bbShowDetail.Checked;
             this.orderBookSidePanel.Visible = this.bcShowOrderBook.Checked;
             ((XYDiagram)this.arbitrageHistoryChart.Diagram).EnableAxisXScrolling = true;
@@ -56,9 +57,6 @@ namespace CryptoMarketClient {
         }
         void RefreshGridRow(TickerArbitrageInfo info) {
             this.gridView1.RefreshRow(this.gridView1.GetRowHandle(ArbitrageList.IndexOf(info)));
-        }
-        void RefreshGrid() {
-            this.gridControl1.RefreshDataSource();
         }
         async Task UpdateArbitrageInfo(TickerArbitrageInfo info) {
             for(int i = 0; i < info.Count; i++)
@@ -145,7 +143,7 @@ namespace CryptoMarketClient {
                         }
                     }
                     else {
-                        current.NextOverdueMs = 3000;
+                        current.NextOverdueMs = 6000;
                         current.StartUpdateMs = timer.ElapsedMilliseconds;
                         current.UpdateTask = UpdateArbitrageInfo(current);
                         current.UpdateTask.ContinueWith((action, infoObject) => {
@@ -210,7 +208,7 @@ namespace CryptoMarketClient {
         }
 
         private void bbAllCurrencies_CheckedChanged(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
-            UpdateGridFilter(((BarCheckItem)e.Item).Checked);
+            UpdateGridFilter(!((BarCheckItem)e.Item).Checked);
         }
         void UpdateGridFilter(bool showAll) {
             if(showAll)
@@ -249,6 +247,24 @@ namespace CryptoMarketClient {
         private void bbTryArbitrage_ItemClick(object sender, ItemClickEventArgs e) {
             SelectedArbitrage = (TickerArbitrageInfo)bbTryArbitrage.Tag;
             ShouldProcessArbitrage = SelectedArbitrage != null;
+        }
+
+        private void bbOpenWeb_ItemClick(object sender, ItemClickEventArgs e) {
+            TickerArbitrageInfo info = (TickerArbitrageInfo)bbTryArbitrage.Tag;
+            if(info == null) {
+                XtraMessageBox.Show("Arbitrage not selected!");
+                return;
+            }
+            for(int i = 0; i < info.Count; i++) {
+                System.Diagnostics.Process.Start(info.Tickers[i].WebPageAddress);
+            }
+        }
+
+        private void bbSelectPositive_ItemClick(object sender, ItemClickEventArgs e) {
+            foreach(TickerArbitrageInfo info in ArbitrageList) {
+                info.IsSelected = info.EarningUSD > 0;
+            }
+            this.gridControl1.RefreshDataSource();
         }
     }
 }

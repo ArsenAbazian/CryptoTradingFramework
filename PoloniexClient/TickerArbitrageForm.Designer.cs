@@ -38,13 +38,17 @@ namespace CryptoMarketClient {
             DevExpress.XtraCharts.Series series2 = new DevExpress.XtraCharts.Series();
             DevExpress.XtraCharts.StepAreaSeriesView stepAreaSeriesView2 = new DevExpress.XtraCharts.StepAreaSeriesView();
             this.colEarning = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colIsActual = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colEarningUSD = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gridControl1 = new DevExpress.XtraGrid.GridControl();
             this.tickerArbitrageInfoBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.gridView1 = new DevExpress.XtraGrid.Views.Grid.GridView();
+            this.colIsSelected = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.repositoryItemCheckEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit();
             this.colBaseCurrency = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colMarketCurrency = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colLastUpdate = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colUpdateTime = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colTickers = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colCount = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colLowestAskTicker = new DevExpress.XtraGrid.Columns.GridColumn();
@@ -65,6 +69,9 @@ namespace CryptoMarketClient {
             this.bbAllCurrencies = new DevExpress.XtraBars.BarCheckItem();
             this.bcShowOrderBook = new DevExpress.XtraBars.BarCheckItem();
             this.bbTryArbitrage = new DevExpress.XtraBars.BarButtonItem();
+            this.barButtonItem1 = new DevExpress.XtraBars.BarButtonItem();
+            this.bbMonitorSelected = new DevExpress.XtraBars.BarCheckItem();
+            this.bbOpenWeb = new DevExpress.XtraBars.BarButtonItem();
             this.rpPoloniex = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPageGroup1 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.arbitrageHistoryChart = new DevExpress.XtraCharts.ChartControl();
@@ -72,15 +79,11 @@ namespace CryptoMarketClient {
             this.chartSidePanel = new DevExpress.XtraEditors.SidePanel();
             this.orderBookSidePanel = new DevExpress.XtraEditors.SidePanel();
             this.orderBookControl1 = new CryptoMarketClient.OrderBookControl();
-            this.colUpdateTime = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.colIsActual = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.barButtonItem1 = new DevExpress.XtraBars.BarButtonItem();
-            this.bbMonitorSelected = new DevExpress.XtraBars.BarCheckItem();
-            this.colIsSelected = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.repositoryItemCheckEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit();
+            this.bbSelectPositive = new DevExpress.XtraBars.BarButtonItem();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tickerArbitrageInfoBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.arbitrageHistoryChart)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(xyDiagram1)).BeginInit();
@@ -91,7 +94,6 @@ namespace CryptoMarketClient {
             this.sidePanel1.SuspendLayout();
             this.chartSidePanel.SuspendLayout();
             this.orderBookSidePanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit1)).BeginInit();
             this.SuspendLayout();
             // 
             // colEarning
@@ -104,6 +106,13 @@ namespace CryptoMarketClient {
             this.colEarning.OptionsColumn.ReadOnly = true;
             this.colEarning.Visible = true;
             this.colEarning.VisibleIndex = 14;
+            // 
+            // colIsActual
+            // 
+            this.colIsActual.Caption = "IsActual";
+            this.colIsActual.FieldName = "IsActual";
+            this.colIsActual.Name = "colIsActual";
+            this.colIsActual.OptionsColumn.AllowEdit = false;
             // 
             // colEarningUSD
             // 
@@ -121,12 +130,14 @@ namespace CryptoMarketClient {
             // 
             this.gridControl1.DataSource = this.tickerArbitrageInfoBindingSource;
             this.gridControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gridControl1.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(6);
             this.gridControl1.Location = new System.Drawing.Point(0, 0);
             this.gridControl1.MainView = this.gridView1;
+            this.gridControl1.Margin = new System.Windows.Forms.Padding(6);
             this.gridControl1.Name = "gridControl1";
             this.gridControl1.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repositoryItemCheckEdit1});
-            this.gridControl1.Size = new System.Drawing.Size(511, 377);
+            this.gridControl1.Size = new System.Drawing.Size(1022, 718);
             this.gridControl1.TabIndex = 0;
             this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridView1});
@@ -171,8 +182,8 @@ namespace CryptoMarketClient {
             formatConditionRuleValue1.Condition = DevExpress.XtraEditors.FormatCondition.Greater;
             formatConditionRuleValue1.Value1 = 0D;
             gridFormatRule1.Rule = formatConditionRuleValue1;
-            gridFormatRule2.ApplyToRow = true;
             gridFormatRule2.Column = this.colIsActual;
+            gridFormatRule2.ColumnApplyTo = this.colUpdateTime;
             gridFormatRule2.Name = "FormatNotActual";
             formatConditionRuleValue2.Appearance.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
             formatConditionRuleValue2.Appearance.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
@@ -188,9 +199,24 @@ namespace CryptoMarketClient {
             this.gridView1.OptionsBehavior.AllowPixelScrolling = DevExpress.Utils.DefaultBoolean.True;
             this.gridView1.OptionsBehavior.KeepFocusedRowOnUpdate = false;
             this.gridView1.OptionsDetail.EnableMasterViewMode = false;
+            this.gridView1.OptionsView.ShowFilterPanelMode = DevExpress.XtraGrid.Views.Base.ShowFilterPanelMode.Never;
             this.gridView1.SortInfo.AddRange(new DevExpress.XtraGrid.Columns.GridColumnSortInfo[] {
             new DevExpress.XtraGrid.Columns.GridColumnSortInfo(this.colSpread, DevExpress.Data.ColumnSortOrder.Descending)});
             this.gridView1.Click += new System.EventHandler(this.gridView1_Click);
+            // 
+            // colIsSelected
+            // 
+            this.colIsSelected.Caption = "Selected";
+            this.colIsSelected.ColumnEdit = this.repositoryItemCheckEdit1;
+            this.colIsSelected.FieldName = "IsSelected";
+            this.colIsSelected.Name = "colIsSelected";
+            this.colIsSelected.Visible = true;
+            this.colIsSelected.VisibleIndex = 0;
+            // 
+            // repositoryItemCheckEdit1
+            // 
+            this.repositoryItemCheckEdit1.AutoHeight = false;
+            this.repositoryItemCheckEdit1.Name = "repositoryItemCheckEdit1";
             // 
             // colBaseCurrency
             // 
@@ -219,6 +245,16 @@ namespace CryptoMarketClient {
             this.colLastUpdate.OptionsColumn.AllowEdit = false;
             this.colLastUpdate.Visible = true;
             this.colLastUpdate.VisibleIndex = 3;
+            // 
+            // colUpdateTime
+            // 
+            this.colUpdateTime.Caption = "UpdateTime Ms";
+            this.colUpdateTime.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+            this.colUpdateTime.FieldName = "UpdateTimeMs";
+            this.colUpdateTime.Name = "colUpdateTime";
+            this.colUpdateTime.OptionsColumn.AllowEdit = false;
+            this.colUpdateTime.Visible = true;
+            this.colUpdateTime.VisibleIndex = 4;
             // 
             // colTickers
             // 
@@ -366,13 +402,16 @@ namespace CryptoMarketClient {
             this.bcShowOrderBook,
             this.bbTryArbitrage,
             this.barButtonItem1,
-            this.bbMonitorSelected});
+            this.bbMonitorSelected,
+            this.bbOpenWeb,
+            this.bbSelectPositive});
             this.ribbonControl1.Location = new System.Drawing.Point(0, 0);
-            this.ribbonControl1.MaxItemId = 8;
+            this.ribbonControl1.Margin = new System.Windows.Forms.Padding(6);
+            this.ribbonControl1.MaxItemId = 10;
             this.ribbonControl1.Name = "ribbonControl1";
             this.ribbonControl1.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
             this.rpPoloniex});
-            this.ribbonControl1.Size = new System.Drawing.Size(1002, 141);
+            this.ribbonControl1.Size = new System.Drawing.Size(2004, 278);
             // 
             // bbShowDetail
             // 
@@ -385,7 +424,7 @@ namespace CryptoMarketClient {
             // 
             // bbAllCurrencies
             // 
-            this.bbAllCurrencies.Caption = "All/Only Arbitraged";
+            this.bbAllCurrencies.Caption = "Show Positive Earnings";
             this.bbAllCurrencies.Id = 3;
             this.bbAllCurrencies.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bbAllCurrencies.ImageOptions.Image")));
             this.bbAllCurrencies.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("bbAllCurrencies.ImageOptions.LargeImage")));
@@ -410,6 +449,29 @@ namespace CryptoMarketClient {
             this.bbTryArbitrage.Name = "bbTryArbitrage";
             this.bbTryArbitrage.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bbTryArbitrage_ItemClick);
             // 
+            // barButtonItem1
+            // 
+            this.barButtonItem1.Caption = "Monitor only Seelcted Arbitrage";
+            this.barButtonItem1.Id = 6;
+            this.barButtonItem1.Name = "barButtonItem1";
+            // 
+            // bbMonitorSelected
+            // 
+            this.bbMonitorSelected.Caption = "Monitor Only Selected Arbitrages";
+            this.bbMonitorSelected.Id = 7;
+            this.bbMonitorSelected.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bbMonitorSelected.ImageOptions.Image")));
+            this.bbMonitorSelected.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("bbMonitorSelected.ImageOptions.LargeImage")));
+            this.bbMonitorSelected.Name = "bbMonitorSelected";
+            // 
+            // bbOpenWeb
+            // 
+            this.bbOpenWeb.Caption = "Open Markets in Web";
+            this.bbOpenWeb.Id = 8;
+            this.bbOpenWeb.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bbOpenWeb.ImageOptions.Image")));
+            this.bbOpenWeb.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("bbOpenWeb.ImageOptions.LargeImage")));
+            this.bbOpenWeb.Name = "bbOpenWeb";
+            this.bbOpenWeb.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bbOpenWeb_ItemClick);
+            // 
             // rpPoloniex
             // 
             this.rpPoloniex.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] {
@@ -423,8 +485,10 @@ namespace CryptoMarketClient {
             this.ribbonPageGroup1.ItemLinks.Add(this.bbShowDetail);
             this.ribbonPageGroup1.ItemLinks.Add(this.bcShowOrderBook);
             this.ribbonPageGroup1.ItemLinks.Add(this.bbAllCurrencies, true);
-            this.ribbonPageGroup1.ItemLinks.Add(this.bbTryArbitrage);
+            this.ribbonPageGroup1.ItemLinks.Add(this.bbSelectPositive);
             this.ribbonPageGroup1.ItemLinks.Add(this.bbMonitorSelected);
+            this.ribbonPageGroup1.ItemLinks.Add(this.bbOpenWeb);
+            this.ribbonPageGroup1.ItemLinks.Add(this.bbTryArbitrage);
             this.ribbonPageGroup1.Name = "ribbonPageGroup1";
             this.ribbonPageGroup1.ShowCaptionButton = false;
             this.ribbonPageGroup1.Text = "Arbitrage";
@@ -445,7 +509,7 @@ namespace CryptoMarketClient {
             this.arbitrageHistoryChart.Legend.Name = "Default Legend";
             this.arbitrageHistoryChart.Legend.Visibility = DevExpress.Utils.DefaultBoolean.True;
             this.arbitrageHistoryChart.Location = new System.Drawing.Point(1, 0);
-            this.arbitrageHistoryChart.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.arbitrageHistoryChart.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.arbitrageHistoryChart.Name = "arbitrageHistoryChart";
             series1.ArgumentDataMember = "Time";
             series1.ArgumentScaleType = DevExpress.XtraCharts.ScaleType.DateTime;
@@ -462,17 +526,17 @@ namespace CryptoMarketClient {
             this.arbitrageHistoryChart.SeriesSerializable = new DevExpress.XtraCharts.Series[] {
         series1,
         series2};
-            this.arbitrageHistoryChart.Size = new System.Drawing.Size(264, 377);
+            this.arbitrageHistoryChart.Size = new System.Drawing.Size(529, 718);
             this.arbitrageHistoryChart.TabIndex = 5;
             // 
             // sidePanel1
             // 
             this.sidePanel1.Controls.Add(this.gridControl1);
             this.sidePanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.sidePanel1.Location = new System.Drawing.Point(0, 141);
-            this.sidePanel1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.sidePanel1.Location = new System.Drawing.Point(0, 278);
+            this.sidePanel1.Margin = new System.Windows.Forms.Padding(4);
             this.sidePanel1.Name = "sidePanel1";
-            this.sidePanel1.Size = new System.Drawing.Size(511, 377);
+            this.sidePanel1.Size = new System.Drawing.Size(1022, 718);
             this.sidePanel1.TabIndex = 6;
             this.sidePanel1.Text = "sidePanel1";
             // 
@@ -480,10 +544,10 @@ namespace CryptoMarketClient {
             // 
             this.chartSidePanel.Controls.Add(this.arbitrageHistoryChart);
             this.chartSidePanel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.chartSidePanel.Location = new System.Drawing.Point(737, 141);
-            this.chartSidePanel.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.chartSidePanel.Location = new System.Drawing.Point(1474, 278);
+            this.chartSidePanel.Margin = new System.Windows.Forms.Padding(4);
             this.chartSidePanel.Name = "chartSidePanel";
-            this.chartSidePanel.Size = new System.Drawing.Size(265, 377);
+            this.chartSidePanel.Size = new System.Drawing.Size(530, 718);
             this.chartSidePanel.TabIndex = 7;
             this.chartSidePanel.Text = "sidePanel2";
             // 
@@ -491,10 +555,10 @@ namespace CryptoMarketClient {
             // 
             this.orderBookSidePanel.Controls.Add(this.orderBookControl1);
             this.orderBookSidePanel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.orderBookSidePanel.Location = new System.Drawing.Point(511, 141);
-            this.orderBookSidePanel.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.orderBookSidePanel.Location = new System.Drawing.Point(1022, 278);
+            this.orderBookSidePanel.Margin = new System.Windows.Forms.Padding(4);
             this.orderBookSidePanel.Name = "orderBookSidePanel";
-            this.orderBookSidePanel.Size = new System.Drawing.Size(226, 377);
+            this.orderBookSidePanel.Size = new System.Drawing.Size(452, 718);
             this.orderBookSidePanel.TabIndex = 9;
             this.orderBookSidePanel.Text = "sidePanel2";
             // 
@@ -505,72 +569,38 @@ namespace CryptoMarketClient {
             this.orderBookControl1.Bids = null;
             this.orderBookControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.orderBookControl1.Location = new System.Drawing.Point(1, 0);
-            this.orderBookControl1.Margin = new System.Windows.Forms.Padding(0, 1, 0, 1);
+            this.orderBookControl1.Margin = new System.Windows.Forms.Padding(0, 2, 0, 2);
             this.orderBookControl1.Name = "orderBookControl1";
             this.orderBookControl1.OrderBookCaption = "";
-            this.orderBookControl1.Size = new System.Drawing.Size(225, 377);
+            this.orderBookControl1.Size = new System.Drawing.Size(451, 718);
             this.orderBookControl1.TabIndex = 0;
             // 
-            // colUpdateTime
+            // bbSelectPositive
             // 
-            this.colUpdateTime.Caption = "UpdateTime Ms";
-            this.colUpdateTime.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
-            this.colUpdateTime.FieldName = "UpdateTimeMs";
-            this.colUpdateTime.Name = "colUpdateTime";
-            this.colUpdateTime.OptionsColumn.AllowEdit = false;
-            this.colUpdateTime.Visible = true;
-            this.colUpdateTime.VisibleIndex = 4;
-            // 
-            // colIsActual
-            // 
-            this.colIsActual.Caption = "IsActual";
-            this.colIsActual.FieldName = "IsActual";
-            this.colIsActual.Name = "colIsActual";
-            this.colIsActual.OptionsColumn.AllowEdit = false;
-            // 
-            // barButtonItem1
-            // 
-            this.barButtonItem1.Caption = "Monitor only Seelcted Arbitrage";
-            this.barButtonItem1.Id = 6;
-            this.barButtonItem1.Name = "barButtonItem1";
-            // 
-            // bbMonitorSelected
-            // 
-            this.bbMonitorSelected.Caption = "Monitor Only Selected Arbitrage";
-            this.bbMonitorSelected.Id = 7;
-            this.bbMonitorSelected.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("barCheckItem1.ImageOptions.Image")));
-            this.bbMonitorSelected.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("barCheckItem1.ImageOptions.LargeImage")));
-            this.bbMonitorSelected.Name = "bbMonitorSelected";
-            // 
-            // colIsSelected
-            // 
-            this.colIsSelected.Caption = "gridColumn1";
-            this.colIsSelected.ColumnEdit = this.repositoryItemCheckEdit1;
-            this.colIsSelected.FieldName = "IsSelected";
-            this.colIsSelected.Name = "colIsSelected";
-            this.colIsSelected.Visible = true;
-            this.colIsSelected.VisibleIndex = 0;
-            // 
-            // repositoryItemCheckEdit1
-            // 
-            this.repositoryItemCheckEdit1.AutoHeight = false;
-            this.repositoryItemCheckEdit1.Name = "repositoryItemCheckEdit1";
+            this.bbSelectPositive.Caption = "Select Positive Arbitrages";
+            this.bbSelectPositive.Id = 9;
+            this.bbSelectPositive.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bbSelectPositive.ImageOptions.Image")));
+            this.bbSelectPositive.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("bbSelectPositive.ImageOptions.LargeImage")));
+            this.bbSelectPositive.Name = "bbSelectPositive";
+            this.bbSelectPositive.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bbSelectPositive_ItemClick);
             // 
             // TickerArbitrageForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1002, 518);
+            this.ClientSize = new System.Drawing.Size(2004, 996);
             this.Controls.Add(this.sidePanel1);
             this.Controls.Add(this.orderBookSidePanel);
             this.Controls.Add(this.chartSidePanel);
             this.Controls.Add(this.ribbonControl1);
+            this.Margin = new System.Windows.Forms.Padding(6);
             this.Name = "TickerArbitrageForm";
             this.Text = "Classic Arbitrage";
             this.Load += new System.EventHandler(this.TickerArbitrageForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tickerArbitrageInfoBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(xyDiagram1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(stepAreaSeriesView1)).EndInit();
@@ -581,7 +611,6 @@ namespace CryptoMarketClient {
             this.sidePanel1.ResumeLayout(false);
             this.chartSidePanel.ResumeLayout(false);
             this.orderBookSidePanel.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -630,5 +659,7 @@ namespace CryptoMarketClient {
         private DevExpress.XtraBars.BarCheckItem bbMonitorSelected;
         private DevExpress.XtraGrid.Columns.GridColumn colIsSelected;
         private DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit repositoryItemCheckEdit1;
+        private DevExpress.XtraBars.BarButtonItem bbOpenWeb;
+        private DevExpress.XtraBars.BarButtonItem bbSelectPositive;
     }
 }

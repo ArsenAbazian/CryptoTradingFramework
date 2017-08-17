@@ -10,6 +10,7 @@ using System.Security.Cryptography;
 using System.Net;
 using System.Diagnostics;
 using System.IO;
+using CryptoMarketClient.Common;
 
 namespace CryptoMarketClient {
     public abstract class ModelBase : IXtraSerializable {
@@ -202,9 +203,9 @@ namespace CryptoMarketClient {
             }
         }
 
-        protected WebClient[] WebClientBuffer { get; } = new WebClient[32];
+        protected MyWebClient[] WebClientBuffer { get; } = new MyWebClient[32];
         protected int CurrentClientIndex { get; set; }
-        public WebClient GetWebClient() {
+        public MyWebClient GetWebClient() {
             //for(int i = 0; i < WebClientBuffer.Length; i++) { 
             //    if(WebClientBuffer[CurrentClientIndex] == null)
             //        WebClientBuffer[CurrentClientIndex] = new WebClient();
@@ -214,7 +215,7 @@ namespace CryptoMarketClient {
             //    if(CurrentClientIndex >= WebClientBuffer.Length)
             //        CurrentClientIndex = 0;
             //}
-            return new WebClient();
+            return new MyWebClient();
         }
         protected Stopwatch Timer { get; } = new Stopwatch();
         protected string GetDownloadString(string address) {

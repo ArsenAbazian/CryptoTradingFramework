@@ -25,6 +25,8 @@ namespace CryptoMarketClient {
             InitializeComponent();
         }
 
+        protected override bool SupportAdvancedTitlePainting => false;
+
         protected override void OnShown(EventArgs e) {
             base.OnShown(e);
             ModelBase.AllowTradeHistory = this.bcAllowTradeHistory.Checked;

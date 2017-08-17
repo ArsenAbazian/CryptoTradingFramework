@@ -161,15 +161,15 @@ namespace CryptoMarketClient.Bittrex {
             string text = GetDownloadString(info, address);
             if(string.IsNullOrEmpty(text))
                 return false;
-            return UpdateOrderBook(info, text, false);
+            return UpdateOrderBook(info, text, false, depth);
         }
         public string GetOrderBookString(BittrexMarketInfo info, int depth) {
             return string.Format("https://bittrex.com/api/v1.1/public/getorderbook?market={0}&type=both&depth={1}", Uri.EscapeDataString(info.MarketName), depth);
         }
-        public bool UpdateOrderBook(BittrexMarketInfo info, string text) {
-            return UpdateOrderBook(info, text, true);
+        public bool UpdateOrderBook(BittrexMarketInfo info, string text, int depth) {
+            return UpdateOrderBook(info, text, true, depth);
         }
-        public bool UpdateOrderBook(BittrexMarketInfo info, string text, bool raiseChanged) {
+        public bool UpdateOrderBook(BittrexMarketInfo info, string text, bool raiseChanged, int depth) {
             JObject res = (JObject)JsonConvert.DeserializeObject(text);
             foreach(JProperty prop in res.Children()) {
                 if(prop.Name == "success") {
@@ -183,17 +183,23 @@ namespace CryptoMarketClient.Bittrex {
                         info.OrderBook.Clear();
                         JArray bids = ((JObject)prop.Value).Value<JArray>("buy");
                         JArray asks = ((JObject)prop.Value).Value<JArray>("sell");
+                        int count = 0;
                         foreach(JObject obj in bids) {
                             OrderBookEntry e = new OrderBookEntry();
                             e.Value = obj.Value<double>("Rate");
                             e.Amount = obj.Value<double>("Quantity");
                             info.OrderBook.Bids.Add(e);
+                            if(++count >= depth)
+                                break;
                         }
+                        count = 0;
                         foreach(JObject obj in asks) {
                             OrderBookEntry e = new OrderBookEntry();
                             e.Value = obj.Value<double>("Rate");
                             e.Amount = obj.Value<double>("Quantity");
                             info.OrderBook.Asks.Add(e);
+                            if(++count >= depth)
+                                break;
                         }
                     }
                 }
@@ -209,7 +215,7 @@ namespace CryptoMarketClient.Bittrex {
             string text = GetDownloadString(info, address);
             if(string.IsNullOrEmpty(text))
                 return;
-            UpdateOrderBook(info, text);
+            UpdateOrderBook(info, text, depth);
         }
         public void GetTrades(BittrexMarketInfo info) {
             Timer.Reset();
