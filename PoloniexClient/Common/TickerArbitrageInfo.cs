@@ -18,6 +18,7 @@ namespace CryptoMarketClient {
         public ITicker[] Tickers { get; private set; } = new ITicker[16];
         public ITicker TickerInUSD { get; set; }
         public int Count { get; private set; }
+        public string ShortName { get { return BaseCurrency + "-" + MarketCurrency; } }
         public string Name {
             get {
                 if(HighestBidTicker == null || LowestAskTicker == null)

@@ -169,6 +169,7 @@ namespace CryptoMarketClient {
             this.orderBookControl1.RefreshBids();
         }
         void OnUpdateTickerInfo(TickerArbitrageInfo info) {
+            double prevEarnings = info.EarningUSD;
             info.Update();
             info.SaveExpectedEarningUSD();
             this.gridView1.RefreshRow(this.gridView1.GetRowHandle(ArbitrageList.IndexOf(info)));
@@ -176,8 +177,35 @@ namespace CryptoMarketClient {
                 RefreshChartDataSource();
             if(this.orderBookControl1.ArbitrageInfo == info)
                 RefreshOrderBook();
-            //if(!this.bbAllCurrencies.Checked)
-            //    RefreshGrid();
+            if((prevEarnings <= 0 && info.EarningUSD <= 0) || prevEarnings == info.EarningUSD)
+                return;
+            ShowNotification(info, prevEarnings);
+        }
+        void ShowNotification(TickerArbitrageInfo info, double prev) {
+            double delta = info.EarningUSD - prev;
+            double percent = delta / prev * 100;
+
+            string changed = string.Empty;
+            TrendNotification trend = TrendNotification.New;
+            if(prev > 0) {
+                changed = "Arbitrage changed: " + percent.ToString("<b>+0.###;-0.###;0.###%%</color></b>");
+                trend = delta > 0 ? TrendNotification.TrendUp : TrendNotification.TrendDown;
+            }
+            else
+                changed = "New Arbitrage possibilities. Up to <b>" + info.EarningUSD.ToString("USD 0.###</b>");
+
+            GetReadyNotificationForm().ShowInfo(this, trend, info.ShortName, changed, 10000);
+        }
+        protected List<NotificationForm> NotificationForms { get; } = new List<NotificationForm>();
+        NotificationForm GetReadyNotificationForm() {
+            for(int i = 0; i < NotificationForms.Count; i++) {
+                if(NotificationForms[i].IsDisposed)
+                    NotificationForms[i] = new NotificationForm();
+                if(!NotificationForms[i].Visible)
+                    return NotificationForms[i];
+            }
+            NotificationForms.Add(new NotificationForm());
+            return NotificationForms[NotificationForms.Count - 1];
         }
         public List<TickerArbitrageInfo> ArbitrageList { get; private set; }
         void BuildCurrenciesList() {

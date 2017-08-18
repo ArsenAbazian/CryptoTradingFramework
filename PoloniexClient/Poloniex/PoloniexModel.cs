@@ -121,6 +121,8 @@ namespace CryptoMarketClient {
             }
         }
         public void UpdateTickersInfo() {
+            if(Tickers == null)
+                return;
             string address = "https://poloniex.com/public?command=returnTicker";
             string text = GetDownloadString(address);
             if(string.IsNullOrEmpty(text))
@@ -265,7 +267,12 @@ namespace CryptoMarketClient {
             client.Headers.Clear();
             client.Headers.Add("Sign", GetSign(ToQueryString(coll)));
             client.Headers.Add("Key", ApiKey);
-            return OnGetBalances(client.UploadValues(address, coll));
+            try {
+                return OnGetBalances(client.UploadValues(address, coll));
+            }
+            catch(Exception) {
+                return false;
+            }
         }
         public Task<byte[]> GetBalancesAsync() {
             string address = string.Format("https://poloniex.com/tradingApi");
@@ -342,7 +349,7 @@ namespace CryptoMarketClient {
                     PoloniexAccountBalanceInfo info = Balances.FirstOrDefault((a) => a.Currency == prop.Name);
                     if(info == null)
                         continue;
-                    info.DepositAddress = prop.Value<string>();
+                    info.DepositAddress = (string)prop.Value;
                 }
             }
             return true;
