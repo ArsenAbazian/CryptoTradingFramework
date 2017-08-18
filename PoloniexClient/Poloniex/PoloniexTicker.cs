@@ -214,7 +214,7 @@ namespace CryptoMarketClient {
             return PoloniexModel.Default.GetWebClient().DownloadStringTaskAsync(PoloniexModel.Default.GetOrderBookString(this, depth));
         }
         public void ProcessArbitrageOrderBook(string text) {
-            PoloniexModel.Default.UpdateOrderBook(this, text);
+            PoloniexModel.Default.OnUpdateArbitrageOrderBook(this, text);
         }
         public bool UpdateBalance(bool updateMarket) {
             return PoloniexModel.Default.GetBalance(updateMarket ? SecondCurrency : FirstCurrency);

@@ -90,6 +90,7 @@ namespace CryptoMarketClient {
                 return Earning * TickerInUSD.Last;
             }
         }
+        public bool IsUpdating { get; set; }
         private const double InvalidValue = -10000000;
         public void Update() {
             double prev = History.Count == 0 ? InvalidValue : History.Last().ValueUSD;

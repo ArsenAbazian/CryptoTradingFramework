@@ -168,6 +168,30 @@ namespace CryptoMarketClient {
             }
             return true;
         }
+        public bool OnUpdateArbitrageOrderBook(PoloniexTicker ticker, string text) {
+            if(string.IsNullOrEmpty(text))
+                return false;
+            ticker.OrderBook.Bids.Clear();
+            ticker.OrderBook.Asks.Clear();
+
+            JObject res = (JObject)JsonConvert.DeserializeObject(text);
+            JArray bids = res.Value<JArray>("bids");
+            JArray asks = res.Value<JArray>("asks");
+            foreach(JArray item in bids) {
+                OrderBookEntry entry = new OrderBookEntry();
+                entry.Value = item[0].Value<double>();
+                entry.Amount = item[1].Value<double>();
+                ticker.OrderBook.Bids.Add(entry);
+            }
+            foreach(JArray item in asks) {
+                OrderBookEntry entry = new OrderBookEntry();
+                entry.Value = item[0].Value<double>();
+                entry.Amount = item[1].Value<double>();
+                ticker.OrderBook.Asks.Add(entry);
+            }
+            return true;
+        }
+
         public string GetOrderBookString(PoloniexTicker ticker, int depth) {
             return string.Format("https://poloniex.com/public?command=returnOrderBook&currencyPair={0}&depth={1}",
                 Uri.EscapeDataString(ticker.CurrencyPair), depth);

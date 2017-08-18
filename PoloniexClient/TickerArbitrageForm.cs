@@ -134,7 +134,10 @@ namespace CryptoMarketClient {
                     if(this.bbMonitorSelected.Checked && !ArbitrageList[i].IsSelected)
                         continue;
                     TickerArbitrageInfo current = ArbitrageList[i];
-                    if(current.UpdateTask != null && !current.UpdateTask.IsCompleted) {
+                    if(current.IsUpdating)
+                        continue;
+                    Task task = current.UpdateTask;
+                    if(task != null && !task.IsCompleted && !task.IsCanceled) {
                         current.UpdateTimeMs = (int)(timer.ElapsedMilliseconds - current.StartUpdateMs);
                         if(current.UpdateTimeMs > current.NextOverdueMs) {
                             current.IsActual = false;
@@ -170,8 +173,10 @@ namespace CryptoMarketClient {
         }
         void OnUpdateTickerInfo(TickerArbitrageInfo info) {
             double prevEarnings = info.EarningUSD;
+            info.IsUpdating = true;
             info.Update();
             info.SaveExpectedEarningUSD();
+            info.IsUpdating = false;
             this.gridView1.RefreshRow(this.gridView1.GetRowHandle(ArbitrageList.IndexOf(info)));
             if(this.arbitrageHistoryChart.DataSource == info.History)
                 RefreshChartDataSource();

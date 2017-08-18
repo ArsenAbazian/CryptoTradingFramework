@@ -175,16 +175,16 @@ namespace CryptoMarketClient {
         }
         protected double PrevShiftValue { get; set; }
         void OnShiftAnimation(FloatAnimationInfo finfo) {
+            double newValue = finfo.Value * Height;
+            double delta = newValue - PrevShiftValue;
+            if(delta < 1.0)
+                return;
+            PrevShiftValue = newValue;
             foreach(NotificationForm form in OpenedForms) {
                 if(form == this)
                     break;
-                double newValue = finfo.Value * Height;
-                double delta = newValue - PrevShiftValue;
-                if(delta >= 1.0) {
-                    PrevShiftValue = newValue;
-                    form.TopLocation -= (int)(delta);
-                    form.Top = form.TopLocation;
-                }
+                form.TopLocation -= (int)(delta);
+                form.Top = form.TopLocation;
             }
         }
         void OnAppearAnimation(FloatAnimationInfo finfo) {
