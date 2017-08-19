@@ -320,5 +320,21 @@ namespace CryptoMarketClient {
             }
             this.gridControl1.RefreshDataSource();
         }
+
+        private void bbBuy_ItemClick(object sender, ItemClickEventArgs e) {
+            SelectedArbitrage = (TickerArbitrageInfo)this.bbTryArbitrage.Tag;
+            if(SelectedArbitrage == null)
+                return;
+            bool res = SelectedArbitrage.LowestAskTicker.Buy(SelectedArbitrage.LowestAsk, 1);
+            SelectedArbitrage = null;
+        }
+
+        private void bbSell_ItemClick(object sender, ItemClickEventArgs e) {
+            SelectedArbitrage = (TickerArbitrageInfo)this.bbTryArbitrage.Tag;
+            if(SelectedArbitrage == null)
+                return;
+            bool res = SelectedArbitrage.HighestBidTicker.Sell(SelectedArbitrage.HighestBid, 1);
+            SelectedArbitrage = null;
+        }
     }
 }
