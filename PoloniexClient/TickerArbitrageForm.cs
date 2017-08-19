@@ -58,9 +58,65 @@ namespace CryptoMarketClient {
         void RefreshGridRow(TickerArbitrageInfo info) {
             this.gridView1.RefreshRow(this.gridView1.GetRowHandle(ArbitrageList.IndexOf(info)));
         }
+        Stopwatch timer = new Stopwatch();
+        void OnUpdateTickers() {
+            timer.Start();
+            while(true) {
+                int count = ArbitrageList.Count;
+                for(int i = 0; i < count; i++) {
+                    if(ShouldProcessArbitrage)
+                        ProcessSelectedArbitrageInfo();
+                    if(this.bbMonitorSelected.Checked && !ArbitrageList[i].IsSelected)
+                        continue;
+                    TickerArbitrageInfo current = ArbitrageList[i];
+                    if(current.IsUpdating)
+                        continue;
+                    if(current.ObtainingData) {
+                        current.UpdateTimeMs = (int)(timer.ElapsedMilliseconds - current.StartUpdateMs);
+                        if(current.UpdateTimeMs > current.NextOverdueMs) {
+                            current.IsActual = false;
+                            current.NextOverdueMs += 3000;
+                            Invoke(new Action<TickerArbitrageInfo>(RefreshGridRow), current);
+                        }
+                    }
+                    else {
+                        current.UpdateTask = UpdateArbitrageInfo(current);
+                        //current.UpdateTask.ContinueWith((action, infoObject) => {
+                        //    TickerArbitrageInfo info = (TickerArbitrageInfo)infoObject;
+                        //    info.UpdateTask = null;
+                        //    info.IsUpdating = true;
+                        //    info.ObtainingData = false;
+                        //    //info.IsActual = true;
+                        //    info.UpdateTimeMs = (int)(timer.ElapsedMilliseconds - info.StartUpdateMs);
+                        //    Invoke(new Action<TickerArbitrageInfo>(OnUpdateTickerInfo), info);
+                        //}, ArbitrageList[i]);
+                    }
+                }
+            }
+        }
         async Task UpdateArbitrageInfo(TickerArbitrageInfo info) {
-            for(int i = 0; i < info.Count; i++)
-                await info.Tickers[i].GetOrderBookStringAsync(TickerArbitrageInfo.Depth).ContinueWith(task => info.Tickers[i].ProcessArbitrageOrderBook(task.Result));
+            info.ObtainDataSuccessCount = 0;
+            info.ObtainDataCount = 0;
+            info.NextOverdueMs = 6000;
+            info.StartUpdateMs = timer.ElapsedMilliseconds;
+            info.ObtainingData = true;
+            for(int i = 0; i < info.Count; i++) {
+                Task task = Task.Factory.StartNew(() => {
+                    while(info.IsUpdating)
+                        continue;
+                    if(info.Tickers[i].UpdateArbitrageOrderBook(TickerArbitrageInfo.Depth))
+                        info.ObtainDataSuccessCount++;
+                    info.ObtainDataCount++;
+                    if(info.ObtainDataCount == info.Count) {
+                        info.IsActual = info.ObtainDataSuccessCount == info.Count;
+                        info.IsUpdating = true;
+                        info.ObtainingData = false;
+                        info.UpdateTimeMs = (int)(timer.ElapsedMilliseconds - info.StartUpdateMs);
+                        Invoke(new Action<TickerArbitrageInfo>(OnUpdateTickerInfo), info);
+                    }
+                });
+                await task;
+            }
             info.LastUpdate = DateTime.Now;
         }
         void OnThreadUpdate() {
@@ -123,43 +179,6 @@ namespace CryptoMarketClient {
         void ShowLog() {
             LogManager.Default.Show();
         }
-        void OnUpdateTickers() {
-            Stopwatch timer = new Stopwatch();
-            timer.Start();
-            while(true) {
-                int count = ArbitrageList.Count;
-                for(int i = 0; i < count; i++) {
-                    if(ShouldProcessArbitrage)
-                        ProcessSelectedArbitrageInfo();
-                    if(this.bbMonitorSelected.Checked && !ArbitrageList[i].IsSelected)
-                        continue;
-                    TickerArbitrageInfo current = ArbitrageList[i];
-                    if(current.IsUpdating)
-                        continue;
-                    Task task = current.UpdateTask;
-                    if(task != null && !task.IsCompleted && !task.IsCanceled) {
-                        current.UpdateTimeMs = (int)(timer.ElapsedMilliseconds - current.StartUpdateMs);
-                        if(current.UpdateTimeMs > current.NextOverdueMs) {
-                            current.IsActual = false;
-                            current.NextOverdueMs += 3000;
-                            Invoke(new Action<TickerArbitrageInfo>(RefreshGridRow), current);
-                        }
-                    }
-                    else {
-                        current.NextOverdueMs = 6000;
-                        current.StartUpdateMs = timer.ElapsedMilliseconds;
-                        current.UpdateTask = UpdateArbitrageInfo(current);
-                        current.UpdateTask.ContinueWith((action, infoObject) => {
-                            TickerArbitrageInfo info = (TickerArbitrageInfo)infoObject;
-                            info.UpdateTask = null;
-                            info.IsActual = true;
-                            info.UpdateTimeMs = (int)(timer.ElapsedMilliseconds - info.StartUpdateMs);
-                            Invoke(new Action<TickerArbitrageInfo>(OnUpdateTickerInfo), info);
-                        }, ArbitrageList[i]);
-                    }
-                }
-            }
-        }
         void RefreshChartDataSource() {
             if(!this.chartSidePanel.Visible)
                 return;
@@ -187,6 +206,8 @@ namespace CryptoMarketClient {
             ShowNotification(info, prevEarnings);
         }
         void ShowNotification(TickerArbitrageInfo info, double prev) {
+            if(MdiParent.WindowState != FormWindowState.Minimized)
+                return;
             double delta = info.EarningUSD - prev;
             double percent = delta / prev * 100;
 

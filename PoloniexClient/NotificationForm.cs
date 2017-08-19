@@ -186,6 +186,10 @@ namespace CryptoMarketClient {
                 form.TopLocation -= (int)(delta);
                 form.Top = form.TopLocation;
             }
+            while(OpenedForms.Count > 0 && OpenedForms.First().Bottom < 0) {
+                OpenedForms.First().Hide();
+                OpenedForms.RemoveAt(0);
+            }    
         }
         void OnAppearAnimation(FloatAnimationInfo finfo) {
             Location = new Point((int)(StartBounds.X + finfo.Value * (DestinationBounds.X - StartBounds.X)), TopLocation);

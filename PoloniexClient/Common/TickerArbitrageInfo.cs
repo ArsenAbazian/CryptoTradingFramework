@@ -91,12 +91,17 @@ namespace CryptoMarketClient {
             }
         }
         public bool IsUpdating { get; set; }
+        public bool ObtainingData { get; set; }
+        public int ObtainDataCount { get; set; }
+        public int ObtainDataSuccessCount { get; set; }
         private const double InvalidValue = -10000000;
         public void Update() {
             double prev = History.Count == 0 ? InvalidValue : History.Last().ValueUSD;
             LowestAskTicker = GetLowestAskTicker();
             HighestBidTicker = GetHighestBidTicker();
-            if(LowestAskTicker == HighestBidTicker) {
+            if(LowestAskTicker == HighestBidTicker || 
+                LowestAskTicker.OrderBook.Asks.Count == 0 || 
+                HighestBidTicker.OrderBook.Bids.Count == 0) {
                 Spread = InvalidValue;
                 Amount = 0;
                 Total = 0;
