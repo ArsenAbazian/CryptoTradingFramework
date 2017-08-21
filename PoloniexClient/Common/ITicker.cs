@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CryptoMarketClient.Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -54,8 +55,10 @@ namespace CryptoMarketClient {
         event EventHandler Changed;
         event EventHandler TradeHistoryAdd;
 
-        bool UpdateBalance(bool updateMarket);
+        bool UpdateBalance(CurrencyType type);
+        string GetDepositAddress(CurrencyType type);
         bool Buy(double lowestAsk, double amount);
         bool Sell(double highestBid, double amount);
+        bool Withdraw(CurrencyType currencyType, string address, double amount);
     }
 }

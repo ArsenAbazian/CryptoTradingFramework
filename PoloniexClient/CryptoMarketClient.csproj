@@ -145,6 +145,7 @@
     </Compile>
     <Compile Include="Common\ApiKeyInfo.cs" />
     <Compile Include="Common\CandleStickChartHelper.cs" />
+    <Compile Include="Common\CurrencyType.cs" />
     <Compile Include="Common\ITicker.cs" />
     <Compile Include="Common\LogManager.cs" />
     <Compile Include="Common\LogMessage.cs" />

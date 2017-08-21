@@ -36,7 +36,6 @@ namespace CryptoMarketClient {
             BuildCurrenciesList();
             StartUpdateThread();
             Responses = new string[ArbitrageList[0].Count];
-            //Tasks = new Task<string>[ArbitrageList[0].Count];
             HasShown = true;
         }
         protected Thread UpdateThread { get; private set; }
@@ -81,15 +80,6 @@ namespace CryptoMarketClient {
                     }
                     else {
                         current.UpdateTask = UpdateArbitrageInfo(current);
-                        //current.UpdateTask.ContinueWith((action, infoObject) => {
-                        //    TickerArbitrageInfo info = (TickerArbitrageInfo)infoObject;
-                        //    info.UpdateTask = null;
-                        //    info.IsUpdating = true;
-                        //    info.ObtainingData = false;
-                        //    //info.IsActual = true;
-                        //    info.UpdateTimeMs = (int)(timer.ElapsedMilliseconds - info.StartUpdateMs);
-                        //    Invoke(new Action<TickerArbitrageInfo>(OnUpdateTickerInfo), info);
-                        //}, ArbitrageList[i]);
                     }
                 }
             }
@@ -131,14 +121,14 @@ namespace CryptoMarketClient {
                 return;
             }
             LogManager.Default.Add("Update buy on market balance info.", SelectedArbitrage.LowestAskHost + " - " + SelectedArbitrage.LowestAskTicker.BaseCurrency);
-            if(!SelectedArbitrage.LowestAskTicker.UpdateBalance(false)) {
+            if(!SelectedArbitrage.LowestAskTicker.UpdateBalance(CurrencyType.BaseCurrency)) {
                 LogManager.Default.AddError("Failed update buy on market currency balance. Quit.", SelectedArbitrage.LowestAskTicker.BaseCurrency);
                 Invoke(new MethodInvoker(ShowLog));
                 return;
             }
 
             LogManager.Default.Add("Update buy on market balance info.", SelectedArbitrage.HighestBidHost + " - " + SelectedArbitrage.HighestBidTicker.MarketCurrency);
-            if(!SelectedArbitrage.HighestBidTicker.UpdateBalance(true)) {
+            if(!SelectedArbitrage.HighestBidTicker.UpdateBalance(CurrencyType.MarketCurrency)) {
                 LogManager.Default.AddError("Failed update sell on market currency balance. Quit.", SelectedArbitrage.HighestBidTicker.MarketCurrency);
                 Invoke(new MethodInvoker(ShowLog));
                 return;
@@ -201,9 +191,10 @@ namespace CryptoMarketClient {
                 RefreshChartDataSource();
             if(this.orderBookControl1.ArbitrageInfo == info)
                 RefreshOrderBook();
-            if((prevEarnings <= 0 && info.EarningUSD <= 0) || prevEarnings == info.EarningUSD)
-                return;
-            ShowNotification(info, prevEarnings);
+            //if((prevEarnings <= 0 && info.EarningUSD <= 0) || prevEarnings == info.EarningUSD)
+            //    return;
+            if(info.EarningUSD - prevEarnings > 20)
+                ShowNotification(info, prevEarnings);
         }
         void ShowNotification(TickerArbitrageInfo info, double prev) {
             if(MdiParent.WindowState != FormWindowState.Minimized)
@@ -325,15 +316,145 @@ namespace CryptoMarketClient {
             SelectedArbitrage = (TickerArbitrageInfo)this.bbTryArbitrage.Tag;
             if(SelectedArbitrage == null)
                 return;
-            bool res = SelectedArbitrage.LowestAskTicker.Buy(SelectedArbitrage.LowestAsk, 1);
+
+            ITicker lowest = SelectedArbitrage.LowestAskTicker;
+
+            if(!lowest.UpdateBalance(CurrencyType.BaseCurrency)) {
+                LogManager.Default.AddError("Cant update balance.", lowest.HostName + "-" + lowest.BaseCurrency);
+                SelectedArbitrage = null;
+                LogManager.Default.Show();
+                return;
+            }
+
+            double percent = Convert.ToDouble(this.beBuyLowestAsk.EditValue) / 100;
+            double buyAmount = lowest.BaseCurrencyBalance * percent;
+            LogManager.Default.Add("Lowest Ask Base Currency Amount = " + buyAmount.ToString("0.########"));
+            double amount = buyAmount / SelectedArbitrage.LowestAsk;
+
+            if(!SelectedArbitrage.LowestAskTicker.Buy(SelectedArbitrage.LowestAsk, amount))
+                LogManager.Default.AddError("Cant buy currency.", "At" + lowest.HostName + "-" + lowest.BaseCurrency + "(" + amount.ToString("0.########") + ")" + " for " + lowest.MarketCurrency);
+
             SelectedArbitrage = null;
+            LogManager.Default.Show();
+            return;
         }
 
         private void bbSell_ItemClick(object sender, ItemClickEventArgs e) {
             SelectedArbitrage = (TickerArbitrageInfo)this.bbTryArbitrage.Tag;
             if(SelectedArbitrage == null)
                 return;
-            bool res = SelectedArbitrage.HighestBidTicker.Sell(SelectedArbitrage.HighestBid, 1);
+
+            ITicker highest = SelectedArbitrage.HighestBidTicker;
+            if(!highest.UpdateBalance(CurrencyType.MarketCurrency)) {
+                LogManager.Default.AddError("Cant update balance.", highest.HostName + "-" + highest.MarketCurrency);
+                SelectedArbitrage = null;
+                LogManager.Default.Show();
+                return;
+            }
+
+            double percent = Convert.ToDouble(this.beHighestBidSell.EditValue) / 100;
+            double amount = highest.MarketCurrencyBalance * percent;
+            LogManager.Default.Add("Highest Bid Market Currency Amount = " + amount.ToString("0.########"));
+
+            if(!SelectedArbitrage.HighestBidTicker.Sell(SelectedArbitrage.HighestBid, amount))
+                LogManager.Default.AddError("Cant sell currency.", "At" + highest.HostName + "-" + highest.MarketCurrency + "(" + amount.ToString("0.########") + ")" + " for " + highest.BaseCurrency);
+
+            SelectedArbitrage = null;
+        }
+
+        private void bbSendToHighestBid_ItemClick(object sender, ItemClickEventArgs e) {
+            SelectedArbitrage = (TickerArbitrageInfo)this.bbTryArbitrage.Tag;
+            if(SelectedArbitrage == null)
+                return;
+            ITicker lowest = SelectedArbitrage.LowestAskTicker;
+            ITicker highest = SelectedArbitrage.HighestBidTicker;
+
+            if(!lowest.UpdateBalance(CurrencyType.MarketCurrency)) {
+                LogManager.Default.AddError("Cant update balance.", lowest.HostName + "-" + lowest.MarketCurrency);
+                SelectedArbitrage = null;
+                LogManager.Default.Show();
+                return;
+            }
+            if(!highest.UpdateBalance(CurrencyType.MarketCurrency)) {
+                LogManager.Default.AddError("Cant update balance.", highest.HostName + "-" + highest.MarketCurrency);
+                SelectedArbitrage = null;
+                LogManager.Default.Show();
+                return;
+            }
+
+            string lowAddress = lowest.GetDepositAddress(CurrencyType.MarketCurrency);
+            if(string.IsNullOrEmpty(lowAddress)) {
+                LogManager.Default.AddError("Cant get deposit address.", lowest.HostName + "-" + lowest.MarketCurrency);
+                SelectedArbitrage = null;
+                LogManager.Default.Show();
+                return;
+            }
+
+            string highAddress = highest.GetDepositAddress(CurrencyType.MarketCurrency);
+            if(string.IsNullOrEmpty(highAddress)) {
+                LogManager.Default.AddError("Cant get deposit address.", highest.HostName + "-" + highest.MarketCurrency);
+                SelectedArbitrage = null;
+                LogManager.Default.Show();
+                return;
+            }
+
+            LogManager.Default.Add("Lowest Ask Currency Deposit: " + lowAddress);
+            LogManager.Default.Add("Highest Bid Currency Deposit: " + highAddress);
+
+            double amount = lowest.MarketCurrencyBalance;
+            LogManager.Default.Add("Lowest Ask Currency Amount = " + amount.ToString("0.########"));
+
+            lowest.Withdraw(CurrencyType.MarketCurrency, highAddress, amount);
+
+            LogManager.Default.Show();
+            SelectedArbitrage = null;
+        }
+
+        private void bbSyncWithLowestAsk_ItemClick(object sender, ItemClickEventArgs e) {
+            SelectedArbitrage = (TickerArbitrageInfo)this.bbTryArbitrage.Tag;
+            if(SelectedArbitrage == null)
+                return;
+            ITicker lowest = SelectedArbitrage.LowestAskTicker;
+            ITicker highest = SelectedArbitrage.HighestBidTicker;
+
+            if(!lowest.UpdateBalance(CurrencyType.BaseCurrency)) {
+                LogManager.Default.AddError("Cant update balance.", lowest.HostName + "-" + lowest.BaseCurrency);
+                SelectedArbitrage = null;
+                LogManager.Default.Show();
+                return;
+            }
+            if(!highest.UpdateBalance(CurrencyType.BaseCurrency)) {
+                LogManager.Default.AddError("Cant update balance.", highest.HostName + "-" + highest.BaseCurrency);
+                SelectedArbitrage = null;
+                LogManager.Default.Show();
+                return;
+            }
+
+            string lowAddress = lowest.GetDepositAddress(CurrencyType.BaseCurrency);
+            if(string.IsNullOrEmpty(lowAddress)) {
+                LogManager.Default.AddError("Cant get deposit address.", lowest.HostName + "-" + lowest.BaseCurrency);
+                SelectedArbitrage = null;
+                LogManager.Default.Show();
+                return;
+            }
+
+            string highAddress = highest.GetDepositAddress(CurrencyType.BaseCurrency);
+            if(string.IsNullOrEmpty(highAddress)) {
+                LogManager.Default.AddError("Cant get deposit address.", highest.HostName + "-" + highest.BaseCurrency);
+                SelectedArbitrage = null;
+                LogManager.Default.Show();
+                return;
+            }
+
+            LogManager.Default.Add("Lowest Ask Base Currency Deposit: " + lowAddress);
+            LogManager.Default.Add("Highest Bid Base Currency Deposit: " + highAddress);
+
+            double amount = highest.BaseCurrencyBalance;
+            LogManager.Default.Add("Highest Bid Base Currency Amount = " + amount.ToString("0.########"));
+
+            highest.Withdraw(CurrencyType.BaseCurrency, lowAddress, amount);
+
+            LogManager.Default.Show();
             SelectedArbitrage = null;
         }
     }

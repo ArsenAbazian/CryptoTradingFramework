@@ -159,14 +159,31 @@ namespace CryptoMarketClient.Bittrex {
         public void ProcessArbitrageOrderBook(string text) {
             BittrexModel.Default.UpdateOrderBook(this, text, TickerArbitrageInfo.Depth);
         }
-        public bool UpdateBalance(bool updateMarket) {
-            return BittrexModel.Default.GetBalance(updateMarket? MarketCurrency: BaseCurrency);
+        public bool UpdateBalance(CurrencyType type) {
+            return BittrexModel.Default.GetBalance(type == CurrencyType.MarketCurrency? MarketCurrency: BaseCurrency);
         }
         public bool Buy(double rate, double amount) {
             return BittrexModel.Default.BuyLimit(this, rate, amount) != null;
         }
         public bool Sell(double rate, double amount) {
             return BittrexModel.Default.SellLimit(this, rate, amount) != null;
+        }
+        public string GetDepositAddress(CurrencyType type) {
+            if(type == CurrencyType.BaseCurrency) {
+                if(!string.IsNullOrEmpty(BaseBalanceInfo.CryptoAddress))
+                    return BaseBalanceInfo.CryptoAddress;
+                return BittrexModel.Default.CheckCreateDeposit(BaseCurrency);
+            }
+            if(!string.IsNullOrEmpty(MarketBalanceInfo.CryptoAddress))
+                return BaseBalanceInfo.CryptoAddress;
+            return BittrexModel.Default.CheckCreateDeposit(MarketCurrency);
+        }
+        string GetCurrency(CurrencyType currencyType) {
+            return currencyType == CurrencyType.BaseCurrency ? BaseCurrency : MarketCurrency;
+        }
+        public bool Withdraw(CurrencyType currencyType, string address, double amount) {
+            string currency = GetCurrency(currencyType);
+            return BittrexModel.Default.Withdraw(currency, amount, address, "");
         }
         public string HostName { get { return "Bittrex"; } }
         public string WebPageAddress { get { return "https://bittrex.com/Market/Index?MarketName=" + MarketName; } }

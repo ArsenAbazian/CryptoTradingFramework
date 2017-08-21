@@ -73,21 +73,30 @@ namespace CryptoMarketClient {
             this.bbMonitorSelected = new DevExpress.XtraBars.BarCheckItem();
             this.bbOpenWeb = new DevExpress.XtraBars.BarButtonItem();
             this.bbSelectPositive = new DevExpress.XtraBars.BarButtonItem();
+            this.bbBuy = new DevExpress.XtraBars.BarButtonItem();
+            this.bbSell = new DevExpress.XtraBars.BarButtonItem();
+            this.bbSendToHighestBid = new DevExpress.XtraBars.BarButtonItem();
+            this.repositoryItemSpinEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemSpinEdit();
             this.rpPoloniex = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPageGroup1 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
+            this.ribbonPageGroup2 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.arbitrageHistoryChart = new DevExpress.XtraCharts.ChartControl();
             this.sidePanel1 = new DevExpress.XtraEditors.SidePanel();
             this.chartSidePanel = new DevExpress.XtraEditors.SidePanel();
             this.orderBookSidePanel = new DevExpress.XtraEditors.SidePanel();
             this.orderBookControl1 = new CryptoMarketClient.OrderBookControl();
-            this.ribbonPageGroup2 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
-            this.bbBuy = new DevExpress.XtraBars.BarButtonItem();
-            this.bbSell = new DevExpress.XtraBars.BarButtonItem();
+            this.beBuyLowestAsk = new DevExpress.XtraBars.BarEditItem();
+            this.repositoryItemSpinEdit2 = new DevExpress.XtraEditors.Repository.RepositoryItemSpinEdit();
+            this.ribbonPage1 = new DevExpress.XtraBars.Ribbon.RibbonPage();
+            this.beHighestBidSell = new DevExpress.XtraBars.BarEditItem();
+            this.repositoryItemSpinEdit3 = new DevExpress.XtraEditors.Repository.RepositoryItemSpinEdit();
+            this.bbSyncWithLowestAsk = new DevExpress.XtraBars.BarButtonItem();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tickerArbitrageInfoBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemSpinEdit1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.arbitrageHistoryChart)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(xyDiagram2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(series3)).BeginInit();
@@ -97,6 +106,8 @@ namespace CryptoMarketClient {
             this.sidePanel1.SuspendLayout();
             this.chartSidePanel.SuspendLayout();
             this.orderBookSidePanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemSpinEdit2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemSpinEdit3)).BeginInit();
             this.SuspendLayout();
             // 
             // colEarning
@@ -148,7 +159,7 @@ namespace CryptoMarketClient {
             this.gridControl1.Name = "gridControl1";
             this.gridControl1.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repositoryItemCheckEdit1});
-            this.gridControl1.Size = new System.Drawing.Size(511, 377);
+            this.gridControl1.Size = new System.Drawing.Size(688, 377);
             this.gridControl1.TabIndex = 0;
             this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridView1});
@@ -407,13 +418,22 @@ namespace CryptoMarketClient {
             this.bbOpenWeb,
             this.bbSelectPositive,
             this.bbBuy,
-            this.bbSell});
+            this.bbSell,
+            this.bbSendToHighestBid,
+            this.beBuyLowestAsk,
+            this.beHighestBidSell,
+            this.bbSyncWithLowestAsk});
             this.ribbonControl1.Location = new System.Drawing.Point(0, 0);
-            this.ribbonControl1.MaxItemId = 12;
+            this.ribbonControl1.MaxItemId = 17;
             this.ribbonControl1.Name = "ribbonControl1";
             this.ribbonControl1.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
-            this.rpPoloniex});
-            this.ribbonControl1.Size = new System.Drawing.Size(1002, 141);
+            this.rpPoloniex,
+            this.ribbonPage1});
+            this.ribbonControl1.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
+            this.repositoryItemSpinEdit1,
+            this.repositoryItemSpinEdit2,
+            this.repositoryItemSpinEdit3});
+            this.ribbonControl1.Size = new System.Drawing.Size(1179, 141);
             // 
             // bbShowDetail
             // 
@@ -435,7 +455,7 @@ namespace CryptoMarketClient {
             // 
             // bcShowOrderBook
             // 
-            this.bcShowOrderBook.Caption = "Show Combined OrderBook";
+            this.bcShowOrderBook.Caption = "Combined OrderBook";
             this.bcShowOrderBook.Id = 4;
             this.bcShowOrderBook.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bcShowOrderBook.ImageOptions.Image")));
             this.bcShowOrderBook.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("bcShowOrderBook.ImageOptions.LargeImage")));
@@ -483,11 +503,43 @@ namespace CryptoMarketClient {
             this.bbSelectPositive.Name = "bbSelectPositive";
             this.bbSelectPositive.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bbSelectPositive_ItemClick);
             // 
+            // bbBuy
+            // 
+            this.bbBuy.Caption = "Buy LowestAsk";
+            this.bbBuy.Id = 10;
+            this.bbBuy.Name = "bbBuy";
+            this.bbBuy.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bbBuy_ItemClick);
+            // 
+            // bbSell
+            // 
+            this.bbSell.Caption = "Sell Highest Bid";
+            this.bbSell.Id = 11;
+            this.bbSell.Name = "bbSell";
+            this.bbSell.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bbSell_ItemClick);
+            // 
+            // bbSendToHighestBid
+            // 
+            this.bbSendToHighestBid.Caption = "Sync With Highest Bid Market";
+            this.bbSendToHighestBid.Id = 12;
+            this.bbSendToHighestBid.Name = "bbSendToHighestBid";
+            this.bbSendToHighestBid.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bbSendToHighestBid_ItemClick);
+            // 
+            // repositoryItemSpinEdit1
+            // 
+            this.repositoryItemSpinEdit1.AutoHeight = false;
+            this.repositoryItemSpinEdit1.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.repositoryItemSpinEdit1.MaxValue = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.repositoryItemSpinEdit1.Name = "repositoryItemSpinEdit1";
+            // 
             // rpPoloniex
             // 
             this.rpPoloniex.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] {
-            this.ribbonPageGroup1,
-            this.ribbonPageGroup2});
+            this.ribbonPageGroup1});
             this.rpPoloniex.Name = "rpPoloniex";
             this.rpPoloniex.Text = "Connect";
             // 
@@ -504,6 +556,17 @@ namespace CryptoMarketClient {
             this.ribbonPageGroup1.Name = "ribbonPageGroup1";
             this.ribbonPageGroup1.ShowCaptionButton = false;
             this.ribbonPageGroup1.Text = "Arbitrage";
+            // 
+            // ribbonPageGroup2
+            // 
+            this.ribbonPageGroup2.ItemLinks.Add(this.bbBuy);
+            this.ribbonPageGroup2.ItemLinks.Add(this.beBuyLowestAsk);
+            this.ribbonPageGroup2.ItemLinks.Add(this.bbSendToHighestBid);
+            this.ribbonPageGroup2.ItemLinks.Add(this.bbSell, true);
+            this.ribbonPageGroup2.ItemLinks.Add(this.beHighestBidSell);
+            this.ribbonPageGroup2.ItemLinks.Add(this.bbSyncWithLowestAsk);
+            this.ribbonPageGroup2.Name = "ribbonPageGroup2";
+            this.ribbonPageGroup2.Text = "Manual Arbitrage";
             // 
             // arbitrageHistoryChart
             // 
@@ -546,9 +609,9 @@ namespace CryptoMarketClient {
             this.sidePanel1.Controls.Add(this.gridControl1);
             this.sidePanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.sidePanel1.Location = new System.Drawing.Point(0, 141);
-            this.sidePanel1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.sidePanel1.Margin = new System.Windows.Forms.Padding(2);
             this.sidePanel1.Name = "sidePanel1";
-            this.sidePanel1.Size = new System.Drawing.Size(511, 377);
+            this.sidePanel1.Size = new System.Drawing.Size(688, 377);
             this.sidePanel1.TabIndex = 6;
             this.sidePanel1.Text = "sidePanel1";
             // 
@@ -556,8 +619,8 @@ namespace CryptoMarketClient {
             // 
             this.chartSidePanel.Controls.Add(this.arbitrageHistoryChart);
             this.chartSidePanel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.chartSidePanel.Location = new System.Drawing.Point(737, 141);
-            this.chartSidePanel.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.chartSidePanel.Location = new System.Drawing.Point(914, 141);
+            this.chartSidePanel.Margin = new System.Windows.Forms.Padding(2);
             this.chartSidePanel.Name = "chartSidePanel";
             this.chartSidePanel.Size = new System.Drawing.Size(265, 377);
             this.chartSidePanel.TabIndex = 7;
@@ -567,8 +630,8 @@ namespace CryptoMarketClient {
             // 
             this.orderBookSidePanel.Controls.Add(this.orderBookControl1);
             this.orderBookSidePanel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.orderBookSidePanel.Location = new System.Drawing.Point(511, 141);
-            this.orderBookSidePanel.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.orderBookSidePanel.Location = new System.Drawing.Point(688, 141);
+            this.orderBookSidePanel.Margin = new System.Windows.Forms.Padding(2);
             this.orderBookSidePanel.Name = "orderBookSidePanel";
             this.orderBookSidePanel.Size = new System.Drawing.Size(226, 377);
             this.orderBookSidePanel.TabIndex = 9;
@@ -587,32 +650,62 @@ namespace CryptoMarketClient {
             this.orderBookControl1.Size = new System.Drawing.Size(225, 377);
             this.orderBookControl1.TabIndex = 0;
             // 
-            // ribbonPageGroup2
+            // beBuyLowestAsk
             // 
-            this.ribbonPageGroup2.ItemLinks.Add(this.bbBuy);
-            this.ribbonPageGroup2.ItemLinks.Add(this.bbSell);
-            this.ribbonPageGroup2.Name = "ribbonPageGroup2";
-            this.ribbonPageGroup2.Text = "Debug Arbitrage";
+            this.beBuyLowestAsk.Caption = "Use Base Currency (0-100%)";
+            this.beBuyLowestAsk.Edit = this.repositoryItemSpinEdit2;
+            this.beBuyLowestAsk.EditValue = 50D;
+            this.beBuyLowestAsk.EditWidth = 75;
+            this.beBuyLowestAsk.Id = 14;
+            this.beBuyLowestAsk.Name = "beBuyLowestAsk";
             // 
-            // bbBuy
+            // repositoryItemSpinEdit2
             // 
-            this.bbBuy.Caption = "Buy LowestAsk";
-            this.bbBuy.Id = 10;
-            this.bbBuy.Name = "bbBuy";
-            this.bbBuy.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bbBuy_ItemClick);
+            this.repositoryItemSpinEdit2.AutoHeight = false;
+            this.repositoryItemSpinEdit2.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.repositoryItemSpinEdit2.Name = "repositoryItemSpinEdit2";
             // 
-            // bbSell
+            // ribbonPage1
             // 
-            this.bbSell.Caption = "Sell Highest Bid";
-            this.bbSell.Id = 11;
-            this.bbSell.Name = "bbSell";
-            this.bbSell.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bbSell_ItemClick);
+            this.ribbonPage1.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] {
+            this.ribbonPageGroup2});
+            this.ribbonPage1.Name = "ribbonPage1";
+            this.ribbonPage1.Text = "Manual Arbitrage";
+            // 
+            // beHighestBidSell
+            // 
+            this.beHighestBidSell.Caption = "Use Market Currency (0-100%)";
+            this.beHighestBidSell.Edit = this.repositoryItemSpinEdit3;
+            this.beHighestBidSell.EditValue = 100D;
+            this.beHighestBidSell.EditWidth = 75;
+            this.beHighestBidSell.Id = 15;
+            this.beHighestBidSell.Name = "beHighestBidSell";
+            // 
+            // repositoryItemSpinEdit3
+            // 
+            this.repositoryItemSpinEdit3.AutoHeight = false;
+            this.repositoryItemSpinEdit3.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.repositoryItemSpinEdit3.MaxValue = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.repositoryItemSpinEdit3.Name = "repositoryItemSpinEdit3";
+            // 
+            // bbSyncWithLowestAsk
+            // 
+            this.bbSyncWithLowestAsk.Caption = "Send To Lowest Ask";
+            this.bbSyncWithLowestAsk.Id = 16;
+            this.bbSyncWithLowestAsk.Name = "bbSyncWithLowestAsk";
+            this.bbSyncWithLowestAsk.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bbSyncWithLowestAsk_ItemClick);
             // 
             // TickerArbitrageForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1002, 518);
+            this.ClientSize = new System.Drawing.Size(1179, 518);
             this.Controls.Add(this.sidePanel1);
             this.Controls.Add(this.orderBookSidePanel);
             this.Controls.Add(this.chartSidePanel);
@@ -625,6 +718,7 @@ namespace CryptoMarketClient {
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemSpinEdit1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(xyDiagram2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(stepAreaSeriesView3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(series3)).EndInit();
@@ -634,6 +728,8 @@ namespace CryptoMarketClient {
             this.sidePanel1.ResumeLayout(false);
             this.chartSidePanel.ResumeLayout(false);
             this.orderBookSidePanel.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemSpinEdit2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemSpinEdit3)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -687,5 +783,13 @@ namespace CryptoMarketClient {
         private DevExpress.XtraBars.BarButtonItem bbBuy;
         private DevExpress.XtraBars.BarButtonItem bbSell;
         private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup2;
+        private DevExpress.XtraBars.BarButtonItem bbSendToHighestBid;
+        private DevExpress.XtraEditors.Repository.RepositoryItemSpinEdit repositoryItemSpinEdit1;
+        private DevExpress.XtraBars.BarEditItem beBuyLowestAsk;
+        private DevExpress.XtraEditors.Repository.RepositoryItemSpinEdit repositoryItemSpinEdit2;
+        private DevExpress.XtraBars.Ribbon.RibbonPage ribbonPage1;
+        private DevExpress.XtraBars.BarEditItem beHighestBidSell;
+        private DevExpress.XtraEditors.Repository.RepositoryItemSpinEdit repositoryItemSpinEdit3;
+        private DevExpress.XtraBars.BarButtonItem bbSyncWithLowestAsk;
     }
 }

@@ -1,4 +1,5 @@
-﻿using CryptoMarketClient.Poloniex;
+﻿using CryptoMarketClient.Common;
+using CryptoMarketClient.Poloniex;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -216,14 +217,28 @@ namespace CryptoMarketClient {
         public void ProcessArbitrageOrderBook(string text) {
             PoloniexModel.Default.OnUpdateArbitrageOrderBook(this, text);
         }
-        public bool UpdateBalance(bool updateMarket) {
-            return PoloniexModel.Default.GetBalance(updateMarket ? SecondCurrency : FirstCurrency);
-        }
         public bool Buy(double rate, double amount) {
             return PoloniexModel.Default.BuyLimit(this, rate, amount) != -1;
         }
         public bool Sell(double rate, double amount) {
             return PoloniexModel.Default.SellLimit(this, rate, amount) != -1;
+        }
+        public bool UpdateBalance(CurrencyType type) {
+            return PoloniexModel.Default.GetBalance(type == CurrencyType.BaseCurrency? FirstCurrency: SecondCurrency);
+        }
+        public string GetDepositAddress(CurrencyType type) {
+            if(type == CurrencyType.BaseCurrency) {
+                if(!string.IsNullOrEmpty(FirstCurrencyBalanceInfo.DepositAddress))
+                    return FirstCurrencyBalanceInfo.DepositAddress;
+                return PoloniexModel.Default.CreateDeposit(FirstCurrency);
+            }
+            if(!string.IsNullOrEmpty(SecondCurrencyBalanceInfo.DepositAddress))
+                return SecondCurrencyBalanceInfo.DepositAddress;
+            return PoloniexModel.Default.CreateDeposit(SecondCurrency);
+        }
+        public bool Withdraw(CurrencyType currencyType, string address, double amount) {
+            string currency = currencyType == CurrencyType.BaseCurrency ? FirstCurrency : SecondCurrency;
+            return PoloniexModel.Default.Withdraw(currency, amount, address, "");
         }
     }
 }

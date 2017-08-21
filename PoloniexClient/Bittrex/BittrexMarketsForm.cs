@@ -1,4 +1,5 @@
-﻿using DevExpress.XtraGrid;
+﻿using DevExpress.XtraEditors;
+using DevExpress.XtraGrid;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -19,9 +20,16 @@ namespace CryptoMarketClient.Bittrex {
         protected bool HasShown { get; set; }
         protected override void OnShown(EventArgs e) {
             base.OnShown(e);
-            BittrexModel.Default.GetMarketsInfo();
-            BittrexModel.Default.GetMarketsSummaryInfo();
-            BittrexModel.Default.GetBalances();
+            if(!BittrexModel.Default.GetMarketsInfo()) {
+                XtraMessageBox.Show("Fatal Error: Can't obtain markets info");
+                BeginInvoke(new Action(Close));
+                return;
+            }
+            if(!BittrexModel.Default.GetMarketsSummaryInfo()) {
+                XtraMessageBox.Show("Fatal Error: Can't obtain markets summary info");
+                BeginInvoke(new Action(Close));
+                return;
+            }
             this.gridControl1.DataSource = BittrexModel.Default.Markets;
             HasShown = true;
             StartUpdateTickerThread();
