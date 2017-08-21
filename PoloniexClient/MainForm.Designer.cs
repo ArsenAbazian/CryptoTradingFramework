@@ -34,6 +34,7 @@
             this.repositoryItemSpinEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemSpinEdit();
             this.bcAllowTradeHistory = new DevExpress.XtraBars.BarCheckItem();
             this.btShowApiKeys = new DevExpress.XtraBars.BarButtonItem();
+            this.bbShowYourTotalDeposit = new DevExpress.XtraBars.BarButtonItem();
             this.ribbonPageCategory1 = new DevExpress.XtraBars.Ribbon.RibbonPageCategory();
             this.ribbonPage2 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPageGroup2 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
@@ -42,6 +43,8 @@
             this.rpPoloniex = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPageGroup3 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.ribbonPageGroup1 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
+            this.ribbonPage1 = new DevExpress.XtraBars.Ribbon.RibbonPage();
+            this.ribbonPageGroup6 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.ribbonStatusBar1 = new DevExpress.XtraBars.Ribbon.RibbonStatusBar();
             this.documentManager1 = new DevExpress.XtraBars.Docking2010.DocumentManager(this.components);
             this.tabbedView1 = new DevExpress.XtraBars.Docking2010.Views.Tabbed.TabbedView(this.components);
@@ -64,21 +67,23 @@
             this.btClassicArbitrage,
             this.beOrderBookDepth,
             this.bcAllowTradeHistory,
-            this.btShowApiKeys});
+            this.btShowApiKeys,
+            this.bbShowYourTotalDeposit});
             this.ribbonControl1.Location = new System.Drawing.Point(0, 0);
-            this.ribbonControl1.Margin = new System.Windows.Forms.Padding(7);
-            this.ribbonControl1.MaxItemId = 13;
+            this.ribbonControl1.Margin = new System.Windows.Forms.Padding(6);
+            this.ribbonControl1.MaxItemId = 14;
             this.ribbonControl1.MdiMergeStyle = DevExpress.XtraBars.Ribbon.RibbonMdiMergeStyle.Always;
             this.ribbonControl1.Name = "ribbonControl1";
             this.ribbonControl1.PageCategories.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageCategory[] {
             this.ribbonPageCategory1});
             this.ribbonControl1.PageCategoryAlignment = DevExpress.XtraBars.Ribbon.RibbonPageCategoryAlignment.Right;
             this.ribbonControl1.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
-            this.rpPoloniex});
+            this.rpPoloniex,
+            this.ribbonPage1});
             this.ribbonControl1.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repositoryItemSpinEdit1});
             this.ribbonControl1.ShowApplicationButton = DevExpress.Utils.DefaultBoolean.False;
-            this.ribbonControl1.Size = new System.Drawing.Size(1922, 319);
+            this.ribbonControl1.Size = new System.Drawing.Size(1774, 282);
             this.ribbonControl1.StatusBar = this.ribbonStatusBar1;
             // 
             // skinRibbonGalleryBarItem1
@@ -148,6 +153,15 @@
             this.btShowApiKeys.Name = "btShowApiKeys";
             this.btShowApiKeys.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btShowApiKeys_ItemClick);
             // 
+            // bbShowYourTotalDeposit
+            // 
+            this.bbShowYourTotalDeposit.Caption = "Deposits Total";
+            this.bbShowYourTotalDeposit.Id = 13;
+            this.bbShowYourTotalDeposit.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bbShowYourTotalDeposit.ImageOptions.Image")));
+            this.bbShowYourTotalDeposit.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("bbShowYourTotalDeposit.ImageOptions.LargeImage")));
+            this.bbShowYourTotalDeposit.Name = "bbShowYourTotalDeposit";
+            this.bbShowYourTotalDeposit.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bbShowYourTotalDeposit_ItemClick);
+            // 
             // ribbonPageCategory1
             // 
             this.ribbonPageCategory1.Name = "ribbonPageCategory1";
@@ -204,13 +218,26 @@
             this.ribbonPageGroup1.Name = "ribbonPageGroup1";
             this.ribbonPageGroup1.Text = "Arbitrage";
             // 
+            // ribbonPage1
+            // 
+            this.ribbonPage1.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] {
+            this.ribbonPageGroup6});
+            this.ribbonPage1.Name = "ribbonPage1";
+            this.ribbonPage1.Text = "Statistics";
+            // 
+            // ribbonPageGroup6
+            // 
+            this.ribbonPageGroup6.ItemLinks.Add(this.bbShowYourTotalDeposit);
+            this.ribbonPageGroup6.Name = "ribbonPageGroup6";
+            this.ribbonPageGroup6.Text = "Statistics";
+            // 
             // ribbonStatusBar1
             // 
-            this.ribbonStatusBar1.Location = new System.Drawing.Point(0, 1020);
-            this.ribbonStatusBar1.Margin = new System.Windows.Forms.Padding(7);
+            this.ribbonStatusBar1.Location = new System.Drawing.Point(0, 879);
+            this.ribbonStatusBar1.Margin = new System.Windows.Forms.Padding(6);
             this.ribbonStatusBar1.Name = "ribbonStatusBar1";
             this.ribbonStatusBar1.Ribbon = this.ribbonControl1;
-            this.ribbonStatusBar1.Size = new System.Drawing.Size(1922, 71);
+            this.ribbonStatusBar1.Size = new System.Drawing.Size(1774, 62);
             // 
             // documentManager1
             // 
@@ -227,13 +254,13 @@
             // MainForm
             // 
             this.AllowFormGlass = DevExpress.Utils.DefaultBoolean.False;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(13F, 29F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1922, 1091);
+            this.ClientSize = new System.Drawing.Size(1774, 941);
             this.Controls.Add(this.ribbonStatusBar1);
             this.Controls.Add(this.ribbonControl1);
             this.IsMdiContainer = true;
-            this.Margin = new System.Windows.Forms.Padding(7);
+            this.Margin = new System.Windows.Forms.Padding(6);
             this.Name = "MainForm";
             this.Ribbon = this.ribbonControl1;
             this.StatusBar = this.ribbonStatusBar1;
@@ -269,6 +296,9 @@
         private DevExpress.XtraBars.Ribbon.RibbonPageCategory ribbonPageCategory1;
         private DevExpress.XtraBars.BarButtonItem btShowApiKeys;
         private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup5;
+        private DevExpress.XtraBars.BarButtonItem bbShowYourTotalDeposit;
+        private DevExpress.XtraBars.Ribbon.RibbonPage ribbonPage1;
+        private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup6;
     }
 }
 

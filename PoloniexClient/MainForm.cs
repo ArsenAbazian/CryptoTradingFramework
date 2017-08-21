@@ -100,5 +100,10 @@ namespace CryptoMarketClient {
                 form.ShowDialog();
             }
         }
+
+        private void bbShowYourTotalDeposit_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
+            DepositsTotal form = new DepositsTotal();
+            form.Show();
+        }
     }
 }

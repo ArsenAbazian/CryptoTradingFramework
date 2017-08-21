@@ -19,7 +19,7 @@ namespace CryptoMarketClient.Common {
 
         protected LogForm Form { get; set; }
 
-        protected List<LogMessage> Messages { get; } = new List<LogMessage>();
+        public List<LogMessage> Messages { get; } = new List<LogMessage>();
         public void AddMessage(LogType type, string message, string description) {
             Messages.Add(new LogMessage() { Type = type, Text = message, Description = description, Time = DateTime.Now });
             if(Form != null && !Form.IsDisposed)

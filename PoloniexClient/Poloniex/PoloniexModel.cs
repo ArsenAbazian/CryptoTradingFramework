@@ -93,11 +93,17 @@ namespace CryptoMarketClient {
             return subject.Subscribe(x => ticker.OrderBook.OnRecvUpdate(x));
         }
 
-        public void GetTickersInfo() {
+        public bool GetTickersInfo() {
             string address = "https://poloniex.com/public?command=returnTicker";
-            string text = GetDownloadString(address);
+            string text = string.Empty;
+            try {
+                text = GetDownloadString(address);
+            }
+            catch(Exception) {
+                return false;
+            }
             if(string.IsNullOrEmpty(text))
-                return;
+                return false;
             Tickers.Clear();
             JObject res = (JObject)JsonConvert.DeserializeObject(text);
             int index = 0;
@@ -119,14 +125,21 @@ namespace CryptoMarketClient {
                 Tickers.Add(t);
                 index++;
             }
+            return true;
         }
-        public void UpdateTickersInfo() {
+        public bool UpdateTickersInfo() {
             if(Tickers.Count == 0)
-                return;
+                return false;
             string address = "https://poloniex.com/public?command=returnTicker";
-            string text = GetDownloadString(address);
+            string text = string.Empty;
+            try {
+                text = GetDownloadString(address);
+            }
+            catch(Exception) {
+                return false;
+            }
             if(string.IsNullOrEmpty(text))
-                return;
+                return false;
             JObject res = (JObject)JsonConvert.DeserializeObject(text);
             foreach(JProperty prop in res.Children()) {
                 PoloniexTicker t = Tickers.FirstOrDefault((i) => i.CurrencyPair == prop.Name);
@@ -143,6 +156,7 @@ namespace CryptoMarketClient {
                 t.Hr24High = obj.Value<double>("high24hr");
                 t.Hr24Low = obj.Value<double>("low24hr");
             }
+            return true;
         }
         public bool UpdateArbitrageOrderBook(PoloniexTicker ticker, int depth) {
             string address = GetOrderBookString(ticker, depth);
@@ -262,7 +276,7 @@ namespace CryptoMarketClient {
                 ticker.TradeHistory.Add(item);
             }
         }
-        public void GetTicker(ITicker ticker) {
+        public void GetTicker(PoloniexTicker ticker) {
             throw new NotImplementedException();
         }
         public string ToQueryString(NameValueCollection nvc) {

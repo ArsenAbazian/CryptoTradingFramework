@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DevExpress.XtraEditors;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace CryptoMarketClient {
-    public class TimerUpdateForm : Form {
+    public class TimerUpdateForm : XtraForm {
 
         protected virtual int UpdateInervalMs { get { return 1000; } }
         protected virtual bool AllowUpdateInactive { get { return false; } }
