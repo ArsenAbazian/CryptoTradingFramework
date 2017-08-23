@@ -97,7 +97,34 @@ namespace CryptoMarketClient {
                 }
             }
         }
+        //int logCounter = 0;
         async Task UpdateArbitrageInfo(TickerArbitrageInfo info) {
+            //int log = Interlocked.Increment(ref logCounter);
+            info.ObtainDataSuccessCount = 0;
+            info.ObtainDataCount = 0;
+            info.NextOverdueMs = 6000;
+            info.StartUpdateMs = timer.ElapsedMilliseconds;
+            info.ObtainingData = true;
+            Task task = Task.Factory.StartNew(() => {
+                for(int i = 0; i < info.Count; i++) {
+                        if(info.Tickers[i].UpdateArbitrageOrderBook(TickerArbitrageInfo.Depth))
+                            info.ObtainDataSuccessCount++;
+                        info.ObtainDataCount++;
+                }
+                });
+            await task;
+            if(info.ObtainDataCount == info.Count) {
+                info.IsActual = info.ObtainDataSuccessCount == info.Count;
+                info.IsUpdating = true;
+                info.ObtainingData = false;
+                info.UpdateTimeMs = (int)(timer.ElapsedMilliseconds - info.StartUpdateMs);
+                Invoke(new Action<TickerArbitrageInfo>(OnUpdateTickerInfo), info);
+            }
+
+            info.LastUpdate = DateTime.Now;
+        }
+
+        async Task UpdateArbitrageInfoOLD(TickerArbitrageInfo info) {
             info.ObtainDataSuccessCount = 0;
             info.ObtainDataCount = 0;
             info.NextOverdueMs = 6000;
@@ -489,6 +516,10 @@ namespace CryptoMarketClient {
 
             LogManager.Default.Show();
             SelectedArbitrage = null;
+        }
+
+        private void repositoryItemCheckEdit1_EditValueChanged(object sender, EventArgs e) {
+            gridView1.PostEditor();
         }
     }
 }
