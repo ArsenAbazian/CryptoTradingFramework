@@ -16,6 +16,7 @@ using System.Diagnostics;
 using DevExpress.XtraWaitForm;
 using CryptoMarketClient.Bittrex;
 using DevExpress.XtraEditors;
+using CryptoMarketClient.Common;
 
 namespace CryptoMarketClient {
     public partial class MainForm : DevExpress.XtraBars.Ribbon.RibbonForm {
@@ -31,6 +32,7 @@ namespace CryptoMarketClient {
             base.OnShown(e);
             ModelBase.AllowTradeHistory = this.bcAllowTradeHistory.Checked;
             ModelBase.OrderBookDepth = Convert.ToInt32(this.beOrderBookDepth.EditValue);
+            TelegramBot.Default.SendNotification("hello!");
         }
 
         PoloniexTickersForm tickersForm;

@@ -35,6 +35,7 @@ namespace CryptoMarketClient {
         public List<PoloniexTicker> Tickers { get; } = new List<PoloniexTicker>();
         public List<PoloniexAccountBalanceInfo> Balances { get; } = new List<PoloniexAccountBalanceInfo>();
         public List<PoloniexOrderInfo> Orders { get; } = new List<PoloniexOrderInfo>();
+        public List<PoloniexCurrencyInfo> Currencies { get; } = new List<PoloniexCurrencyInfo>();
 
         protected IDisposable TickersSubscriber { get; set; }
         public void Connect() {
@@ -91,6 +92,35 @@ namespace CryptoMarketClient {
 
             ISubject<OrderBookUpdateInfo> subject = wampChannel.RealmProxy.Services.GetSubject<OrderBookUpdateInfo>(ticker.OrderBook.Owner.Name, new OrderBookUpdateInfoConverter());
             return subject.Subscribe(x => ticker.OrderBook.OnRecvUpdate(x));
+        }
+
+        public bool UpdateCurrencies() {
+            string address = "https://poloniex.com/public?command=returnCurrencies";
+            string text = string.Empty;
+            try {
+                text = GetDownloadString(address);
+            }
+            catch(Exception) {
+                return false;
+            }
+            if(string.IsNullOrEmpty(text))
+                return false;
+            JObject res = (JObject)JsonConvert.DeserializeObject(text);
+            foreach(JProperty prop in res.Children()) {
+                string currency = prop.Name;
+                JObject obj = (JObject)prop.Value;
+                PoloniexCurrencyInfo c = Currencies.FirstOrDefault(curr => curr.Currency == currency);
+                if(c == null) {
+                    c = new PoloniexCurrencyInfo();
+                    c.Currency = currency;
+                    c.MaxDailyWithdrawal = obj.Value<double>("maxDailyWithdrawal");
+                    c.TxFee = obj.Value<double>("txFee");
+                    c.MinConfirmation = obj.Value<double>("minConf");
+                    Currencies.Add(c);
+                }
+                c.Disabled = obj.Value<int>("disabled") != 0;
+            }
+            return true;
         }
 
         public bool GetTickersInfo() {
@@ -333,19 +363,22 @@ namespace CryptoMarketClient {
                 return false;
             JObject res = (JObject)JsonConvert.DeserializeObject(text);
             lock(Balances) {
-                Balances.Clear();
                 foreach(JProperty prop in res.Children()) {
                     if(prop.Name == "error") {
                         Debug.WriteLine("OnGetBalances fails: " + prop.Value<string>());
                         return false;
                     }
                     JObject obj = (JObject)prop.Value;
-                    PoloniexAccountBalanceInfo info = new PoloniexAccountBalanceInfo();
+                    PoloniexAccountBalanceInfo info = Balances.FirstOrDefault(b => b.Currency == prop.Name);
+                    if(info == null) {
+                        info = new PoloniexAccountBalanceInfo();
+                        info.Currency = prop.Name;
+                        Balances.Add(info);
+                    }
                     info.Currency = prop.Name;
                     info.Available = obj.Value<double>("available");
                     info.OnOrders = obj.Value<double>("onOrders");
                     info.BtcValue = obj.Value<double>("btcValue");
-                    Balances.Add(info);
                 }
             }
             return true;

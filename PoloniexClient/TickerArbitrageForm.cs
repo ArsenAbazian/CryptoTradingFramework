@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace CryptoMarketClient {
-    public partial class TickerArbitrageForm : Form {
+    public partial class TickerArbitrageForm : ThreadUpdateForm {
         public TickerArbitrageForm() {
             InitializeComponent();
             UpdateGridFilter(!this.bbAllCurrencies.Checked);
@@ -29,30 +29,42 @@ namespace CryptoMarketClient {
             ((XYDiagram)this.arbitrageHistoryChart.Diagram).AxisX.DateTimeScaleOptions.MeasureUnit = DateTimeMeasureUnit.Second;
             ((XYDiagram)this.arbitrageHistoryChart.Diagram).AxisY.WholeRange.AlwaysShowZeroLevel = true;
         }
-        protected bool HasShown { get; set; }
-        protected string[] Responses { get; set; }
+        protected override bool AllowUpdateInactive => true;
         protected override void OnShown(EventArgs e) {
-            base.OnShown(e);
             BuildCurrenciesList();
-            StartUpdateThread();
-            Responses = new string[ArbitrageList[0].Count];
-            HasShown = true;
+            base.OnShown(e);
         }
-        protected Thread UpdateThread { get; private set; }
-        void StartUpdateThread() {
-            if(UpdateThread != null && UpdateThread.IsAlive)
-                return;
-            UpdateThread = new Thread(OnThreadUpdate);
-            UpdateThread.Start();
+        protected Thread UpdateCurrenciesThread { get; set; }
+        protected override void StartUpdateThread() {
+            base.StartUpdateThread();
+            UpdateCurrenciesThread = CheckStartThread(UpdateCurrenciesThread, UpdateCurrencies);
         }
-        protected override void OnActivated(EventArgs e) {
-            base.OnActivated(e);
-            if(!HasShown)
-                return;
-            StartUpdateThread();
-        }
-        protected override void OnTextChanged(EventArgs e) {
-            base.OnTextChanged(e);
+        void UpdateCurrencies() {
+            while(AllowWorkThread) {
+                for(int i = 0; i < 3; i++) {
+                    if(PoloniexModel.Default.GetBalances())
+                        break;
+                }
+                for(int i = 0; i < 3; i++) {
+                    if(PoloniexModel.Default.UpdateCurrencies())
+                        break;
+                }
+                for(int i = 0; i < 3; i++) {
+                    if(BittrexModel.Default.GetBalance(ArbitrageList[0].BaseCurrency))
+                        break;
+                }
+                foreach(TickerArbitrageInfo info in ArbitrageList) {
+                    for(int i = 0; i < 3; i++) {
+                        if(BittrexModel.Default.GetBalance(info.MarketCurrency))
+                            break;
+                    }
+                }
+                for(int i = 0; i < 3; i++) {
+                    if(BittrexModel.Default.UpdateCurrencies())
+                        break;
+                }
+                Thread.Sleep(10 * 60 * 1000); // sleep 10 min
+            }
         }
         void RefreshGridRow(TickerArbitrageInfo info) {
             this.gridView1.RefreshRow(this.gridView1.GetRowHandle(ArbitrageList.IndexOf(info)));
@@ -75,7 +87,8 @@ namespace CryptoMarketClient {
                         if(current.UpdateTimeMs > current.NextOverdueMs) {
                             current.IsActual = false;
                             current.NextOverdueMs += 3000;
-                            Invoke(new Action<TickerArbitrageInfo>(RefreshGridRow), current);
+                            if(IsHandleCreated)
+                                Invoke(new Action<TickerArbitrageInfo>(RefreshGridRow), current);
                         }
                     }
                     else {
@@ -109,7 +122,7 @@ namespace CryptoMarketClient {
             }
             info.LastUpdate = DateTime.Now;
         }
-        void OnThreadUpdate() {
+        protected override void OnThreadUpdate() {
             OnUpdateTickers();
         }
         protected TickerArbitrageInfo SelectedArbitrage { get; set; }
@@ -144,11 +157,11 @@ namespace CryptoMarketClient {
 
             SelectedArbitrage.Update();
             SelectedArbitrage.UpateAmountByBalance();
-            if(SelectedArbitrage.ExpectedEarningUSD - SelectedArbitrage.EarningUSD > 10)
-                LogManager.Default.AddWarning("Arbitrage amount reduced because of balance not enough.", "New Amount = " + SelectedArbitrage.Amount + ", EarningUSD = " + SelectedArbitrage.EarningUSD);
+            if(SelectedArbitrage.ExpectedProfitUSD - SelectedArbitrage.MaxProfitUSD > 10)
+                LogManager.Default.AddWarning("Arbitrage amount reduced because of balance not enough.", "New Amount = " + SelectedArbitrage.Amount.ToString("0.########") + ", ProfitUSD = " + SelectedArbitrage.MaxProfitUSD);
 
-            if(SelectedArbitrage.EarningUSD < 0) {
-                LogManager.Default.AddWarning("Arbitrage earning reduced since last time. Skip trading.", SelectedArbitrage.Name + " expected " + SelectedArbitrage.ExpectedEarningUSD + " but after update" + SelectedArbitrage.EarningUSD);
+            if(SelectedArbitrage.AvailableProfitUSD <= 20) {
+                LogManager.Default.AddWarning("Arbitrage Profit reduced since last time. Skip trading.", SelectedArbitrage.Name + " expected " + SelectedArbitrage.ExpectedProfitUSD + " but after update" + SelectedArbitrage.MaxProfitUSD);
                 Invoke(new MethodInvoker(ShowLog));
                 return;
             }
@@ -162,7 +175,9 @@ namespace CryptoMarketClient {
                 return;
             }
 
-            LogManager.Default.AddSuccess("Arbitrage completed!!! Please check your balances.", SelectedArbitrage.Name + " earned " + SelectedArbitrage.EarningUSD);
+            string successText = "Arbitrage completed!!! Please check your balances." + SelectedArbitrage.Name + " earned " + SelectedArbitrage.AvailableProfitUSD;
+            LogManager.Default.AddSuccess(successText);
+            TelegramBot.Default.SendNotification(successText);
             Invoke(new MethodInvoker(ShowLog));
             return;
         }
@@ -181,25 +196,28 @@ namespace CryptoMarketClient {
             this.orderBookControl1.RefreshBids();
         }
         void OnUpdateTickerInfo(TickerArbitrageInfo info) {
-            double prevEarnings = info.EarningUSD;
+            double prevProfits = info.MaxProfitUSD;
             info.IsUpdating = true;
             info.Update();
-            info.SaveExpectedEarningUSD();
+            info.SaveExpectedProfitUSD();
             info.IsUpdating = false;
+            if(info.AvailableProfitUSD > 30) {
+                SelectedArbitrage = info;
+                ShouldProcessArbitrage = true;
+                return;
+            }
             this.gridView1.RefreshRow(this.gridView1.GetRowHandle(ArbitrageList.IndexOf(info)));
             if(this.arbitrageHistoryChart.DataSource == info.History)
                 RefreshChartDataSource();
             if(this.orderBookControl1.ArbitrageInfo == info)
                 RefreshOrderBook();
-            //if((prevEarnings <= 0 && info.EarningUSD <= 0) || prevEarnings == info.EarningUSD)
-            //    return;
-            if(info.EarningUSD - prevEarnings > 20)
-                ShowNotification(info, prevEarnings);
+            if(info.MaxProfitUSD - prevProfits > 20)
+                ShowNotification(info, prevProfits);
         }
-        void ShowNotification(TickerArbitrageInfo info, double prev) {
+        void ShowDesktopNotification(TickerArbitrageInfo info, double prev) {
             if(MdiParent.WindowState != FormWindowState.Minimized)
                 return;
-            double delta = info.EarningUSD - prev;
+            double delta = info.MaxProfitUSD - prev;
             double percent = delta / prev * 100;
 
             string changed = string.Empty;
@@ -209,9 +227,24 @@ namespace CryptoMarketClient {
                 trend = delta > 0 ? TrendNotification.TrendUp : TrendNotification.TrendDown;
             }
             else
-                changed = "New Arbitrage possibilities. Up to <b>" + info.EarningUSD.ToString("USD 0.###</b>");
-
+                changed = "New Arbitrage possibilities. Up to <b>" + info.MaxProfitUSD.ToString("USD 0.###</b>");
             GetReadyNotificationForm().ShowInfo(this, trend, info.ShortName, changed, 10000);
+        }
+        void ShowNotification(TickerArbitrageInfo info, double prev) {
+            SendTelegramNotification(info, prev);
+            ShowDesktopNotification(info, prev);
+        }
+        void SendTelegramNotification(TickerArbitrageInfo info, double prev) {
+            if(prev <= 0 && info.MaxProfit <= 0)
+                return;
+            string text = string.Empty;
+            string eventText = string.Empty;
+            if(info.AvailableAmount > 0) {
+                if(prev <= 0)
+                    eventText = prev <= 0 ? "new" : "changed";
+                text = eventText + info.ShortName + "</b>. max profit: <b>" + info.MaxProfitUSD.ToString("USD 0.###</b>") + "</b>";
+                TelegramBot.Default.SendNotification(text);
+            }
         }
         protected List<NotificationForm> NotificationForms { get; } = new List<NotificationForm>();
         NotificationForm GetReadyNotificationForm() {
@@ -259,7 +292,7 @@ namespace CryptoMarketClient {
             if(showAll)
                 this.gridView1.ActiveFilterString = null;
             else
-                this.gridView1.ActiveFilterCriteria = new BinaryOperator("Earning", 0, BinaryOperatorType.Greater);
+                this.gridView1.ActiveFilterCriteria = new BinaryOperator("MaxProfit", 0, BinaryOperatorType.Greater);
         }
 
         private void gridView1_Click(object sender, EventArgs e) {
@@ -307,7 +340,7 @@ namespace CryptoMarketClient {
 
         private void bbSelectPositive_ItemClick(object sender, ItemClickEventArgs e) {
             foreach(TickerArbitrageInfo info in ArbitrageList) {
-                info.IsSelected = info.EarningUSD > 0;
+                info.IsSelected = info.MaxProfitUSD > 0;
             }
             this.gridControl1.RefreshDataSource();
         }
@@ -332,7 +365,7 @@ namespace CryptoMarketClient {
             double amount = buyAmount / SelectedArbitrage.LowestAsk;
 
             if(!SelectedArbitrage.LowestAskTicker.Buy(SelectedArbitrage.LowestAsk, amount))
-                LogManager.Default.AddError("Cant buy currency.", "At" + lowest.HostName + "-" + lowest.BaseCurrency + "(" + amount.ToString("0.########") + ")" + " for " + lowest.MarketCurrency);
+                LogManager.Default.AddError("Cant buy currency.", "At " + lowest.HostName + "-" + lowest.BaseCurrency + "(" + amount.ToString("0.########") + ")" + " for " + lowest.MarketCurrency);
 
             SelectedArbitrage = null;
             LogManager.Default.Show();
@@ -357,7 +390,7 @@ namespace CryptoMarketClient {
             LogManager.Default.Add("Highest Bid Market Currency Amount = " + amount.ToString("0.########"));
 
             if(!SelectedArbitrage.HighestBidTicker.Sell(SelectedArbitrage.HighestBid, amount))
-                LogManager.Default.AddError("Cant sell currency.", "At" + highest.HostName + "-" + highest.MarketCurrency + "(" + amount.ToString("0.########") + ")" + " for " + highest.BaseCurrency);
+                LogManager.Default.AddError("Cant sell currency.", "At " + highest.HostName + "-" + highest.MarketCurrency + "(" + amount.ToString("0.########") + ")" + " for " + highest.BaseCurrency);
 
             SelectedArbitrage = null;
         }

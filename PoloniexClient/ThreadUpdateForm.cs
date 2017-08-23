@@ -18,12 +18,16 @@ namespace CryptoMarketClient {
         protected Thread UpdateThread { get; private set; }
         protected bool AllowWorkThread { get; set; }
 
-        void StartUpdateThread() {
+        protected virtual Thread CheckStartThread(Thread current, ThreadStart method) {
+            if(current != null && current.IsAlive)
+                return current;
+            current = new Thread(method);
+            current.Start();
+            return current;
+        } 
+        protected virtual void StartUpdateThread() {
             AllowWorkThread = true;
-            if(UpdateThread != null && UpdateThread.IsAlive)
-                return;
-            UpdateThread = new Thread(ThreadWork);
-            UpdateThread.Start();
+            UpdateThread = CheckStartThread(UpdateThread, ThreadWork);
         }
 
         protected override void OnShown(EventArgs e) {
@@ -42,7 +46,7 @@ namespace CryptoMarketClient {
             if(!AllowUpdateInactive)
                 StopUpdateThread();
         }
-        void StopUpdateThread() {
+        protected virtual void StopUpdateThread() {
             AllowWorkThread = false;
         }
 

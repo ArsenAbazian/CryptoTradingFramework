@@ -70,6 +70,38 @@ namespace CryptoMarketClient.Bittrex {
             }
             return true;
         }
+        public bool UpdateCurrencies() {
+            string address = "https://bittrex.com/api/v1.1/public/getcurrencies";
+            string text = string.Empty;
+            try {
+                text = GetDownloadString(address);
+            }
+            catch(Exception) {
+                return false;
+            }
+            if(string.IsNullOrEmpty(text))
+                return false;
+            JObject res = (JObject)JsonConvert.DeserializeObject(text);
+            if(!res.Value<bool>("success"))
+                return false;
+            JArray markets = res.Value<JArray>("result");
+            foreach(JObject obj in markets) {
+                string currency = obj.Value<string>("Currency");
+                BittrexCurrencyInfo c = Currencies.FirstOrDefault(curr => curr.Currency == currency);
+                if(c == null) {
+                    c = new BittrexCurrencyInfo();
+                    c.Currency = currency;
+                    c.CurrencyLong = obj.Value<string>("CurrencyLong");
+                    c.MinConfirmation = obj.Value<int>("MinConfirmation");
+                    c.CoinType = obj.Value<string>("CoinType");
+                    c.BaseAddress = obj.Value<string>("BaseAddress");
+                    c.TxFree = obj.Value<double>("TxFee");
+                    Currencies.Add(c);
+                }
+                c.IsActive = obj.Value<bool>("IsActive");
+            }
+            return true;
+        }
         public bool GetCurrenciesInfo() {
             string address = "https://bittrex.com/api/v1.1/public/getcurrencies";
             string text = string.Empty;
@@ -465,13 +497,18 @@ namespace CryptoMarketClient.Bittrex {
                 string address = string.Format("https://bittrex.com/api/v1.1/account/getbalance?apikey={0}&nonce={1}&currency={2}", Uri.EscapeDataString(ApiKey), DateTime.Now, info.Currency);
                 client.Headers.Clear();
                 client.Headers.Add("apisign", GetSign(address));
-                try {
-                    string text = client.DownloadString(address);
-                    if(!OnGetBalance(text))
+                int tryIndex = 0;
+                for(tryIndex = 0; tryIndex < 3; tryIndex++) {
+                    try {
+                        string text = client.DownloadString(address);
+                        if(!OnGetBalance(text))
+                            return false;
+                    }
+                    catch(Exception) {
+                        continue;
+                    }
+                    if(tryIndex == 3)
                         return false;
-                }
-                catch(Exception) {
-                    return false;
                 }
             }
             return true;
