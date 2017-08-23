@@ -188,7 +188,7 @@ namespace CryptoMarketClient {
             if(MaxProfitUSD < 0 && prev < 0)
                 return;
             if(Math.Abs(MaxProfitUSD - prev) > 0.0000001)
-                History.Add(new SimpleHistoryItem() { Time = DateTime.Now, Value = MaxProfit, ValueUSD = MaxProfitUSD });
+                History.Add(new SimpleHistoryItem() { Time = DateTime.Now, Value = MaxProfit, ValueUSD = MaxProfitUSD, Spread = Spread, Amount = Amount });
         }
         public bool Buy() {
             return LowestAskTicker.Buy(LowestAsk, Amount);
@@ -214,5 +214,7 @@ namespace CryptoMarketClient {
         public DateTime Time { get; set; }
         public double Value { get; set; }
         public double ValueUSD { get; set; }
+        public double Spread { get; set; }
+        public double Amount { get; set; }
     }
 }

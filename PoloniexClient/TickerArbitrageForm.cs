@@ -1,5 +1,6 @@
 ﻿using CryptoMarketClient.Bittrex;
 using CryptoMarketClient.Common;
+using CryptoMarketClient.Poloniex;
 using DevExpress.Data.Filtering;
 using DevExpress.XtraBars;
 using DevExpress.XtraCharts;
@@ -39,7 +40,9 @@ namespace CryptoMarketClient {
             base.StartUpdateThread();
             UpdateCurrenciesThread = CheckStartThread(UpdateCurrenciesThread, UpdateCurrencies);
         }
+        protected bool UpdateBalanceNotification { get; set; }
         void UpdateCurrencies() {
+            UpdateBalanceNotification = true;
             while(AllowWorkThread) {
                 for(int i = 0; i < 3; i++) {
                     if(PoloniexModel.Default.GetBalances())
@@ -62,6 +65,17 @@ namespace CryptoMarketClient {
                 for(int i = 0; i < 3; i++) {
                     if(BittrexModel.Default.UpdateCurrencies())
                         break;
+                }
+                if(UpdateBalanceNotification) {
+                    UpdateBalanceNotification = false;
+                    foreach(PoloniexAccountBalanceInfo info in PoloniexModel.Default.Balances) {
+                        if(info.Available > 0)
+                            TelegramBot.Default.SendNotification("poloniex balance " + info.Currency + " = " + info.Available);
+                    }
+                    foreach(BittrexAccountBalanceInfo info in BittrexModel.Default.Balances) {
+                        if(info.Available > 0)
+                            TelegramBot.Default.SendNotification("bittrex  balance " + info.Currency + " = " + info.Available);
+                    }
                 }
                 Thread.Sleep(10 * 60 * 1000); // sleep 10 min
             }
@@ -92,7 +106,7 @@ namespace CryptoMarketClient {
                         }
                     }
                     else {
-                        current.UpdateTask = UpdateArbitrageInfo(current);
+                        current.UpdateTask = UpdateArbitrageInfoOLD(current);
                     }
                 }
             }
@@ -205,6 +219,7 @@ namespace CryptoMarketClient {
             string successText = "Arbitrage completed!!! Please check your balances." + SelectedArbitrage.Name + " earned " + SelectedArbitrage.AvailableProfitUSD;
             LogManager.Default.AddSuccess(successText);
             TelegramBot.Default.SendNotification(successText);
+            UpdateBalanceNotification = true;
             Invoke(new MethodInvoker(ShowLog));
             return;
         }
