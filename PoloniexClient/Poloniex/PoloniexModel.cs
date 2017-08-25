@@ -376,6 +376,7 @@ namespace CryptoMarketClient {
                         Balances.Add(info);
                     }
                     info.Currency = prop.Name;
+                    info.LastAvailable = info.Available;
                     info.Available = obj.Value<double>("available");
                     info.OnOrders = obj.Value<double>("onOrders");
                     info.BtcValue = obj.Value<double>("btcValue");

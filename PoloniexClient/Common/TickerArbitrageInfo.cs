@@ -217,4 +217,25 @@ namespace CryptoMarketClient {
         public double Spread { get; set; }
         public double Amount { get; set; }
     }
+
+    public class SyncronizationItemInfo {
+        public ITicker Source { get; set; }
+        public ITicker Destination { get; set; }
+
+        public string DestinationAddress { get; set; }
+        public double Amount { get; set; }
+
+        public bool HasDestinationAddress { get { return !string.IsNullOrEmpty(DestinationAddress); } }
+        public bool ObtainDestinationAddress() {
+            for(int i = 0; i < 3; i++) {
+                DestinationAddress = Destination.GetDepositAddress(Common.CurrencyType.MarketCurrency);
+                if(HasDestinationAddress)
+                    return true;
+            }
+            return false;
+        }
+        public bool MakeWithdraw() {
+            return Source.Withdraw(Common.CurrencyType.MarketCurrency, DestinationAddress, Amount);
+        }
+    }
 }

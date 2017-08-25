@@ -45,7 +45,7 @@ namespace CryptoMarketClient.Common {
                 Debug.WriteLine("Error: Group ChatId == null");
                 return;
             }
-            InnerClient.SendTextMessageAsync(BroadcastId, text, Telegram.Bot.Types.Enums.ParseMode.Default);
+            InnerClient.SendTextMessageAsync(BroadcastId, text, Telegram.Bot.Types.Enums.ParseMode.Html);
         }
     }
 }

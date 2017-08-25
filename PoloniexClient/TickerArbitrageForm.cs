@@ -33,12 +33,41 @@ namespace CryptoMarketClient {
         protected override bool AllowUpdateInactive => true;
         protected override void OnShown(EventArgs e) {
             BuildCurrenciesList();
+            SyncronizationItemInfo info = new SyncronizationItemInfo();
+            info.Source = PoloniexModel.Default.Tickers.FirstOrDefault((t) => t.FirstCurrency == "BTC" && t.SecondCurrency == "XVC");
+            info.Destination = BittrexModel.Default.Markets.FirstOrDefault((t) => t.BaseCurrency == "BTC" && t.MarketCurrency == "XVC");
+            info.Amount = 998;
+            if(info.Source != null && info.Destination != null)
+                ItemsToSync.Add(info);
             base.OnShown(e);
         }
         protected Thread UpdateCurrenciesThread { get; set; }
+        protected Thread SyncThread { get; set; }
         protected override void StartUpdateThread() {
             base.StartUpdateThread();
             UpdateCurrenciesThread = CheckStartThread(UpdateCurrenciesThread, UpdateCurrencies);
+            SyncThread = CheckStartThread(SyncThread, OnSyncThreadWork);
+        }
+        protected List<SyncronizationItemInfo> ItemsToSync { get; } = new List<SyncronizationItemInfo>();
+        void OnSyncThreadWork() {
+            foreach(SyncronizationItemInfo info in ItemsToSync) {
+                TelegramBot.Default.SendNotification("start withdrawal: "+ info.Source.MarketCurrency + ": move " + info.Amount.ToString("0.########") + " from " + info.Source.HostName + " to " + info.Destination.HostName);
+            }
+            while(true) {
+                foreach(SyncronizationItemInfo info in ItemsToSync) {
+                    if(!info.HasDestinationAddress && !info.ObtainDestinationAddress())
+                        continue;
+                    if(info.MakeWithdraw()) {
+                        ItemsToSync.Remove(info);
+                        TelegramBot.Default.SendNotification(info.Source.MarketCurrency + ": moved " + info.Amount.ToString("0.########") + " from " + info.Source.HostName + " to " + info.Destination.HostName);
+                        break;
+                    }
+                    else {
+                        Debug.WriteLine("Withdraw failed");
+                    }
+                }
+                Thread.Sleep(30 * 1000);
+            }
         }
         protected bool UpdateBalanceNotification { get; set; }
         void UpdateCurrencies() {
@@ -70,14 +99,24 @@ namespace CryptoMarketClient {
                     UpdateBalanceNotification = false;
                     foreach(PoloniexAccountBalanceInfo info in PoloniexModel.Default.Balances) {
                         if(info.Available > 0)
-                            TelegramBot.Default.SendNotification("poloniex balance " + info.Currency + " = " + info.Available);
+                            TelegramBot.Default.SendNotification("poloniex balance " + info.Currency + " = <b>" + info.Available.ToString("0.########") + "</b>");
                     }
                     foreach(BittrexAccountBalanceInfo info in BittrexModel.Default.Balances) {
                         if(info.Available > 0)
-                            TelegramBot.Default.SendNotification("bittrex  balance " + info.Currency + " = " + info.Available);
+                            TelegramBot.Default.SendNotification("bittrex  balance " + info.Currency + " = <b>" + info.Available.ToString("0.########") + "</b>");
                     }
                 }
-                Thread.Sleep(10 * 60 * 1000); // sleep 10 min
+                foreach(PoloniexAccountBalanceInfo info in PoloniexModel.Default.Balances) {
+                    if(info.DepositChanged > 0.05) {
+                        TelegramBot.Default.SendNotification("poloniex deposit changed: " + info.Currency + " = " + info.Available);
+                    }
+                }
+                foreach(BittrexAccountBalanceInfo info in BittrexModel.Default.Balances) {
+                    if(info.DepositChanged > 0.05) {
+                        TelegramBot.Default.SendNotification("bittrex deposit changed: " + info.Currency + " = " + info.Available);
+                    }
+                }
+                Thread.Sleep(5 * 60 * 1000); // sleep 10 min
             }
         }
         void RefreshGridRow(TickerArbitrageInfo info) {
@@ -216,7 +255,7 @@ namespace CryptoMarketClient {
                 return;
             }
 
-            string successText = "Arbitrage completed!!! Please check your balances." + SelectedArbitrage.Name + " earned " + SelectedArbitrage.AvailableProfitUSD;
+            string successText = "Arbitrage completed!!! Please check your balances." + SelectedArbitrage.Name + " earned <b>" + SelectedArbitrage.AvailableProfitUSD + "</b>";
             LogManager.Default.AddSuccess(successText);
             TelegramBot.Default.SendNotification(successText);
             UpdateBalanceNotification = true;
@@ -243,7 +282,7 @@ namespace CryptoMarketClient {
             info.Update();
             info.SaveExpectedProfitUSD();
             info.IsUpdating = false;
-            if(info.AvailableProfitUSD > 30) {
+            if(info.AvailableProfitUSD > 15) {
                 SelectedArbitrage = info;
                 ShouldProcessArbitrage = true;
                 return;
@@ -265,11 +304,11 @@ namespace CryptoMarketClient {
             string changed = string.Empty;
             TrendNotification trend = TrendNotification.New;
             if(prev > 0) {
-                changed = "Arbitrage changed: " + percent.ToString("<b>+0.###;-0.###;0.###%%</color></b>");
+                changed = "Arbitrage changed: <b>" + percent.ToString("+0.###;-0.###;0.###%%") + "</b>";
                 trend = delta > 0 ? TrendNotification.TrendUp : TrendNotification.TrendDown;
             }
             else
-                changed = "New Arbitrage possibilities. Up to <b>" + info.MaxProfitUSD.ToString("USD 0.###</b>");
+                changed = "New Arbitrage possibilities. Up to <b>" + info.MaxProfitUSD.ToString("USD 0.###") + "</b>";
             GetReadyNotificationForm().ShowInfo(this, trend, info.ShortName, changed, 10000);
         }
         void ShowNotification(TickerArbitrageInfo info, double prev) {
@@ -283,8 +322,12 @@ namespace CryptoMarketClient {
             string eventText = string.Empty;
             if(info.AvailableAmount > 0) {
                 if(prev <= 0)
-                    eventText = prev <= 0 ? "new" : "changed";
-                text = eventText + info.ShortName + "</b>. max profit: <b>" + info.MaxProfitUSD.ToString("USD 0.###</b>") + "</b>";
+                    eventText = prev <= 0 ? "<b>new</b> " : "<b>changed</b> ";
+                text = eventText + info.ShortName;
+                text += " spread: " + info.Spread.ToString("0.########");
+                text += " amount: " + info.Amount.ToString("0.########");
+                text += " max profit: " + info.MaxProfitUSD.ToString("0.###");
+                text += " avail profit: " + info.AvailableProfitUSD.ToString("0.###");
                 TelegramBot.Default.SendNotification(text);
             }
         }
@@ -437,50 +480,54 @@ namespace CryptoMarketClient {
             SelectedArbitrage = null;
         }
 
+        protected virtual bool SyncToHighestBid(TickerArbitrageInfo info, bool forceUpdateBalance, bool allowLog) {
+            if(info == null)
+                return false;
+
+            ITicker lowest = info.LowestAskTicker;
+            ITicker highest = info.HighestBidTicker;
+
+            if(forceUpdateBalance || lowest.MarketCurrencyBalance == 0) {
+                if(!lowest.UpdateBalance(CurrencyType.MarketCurrency)) {
+                    if(allowLog) LogManager.Default.AddError("Cant update balance.", lowest.HostName + "-" + lowest.MarketCurrency);
+                    if(allowLog) LogManager.Default.Show();
+                    return false;
+                }
+                if(!highest.UpdateBalance(CurrencyType.MarketCurrency)) {
+                    if(allowLog) LogManager.Default.AddError("Cant update balance.", highest.HostName + "-" + highest.MarketCurrency);
+                    if(allowLog) LogManager.Default.Show();
+                    return false;
+                }
+            }
+            string highAddress = highest.GetDepositAddress(CurrencyType.MarketCurrency);
+            if(string.IsNullOrEmpty(highAddress)) {
+                if(allowLog) LogManager.Default.AddError("Cant get deposit address.", highest.HostName + "-" + highest.MarketCurrency);
+                if(allowLog) LogManager.Default.Show();
+                return false;
+            }
+
+            if(allowLog) LogManager.Default.Add("Highest Bid Currency Deposit: " + highAddress);
+
+            double amount = lowest.MarketCurrencyBalance;
+            if(allowLog) LogManager.Default.Add("Lowest Ask Currency Amount = " + amount.ToString("0.########"));
+
+            if(lowest.Withdraw(CurrencyType.MarketCurrency, highAddress, amount)) {
+                string text = "Withdraw " + lowest.MarketCurrency + " " + lowest.HostName + " -> " + highest.HostName + " succeded.";
+                if(allowLog) LogManager.Default.AddSuccess(text);
+                TelegramBot.Default.SendNotification(text);
+                return true;
+            }
+            else {
+                if(allowLog) LogManager.Default.AddError("Withdraw " + lowest.MarketCurrency + " " + lowest.HostName + " -> " + highest.HostName + " failed.");
+                return false;
+            }
+        }
+
         private void bbSendToHighestBid_ItemClick(object sender, ItemClickEventArgs e) {
             SelectedArbitrage = (TickerArbitrageInfo)this.bbTryArbitrage.Tag;
             if(SelectedArbitrage == null)
                 return;
-            ITicker lowest = SelectedArbitrage.LowestAskTicker;
-            ITicker highest = SelectedArbitrage.HighestBidTicker;
-
-            if(!lowest.UpdateBalance(CurrencyType.MarketCurrency)) {
-                LogManager.Default.AddError("Cant update balance.", lowest.HostName + "-" + lowest.MarketCurrency);
-                SelectedArbitrage = null;
-                LogManager.Default.Show();
-                return;
-            }
-            if(!highest.UpdateBalance(CurrencyType.MarketCurrency)) {
-                LogManager.Default.AddError("Cant update balance.", highest.HostName + "-" + highest.MarketCurrency);
-                SelectedArbitrage = null;
-                LogManager.Default.Show();
-                return;
-            }
-
-            string lowAddress = lowest.GetDepositAddress(CurrencyType.MarketCurrency);
-            if(string.IsNullOrEmpty(lowAddress)) {
-                LogManager.Default.AddError("Cant get deposit address.", lowest.HostName + "-" + lowest.MarketCurrency);
-                SelectedArbitrage = null;
-                LogManager.Default.Show();
-                return;
-            }
-
-            string highAddress = highest.GetDepositAddress(CurrencyType.MarketCurrency);
-            if(string.IsNullOrEmpty(highAddress)) {
-                LogManager.Default.AddError("Cant get deposit address.", highest.HostName + "-" + highest.MarketCurrency);
-                SelectedArbitrage = null;
-                LogManager.Default.Show();
-                return;
-            }
-
-            LogManager.Default.Add("Lowest Ask Currency Deposit: " + lowAddress);
-            LogManager.Default.Add("Highest Bid Currency Deposit: " + highAddress);
-
-            double amount = lowest.MarketCurrencyBalance;
-            LogManager.Default.Add("Lowest Ask Currency Amount = " + amount.ToString("0.########"));
-
-            lowest.Withdraw(CurrencyType.MarketCurrency, highAddress, amount);
-
+            SyncToHighestBid(SelectedArbitrage, true, true);
             LogManager.Default.Show();
             SelectedArbitrage = null;
         }

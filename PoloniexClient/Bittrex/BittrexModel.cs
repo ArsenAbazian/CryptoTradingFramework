@@ -480,6 +480,7 @@ namespace CryptoMarketClient.Bittrex {
                     info.Uuid = obj.Value<string>("Uuid");
                     Balances.Add(info);
                 }
+                info.LastAvailable = info.Available;
                 info.Available = obj.Value<string>("Available") == null? 0: obj.Value<double>("Available");
                 info.Balance = obj.Value<string>("Balance") == null ? 0 : obj.Value<double>("Balance");
                 info.Pending = obj.Value<string>("Pending") == null ? 0 : obj.Value<double>("Pending");

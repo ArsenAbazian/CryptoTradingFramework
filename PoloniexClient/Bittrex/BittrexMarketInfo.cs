@@ -170,10 +170,14 @@ namespace CryptoMarketClient.Bittrex {
         }
         public string GetDepositAddress(CurrencyType type) {
             if(type == CurrencyType.BaseCurrency) {
+                if(BaseBalanceInfo == null)
+                    return null;
                 if(!string.IsNullOrEmpty(BaseBalanceInfo.CryptoAddress))
                     return BaseBalanceInfo.CryptoAddress;
                 return BittrexModel.Default.CheckCreateDeposit(BaseCurrency);
             }
+            if(MarketBalanceInfo == null)
+                return null;
             if(!string.IsNullOrEmpty(MarketBalanceInfo.CryptoAddress))
                 return BaseBalanceInfo.CryptoAddress;
             return BittrexModel.Default.CheckCreateDeposit(MarketCurrency);
