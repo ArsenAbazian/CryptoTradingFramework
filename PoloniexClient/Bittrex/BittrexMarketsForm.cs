@@ -53,9 +53,10 @@ namespace CryptoMarketClient.Bittrex {
             while(AllowWorking && BittrexModel.Default.IsConnected) {
                 BittrexModel.Default.GetMarketsSummaryInfo();
                 lock(BittrexModel.Default.Markets) {
-                    if(!IsDisposed && IsHandleCreated)
+                    if(!IsDisposed && IsHandleCreated && !Disposing)
                         Invoke(new Action(UpdateGridAll));
                 }
+                Thread.Sleep(900); //to avoid throttling
             }
         }
         void UpdateGrid(BittrexMarketInfo info) {
@@ -76,6 +77,7 @@ namespace CryptoMarketClient.Bittrex {
         private void StopBidAskThread() {
             if(BidAskThread != null) {
                 AllowWorking = false;
+                BidAskThread.Abort();
                 BidAskThread = null;
             }
         }

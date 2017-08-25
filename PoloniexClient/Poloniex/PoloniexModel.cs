@@ -113,9 +113,9 @@ namespace CryptoMarketClient {
                 if(c == null) {
                     c = new PoloniexCurrencyInfo();
                     c.Currency = currency;
-                    c.MaxDailyWithdrawal = obj.Value<double>("maxDailyWithdrawal");
-                    c.TxFee = obj.Value<double>("txFee");
-                    c.MinConfirmation = obj.Value<double>("minConf");
+                    c.MaxDailyWithdrawal = obj.Value<decimal>("maxDailyWithdrawal");
+                    c.TxFee = obj.Value<decimal>("txFee");
+                    c.MinConfirmation = obj.Value<decimal>("minConf");
                     Currencies.Add(c);
                 }
                 c.Disabled = obj.Value<int>("disabled") != 0;
@@ -143,15 +143,15 @@ namespace CryptoMarketClient {
                 t.CurrencyPair = prop.Name;
                 JObject obj = (JObject)prop.Value;
                 t.Id = obj.Value<int>("id");
-                t.Last = obj.Value<double>("last");
-                t.LowestAsk = obj.Value<double>("lowestAsk");
-                t.HighestBid = obj.Value<double>("highestBid");
-                t.Change = obj.Value<double>("percentChange");
-                t.BaseVolume = obj.Value<double>("baseVolume");
-                t.Volume = obj.Value<double>("quoteVolume");
+                t.Last = obj.Value<decimal>("last");
+                t.LowestAsk = obj.Value<decimal>("lowestAsk");
+                t.HighestBid = obj.Value<decimal>("highestBid");
+                t.Change = obj.Value<decimal>("percentChange");
+                t.BaseVolume = obj.Value<decimal>("baseVolume");
+                t.Volume = obj.Value<decimal>("quoteVolume");
                 t.IsFrozen = obj.Value<int>("isFrozen") != 0;
-                t.Hr24High = obj.Value<double>("high24hr");
-                t.Hr24Low = obj.Value<double>("low24hr");
+                t.Hr24High = obj.Value<decimal>("high24hr");
+                t.Hr24Low = obj.Value<decimal>("low24hr");
                 Tickers.Add(t);
                 index++;
             }
@@ -176,15 +176,15 @@ namespace CryptoMarketClient {
                 if(t == null)
                     continue;
                 JObject obj = (JObject)prop.Value;
-                t.Last = obj.Value<double>("last");
-                t.LowestAsk = obj.Value<double>("lowestAsk");
-                t.HighestBid = obj.Value<double>("highestBid");
-                t.Change = obj.Value<double>("percentChange");
-                t.BaseVolume = obj.Value<double>("baseVolume");
-                t.Volume = obj.Value<double>("quoteVolume");
+                t.Last = obj.Value<decimal>("last");
+                t.LowestAsk = obj.Value<decimal>("lowestAsk");
+                t.HighestBid = obj.Value<decimal>("highestBid");
+                t.Change = obj.Value<decimal>("percentChange");
+                t.BaseVolume = obj.Value<decimal>("baseVolume");
+                t.Volume = obj.Value<decimal>("quoteVolume");
                 t.IsFrozen = obj.Value<int>("isFrozen") != 0;
-                t.Hr24High = obj.Value<double>("high24hr");
-                t.Hr24Low = obj.Value<double>("low24hr");
+                t.Hr24High = obj.Value<decimal>("high24hr");
+                t.Hr24Low = obj.Value<decimal>("low24hr");
             }
             return true;
         }
@@ -202,14 +202,14 @@ namespace CryptoMarketClient {
             JArray asks = res.Value<JArray>("asks");
             foreach(JArray item in bids) {
                 OrderBookEntry entry = new OrderBookEntry();
-                entry.Value = item[0].Value<double>();
-                entry.Amount = item[1].Value<double>();
+                entry.Value = item[0].Value<decimal>();
+                entry.Amount = item[1].Value<decimal>();
                 ticker.OrderBook.Bids.Add(entry);
             }
             foreach(JArray item in asks) {
                 OrderBookEntry entry = new OrderBookEntry();
-                entry.Value = item[0].Value<double>();
-                entry.Amount = item[1].Value<double>();
+                entry.Value = item[0].Value<decimal>();
+                entry.Amount = item[1].Value<decimal>();
                 ticker.OrderBook.Asks.Add(entry);
             }
             return true;
@@ -225,14 +225,14 @@ namespace CryptoMarketClient {
             JArray asks = res.Value<JArray>("asks");
             foreach(JArray item in bids) {
                 OrderBookEntry entry = new OrderBookEntry();
-                entry.Value = item[0].Value<double>();
-                entry.Amount = item[1].Value<double>();
+                entry.Value = item[0].Value<decimal>();
+                entry.Amount = item[1].Value<decimal>();
                 ticker.OrderBook.Bids.Add(entry);
             }
             foreach(JArray item in asks) {
                 OrderBookEntry entry = new OrderBookEntry();
-                entry.Value = item[0].Value<double>();
-                entry.Amount = item[1].Value<double>();
+                entry.Value = item[0].Value<decimal>();
+                entry.Amount = item[1].Value<decimal>();
                 ticker.OrderBook.Asks.Add(entry);
             }
             return true;
@@ -258,8 +258,8 @@ namespace CryptoMarketClient {
                         info.Action = OrderBookUpdateType.Modify;
                         JEnumerable<JToken> values = (JEnumerable<JToken>)item.Children();
                         JValue rateValue = (JValue)values.First();
-                        info.Entry.Value = rateValue.ToObject<double>();
-                        info.Entry.Amount = rateValue.Next.ToObject<double>();
+                        info.Entry.Value = rateValue.ToObject<decimal>();
+                        info.Entry.Amount = rateValue.Next.ToObject<decimal>();
                         if(type == OrderBookEntryType.Ask)
                             ticker.OrderBook.ForceAddAsk(info);
                         else
@@ -297,9 +297,9 @@ namespace CryptoMarketClient {
             foreach(JObject obj in trades) {
                 TradeHistoryItem item = new TradeHistoryItem();
                 item.Time = obj.Value<DateTime>("time");
-                item.Amount = obj.Value<double>("amount");
-                item.Rate = obj.Value<double>("rate");
-                item.Total = obj.Value<double>("total");
+                item.Amount = obj.Value<decimal>("amount");
+                item.Rate = obj.Value<decimal>("rate");
+                item.Total = obj.Value<decimal>("total");
                 item.Type = obj.Value<string>("type") == "buy" ? TradeType.Buy : TradeType.Sell;
                 item.Fill = TradeFillType.Fill;
                 TickerUpdateHelper.UpdateHistoryForTradeItem(item, ticker);
@@ -376,9 +376,9 @@ namespace CryptoMarketClient {
                         Balances.Add(info);
                     }
                     info.Currency = prop.Name;
-                    info.Available = obj.Value<double>("available");
-                    info.OnOrders = obj.Value<double>("onOrders");
-                    info.BtcValue = obj.Value<double>("btcValue");
+                    info.Available = obj.Value<decimal>("available");
+                    info.OnOrders = obj.Value<decimal>("onOrders");
+                    info.BtcValue = obj.Value<decimal>("btcValue");
                 }
             }
             return true;
@@ -460,9 +460,9 @@ namespace CryptoMarketClient {
                         info.Market = prop.Name;
                         info.OrderNumber = obj.Value<int>("orderNumber");
                         info.Type = obj.Value<string>("type") == "sell" ? OrderType.LimitSell : OrderType.LimitBuy;
-                        info.Value = obj.Value<double>("rate");
-                        info.Amount = obj.Value<double>("amount");
-                        info.Total = obj.Value<double>("total");
+                        info.Value = obj.Value<decimal>("rate");
+                        info.Amount = obj.Value<decimal>("amount");
+                        info.Total = obj.Value<decimal>("total");
                         Orders.Add(info);
                     }
                 }
@@ -470,7 +470,7 @@ namespace CryptoMarketClient {
             return true;
         }
 
-        public long BuyLimit(PoloniexTicker ticker, double rate, double amount) {
+        public long BuyLimit(PoloniexTicker ticker, decimal rate, decimal amount) {
             string address = string.Format("https://poloniex.com/tradingApi");
 
             NameValueCollection coll = new NameValueCollection();
@@ -494,7 +494,7 @@ namespace CryptoMarketClient {
             }
         }
 
-        public long SellLimit(PoloniexTicker ticker, double rate, double amount) {
+        public long SellLimit(PoloniexTicker ticker, decimal rate, decimal amount) {
             string address = string.Format("https://poloniex.com/tradingApi");
 
             NameValueCollection coll = new NameValueCollection();
@@ -571,7 +571,7 @@ namespace CryptoMarketClient {
             return res.Value<int>("success") == 1;
         }
 
-        public Task<byte[]> WithdrawAsync(string currency, double amount, string addr, string paymentId) {
+        public Task<byte[]> WithdrawAsync(string currency, decimal amount, string addr, string paymentId) {
             string address = string.Format("https://poloniex.com/tradingApi");
 
             NameValueCollection coll = new NameValueCollection();
@@ -590,7 +590,7 @@ namespace CryptoMarketClient {
             return client.UploadValuesTaskAsync(address, coll);
         }
 
-        public bool Withdraw(string currency, double amount, string addr, string paymentId) {
+        public bool Withdraw(string currency, decimal amount, string addr, string paymentId) {
             string address = string.Format("https://poloniex.com/tradingApi");
 
             NameValueCollection coll = new NameValueCollection();

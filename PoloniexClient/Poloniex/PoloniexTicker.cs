@@ -40,10 +40,10 @@ namespace CryptoMarketClient {
         public string SecondCurrency {
             get; private set;
         }
-        public double Last { get; set; }
+        public decimal Last { get; set; }
 
-        double lowestAsk;
-        public double LowestAsk {
+        decimal lowestAsk;
+        public decimal LowestAsk {
             get { return lowestAsk; }
             set {
                 if(value != LowestAsk)
@@ -51,8 +51,8 @@ namespace CryptoMarketClient {
                 lowestAsk = value;
             }
         }
-        double highestBid;
-        public double HighestBid {
+        decimal highestBid;
+        public decimal HighestBid {
             get { return highestBid; }
             set {
                 if(value != HighestBid)
@@ -77,23 +77,23 @@ namespace CryptoMarketClient {
             }
         }
 
-        public double BaseCurrencyBalance { get { return FirstCurrencyBalanceInfo == null? 0: FirstCurrencyBalanceInfo.Available; } }
-        public double MarketCurrencyBalance { get { return SecondCurrencyBalanceInfo == null? 0: SecondCurrencyBalanceInfo.Available; } }
-        public double Change { get; set; }
-        public double BaseVolume { get; set; }
-        public double Volume { get; set; }
+        public decimal BaseCurrencyBalance { get { return FirstCurrencyBalanceInfo == null? 0: FirstCurrencyBalanceInfo.Available; } }
+        public decimal MarketCurrencyBalance { get { return SecondCurrencyBalanceInfo == null? 0: SecondCurrencyBalanceInfo.Available; } }
+        public decimal Change { get; set; }
+        public decimal BaseVolume { get; set; }
+        public decimal Volume { get; set; }
         public bool IsFrozen { get; set; }
-        public double Hr24High { get; set; }
-        public double Hr24Low { get; set; }
+        public decimal Hr24High { get; set; }
+        public decimal Hr24Low { get; set; }
         public DateTime Time { get; set; }
-        public double BidChange { get; set; }
-        public double AskChange { get; set; }
+        public decimal BidChange { get; set; }
+        public decimal AskChange { get; set; }
         public string HostName { get { return "Poloniex"; } }
-        public double Fee { get { return 0.25 * 0.01; } }
+        public decimal Fee { get { return 0.25m * 0.01m; } }
 
-        public double DeltaAsk { get; set; }
-        public double DeltaBid { get; set; }
-        public double Spread { get { return LowestAsk - HighestBid; } }
+        public decimal DeltaAsk { get; set; }
+        public decimal DeltaBid { get; set; }
+        public decimal Spread { get { return LowestAsk - HighestBid; } }
         public List<TickerHistoryItem> History { get; } = new List<TickerHistoryItem>();
         public List<TradeHistoryItem> TradeHistory { get; } = new List<TradeHistoryItem>();
         public List<CandleStickData> CandleStickData { get; set; } = new List<CandleStickData>();
@@ -217,10 +217,10 @@ namespace CryptoMarketClient {
         public void ProcessArbitrageOrderBook(string text) {
             PoloniexModel.Default.OnUpdateArbitrageOrderBook(this, text);
         }
-        public bool Buy(double rate, double amount) {
+        public bool Buy(decimal rate, decimal amount) {
             return PoloniexModel.Default.BuyLimit(this, rate, amount) != -1;
         }
-        public bool Sell(double rate, double amount) {
+        public bool Sell(decimal rate, decimal amount) {
             return PoloniexModel.Default.SellLimit(this, rate, amount) != -1;
         }
         public bool UpdateBalance(CurrencyType type) {
@@ -236,7 +236,7 @@ namespace CryptoMarketClient {
                 return SecondCurrencyBalanceInfo.DepositAddress;
             return PoloniexModel.Default.CreateDeposit(SecondCurrency);
         }
-        public bool Withdraw(CurrencyType currencyType, string address, double amount) {
+        public bool Withdraw(CurrencyType currencyType, string address, decimal amount) {
             string currency = currencyType == CurrencyType.BaseCurrency ? FirstCurrency : SecondCurrency;
             return PoloniexModel.Default.Withdraw(currency, amount, address, "");
         }

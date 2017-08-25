@@ -10,14 +10,14 @@ namespace CryptoMarketClient {
 
     public class TradeHistoryItem {
         public DateTime Time { get; set; }
-        public double Amount { get; set; }
-        public double Rate { get; set; }
-        public double Total { get; set; }
+        public decimal Amount { get; set; }
+        public decimal Rate { get; set; }
+        public decimal Total { get; set; }
         public TradeFillType Fill { get; set;}
         public TradeType Type { get; set; }
         public int Id { get; set; }
-        public double Bid { get; set; }
-        public double Ask { get; set; }
-        public double Current { get; set; }
+        public decimal Bid { get; set; }
+        public decimal Ask { get; set; }
+        public decimal Current { get; set; }
     }
 }

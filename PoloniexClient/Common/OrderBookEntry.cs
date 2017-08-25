@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace CryptoMarketClient {
     public enum OrderBookEntryType { Bid, Ask }
     public class OrderBookEntry {
-        public double Value { get; set; }
-        public double Amount { get; set; }
+        public decimal Value { get; set; }
+        public decimal Amount { get; set; }
     }
 }
