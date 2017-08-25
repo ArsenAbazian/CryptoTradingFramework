@@ -10,9 +10,9 @@ namespace CryptoMarketClient.Common {
     public class DepositInfo {
         public string HostName { get; set; }
         public string Currency { get; set; }
-        public double Amount { get; set; }
-        public double RateInBTC { get; set; }
-        public double RateInUSD { get; set; }
+        public decimal Amount { get; set; }
+        public decimal RateInBTC { get; set; }
+        public decimal RateInUSD { get; set; }
     }
 
     public class DepositInfoHelper {

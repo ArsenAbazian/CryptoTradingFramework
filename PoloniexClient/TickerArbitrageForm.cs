@@ -277,7 +277,7 @@ namespace CryptoMarketClient {
             this.orderBookControl1.RefreshBids();
         }
         void OnUpdateTickerInfo(TickerArbitrageInfo info) {
-            double prevProfits = info.MaxProfitUSD;
+            decimal prevProfits = info.MaxProfitUSD;
             info.IsUpdating = true;
             info.Update();
             info.SaveExpectedProfitUSD();
@@ -295,11 +295,11 @@ namespace CryptoMarketClient {
             if(info.MaxProfitUSD - prevProfits > 20)
                 ShowNotification(info, prevProfits);
         }
-        void ShowDesktopNotification(TickerArbitrageInfo info, double prev) {
+        void ShowDesktopNotification(TickerArbitrageInfo info, decimal prev) {
             if(MdiParent.WindowState != FormWindowState.Minimized)
                 return;
-            double delta = info.MaxProfitUSD - prev;
-            double percent = delta / prev * 100;
+            decimal delta = info.MaxProfitUSD - prev;
+            decimal percent = delta / prev * 100;
 
             string changed = string.Empty;
             TrendNotification trend = TrendNotification.New;
@@ -311,11 +311,11 @@ namespace CryptoMarketClient {
                 changed = "New Arbitrage possibilities. Up to <b>" + info.MaxProfitUSD.ToString("USD 0.###") + "</b>";
             GetReadyNotificationForm().ShowInfo(this, trend, info.ShortName, changed, 10000);
         }
-        void ShowNotification(TickerArbitrageInfo info, double prev) {
+        void ShowNotification(TickerArbitrageInfo info, decimal prev) {
             SendTelegramNotification(info, prev);
             ShowDesktopNotification(info, prev);
         }
-        void SendTelegramNotification(TickerArbitrageInfo info, double prev) {
+        void SendTelegramNotification(TickerArbitrageInfo info, decimal prev) {
             if(prev <= 0 && info.MaxProfit <= 0)
                 return;
             string text = string.Empty;
@@ -444,10 +444,10 @@ namespace CryptoMarketClient {
                 return;
             }
 
-            double percent = Convert.ToDouble(this.beBuyLowestAsk.EditValue) / 100;
-            double buyAmount = lowest.BaseCurrencyBalance * percent;
+            decimal percent = Convert.ToDecimal(this.beBuyLowestAsk.EditValue) / 100;
+            decimal buyAmount = lowest.BaseCurrencyBalance * percent;
             LogManager.Default.Add("Lowest Ask Base Currency Amount = " + buyAmount.ToString("0.########"));
-            double amount = buyAmount / SelectedArbitrage.LowestAsk;
+            decimal amount = buyAmount / SelectedArbitrage.LowestAsk;
 
             if(!SelectedArbitrage.LowestAskTicker.Buy(SelectedArbitrage.LowestAsk, amount))
                 LogManager.Default.AddError("Cant buy currency.", "At " + lowest.HostName + "-" + lowest.BaseCurrency + "(" + amount.ToString("0.########") + ")" + " for " + lowest.MarketCurrency);
@@ -470,8 +470,8 @@ namespace CryptoMarketClient {
                 return;
             }
 
-            double percent = Convert.ToDouble(this.beHighestBidSell.EditValue) / 100;
-            double amount = highest.MarketCurrencyBalance * percent;
+            decimal percent = Convert.ToDecimal(this.beHighestBidSell.EditValue) / 100;
+            decimal amount = highest.MarketCurrencyBalance * percent;
             LogManager.Default.Add("Highest Bid Market Currency Amount = " + amount.ToString("0.########"));
 
             if(!SelectedArbitrage.HighestBidTicker.Sell(SelectedArbitrage.HighestBid, amount))
@@ -508,8 +508,8 @@ namespace CryptoMarketClient {
 
             if(allowLog) LogManager.Default.Add("Highest Bid Currency Deposit: " + highAddress);
 
-            double amount = lowest.MarketCurrencyBalance;
-            if(allowLog) LogManager.Default.Add("Lowest Ask Currency Amount = " + amount.ToString("0.########"));
+            decimal amount = lowest.MarketCurrencyBalance;
+            if(allowLog)LogManager.Default.Add("Lowest Ask Currency Amount = " + amount.ToString("0.########"));
 
             if(lowest.Withdraw(CurrencyType.MarketCurrency, highAddress, amount)) {
                 string text = "Withdraw " + lowest.MarketCurrency + " " + lowest.HostName + " -> " + highest.HostName + " succeded.";
@@ -571,7 +571,7 @@ namespace CryptoMarketClient {
             LogManager.Default.Add("Lowest Ask Base Currency Deposit: " + lowAddress);
             LogManager.Default.Add("Highest Bid Base Currency Deposit: " + highAddress);
 
-            double amount = highest.BaseCurrencyBalance;
+            decimal amount = highest.BaseCurrencyBalance;
             LogManager.Default.Add("Highest Bid Base Currency Amount = " + amount.ToString("0.########"));
 
             highest.Withdraw(CurrencyType.BaseCurrency, lowAddress, amount);

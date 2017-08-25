@@ -45,9 +45,10 @@ namespace CryptoMarketClient {
             while(AllowWorking && PoloniexModel.Default.IsConnected) {
                 PoloniexModel.Default.UpdateTickersInfo();
                 lock(PoloniexModel.Default.Tickers) {
-                    if(!IsDisposed)
+                    if(!IsDisposed && !Disposing)
                         BeginInvoke(new Action(UpdateGridAll));
                 }
+                Thread.Sleep(900); //to avoid throttling
             }
         }
         void UpdateGrid(PoloniexTicker info) {
@@ -68,6 +69,7 @@ namespace CryptoMarketClient {
         private void StopBidAskThread() {
             if(BidAskThread != null) {
                 AllowWorking = false;
+                BidAskThread.Abort();
                 BidAskThread = null;
             }
         }

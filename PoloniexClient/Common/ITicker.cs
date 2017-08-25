@@ -11,20 +11,20 @@ namespace CryptoMarketClient {
         List<TradeHistoryItem> TradeHistory { get; }
         OrderBook OrderBook { get; }
         string Name { get; }
-        double HighestBid { get; set; }
-        double LowestAsk { get; set; }
-        double Last { get; }
-        double BaseVolume { get; }
-        double Volume { get; }
-        double Hr24High { get; }
-        double Hr24Low { get; }
-        double Change { get; set; }
-        double Spread { get; }
-        double BidChange { get; set; }
-        double AskChange { get; set; }
-        double Fee { get; }
-        double BaseCurrencyBalance { get; }
-        double MarketCurrencyBalance { get; }
+        decimal HighestBid { get; set; }
+        decimal LowestAsk { get; set; }
+        decimal Last { get; }
+        decimal BaseVolume { get; }
+        decimal Volume { get; }
+        decimal Hr24High { get; }
+        decimal Hr24Low { get; }
+        decimal Change { get; set; }
+        decimal Spread { get; }
+        decimal BidChange { get; set; }
+        decimal AskChange { get; set; }
+        decimal Fee { get; }
+        decimal BaseCurrencyBalance { get; }
+        decimal MarketCurrencyBalance { get; }
         string BaseCurrency { get; set; }
         string MarketCurrency { get; set; }
         string HostName { get; }
@@ -57,8 +57,8 @@ namespace CryptoMarketClient {
 
         bool UpdateBalance(CurrencyType type);
         string GetDepositAddress(CurrencyType type);
-        bool Buy(double lowestAsk, double amount);
-        bool Sell(double highestBid, double amount);
-        bool Withdraw(CurrencyType currencyType, string address, double amount);
+        bool Buy(decimal lowestAsk, decimal amount);
+        bool Sell(decimal highestBid, decimal amount);
+        bool Withdraw(CurrencyType currencyType, string address, decimal amount);
     }
 }

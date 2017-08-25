@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 namespace CryptoMarketClient {
     public class TickerHistoryItem {
         public DateTime Time { get; set; }
-        public double Bid { get; set; }
-        public double Ask { get; set; }
-        public double Current { get; set; }
+        public decimal Bid { get; set; }
+        public decimal Ask { get; set; }
+        public decimal Current { get; set; }
     }
 }

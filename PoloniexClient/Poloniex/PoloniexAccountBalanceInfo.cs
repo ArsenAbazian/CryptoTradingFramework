@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 namespace CryptoMarketClient.Poloniex {
     public class PoloniexAccountBalanceInfo {
         public string Currency { get; set; }
-        public double Available { get; set; }
-        public double LastAvailable { get; set; }
-        public double OnOrders { get; set; }
-        public double BtcValue { get; set; }
+        public decimal Available { get; set; }
+        public decimal LastAvailable { get; set; }
+        public decimal OnOrders { get; set; }
+        public decimal BtcValue { get; set; }
         public string DepositAddress { get; set; }
         public double DepositChanged {
             get {

@@ -14,31 +14,31 @@ namespace CryptoMarketClient.Bittrex {
         public string BaseCurrency { get; set; }
         public string MarketCurrencyLong { get; set; }
         public string BaseCurrencyLong { get; set; }
-        public double MinTradeSize { get; set; }
+        public decimal MinTradeSize { get; set; }
         public string MarketName { get; set; }
         public bool IsActive { get; set; }
         public DateTime Created { get; set; }
-        public double HighestBid { get; set; }
-        public double LowestAsk { get; set; }
-        public double Last { get; set; }
+        public decimal HighestBid { get; set; }
+        public decimal LowestAsk { get; set; }
+        public decimal Last { get; set; }
         public DateTime Time { get; set; }
-        public double Volume { get; set; }
-        public double BaseVolume { get; set; }
+        public decimal Volume { get; set; }
+        public decimal BaseVolume { get; set; }
         public int OpenBuyOrders { get; set; }
         public int OpenSellOrders { get; set; }
-        public double PrevDay { get; set; }
+        public decimal PrevDay { get; set; }
         public string DisplayMarketName { get; set; }
-        public double Hr24High { get; set; }
-        public double Hr24Low { get; set; }
-        public double Change { get; set; }
-        public double Spread { get { return LowestAsk - HighestBid; } }
-        public double BidChange { get; set; }
-        public double AskChange { get; set; }
+        public decimal Hr24High { get; set; }
+        public decimal Hr24Low { get; set; }
+        public decimal Change { get; set; }
+        public decimal Spread { get { return LowestAsk - HighestBid; } }
+        public decimal BidChange { get; set; }
+        public decimal AskChange { get; set; }
         public int CandleStickPeriodMin { get; set; } = 1;
-        public double Fee { get { return 0.25 * 0.01; } }
+        public decimal Fee { get { return 0.25m * 0.01m; } }
 
-        public double BaseCurrencyBalance { get { return BaseBalanceInfo == null ? 0 : BaseBalanceInfo.Available; } }
-        public double MarketCurrencyBalance { get { return MarketBalanceInfo == null ? 0 : MarketBalanceInfo.Available; } }
+        public decimal BaseCurrencyBalance { get { return BaseBalanceInfo == null ? 0 : BaseBalanceInfo.Available; } }
+        public decimal MarketCurrencyBalance { get { return MarketBalanceInfo == null ? 0 : MarketBalanceInfo.Available; } }
 
         BittrexAccountBalanceInfo baseBalanceInfo, marketBalanceInfo;
         protected BittrexAccountBalanceInfo BaseBalanceInfo {
@@ -162,10 +162,10 @@ namespace CryptoMarketClient.Bittrex {
         public bool UpdateBalance(CurrencyType type) {
             return BittrexModel.Default.GetBalance(type == CurrencyType.MarketCurrency? MarketCurrency: BaseCurrency);
         }
-        public bool Buy(double rate, double amount) {
+        public bool Buy(decimal rate, decimal amount) {
             return BittrexModel.Default.BuyLimit(this, rate, amount) != null;
         }
-        public bool Sell(double rate, double amount) {
+        public bool Sell(decimal rate, decimal amount) {
             return BittrexModel.Default.SellLimit(this, rate, amount) != null;
         }
         public string GetDepositAddress(CurrencyType type) {
@@ -185,7 +185,7 @@ namespace CryptoMarketClient.Bittrex {
         string GetCurrency(CurrencyType currencyType) {
             return currencyType == CurrencyType.BaseCurrency ? BaseCurrency : MarketCurrency;
         }
-        public bool Withdraw(CurrencyType currencyType, string address, double amount) {
+        public bool Withdraw(CurrencyType currencyType, string address, decimal amount) {
             string currency = GetCurrency(currencyType);
             return BittrexModel.Default.Withdraw(currency, amount, address, "");
         }
@@ -197,7 +197,7 @@ namespace CryptoMarketClient.Bittrex {
         public string Currency { get; set; }
         public string CurrencyLong { get; set; }
         public int MinConfirmation { get; set; }
-        public double TxFree { get; set; }
+        public decimal TxFree { get; set; }
         public bool IsActive { get; set; }
         public string CoinType { get; set; }
         public string BaseAddress { get; set; }

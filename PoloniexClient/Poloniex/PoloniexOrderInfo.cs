@@ -10,8 +10,8 @@ namespace CryptoMarketClient.Poloniex {
         public string Market { get; set; }
         public int OrderNumber { get; set; }
         public OrderType Type { get; set; }
-        public double Value { get; set; }
-        public double Amount { get; set; }
-        public double Total { get; set; }
+        public decimal Value { get; set; }
+        public decimal Amount { get; set; }
+        public decimal Total { get; set; }
     }
 }
