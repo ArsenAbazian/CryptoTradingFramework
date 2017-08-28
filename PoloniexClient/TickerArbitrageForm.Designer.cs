@@ -26,10 +26,15 @@ namespace CryptoMarketClient {
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
+            this.components = new System.ComponentModel.Container();
             DevExpress.XtraGrid.GridFormatRule gridFormatRule1 = new DevExpress.XtraGrid.GridFormatRule();
             DevExpress.XtraEditors.FormatConditionRuleValue formatConditionRuleValue1 = new DevExpress.XtraEditors.FormatConditionRuleValue();
             DevExpress.XtraGrid.GridFormatRule gridFormatRule2 = new DevExpress.XtraGrid.GridFormatRule();
             DevExpress.XtraEditors.FormatConditionRuleValue formatConditionRuleValue2 = new DevExpress.XtraEditors.FormatConditionRuleValue();
+            DevExpress.XtraGrid.GridFormatRule gridFormatRule3 = new DevExpress.XtraGrid.GridFormatRule();
+            DevExpress.XtraEditors.FormatConditionRuleValue formatConditionRuleValue3 = new DevExpress.XtraEditors.FormatConditionRuleValue();
+            DevExpress.XtraGrid.GridFormatRule gridFormatRule4 = new DevExpress.XtraGrid.GridFormatRule();
+            DevExpress.XtraEditors.FormatConditionRuleValue formatConditionRuleValue4 = new DevExpress.XtraEditors.FormatConditionRuleValue();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TickerArbitrageForm));
             DevExpress.XtraCharts.XYDiagram xyDiagram1 = new DevExpress.XtraCharts.XYDiagram();
             DevExpress.XtraCharts.Series series1 = new DevExpress.XtraCharts.Series();
@@ -42,22 +47,26 @@ namespace CryptoMarketClient {
             DevExpress.XtraCharts.StepLineSeriesView stepLineSeriesView2 = new DevExpress.XtraCharts.StepLineSeriesView();
             this.colProfit = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colIsActual = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colMarketCurrency = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colLowestAskEnabled = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.repositoryItemCheckEdit3 = new DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit();
+            this.colLowestAskHost = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colHighestBidEnabled = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.repositoryItemCheckEdit2 = new DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit();
+            this.colHighestBidHost = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colUpdateTime = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colProfitUSD = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gridControl1 = new DevExpress.XtraGrid.GridControl();
-            this.tickerArbitrageInfoBindingSource = new System.Windows.Forms.BindingSource();
+            this.tickerArbitrageInfoBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.gridView1 = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.colIsSelected = new DevExpress.XtraGrid.Columns.GridColumn();
             this.repositoryItemCheckEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit();
             this.colBaseCurrency = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.colMarketCurrency = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colLastUpdate = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colTickers = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colCount = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colLowestAskTicker = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colHighestBidTicker = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.colLowestAskHost = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.colHighestBidHost = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colLowestAsk = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colHighestBid = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colSpread = new DevExpress.XtraGrid.Columns.GridColumn();
@@ -87,6 +96,7 @@ namespace CryptoMarketClient {
             this.beHighestBidSell = new DevExpress.XtraBars.BarEditItem();
             this.repositoryItemSpinEdit3 = new DevExpress.XtraEditors.Repository.RepositoryItemSpinEdit();
             this.bbSyncWithLowestAsk = new DevExpress.XtraBars.BarButtonItem();
+            this.btShowCombinedBidAsk = new DevExpress.XtraBars.BarButtonItem();
             this.rpPoloniex = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPageGroup1 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.ribbonPage1 = new DevExpress.XtraBars.Ribbon.RibbonPage();
@@ -97,6 +107,8 @@ namespace CryptoMarketClient {
             this.chartSidePanel = new DevExpress.XtraEditors.SidePanel();
             this.orderBookSidePanel = new DevExpress.XtraEditors.SidePanel();
             this.orderBookControl1 = new CryptoMarketClient.OrderBookControl();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tickerArbitrageInfoBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).BeginInit();
@@ -129,7 +141,7 @@ namespace CryptoMarketClient {
             this.colProfit.OptionsColumn.AllowEdit = false;
             this.colProfit.OptionsColumn.ReadOnly = true;
             this.colProfit.Visible = true;
-            this.colProfit.VisibleIndex = 12;
+            this.colProfit.VisibleIndex = 10;
             // 
             // colIsActual
             // 
@@ -138,6 +150,59 @@ namespace CryptoMarketClient {
             this.colIsActual.Name = "colIsActual";
             this.colIsActual.OptionsColumn.AllowEdit = false;
             // 
+            // colMarketCurrency
+            // 
+            this.colMarketCurrency.Caption = "Market";
+            this.colMarketCurrency.FieldName = "MarketCurrency";
+            this.colMarketCurrency.Name = "colMarketCurrency";
+            this.colMarketCurrency.OptionsColumn.AllowEdit = false;
+            this.colMarketCurrency.Visible = true;
+            this.colMarketCurrency.VisibleIndex = 2;
+            // 
+            // colLowestAskEnabled
+            // 
+            this.colLowestAskEnabled.Caption = "LowestAsk Enabled";
+            this.colLowestAskEnabled.ColumnEdit = this.repositoryItemCheckEdit3;
+            this.colLowestAskEnabled.FieldName = "LowestAskEnabled";
+            this.colLowestAskEnabled.Name = "colLowestAskEnabled";
+            // 
+            // repositoryItemCheckEdit3
+            // 
+            this.repositoryItemCheckEdit3.AutoHeight = false;
+            this.repositoryItemCheckEdit3.Name = "repositoryItemCheckEdit3";
+            // 
+            // colLowestAskHost
+            // 
+            this.colLowestAskHost.Caption = "Buy On";
+            this.colLowestAskHost.FieldName = "LowestAskHost";
+            this.colLowestAskHost.Name = "colLowestAskHost";
+            this.colLowestAskHost.OptionsColumn.AllowEdit = false;
+            this.colLowestAskHost.OptionsColumn.ReadOnly = true;
+            this.colLowestAskHost.Visible = true;
+            this.colLowestAskHost.VisibleIndex = 3;
+            // 
+            // colHighestBidEnabled
+            // 
+            this.colHighestBidEnabled.Caption = "HighestBid Enabled";
+            this.colHighestBidEnabled.ColumnEdit = this.repositoryItemCheckEdit2;
+            this.colHighestBidEnabled.FieldName = "HighestBidEnabled";
+            this.colHighestBidEnabled.Name = "colHighestBidEnabled";
+            // 
+            // repositoryItemCheckEdit2
+            // 
+            this.repositoryItemCheckEdit2.AutoHeight = false;
+            this.repositoryItemCheckEdit2.Name = "repositoryItemCheckEdit2";
+            // 
+            // colHighestBidHost
+            // 
+            this.colHighestBidHost.Caption = "Sell On";
+            this.colHighestBidHost.FieldName = "HighestBidHost";
+            this.colHighestBidHost.Name = "colHighestBidHost";
+            this.colHighestBidHost.OptionsColumn.AllowEdit = false;
+            this.colHighestBidHost.OptionsColumn.ReadOnly = true;
+            this.colHighestBidHost.Visible = true;
+            this.colHighestBidHost.VisibleIndex = 4;
+            // 
             // colUpdateTime
             // 
             this.colUpdateTime.Caption = "UpdateTime Ms";
@@ -145,8 +210,6 @@ namespace CryptoMarketClient {
             this.colUpdateTime.FieldName = "UpdateTimeMs";
             this.colUpdateTime.Name = "colUpdateTime";
             this.colUpdateTime.OptionsColumn.AllowEdit = false;
-            this.colUpdateTime.Visible = true;
-            this.colUpdateTime.VisibleIndex = 4;
             // 
             // colProfitUSD
             // 
@@ -158,7 +221,7 @@ namespace CryptoMarketClient {
             this.colProfitUSD.OptionsColumn.AllowEdit = false;
             this.colProfitUSD.OptionsColumn.ReadOnly = true;
             this.colProfitUSD.Visible = true;
-            this.colProfitUSD.VisibleIndex = 13;
+            this.colProfitUSD.VisibleIndex = 11;
             // 
             // gridControl1
             // 
@@ -170,8 +233,10 @@ namespace CryptoMarketClient {
             this.gridControl1.Margin = new System.Windows.Forms.Padding(6);
             this.gridControl1.Name = "gridControl1";
             this.gridControl1.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
-            this.repositoryItemCheckEdit1});
-            this.gridControl1.Size = new System.Drawing.Size(1376, 718);
+            this.repositoryItemCheckEdit1,
+            this.repositoryItemCheckEdit2,
+            this.repositoryItemCheckEdit3});
+            this.gridControl1.Size = new System.Drawing.Size(934, 718);
             this.gridControl1.TabIndex = 0;
             this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridView1});
@@ -208,7 +273,9 @@ namespace CryptoMarketClient {
             this.colProfitUSD,
             this.colAvailableAmount,
             this.colAvailableProfit,
-            this.colAvailableProfitUSD});
+            this.colAvailableProfitUSD,
+            this.colLowestAskEnabled,
+            this.colHighestBidEnabled});
             gridFormatRule1.Column = this.colProfit;
             gridFormatRule1.ColumnApplyTo = this.colProfit;
             gridFormatRule1.Name = "ArbitrageSpreadRule";
@@ -220,7 +287,7 @@ namespace CryptoMarketClient {
             formatConditionRuleValue1.Value1 = 0D;
             gridFormatRule1.Rule = formatConditionRuleValue1;
             gridFormatRule2.Column = this.colIsActual;
-            gridFormatRule2.ColumnApplyTo = this.colUpdateTime;
+            gridFormatRule2.ColumnApplyTo = this.colMarketCurrency;
             gridFormatRule2.Name = "FormatNotActual";
             formatConditionRuleValue2.Appearance.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
             formatConditionRuleValue2.Appearance.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
@@ -229,8 +296,26 @@ namespace CryptoMarketClient {
             formatConditionRuleValue2.Condition = DevExpress.XtraEditors.FormatCondition.Equal;
             formatConditionRuleValue2.Value1 = false;
             gridFormatRule2.Rule = formatConditionRuleValue2;
+            gridFormatRule3.Column = this.colLowestAskEnabled;
+            gridFormatRule3.ColumnApplyTo = this.colLowestAskHost;
+            gridFormatRule3.Name = "LowestAskEnabledRule";
+            formatConditionRuleValue3.Appearance.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(224)))), ((int)(((byte)(192)))));
+            formatConditionRuleValue3.Appearance.Options.UseBackColor = true;
+            formatConditionRuleValue3.Condition = DevExpress.XtraEditors.FormatCondition.Equal;
+            formatConditionRuleValue3.Value1 = false;
+            gridFormatRule3.Rule = formatConditionRuleValue3;
+            gridFormatRule4.Column = this.colHighestBidEnabled;
+            gridFormatRule4.ColumnApplyTo = this.colHighestBidHost;
+            gridFormatRule4.Name = "HighestBidEnabledRule";
+            formatConditionRuleValue4.Appearance.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(224)))), ((int)(((byte)(192)))));
+            formatConditionRuleValue4.Appearance.Options.UseBackColor = true;
+            formatConditionRuleValue4.Condition = DevExpress.XtraEditors.FormatCondition.Equal;
+            formatConditionRuleValue4.Value1 = false;
+            gridFormatRule4.Rule = formatConditionRuleValue4;
             this.gridView1.FormatRules.Add(gridFormatRule1);
             this.gridView1.FormatRules.Add(gridFormatRule2);
+            this.gridView1.FormatRules.Add(gridFormatRule3);
+            this.gridView1.FormatRules.Add(gridFormatRule4);
             this.gridView1.GridControl = this.gridControl1;
             this.gridView1.Name = "gridView1";
             this.gridView1.OptionsBehavior.AllowPixelScrolling = DevExpress.Utils.DefaultBoolean.True;
@@ -265,15 +350,6 @@ namespace CryptoMarketClient {
             this.colBaseCurrency.Visible = true;
             this.colBaseCurrency.VisibleIndex = 1;
             // 
-            // colMarketCurrency
-            // 
-            this.colMarketCurrency.Caption = "Market";
-            this.colMarketCurrency.FieldName = "MarketCurrency";
-            this.colMarketCurrency.Name = "colMarketCurrency";
-            this.colMarketCurrency.OptionsColumn.AllowEdit = false;
-            this.colMarketCurrency.Visible = true;
-            this.colMarketCurrency.VisibleIndex = 2;
-            // 
             // colLastUpdate
             // 
             this.colLastUpdate.DisplayFormat.FormatString = "HH:mm:ss.fff";
@@ -281,8 +357,6 @@ namespace CryptoMarketClient {
             this.colLastUpdate.FieldName = "LastUpdate";
             this.colLastUpdate.Name = "colLastUpdate";
             this.colLastUpdate.OptionsColumn.AllowEdit = false;
-            this.colLastUpdate.Visible = true;
-            this.colLastUpdate.VisibleIndex = 3;
             // 
             // colTickers
             // 
@@ -312,26 +386,6 @@ namespace CryptoMarketClient {
             this.colHighestBidTicker.OptionsColumn.AllowEdit = false;
             this.colHighestBidTicker.OptionsColumn.ReadOnly = true;
             // 
-            // colLowestAskHost
-            // 
-            this.colLowestAskHost.Caption = "Buy On";
-            this.colLowestAskHost.FieldName = "LowestAskHost";
-            this.colLowestAskHost.Name = "colLowestAskHost";
-            this.colLowestAskHost.OptionsColumn.AllowEdit = false;
-            this.colLowestAskHost.OptionsColumn.ReadOnly = true;
-            this.colLowestAskHost.Visible = true;
-            this.colLowestAskHost.VisibleIndex = 5;
-            // 
-            // colHighestBidHost
-            // 
-            this.colHighestBidHost.Caption = "Sell On";
-            this.colHighestBidHost.FieldName = "HighestBidHost";
-            this.colHighestBidHost.Name = "colHighestBidHost";
-            this.colHighestBidHost.OptionsColumn.AllowEdit = false;
-            this.colHighestBidHost.OptionsColumn.ReadOnly = true;
-            this.colHighestBidHost.Visible = true;
-            this.colHighestBidHost.VisibleIndex = 6;
-            // 
             // colLowestAsk
             // 
             this.colLowestAsk.DisplayFormat.FormatString = "0.########";
@@ -341,7 +395,7 @@ namespace CryptoMarketClient {
             this.colLowestAsk.OptionsColumn.AllowEdit = false;
             this.colLowestAsk.OptionsColumn.ReadOnly = true;
             this.colLowestAsk.Visible = true;
-            this.colLowestAsk.VisibleIndex = 7;
+            this.colLowestAsk.VisibleIndex = 5;
             // 
             // colHighestBid
             // 
@@ -352,7 +406,7 @@ namespace CryptoMarketClient {
             this.colHighestBid.OptionsColumn.AllowEdit = false;
             this.colHighestBid.OptionsColumn.ReadOnly = true;
             this.colHighestBid.Visible = true;
-            this.colHighestBid.VisibleIndex = 8;
+            this.colHighestBid.VisibleIndex = 6;
             // 
             // colSpread
             // 
@@ -362,7 +416,7 @@ namespace CryptoMarketClient {
             this.colSpread.Name = "colSpread";
             this.colSpread.OptionsColumn.AllowEdit = false;
             this.colSpread.Visible = true;
-            this.colSpread.VisibleIndex = 9;
+            this.colSpread.VisibleIndex = 7;
             // 
             // colAmount
             // 
@@ -372,7 +426,7 @@ namespace CryptoMarketClient {
             this.colAmount.OptionsColumn.AllowEdit = false;
             this.colAmount.OptionsColumn.ReadOnly = true;
             this.colAmount.Visible = true;
-            this.colAmount.VisibleIndex = 10;
+            this.colAmount.VisibleIndex = 8;
             // 
             // colBuyTotal
             // 
@@ -382,7 +436,7 @@ namespace CryptoMarketClient {
             this.colBuyTotal.Name = "colBuyTotal";
             this.colBuyTotal.OptionsColumn.AllowEdit = false;
             this.colBuyTotal.Visible = true;
-            this.colBuyTotal.VisibleIndex = 11;
+            this.colBuyTotal.VisibleIndex = 9;
             // 
             // colTotal
             // 
@@ -421,7 +475,7 @@ namespace CryptoMarketClient {
             this.colAvailableAmount.FieldName = "AvailableAmount";
             this.colAvailableAmount.Name = "colAvailableAmount";
             this.colAvailableAmount.Visible = true;
-            this.colAvailableAmount.VisibleIndex = 14;
+            this.colAvailableAmount.VisibleIndex = 12;
             // 
             // colAvailableProfit
             // 
@@ -431,7 +485,7 @@ namespace CryptoMarketClient {
             this.colAvailableProfit.FieldName = "AvailableProfit";
             this.colAvailableProfit.Name = "colAvailableProfit";
             this.colAvailableProfit.Visible = true;
-            this.colAvailableProfit.VisibleIndex = 15;
+            this.colAvailableProfit.VisibleIndex = 13;
             // 
             // colAvailableProfitUSD
             // 
@@ -441,7 +495,7 @@ namespace CryptoMarketClient {
             this.colAvailableProfitUSD.FieldName = "AvailableProfitUSD";
             this.colAvailableProfitUSD.Name = "colAvailableProfitUSD";
             this.colAvailableProfitUSD.Visible = true;
-            this.colAvailableProfitUSD.VisibleIndex = 16;
+            this.colAvailableProfitUSD.VisibleIndex = 14;
             // 
             // ribbonControl1
             // 
@@ -462,10 +516,11 @@ namespace CryptoMarketClient {
             this.bbSendToHighestBid,
             this.beBuyLowestAsk,
             this.beHighestBidSell,
-            this.bbSyncWithLowestAsk});
+            this.bbSyncWithLowestAsk,
+            this.btShowCombinedBidAsk});
             this.ribbonControl1.Location = new System.Drawing.Point(0, 0);
             this.ribbonControl1.Margin = new System.Windows.Forms.Padding(6);
-            this.ribbonControl1.MaxItemId = 17;
+            this.ribbonControl1.MaxItemId = 20;
             this.ribbonControl1.Name = "ribbonControl1";
             this.ribbonControl1.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
             this.rpPoloniex,
@@ -474,7 +529,7 @@ namespace CryptoMarketClient {
             this.repositoryItemSpinEdit1,
             this.repositoryItemSpinEdit2,
             this.repositoryItemSpinEdit3});
-            this.ribbonControl1.Size = new System.Drawing.Size(2358, 278);
+            this.ribbonControl1.Size = new System.Drawing.Size(1916, 278);
             // 
             // bbShowDetail
             // 
@@ -609,6 +664,15 @@ namespace CryptoMarketClient {
             this.bbSyncWithLowestAsk.Name = "bbSyncWithLowestAsk";
             this.bbSyncWithLowestAsk.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bbSyncWithLowestAsk_ItemClick);
             // 
+            // btShowCombinedBidAsk
+            // 
+            this.btShowCombinedBidAsk.Caption = "Combined Bid/Ask";
+            this.btShowCombinedBidAsk.Id = 19;
+            this.btShowCombinedBidAsk.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("btShowCombinedBidAsk.ImageOptions.Image")));
+            this.btShowCombinedBidAsk.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("btShowCombinedBidAsk.ImageOptions.LargeImage")));
+            this.btShowCombinedBidAsk.Name = "btShowCombinedBidAsk";
+            this.btShowCombinedBidAsk.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btShowCombinedBidAsk_ItemClick);
+            // 
             // rpPoloniex
             // 
             this.rpPoloniex.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] {
@@ -621,6 +685,7 @@ namespace CryptoMarketClient {
             this.ribbonPageGroup1.AllowTextClipping = false;
             this.ribbonPageGroup1.ItemLinks.Add(this.bbShowDetail);
             this.ribbonPageGroup1.ItemLinks.Add(this.bcShowOrderBook);
+            this.ribbonPageGroup1.ItemLinks.Add(this.btShowCombinedBidAsk);
             this.ribbonPageGroup1.ItemLinks.Add(this.bbAllCurrencies, true);
             this.ribbonPageGroup1.ItemLinks.Add(this.bbSelectPositive);
             this.ribbonPageGroup1.ItemLinks.Add(this.bbMonitorSelected);
@@ -680,12 +745,14 @@ namespace CryptoMarketClient {
             this.arbitrageHistoryChart.Name = "arbitrageHistoryChart";
             series1.ArgumentDataMember = "Time";
             series1.ArgumentScaleType = DevExpress.XtraCharts.ScaleType.DateTime;
+            series1.CheckedInLegend = false;
             series1.LegendText = "Profits in USD";
             series1.Name = "Profits in USD";
             series1.ValueDataMembersSerializable = "ValueUSD";
             series1.View = stepAreaSeriesView1;
             series2.ArgumentDataMember = "Time";
             series2.ArgumentScaleType = DevExpress.XtraCharts.ScaleType.DateTime;
+            series2.CheckedInLegend = false;
             series2.LegendText = "Profits in base currency";
             series2.Name = "Profits in base currency";
             series2.ValueDataMembersSerializable = "Value";
@@ -698,6 +765,7 @@ namespace CryptoMarketClient {
             series3.View = stepLineSeriesView1;
             series4.ArgumentDataMember = "Time";
             series4.ArgumentScaleType = DevExpress.XtraCharts.ScaleType.DateTime;
+            series4.CheckedInLegend = false;
             series4.LegendText = "Amount";
             series4.Name = "Amount";
             series4.ValueDataMembersSerializable = "Amount";
@@ -717,7 +785,7 @@ namespace CryptoMarketClient {
             this.sidePanel1.Location = new System.Drawing.Point(0, 278);
             this.sidePanel1.Margin = new System.Windows.Forms.Padding(4);
             this.sidePanel1.Name = "sidePanel1";
-            this.sidePanel1.Size = new System.Drawing.Size(1376, 718);
+            this.sidePanel1.Size = new System.Drawing.Size(934, 718);
             this.sidePanel1.TabIndex = 6;
             this.sidePanel1.Text = "sidePanel1";
             // 
@@ -725,7 +793,7 @@ namespace CryptoMarketClient {
             // 
             this.chartSidePanel.Controls.Add(this.arbitrageHistoryChart);
             this.chartSidePanel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.chartSidePanel.Location = new System.Drawing.Point(1828, 278);
+            this.chartSidePanel.Location = new System.Drawing.Point(1386, 278);
             this.chartSidePanel.Margin = new System.Windows.Forms.Padding(4);
             this.chartSidePanel.Name = "chartSidePanel";
             this.chartSidePanel.Size = new System.Drawing.Size(530, 718);
@@ -736,7 +804,7 @@ namespace CryptoMarketClient {
             // 
             this.orderBookSidePanel.Controls.Add(this.orderBookControl1);
             this.orderBookSidePanel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.orderBookSidePanel.Location = new System.Drawing.Point(1376, 278);
+            this.orderBookSidePanel.Location = new System.Drawing.Point(934, 278);
             this.orderBookSidePanel.Margin = new System.Windows.Forms.Padding(4);
             this.orderBookSidePanel.Name = "orderBookSidePanel";
             this.orderBookSidePanel.Size = new System.Drawing.Size(452, 718);
@@ -760,7 +828,7 @@ namespace CryptoMarketClient {
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(2358, 996);
+            this.ClientSize = new System.Drawing.Size(1916, 996);
             this.Controls.Add(this.sidePanel1);
             this.Controls.Add(this.orderBookSidePanel);
             this.Controls.Add(this.chartSidePanel);
@@ -769,6 +837,8 @@ namespace CryptoMarketClient {
             this.Name = "TickerArbitrageForm";
             this.Text = "Classic Arbitrage";
             this.Load += new System.EventHandler(this.TickerArbitrageForm_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tickerArbitrageInfoBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).EndInit();
@@ -854,5 +924,10 @@ namespace CryptoMarketClient {
         private DevExpress.XtraGrid.Columns.GridColumn colAvailableAmount;
         private DevExpress.XtraGrid.Columns.GridColumn colAvailableProfit;
         private DevExpress.XtraGrid.Columns.GridColumn colAvailableProfitUSD;
+        private DevExpress.XtraGrid.Columns.GridColumn colLowestAskEnabled;
+        private DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit repositoryItemCheckEdit3;
+        private DevExpress.XtraGrid.Columns.GridColumn colHighestBidEnabled;
+        private DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit repositoryItemCheckEdit2;
+        private DevExpress.XtraBars.BarButtonItem btShowCombinedBidAsk;
     }
 }

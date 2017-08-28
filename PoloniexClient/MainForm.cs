@@ -107,5 +107,15 @@ namespace CryptoMarketClient {
             DepositsTotal form = new DepositsTotal();
             form.Show();
         }
+
+        private void bbShowHistory_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
+            ArbitrageHistoryForm form = new ArbitrageHistoryForm();
+            form.MdiParent = this;
+            form.Show();
+        }
+
+        private void bbSaveAllHistory_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
+
+        }
     }
 }

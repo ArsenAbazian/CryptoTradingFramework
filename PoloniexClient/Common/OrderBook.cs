@@ -21,6 +21,19 @@ namespace CryptoMarketClient {
         public List<OrderBookUpdateInfo> Updates { get; private set; }
         public bool IsActualState { get { return SeqNumber != 0 && Updates.Count == 0; } }
 
+        protected void UpdateOrderBookItemsCount(List<OrderBookEntry> list, int count) {
+            if(list.Count == count)
+                return;
+            if(list.Count > count)
+                list.RemoveRange(count, list.Count - count);
+            else {
+                list.Capacity += count - list.Count;
+                while(list.Count < count)
+                    list.Add(new OrderBookEntry());
+            }
+        }
+        public void UpdateBidsCount(int count) { UpdateOrderBookItemsCount(Bids, count); }
+        public void UpdateAsksCount(int count) { UpdateOrderBookItemsCount(Asks, count); }
         public void Clear() {
             Asks.Clear();
             Bids.Clear();

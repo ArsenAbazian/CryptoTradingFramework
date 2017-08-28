@@ -179,7 +179,14 @@
     <Compile Include="Bittrex\BittrexOrdersForm.Designer.cs">
       <DependentUpon>BittrexOrdersForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="CombinedBidAskForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CombinedBidAskForm.Designer.cs">
+      <DependentUpon>CombinedBidAskForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Common\ApiKeyInfo.cs" />
+    <Compile Include="Common\ArbitrageHistoryHelper.cs" />
     <Compile Include="Common\CandleStickChartHelper.cs" />
     <Compile Include="Common\CurrencyType.cs" />
     <Compile Include="Common\DepositInfo.cs" />
@@ -210,6 +217,12 @@
     </Compile>
     <Compile Include="EnterApiKeyForm.Designer.cs">
       <DependentUpon>EnterApiKeyForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ArbitrageHistoryForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ArbitrageHistoryForm.Designer.cs">
+      <DependentUpon>ArbitrageHistoryForm.cs</DependentUpon>
     </Compile>
     <Compile Include="LogForm.cs">
       <SubType>Form</SubType>
@@ -308,11 +321,17 @@
     <EmbeddedResource Include="Bittrex\BittrexOrdersForm.resx">
       <DependentUpon>BittrexOrdersForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="CombinedBidAskForm.resx">
+      <DependentUpon>CombinedBidAskForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="DepositsTotal.resx">
       <DependentUpon>DepositsTotal.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="EnterApiKeyForm.resx">
       <DependentUpon>EnterApiKeyForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ArbitrageHistoryForm.resx">
+      <DependentUpon>ArbitrageHistoryForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="LogForm.resx">
       <DependentUpon>LogForm.cs</DependentUpon>
@@ -328,6 +347,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Poloniex\PoloniexOrdersForm.resx">
       <DependentUpon>PoloniexOrdersForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ThreadUpdateForm.resx">
+      <DependentUpon>ThreadUpdateForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="TickerArbitrageForm.resx">
       <DependentUpon>TickerArbitrageForm.cs</DependentUpon>

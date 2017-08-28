@@ -25,6 +25,7 @@ namespace CryptoMarketClient {
         decimal Fee { get; }
         decimal BaseCurrencyBalance { get; }
         decimal MarketCurrencyBalance { get; }
+        bool MarketCurrencyEnabled { get; }
         string BaseCurrency { get; set; }
         string MarketCurrency { get; set; }
         string HostName { get; }

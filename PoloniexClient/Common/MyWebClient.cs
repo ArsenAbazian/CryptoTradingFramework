@@ -14,11 +14,11 @@ namespace CryptoMarketClient.Common {
             WebRequest res = base.GetWebRequest(address);
             HttpWebRequest hres = res as HttpWebRequest;
             if(hres != null) {
-                hres.Headers.Add(HttpRequestHeader.AcceptEncoding, "gzip, deflate");
+                //hres.Headers.Add(HttpRequestHeader.AcceptEncoding, "gzip, deflate");
                 hres.Headers.Add(HttpRequestHeader.AcceptLanguage, "en-us");
                 hres.AutomaticDecompression = DecompressionMethods.Deflate | DecompressionMethods.GZip;
             }
-            res.Timeout = 5000;
+            res.Timeout = 7000;
             return res;
         }
     }

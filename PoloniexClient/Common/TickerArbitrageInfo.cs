@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CryptoMarketClient.Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,7 +16,7 @@ namespace CryptoMarketClient {
         public bool IsSelected { get; set; }
 
         public Task UpdateTask { get; set; }
-        public List<SimpleHistoryItem> History { get; } = new List<SimpleHistoryItem>();
+        public List<ArbitrageHistoryItem> History { get; } = new List<ArbitrageHistoryItem>();
         public ITicker[] Tickers { get; private set; } = new ITicker[16];
         public ITicker TickerInUSD { get; set; }
         public int Count { get; private set; }
@@ -101,19 +102,21 @@ namespace CryptoMarketClient {
         public decimal CalcTotalFee(decimal bid, decimal ask, decimal amount) {
             return amount * (HighestBidFee * bid + LowestAksFee * ask);
         }
+        public bool LowestAskEnabled { get; set; }
+        public bool HighestBidEnabled { get; set; }
         public void Update() {
             decimal prev = History.Count == 0 ? InvalidValue : History.Last().ValueUSD;
             LowestAskTicker = GetLowestAskTicker();
             HighestBidTicker = GetHighestBidTicker();
-            if(LowestAskTicker == HighestBidTicker || 
-                LowestAskTicker.OrderBook.Asks.Count == 0 || 
-                HighestBidTicker.OrderBook.Bids.Count == 0) {
+            if(LowestAskTicker == HighestBidTicker || LowestAskTicker.OrderBook.Asks.Count == 0 || HighestBidTicker.OrderBook.Bids.Count == 0) {
                 Spread = InvalidValue;
                 AvailableAmount = 0;
                 Amount = 0;
                 Total = 0;
                 TotalFee = 0;
                 MaxProfit = 0;
+                LowestAskEnabled = true;
+                HighestBidEnabled = true;
             }
             else {
                 Calculate();
@@ -129,6 +132,8 @@ namespace CryptoMarketClient {
             Total = 0.0m;
             MaxProfit = 0.0m;
             AvailableAmount = 0.0m;
+            LowestAskEnabled = LowestAskTicker.MarketCurrencyEnabled;
+            HighestBidEnabled = HighestBidTicker.MarketCurrencyEnabled;
             if(LowestAskTicker.OrderBook.Asks.Count == 0)
                 return;
             if(HighestBidTicker.OrderBook.Bids.Count == 0)
@@ -187,8 +192,29 @@ namespace CryptoMarketClient {
         void UpdateHistory(decimal prev) {
             if(MaxProfitUSD < 0 && prev < 0)
                 return;
-            if(Math.Abs(MaxProfitUSD - prev) > 0.0000001m)
-                History.Add(new SimpleHistoryItem() { Time = DateTime.Now, Value = MaxProfit, ValueUSD = MaxProfitUSD, Spread = Spread, Amount = Amount });
+            if(Math.Abs(MaxProfitUSD - prev) < 0.0000001m)
+                return;
+            ArbitrageHistoryItem item = new ArbitrageHistoryItem() { Time = DateTime.Now, Value = MaxProfit, ValueUSD = MaxProfitUSD, Spread = Spread, Amount = Amount };
+            item.LowestAskCurrencyEnabled = LowestAskTicker.MarketCurrencyEnabled;
+            item.HighestBidCurrencyEnabled = HighestBidTicker.MarketCurrencyEnabled;
+            History.Add(item);
+            ArbitrageStatisticsItem st = new ArbitrageStatisticsItem();
+            st.Amount = Amount;
+            st.LowestAskHost = LowestAskHost;
+            st.LowestAskEnabled = LowestAskEnabled;
+            st.LowestAsk = LowestAsk;
+            st.HighestBidHost = HighestBidHost;
+            st.HighestBidEnabled = HighestBidEnabled;
+            st.HighestBid = HighestBid;
+            st.Spread = Spread;
+            st.BaseCurrency = BaseCurrency;
+            st.MarketCurrency = MarketCurrency;
+            st.MaxProfit = MaxProfit;
+            st.MaxProfitUSD = MaxProfitUSD;
+            st.Time = DateTime.Now;
+            st.RateInUSD = TickerInUSD.Last;
+            ArbitrageHistoryHelper.Default.History.Add(st);
+            ArbitrageHistoryHelper.Default.CheckSave();
         }
         public bool Buy() {
             return LowestAskTicker.Buy(LowestAsk, Amount);
@@ -210,12 +236,14 @@ namespace CryptoMarketClient {
         }
     }
 
-    public class SimpleHistoryItem {
+    public class ArbitrageHistoryItem {
         public DateTime Time { get; set; }
         public decimal Value { get; set; }
         public decimal ValueUSD { get; set; }
         public decimal Spread { get; set; }
         public decimal Amount { get; set; }
+        public bool LowestAskCurrencyEnabled { get; set; }
+        public bool HighestBidCurrencyEnabled { get; set; }
     }
 
     public class SyncronizationItemInfo {
@@ -223,7 +251,7 @@ namespace CryptoMarketClient {
         public ITicker Destination { get; set; }
 
         public string DestinationAddress { get; set; }
-        public double Amount { get; set; }
+        public decimal Amount { get; set; }
 
         public bool HasDestinationAddress { get { return !string.IsNullOrEmpty(DestinationAddress); } }
         public bool ObtainDestinationAddress() {

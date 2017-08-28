@@ -191,49 +191,32 @@ namespace CryptoMarketClient {
         public bool UpdateArbitrageOrderBook(PoloniexTicker ticker, int depth) {
             string address = GetOrderBookString(ticker, depth);
             string text = ((ITicker)ticker).DownloadString(address);
-            if(string.IsNullOrEmpty(text))
-                return false;
-
-            ticker.OrderBook.Bids.Clear();
-            ticker.OrderBook.Asks.Clear();
-
-            JObject res = (JObject)JsonConvert.DeserializeObject(text);
-            JArray bids = res.Value<JArray>("bids");
-            JArray asks = res.Value<JArray>("asks");
-            foreach(JArray item in bids) {
-                OrderBookEntry entry = new OrderBookEntry();
-                entry.Value = item[0].Value<decimal>();
-                entry.Amount = item[1].Value<decimal>();
-                ticker.OrderBook.Bids.Add(entry);
-            }
-            foreach(JArray item in asks) {
-                OrderBookEntry entry = new OrderBookEntry();
-                entry.Value = item[0].Value<decimal>();
-                entry.Amount = item[1].Value<decimal>();
-                ticker.OrderBook.Asks.Add(entry);
-            }
-            return true;
+            return OnUpdateArbitrageOrderBook(ticker, text);
+            
         }
         public bool OnUpdateArbitrageOrderBook(PoloniexTicker ticker, string text) {
             if(string.IsNullOrEmpty(text))
                 return false;
-            ticker.OrderBook.Bids.Clear();
-            ticker.OrderBook.Asks.Clear();
 
             JObject res = (JObject)JsonConvert.DeserializeObject(text);
             JArray bids = res.Value<JArray>("bids");
             JArray asks = res.Value<JArray>("asks");
+            ticker.OrderBook.UpdateBidsCount(bids.Count);
+            ticker.OrderBook.UpdateAsksCount(asks.Count);
+
+            IEnumerator<OrderBookEntry> en = ticker.OrderBook.Bids.GetEnumerator();
             foreach(JArray item in bids) {
-                OrderBookEntry entry = new OrderBookEntry();
+                en.MoveNext();
+                OrderBookEntry entry = en.Current;
                 entry.Value = item[0].Value<decimal>();
                 entry.Amount = item[1].Value<decimal>();
-                ticker.OrderBook.Bids.Add(entry);
             }
+            en = ticker.OrderBook.Asks.GetEnumerator();
             foreach(JArray item in asks) {
-                OrderBookEntry entry = new OrderBookEntry();
+                en.MoveNext();
+                OrderBookEntry entry = en.Current;
                 entry.Value = item[0].Value<decimal>();
                 entry.Amount = item[1].Value<decimal>();
-                ticker.OrderBook.Asks.Add(entry);
             }
             return true;
         }

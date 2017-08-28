@@ -35,6 +35,7 @@
             this.bcAllowTradeHistory = new DevExpress.XtraBars.BarCheckItem();
             this.btShowApiKeys = new DevExpress.XtraBars.BarButtonItem();
             this.bbShowYourTotalDeposit = new DevExpress.XtraBars.BarButtonItem();
+            this.bbShowHistory = new DevExpress.XtraBars.BarButtonItem();
             this.ribbonPageCategory1 = new DevExpress.XtraBars.Ribbon.RibbonPageCategory();
             this.ribbonPage2 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPageGroup2 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
@@ -48,6 +49,8 @@
             this.ribbonStatusBar1 = new DevExpress.XtraBars.Ribbon.RibbonStatusBar();
             this.documentManager1 = new DevExpress.XtraBars.Docking2010.DocumentManager(this.components);
             this.tabbedView1 = new DevExpress.XtraBars.Docking2010.Views.Tabbed.TabbedView(this.components);
+            this.ribbonPageGroup7 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
+            this.bbSaveAllHistory = new DevExpress.XtraBars.BarButtonItem();
             ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemSpinEdit1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.documentManager1)).BeginInit();
@@ -68,10 +71,12 @@
             this.beOrderBookDepth,
             this.bcAllowTradeHistory,
             this.btShowApiKeys,
-            this.bbShowYourTotalDeposit});
+            this.bbShowYourTotalDeposit,
+            this.bbShowHistory,
+            this.bbSaveAllHistory});
             this.ribbonControl1.Location = new System.Drawing.Point(0, 0);
             this.ribbonControl1.Margin = new System.Windows.Forms.Padding(6);
-            this.ribbonControl1.MaxItemId = 14;
+            this.ribbonControl1.MaxItemId = 16;
             this.ribbonControl1.MdiMergeStyle = DevExpress.XtraBars.Ribbon.RibbonMdiMergeStyle.Always;
             this.ribbonControl1.Name = "ribbonControl1";
             this.ribbonControl1.PageCategories.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageCategory[] {
@@ -162,6 +167,15 @@
             this.bbShowYourTotalDeposit.Name = "bbShowYourTotalDeposit";
             this.bbShowYourTotalDeposit.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bbShowYourTotalDeposit_ItemClick);
             // 
+            // bbShowHistory
+            // 
+            this.bbShowHistory.Caption = "Arbitrage History";
+            this.bbShowHistory.Id = 14;
+            this.bbShowHistory.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bbShowHistory.ImageOptions.Image")));
+            this.bbShowHistory.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("bbShowHistory.ImageOptions.LargeImage")));
+            this.bbShowHistory.Name = "bbShowHistory";
+            this.bbShowHistory.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bbShowHistory_ItemClick);
+            // 
             // ribbonPageCategory1
             // 
             this.ribbonPageCategory1.Name = "ribbonPageCategory1";
@@ -201,7 +215,8 @@
             // 
             this.rpPoloniex.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] {
             this.ribbonPageGroup3,
-            this.ribbonPageGroup1});
+            this.ribbonPageGroup1,
+            this.ribbonPageGroup7});
             this.rpPoloniex.Name = "rpPoloniex";
             this.rpPoloniex.Text = "Connect";
             // 
@@ -215,6 +230,7 @@
             // ribbonPageGroup1
             // 
             this.ribbonPageGroup1.ItemLinks.Add(this.btClassicArbitrage);
+            this.ribbonPageGroup1.ItemLinks.Add(this.bbShowHistory);
             this.ribbonPageGroup1.Name = "ribbonPageGroup1";
             this.ribbonPageGroup1.Text = "Arbitrage";
             // 
@@ -250,6 +266,21 @@
             // tabbedView1
             // 
             this.tabbedView1.RootContainer.Element = null;
+            // 
+            // ribbonPageGroup7
+            // 
+            this.ribbonPageGroup7.ItemLinks.Add(this.bbSaveAllHistory);
+            this.ribbonPageGroup7.Name = "ribbonPageGroup7";
+            this.ribbonPageGroup7.Text = "History";
+            // 
+            // bbSaveAllHistory
+            // 
+            this.bbSaveAllHistory.Caption = "Save All History";
+            this.bbSaveAllHistory.Id = 15;
+            this.bbSaveAllHistory.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bbSaveAllHistory.ImageOptions.Image")));
+            this.bbSaveAllHistory.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("bbSaveAllHistory.ImageOptions.LargeImage")));
+            this.bbSaveAllHistory.Name = "bbSaveAllHistory";
+            this.bbSaveAllHistory.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bbSaveAllHistory_ItemClick);
             // 
             // MainForm
             // 
@@ -299,6 +330,9 @@
         private DevExpress.XtraBars.BarButtonItem bbShowYourTotalDeposit;
         private DevExpress.XtraBars.Ribbon.RibbonPage ribbonPage1;
         private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup6;
+        private DevExpress.XtraBars.BarButtonItem bbShowHistory;
+        private DevExpress.XtraBars.BarButtonItem bbSaveAllHistory;
+        private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup7;
     }
 }
 

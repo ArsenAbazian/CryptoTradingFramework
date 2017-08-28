@@ -63,7 +63,7 @@ namespace CryptoMarketClient {
             base.OnDeactivate(e);
             if(!HasShown)
               return;
-            StopBidAskThread();
+            //StopBidAskThread();
         }
 
         private void StopBidAskThread() {

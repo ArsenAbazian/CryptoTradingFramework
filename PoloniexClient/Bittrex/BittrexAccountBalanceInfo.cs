@@ -14,10 +14,10 @@ namespace CryptoMarketClient.Bittrex {
         public string CryptoAddress { get; set; }
         public bool Requested { get; set; }
         public string Uuid { get; set; }
-        public double DepositChanged {
+        public decimal DepositChanged {
             get {
-                double max = Math.Max(Available, LastAvailable);
-                double delta = Math.Abs(Available - LastAvailable);
+                decimal max = Math.Max(Available, LastAvailable);
+                decimal delta = Math.Abs(Available - LastAvailable);
                 if(max == 0)
                     return 0;
                 return (delta / max);

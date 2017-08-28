@@ -33,12 +33,6 @@ namespace CryptoMarketClient {
         protected override bool AllowUpdateInactive => true;
         protected override void OnShown(EventArgs e) {
             BuildCurrenciesList();
-            SyncronizationItemInfo info = new SyncronizationItemInfo();
-            info.Source = PoloniexModel.Default.Tickers.FirstOrDefault((t) => t.FirstCurrency == "BTC" && t.SecondCurrency == "XVC");
-            info.Destination = BittrexModel.Default.Markets.FirstOrDefault((t) => t.BaseCurrency == "BTC" && t.MarketCurrency == "XVC");
-            info.Amount = 998;
-            if(info.Source != null && info.Destination != null)
-                ItemsToSync.Add(info);
             base.OnShown(e);
         }
         protected Thread UpdateCurrenciesThread { get; set; }
@@ -107,16 +101,16 @@ namespace CryptoMarketClient {
                     }
                 }
                 foreach(PoloniexAccountBalanceInfo info in PoloniexModel.Default.Balances) {
-                    if(info.DepositChanged > 0.05) {
+                    if(info.DepositChanged > 0.05m) {
                         TelegramBot.Default.SendNotification("poloniex deposit changed: " + info.Currency + " = " + info.Available);
                     }
                 }
                 foreach(BittrexAccountBalanceInfo info in BittrexModel.Default.Balances) {
-                    if(info.DepositChanged > 0.05) {
+                    if(info.DepositChanged > 0.05m) {
                         TelegramBot.Default.SendNotification("bittrex deposit changed: " + info.Currency + " = " + info.Available);
                     }
                 }
-                Thread.Sleep(5 * 60 * 1000); // sleep 10 min
+                Thread.Sleep(5 * 60 * 1000); // sleep 5 min
             }
         }
         void RefreshGridRow(TickerArbitrageInfo info) {
@@ -125,28 +119,33 @@ namespace CryptoMarketClient {
         Stopwatch timer = new Stopwatch();
         void OnUpdateTickers() {
             timer.Start();
+            long lastGUIUpdateTime = 0;
             while(true) {
-                int count = ArbitrageList.Count;
-                for(int i = 0; i < count; i++) {
+                for(int i = 0; i < ArbitrageList.Count; i++) {
                     if(ShouldProcessArbitrage)
                         ProcessSelectedArbitrageInfo();
+                    if(timer.ElapsedMilliseconds - lastGUIUpdateTime > 2000) {
+                        lastGUIUpdateTime = timer.ElapsedMilliseconds;
+                        if(IsHandleCreated)
+                            Invoke(new Action(RefreshGUI));
+                    }
                     if(this.bbMonitorSelected.Checked && !ArbitrageList[i].IsSelected)
                         continue;
                     TickerArbitrageInfo current = ArbitrageList[i];
                     if(current.IsUpdating)
                         continue;
-                    if(current.ObtainingData) {
-                        current.UpdateTimeMs = (int)(timer.ElapsedMilliseconds - current.StartUpdateMs);
-                        if(current.UpdateTimeMs > current.NextOverdueMs) {
-                            current.IsActual = false;
-                            current.NextOverdueMs += 3000;
-                            if(IsHandleCreated)
-                                Invoke(new Action<TickerArbitrageInfo>(RefreshGridRow), current);
-                        }
-                    }
-                    else {
+                    if(!current.ObtainingData) {
                         current.UpdateTask = UpdateArbitrageInfoOLD(current);
+                        continue;
                     }
+                    current.UpdateTimeMs = (int)(timer.ElapsedMilliseconds - current.StartUpdateMs);
+                    if(current.UpdateTimeMs > current.NextOverdueMs) {
+                        current.IsActual = false;
+                        current.NextOverdueMs += 3000;
+                        if(IsHandleCreated)
+                            Invoke(new Action<TickerArbitrageInfo>(RefreshGridRow), current);
+                    }
+                    continue;
                 }
             }
         }
@@ -276,22 +275,23 @@ namespace CryptoMarketClient {
             this.orderBookControl1.RefreshAsks();
             this.orderBookControl1.RefreshBids();
         }
+        void RefreshGUI() {
+            //this.gridView1.RefreshData();
+            RefreshChartDataSource();
+            RefreshOrderBook();
+        }
         void OnUpdateTickerInfo(TickerArbitrageInfo info) {
             decimal prevProfits = info.MaxProfitUSD;
             info.IsUpdating = true;
             info.Update();
             info.SaveExpectedProfitUSD();
             info.IsUpdating = false;
-            if(info.AvailableProfitUSD > 15) {
+            RefreshGridRow(info);
+            if(info.AvailableProfitUSD > 20) {
                 SelectedArbitrage = info;
                 ShouldProcessArbitrage = true;
                 return;
             }
-            this.gridView1.RefreshRow(this.gridView1.GetRowHandle(ArbitrageList.IndexOf(info)));
-            if(this.arbitrageHistoryChart.DataSource == info.History)
-                RefreshChartDataSource();
-            if(this.orderBookControl1.ArbitrageInfo == info)
-                RefreshOrderBook();
             if(info.MaxProfitUSD - prevProfits > 20)
                 ShowNotification(info, prevProfits);
         }
@@ -582,6 +582,24 @@ namespace CryptoMarketClient {
 
         private void repositoryItemCheckEdit1_EditValueChanged(object sender, EventArgs e) {
             gridView1.PostEditor();
+        }
+
+        private void bbShowHistory_ItemClick(object sender, ItemClickEventArgs e) {
+            ArbitrageHistoryForm form = new ArbitrageHistoryForm();
+            form.MdiParent = MdiParent;
+            form.Show();
+        }
+
+        private void btShowCombinedBidAsk_ItemClick(object sender, ItemClickEventArgs e) {
+            TickerArbitrageInfo info = (TickerArbitrageInfo)this.bbTryArbitrage.Tag;
+            if(info == null)
+                return;
+            CombinedBidAskForm form = new CombinedBidAskForm();
+            form.MdiParent = MdiParent;
+            form.AddTicker(info.LowestAskTicker);
+            form.AddTicker(info.HighestBidTicker);
+            form.Text = info.Name;
+            form.Show();
         }
     }
 }

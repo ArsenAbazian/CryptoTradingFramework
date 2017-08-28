@@ -77,8 +77,18 @@ namespace CryptoMarketClient {
             }
         }
 
+        PoloniexCurrencyInfo marketCurrencyInfo;
+        protected PoloniexCurrencyInfo MarketCurrencyInfo {
+            get {
+                if(marketCurrencyInfo == null)
+                    marketCurrencyInfo = PoloniexModel.Default.Currencies.FirstOrDefault(c => c.Currency == SecondCurrency);
+                return marketCurrencyInfo;
+            }
+        }
+
         public decimal BaseCurrencyBalance { get { return FirstCurrencyBalanceInfo == null? 0: FirstCurrencyBalanceInfo.Available; } }
         public decimal MarketCurrencyBalance { get { return SecondCurrencyBalanceInfo == null? 0: SecondCurrencyBalanceInfo.Available; } }
+        public bool MarketCurrencyEnabled { get { return MarketCurrencyInfo == null ? false : !MarketCurrencyInfo.Disabled; } }
         public decimal Change { get; set; }
         public decimal BaseVolume { get; set; }
         public decimal Volume { get; set; }
@@ -209,7 +219,14 @@ namespace CryptoMarketClient {
             return string.Empty;
         }
         public bool UpdateArbitrageOrderBook(int depth) {
-            return PoloniexModel.Default.UpdateArbitrageOrderBook(this, depth);
+            bool res = PoloniexModel.Default.UpdateArbitrageOrderBook(this, depth);
+            if(res) {
+                HighestBid = OrderBook.Bids[0].Value;
+                LowestAsk = OrderBook.Asks[0].Value;
+                Time = DateTime.Now;
+                UpdateHistoryItem();
+            }
+            return res;
         }
         public Task<string> GetOrderBookStringAsync(int depth) {
             return PoloniexModel.Default.GetWebClient().DownloadStringTaskAsync(PoloniexModel.Default.GetOrderBookString(this, depth));

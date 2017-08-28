@@ -223,24 +223,27 @@ namespace CryptoMarketClient.Bittrex {
                     continue;
                 if(prop.Name == "result") {
                     lock(info) {
-                        info.OrderBook.Clear();
                         JArray bids = ((JObject)prop.Value).Value<JArray>("buy");
                         JArray asks = ((JObject)prop.Value).Value<JArray>("sell");
+                        info.OrderBook.UpdateBidsCount(Math.Min(bids.Count, depth));
+                        info.OrderBook.UpdateAsksCount(Math.Min(asks.Count, depth));
                         int count = 0;
+                        IEnumerator<OrderBookEntry> en = info.OrderBook.Bids.GetEnumerator();
                         foreach(JObject obj in bids) {
-                            OrderBookEntry e = new OrderBookEntry();
+                            en.MoveNext();
+                            OrderBookEntry e = en.Current;
                             e.Value = obj.Value<decimal>("Rate");
                             e.Amount = obj.Value<decimal>("Quantity");
-                            info.OrderBook.Bids.Add(e);
                             if(++count >= depth)
                                 break;
                         }
                         count = 0;
+                        en = info.OrderBook.Asks.GetEnumerator();
                         foreach(JObject obj in asks) {
-                            OrderBookEntry e = new OrderBookEntry();
+                            en.MoveNext();
+                            OrderBookEntry e = en.Current;
                             e.Value = obj.Value<decimal>("Rate");
                             e.Amount = obj.Value<decimal>("Quantity");
-                            info.OrderBook.Asks.Add(e);
                             if(++count >= depth)
                                 break;
                         }
@@ -458,7 +461,12 @@ namespace CryptoMarketClient.Bittrex {
             WebClient client = GetWebClient();
             client.Headers.Clear();
             client.Headers.Add("apisign", GetSign(address));
-            return OnGetBalance(client.DownloadString(address));
+            try {
+                return OnGetBalance(client.DownloadString(address));
+            }
+            catch(Exception) {
+                return false;
+            }
         }
 
         public bool OnGetBalance(string text) {

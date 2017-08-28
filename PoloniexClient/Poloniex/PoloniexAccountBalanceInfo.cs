@@ -12,10 +12,10 @@ namespace CryptoMarketClient.Poloniex {
         public decimal OnOrders { get; set; }
         public decimal BtcValue { get; set; }
         public string DepositAddress { get; set; }
-        public double DepositChanged {
+        public decimal DepositChanged {
             get {
-                double max = Math.Max(Available, LastAvailable);
-                double delta = Math.Abs(Available - LastAvailable);
+                decimal max = Math.Max(Available, LastAvailable);
+                decimal delta = Math.Abs(Available - LastAvailable);
                 if(max == 0)
                     return 0;
                 return (delta / max);
