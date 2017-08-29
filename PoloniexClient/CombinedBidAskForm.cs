@@ -31,7 +31,6 @@ namespace CryptoMarketClient {
             ((XYDiagram)this.arbitrageHistoryChart.Diagram).EnableAxisXScrolling = true;
             ((XYDiagram)this.arbitrageHistoryChart.Diagram).EnableAxisXZooming = true;
             ((XYDiagram)this.arbitrageHistoryChart.Diagram).AxisX.DateTimeScaleOptions.MeasureUnit = DateTimeMeasureUnit.Second;
-            ((XYDiagram)this.arbitrageHistoryChart.Diagram).AxisY.WholeRange.AlwaysShowZeroLevel = true;
         }
 
         protected override void OnClosed(EventArgs e) {

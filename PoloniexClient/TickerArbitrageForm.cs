@@ -135,7 +135,7 @@ namespace CryptoMarketClient {
                     if(current.IsUpdating)
                         continue;
                     if(!current.ObtainingData) {
-                        current.UpdateTask = UpdateArbitrageInfoOLD(current);
+                        current.UpdateTask = UpdateArbitrageInfo(current);
                         continue;
                     }
                     current.UpdateTimeMs = (int)(timer.ElapsedMilliseconds - current.StartUpdateMs);
