@@ -20,6 +20,10 @@ namespace CryptoMarketClient {
 
         public int Index { get; set; }
         public int Id { get; set; }
+        RateLimiting.RateGate apiRate = new RateLimiting.RateGate(6, TimeSpan.FromSeconds(1));
+        protected RateLimiting.RateGate ApiRate {
+            get { return apiRate; }
+        }
 
         string currensyPair;
         public string CurrencyPair {
@@ -213,6 +217,7 @@ namespace CryptoMarketClient {
         public string WebPageAddress { get { return "https://poloniex.com/exchange#" + MarketName.ToLower(); } }
         public string DownloadString(string address) {
             try {
+                ApiRate.WaitToProceed();
                 return PoloniexModel.Default.GetWebClient().DownloadString(address);
             }
             catch { }
@@ -228,9 +233,9 @@ namespace CryptoMarketClient {
             }
             return res;
         }
-        public Task<string> GetOrderBookStringAsync(int depth) {
-            return PoloniexModel.Default.GetWebClient().DownloadStringTaskAsync(PoloniexModel.Default.GetOrderBookString(this, depth));
-        }
+        //public Task<string> GetOrderBookStringAsync(int depth) {
+        //    return PoloniexModel.Default.GetWebClient().DownloadStringTaskAsync(PoloniexModel.Default.GetOrderBookString(this, depth));
+        //}
         public void ProcessArbitrageOrderBook(string text) {
             PoloniexModel.Default.OnUpdateArbitrageOrderBook(this, text);
         }

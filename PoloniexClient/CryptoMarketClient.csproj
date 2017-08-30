@@ -200,6 +200,7 @@
     <Compile Include="Common\OrderBookEntry.cs" />
     <Compile Include="Common\OrderBookUpdateInfo.cs" />
     <Compile Include="Common\OrderType.cs" />
+    <Compile Include="Common\RateGate.cs" />
     <Compile Include="Common\TelegramBot.cs" />
     <Compile Include="Common\TickerArbitrageHelper.cs" />
     <Compile Include="Common\TickerArbitrageInfo.cs" />

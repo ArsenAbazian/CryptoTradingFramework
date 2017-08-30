@@ -40,7 +40,10 @@ namespace CryptoMarketClient.Bittrex {
         public decimal BaseCurrencyBalance { get { return BaseBalanceInfo == null ? 0 : BaseBalanceInfo.Available; } }
         public decimal MarketCurrencyBalance { get { return MarketBalanceInfo == null ? 0 : MarketBalanceInfo.Available; } }
         public bool MarketCurrencyEnabled { get { return MarketCurrencyInfo == null ? false : MarketCurrencyInfo.IsActive; } }
-
+        RateLimiting.RateGate apiRate = new RateLimiting.RateGate(6, TimeSpan.FromSeconds(1));
+        protected RateLimiting.RateGate ApiRate {
+            get { return apiRate; }
+        }
         BittrexAccountBalanceInfo baseBalanceInfo, marketBalanceInfo;
         protected BittrexAccountBalanceInfo BaseBalanceInfo {
             get {
@@ -155,6 +158,7 @@ namespace CryptoMarketClient.Bittrex {
         protected WebClient WebClient { get; } = new MyWebClient();
         public string DownloadString(string address) {
             try {
+                ApiRate.WaitToProceed();
                 return BittrexModel.Default.GetWebClient().DownloadString(address);
             }
             catch { }
@@ -170,9 +174,9 @@ namespace CryptoMarketClient.Bittrex {
             }
             return res;
         }
-        public Task<string> GetOrderBookStringAsync(int depth) {
-            return BittrexModel.Default.GetWebClient().DownloadStringTaskAsync(BittrexModel.Default.GetOrderBookString(this, depth));
-        }
+        //public Task<string> GetOrderBookStringAsync(int depth) {
+        //    return BittrexModel.Default.GetWebClient().DownloadStringTaskAsync(BittrexModel.Default.GetOrderBookString(this, depth));
+        //}
         public void ProcessArbitrageOrderBook(string text) {
             BittrexModel.Default.UpdateOrderBook(this, text, TickerArbitrageInfo.Depth);
         }

@@ -116,6 +116,7 @@ namespace CryptoMarketClient {
         void RefreshGridRow(TickerArbitrageInfo info) {
             this.gridView1.RefreshRow(this.gridView1.GetRowHandle(ArbitrageList.IndexOf(info)));
         }
+        int concurrentTickersCount = 0;
         Stopwatch timer = new Stopwatch();
         void OnUpdateTickers() {
             timer.Start();
@@ -127,7 +128,7 @@ namespace CryptoMarketClient {
                     if(timer.ElapsedMilliseconds - lastGUIUpdateTime > 2000) {
                         lastGUIUpdateTime = timer.ElapsedMilliseconds;
                         if(IsHandleCreated)
-                            Invoke(new Action(RefreshGUI));
+                            BeginInvoke(new Action(RefreshGUI));
                     }
                     if(this.bbMonitorSelected.Checked && !ArbitrageList[i].IsSelected)
                         continue;
@@ -135,22 +136,35 @@ namespace CryptoMarketClient {
                     if(current.IsUpdating)
                         continue;
                     if(!current.ObtainingData) {
-                        current.UpdateTask = UpdateArbitrageInfo(current);
+                        while(concurrentTickersCount > 8) {
+                            Thread.Sleep(1);
+                            
+                        }
+                        Interlocked.Increment(ref concurrentTickersCount);
+                        UpdateArbitrageInfo(current);
+                        //Interlocked.Decrement(ref concurrentTickersCount);
                         continue;
                     }
-                    current.UpdateTimeMs = (int)(timer.ElapsedMilliseconds - current.StartUpdateMs);
-                    if(current.UpdateTimeMs > current.NextOverdueMs) {
+                    int currentUpdateTimeMS = (int)(timer.ElapsedMilliseconds - current.StartUpdateMs);
+                    if(currentUpdateTimeMS > current.NextOverdueMs) {
+                        current.UpdateTimeMs = currentUpdateTimeMS;
                         current.IsActual = false;
                         current.NextOverdueMs += 3000;
                         if(IsHandleCreated)
-                            Invoke(new Action<TickerArbitrageInfo>(RefreshGridRow), current);
+                            BeginInvoke(new Action<TickerArbitrageInfo>(RefreshGridRow), current);
                     }
                     continue;
                 }
             }
         }
-        //int logCounter = 0;
-        async Task UpdateArbitrageInfo(TickerArbitrageInfo info) {
+        async Task UpdateArbitrageInfoTask(TickerArbitrageInfo info) {
+            Task task = Task.Factory.StartNew(() => {
+                UpdateArbitrageInfo(info);
+            });
+            await task;
+        }
+            //int logCounter = 0;
+        async void UpdateArbitrageInfo(TickerArbitrageInfo info) {
             //int log = Interlocked.Increment(ref logCounter);
             info.ObtainDataSuccessCount = 0;
             info.ObtainDataCount = 0;
@@ -165,42 +179,43 @@ namespace CryptoMarketClient {
                 }
                 });
             await task;
+            Interlocked.Decrement(ref concurrentTickersCount); //todo
             if(info.ObtainDataCount == info.Count) {
                 info.IsActual = info.ObtainDataSuccessCount == info.Count;
                 info.IsUpdating = true;
                 info.ObtainingData = false;
                 info.UpdateTimeMs = (int)(timer.ElapsedMilliseconds - info.StartUpdateMs);
-                Invoke(new Action<TickerArbitrageInfo>(OnUpdateTickerInfo), info);
+                OnUpdateTickerInfo(info, true);
             }
 
             info.LastUpdate = DateTime.Now;
         }
 
-        async Task UpdateArbitrageInfoOLD(TickerArbitrageInfo info) {
-            info.ObtainDataSuccessCount = 0;
-            info.ObtainDataCount = 0;
-            info.NextOverdueMs = 6000;
-            info.StartUpdateMs = timer.ElapsedMilliseconds;
-            info.ObtainingData = true;
-            for(int i = 0; i < info.Count; i++) {
-                Task task = Task.Factory.StartNew(() => {
-                    while(info.IsUpdating)
-                        continue;
-                    if(info.Tickers[i].UpdateArbitrageOrderBook(TickerArbitrageInfo.Depth))
-                        info.ObtainDataSuccessCount++;
-                    info.ObtainDataCount++;
-                    if(info.ObtainDataCount == info.Count) {
-                        info.IsActual = info.ObtainDataSuccessCount == info.Count;
-                        info.IsUpdating = true;
-                        info.ObtainingData = false;
-                        info.UpdateTimeMs = (int)(timer.ElapsedMilliseconds - info.StartUpdateMs);
-                        Invoke(new Action<TickerArbitrageInfo>(OnUpdateTickerInfo), info);
-                    }
-                });
-                await task;
-            }
-            info.LastUpdate = DateTime.Now;
-        }
+        //async Task UpdateArbitrageInfoOLD(TickerArbitrageInfo info) {
+        //    info.ObtainDataSuccessCount = 0;
+        //    info.ObtainDataCount = 0;
+        //    info.NextOverdueMs = 6000;
+        //    info.StartUpdateMs = timer.ElapsedMilliseconds;
+        //    info.ObtainingData = true;
+        //    for(int i = 0; i < info.Count; i++) {
+        //        Task task = Task.Factory.StartNew(() => {
+        //            while(info.IsUpdating)
+        //                continue;
+        //            if(info.Tickers[i].UpdateArbitrageOrderBook(TickerArbitrageInfo.Depth))
+        //                info.ObtainDataSuccessCount++;
+        //            info.ObtainDataCount++;
+        //            if(info.ObtainDataCount == info.Count) {
+        //                info.IsActual = info.ObtainDataSuccessCount == info.Count;
+        //                info.IsUpdating = true;
+        //                info.ObtainingData = false;
+        //                info.UpdateTimeMs = (int)(timer.ElapsedMilliseconds - info.StartUpdateMs);
+        //                Invoke(new Action<TickerArbitrageInfo, bool>(OnUpdateTickerInfo), info);
+        //            }
+        //        });
+        //        await task;
+        //    }
+        //    info.LastUpdate = DateTime.Now;
+        //}
         protected override void OnThreadUpdate() {
             OnUpdateTickers();
         }
@@ -227,7 +242,7 @@ namespace CryptoMarketClient {
             }
 
             LogManager.Default.Add("Update arbitrage info values.", SelectedArbitrage.Name);
-            if(!UpdateArbitrageInfo(SelectedArbitrage).Wait(5000)) {
+            if(!UpdateArbitrageInfoTask(SelectedArbitrage).Wait(5000)) {
                 LogManager.Default.AddError("Failed arbitrage update info values. Timeout.", SelectedArbitrage.Name);
                 Invoke(new MethodInvoker(ShowLog));
                 return;
@@ -280,20 +295,28 @@ namespace CryptoMarketClient {
             RefreshChartDataSource();
             RefreshOrderBook();
         }
-        void OnUpdateTickerInfo(TickerArbitrageInfo info) {
+        void OnUpdateTickerInfo(TickerArbitrageInfo info, bool useInvokeForUI = false) {
             decimal prevProfits = info.MaxProfitUSD;
             info.IsUpdating = true;
             info.Update();
             info.SaveExpectedProfitUSD();
             info.IsUpdating = false;
-            RefreshGridRow(info);
+            bool checkMaxProfits = true;
             if(info.AvailableProfitUSD > 20) {
                 SelectedArbitrage = info;
                 ShouldProcessArbitrage = true;
-                return;
+                checkMaxProfits = false;
             }
-            if(info.MaxProfitUSD - prevProfits > 20)
-                ShowNotification(info, prevProfits);
+            var action = new Action(() => {
+                RefreshGridRow(info);
+                if(checkMaxProfits && info.MaxProfitUSD - prevProfits > 20)
+                    ShowNotification(info, prevProfits);
+            });
+            if(useInvokeForUI)
+                BeginInvoke(action);
+            else
+                action();
+
         }
         void ShowDesktopNotification(TickerArbitrageInfo info, decimal prev) {
             if(MdiParent.WindowState != FormWindowState.Minimized)
