@@ -1,4 +1,5 @@
-﻿using DevExpress.XtraEditors;
+﻿using CryptoMarketClient.HitBtc;
+using DevExpress.XtraEditors;
 using DevExpress.XtraGrid;
 using System;
 using System.Collections.Generic;
@@ -12,25 +13,20 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace CryptoMarketClient.Bittrex {
-    public partial class BittrexMarketsForm : Form {
-        public BittrexMarketsForm() {
+    public partial class HitBtcTickerCollectionForm : XtraForm {
+        public HitBtcTickerCollectionForm() {
             InitializeComponent();
         }
 
         protected bool HasShown { get; set; }
         protected override void OnShown(EventArgs e) {
             base.OnShown(e);
-            if(!BittrexModel.Default.GetMarketsInfo()) {
+            if(!HitBtcModel.Default.GetTickers()) {
                 XtraMessageBox.Show("Fatal Error: Can't obtain markets info");
                 BeginInvoke(new Action(Close));
                 return;
             }
-            if(!BittrexModel.Default.GetMarketsSummaryInfo()) {
-                XtraMessageBox.Show("Fatal Error: Can't obtain markets summary info");
-                BeginInvoke(new Action(Close));
-                return;
-            }
-            this.gridControl1.DataSource = BittrexModel.Default.Markets;
+            this.gridControl1.DataSource = HitBtcModel.Default.Tickers;
             HasShown = true;
             StartUpdateTickerThread();
         }
@@ -50,28 +46,23 @@ namespace CryptoMarketClient.Bittrex {
         }
         protected bool AllowWorking { get; set; }
         void OnBidAskUpdate() {
-            while(AllowWorking && BittrexModel.Default.IsConnected) {
-                BittrexModel.Default.GetMarketsSummaryInfo();
-                lock(BittrexModel.Default.Markets) {
-                    if(!IsDisposed && IsHandleCreated && !Disposing)
-                        Invoke(new Action(UpdateGridAll));
-                }
+            while(AllowWorking && HitBtcModel.Default.IsConnected) {
+                HitBtcModel.Default.UpdateTickersInfo();
+                this.gridControl1.RefreshDataSource();
                 Thread.Sleep(900); //to avoid throttling
             }
         }
-        void UpdateGrid(BittrexMarketInfo info) {
+
+        void UpdateGrid(HitBtcTicker info) {
             int rowHandle = this.gridView1.GetRowHandle(info.Index);
             this.gridView1.RefreshRow(rowHandle);
-        }
-        void UpdateGridAll() {
-            this.gridView1.RefreshData();
         }
 
         protected override void OnDeactivate(EventArgs e) {
             base.OnDeactivate(e);
             if(!HasShown)
                 return;
-            //StopBidAskThread();
+            StopBidAskThread();
         }
 
         private void StopBidAskThread() {
@@ -83,9 +74,9 @@ namespace CryptoMarketClient.Bittrex {
         }
 
         private void btCurrencies_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
-            BittrexCurrenciesForm form = new BittrexCurrenciesForm();
-            form.MdiParent = MdiParent;
-            form.Show();
+            //BittrexCurrenciesForm form = new BittrexCurrenciesForm();
+            //form.MdiParent = MdiParent;
+            //form.Show();
         }
 
         private void btShowDetails_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
@@ -94,7 +85,7 @@ namespace CryptoMarketClient.Bittrex {
         void ShowDetailsForSelectedItemCore() {
             if(this.gridView1.FocusedRowHandle == GridControl.InvalidRowHandle)
                 return;
-            ITicker t = (ITicker)this.gridView1.GetRow(this.gridView1.FocusedRowHandle);
+            TickerBase t = (TickerBase)this.gridView1.GetRow(this.gridView1.FocusedRowHandle);
             TickerForm form = new TickerForm();
             form.MarketName = "Bittrex";
             form.Ticker = t;

@@ -1,8 +1,10 @@
 ﻿using CryptoMarketClient.Common;
 using CryptoMarketClient.Poloniex;
+using DevExpress.XtraEditors;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Diagnostics;
@@ -10,6 +12,7 @@ using System.Linq;
 using System.Net;
 using System.Reactive.Subjects;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using WampSharp.Binding;
 using WampSharp.V2;
@@ -41,39 +44,45 @@ namespace CryptoMarketClient {
         public void Connect() {
             if(TickersSubscriber != null)
                 return;
-            TickersSubscriber = SubscribeToTicker();
+            //TickersSubscriber = SubscribeToTicker();
         }
 
-        private IDisposable SubscribeToTicker() {
-            DefaultWampChannelFactory channelFactory =
-                new DefaultWampChannelFactory();
+        //private IDisposable SubscribeToTicker() {
+        //    DefaultWampChannelFactory channelFactory =
+        //        new DefaultWampChannelFactory();
 
-            IWampChannel wampChannel = channelFactory.CreateJsonChannel(PoloniexServerAddress, "realm1");
-            wampChannel.Open().Wait();
+        //    IWampChannel wampChannel = channelFactory.CreateJsonChannel(PoloniexServerAddress, "realm1");
+        //    try {
+        //        wampChannel.Open().Wait();
+        //    }
+        //    catch(Exception e) {
+        //        XtraMessageBox.Show(e.ToString());
+        //        Debug.WriteLine(e.ToString());
+        //    }
 
-            ISubject<PoloniexTicker> subject = wampChannel.RealmProxy.Services.GetSubject<PoloniexTicker>("ticker", new PoloniexTickerConverter());
-            IDisposable disposable = subject.Subscribe(x => GetTickerItem(x));
+        //    ISubject<PoloniexTicker> subject = wampChannel.RealmProxy.Services.GetSubject<PoloniexTicker>("ticker", new PoloniexTickerConverter());
+        //    IDisposable disposable = subject.Subscribe(x => GetTickerItem(x));
 
-            return disposable;
-        }
+        //    return disposable;
+        //}
 
 
-        private void GetTickerItem(PoloniexTicker item) {
-            lock(Tickers) {
-                PoloniexTicker t = Tickers.FirstOrDefault((i) => i.CurrencyPair == item.CurrencyPair);
-                if(t != null) {
-                    lock(t) {
-                        t.Assign(item);
-                        t.UpdateHistoryItem();
-                        RaiseTickerUpdate(t);
-                    }
-                }
-                else {
-                    Tickers.Add(item);
-                    RaiseTickerUpdate(item);
-                }
-            }
-        }
+        //private void GetTickerItem(PoloniexTicker item) {
+        //    lock(Tickers) {
+        //        PoloniexTicker t = Tickers.FirstOrDefault((i) => i.CurrencyPair == item.CurrencyPair);
+        //        if(t != null) {
+        //            lock(t) {
+        //                t.Assign(item);
+        //                t.UpdateHistoryItem();
+        //                RaiseTickerUpdate(t);
+        //            }
+        //        }
+        //        else {
+        //            Tickers.Add(item);
+        //            RaiseTickerUpdate(item);
+        //        }
+        //    }
+        //}
 
         public event TickerUpdateEventHandler TickerUpdate;
         protected void RaiseTickerUpdate(PoloniexTicker t) {
@@ -83,15 +92,16 @@ namespace CryptoMarketClient {
             t.RaiseChanged();
         }
         public IDisposable ConnectOrderBook(PoloniexTicker ticker) {
-            ticker.OrderBook.Updates.Clear();
-            DefaultWampChannelFactory channelFactory =
-               new DefaultWampChannelFactory();
+            //ticker.OrderBook.Updates.Clear();
+            //DefaultWampChannelFactory channelFactory =
+            //   new DefaultWampChannelFactory();
 
-            IWampChannel wampChannel = channelFactory.CreateJsonChannel(PoloniexServerAddress, "realm1");
-            wampChannel.Open().Wait();
+            //IWampChannel wampChannel = channelFactory.CreateJsonChannel(PoloniexServerAddress, "realm1");
+            //wampChannel.Open().Wait();
 
-            ISubject<OrderBookUpdateInfo> subject = wampChannel.RealmProxy.Services.GetSubject<OrderBookUpdateInfo>(ticker.OrderBook.Owner.Name, new OrderBookUpdateInfoConverter());
-            return subject.Subscribe(x => ticker.OrderBook.OnRecvUpdate(x));
+            //ISubject<OrderBookUpdateInfo> subject = wampChannel.RealmProxy.Services.GetSubject<OrderBookUpdateInfo>(ticker.OrderBook.Owner.Name, new OrderBookUpdateInfoConverter());
+            //return subject.Subscribe(x => ticker.OrderBook.OnRecvUpdate(x));
+            return null;
         }
 
         public bool UpdateCurrencies() {
@@ -190,34 +200,74 @@ namespace CryptoMarketClient {
         }
         public bool UpdateArbitrageOrderBook(PoloniexTicker ticker, int depth) {
             string address = GetOrderBookString(ticker, depth);
-            string text = ((ITicker)ticker).DownloadString(address);
+            string text = ((TickerBase)ticker).DownloadString(address);
             return OnUpdateArbitrageOrderBook(ticker, text);
-            
+
         }
+
         public bool OnUpdateArbitrageOrderBook(PoloniexTicker ticker, string text) {
             if(string.IsNullOrEmpty(text))
                 return false;
 
-            JObject res = (JObject)JsonConvert.DeserializeObject(text);
-            JArray bids = res.Value<JArray>("bids");
-            JArray asks = res.Value<JArray>("asks");
-            ticker.OrderBook.UpdateBidsCount(bids.Count);
-            ticker.OrderBook.UpdateAsksCount(asks.Count);
+            Dictionary<string, object> res2 = null;
+            lock(JsonParser) {
+                res2 = JsonParser.Parse(text) as Dictionary<string, object>;
+                if(res2 == null)
+                    return false;
+            }
 
-            IEnumerator<OrderBookEntry> en = ticker.OrderBook.Bids.GetEnumerator();
-            foreach(JArray item in bids) {
-                en.MoveNext();
-                OrderBookEntry entry = en.Current;
-                entry.Value = item[0].Value<decimal>();
-                entry.Amount = item[1].Value<decimal>();
+            List<object> bids = (List<object>)res2["bids"];
+            List<object> asks = (List<object>)res2["asks"];
+
+            ticker.OrderBook.GetNewBidAsks();
+            int index = 0;
+            OrderBookEntry[] list = ticker.OrderBook.Bids;
+            foreach(List<object> item in bids) {
+                OrderBookEntry entry = list[index];
+                entry.Value = (decimal)(double.Parse((string)item.First()));
+                entry.Amount = (decimal)(double.Parse((string)item.Last()));
+                index++;
+                if(index >= list.Length)
+                    break;
             }
-            en = ticker.OrderBook.Asks.GetEnumerator();
-            foreach(JArray item in asks) {
-                en.MoveNext();
-                OrderBookEntry entry = en.Current;
-                entry.Value = item[0].Value<decimal>();
-                entry.Amount = item[1].Value<decimal>();
+            index = 0;
+            list = ticker.OrderBook.Asks;
+            foreach(List<object> item in asks) {
+                OrderBookEntry entry = list[index];
+                entry.Value = (decimal)(double.Parse((string)item.First()));
+                entry.Amount = (decimal)(double.Parse((string)item.Last()));
+                index++;
+                if(index >= list.Length)
+                    break;
             }
+
+            //JObject res = (JObject)JsonConvert.DeserializeObject(text);
+            //JArray bids = res.Value<JArray>("bids");
+            //JArray asks = res.Value<JArray>("asks");
+
+            //ticker.OrderBook.Save();
+            //int index = 0;
+            //OrderBookEntry[] list = ticker.OrderBook.Bids;
+            //foreach(JArray item in bids) {
+            //    OrderBookEntry entry = list[index];
+            //    entry.Value = item[0].Value<decimal>();
+            //    entry.Amount = item[1].Value<decimal>();
+            //    index++;
+            //    if(index >= list.Length)
+            //        break;
+            //}
+            //index = 0;
+            //list = ticker.OrderBook.Asks;
+            //foreach(JArray item in asks) {
+            //    OrderBookEntry entry = list[index];
+            //    entry.Value = item[0].Value<decimal>();
+            //    entry.Amount = item[1].Value<decimal>();
+            //    index++;
+            //    if(index >= list.Length)
+            //        break;
+            //}
+            ticker.OrderBook.UpdateEntries();
+            ticker.OrderBook.RaiseOnChanged(new OrderBookUpdateInfo() { Action = OrderBookUpdateType.RefreshAll });
             return true;
         }
 
@@ -226,44 +276,13 @@ namespace CryptoMarketClient {
                 Uri.EscapeDataString(ticker.CurrencyPair), depth);
         }
         public void UpdateOrderBook(PoloniexTicker ticker, string text) {
-            ticker.OrderBook.Bids.Clear();
-            ticker.OrderBook.Asks.Clear();
-
-            JObject res = (JObject)JsonConvert.DeserializeObject(text);
-            foreach(JProperty prop in res.Children()) {
-                if(prop.Name == "asks" || prop.Name == "bids") {
-                    OrderBookEntryType type = prop.Name == "asks" ? OrderBookEntryType.Ask : OrderBookEntryType.Bid;
-                    JArray items = prop.Value.ToObject<JArray>();
-                    foreach(JArray item in items.Children()) {
-                        OrderBookUpdateInfo info = new OrderBookUpdateInfo();
-                        info.Type = type;
-                        info.Entry = new OrderBookEntry();
-                        info.Action = OrderBookUpdateType.Modify;
-                        JEnumerable<JToken> values = (JEnumerable<JToken>)item.Children();
-                        JValue rateValue = (JValue)values.First();
-                        info.Entry.Value = rateValue.ToObject<decimal>();
-                        info.Entry.Amount = rateValue.Next.ToObject<decimal>();
-                        if(type == OrderBookEntryType.Ask)
-                            ticker.OrderBook.ForceAddAsk(info);
-                        else
-                            ticker.OrderBook.ForceAddBid(info);
-                    }
-                }
-                else if(prop.Name == "seq") {
-                    ticker.OrderBook.SeqNumber = prop.Value.ToObject<int>();
-                    //Console.WriteLine("Snapshot seq no = " + ticker.OrderBook.SeqNumber);
-                }
-                else if(prop.Name == "isFrozen") {
-                    ticker.IsFrozen = prop.Value.ToObject<int>() == 0;
-                }
-            }
-            ticker.OrderBook.ApplyQueueUpdates();
+            OnUpdateArbitrageOrderBook(ticker, text);
             ticker.OrderBook.RaiseOnChanged(new OrderBookUpdateInfo() { Action = OrderBookUpdateType.RefreshAll });
         }
         public bool GetOrderBook(PoloniexTicker ticker, int depth) {
             string address = string.Format("https://poloniex.com/public?command=returnOrderBook&currencyPair={0}&depth={1}",
                 Uri.EscapeDataString(ticker.CurrencyPair), depth);
-            string text = ((ITicker)ticker).DownloadString(address);
+            string text = ((TickerBase)ticker).DownloadString(address);
             if(string.IsNullOrEmpty(text))
                 return false;
             UpdateOrderBook(ticker, text);
@@ -288,6 +307,62 @@ namespace CryptoMarketClient {
                 TickerUpdateHelper.UpdateHistoryForTradeItem(item, ticker);
                 ticker.TradeHistory.Add(item);
             }
+        }
+        public bool UpdateTradesStatistic(PoloniexTicker ticker, int depth) {
+            string address = string.Format("https://poloniex.com/public?command=returnTradeHistory&currencyPair={0}", Uri.EscapeDataString(ticker.CurrencyPair));
+            string text = GetDownloadString(address);
+            if(string.IsNullOrEmpty(text))
+                return true;
+            JArray trades = (JArray)JsonConvert.DeserializeObject(text);
+            if(trades.Count == 0)
+                return true;
+
+            DateTime lastTime = trades.First().Value<DateTime>("date");
+            if(lastTime == ticker.LastTradeStatisticTime) {
+                ticker.TradeStatistic.Add(new TradeStatisticsItem() { Time = DateTime.Now });
+                if(ticker.TradeStatistic.Count > 5000) {
+                    for(int i = 0; i < 100; i++)
+                        ticker.TradeStatistic.RemoveAt(0);
+                }
+                return true;
+            }
+            TradeStatisticsItem st = new TradeStatisticsItem();
+            st.MinBuyPrice = decimal.MaxValue;
+            st.MinSellPrice = decimal.MaxValue;
+            st.Time = lastTime;
+
+            foreach(JObject obj in trades) {
+                TradeHistoryItem item = new TradeHistoryItem();
+                DateTime time = obj.Value<DateTime>("date");
+                if(time == ticker.LastTradeStatisticTime)
+                    break;
+                decimal amount = obj.Value<decimal>("amount");
+                decimal price = obj.Value<decimal>("rate");
+                bool isBuy = obj.Value<string>("type").Length == 3;
+                if(isBuy) {
+                    st.BuyAmount += amount;
+                    st.MinBuyPrice = Math.Min(st.MinBuyPrice, price);
+                    st.MaxBuyPrice = Math.Max(st.MaxBuyPrice, price);
+                    st.BuyVolume += amount * price;
+                }
+                else {
+                    st.SellAmount += amount;
+                    st.MinSellPrice = Math.Min(st.MinSellPrice, price);
+                    st.MaxSellPrice = Math.Max(st.MaxSellPrice, price);
+                    st.SellVolume += amount * price;
+                }
+            }
+            if(st.MinSellPrice == decimal.MaxValue)
+                st.MinSellPrice = 0;
+            if(st.MinBuyPrice == decimal.MaxValue)
+                st.MinBuyPrice = 0;
+            ticker.LastTradeStatisticTime = lastTime;
+            ticker.TradeStatistic.Add(st);
+            if(ticker.TradeStatistic.Count > 5000) {
+                for(int i = 0; i < 100; i++)
+                    ticker.TradeStatistic.RemoveAt(0);
+            }
+            return true;
         }
         public void GetTicker(PoloniexTicker ticker) {
             throw new NotImplementedException();

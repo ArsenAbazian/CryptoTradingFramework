@@ -17,6 +17,7 @@ using DevExpress.XtraWaitForm;
 using CryptoMarketClient.Bittrex;
 using DevExpress.XtraEditors;
 using CryptoMarketClient.Common;
+using CryptoMarketClient.HitBtc;
 
 namespace CryptoMarketClient {
     public partial class MainForm : DevExpress.XtraBars.Ribbon.RibbonForm {
@@ -33,6 +34,20 @@ namespace CryptoMarketClient {
             ModelBase.AllowTradeHistory = this.bcAllowTradeHistory.Checked;
             ModelBase.OrderBookDepth = Convert.ToInt32(this.beOrderBookDepth.EditValue);
             TelegramBot.Default.SendNotification("hello!");
+
+            BittrexModel.Default.IsConnected = true;
+            BittrextMarketsForm.Show();
+            PoloniexModel.Default.IsConnected = true;
+            PoloniexTickersForm.Show();
+            HitBtcModel.Default.IsConnected = true;
+            HitBtcMarketsForm.Show();
+
+            if(BittrexModel.Default.IsConnected && 
+                PoloniexModel.Default.IsConnected && 
+                HitBtcModel.Default.IsConnected) {
+                ArbitrageForm.Show();
+                ArbitrageForm.Activate();
+            }
         }
 
         PoloniexTickersForm tickersForm;
@@ -46,17 +61,28 @@ namespace CryptoMarketClient {
             }
         }
 
-        BittrexMarketsForm bittrexMarketsForm;
-        public BittrexMarketsForm BittrextMarketsForm {
+        BittrexTickerCollectionForm bittrexMarketsForm;
+        public BittrexTickerCollectionForm BittrextMarketsForm {
             get {
                 if(bittrexMarketsForm == null || bittrexMarketsForm.IsDisposed) {
-                    bittrexMarketsForm = new BittrexMarketsForm();
+                    bittrexMarketsForm = new BittrexTickerCollectionForm();
                     bittrexMarketsForm.MdiParent = this;
                 }
                 return bittrexMarketsForm;
             }
         }
-       
+
+        HitBtcTickerCollectionForm hitBtcMarketsForm;
+        public HitBtcTickerCollectionForm HitBtcMarketsForm {
+            get {
+                if(hitBtcMarketsForm == null || hitBtcMarketsForm.IsDisposed) {
+                    hitBtcMarketsForm = new HitBtcTickerCollectionForm();
+                    hitBtcMarketsForm.MdiParent = this;
+                }
+                return hitBtcMarketsForm;
+            }
+        }
+
         private void bcPoloniex_CheckedChanged(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
             if(this.bcPoloniex.Checked) {
                 PoloniexModel.Default.IsConnected = true;
@@ -79,14 +105,24 @@ namespace CryptoMarketClient {
             }
         }
 
+        TickerArbitrageForm arbitrageForm;
+        public TickerArbitrageForm ArbitrageForm {
+            get {
+                if(arbitrageForm == null || arbitrageForm.IsDisposed) {
+                    arbitrageForm = new TickerArbitrageForm();
+                    arbitrageForm.MdiParent = this;
+                }
+                return arbitrageForm;
+            }
+        }
+
         private void btClassicArbitrage_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
             if(!BittrexModel.Default.IsConnected || !PoloniexModel.Default.IsConnected) {
                 XtraMessageBox.Show("Please connect at least two markets to make arbitrage possible...");
                 return;
             }
-            TickerArbitrageForm form = new TickerArbitrageForm();
-            form.MdiParent = this;
-            form.Show();
+            ArbitrageForm.Show();
+            ArbitrageForm.Activate();
         }
 
         private void beOrderBookDepth_EditValueChanged(object sender, EventArgs e) {
@@ -116,6 +152,21 @@ namespace CryptoMarketClient {
 
         private void bbSaveAllHistory_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
 
+        }
+
+        private void beArbitrageDepth_EditValueChanged(object sender, EventArgs e) {
+            TickerCollection.Depth = Convert.ToInt32(this.beArbitrageDepth.EditValue);
+        }
+
+        private void bcHitBtc_CheckedChanged(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
+            if(this.bcBittrex.Checked) {
+                HitBtcModel.Default.IsConnected = true;
+                HitBtcMarketsForm.Show();
+            }
+            else {
+                HitBtcModel.Default.IsConnected = false;
+                HitBtcMarketsForm.Hide();
+            }
         }
     }
 }

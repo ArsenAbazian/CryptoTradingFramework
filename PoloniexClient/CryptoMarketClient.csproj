@@ -54,6 +54,7 @@
     <Reference Include="DevExpress.XtraGrid.v17.2, Version=17.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4" />
     <Reference Include="DevExpress.XtraLayout.v17.2, Version=17.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4" />
     <Reference Include="DevExpress.XtraPrinting.v17.2, Version=17.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4" />
+    <Reference Include="DevExpress.XtraVerticalGrid.v17.2, Version=17.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4" />
     <Reference Include="Fleck, Version=0.14.0.59, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Fleck.0.14.0.59\lib\net40\Fleck.dll</HintPath>
     </Reference>
@@ -67,6 +68,9 @@
       <HintPath>..\packages\Newtonsoft.Msgpack.0.1.10\lib\net45\Newtonsoft.Msgpack.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
+    <Reference Include="RestSharp, Version=105.2.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\RestSharp.105.2.3\lib\net452\RestSharp.dll</HintPath>
+    </Reference>
     <Reference Include="SuperSocket.ClientEngine, Version=0.8.0.12, Culture=neutral, PublicKeyToken=ee9af13f57f00acc, processorArchitecture=MSIL">
       <HintPath>..\packages\SuperSocket.ClientEngine.Core.0.8.0.12\lib\net45\SuperSocket.ClientEngine.dll</HintPath>
     </Reference>
@@ -98,6 +102,9 @@
       <HintPath>..\packages\System.Runtime.InteropServices.RuntimeInformation.4.3.0\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
     </Reference>
     <Reference Include="System.Runtime.Remoting" />
+    <Reference Include="System.Text.Json, Version=2.0.0.11, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Text.Json.2.0.0.11\lib\net40\System.Text.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System.Threading.Tasks.Dataflow, Version=4.6.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Threading.Tasks.Dataflow.4.7.0\lib\portable-net45+win8+wpa81\System.Threading.Tasks.Dataflow.dll</HintPath>
     </Reference>
@@ -145,6 +152,16 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AnalyticsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AnalyticsForm.Designer.cs">
+      <DependentUpon>AnalyticsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Common\ArbitrageInfo.cs" />
+    <Compile Include="Analytics\OrderBookChangeAnalyser.cs" />
+    <Compile Include="Analytics\TickerAnalyserBase.cs" />
+    <Compile Include="Analytics\TickerCollectionAnalyserBase.cs" />
     <Compile Include="Bittrex\BittrexAccountBalancesForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -165,11 +182,11 @@
       <DependentUpon>BittrexCurrenciesForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Bittrex\BittrexMarketInfo.cs" />
-    <Compile Include="Bittrex\BittrexMarketsForm.cs">
+    <Compile Include="Bittrex\TickerCollectionForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Bittrex\BittrexMarketsForm.Designer.cs">
-      <DependentUpon>BittrexMarketsForm.cs</DependentUpon>
+    <Compile Include="Bittrex\TickerCollectionForm.Designer.cs">
+      <DependentUpon>TickerCollectionForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Bittrex\BittrexModel.cs" />
     <Compile Include="Bittrex\BittrexOrderInfo.cs" />
@@ -188,9 +205,11 @@
     <Compile Include="Common\ApiKeyInfo.cs" />
     <Compile Include="Common\ArbitrageHistoryHelper.cs" />
     <Compile Include="Common\CandleStickChartHelper.cs" />
+    <Compile Include="Common\CurrencyStatusHistoryItem.cs" />
     <Compile Include="Common\CurrencyType.cs" />
     <Compile Include="Common\DepositInfo.cs" />
-    <Compile Include="Common\ITicker.cs" />
+    <Compile Include="Common\SimpleJsonParser.cs" />
+    <Compile Include="Common\TickerBase.cs" />
     <Compile Include="Common\LogManager.cs" />
     <Compile Include="Common\LogMessage.cs" />
     <Compile Include="Common\ModelBase.cs" />
@@ -202,8 +221,9 @@
     <Compile Include="Common\OrderType.cs" />
     <Compile Include="Common\RateGate.cs" />
     <Compile Include="Common\TelegramBot.cs" />
-    <Compile Include="Common\TickerArbitrageHelper.cs" />
-    <Compile Include="Common\TickerArbitrageInfo.cs" />
+    <Compile Include="Common\TickerCollectionHelperHelper.cs" />
+    <Compile Include="Common\TickerCollectionInfo.cs" />
+    <Compile Include="Common\TickerCollectionUpdateHelper.cs" />
     <Compile Include="Common\TickerHistoryItem.cs" />
     <Compile Include="Common\TickerUpdateHelper.cs" />
     <Compile Include="Common\TradeHistoryItem.cs" />
@@ -225,11 +245,28 @@
     <Compile Include="ArbitrageHistoryForm.Designer.cs">
       <DependentUpon>ArbitrageHistoryForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="HitBtc\HitBtcBalanceInfo.cs" />
+    <Compile Include="HitBtc\HitBtcCurrencyInfo.cs" />
+    <Compile Include="HitBtc\HitBtcModel.cs" />
+    <Compile Include="HitBtc\HitBtcOrderInfo.cs" />
+    <Compile Include="HitBtc\HitBtcTicker.cs" />
+    <Compile Include="HitBtc\HitBtcTickerCollectionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="HitBtc\HitBtcTickerCollectionForm.Designer.cs">
+      <DependentUpon>HitBtcTickerCollectionForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="LogForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="LogForm.Designer.cs">
       <DependentUpon>LogForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CalculatorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CalculatorForm.Designer.cs">
+      <DependentUpon>CalculatorForm.cs</DependentUpon>
     </Compile>
     <Compile Include="NotificationForm.cs">
       <SubType>Form</SubType>
@@ -242,6 +279,12 @@
     </Compile>
     <Compile Include="OrderBookControl.Designer.cs">
       <DependentUpon>OrderBookControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="OrderBookVolumeHistoryForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OrderBookVolumeHistoryForm.Designer.cs">
+      <DependentUpon>OrderBookVolumeHistoryForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Poloniex\PoloniexAccountBalanceInfo.cs" />
     <Compile Include="Poloniex\PoloniexAccountBalancesForm.cs">
@@ -258,6 +301,20 @@
     <Compile Include="Poloniex\PoloniexOrdersForm.Designer.cs">
       <DependentUpon>PoloniexOrdersForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="ProfitTickersControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ProfitTickersControl.Designer.cs">
+      <DependentUpon>ProfitTickersControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ProfitTickersForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ProfitTickersForm.Designer.cs">
+      <DependentUpon>ProfitTickersForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Strategies\GridStrategy.cs" />
+    <Compile Include="Strategies\StrategyBase.cs" />
     <Compile Include="ThreadUpdateForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -304,9 +361,30 @@
     <Compile Include="Poloniex\PoloniexTickersForm.Designer.cs">
       <DependentUpon>PoloniexTickersForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="TickersCollectionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TickersCollectionForm.Designer.cs">
+      <DependentUpon>TickersCollectionForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TickerStrategyCollectionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TickerStrategyCollectionForm.Designer.cs">
+      <DependentUpon>TickerStrategyCollectionForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TickerStrategyParametersForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TickerStrategyParametersForm.Designer.cs">
+      <DependentUpon>TickerStrategyParametersForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="TimerUpdateForm.cs">
       <SubType>Form</SubType>
     </Compile>
+    <EmbeddedResource Include="AnalyticsForm.resx">
+      <DependentUpon>AnalyticsForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Bittrex\BittrexAccountBalancesForm.resx">
       <DependentUpon>BittrexAccountBalancesForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -316,8 +394,8 @@
     <EmbeddedResource Include="Bittrex\BittrexCurrenciesForm.resx">
       <DependentUpon>BittrexCurrenciesForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Bittrex\BittrexMarketsForm.resx">
-      <DependentUpon>BittrexMarketsForm.cs</DependentUpon>
+    <EmbeddedResource Include="Bittrex\TickerCollectionForm.resx">
+      <DependentUpon>TickerCollectionForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Bittrex\BittrexOrdersForm.resx">
       <DependentUpon>BittrexOrdersForm.cs</DependentUpon>
@@ -334,8 +412,14 @@
     <EmbeddedResource Include="ArbitrageHistoryForm.resx">
       <DependentUpon>ArbitrageHistoryForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="HitBtc\HitBtcTickerCollectionForm.resx">
+      <DependentUpon>HitBtcTickerCollectionForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="LogForm.resx">
       <DependentUpon>LogForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CalculatorForm.resx">
+      <DependentUpon>CalculatorForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="NotificationForm.resx">
       <DependentUpon>NotificationForm.cs</DependentUpon>
@@ -343,12 +427,22 @@
     <EmbeddedResource Include="OrderBookControl.resx">
       <DependentUpon>OrderBookControl.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="OrderBookVolumeHistoryForm.resx">
+      <DependentUpon>OrderBookVolumeHistoryForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Poloniex\PoloniexAccountBalancesForm.resx">
       <DependentUpon>PoloniexAccountBalancesForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Poloniex\PoloniexOrdersForm.resx">
       <DependentUpon>PoloniexOrdersForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="ProfitTickersControl.resx">
+      <DependentUpon>ProfitTickersControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ProfitTickersForm.resx">
+      <DependentUpon>ProfitTickersForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\licenses.licx" />
     <EmbeddedResource Include="ThreadUpdateForm.resx">
       <DependentUpon>ThreadUpdateForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -358,7 +452,6 @@
     <EmbeddedResource Include="TickerInfo.resx">
       <DependentUpon>TickerInfo.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Properties\licenses.licx" />
     <EmbeddedResource Include="TickerChartViewer.resx">
       <DependentUpon>TickerChartViewer.cs</DependentUpon>
     </EmbeddedResource>
@@ -380,6 +473,15 @@
     </Compile>
     <EmbeddedResource Include="Poloniex\PoloniexTickersForm.resx">
       <DependentUpon>PoloniexTickersForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TickersCollectionForm.resx">
+      <DependentUpon>TickersCollectionForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TickerStrategyCollectionForm.resx">
+      <DependentUpon>TickerStrategyCollectionForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TickerStrategyParametersForm.resx">
+      <DependentUpon>TickerStrategyParametersForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.manifest" />
     <None Include="packages.config" />
@@ -403,5 +505,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Images\TrendNew.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\chart.png" />
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

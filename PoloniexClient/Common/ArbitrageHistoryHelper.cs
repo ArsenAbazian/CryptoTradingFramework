@@ -3,6 +3,7 @@ using DevExpress.Utils.Serializing;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -30,8 +31,17 @@ namespace CryptoMarketClient.Common {
         }
 
         #region Settings
+        protected bool Saving { get; set; }
         public void Save() {
-            SaveLayoutToXml(Name);
+            if(Saving)
+                return;
+            Saving = true;
+            try {
+                SaveLayoutToXml(Name);
+            }
+            finally {
+                Saving = false;
+            }
         }
         public void Load() {
             if(!File.Exists(Name))
@@ -90,7 +100,7 @@ namespace CryptoMarketClient.Common {
         #endregion
 
         [XtraSerializableProperty(XtraSerializationVisibility.Collection, true, false, true)]
-        public List<ArbitrageStatisticsItem> History { get; } = new List<ArbitrageStatisticsItem>();
+        public BindingList<ArbitrageStatisticsItem> History { get; } = new BindingList<ArbitrageStatisticsItem>();
 
         protected object XtraCreateHistoryItem(XtraItemEventArgs e) {
             ArbitrageStatisticsItem item = new ArbitrageStatisticsItem();

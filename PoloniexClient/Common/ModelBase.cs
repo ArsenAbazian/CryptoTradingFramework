@@ -11,6 +11,7 @@ using System.Net;
 using System.Diagnostics;
 using System.IO;
 using CryptoMarketClient.Common;
+using System.Text.Json;
 
 namespace CryptoMarketClient {
     public abstract class ModelBase : IXtraSerializable {
@@ -193,7 +194,7 @@ namespace CryptoMarketClient {
         }
         #endregion
 
-        protected string GetDownloadString(ITicker ticker, string address) {
+        protected string GetDownloadString(TickerBase ticker, string address) {
             try {
                 return ticker.DownloadString(address);
             }
@@ -225,6 +226,15 @@ namespace CryptoMarketClient {
             catch(Exception e) {
                 Console.WriteLine("WebClient exception = " + e.ToString());
                 return null;
+            }
+        }
+
+        JsonParser jsonParser;
+        protected JsonParser JsonParser {
+            get {
+                if(jsonParser == null)
+                    jsonParser = new JsonParser();
+                return jsonParser;
             }
         }
     }

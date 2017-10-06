@@ -1,4 +1,5 @@
 ﻿using CryptoMarketClient.Bittrex;
+using CryptoMarketClient.HitBtc;
 using DevExpress.XtraEditors;
 using System;
 using System.Collections.Generic;
@@ -21,6 +22,7 @@ namespace CryptoMarketClient {
             List<ApiKeyInfo> list = new List<ApiKeyInfo>();
             list.Add(new ApiKeyInfo() { Market = "Bittrex", ApiKey = BittrexModel.Default.ApiKey, Secret = BittrexModel.Default.ApiSecret });
             list.Add(new ApiKeyInfo() { Market = "Poloniex", ApiKey = PoloniexModel.Default.ApiKey, Secret = PoloniexModel.Default.ApiSecret });
+            list.Add(new ApiKeyInfo() { Market = "HitBtc", ApiKey = HitBtcModel.Default.ApiKey, Secret = HitBtcModel.Default.ApiSecret });
             this.apiKeyInfoBindingSource.DataSource = list;
             Keys = list;
         }
@@ -35,8 +37,11 @@ namespace CryptoMarketClient {
             BittrexModel.Default.ApiSecret = Keys.First((k) => k.Market == "Bittrex").Secret.Trim();
             PoloniexModel.Default.ApiKey = Keys.First((k) => k.Market == "Poloniex").ApiKey.Trim();
             PoloniexModel.Default.ApiSecret = Keys.First((k) => k.Market == "Poloniex").Secret.Trim();
+            HitBtcModel.Default.ApiKey = Keys.First((k) => k.Market == "HitBtc").ApiKey.Trim();
+            HitBtcModel.Default.ApiSecret = Keys.First((k) => k.Market == "HitBtc").Secret.Trim();
             BittrexModel.Default.Save();
             PoloniexModel.Default.Save();
+            HitBtcModel.Default.Save();
             Close();
         }
     }

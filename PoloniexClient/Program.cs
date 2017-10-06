@@ -1,5 +1,7 @@
 ﻿using CryptoMarketClient.Bittrex;
+using CryptoMarketClient.HitBtc;
 using DevExpress.LookAndFeel;
+using DevExpress.Utils.DirectXPaint;
 using DevExpress.XtraEditors;
 using DevExpress.XtraGrid;
 using System;
@@ -20,14 +22,16 @@ namespace CryptoMarketClient {
             UserLookAndFeel.Default.SetSkinStyle("Office 2016 Dark");
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            GridControl.DisableDirectXPaint = false;
+            WindowsFormsSettings.UseHardwareAcceleration = DevExpress.Utils.DefaultBoolean.True;
 
             CheckShowApiKeysForm();
             
             Application.Run(new MainForm());
         }
         static void CheckShowApiKeysForm() {
-            if(!BittrexModel.Default.IsApiKeyExists || !PoloniexModel.Default.IsApiKeyExists)
+            if(!BittrexModel.Default.IsApiKeyExists || 
+                !PoloniexModel.Default.IsApiKeyExists || 
+                !HitBtcModel.Default.IsApiKeyExists)
                 Application.Run(new EnterApiKeyForm());
         }
     }

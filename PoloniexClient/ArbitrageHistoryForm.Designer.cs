@@ -42,14 +42,14 @@
             this.colHighestBid = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colSpread = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colAmount = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colTotalSpent = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colTotalSpentUSD = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colMaxProfit = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colMaxProfitUSD = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colProfitPercent = new DevExpress.XtraGrid.Columns.GridColumn();
             this.repositoryItemCheckEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit();
             this.repositoryItemCheckEdit2 = new DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit();
             this.repositoryItemCheckEdit3 = new DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit();
-            this.colTotalSpent = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.colTotalSpentUSD = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.colProfitPercent = new DevExpress.XtraGrid.Columns.GridColumn();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.arbitrageStatisticsItemBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).BeginInit();
@@ -95,7 +95,7 @@
             this.repositoryItemCheckEdit1,
             this.repositoryItemCheckEdit2,
             this.repositoryItemCheckEdit3});
-            this.gridControl1.Size = new System.Drawing.Size(1850, 696);
+            this.gridControl1.Size = new System.Drawing.Size(1850, 921);
             this.gridControl1.TabIndex = 1;
             this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridView1});
@@ -208,39 +208,6 @@
             this.colAmount.Visible = true;
             this.colAmount.VisibleIndex = 8;
             // 
-            // colMaxProfit
-            // 
-            this.colMaxProfit.DisplayFormat.FormatString = "0.########";
-            this.colMaxProfit.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
-            this.colMaxProfit.FieldName = "MaxProfit";
-            this.colMaxProfit.Name = "colMaxProfit";
-            this.colMaxProfit.Visible = true;
-            this.colMaxProfit.VisibleIndex = 11;
-            // 
-            // colMaxProfitUSD
-            // 
-            this.colMaxProfitUSD.DisplayFormat.FormatString = "0.########";
-            this.colMaxProfitUSD.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
-            this.colMaxProfitUSD.FieldName = "MaxProfitUSD";
-            this.colMaxProfitUSD.Name = "colMaxProfitUSD";
-            this.colMaxProfitUSD.Visible = true;
-            this.colMaxProfitUSD.VisibleIndex = 12;
-            // 
-            // repositoryItemCheckEdit1
-            // 
-            this.repositoryItemCheckEdit1.AutoHeight = false;
-            this.repositoryItemCheckEdit1.Name = "repositoryItemCheckEdit1";
-            // 
-            // repositoryItemCheckEdit2
-            // 
-            this.repositoryItemCheckEdit2.AutoHeight = false;
-            this.repositoryItemCheckEdit2.Name = "repositoryItemCheckEdit2";
-            // 
-            // repositoryItemCheckEdit3
-            // 
-            this.repositoryItemCheckEdit3.AutoHeight = false;
-            this.repositoryItemCheckEdit3.Name = "repositoryItemCheckEdit3";
-            // 
             // colTotalSpent
             // 
             this.colTotalSpent.Caption = "TotalSpent";
@@ -261,6 +228,24 @@
             this.colTotalSpentUSD.Visible = true;
             this.colTotalSpentUSD.VisibleIndex = 10;
             // 
+            // colMaxProfit
+            // 
+            this.colMaxProfit.DisplayFormat.FormatString = "0.########";
+            this.colMaxProfit.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+            this.colMaxProfit.FieldName = "MaxProfit";
+            this.colMaxProfit.Name = "colMaxProfit";
+            this.colMaxProfit.Visible = true;
+            this.colMaxProfit.VisibleIndex = 11;
+            // 
+            // colMaxProfitUSD
+            // 
+            this.colMaxProfitUSD.DisplayFormat.FormatString = "0.########";
+            this.colMaxProfitUSD.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+            this.colMaxProfitUSD.FieldName = "MaxProfitUSD";
+            this.colMaxProfitUSD.Name = "colMaxProfitUSD";
+            this.colMaxProfitUSD.Visible = true;
+            this.colMaxProfitUSD.VisibleIndex = 12;
+            // 
             // colProfitPercent
             // 
             this.colProfitPercent.Caption = "Profit Percent In Spent";
@@ -271,11 +256,26 @@
             this.colProfitPercent.Visible = true;
             this.colProfitPercent.VisibleIndex = 13;
             // 
+            // repositoryItemCheckEdit1
+            // 
+            this.repositoryItemCheckEdit1.AutoHeight = false;
+            this.repositoryItemCheckEdit1.Name = "repositoryItemCheckEdit1";
+            // 
+            // repositoryItemCheckEdit2
+            // 
+            this.repositoryItemCheckEdit2.AutoHeight = false;
+            this.repositoryItemCheckEdit2.Name = "repositoryItemCheckEdit2";
+            // 
+            // repositoryItemCheckEdit3
+            // 
+            this.repositoryItemCheckEdit3.AutoHeight = false;
+            this.repositoryItemCheckEdit3.Name = "repositoryItemCheckEdit3";
+            // 
             // ArbitrageHistoryForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1850, 696);
+            this.ClientSize = new System.Drawing.Size(1850, 921);
             this.Controls.Add(this.gridControl1);
             this.Name = "ArbitrageHistoryForm";
             this.Text = "Arbitrage History";

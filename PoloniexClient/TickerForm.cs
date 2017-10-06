@@ -27,21 +27,21 @@ namespace CryptoMarketClient {
 
         public string MarketName { get; set; }
 
-        ITicker ticker;
-        public ITicker Ticker {
+        TickerBase ticker;
+        public TickerBase Ticker {
             get {
                 return ticker;
             }
             set {
                 if(Ticker == value)
                     return;
-                ITicker prev = Ticker;
+                TickerBase prev = Ticker;
                 ticker = value;
                 OnTickerChanged(prev);
             }
         }
         
-        void OnTickerChanged(ITicker prev) {
+        void OnTickerChanged(TickerBase prev) {
             if(prev != null) {
                 ClearText();
                 ClearGrid();
@@ -80,14 +80,11 @@ namespace CryptoMarketClient {
             this.orderBookControl1.Bids = null;
             this.tradeHistoryItemBindingSource.DataSource = null;
         }
-        void UnsubscribeEvents(ITicker prev) {
+        void UnsubscribeEvents(TickerBase prev) {
             prev.OrderBook.OnChanged -= OnTickerOrderBookChanged;
             prev.Changed -= OnTickerChanged;
             prev.HistoryItemAdd -= OnTickerHistoryItemAdded;
             prev.TradeHistoryAdd -= OnTickerTradeHistoryAdd;
-            prev.UnsubscribeOrderBookUpdates();
-            prev.UnsubscribeTickerUpdates();
-            prev.UnsubscribeTradeUpdates();
         }
         void UpdateGrid() {
             this.orderBookControl1.Bids = Ticker.OrderBook.Bids;
@@ -99,16 +96,11 @@ namespace CryptoMarketClient {
             Ticker.Changed += OnTickerChanged;
             Ticker.HistoryItemAdd += OnTickerHistoryItemAdded;
             Ticker.TradeHistoryAdd += OnTickerTradeHistoryAdd;
-            if(IsHandleCreated) {
-                Ticker.SubscribeOrderBookUpdates();
-                Ticker.SubscribeTickerUpdates();
-                Ticker.SubscribeTradeUpdates();
-            }
         }
 
         private void OnTickerTradeHistoryAdd(object sender, EventArgs e) {
-            if(IsHandleCreated)
-                BeginInvoke(new MethodInvoker(this.tradeGridControl.RefreshDataSource));
+            //if(IsHandleCreated)
+            //    BeginInvoke(new MethodInvoker(this.tradeGridControl.RefreshDataSource));
         }
         
         private void OnTickerHistoryItemAdded(object sender, EventArgs e) {
@@ -117,44 +109,11 @@ namespace CryptoMarketClient {
         private void OnTickerChanged(object sender, EventArgs e) {
         }
 
-        protected override void OnShown(EventArgs e) {
-            base.OnShown(e);
-            if(Ticker != null) {
-                Ticker.SubscribeOrderBookUpdates();
-                Ticker.SubscribeTickerUpdates();
-                Ticker.SubscribeTradeUpdates();
-            }
-        }
-        
         private void OnTickerOrderBookChanged(object sender, OrderBookEventArgs e) {
             if(!IsHandleCreated)
                 return;
-            if(e.Update.Action == OrderBookUpdateType.RefreshAll) {
-                BeginInvoke(new Action(RefreshAskGrid));
-                BeginInvoke(new Action(RefreshBidGrid));
-                return;
-            }
-            if(e.Update.Action == OrderBookUpdateType.Remove) {
-                if(e.Update.Type == OrderBookEntryType.Ask)
-                    BeginInvoke(new Action<OrderBookEventArgs>(OnRemoveAsk), e);
-                else if(e.Update.Type == OrderBookEntryType.Bid)
-                    BeginInvoke(new Action<OrderBookEventArgs>(OnRemoveBid), e);
-                return;
-            }
-            if(e.Update.Action == OrderBookUpdateType.Add) {
-                if(e.Update.Type == OrderBookEntryType.Ask)
-                    BeginInvoke(new Action<OrderBookEventArgs>(OnAddAsk), e);
-                else if(e.Update.Type == OrderBookEntryType.Bid)
-                    BeginInvoke(new Action<OrderBookEventArgs>(OnAddBid), e);
-                return;
-            }
-            if(e.Update.Action == OrderBookUpdateType.Modify) {
-                if(e.Update.Type == OrderBookEntryType.Ask)
-                    BeginInvoke(new Action<OrderBookEventArgs>(OnModifyAsk), e);
-                else if(e.Update.Type == OrderBookEntryType.Bid)
-                    BeginInvoke(new Action<OrderBookEventArgs>(OnModifyBid), e);
-                return;
-            }
+            BeginInvoke(new Action(RefreshAskGrid));
+            BeginInvoke(new Action(RefreshBidGrid));
         }
         void OnModifyBid(OrderBookEventArgs obj) {
             RefreshBidGrid();
@@ -175,10 +134,42 @@ namespace CryptoMarketClient {
             RefreshAskGrid();
         }
         void RefreshBidGrid() {
-            this.orderBookControl1.RefreshBids();
+            this.orderBookControl1.Bids = Ticker.OrderBook.Bids;
         }
         void RefreshAskGrid() {
-            this.orderBookControl1.RefreshAsks();
+            this.orderBookControl1.Asks = Ticker.OrderBook.Asks;
+        }
+
+        private void biSell_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
+            decimal price = 0;
+            decimal amount = 0;
+            try {
+                price = Convert.ToDecimal(this.bePrice.EditValue);
+            }
+            catch(Exception ee) {
+                XtraMessageBox.Show("Can't sell: get price = " + ee.ToString());
+                return;
+            }
+            if(Ticker.HighestBid / price > 10m) {
+                if(XtraMessageBox.Show("It seems that you made mistake on price?", "Sell", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    return;
+            }
+            try {
+                amount = Convert.ToDecimal(this.beAmount.EditValue);
+            }
+            catch(Exception ee) {
+                XtraMessageBox.Show("Can't sell: get amount = " + ee.ToString());
+                return;
+            }
+            if(!Ticker.Sell(price, amount)) {
+                XtraMessageBox.Show("Error: can't place sell " + amount + " " + Ticker.MarketCurrency + " for " + price);
+                return;
+            }
+            XtraMessageBox.Show("Place sell " + amount + " " + Ticker.MarketCurrency + " for " + price);
+        }
+
+        private void biSellMarket_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
+
         }
     }
 }

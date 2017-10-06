@@ -9,5 +9,11 @@ namespace CryptoMarketClient {
     public class OrderBookEntry {
         public decimal Value { get; set; }
         public decimal Amount { get; set; }
+        public decimal Volume { get; set; }
+        public decimal VolumePercent { get; set; }
+        public void Clear() {
+            Value = 0;
+            Amount = 0;
+        }
     }
 }

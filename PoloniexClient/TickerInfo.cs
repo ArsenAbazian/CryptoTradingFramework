@@ -19,24 +19,24 @@ namespace CryptoMarketClient {
             
         }
 
-        ITicker ticker;
-        public ITicker Ticker {
+        TickerBase ticker;
+        public TickerBase Ticker {
             get { return ticker; }
             set {
                 if(Ticker == value)
                     return;
-                ITicker prev = Ticker;
+                TickerBase prev = Ticker;
                 ticker = value;
                 OnTickerChanged(prev);
             }
         }
         
-        void OnTickerChanged(ITicker prev) {
+        void OnTickerChanged(TickerBase prev) {
             if(prev != null)
                 prev.HistoryItemAdd -= Ticker_Changed;
             if(Ticker != null)
                 Ticker.HistoryItemAdd += Ticker_Changed;
-            List<ITicker> list = new List<ITicker>();
+            List<TickerBase> list = new List<TickerBase>();
             list.Add(Ticker);
             this.bindingSource.DataSource = list;
             UpdateTickerInfo();
@@ -52,7 +52,7 @@ namespace CryptoMarketClient {
                 return;
             this.colChange.AppearanceCell.ForeColor = Ticker.Change < 0 ? Color.Red : Color.Green;
             this.colLast.AppearanceCell.ForeColor = this.colChange.AppearanceCell.ForeColor;
-            this.gridControl1.RefreshDataSource();
+            //this.gridControl1.RefreshDataSource();
         }
 
         public int CalcBestHeight() {

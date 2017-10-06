@@ -1,4 +1,5 @@
-﻿using DevExpress.XtraGrid;
+﻿using DevExpress.XtraBars;
+using DevExpress.XtraGrid;
 using DevExpress.XtraGrid.Views.Grid;
 
 namespace CryptoMarketClient {
@@ -35,16 +36,11 @@ namespace CryptoMarketClient {
             DevExpress.XtraEditors.FormatConditionRuleValue formatConditionRuleValue3 = new DevExpress.XtraEditors.FormatConditionRuleValue();
             DevExpress.XtraGrid.GridFormatRule gridFormatRule4 = new DevExpress.XtraGrid.GridFormatRule();
             DevExpress.XtraEditors.FormatConditionRuleValue formatConditionRuleValue4 = new DevExpress.XtraEditors.FormatConditionRuleValue();
+            DevExpress.Sparkline.BarSparklineView barSparklineView1 = new DevExpress.Sparkline.BarSparklineView();
+            DevExpress.Sparkline.BarSparklineView barSparklineView2 = new DevExpress.Sparkline.BarSparklineView();
+            DevExpress.Sparkline.AreaSparklineView areaSparklineView1 = new DevExpress.Sparkline.AreaSparklineView();
+            DevExpress.Sparkline.AreaSparklineView areaSparklineView2 = new DevExpress.Sparkline.AreaSparklineView();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TickerArbitrageForm));
-            DevExpress.XtraCharts.XYDiagram xyDiagram1 = new DevExpress.XtraCharts.XYDiagram();
-            DevExpress.XtraCharts.Series series1 = new DevExpress.XtraCharts.Series();
-            DevExpress.XtraCharts.StepAreaSeriesView stepAreaSeriesView1 = new DevExpress.XtraCharts.StepAreaSeriesView();
-            DevExpress.XtraCharts.Series series2 = new DevExpress.XtraCharts.Series();
-            DevExpress.XtraCharts.StepAreaSeriesView stepAreaSeriesView2 = new DevExpress.XtraCharts.StepAreaSeriesView();
-            DevExpress.XtraCharts.Series series3 = new DevExpress.XtraCharts.Series();
-            DevExpress.XtraCharts.StepLineSeriesView stepLineSeriesView1 = new DevExpress.XtraCharts.StepLineSeriesView();
-            DevExpress.XtraCharts.Series series4 = new DevExpress.XtraCharts.Series();
-            DevExpress.XtraCharts.StepLineSeriesView stepLineSeriesView2 = new DevExpress.XtraCharts.StepLineSeriesView();
             this.colProfit = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colIsActual = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colMarketCurrency = new DevExpress.XtraGrid.Columns.GridColumn();
@@ -79,10 +75,23 @@ namespace CryptoMarketClient {
             this.colAvailableAmount = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colAvailableProfit = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colAvailableProfitUSD = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colLowestBidAskRelation = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.repositoryItemProgressBar1 = new DevExpress.XtraEditors.Repository.RepositoryItemProgressBar();
+            this.colHighestBidAskRelation = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colSuppressNotification = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.repositoryItemCheckEdit4 = new DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit();
+            this.colBidShift = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colAskShift = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colHipe = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.repositoryItemSparklineEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemSparklineEdit();
+            this.colSellHipe = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.repositoryItemSparklineEdit2 = new DevExpress.XtraEditors.Repository.RepositoryItemSparklineEdit();
+            this.colBidEnergy = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.repositoryItemSparklineEdit3 = new DevExpress.XtraEditors.Repository.RepositoryItemSparklineEdit();
+            this.colAskEnergy = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.repositoryItemSparklineEdit4 = new DevExpress.XtraEditors.Repository.RepositoryItemSparklineEdit();
             this.ribbonControl1 = new DevExpress.XtraBars.Ribbon.RibbonControl();
-            this.bbShowDetail = new DevExpress.XtraBars.BarCheckItem();
             this.bbAllCurrencies = new DevExpress.XtraBars.BarCheckItem();
-            this.bcShowOrderBook = new DevExpress.XtraBars.BarCheckItem();
             this.bbTryArbitrage = new DevExpress.XtraBars.BarButtonItem();
             this.barButtonItem1 = new DevExpress.XtraBars.BarButtonItem();
             this.bbMonitorSelected = new DevExpress.XtraBars.BarCheckItem();
@@ -97,39 +106,47 @@ namespace CryptoMarketClient {
             this.repositoryItemSpinEdit3 = new DevExpress.XtraEditors.Repository.RepositoryItemSpinEdit();
             this.bbSyncWithLowestAsk = new DevExpress.XtraBars.BarButtonItem();
             this.btShowCombinedBidAsk = new DevExpress.XtraBars.BarButtonItem();
+            this.bbShowOrderBookHistory = new DevExpress.XtraBars.BarButtonItem();
+            this.bbMinimalProfitSpread = new DevExpress.XtraBars.BarButtonItem();
+            this.bbAnalytics = new DevExpress.XtraBars.BarButtonItem();
+            this.bbGridStrategy = new DevExpress.XtraBars.BarButtonItem();
+            this.bbShowTickerStrategies = new DevExpress.XtraBars.BarButtonItem();
+            this.bbUpdateBot = new DevExpress.XtraBars.BarButtonItem();
+            this.barButtonItem2 = new DevExpress.XtraBars.BarButtonItem();
+            this.barButtonItem3 = new DevExpress.XtraBars.BarButtonItem();
+            this.bsShowTickerChart = new DevExpress.XtraBars.BarSubItem();
+            this.bsStrategies = new DevExpress.XtraBars.BarSubItem();
+            this.bsShowOrderBookHistory = new DevExpress.XtraBars.BarSubItem();
             this.rpPoloniex = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPageGroup1 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
-            this.ribbonPage1 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPageGroup2 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
+            this.ribbonPageGroup3 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
+            this.ribbonPage1 = new DevExpress.XtraBars.Ribbon.RibbonPage();
+            this.ribbonPageGroup4 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
+            this.ribbonPageGroup5 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.repositoryItemSpinEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemSpinEdit();
-            this.arbitrageHistoryChart = new DevExpress.XtraCharts.ChartControl();
             this.sidePanel1 = new DevExpress.XtraEditors.SidePanel();
-            this.chartSidePanel = new DevExpress.XtraEditors.SidePanel();
-            this.orderBookSidePanel = new DevExpress.XtraEditors.SidePanel();
-            this.orderBookControl1 = new CryptoMarketClient.OrderBookControl();
+            this.popupMenu1 = new DevExpress.XtraBars.PopupMenu(this.components);
+            this.bcShowNonZeroAmout = new DevExpress.XtraBars.BarCheckItem();
+            this.colTotalBalance = new DevExpress.XtraGrid.Columns.GridColumn();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tickerArbitrageInfoBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemProgressBar1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit4)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemSparklineEdit1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemSparklineEdit2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemSparklineEdit3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemSparklineEdit4)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemSpinEdit2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemSpinEdit3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemSpinEdit1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.arbitrageHistoryChart)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(xyDiagram1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(series1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(stepAreaSeriesView1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(series2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(stepAreaSeriesView2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(series3)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(stepLineSeriesView1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(series4)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(stepLineSeriesView2)).BeginInit();
             this.sidePanel1.SuspendLayout();
-            this.chartSidePanel.SuspendLayout();
-            this.orderBookSidePanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.popupMenu1)).BeginInit();
             this.SuspendLayout();
             // 
             // colProfit
@@ -141,7 +158,7 @@ namespace CryptoMarketClient {
             this.colProfit.OptionsColumn.AllowEdit = false;
             this.colProfit.OptionsColumn.ReadOnly = true;
             this.colProfit.Visible = true;
-            this.colProfit.VisibleIndex = 10;
+            this.colProfit.VisibleIndex = 12;
             // 
             // colIsActual
             // 
@@ -157,7 +174,7 @@ namespace CryptoMarketClient {
             this.colMarketCurrency.Name = "colMarketCurrency";
             this.colMarketCurrency.OptionsColumn.AllowEdit = false;
             this.colMarketCurrency.Visible = true;
-            this.colMarketCurrency.VisibleIndex = 2;
+            this.colMarketCurrency.VisibleIndex = 3;
             // 
             // colLowestAskEnabled
             // 
@@ -179,7 +196,7 @@ namespace CryptoMarketClient {
             this.colLowestAskHost.OptionsColumn.AllowEdit = false;
             this.colLowestAskHost.OptionsColumn.ReadOnly = true;
             this.colLowestAskHost.Visible = true;
-            this.colLowestAskHost.VisibleIndex = 3;
+            this.colLowestAskHost.VisibleIndex = 5;
             // 
             // colHighestBidEnabled
             // 
@@ -201,7 +218,7 @@ namespace CryptoMarketClient {
             this.colHighestBidHost.OptionsColumn.AllowEdit = false;
             this.colHighestBidHost.OptionsColumn.ReadOnly = true;
             this.colHighestBidHost.Visible = true;
-            this.colHighestBidHost.VisibleIndex = 4;
+            this.colHighestBidHost.VisibleIndex = 6;
             // 
             // colUpdateTime
             // 
@@ -221,29 +238,36 @@ namespace CryptoMarketClient {
             this.colProfitUSD.OptionsColumn.AllowEdit = false;
             this.colProfitUSD.OptionsColumn.ReadOnly = true;
             this.colProfitUSD.Visible = true;
-            this.colProfitUSD.VisibleIndex = 11;
+            this.colProfitUSD.VisibleIndex = 13;
             // 
             // gridControl1
             // 
             this.gridControl1.DataSource = this.tickerArbitrageInfoBindingSource;
             this.gridControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gridControl1.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(6);
+            this.gridControl1.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.gridControl1.Location = new System.Drawing.Point(0, 0);
             this.gridControl1.MainView = this.gridView1;
-            this.gridControl1.Margin = new System.Windows.Forms.Padding(6);
+            this.gridControl1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.gridControl1.Name = "gridControl1";
             this.gridControl1.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repositoryItemCheckEdit1,
             this.repositoryItemCheckEdit2,
-            this.repositoryItemCheckEdit3});
-            this.gridControl1.Size = new System.Drawing.Size(934, 718);
+            this.repositoryItemCheckEdit3,
+            this.repositoryItemProgressBar1,
+            this.repositoryItemCheckEdit4,
+            this.repositoryItemSparklineEdit1,
+            this.repositoryItemSparklineEdit2,
+            this.repositoryItemSparklineEdit3,
+            this.repositoryItemSparklineEdit4});
+            this.gridControl1.Size = new System.Drawing.Size(1916, 776);
             this.gridControl1.TabIndex = 0;
             this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridView1});
+            this.gridControl1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.gridControl1_MouseDown);
             // 
             // tickerArbitrageInfoBindingSource
             // 
-            this.tickerArbitrageInfoBindingSource.DataSource = typeof(CryptoMarketClient.TickerArbitrageInfo);
+            this.tickerArbitrageInfoBindingSource.DataSource = typeof(CryptoMarketClient.TickerCollection);
             // 
             // gridView1
             // 
@@ -275,7 +299,17 @@ namespace CryptoMarketClient {
             this.colAvailableProfit,
             this.colAvailableProfitUSD,
             this.colLowestAskEnabled,
-            this.colHighestBidEnabled});
+            this.colHighestBidEnabled,
+            this.colLowestBidAskRelation,
+            this.colHighestBidAskRelation,
+            this.colSuppressNotification,
+            this.colBidShift,
+            this.colAskShift,
+            this.colHipe,
+            this.colSellHipe,
+            this.colBidEnergy,
+            this.colAskEnergy,
+            this.colTotalBalance});
             gridFormatRule1.Column = this.colProfit;
             gridFormatRule1.ColumnApplyTo = this.colProfit;
             gridFormatRule1.Name = "ArbitrageSpreadRule";
@@ -348,7 +382,7 @@ namespace CryptoMarketClient {
             this.colBaseCurrency.Name = "colBaseCurrency";
             this.colBaseCurrency.OptionsColumn.AllowEdit = false;
             this.colBaseCurrency.Visible = true;
-            this.colBaseCurrency.VisibleIndex = 1;
+            this.colBaseCurrency.VisibleIndex = 2;
             // 
             // colLastUpdate
             // 
@@ -395,7 +429,7 @@ namespace CryptoMarketClient {
             this.colLowestAsk.OptionsColumn.AllowEdit = false;
             this.colLowestAsk.OptionsColumn.ReadOnly = true;
             this.colLowestAsk.Visible = true;
-            this.colLowestAsk.VisibleIndex = 5;
+            this.colLowestAsk.VisibleIndex = 7;
             // 
             // colHighestBid
             // 
@@ -406,7 +440,7 @@ namespace CryptoMarketClient {
             this.colHighestBid.OptionsColumn.AllowEdit = false;
             this.colHighestBid.OptionsColumn.ReadOnly = true;
             this.colHighestBid.Visible = true;
-            this.colHighestBid.VisibleIndex = 6;
+            this.colHighestBid.VisibleIndex = 8;
             // 
             // colSpread
             // 
@@ -416,7 +450,7 @@ namespace CryptoMarketClient {
             this.colSpread.Name = "colSpread";
             this.colSpread.OptionsColumn.AllowEdit = false;
             this.colSpread.Visible = true;
-            this.colSpread.VisibleIndex = 7;
+            this.colSpread.VisibleIndex = 9;
             // 
             // colAmount
             // 
@@ -426,7 +460,7 @@ namespace CryptoMarketClient {
             this.colAmount.OptionsColumn.AllowEdit = false;
             this.colAmount.OptionsColumn.ReadOnly = true;
             this.colAmount.Visible = true;
-            this.colAmount.VisibleIndex = 8;
+            this.colAmount.VisibleIndex = 10;
             // 
             // colBuyTotal
             // 
@@ -436,7 +470,7 @@ namespace CryptoMarketClient {
             this.colBuyTotal.Name = "colBuyTotal";
             this.colBuyTotal.OptionsColumn.AllowEdit = false;
             this.colBuyTotal.Visible = true;
-            this.colBuyTotal.VisibleIndex = 9;
+            this.colBuyTotal.VisibleIndex = 11;
             // 
             // colTotal
             // 
@@ -474,8 +508,7 @@ namespace CryptoMarketClient {
             this.colAvailableAmount.Caption = "AvailableAmount";
             this.colAvailableAmount.FieldName = "AvailableAmount";
             this.colAvailableAmount.Name = "colAvailableAmount";
-            this.colAvailableAmount.Visible = true;
-            this.colAvailableAmount.VisibleIndex = 12;
+            this.colAvailableAmount.OptionsColumn.AllowEdit = false;
             // 
             // colAvailableProfit
             // 
@@ -484,8 +517,7 @@ namespace CryptoMarketClient {
             this.colAvailableProfit.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.colAvailableProfit.FieldName = "AvailableProfit";
             this.colAvailableProfit.Name = "colAvailableProfit";
-            this.colAvailableProfit.Visible = true;
-            this.colAvailableProfit.VisibleIndex = 13;
+            this.colAvailableProfit.OptionsColumn.AllowEdit = false;
             // 
             // colAvailableProfitUSD
             // 
@@ -494,8 +526,134 @@ namespace CryptoMarketClient {
             this.colAvailableProfitUSD.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.colAvailableProfitUSD.FieldName = "AvailableProfitUSD";
             this.colAvailableProfitUSD.Name = "colAvailableProfitUSD";
-            this.colAvailableProfitUSD.Visible = true;
-            this.colAvailableProfitUSD.VisibleIndex = 14;
+            this.colAvailableProfitUSD.OptionsColumn.AllowEdit = false;
+            // 
+            // colLowestBidAskRelation
+            // 
+            this.colLowestBidAskRelation.Caption = "Lowest Bid/Ask";
+            this.colLowestBidAskRelation.ColumnEdit = this.repositoryItemProgressBar1;
+            this.colLowestBidAskRelation.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+            this.colLowestBidAskRelation.FieldName = "LowestBidAskRelation";
+            this.colLowestBidAskRelation.Name = "colLowestBidAskRelation";
+            this.colLowestBidAskRelation.OptionsColumn.AllowEdit = false;
+            // 
+            // repositoryItemProgressBar1
+            // 
+            this.repositoryItemProgressBar1.Appearance.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
+            this.repositoryItemProgressBar1.Appearance.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.repositoryItemProgressBar1.Appearance.ForeColor2 = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.repositoryItemProgressBar1.AppearanceFocused.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
+            this.repositoryItemProgressBar1.AppearanceReadOnly.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
+            this.repositoryItemProgressBar1.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.repositoryItemProgressBar1.LookAndFeel.Style = DevExpress.LookAndFeel.LookAndFeelStyle.Flat;
+            this.repositoryItemProgressBar1.LookAndFeel.UseDefaultLookAndFeel = false;
+            this.repositoryItemProgressBar1.Name = "repositoryItemProgressBar1";
+            this.repositoryItemProgressBar1.ProgressViewStyle = DevExpress.XtraEditors.Controls.ProgressViewStyle.Solid;
+            this.repositoryItemProgressBar1.ShowTitle = true;
+            this.repositoryItemProgressBar1.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            // 
+            // colHighestBidAskRelation
+            // 
+            this.colHighestBidAskRelation.Caption = "Highest Bid/Ask";
+            this.colHighestBidAskRelation.ColumnEdit = this.repositoryItemProgressBar1;
+            this.colHighestBidAskRelation.FieldName = "HighestBidAskRelation";
+            this.colHighestBidAskRelation.Name = "colHighestBidAskRelation";
+            // 
+            // colSuppressNotification
+            // 
+            this.colSuppressNotification.Caption = "Disable Notification";
+            this.colSuppressNotification.ColumnEdit = this.repositoryItemCheckEdit4;
+            this.colSuppressNotification.FieldName = "SuppressNotification";
+            this.colSuppressNotification.Name = "colSuppressNotification";
+            this.colSuppressNotification.Visible = true;
+            this.colSuppressNotification.VisibleIndex = 1;
+            // 
+            // repositoryItemCheckEdit4
+            // 
+            this.repositoryItemCheckEdit4.AutoHeight = false;
+            this.repositoryItemCheckEdit4.Name = "repositoryItemCheckEdit4";
+            this.repositoryItemCheckEdit4.EditValueChanged += new System.EventHandler(this.repositoryItemCheckEdit4_EditValueChanged);
+            // 
+            // colBidShift
+            // 
+            this.colBidShift.Caption = "BidShift";
+            this.colBidShift.DisplayFormat.FormatString = "0.######";
+            this.colBidShift.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+            this.colBidShift.FieldName = "BidShift";
+            this.colBidShift.Name = "colBidShift";
+            // 
+            // colAskShift
+            // 
+            this.colAskShift.Caption = "Ask Shift";
+            this.colAskShift.DisplayFormat.FormatString = "0.#####";
+            this.colAskShift.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+            this.colAskShift.FieldName = "AskShift";
+            this.colAskShift.Name = "colAskShift";
+            // 
+            // colHipe
+            // 
+            this.colHipe.Caption = "BidHipe";
+            this.colHipe.ColumnEdit = this.repositoryItemSparklineEdit1;
+            this.colHipe.FieldName = "BidHipes";
+            this.colHipe.Name = "colHipe";
+            this.colHipe.OptionsColumn.AllowEdit = false;
+            this.colHipe.Visible = true;
+            this.colHipe.VisibleIndex = 14;
+            // 
+            // repositoryItemSparklineEdit1
+            // 
+            this.repositoryItemSparklineEdit1.Name = "repositoryItemSparklineEdit1";
+            this.repositoryItemSparklineEdit1.ValueRange.IsAuto = false;
+            barSparklineView1.Color = System.Drawing.Color.Green;
+            this.repositoryItemSparklineEdit1.View = barSparklineView1;
+            // 
+            // colSellHipe
+            // 
+            this.colSellHipe.Caption = "AskHipe";
+            this.colSellHipe.ColumnEdit = this.repositoryItemSparklineEdit2;
+            this.colSellHipe.FieldName = "AskHipes";
+            this.colSellHipe.Name = "colSellHipe";
+            this.colSellHipe.OptionsColumn.AllowEdit = false;
+            this.colSellHipe.Visible = true;
+            this.colSellHipe.VisibleIndex = 15;
+            // 
+            // repositoryItemSparklineEdit2
+            // 
+            this.repositoryItemSparklineEdit2.Name = "repositoryItemSparklineEdit2";
+            barSparklineView2.Color = System.Drawing.Color.Red;
+            this.repositoryItemSparklineEdit2.View = barSparklineView2;
+            // 
+            // colBidEnergy
+            // 
+            this.colBidEnergy.Caption = "Bid Energies";
+            this.colBidEnergy.ColumnEdit = this.repositoryItemSparklineEdit3;
+            this.colBidEnergy.FieldName = "BidEnergies";
+            this.colBidEnergy.Name = "colBidEnergy";
+            this.colBidEnergy.OptionsColumn.AllowEdit = false;
+            this.colBidEnergy.Visible = true;
+            this.colBidEnergy.VisibleIndex = 16;
+            // 
+            // repositoryItemSparklineEdit3
+            // 
+            this.repositoryItemSparklineEdit3.Name = "repositoryItemSparklineEdit3";
+            areaSparklineView1.Color = System.Drawing.Color.Green;
+            this.repositoryItemSparklineEdit3.View = areaSparklineView1;
+            // 
+            // colAskEnergy
+            // 
+            this.colAskEnergy.Caption = "Ask Energies";
+            this.colAskEnergy.ColumnEdit = this.repositoryItemSparklineEdit4;
+            this.colAskEnergy.FieldName = "AskEnergies";
+            this.colAskEnergy.Name = "colAskEnergy";
+            this.colAskEnergy.OptionsColumn.AllowEdit = false;
+            this.colAskEnergy.Visible = true;
+            this.colAskEnergy.VisibleIndex = 17;
+            // 
+            // repositoryItemSparklineEdit4
+            // 
+            this.repositoryItemSparklineEdit4.Name = "repositoryItemSparklineEdit4";
+            areaSparklineView2.Color = System.Drawing.Color.Red;
+            this.repositoryItemSparklineEdit4.View = areaSparklineView2;
             // 
             // ribbonControl1
             // 
@@ -503,9 +661,7 @@ namespace CryptoMarketClient {
             this.ribbonControl1.ExpandCollapseItem.Id = 0;
             this.ribbonControl1.Items.AddRange(new DevExpress.XtraBars.BarItem[] {
             this.ribbonControl1.ExpandCollapseItem,
-            this.bbShowDetail,
             this.bbAllCurrencies,
-            this.bcShowOrderBook,
             this.bbTryArbitrage,
             this.barButtonItem1,
             this.bbMonitorSelected,
@@ -517,10 +673,22 @@ namespace CryptoMarketClient {
             this.beBuyLowestAsk,
             this.beHighestBidSell,
             this.bbSyncWithLowestAsk,
-            this.btShowCombinedBidAsk});
+            this.btShowCombinedBidAsk,
+            this.bbShowOrderBookHistory,
+            this.bbMinimalProfitSpread,
+            this.bbAnalytics,
+            this.bbGridStrategy,
+            this.bbShowTickerStrategies,
+            this.bbUpdateBot,
+            this.barButtonItem2,
+            this.barButtonItem3,
+            this.bsShowTickerChart,
+            this.bsStrategies,
+            this.bsShowOrderBookHistory,
+            this.bcShowNonZeroAmout});
             this.ribbonControl1.Location = new System.Drawing.Point(0, 0);
-            this.ribbonControl1.Margin = new System.Windows.Forms.Padding(6);
-            this.ribbonControl1.MaxItemId = 20;
+            this.ribbonControl1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.ribbonControl1.MaxItemId = 33;
             this.ribbonControl1.Name = "ribbonControl1";
             this.ribbonControl1.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
             this.rpPoloniex,
@@ -531,15 +699,6 @@ namespace CryptoMarketClient {
             this.repositoryItemSpinEdit3});
             this.ribbonControl1.Size = new System.Drawing.Size(1916, 278);
             // 
-            // bbShowDetail
-            // 
-            this.bbShowDetail.Caption = "Show Chart";
-            this.bbShowDetail.Id = 1;
-            this.bbShowDetail.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bbShowDetail.ImageOptions.Image")));
-            this.bbShowDetail.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("bbShowDetail.ImageOptions.LargeImage")));
-            this.bbShowDetail.Name = "bbShowDetail";
-            this.bbShowDetail.CheckedChanged += new DevExpress.XtraBars.ItemClickEventHandler(this.bbShowDetail_CheckedChanged);
-            // 
             // bbAllCurrencies
             // 
             this.bbAllCurrencies.Caption = "Show Positive Profits";
@@ -547,16 +706,8 @@ namespace CryptoMarketClient {
             this.bbAllCurrencies.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bbAllCurrencies.ImageOptions.Image")));
             this.bbAllCurrencies.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("bbAllCurrencies.ImageOptions.LargeImage")));
             this.bbAllCurrencies.Name = "bbAllCurrencies";
+            this.bbAllCurrencies.RibbonStyle = ((DevExpress.XtraBars.Ribbon.RibbonItemStyles)((DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText | DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithoutText)));
             this.bbAllCurrencies.CheckedChanged += new DevExpress.XtraBars.ItemClickEventHandler(this.bbAllCurrencies_CheckedChanged);
-            // 
-            // bcShowOrderBook
-            // 
-            this.bcShowOrderBook.Caption = "Combined OrderBook";
-            this.bcShowOrderBook.Id = 4;
-            this.bcShowOrderBook.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bcShowOrderBook.ImageOptions.Image")));
-            this.bcShowOrderBook.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("bcShowOrderBook.ImageOptions.LargeImage")));
-            this.bcShowOrderBook.Name = "bcShowOrderBook";
-            this.bcShowOrderBook.CheckedChanged += new DevExpress.XtraBars.ItemClickEventHandler(this.bcShowOrderBook_CheckedChanged);
             // 
             // bbTryArbitrage
             // 
@@ -575,11 +726,12 @@ namespace CryptoMarketClient {
             // 
             // bbMonitorSelected
             // 
-            this.bbMonitorSelected.Caption = "Monitor Only Selected Arbitrages";
+            this.bbMonitorSelected.Caption = "Monitor Only Selected";
             this.bbMonitorSelected.Id = 7;
             this.bbMonitorSelected.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bbMonitorSelected.ImageOptions.Image")));
             this.bbMonitorSelected.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("bbMonitorSelected.ImageOptions.LargeImage")));
             this.bbMonitorSelected.Name = "bbMonitorSelected";
+            this.bbMonitorSelected.RibbonStyle = ((DevExpress.XtraBars.Ribbon.RibbonItemStyles)((DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText | DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithoutText)));
             // 
             // bbOpenWeb
             // 
@@ -588,6 +740,7 @@ namespace CryptoMarketClient {
             this.bbOpenWeb.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bbOpenWeb.ImageOptions.Image")));
             this.bbOpenWeb.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("bbOpenWeb.ImageOptions.LargeImage")));
             this.bbOpenWeb.Name = "bbOpenWeb";
+            this.bbOpenWeb.RibbonStyle = ((DevExpress.XtraBars.Ribbon.RibbonItemStyles)((DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithText | DevExpress.XtraBars.Ribbon.RibbonItemStyles.SmallWithoutText)));
             this.bbOpenWeb.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bbOpenWeb_ItemClick);
             // 
             // bbSelectPositive
@@ -615,17 +768,17 @@ namespace CryptoMarketClient {
             // 
             // bbSendToHighestBid
             // 
-            this.bbSendToHighestBid.Caption = "Sync With Highest Bid Market";
+            this.bbSendToHighestBid.Caption = "Send To Highest Bid Market";
             this.bbSendToHighestBid.Id = 12;
             this.bbSendToHighestBid.Name = "bbSendToHighestBid";
             this.bbSendToHighestBid.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bbSendToHighestBid_ItemClick);
             // 
             // beBuyLowestAsk
             // 
-            this.beBuyLowestAsk.Caption = "Use Base Currency (0-100%)";
+            this.beBuyLowestAsk.Caption = "Base Currency (%)";
             this.beBuyLowestAsk.Edit = this.repositoryItemSpinEdit2;
             this.beBuyLowestAsk.EditValue = 50D;
-            this.beBuyLowestAsk.EditWidth = 75;
+            this.beBuyLowestAsk.EditWidth = 125;
             this.beBuyLowestAsk.Id = 14;
             this.beBuyLowestAsk.Name = "beBuyLowestAsk";
             // 
@@ -638,10 +791,10 @@ namespace CryptoMarketClient {
             // 
             // beHighestBidSell
             // 
-            this.beHighestBidSell.Caption = "Use Market Currency (0-100%)";
+            this.beHighestBidSell.Caption = "Market Currency (%)";
             this.beHighestBidSell.Edit = this.repositoryItemSpinEdit3;
             this.beHighestBidSell.EditValue = 100D;
-            this.beHighestBidSell.EditWidth = 75;
+            this.beHighestBidSell.EditWidth = 125;
             this.beHighestBidSell.Id = 15;
             this.beHighestBidSell.Name = "beHighestBidSell";
             // 
@@ -673,34 +826,112 @@ namespace CryptoMarketClient {
             this.btShowCombinedBidAsk.Name = "btShowCombinedBidAsk";
             this.btShowCombinedBidAsk.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btShowCombinedBidAsk_ItemClick);
             // 
+            // bbShowOrderBookHistory
+            // 
+            this.bbShowOrderBookHistory.Caption = "OrderBook History";
+            this.bbShowOrderBookHistory.Id = 20;
+            this.bbShowOrderBookHistory.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bbShowOrderBookHistory.ImageOptions.Image")));
+            this.bbShowOrderBookHistory.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("bbShowOrderBookHistory.ImageOptions.LargeImage")));
+            this.bbShowOrderBookHistory.Name = "bbShowOrderBookHistory";
+            this.bbShowOrderBookHistory.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bbShowOrderBookHistory_ItemClick);
+            // 
+            // bbMinimalProfitSpread
+            // 
+            this.bbMinimalProfitSpread.Caption = "Minimal Profit Spread";
+            this.bbMinimalProfitSpread.Id = 21;
+            this.bbMinimalProfitSpread.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bbMinimalProfitSpread.ImageOptions.Image")));
+            this.bbMinimalProfitSpread.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("bbMinimalProfitSpread.ImageOptions.LargeImage")));
+            this.bbMinimalProfitSpread.Name = "bbMinimalProfitSpread";
+            this.bbMinimalProfitSpread.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bbMinimalProfitSpread_ItemClick);
+            // 
+            // bbAnalytics
+            // 
+            this.bbAnalytics.Caption = "Analytics";
+            this.bbAnalytics.Id = 22;
+            this.bbAnalytics.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bbAnalytics.ImageOptions.Image")));
+            this.bbAnalytics.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("bbAnalytics.ImageOptions.LargeImage")));
+            this.bbAnalytics.Name = "bbAnalytics";
+            this.bbAnalytics.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bbAnalytics_ItemClick);
+            // 
+            // bbGridStrategy
+            // 
+            this.bbGridStrategy.ActAsDropDown = true;
+            this.bbGridStrategy.ButtonStyle = DevExpress.XtraBars.BarButtonStyle.DropDown;
+            this.bbGridStrategy.Caption = "GridStrategy";
+            this.bbGridStrategy.Id = 23;
+            this.bbGridStrategy.Name = "bbGridStrategy";
+            this.bbGridStrategy.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bbGridStrategy_ItemClick);
+            // 
+            // bbShowTickerStrategies
+            // 
+            this.bbShowTickerStrategies.Caption = "Show Ticker Strategies";
+            this.bbShowTickerStrategies.Id = 24;
+            this.bbShowTickerStrategies.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bbShowTickerStrategies.ImageOptions.Image")));
+            this.bbShowTickerStrategies.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("bbShowTickerStrategies.ImageOptions.LargeImage")));
+            this.bbShowTickerStrategies.Name = "bbShowTickerStrategies";
+            // 
+            // bbUpdateBot
+            // 
+            this.bbUpdateBot.Caption = "UpdateBot";
+            this.bbUpdateBot.Id = 25;
+            this.bbUpdateBot.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bbUpdateBot.ImageOptions.Image")));
+            this.bbUpdateBot.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("bbUpdateBot.ImageOptions.LargeImage")));
+            this.bbUpdateBot.Name = "bbUpdateBot";
+            this.bbUpdateBot.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bbUpdateBot_ItemClick);
+            // 
+            // barButtonItem2
+            // 
+            this.barButtonItem2.Caption = "barButtonItem2";
+            this.barButtonItem2.Id = 26;
+            this.barButtonItem2.Name = "barButtonItem2";
+            // 
+            // barButtonItem3
+            // 
+            this.barButtonItem3.Caption = "barButtonItem3";
+            this.barButtonItem3.Id = 27;
+            this.barButtonItem3.Name = "barButtonItem3";
+            // 
+            // bsShowTickerChart
+            // 
+            this.bsShowTickerChart.Caption = "Show Ticker Chart";
+            this.bsShowTickerChart.Id = 28;
+            this.bsShowTickerChart.Name = "bsShowTickerChart";
+            // 
+            // bsStrategies
+            // 
+            this.bsStrategies.Caption = "Strategies";
+            this.bsStrategies.Id = 29;
+            this.bsStrategies.Name = "bsStrategies";
+            // 
+            // bsShowOrderBookHistory
+            // 
+            this.bsShowOrderBookHistory.Caption = "Show Order Book History";
+            this.bsShowOrderBookHistory.Id = 30;
+            this.bsShowOrderBookHistory.Name = "bsShowOrderBookHistory";
+            // 
             // rpPoloniex
             // 
             this.rpPoloniex.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] {
-            this.ribbonPageGroup1});
+            this.ribbonPageGroup1,
+            this.ribbonPageGroup2,
+            this.ribbonPageGroup3});
             this.rpPoloniex.Name = "rpPoloniex";
-            this.rpPoloniex.Text = "Connect";
+            this.rpPoloniex.Text = "Arbitrage";
             // 
             // ribbonPageGroup1
             // 
             this.ribbonPageGroup1.AllowTextClipping = false;
-            this.ribbonPageGroup1.ItemLinks.Add(this.bbShowDetail);
-            this.ribbonPageGroup1.ItemLinks.Add(this.bcShowOrderBook);
             this.ribbonPageGroup1.ItemLinks.Add(this.btShowCombinedBidAsk);
+            this.ribbonPageGroup1.ItemLinks.Add(this.bbShowOrderBookHistory);
             this.ribbonPageGroup1.ItemLinks.Add(this.bbAllCurrencies, true);
-            this.ribbonPageGroup1.ItemLinks.Add(this.bbSelectPositive);
             this.ribbonPageGroup1.ItemLinks.Add(this.bbMonitorSelected);
             this.ribbonPageGroup1.ItemLinks.Add(this.bbOpenWeb);
             this.ribbonPageGroup1.ItemLinks.Add(this.bbTryArbitrage);
+            this.ribbonPageGroup1.ItemLinks.Add(this.bbAnalytics);
+            this.ribbonPageGroup1.ItemLinks.Add(this.bcShowNonZeroAmout);
             this.ribbonPageGroup1.Name = "ribbonPageGroup1";
             this.ribbonPageGroup1.ShowCaptionButton = false;
             this.ribbonPageGroup1.Text = "Arbitrage";
-            // 
-            // ribbonPage1
-            // 
-            this.ribbonPage1.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] {
-            this.ribbonPageGroup2});
-            this.ribbonPage1.Name = "ribbonPage1";
-            this.ribbonPage1.Text = "Manual Arbitrage";
             // 
             // ribbonPageGroup2
             // 
@@ -712,6 +943,33 @@ namespace CryptoMarketClient {
             this.ribbonPageGroup2.ItemLinks.Add(this.bbSyncWithLowestAsk);
             this.ribbonPageGroup2.Name = "ribbonPageGroup2";
             this.ribbonPageGroup2.Text = "Manual Arbitrage";
+            // 
+            // ribbonPageGroup3
+            // 
+            this.ribbonPageGroup3.ItemLinks.Add(this.bbMinimalProfitSpread);
+            this.ribbonPageGroup3.ItemLinks.Add(this.bbUpdateBot);
+            this.ribbonPageGroup3.Name = "ribbonPageGroup3";
+            this.ribbonPageGroup3.Text = "Tools";
+            // 
+            // ribbonPage1
+            // 
+            this.ribbonPage1.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] {
+            this.ribbonPageGroup4,
+            this.ribbonPageGroup5});
+            this.ribbonPage1.Name = "ribbonPage1";
+            this.ribbonPage1.Text = "Strategies";
+            // 
+            // ribbonPageGroup4
+            // 
+            this.ribbonPageGroup4.ItemLinks.Add(this.bbGridStrategy);
+            this.ribbonPageGroup4.Name = "ribbonPageGroup4";
+            this.ribbonPageGroup4.Text = "Strategies";
+            // 
+            // ribbonPageGroup5
+            // 
+            this.ribbonPageGroup5.ItemLinks.Add(this.bbShowTickerStrategies);
+            this.ribbonPageGroup5.Name = "ribbonPageGroup5";
+            this.ribbonPageGroup5.Text = "Show/Edit";
             // 
             // repositoryItemSpinEdit1
             // 
@@ -725,115 +983,50 @@ namespace CryptoMarketClient {
             0});
             this.repositoryItemSpinEdit1.Name = "repositoryItemSpinEdit1";
             // 
-            // arbitrageHistoryChart
-            // 
-            this.arbitrageHistoryChart.BorderOptions.Visibility = DevExpress.Utils.DefaultBoolean.False;
-            this.arbitrageHistoryChart.DataBindings = null;
-            xyDiagram1.AxisX.VisibleInPanesSerializable = "-1";
-            xyDiagram1.AxisX.WholeRange.AutoSideMargins = false;
-            xyDiagram1.AxisX.WholeRange.SideMarginsValue = 0D;
-            xyDiagram1.AxisY.VisibleInPanesSerializable = "-1";
-            this.arbitrageHistoryChart.Diagram = xyDiagram1;
-            this.arbitrageHistoryChart.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.arbitrageHistoryChart.Legend.AlignmentHorizontal = DevExpress.XtraCharts.LegendAlignmentHorizontal.Right;
-            this.arbitrageHistoryChart.Legend.Border.Visibility = DevExpress.Utils.DefaultBoolean.True;
-            this.arbitrageHistoryChart.Legend.MarkerMode = DevExpress.XtraCharts.LegendMarkerMode.CheckBoxAndMarker;
-            this.arbitrageHistoryChart.Legend.Name = "Default Legend";
-            this.arbitrageHistoryChart.Legend.Visibility = DevExpress.Utils.DefaultBoolean.True;
-            this.arbitrageHistoryChart.Location = new System.Drawing.Point(1, 0);
-            this.arbitrageHistoryChart.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
-            this.arbitrageHistoryChart.Name = "arbitrageHistoryChart";
-            series1.ArgumentDataMember = "Time";
-            series1.ArgumentScaleType = DevExpress.XtraCharts.ScaleType.DateTime;
-            series1.CheckedInLegend = false;
-            series1.LegendText = "Profits in USD";
-            series1.Name = "Profits in USD";
-            series1.ValueDataMembersSerializable = "ValueUSD";
-            series1.View = stepAreaSeriesView1;
-            series2.ArgumentDataMember = "Time";
-            series2.ArgumentScaleType = DevExpress.XtraCharts.ScaleType.DateTime;
-            series2.CheckedInLegend = false;
-            series2.LegendText = "Profits in base currency";
-            series2.Name = "Profits in base currency";
-            series2.ValueDataMembersSerializable = "Value";
-            series2.View = stepAreaSeriesView2;
-            series3.ArgumentDataMember = "Time";
-            series3.ArgumentScaleType = DevExpress.XtraCharts.ScaleType.DateTime;
-            series3.LegendText = "Spread";
-            series3.Name = "Spread";
-            series3.ValueDataMembersSerializable = "Spread";
-            series3.View = stepLineSeriesView1;
-            series4.ArgumentDataMember = "Time";
-            series4.ArgumentScaleType = DevExpress.XtraCharts.ScaleType.DateTime;
-            series4.CheckedInLegend = false;
-            series4.LegendText = "Amount";
-            series4.Name = "Amount";
-            series4.ValueDataMembersSerializable = "Amount";
-            series4.View = stepLineSeriesView2;
-            this.arbitrageHistoryChart.SeriesSerializable = new DevExpress.XtraCharts.Series[] {
-        series1,
-        series2,
-        series3,
-        series4};
-            this.arbitrageHistoryChart.Size = new System.Drawing.Size(529, 718);
-            this.arbitrageHistoryChart.TabIndex = 5;
-            // 
             // sidePanel1
             // 
             this.sidePanel1.Controls.Add(this.gridControl1);
             this.sidePanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.sidePanel1.Location = new System.Drawing.Point(0, 278);
-            this.sidePanel1.Margin = new System.Windows.Forms.Padding(4);
+            this.sidePanel1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.sidePanel1.Name = "sidePanel1";
-            this.sidePanel1.Size = new System.Drawing.Size(934, 718);
+            this.sidePanel1.Size = new System.Drawing.Size(1916, 776);
             this.sidePanel1.TabIndex = 6;
             this.sidePanel1.Text = "sidePanel1";
             // 
-            // chartSidePanel
+            // popupMenu1
             // 
-            this.chartSidePanel.Controls.Add(this.arbitrageHistoryChart);
-            this.chartSidePanel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.chartSidePanel.Location = new System.Drawing.Point(1386, 278);
-            this.chartSidePanel.Margin = new System.Windows.Forms.Padding(4);
-            this.chartSidePanel.Name = "chartSidePanel";
-            this.chartSidePanel.Size = new System.Drawing.Size(530, 718);
-            this.chartSidePanel.TabIndex = 7;
-            this.chartSidePanel.Text = "sidePanel2";
+            this.popupMenu1.ItemLinks.Add(this.bsShowTickerChart);
+            this.popupMenu1.ItemLinks.Add(this.bsStrategies);
+            this.popupMenu1.ItemLinks.Add(this.bsShowOrderBookHistory);
+            this.popupMenu1.Name = "popupMenu1";
+            this.popupMenu1.Ribbon = this.ribbonControl1;
             // 
-            // orderBookSidePanel
+            // bcShowNonZeroAmout
             // 
-            this.orderBookSidePanel.Controls.Add(this.orderBookControl1);
-            this.orderBookSidePanel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.orderBookSidePanel.Location = new System.Drawing.Point(934, 278);
-            this.orderBookSidePanel.Margin = new System.Windows.Forms.Padding(4);
-            this.orderBookSidePanel.Name = "orderBookSidePanel";
-            this.orderBookSidePanel.Size = new System.Drawing.Size(452, 718);
-            this.orderBookSidePanel.TabIndex = 9;
-            this.orderBookSidePanel.Text = "sidePanel2";
+            this.bcShowNonZeroAmout.Caption = "Show NonZero Amount";
+            this.bcShowNonZeroAmout.Id = 32;
+            this.bcShowNonZeroAmout.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bcShowNonZeroAmout.ImageOptions.Image")));
+            this.bcShowNonZeroAmout.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("bcShowNonZeroAmout.ImageOptions.LargeImage")));
+            this.bcShowNonZeroAmout.Name = "bcShowNonZeroAmout";
+            this.bcShowNonZeroAmout.CheckedChanged += new DevExpress.XtraBars.ItemClickEventHandler(this.bcShowNonZeroAmout_CheckedChanged);
             // 
-            // orderBookControl1
+            // colTotalBalance
             // 
-            this.orderBookControl1.ArbitrageInfo = null;
-            this.orderBookControl1.Asks = null;
-            this.orderBookControl1.Bids = null;
-            this.orderBookControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.orderBookControl1.Location = new System.Drawing.Point(1, 0);
-            this.orderBookControl1.Margin = new System.Windows.Forms.Padding(0, 2, 0, 2);
-            this.orderBookControl1.Name = "orderBookControl1";
-            this.orderBookControl1.OrderBookCaption = "";
-            this.orderBookControl1.Size = new System.Drawing.Size(451, 718);
-            this.orderBookControl1.TabIndex = 0;
+            this.colTotalBalance.Caption = "TotalBalance";
+            this.colTotalBalance.FieldName = "TotalBalance";
+            this.colTotalBalance.Name = "colTotalBalance";
+            this.colTotalBalance.Visible = true;
+            this.colTotalBalance.VisibleIndex = 4;
             // 
             // TickerArbitrageForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1916, 996);
+            this.ClientSize = new System.Drawing.Size(1916, 1054);
             this.Controls.Add(this.sidePanel1);
-            this.Controls.Add(this.orderBookSidePanel);
-            this.Controls.Add(this.chartSidePanel);
             this.Controls.Add(this.ribbonControl1);
-            this.Margin = new System.Windows.Forms.Padding(6);
+            this.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.Name = "TickerArbitrageForm";
             this.Text = "Classic Arbitrage";
             this.Load += new System.EventHandler(this.TickerArbitrageForm_Load);
@@ -843,23 +1036,18 @@ namespace CryptoMarketClient {
             ((System.ComponentModel.ISupportInitialize)(this.tickerArbitrageInfoBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemProgressBar1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit4)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemSparklineEdit1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemSparklineEdit2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemSparklineEdit3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemSparklineEdit4)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemSpinEdit2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemSpinEdit3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemSpinEdit1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(xyDiagram1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(stepAreaSeriesView1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(series1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(stepAreaSeriesView2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(series2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(stepLineSeriesView1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(series3)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(stepLineSeriesView2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(series4)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.arbitrageHistoryChart)).EndInit();
             this.sidePanel1.ResumeLayout(false);
-            this.chartSidePanel.ResumeLayout(false);
-            this.orderBookSidePanel.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.popupMenu1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -893,14 +1081,8 @@ namespace CryptoMarketClient {
         private DevExpress.XtraBars.Ribbon.RibbonControl ribbonControl1;
         private DevExpress.XtraBars.Ribbon.RibbonPage rpPoloniex;
         private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup1;
-        private DevExpress.XtraBars.BarCheckItem bbShowDetail;
-        private DevExpress.XtraCharts.ChartControl arbitrageHistoryChart;
         private DevExpress.XtraEditors.SidePanel sidePanel1;
-        private DevExpress.XtraEditors.SidePanel chartSidePanel;
         private DevExpress.XtraBars.BarCheckItem bbAllCurrencies;
-        private DevExpress.XtraBars.BarCheckItem bcShowOrderBook;
-        private DevExpress.XtraEditors.SidePanel orderBookSidePanel;
-        private OrderBookControl orderBookControl1;
         private DevExpress.XtraBars.BarButtonItem bbTryArbitrage;
         private DevExpress.XtraGrid.Columns.GridColumn colUpdateTime;
         private DevExpress.XtraGrid.Columns.GridColumn colIsActual;
@@ -917,7 +1099,6 @@ namespace CryptoMarketClient {
         private DevExpress.XtraEditors.Repository.RepositoryItemSpinEdit repositoryItemSpinEdit1;
         private DevExpress.XtraBars.BarEditItem beBuyLowestAsk;
         private DevExpress.XtraEditors.Repository.RepositoryItemSpinEdit repositoryItemSpinEdit2;
-        private DevExpress.XtraBars.Ribbon.RibbonPage ribbonPage1;
         private DevExpress.XtraBars.BarEditItem beHighestBidSell;
         private DevExpress.XtraEditors.Repository.RepositoryItemSpinEdit repositoryItemSpinEdit3;
         private DevExpress.XtraBars.BarButtonItem bbSyncWithLowestAsk;
@@ -929,5 +1110,38 @@ namespace CryptoMarketClient {
         private DevExpress.XtraGrid.Columns.GridColumn colHighestBidEnabled;
         private DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit repositoryItemCheckEdit2;
         private DevExpress.XtraBars.BarButtonItem btShowCombinedBidAsk;
+        private DevExpress.XtraGrid.Columns.GridColumn colLowestBidAskRelation;
+        private DevExpress.XtraEditors.Repository.RepositoryItemProgressBar repositoryItemProgressBar1;
+        private DevExpress.XtraBars.BarButtonItem bbShowOrderBookHistory;
+        private DevExpress.XtraGrid.Columns.GridColumn colSuppressNotification;
+        private DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit repositoryItemCheckEdit4;
+        private DevExpress.XtraGrid.Columns.GridColumn colHighestBidAskRelation;
+        private DevExpress.XtraBars.BarButtonItem bbMinimalProfitSpread;
+        private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup3;
+        private DevExpress.XtraBars.BarButtonItem bbAnalytics;
+        private DevExpress.XtraGrid.Columns.GridColumn colBidShift;
+        private DevExpress.XtraGrid.Columns.GridColumn colAskShift;
+        private DevExpress.XtraBars.BarButtonItem bbGridStrategy;
+        private DevExpress.XtraBars.Ribbon.RibbonPage ribbonPage1;
+        private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup4;
+        private BarButtonItem bbShowTickerStrategies;
+        private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup5;
+        private BarButtonItem bbUpdateBot;
+        private DevExpress.XtraGrid.Columns.GridColumn colHipe;
+        private DevExpress.XtraGrid.Columns.GridColumn colSellHipe;
+        private BarButtonItem barButtonItem2;
+        private BarButtonItem barButtonItem3;
+        private BarSubItem bsShowTickerChart;
+        private PopupMenu popupMenu1;
+        private BarSubItem bsStrategies;
+        private DevExpress.XtraGrid.Columns.GridColumn colBidEnergy;
+        private DevExpress.XtraGrid.Columns.GridColumn colAskEnergy;
+        private DevExpress.XtraEditors.Repository.RepositoryItemSparklineEdit repositoryItemSparklineEdit1;
+        private DevExpress.XtraEditors.Repository.RepositoryItemSparklineEdit repositoryItemSparklineEdit2;
+        private DevExpress.XtraEditors.Repository.RepositoryItemSparklineEdit repositoryItemSparklineEdit3;
+        private DevExpress.XtraEditors.Repository.RepositoryItemSparklineEdit repositoryItemSparklineEdit4;
+        private BarSubItem bsShowOrderBookHistory;
+        private BarCheckItem bcShowNonZeroAmout;
+        private DevExpress.XtraGrid.Columns.GridColumn colTotalBalance;
     }
 }

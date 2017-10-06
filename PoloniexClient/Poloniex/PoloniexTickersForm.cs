@@ -63,7 +63,7 @@ namespace CryptoMarketClient {
             base.OnDeactivate(e);
             if(!HasShown)
               return;
-            //StopBidAskThread();
+            StopBidAskThread();
         }
 
         private void StopBidAskThread() {
@@ -96,7 +96,7 @@ namespace CryptoMarketClient {
         void ShowDetailsForSelectedItemCore() {
             if(this.gridView1.FocusedRowHandle == GridControl.InvalidRowHandle)
                 return;
-            ITicker t = (ITicker)this.gridView1.GetRow(this.gridView1.FocusedRowHandle);
+            TickerBase t = (TickerBase)this.gridView1.GetRow(this.gridView1.FocusedRowHandle);
             TickerForm form = new TickerForm();
             form.MarketName = "Poloniex";
             form.Ticker = t;

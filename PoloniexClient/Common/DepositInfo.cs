@@ -77,7 +77,7 @@ namespace CryptoMarketClient.Common {
                 return;
             }
 
-            PoloniexTicker btcMarket = PoloniexModel.Default.Tickers.FirstOrDefault(m => m.FirstCurrency == "USDT" && m.SecondCurrency == "BTC");
+            PoloniexTicker btcMarket = PoloniexModel.Default.Tickers.FirstOrDefault(m => m.BaseCurrency == "USDT" && m.MarketCurrency == "BTC");
             if(btcMarket == null) {
                 LogManager.Default.AddError("FillDepositTotalPoloniex: can't get BTC currency info");
                 return;
@@ -92,7 +92,7 @@ namespace CryptoMarketClient.Common {
                 dep.Amount = info.Available;
 
                 if(dep.Currency != "BTC") {
-                    PoloniexTicker market = PoloniexModel.Default.Tickers.FirstOrDefault(m => m.SecondCurrency == dep.Currency);
+                    PoloniexTicker market = PoloniexModel.Default.Tickers.FirstOrDefault(m => m.MarketCurrency == dep.Currency);
                     if(market == null) {
                         LogManager.Default.AddError("FillDepositTotalPoloniex: can't get " + dep.Currency + " currency info");
                         continue;

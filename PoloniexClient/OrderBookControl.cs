@@ -17,33 +17,33 @@ namespace CryptoMarketClient {
             this.askGridView.ViewCaptionHeight = 32;
         }
 
-        public List<OrderBookEntry> Asks {
-            get { return (List<OrderBookEntry>)this.askGridControl.DataSource; }
+        public OrderBookEntry[] Asks {
+            get { return (OrderBookEntry[])this.askGridControl.DataSource; }
             set { this.askGridControl.DataSource = value; }
         }
 
-        public List<OrderBookEntry> Bids {
-            get { return (List<OrderBookEntry>)this.bidGridControl.DataSource; }
+        public OrderBookEntry[] Bids {
+            get { return (OrderBookEntry[])this.bidGridControl.DataSource; }
             set { this.bidGridControl.DataSource = value; }
         }
 
         public void RefreshData() {
-            this.bidGridControl.RefreshDataSource();
-            this.askGridControl.RefreshDataSource();
-            this.askGridView.TopRowIndex = Asks.Count;
+            //this.bidGridControl.RefreshDataSource();
+            //this.askGridControl.RefreshDataSource();
+            this.askGridView.TopRowIndex = Asks.Length;
         }
 
         public void RefreshAsks() {
-            this.askGridControl.RefreshDataSource();
-            this.askGridView.TopRowIndex = Asks.Count;
-            this.askGridControl.Invalidate();
-            this.askGridControl.Update();
+            //this.askGridControl.RefreshDataSource();
+            this.askGridView.TopRowIndex = Asks.Length;
+            //this.askGridControl.Invalidate();
+            //this.askGridControl.Update();
         }
 
         public void RefreshBids() {
-            this.bidGridControl.RefreshDataSource();
-            this.bidGridControl.Invalidate();
-            this.bidGridControl.Update();
+            //this.bidGridControl.RefreshDataSource();
+            //this.bidGridControl.Invalidate();
+            //this.bidGridControl.Update();
         }
 
         private void askGridControl_Resize(object sender, EventArgs e) {
@@ -65,20 +65,20 @@ namespace CryptoMarketClient {
         }
 
         public string OrderBookCaption { get { return this.askGridView.ViewCaption; } set { this.askGridView.ViewCaption = value; } }
-        TickerArbitrageInfo info;
-        public TickerArbitrageInfo ArbitrageInfo {
+        TickerCollection info;
+        public TickerCollection TickerCollection {
             get { return info; }
             set {
-                if(ArbitrageInfo == value)
+                if(TickerCollection == value)
                     return;
                 info = value;
-                OnArbitrageInfoChanged();
+                OnTickerCollectionChanged();
             }
         }
-        void OnArbitrageInfoChanged() {
-            Bids = ArbitrageInfo.HighestBidTicker == null ? null : ArbitrageInfo.HighestBidTicker.OrderBook.Bids;
-            Asks = ArbitrageInfo.LowestAskTicker == null ? null : ArbitrageInfo.LowestAskTicker.OrderBook.Asks;
-            OrderBookCaption = ArbitrageInfo.Name;
+        void OnTickerCollectionChanged() {
+            Bids = TickerCollection.Arbitrage.HighestBidTicker == null ? null : TickerCollection.Arbitrage.HighestBidTicker.OrderBook.Bids;
+            Asks = TickerCollection.Arbitrage.LowestAskTicker == null ? null : TickerCollection.Arbitrage.LowestAskTicker.OrderBook.Asks;
+            OrderBookCaption = TickerCollection.Name;
             UpdateAskTableHeight();
         }
     }

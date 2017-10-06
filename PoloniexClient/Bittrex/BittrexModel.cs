@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace CryptoMarketClient.Bittrex {
@@ -212,46 +213,48 @@ namespace CryptoMarketClient.Bittrex {
         public bool UpdateOrderBook(BittrexMarketInfo info, string text, int depth) {
             return UpdateOrderBook(info, text, true, depth);
         }
-        public bool UpdateOrderBook(BittrexMarketInfo info, string text, bool raiseChanged, int depth) {
-            JObject res = (JObject)JsonConvert.DeserializeObject(text);
-            foreach(JProperty prop in res.Children()) {
-                if(prop.Name == "success") {
-                    if(prop.Value.Value<bool>() == false)
-                        return false;
-                }
-                if(prop.Name == "message")
-                    continue;
-                if(prop.Name == "result") {
-                    lock(info) {
-                        JArray bids = ((JObject)prop.Value).Value<JArray>("buy");
-                        JArray asks = ((JObject)prop.Value).Value<JArray>("sell");
-                        info.OrderBook.UpdateBidsCount(Math.Min(bids.Count, depth));
-                        info.OrderBook.UpdateAsksCount(Math.Min(asks.Count, depth));
-                        int count = 0;
-                        IEnumerator<OrderBookEntry> en = info.OrderBook.Bids.GetEnumerator();
-                        foreach(JObject obj in bids) {
-                            en.MoveNext();
-                            OrderBookEntry e = en.Current;
-                            e.Value = obj.Value<decimal>("Rate");
-                            e.Amount = obj.Value<decimal>("Quantity");
-                            if(++count >= depth)
-                                break;
-                        }
-                        count = 0;
-                        en = info.OrderBook.Asks.GetEnumerator();
-                        foreach(JObject obj in asks) {
-                            en.MoveNext();
-                            OrderBookEntry e = en.Current;
-                            e.Value = obj.Value<decimal>("Rate");
-                            e.Amount = obj.Value<decimal>("Quantity");
-                            if(++count >= depth)
-                                break;
-                        }
-                    }
-                }
+        
+        public bool UpdateOrderBook(BittrexMarketInfo ticker, string text, bool raiseChanged, int depth) {
+            if(text == null)
+                return false;
+            Dictionary<string, object> res2 = null;
+            lock(JsonParser) {
+                res2 = JsonParser.Parse(text) as Dictionary<string, object>;
+                if(res2 == null)
+                    return false;
             }
-            if(raiseChanged)
-                info.OrderBook.RaiseOnChanged(new OrderBookUpdateInfo() { Action = OrderBookUpdateType.RefreshAll });
+
+            if(!(bool)res2["success"])
+                return false;
+
+            Dictionary<string, object> result = (Dictionary<string, object>)res2["result"];
+
+            List<object> bids = (List<object>)result["buy"];
+            List<object> asks = (List<object>)result["sell"];
+
+            ticker.OrderBook.GetNewBidAsks();
+            int index = 0;
+            OrderBookEntry[] list = ticker.OrderBook.Bids;
+            foreach(Dictionary<string, object> item in bids) {
+                OrderBookEntry entry = list[index];
+                entry.Amount = (decimal)(double.Parse((string)item.Values.First()));
+                entry.Value = (decimal)(double.Parse((string)item.Values.Last()));
+                index++;
+                if(index >= list.Length)
+                    break;
+            }
+            index = 0;
+            list = ticker.OrderBook.Asks;
+            foreach(Dictionary<string, object> item in asks) {
+                OrderBookEntry entry = list[index];
+                entry.Amount = (decimal)(double.Parse((string)item.Values.First()));
+                entry.Value = (decimal)(double.Parse((string)item.Values.Last()));
+                index++;
+                if(index >= list.Length)
+                    break;
+            }
+            ticker.OrderBook.UpdateEntries();
+            ticker.OrderBook.RaiseOnChanged(new OrderBookUpdateInfo() { Action = OrderBookUpdateType.RefreshAll });
             return true;
         }
         public void GetOrderBook(BittrexMarketInfo info, int depth) {
@@ -261,81 +264,136 @@ namespace CryptoMarketClient.Bittrex {
                 return;
             UpdateOrderBook(info, text, depth);
         }
-        public void GetTrades(BittrexMarketInfo info) {
+        public bool GetTrades(BittrexMarketInfo info) {
             string address = string.Format("https://bittrex.com/api/v1.1/public/getmarkethistory?market={0}", Uri.EscapeDataString(info.MarketName));
-            string text = GetDownloadString(info, address);
+            string text = string.Empty;
+            try {
+                text = GetDownloadString(info, address);
+            }
+            catch(Exception) {
+                return false;
+            }
             if(string.IsNullOrEmpty(text))
-                return;
+                return false;
             JObject res = (JObject)JsonConvert.DeserializeObject(text);
-            foreach(JProperty prop in res.Children()) {
-                if(prop.Name == "success") {
-                    if(prop.Value.Value<bool>() == false)
-                        break;
-                }
-                if(prop.Name == "message")
-                    continue;
-                if(prop.Name == "result") {
-                    lock(info) {
-                        info.TradeHistory.Clear();
-                        JArray trades = (JArray)prop.Value;
-                        foreach(JObject obj in trades) {
-                            TradeHistoryItem item = new TradeHistoryItem();
-                            item.Id = obj.Value<int>("Id");
-                            item.Time = obj.Value<DateTime>("TimeStamp");
-                            item.Amount = obj.Value<decimal>("Quantity");
-                            item.Rate = obj.Value<decimal>("Price");
-                            item.Total = obj.Value<decimal>("Total");
-                            item.Type = obj.Value<string>("OrderType") == "BUY" ? TradeType.Buy : TradeType.Sell;
-                            item.Fill = obj.Value<string>("FillType") == "FILL" ? TradeFillType.Fill : TradeFillType.PartialFill;
-                            info.TradeHistory.Add(item);
-                            TickerUpdateHelper.UpdateHistoryForTradeItem(item, info);
-                        }
-                    }
-                    Console.WriteLine(DateTime.Now.ToString("hh:mm:ss.fff") + " trade add. process time = " + Timer.ElapsedMilliseconds);
-                    info.RaiseTradeHistoryAdd();
+            if(!res.Value<bool>("success"))
+                return false;
+            JArray trades = (JArray)res.Value<JArray>("result");
+            lock(info) {
+                info.TradeHistory.Clear();
+                foreach(JObject obj in trades) {
+                    TradeHistoryItem item = new TradeHistoryItem();
+                    item.Id = obj.Value<int>("Id");
+                    item.Time = obj.Value<DateTime>("TimeStamp");
+                    item.Amount = obj.Value<decimal>("Quantity");
+                    item.Rate = obj.Value<decimal>("Price");
+                    item.Total = obj.Value<decimal>("Total");
+                    item.Type = obj.Value<string>("OrderType") == "BUY" ? TradeType.Buy : TradeType.Sell;
+                    item.Fill = obj.Value<string>("FillType") == "FILL" ? TradeFillType.Fill : TradeFillType.PartialFill;
+                    info.TradeHistory.Add(item);
+                    TickerUpdateHelper.UpdateHistoryForTradeItem(item, info);
                 }
             }
+            info.RaiseTradeHistoryAdd();
+            return true;
         }
-        public void UpdateTrades(BittrexMarketInfo info) {
+        public bool UpdateTrades(BittrexMarketInfo info) {
+            string address = string.Format("https://bittrex.com/api/v1.1/public/getmarkethistory?market={0}", Uri.EscapeDataString(info.MarketName));
+            string text = string.Empty;
+            try {
+                text = GetDownloadString(info, address);
+            }
+            catch(Exception) {
+                return false;
+            }
+            if(string.IsNullOrEmpty(text))
+                return false;
+            JObject res = (JObject)JsonConvert.DeserializeObject(text);
+            if(!res.Value<bool>("success"))
+                return false;
+            JArray trades = res.Value<JArray>("result");
+            lock(info) {
+                UpdateList.Clear();
+                int lastId = info.TradeHistory.Count > 0 ? info.TradeHistory.First().Id : -1;
+                foreach(JObject obj in trades) {
+                    int id = obj.Value<int>("Id");
+                    if(id == lastId) {
+                        foreach(TradeHistoryItem th in UpdateList)
+                            info.TradeHistory.Insert(0, th);
+                        break;
+                    }
+                    TradeHistoryItem item = new TradeHistoryItem();
+                    item.Id = id;
+                    item.Time = obj.Value<DateTime>("TimeStamp");
+                    item.Amount = obj.Value<decimal>("Quantity");
+                    item.Rate = obj.Value<decimal>("Price");
+                    item.Total = obj.Value<decimal>("Total");
+                    item.Type = obj.Value<string>("OrderType") == "BUY" ? TradeType.Buy : TradeType.Sell;
+                    item.Fill = obj.Value<string>("FillType") == "FILL" ? TradeFillType.Fill : TradeFillType.PartialFill;
+                    TickerUpdateHelper.UpdateHistoryForTradeItem(item, info);
+                    UpdateList.Add(item);
+                }
+            }
+            info.RaiseTradeHistoryAdd();
+            return true;
+        }
+        public bool UpdateTradesStatistic(BittrexMarketInfo info, int depth) {
             string address = string.Format("https://bittrex.com/api/v1.1/public/getmarkethistory?market={0}", Uri.EscapeDataString(info.MarketName));
             string text = GetDownloadString(info, address);
             if(string.IsNullOrEmpty(text))
-                return;
+                return false;
             JObject res = (JObject)JsonConvert.DeserializeObject(text);
-            foreach(JProperty prop in res.Children()) {
-                if(prop.Name == "success") {
-                    if(prop.Value.Value<bool>() == false)
-                        break;
+            if(!res.Value<bool>("success"))
+                return false;
+            JArray trades = res.Value<JArray>("result");
+            if(trades.Count == 0)
+                return true;
+            int lastTradeId = trades.First().Value<int>("Id");
+            if(lastTradeId == info.LastTradeId) {
+                info.TradeStatistic.Add(new TradeStatisticsItem() { Time = DateTime.Now });
+                if(info.TradeStatistic.Count > 5000) {
+                    for(int i = 0; i < 100; i++)
+                        info.TradeStatistic.RemoveAt(0);
                 }
-                if(prop.Name == "message")
-                    continue;
-                if(prop.Name == "result") {
-                    lock(info) {
-                        JArray trades = (JArray)prop.Value;
-                        UpdateList.Clear();
-                        int lastId = info.TradeHistory.Count > 0 ? info.TradeHistory.First().Id : -1;
-                        foreach(JObject obj in trades) {
-                            int id = obj.Value<int>("Id");
-                            if(id == lastId) {
-                                info.TradeHistory.InsertRange(0, UpdateList);
-                                break;
-                            }
-                            TradeHistoryItem item = new TradeHistoryItem();
-                            item.Id = id;
-                            item.Time = obj.Value<DateTime>("TimeStamp");
-                            item.Amount = obj.Value<decimal>("Quantity");
-                            item.Rate = obj.Value<decimal>("Price");
-                            item.Total = obj.Value<decimal>("Total");
-                            item.Type = obj.Value<string>("OrderType") == "BUY" ? TradeType.Buy : TradeType.Sell;
-                            item.Fill = obj.Value<string>("FillType") == "FILL" ? TradeFillType.Fill : TradeFillType.PartialFill;
-                            TickerUpdateHelper.UpdateHistoryForTradeItem(item, info);
-                            UpdateList.Add(item);
-                        }
+                return true;
+            }
+            TradeStatisticsItem st = new TradeStatisticsItem();
+            st.MinBuyPrice = decimal.MaxValue;
+            st.MinSellPrice = decimal.MaxValue;
+            st.Time = trades.First().Value<DateTime>("TimeStamp");
+            lock(info) {
+                foreach(JObject obj in trades) {
+                    int id = obj.Value<int>("Id");
+                    if(id == info.LastTradeId)
+                        break;
+                    bool isBuy = obj.Value<string>("OrderType").Length == 3;
+                    decimal price = obj.Value<decimal>("Price");
+                    decimal amount = obj.Value<decimal>("Quantity");
+                    if(isBuy) {
+                        st.BuyAmount += amount;
+                        st.MinBuyPrice = Math.Min(st.MinBuyPrice, price);
+                        st.MaxBuyPrice = Math.Max(st.MaxBuyPrice, price);
+                        st.BuyVolume += amount * price;
                     }
-                    Console.WriteLine(info.Time.ToString("hh:mm:ss.fff") + " trade update. process time = " + Timer.ElapsedMilliseconds);
-                    info.RaiseTradeHistoryAdd();
+                    else {
+                        st.SellAmount += amount;
+                        st.MinSellPrice = Math.Min(st.MinSellPrice, price);
+                        st.MaxSellPrice = Math.Max(st.MaxSellPrice, price);
+                        st.SellVolume += amount * price;
+                    }
                 }
             }
+            if(st.MinSellPrice == decimal.MaxValue)
+                st.MinSellPrice = 0;
+            if(st.MinBuyPrice == decimal.MaxValue)
+                st.MinBuyPrice = 0;
+            info.LastTradeId = lastTradeId;
+            info.TradeStatistic.Add(st);
+            if(info.TradeStatistic.Count > 5000) {
+                for(int i = 0; i < 100; i++)
+                    info.TradeStatistic.RemoveAt(0);
+            }
+            return true;
         }
 
         public string BuyLimit(BittrexMarketInfo info, decimal rate, decimal amount) {

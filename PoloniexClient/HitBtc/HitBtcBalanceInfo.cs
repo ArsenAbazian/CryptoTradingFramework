@@ -1,0 +1,13 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace CryptoMarketClient.HitBtc {
+    public class HitBtcBalanceInfo {
+        public string Currency { get; set; }
+        public decimal Available { get; set; }
+        public decimal Reserved { get; set; }
+    }
+}

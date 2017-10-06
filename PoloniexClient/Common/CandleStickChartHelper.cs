@@ -1,21 +1,81 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace CryptoMarketClient {
-    public class CandleStickData {
-        public DateTime Time { get; set; }
-        public decimal Open { get; set; }
-        public decimal Close { get; set; }
-        public decimal High { get; set; }
-        public decimal Low { get; set; }
+    public class CandleStickData : INotifyPropertyChanged {
+        DateTime time;
+        public DateTime Time {
+            get { return time; }
+            set {
+                if(Time == value)
+                    return;
+                time = value;
+                RaisePropertyChanged("Time");
+            }
+        }
+        decimal open;
+        public decimal Open {
+            get { return open; }
+            set {
+                if(Open == value)
+                    return;
+                open = value;
+                RaisePropertyChanged("Open");
+            }
+        }
+
+        decimal close;
+        public decimal Close {
+            get { return close; }
+            set {
+                if(Close == value)
+                    return;
+                close = value;
+                RaisePropertyChanged("Close");
+            }
+        }
+
+        decimal high;
+        public decimal High {
+            get { return high; }
+            set {
+                if(High == value)
+                    return;
+                high = value;
+                RaisePropertyChanged("High");
+            }
+        }
+
+        decimal low;
+        public decimal Low {
+            get { return low; }
+            set {
+                if(Low == value)
+                    return;
+                low = value;
+                RaisePropertyChanged("Low");
+            }
+        }
+
+        event PropertyChangedEventHandler propertyChanged;
+        event PropertyChangedEventHandler INotifyPropertyChanged.PropertyChanged {
+            add { this.propertyChanged += value; }
+            remove { this.propertyChanged -= value; }
+        }
+
+        protected void RaisePropertyChanged(string propName) {
+            if(this.propertyChanged != null)
+                this.propertyChanged.Invoke(this, new PropertyChangedEventArgs(propName));
+        }
     }
 
     public static class CandleStickChartHelper {
-        public static List<CandleStickData> CreateCandleStickData(List<TickerHistoryItem> list, long rangeInSeconds) {
-            List<CandleStickData> res = new List<CandleStickData>();
+        public static BindingList<CandleStickData> CreateCandleStickData(BindingList<TickerHistoryItem> list, long rangeInSeconds) {
+            BindingList<CandleStickData> res = new BindingList<CandleStickData>();
             CandleStickData candleItem = null;
             long maxTickCount = rangeInSeconds * TimeSpan.TicksPerSecond;
             foreach(TickerHistoryItem item in list) {
@@ -34,7 +94,7 @@ namespace CryptoMarketClient {
             }
             return res;
         }
-        public static void AddCandleStickData(List<CandleStickData> list, TickerHistoryItem item, long rangeInSeconds) {
+        public static void AddCandleStickData(BindingList<CandleStickData> list, TickerHistoryItem item, long rangeInSeconds) {
             Console.WriteLine("Update candle stick data " + item.Time.ToLongTimeString());
             CandleStickData candleItem = null;
             long maxTickCount = rangeInSeconds * TimeSpan.TicksPerSecond;
@@ -52,7 +112,7 @@ namespace CryptoMarketClient {
             candleItem.High = Math.Max(candleItem.High, item.Current);
             return;
         }
-        public static List<CandleStickData> CreateCandleStickData(ITicker ticker) {
+        public static BindingList<CandleStickData> CreateCandleStickData(TickerBase ticker) {
             ticker.CandleStickData.Clear();
             return CreateCandleStickData(ticker.History, ticker.CandleStickPeriodMin * 60);
         }

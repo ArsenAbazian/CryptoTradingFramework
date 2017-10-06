@@ -23,6 +23,9 @@ namespace CryptoMarketClient.Common {
         protected bool IsActive { get; set; }
         public TelegramBot() {
             InnerClient = new Telegram.Bot.TelegramBotClient("410447550:AAGz1QRPgdoh5tuddcMleFYI9Ttw-Ytn9Fs");
+            Update();
+        }
+        public void Update() {
             InnerClient.GetMeAsync().ContinueWith(u => Debug.WriteLine(u.Result.Username));
             InnerClient.GetUpdatesAsync().ContinueWith(task => {
                 foreach(Update upd in task.Result) {

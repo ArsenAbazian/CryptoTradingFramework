@@ -25,34 +25,29 @@ namespace CryptoMarketClient {
             this.Controls.Add(RangeChart);
         }
 
-        //protected override void OnHandleCreated(EventArgs e) {
-        //    base.OnHandleCreated(e);
-        //    RangeChart.CreateControl();
-        //}
-
         protected ChartControl RangeChart { get; } = new ChartControl();
 
         protected override void OnLookAndFeelChanged() {
             if(BidSeries != null)
-                ((XYDiagram2DSeriesViewBase)BidSeries.View).Color = BidColor;
+                ((XYDiagram2DSeriesViewBase)BidSeries.View).Color = Color.Green;
             if(AskSeries != null)
-                ((XYDiagram2DSeriesViewBase)AskSeries.View).Color = AskColor;
+                ((XYDiagram2DSeriesViewBase)AskSeries.View).Color = Color.Red;
             if(CurrentSeries != null)
                 ((XYDiagram2DSeriesViewBase)CurrentSeries.View).Color = CurrentColor;
         }
 
-        ITicker ticker;
-        public ITicker Ticker {
+        TickerBase ticker;
+        public TickerBase Ticker {
             get { return ticker; }
             set {
                 if(Ticker == value)
                     return;
-                ITicker prev = ticker;
+                TickerBase prev = ticker;
                 this.ticker = value;
                 OnTickerChanged(prev);
             }
         }
-        void OnTickerChanged(ITicker prev) {
+        void OnTickerChanged(TickerBase prev) {
             if(prev != null) {
                 prev.OrderBook.OnChanged -= OrderBook_OnChanged;
                 prev.HistoryItemAdd -= Ticker_HistoryItemAdd;
@@ -90,7 +85,7 @@ namespace CryptoMarketClient {
             Ticker.CandleStickData = CandleStickChartHelper.CreateCandleStickData(Ticker.History, Ticker.CandleStickPeriodMin * 60);
         }
 
-        Series CreateLineSeries(List<TickerHistoryItem> list, string str, Color color) {
+        Series CreateLineSeries(BindingList<OrderBookStatisticItem> list, string str, Color color) {
             Series s = new Series();
             s.Name = str;
             s.ArgumentDataMember = "Time";
@@ -105,7 +100,7 @@ namespace CryptoMarketClient {
             return s;
         }
 
-        Series CreateStepAreaSeries(List<TickerHistoryItem> list, string str, Color color) {
+        Series CreateStepAreaSeries(BindingList<OrderBookStatisticItem> list, string str, Color color) {
             Series s = new Series();
             s.Name = str;
             s.ArgumentDataMember = "Time";
@@ -119,7 +114,7 @@ namespace CryptoMarketClient {
             return s;
         }
 
-        Series CreateAreaSeries(List<TickerHistoryItem> list, string str, Color color) {
+        Series CreateAreaSeries(BindingList<TickerHistoryItem> list, string str, Color color) {
             Series s = new Series();
             s.Name = str;
             s.ArgumentDataMember = "Time";
@@ -128,6 +123,21 @@ namespace CryptoMarketClient {
             s.ShowInLegend = true;
             AreaSeriesView view = new AreaSeriesView();
             view.Color = color;
+            s.View = view;
+            s.DataSource = list;
+            return s;
+        }
+
+        Series CreateBarSeries(BindingList<OrderBookStatisticItem> list, string name, string value, Color color) {
+            Series s = new Series();
+            s.Name = name;
+            s.ArgumentDataMember = "Time";
+            s.ValueDataMembers.AddRange(value);
+            s.ValueScaleType = ScaleType.Numerical;
+            s.ShowInLegend = true;
+            SideBySideBarSeriesView view = new SideBySideBarSeriesView();
+            view.Color = color;
+            view.AxisY = ((XYDiagram)this.chartControl1.Diagram).SecondaryAxesY["Hipes"];
             s.View = view;
             s.DataSource = list;
             return s;
@@ -192,18 +202,40 @@ namespace CryptoMarketClient {
         void UpdateChart() {
             if(Ticker == null)
                 return;
-            this.chartControl1.Series.Add(AskSeries = CreateLineSeries(Ticker.History, "Ask", AskColor));
-            this.chartControl1.Series.Add(BidSeries = CreateLineSeries(Ticker.History, "Bid", BidColor));
-            this.chartControl1.Series.Add(CreateLastSeries());
+            this.chartControl1.Series.Clear();
+
+            this.chartControl1.Series.Add(AskSeries = CreateLineSeries(Ticker.OrderBook.VolumeHistory, "LowestAsk", Color.Red));
+            this.chartControl1.Series.Add(BidSeries = CreateLineSeries(Ticker.OrderBook.VolumeHistory, "HighestBid", Color.Green));
+
+            ((XYDiagram)this.chartControl1.Diagram).SecondaryAxesY.Add(new SecondaryAxisY("Hipes"));
+
+            this.chartControl1.Series.Add(CreateBarSeries(Ticker.OrderBook.VolumeHistory, "Bid Hipes", "BidHipe", Color.Green));
+            this.chartControl1.Series.Add(CreateBarSeries(Ticker.OrderBook.VolumeHistory, "Ask Hipes", "AskHipe", Color.Red));
+
+            this.chartControl1.Series.Add(CreateBarSeries(Ticker.OrderBook.VolumeHistory, "Bid Energy", "BidEnergy", Color.Green));
+            this.chartControl1.Series.Add(CreateBarSeries(Ticker.OrderBook.VolumeHistory, "Ask Energy", "AskEnergy", Color.Red));
+
             RangeChart.Series.Add(CurrentSeries = CreateAreaSeries(Ticker.History, "Current", CurrentColor));
             ((XYDiagram2DSeriesViewBase)RangeChart.Series[0].View).RangeControlOptions.Visible = true;
 
+            ((XYDiagram)this.chartControl1.Diagram).DefaultPane.Weight = 3;
+            ((XYDiagram)this.chartControl1.Diagram).Panes.Add(new XYDiagramPane("Hipes") { Weight = 1 });
+            ((XYDiagram)this.chartControl1.Diagram).Panes.Add(new XYDiagramPane("Energies") { Weight = 1 });
+
             ((XYDiagram)this.chartControl1.Diagram).EnableAxisXScrolling = true;
             ((XYDiagram)this.chartControl1.Diagram).EnableAxisXZooming = true;
-            ((XYDiagram)this.chartControl1.Diagram).EnableAxisYScrolling = true;
-            ((XYDiagram)this.chartControl1.Diagram).EnableAxisYZooming = true;
             ((XYDiagram)this.chartControl1.Diagram).AxisX.DateTimeScaleOptions.MeasureUnit = DateTimeMeasureUnit.Second;
             ((XYDiagram)this.chartControl1.Diagram).AxisY.WholeRange.AlwaysShowZeroLevel = false;
+            ((XYDiagram)this.chartControl1.Diagram).AxisY.Label.TextPattern = "{V:f8}";
+
+            //((XYDiagramSeriesViewBase)this.chartControl1.Series[0].View).Pane = ((XYDiagram)this.chartControl1.Diagram).Panes[0];
+            //((XYDiagramSeriesViewBase)this.chartControl1.Series[1].View).Pane = ((XYDiagram)this.chartControl1.Diagram).Panes[0];
+
+            ((XYDiagramSeriesViewBase)this.chartControl1.Series[2].View).Pane = ((XYDiagram)this.chartControl1.Diagram).Panes[0];
+            ((XYDiagramSeriesViewBase)this.chartControl1.Series[3].View).Pane = ((XYDiagram)this.chartControl1.Diagram).Panes[0];
+
+            ((XYDiagramSeriesViewBase)this.chartControl1.Series[4].View).Pane = ((XYDiagram)this.chartControl1.Diagram).Panes[1];
+            ((XYDiagramSeriesViewBase)this.chartControl1.Series[5].View).Pane = ((XYDiagram)this.chartControl1.Diagram).Panes[1];
         }
         Series CreateLastSeries() {
             if(this.bcStock.Checked)
@@ -211,13 +243,13 @@ namespace CryptoMarketClient {
             else if(this.bcColoredCandle.Checked)
                 return CreateCandleStickSeries();
             else if(this.bcLine.Checked)
-                return CreateLineSeries(Ticker.History, "Current", Color.DarkGray);
+                return CreateLineSeries(Ticker.OrderBook.VolumeHistory, "Current", Color.DarkGray);
             else if(this.bcCandle.Checked)
                 return CreateCandleStickSeries();
             else if(this.bcColoredStock.Checked)
                 return CreateStockSeries();
             else if(this.bcArea.Checked)
-                return CreateStepAreaSeries(Ticker.History, "Current", Color.DarkGray);
+                return CreateStepAreaSeries(Ticker.OrderBook.VolumeHistory, "Current", Color.DarkGray);
             return null;
         }
 

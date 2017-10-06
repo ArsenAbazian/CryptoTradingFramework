@@ -170,7 +170,7 @@
             // 
             // bindingSource
             // 
-            this.bindingSource.DataSource = typeof(CryptoMarketClient.ITicker);
+            this.bindingSource.DataSource = typeof(CryptoMarketClient.TickerBase);
             // 
             // tileView1
             // 
