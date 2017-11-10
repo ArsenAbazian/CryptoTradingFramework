@@ -19,6 +19,7 @@ namespace CryptoMarketClient.Common {
 
         Stopwatch timer;
         int concurrentTickersCount = 0;
+        int concurrentTickersCount2 = 0;
 
         public TickerCollectionUpdateHelper() {
             this.timer = new Stopwatch();
@@ -28,7 +29,8 @@ namespace CryptoMarketClient.Common {
         public List<TickerCollection> Items { get; private set; }
         public void Initialize() {
             Items = TickerCollectionHelper.GetItems();
-            Items = Items.Where((i) => i.BaseCurrency == "BTC").ToList();
+            //Items = Items.Where((i) => (i.BaseCurrency == "USDT" && i.MarketCurrency == "BTC")).ToList();
+            Items = Items.Where((i) => i.BaseCurrency == "BTC" || (i.BaseCurrency == "USDT" && i.MarketCurrency == "BTC")).ToList();
         }
 
         
@@ -64,8 +66,44 @@ namespace CryptoMarketClient.Common {
                 info.IsUpdating = true;
                 info.ObtainingData = false;
                 info.UpdateTimeMs = (int)(timer.ElapsedMilliseconds - info.StartUpdateMs);
+                //Debug.WriteLine(string.Format("{0} = {1}", info.Name, info.UpdateTimeMs));
                 if(listener != null)
                     listener.OnUpdateTickerCollection(info, true);
+            }
+            info.LastUpdate = DateTime.Now;
+        }
+        public async void Update(StaticArbitrageInfo info, IStaticArbitrageUpdateListener listener) {
+            if(concurrentTickersCount2 > 8)
+                return;
+            Interlocked.Increment(ref concurrentTickersCount2);
+
+            info.NextOverdueMs = 6000;
+            info.StartUpdateMs = timer.ElapsedMilliseconds;
+            info.ObtainingData = true;
+            info.ObtainDataSuccessCount = 0;
+            info.ObtainDataCount = 0;
+
+            Task task = Task.Factory.StartNew(() => {
+                if(info.AltBase.UpdateArbitrageOrderBook(OrderBook.Depth))
+                    info.ObtainDataSuccessCount++;
+                info.ObtainDataCount++;
+                if(info.AltUsdt.UpdateArbitrageOrderBook(OrderBook.Depth))
+                    info.ObtainDataSuccessCount++;
+                info.ObtainDataCount++;
+                if(info.BaseUsdt.UpdateArbitrageOrderBook(OrderBook.Depth))
+                    info.ObtainDataSuccessCount++;
+                info.ObtainDataCount++;
+            });
+
+            await task;
+            Interlocked.Decrement(ref concurrentTickersCount2); //todo
+            if(info.ObtainDataCount == info.Count) {
+                info.IsActual = info.ObtainDataSuccessCount == info.Count;
+                info.IsUpdating = true;
+                info.ObtainingData = false;
+                info.UpdateTimeMs = (int)(timer.ElapsedMilliseconds - info.StartUpdateMs);
+                if(listener != null)
+                    listener.OnUpdateInfo(info, true);
             }
             info.LastUpdate = DateTime.Now;
         }
@@ -73,5 +111,9 @@ namespace CryptoMarketClient.Common {
 
     public interface ITickerCollectionUpdateListener {
         void OnUpdateTickerCollection(TickerCollection collection, bool useInvokeForUI);
+    }
+
+    public interface IStaticArbitrageUpdateListener {
+        void OnUpdateInfo(StaticArbitrageInfo info, bool useInvokeForUI);
     }
 }

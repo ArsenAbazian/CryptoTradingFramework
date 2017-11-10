@@ -68,8 +68,6 @@ namespace CryptoMarketClient {
         public BindingList<OrderBookStatisticItem> VolumeHistory { get; } = new BindingList<OrderBookStatisticItem>();
 
         public void UpdateHistory() {
-            //if(VolumeHistory.Count > 600)
-            //    VolumeHistory.RemoveRange(0, 100);
             VolumeHistory.Add(new OrderBookStatisticItem() {
                 LowestAsk = Asks[0].Value,
                 HighestBid = Bids[0].Value,
@@ -168,6 +166,8 @@ namespace CryptoMarketClient {
                 MaxVolume = Math.Max(MaxVolume, Bids[i].Volume);
                 MaxVolume = Math.Max(MaxVolume, Asks[i].Volume);
             }
+            if(MaxVolume == 0)
+                return;
             MaxVolume = 1 / MaxVolume;
             for(int i = 0; i < Depth; i++) {
                 Bids[i].VolumePercent = Bids[i].Volume * MaxVolume;

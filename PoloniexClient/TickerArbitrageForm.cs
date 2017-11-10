@@ -616,7 +616,7 @@ namespace CryptoMarketClient {
 
         protected Type StrategyType { get; set; }
         private void bbGridStrategy_ItemClick(object sender, ItemClickEventArgs e) {
-            StrategyType = typeof(GridStrategy);
+            //StrategyType = typeof(GridStrategy);
         }
         void InitializeTickersMenu() {
             AddEnterMarketMenuItems();

@@ -22,7 +22,7 @@ namespace CryptoMarketClient {
             UserLookAndFeel.Default.SetSkinStyle("Office 2016 Dark");
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            WindowsFormsSettings.UseHardwareAcceleration = DevExpress.Utils.DefaultBoolean.True;
+            WindowsFormsSettings.ForceDirectXPaint();
 
             CheckShowApiKeysForm();
             

@@ -85,7 +85,6 @@ namespace CryptoMarketClient {
                     candleItem.Open = item.Current;
                     candleItem.Low = candleItem.High = candleItem.Close = item.Current;
                     res.Add(candleItem);
-                    Console.WriteLine("Add candlestick data Time = " + candleItem.Time);
                     continue;
                 }
                 candleItem.Close = item.Current;
@@ -95,7 +94,6 @@ namespace CryptoMarketClient {
             return res;
         }
         public static void AddCandleStickData(BindingList<CandleStickData> list, TickerHistoryItem item, long rangeInSeconds) {
-            Console.WriteLine("Update candle stick data " + item.Time.ToLongTimeString());
             CandleStickData candleItem = null;
             long maxTickCount = rangeInSeconds * TimeSpan.TicksPerSecond;
             if(list.Count == 0 || (item.Time.Ticks - list[list.Count - 1].Time.Ticks) > maxTickCount) {
@@ -103,7 +101,6 @@ namespace CryptoMarketClient {
                 candleItem.Open = candleItem.Close = candleItem.High = candleItem.Low = item.Current;
                 candleItem.Time = item.Time;
                 list.Add(candleItem);
-                Console.WriteLine("Add candlestick data Time = " + candleItem.Time);
                 return;
             }
             candleItem = list[list.Count - 1];

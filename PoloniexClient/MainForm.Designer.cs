@@ -39,6 +39,9 @@
             this.bbSaveAllHistory = new DevExpress.XtraBars.BarButtonItem();
             this.beArbitrageDepth = new DevExpress.XtraBars.BarEditItem();
             this.repositoryItemSpinEdit2 = new DevExpress.XtraEditors.Repository.RepositoryItemSpinEdit();
+            this.bbHitBtcConnect = new DevExpress.XtraBars.BarButtonItem();
+            this.bcHitBtc = new DevExpress.XtraBars.BarCheckItem();
+            this.bbShowStaticArbitrage = new DevExpress.XtraBars.BarButtonItem();
             this.ribbonPageCategory1 = new DevExpress.XtraBars.Ribbon.RibbonPageCategory();
             this.ribbonPage2 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPageGroup2 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
@@ -47,6 +50,7 @@
             this.rpPoloniex = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPageGroup3 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.ribbonPageGroup1 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
+            this.ribbonPageGroup8 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.ribbonPageGroup7 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.ribbonPage1 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPageGroup6 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
@@ -54,8 +58,6 @@
             this.ribbonStatusBar1 = new DevExpress.XtraBars.Ribbon.RibbonStatusBar();
             this.documentManager1 = new DevExpress.XtraBars.Docking2010.DocumentManager(this.components);
             this.tabbedView1 = new DevExpress.XtraBars.Docking2010.Views.Tabbed.TabbedView(this.components);
-            this.bbHitBtcConnect = new DevExpress.XtraBars.BarButtonItem();
-            this.bcHitBtc = new DevExpress.XtraBars.BarCheckItem();
             ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemSpinEdit1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemSpinEdit2)).BeginInit();
@@ -83,10 +85,11 @@
             this.bbSaveAllHistory,
             this.beArbitrageDepth,
             this.bbHitBtcConnect,
-            this.bcHitBtc});
+            this.bcHitBtc,
+            this.bbShowStaticArbitrage});
             this.ribbonControl1.Location = new System.Drawing.Point(0, 0);
             this.ribbonControl1.Margin = new System.Windows.Forms.Padding(6);
-            this.ribbonControl1.MaxItemId = 19;
+            this.ribbonControl1.MaxItemId = 20;
             this.ribbonControl1.MdiMergeStyle = DevExpress.XtraBars.Ribbon.RibbonMdiMergeStyle.Always;
             this.ribbonControl1.Name = "ribbonControl1";
             this.ribbonControl1.PageCategories.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageCategory[] {
@@ -129,7 +132,7 @@
             // 
             // btClassicArbitrage
             // 
-            this.btClassicArbitrage.Caption = "Arbitrage Possibilities";
+            this.btClassicArbitrage.Caption = "Show \r\nItems";
             this.btClassicArbitrage.Id = 9;
             this.btClassicArbitrage.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("btClassicArbitrage.ImageOptions.Image")));
             this.btClassicArbitrage.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("btClassicArbitrage.ImageOptions.LargeImage")));
@@ -224,6 +227,30 @@
             0});
             this.repositoryItemSpinEdit2.Name = "repositoryItemSpinEdit2";
             // 
+            // bbHitBtcConnect
+            // 
+            this.bbHitBtcConnect.Caption = "barButtonItem1";
+            this.bbHitBtcConnect.Id = 17;
+            this.bbHitBtcConnect.Name = "bbHitBtcConnect";
+            // 
+            // bcHitBtc
+            // 
+            this.bcHitBtc.Caption = "HitBtc";
+            this.bcHitBtc.Id = 18;
+            this.bcHitBtc.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bcHitBtc.ImageOptions.Image")));
+            this.bcHitBtc.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("bcHitBtc.ImageOptions.LargeImage")));
+            this.bcHitBtc.Name = "bcHitBtc";
+            this.bcHitBtc.CheckedChanged += new DevExpress.XtraBars.ItemClickEventHandler(this.bcHitBtc_CheckedChanged);
+            // 
+            // bbShowStaticArbitrage
+            // 
+            this.bbShowStaticArbitrage.Caption = "Show \r\nItems";
+            this.bbShowStaticArbitrage.Id = 19;
+            this.bbShowStaticArbitrage.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bbShowStaticArbitrage.ImageOptions.Image")));
+            this.bbShowStaticArbitrage.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("bbShowStaticArbitrage.ImageOptions.LargeImage")));
+            this.bbShowStaticArbitrage.Name = "bbShowStaticArbitrage";
+            this.bbShowStaticArbitrage.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bbShowStaticArbitrage_ItemClick);
+            // 
             // ribbonPageCategory1
             // 
             this.ribbonPageCategory1.Name = "ribbonPageCategory1";
@@ -265,6 +292,7 @@
             this.rpPoloniex.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] {
             this.ribbonPageGroup3,
             this.ribbonPageGroup1,
+            this.ribbonPageGroup8,
             this.ribbonPageGroup7});
             this.rpPoloniex.Name = "rpPoloniex";
             this.rpPoloniex.Text = "Connect";
@@ -282,7 +310,14 @@
             this.ribbonPageGroup1.ItemLinks.Add(this.btClassicArbitrage);
             this.ribbonPageGroup1.ItemLinks.Add(this.bbShowHistory);
             this.ribbonPageGroup1.Name = "ribbonPageGroup1";
-            this.ribbonPageGroup1.Text = "Arbitrage";
+            this.ribbonPageGroup1.Text = "ClassicArbitrage";
+            // 
+            // ribbonPageGroup8
+            // 
+            this.ribbonPageGroup8.AllowTextClipping = false;
+            this.ribbonPageGroup8.ItemLinks.Add(this.bbShowStaticArbitrage);
+            this.ribbonPageGroup8.Name = "ribbonPageGroup8";
+            this.ribbonPageGroup8.Text = "Static Arbitrage";
             // 
             // ribbonPageGroup7
             // 
@@ -328,21 +363,6 @@
             // tabbedView1
             // 
             this.tabbedView1.RootContainer.Element = null;
-            // 
-            // bbHitBtcConnect
-            // 
-            this.bbHitBtcConnect.Caption = "barButtonItem1";
-            this.bbHitBtcConnect.Id = 17;
-            this.bbHitBtcConnect.Name = "bbHitBtcConnect";
-            // 
-            // bcHitBtc
-            // 
-            this.bcHitBtc.Caption = "HitBtc";
-            this.bcHitBtc.Id = 18;
-            this.bcHitBtc.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bcHitBtc.ImageOptions.Image")));
-            this.bcHitBtc.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("bcHitBtc.ImageOptions.LargeImage")));
-            this.bcHitBtc.Name = "bcHitBtc";
-            this.bcHitBtc.CheckedChanged += new DevExpress.XtraBars.ItemClickEventHandler(this.bcHitBtc_CheckedChanged);
             // 
             // MainForm
             // 
@@ -402,6 +422,8 @@
         private DevExpress.XtraEditors.Repository.RepositoryItemSpinEdit repositoryItemSpinEdit2;
         private DevExpress.XtraBars.BarButtonItem bbHitBtcConnect;
         private DevExpress.XtraBars.BarCheckItem bcHitBtc;
+        private DevExpress.XtraBars.BarButtonItem bbShowStaticArbitrage;
+        private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup8;
     }
 }
 

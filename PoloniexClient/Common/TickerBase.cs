@@ -78,16 +78,16 @@ namespace CryptoMarketClient {
         }
         protected virtual SnapshotChartControl CreateChartSnapshotControl() {
             SnapshotChartControl chart = new SnapshotChartControl();
-            chart.Series.Add(CreateLineSeries("Bid", BidColor));
-            chart.Series.Add(CreateLineSeries("Ask", AskColor));
+            //chart.Series.Add(CreateLineSeries("Bid", BidColor));
+            //chart.Series.Add(CreateLineSeries("Ask", AskColor));
             chart.Size = BidAskSnapshotSize;
             chart.CreateControl();
             return chart;
         }
         protected virtual SnapshotChartControl CreateOrderBookChartControl() {
             SnapshotChartControl chart = new SnapshotChartControl();
-            chart.Series.Add(CreateStepAreaSeries(OrderBook.Bids, BidColor));
-            chart.Series.Add(CreateStepAreaSeries(OrderBook.Asks, AskColor));
+            //chart.Series.Add(CreateStepAreaSeries(OrderBook.Bids, BidColor));
+            //chart.Series.Add(CreateStepAreaSeries(OrderBook.Asks, AskColor));
             chart.Size = OrderBookSnapshotSize;
             chart.CreateControl();
             return chart;

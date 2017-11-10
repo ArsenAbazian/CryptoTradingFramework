@@ -235,23 +235,27 @@ namespace CryptoMarketClient.Bittrex {
             ticker.OrderBook.GetNewBidAsks();
             int index = 0;
             OrderBookEntry[] list = ticker.OrderBook.Bids;
-            foreach(Dictionary<string, object> item in bids) {
-                OrderBookEntry entry = list[index];
-                entry.Amount = (decimal)(double.Parse((string)item.Values.First()));
-                entry.Value = (decimal)(double.Parse((string)item.Values.Last()));
-                index++;
-                if(index >= list.Length)
-                    break;
+            if(bids != null) {
+                foreach(Dictionary<string, object> item in bids) {
+                    OrderBookEntry entry = list[index];
+                    entry.Amount = (decimal)(double.Parse((string)item.Values.First()));
+                    entry.Value = (decimal)(double.Parse((string)item.Values.Last()));
+                    index++;
+                    if(index >= list.Length)
+                        break;
+                }
             }
             index = 0;
             list = ticker.OrderBook.Asks;
-            foreach(Dictionary<string, object> item in asks) {
-                OrderBookEntry entry = list[index];
-                entry.Amount = (decimal)(double.Parse((string)item.Values.First()));
-                entry.Value = (decimal)(double.Parse((string)item.Values.Last()));
-                index++;
-                if(index >= list.Length)
-                    break;
+            if(asks != null) {
+                foreach(Dictionary<string, object> item in asks) {
+                    OrderBookEntry entry = list[index];
+                    entry.Amount = (decimal)(double.Parse((string)item.Values.First()));
+                    entry.Value = (decimal)(double.Parse((string)item.Values.Last()));
+                    index++;
+                    if(index >= list.Length)
+                        break;
+                }
             }
             ticker.OrderBook.UpdateEntries();
             ticker.OrderBook.RaiseOnChanged(new OrderBookUpdateInfo() { Action = OrderBookUpdateType.RefreshAll });
@@ -346,7 +350,7 @@ namespace CryptoMarketClient.Bittrex {
             if(!res.Value<bool>("success"))
                 return false;
             JArray trades = res.Value<JArray>("result");
-            if(trades.Count == 0)
+            if(trades == null || trades.Count == 0)
                 return true;
             int lastTradeId = trades.First().Value<int>("Id");
             if(lastTradeId == info.LastTradeId) {

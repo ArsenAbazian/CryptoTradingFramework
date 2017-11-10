@@ -224,7 +224,6 @@ namespace CryptoMarketClient.HitBtc {
         }
         public bool GetBalances() {
             string query = string.Format("/api/1/trading/balance?nonce={0}&apikey={1}", GetNonce(), ApiKey);
-            string text = null;
 
             var client = new RestClient("https://api.hitbtc.com");
             var request = new RestRequest("/api/1/trading/balance", Method.GET);

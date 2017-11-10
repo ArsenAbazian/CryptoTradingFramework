@@ -1,38 +1,43 @@
-﻿using System;
+﻿using DevExpress.Utils.Serializing;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DevExpress.XtraCharts;
 
 namespace CryptoMarketClient.Strategies {
-    public class GridStrategy : TickerStrategyBase {
-        public GridStrategy(TickerBase ticker) : base(ticker) {
-            State = GridStrategyState.Buy;
+    public class GridStrategyBase : TickerStrategyBase {
+        public GridStrategyBase(TickerBase ticker) : base(ticker) {
         }
 
-        public GridStrategyState State { get; private set; }
+        protected override void OnTickCore() {
+            throw new NotImplementedException();
+        }
+        public override string Name => "GridStrategy";
 
-        public override void Calculate() {
-            if(PrevHighestBid == 0 || PrevLowestAsk == 0) {
-                PrevHighestBid = Ticker.HighestBid;
-                PrevLowestAsk = Ticker.LowestAsk;
-                Result = StrategyResult.Wait;
-            }
-            HighestBid = Ticker.OrderBook.Bids[0].Value;
-            LowestAsk = Ticker.OrderBook.Asks[0].Value;
-            Result = StrategyResult.Wait;
-            
-            decimal low = AverageMarketPrice - GridStep;
-            if(LowestAsk <= low)
-                Result = StrategyResult.Buy;
+        public List<OrderInfo> BidLines { get; } = new List<OrderInfo>();
+        public List<OrderInfo> AskLines { get; } = new List<OrderInfo>();
 
-            decimal high = AverageMarketPrice + GridStep;
-            if(HighestBid >= high)
-                Result = StrategyResult.Sell;
-            PrevLowestAsk = LowestAsk;
-            PrevHighestBid = HighestBid;
+        [XtraSerializableProperty]
+        public decimal BaseCurrencyMaximum { get; set; }
+        [XtraSerializableProperty]
+        public decimal MarketCurrencyMaximum { get; set; }
+
+        public override object HistoryDataSource => throw new NotImplementedException();
+
+        protected virtual void GenerateLines() { }
+
+        public void ClearLines() {
+            BidLines.Clear();
+            AskLines.Clear();
         }
 
+        protected override void Vizualize(ChartControl chart) {
+            throw new NotImplementedException();
+        }
+
+        /*
         protected decimal CalcBuyTotalAmount(decimal baseCurrencyAmount, out decimal totalSpent, out decimal lowestAsk) {
             totalSpent = TotalSpent;
             decimal totalAmount = 0;
@@ -111,17 +116,11 @@ namespace CryptoMarketClient.Strategies {
             }
             return false;
         }
-
-        public decimal TotalProfit { get { return TotalEarn - TotalSpent; } }
-        public decimal TotalEarn { get; set; }
-        public decimal TotalSpent { get; set; }
-        public decimal HighestBid { get; private set; }
-        public decimal LowestAsk { get; private set; }
-        public decimal PrevHighestBid { get; private set; }
-        public decimal PrevLowestAsk { get; private set; }
-        public decimal AverageMarketPrice { get; set; }
-        public decimal GridStep { get; set; }
+        */
     }
 
-    public enum GridStrategyState { Buy, Sell }
+    public class OrderInfo {
+        public decimal Rate { get; set; }
+        public decimal Amount { get; set; }
+    }
 }

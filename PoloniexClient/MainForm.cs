@@ -39,15 +39,15 @@ namespace CryptoMarketClient {
             BittrextMarketsForm.Show();
             PoloniexModel.Default.IsConnected = true;
             PoloniexTickersForm.Show();
-            HitBtcModel.Default.IsConnected = true;
-            HitBtcMarketsForm.Show();
+            //HitBtcModel.Default.IsConnected = true;
+            //HitBtcMarketsForm.Show();
 
-            if(BittrexModel.Default.IsConnected && 
-                PoloniexModel.Default.IsConnected && 
-                HitBtcModel.Default.IsConnected) {
-                ArbitrageForm.Show();
-                ArbitrageForm.Activate();
-            }
+            //if(BittrexModel.Default.IsConnected && 
+            //    PoloniexModel.Default.IsConnected/* && 
+            //    HitBtcModel.Default.IsConnected*/) {
+            //    ArbitrageForm.Show();
+            //    ArbitrageForm.Activate();
+            //}
         }
 
         PoloniexTickersForm tickersForm;
@@ -167,6 +167,22 @@ namespace CryptoMarketClient {
                 HitBtcModel.Default.IsConnected = false;
                 HitBtcMarketsForm.Hide();
             }
+        }
+
+        StaticArbitrageForm staticArbitrageForm;
+        public StaticArbitrageForm StaticArbitrageForm {
+            get {
+                if(staticArbitrageForm == null || staticArbitrageForm.IsDisposed) {
+                    staticArbitrageForm = new StaticArbitrageForm();
+                    staticArbitrageForm.MdiParent = this;
+                }
+                return staticArbitrageForm;
+            }
+        }
+
+        private void bbShowStaticArbitrage_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
+            StaticArbitrageForm.Show();
+            StaticArbitrageForm.Activate();
         }
     }
 }

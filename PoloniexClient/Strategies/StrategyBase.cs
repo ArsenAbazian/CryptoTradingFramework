@@ -1,4 +1,6 @@
-﻿using System;
+﻿using CryptoMarketClient.Common;
+using DevExpress.XtraCharts;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,74 +11,69 @@ namespace CryptoMarketClient.Strategies {
         public TickerStrategyBase(TickerBase ticker) {
             Ticker = ticker;
             ticker.Strategies.Add(this);
-            Result = StrategyResult.Wait;
             Enabled = false;
             DemoMode = true;
         }
 
         public bool Enabled { get; set; }
-        public StrategyResult Result { get; protected set; }
+        public bool DemoMode { get; set; }
+
         public TickerBase Ticker { get; private set; }
-        public List<StrategyHistoryItem> History { get; } = new List<StrategyHistoryItem>();
-        public abstract void Calculate();
-        public bool Execute() {
-            switch(Result) {
-                case StrategyResult.Wait:
-                    return true;
-                case StrategyResult.Disable:
-                    Enabled = false;
-                    return true;
-                case StrategyResult.Buy:
-                    return Buy();
-                case StrategyResult.Sell:
-                    return Sell();
+        public abstract object HistoryDataSource { get; }
+        public void OnTick() {
+            if(!Enabled)
+                return;
+            OnTickCore();
+        }
+        protected abstract void OnTickCore();
+        public abstract string Name { get; }
+        protected virtual void Log(LogType logType, string text) {
+            LogManager.Default.AddMessage(logType, Name + "-" + Ticker.HostName + "-" + Ticker.Name, text);
+        }
+        protected string GetRateAmountString(decimal rate, decimal amount) {
+            return amount.ToString("0.########") + " by " + rate.ToString("0.########");
+        }
+        protected virtual bool Buy(decimal rate, decimal amount) {
+            if(!DemoMode && !Ticker.Buy(rate, amount)) {
+                Log(LogType.Error, "Buy " + GetRateAmountString(rate, amount) + " failed.");
+                return false;
             }
+            Log(LogType.Success, "Buy " + GetRateAmountString(rate, amount) + " succeded.");
             return true;
         }
-        public bool DemoMode { get; set; }
-        public decimal MaxAllowedBaseCurrencyAmount { get; set; }
-        public decimal BaseCurrencyAmount { get; set; }
-        public decimal MarketCurrencyAmount { get; set; }
-        public decimal BaseCurrencySpentAmount { get; set; }
-        public abstract bool Buy();
-        public abstract bool Sell();
-        protected bool BuyCore(decimal lowestAsk, decimal amount, decimal total) {
-            if(DemoMode || Ticker.Buy(lowestAsk, amount)) {
-                History.Add(new StrategyHistoryItem() {
-                    Time = DateTime.Now,
-                    Amount = amount,
-                    Rate = lowestAsk,
-                    Operation = StrategyOperation.Buy,
-                    Total = total});
-                return true;
+        protected virtual bool Sell(decimal rate, decimal amount) {
+            if(!DemoMode && !Ticker.Sell(rate, amount)) {
+                Log(LogType.Error, "Sell " + GetRateAmountString(rate, amount) + " failed.");
+                return false;
             }
-            return false;
+            Log(LogType.Success, "Sell " + GetRateAmountString(rate, amount) + " succeded.");
+            return true;
         }
-        protected bool SellCore(decimal highestBid, decimal amount, decimal total) {
-            if(DemoMode || Ticker.Sell(highestBid, amount)) {
-                History.Add(new StrategyHistoryItem() {
-                    Time = DateTime.Now,
-                    Amount = amount,
-                    Rate = highestBid,
-                    Operation = StrategyOperation.Sell,
-                    Total = total
-                });
-                return true;
+        protected virtual bool PlaceBid(decimal rate, decimal amount) {
+            if(!DemoMode && !Ticker.Buy(rate, amount)) {
+                Log(LogType.Error, "Place Bid " + GetRateAmountString(rate, amount) + " failed.");
+                return false;
             }
-            return false;
+            Log(LogType.Success, "Place Bid " + GetRateAmountString(rate, amount) + " succeded.");
+            return true;
         }
-    }
+        protected virtual bool PlaceAsk(decimal rate, decimal amount) {
+            if(!DemoMode && !Ticker.Sell(rate, amount)) {
+                Log(LogType.Error, "Place Ask " + GetRateAmountString(rate, amount) + " failed.");
+                return false;
+            }
+            Log(LogType.Success, "Place Ask " + GetRateAmountString(rate, amount) + " succeded.");
+            return true;
+        }
 
-    public enum StrategyResult {
-        Wait,
-        Buy,
-        Sell,
-        Disable
+        protected abstract void Vizualize(ChartControl chart);
     }
 
     public enum StrategyOperation {
-        Buy,
-        Sell
+        BuyNow,
+        SellNow,
+        BuyPostponed,
+        SellPostponed
     }
 
     public class StrategyHistoryItem {
