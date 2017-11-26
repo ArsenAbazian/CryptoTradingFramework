@@ -186,6 +186,12 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActiveTrailngCollectionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ActiveTrailngCollectionForm.Designer.cs">
+      <DependentUpon>ActiveTrailngCollectionForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="AnalyticsForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -238,6 +244,7 @@
     </Compile>
     <Compile Include="Common\ApiKeyInfo.cs" />
     <Compile Include="Common\ArbitrageHistoryHelper.cs" />
+    <Compile Include="Common\BalanceBase.cs" />
     <Compile Include="Common\CandleStickChartHelper.cs" />
     <Compile Include="Common\StaticArbitrageHelper.cs" />
     <Compile Include="Common\StaticArbitrageInfo.cs" />
@@ -263,6 +270,8 @@
     <Compile Include="Common\TickerHistoryItem.cs" />
     <Compile Include="Common\TickerUpdateHelper.cs" />
     <Compile Include="Common\TradeHistoryItem.cs" />
+    <Compile Include="Common\TrailingManager.cs" />
+    <Compile Include="Common\TralingSettings.cs" />
     <Compile Include="DepositsTotal.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -280,6 +289,17 @@
     </Compile>
     <Compile Include="ArbitrageHistoryForm.Designer.cs">
       <DependentUpon>ArbitrageHistoryForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Exmo\ExmoBalanceInfo.cs" />
+    <Compile Include="Exmo\ExmoCurrencyInfo.cs" />
+    <Compile Include="Exmo\ExmoModel.cs" />
+    <Compile Include="Exmo\ExmoOrderInfo.cs" />
+    <Compile Include="Exmo\ExmoTicker.cs" />
+    <Compile Include="Exmo\ExmoTickerCollectionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Exmo\ExmoTickerCollectionForm.Designer.cs">
+      <DependentUpon>ExmoTickerCollectionForm.cs</DependentUpon>
     </Compile>
     <Compile Include="HitBtc\HitBtcBalanceInfo.cs" />
     <Compile Include="HitBtc\HitBtcCurrencyInfo.cs" />
@@ -431,6 +451,15 @@
     <Compile Include="TimerUpdateForm.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="TrailingSettingsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TrailingSettingsForm.Designer.cs">
+      <DependentUpon>TrailingSettingsForm.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="ActiveTrailngCollectionForm.resx">
+      <DependentUpon>ActiveTrailngCollectionForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="AnalyticsForm.resx">
       <DependentUpon>AnalyticsForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -460,6 +489,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ArbitrageHistoryForm.resx">
       <DependentUpon>ArbitrageHistoryForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Exmo\ExmoTickerCollectionForm.resx">
+      <DependentUpon>ExmoTickerCollectionForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="HitBtc\HitBtcTickerCollectionForm.resx">
       <DependentUpon>HitBtcTickerCollectionForm.cs</DependentUpon>
@@ -537,6 +570,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="TickerStrategyParametersForm.resx">
       <DependentUpon>TickerStrategyParametersForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TrailingSettingsForm.resx">
+      <DependentUpon>TrailingSettingsForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.manifest" />
     <None Include="packages.config" />

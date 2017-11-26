@@ -33,14 +33,14 @@ namespace CryptoMarketClient {
         }
 
         PoloniexAccountBalanceInfo firstInfo, secondInfo;
-        protected PoloniexAccountBalanceInfo FirstCurrencyBalanceInfo {
+        public override BalanceBase BaseBalanceInfo {
             get {
                 if(firstInfo == null)
                     firstInfo = PoloniexModel.Default.Balances.FirstOrDefault((b) => b.Currency == BaseCurrency);
                 return firstInfo;
             }
         }
-        protected PoloniexAccountBalanceInfo SecondCurrencyBalanceInfo {
+        public override BalanceBase MarketBalanceInfo {
             get {
                 if(secondInfo == null)
                     secondInfo = PoloniexModel.Default.Balances.FirstOrDefault((b) => b.Currency == MarketCurrency);
@@ -57,9 +57,9 @@ namespace CryptoMarketClient {
             }
         }
 
-        public override decimal BaseCurrencyBalance { get { return FirstCurrencyBalanceInfo == null? 0: FirstCurrencyBalanceInfo.Available; } }
-        public override decimal MarketCurrencyBalance { get { return SecondCurrencyBalanceInfo == null? 0: SecondCurrencyBalanceInfo.Available; } }
-        public override decimal MarketCurrencyTotalBalance { get { return SecondCurrencyBalanceInfo == null ? 0 : SecondCurrencyBalanceInfo.OnOrders + SecondCurrencyBalanceInfo.Available; } }
+        public override decimal BaseCurrencyBalance { get { return BaseBalanceInfo == null? 0: BaseBalanceInfo.Available; } }
+        public override decimal MarketCurrencyBalance { get { return MarketBalanceInfo == null? 0: MarketBalanceInfo.Available; } }
+        public override decimal MarketCurrencyTotalBalance { get { return MarketBalanceInfo == null ? 0 : MarketBalanceInfo.OnOrders + MarketBalanceInfo.Available; } }
         public override bool MarketCurrencyEnabled { get { return MarketCurrencyInfo == null ? false : !MarketCurrencyInfo.Disabled; } }
         public override string HostName { get { return "Poloniex"; } }
         public override decimal Fee { get { return 0.25m * 0.01m; } }
@@ -132,12 +132,12 @@ namespace CryptoMarketClient {
         }
         public override string GetDepositAddress(CurrencyType type) {
             if(type == CurrencyType.BaseCurrency) {
-                if(!string.IsNullOrEmpty(FirstCurrencyBalanceInfo.DepositAddress))
-                    return FirstCurrencyBalanceInfo.DepositAddress;
+                if(!string.IsNullOrEmpty(BaseBalanceInfo.DepositAddress))
+                    return BaseBalanceInfo.DepositAddress;
                 return PoloniexModel.Default.CreateDeposit(BaseCurrency);
             }
-            if(!string.IsNullOrEmpty(SecondCurrencyBalanceInfo.DepositAddress))
-                return SecondCurrencyBalanceInfo.DepositAddress;
+            if(!string.IsNullOrEmpty(MarketBalanceInfo.DepositAddress))
+                return MarketBalanceInfo.DepositAddress;
             return PoloniexModel.Default.CreateDeposit(MarketCurrency);
         }
         public override bool Withdraw(string currency, string address, decimal amount) {

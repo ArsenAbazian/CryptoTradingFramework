@@ -18,7 +18,7 @@ namespace CryptoMarketClient {
         public string MarketCurrency { get; set; }
         public bool IsActual { get; set; } = true;
         public bool IsSelected { get; set; }
-        public bool SuppressNotification { get; set; }
+        public bool Disabled { get; set; }
 
         public Task UpdateTask { get; set; }
 

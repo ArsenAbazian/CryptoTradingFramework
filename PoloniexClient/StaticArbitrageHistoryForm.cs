@@ -1,4 +1,5 @@
 ﻿using CryptoMarketClient.Common;
+using DevExpress.XtraEditors;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -10,14 +11,11 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace CryptoMarketClient {
-    public partial class StaticArbitrageHistoryForm : Form {
+    public partial class StaticArbitrageHistoryForm : XtraForm {
         public StaticArbitrageHistoryForm() {
             InitializeComponent();
         }
 
-        private void bbShowHistory_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
-
-        }
         StaticArbitrageInfo info;
         public StaticArbitrageInfo Info {
             get {
@@ -26,7 +24,7 @@ namespace CryptoMarketClient {
             set {
                 info = value;
                 this.gridControl1.DataSource = info.History;
-                this.Text = info.Exchange + " - " + info.AltCoin + " - " + info.BaseCoin;
+                Text = info.Exchange + " - " + info.AltCoin + " - " + info.BaseCoin;
             }
         }
     }

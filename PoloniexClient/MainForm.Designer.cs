@@ -42,6 +42,8 @@
             this.bbHitBtcConnect = new DevExpress.XtraBars.BarButtonItem();
             this.bcHitBtc = new DevExpress.XtraBars.BarCheckItem();
             this.bbShowStaticArbitrage = new DevExpress.XtraBars.BarButtonItem();
+            this.bcExmo = new DevExpress.XtraBars.BarCheckItem();
+            this.barButtonItem1 = new DevExpress.XtraBars.BarButtonItem();
             this.ribbonPageCategory1 = new DevExpress.XtraBars.Ribbon.RibbonPageCategory();
             this.ribbonPage2 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPageGroup2 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
@@ -86,10 +88,12 @@
             this.beArbitrageDepth,
             this.bbHitBtcConnect,
             this.bcHitBtc,
-            this.bbShowStaticArbitrage});
+            this.bbShowStaticArbitrage,
+            this.bcExmo,
+            this.barButtonItem1});
             this.ribbonControl1.Location = new System.Drawing.Point(0, 0);
             this.ribbonControl1.Margin = new System.Windows.Forms.Padding(6);
-            this.ribbonControl1.MaxItemId = 20;
+            this.ribbonControl1.MaxItemId = 23;
             this.ribbonControl1.MdiMergeStyle = DevExpress.XtraBars.Ribbon.RibbonMdiMergeStyle.Always;
             this.ribbonControl1.Name = "ribbonControl1";
             this.ribbonControl1.PageCategories.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageCategory[] {
@@ -105,6 +109,8 @@
             this.ribbonControl1.ShowApplicationButton = DevExpress.Utils.DefaultBoolean.False;
             this.ribbonControl1.Size = new System.Drawing.Size(1774, 282);
             this.ribbonControl1.StatusBar = this.ribbonStatusBar1;
+            this.ribbonControl1.Merge += new DevExpress.XtraBars.Ribbon.RibbonMergeEventHandler(this.ribbonControl1_Merge);
+            this.ribbonControl1.UnMerge += new DevExpress.XtraBars.Ribbon.RibbonMergeEventHandler(this.ribbonControl1_UnMerge);
             // 
             // skinRibbonGalleryBarItem1
             // 
@@ -251,6 +257,24 @@
             this.bbShowStaticArbitrage.Name = "bbShowStaticArbitrage";
             this.bbShowStaticArbitrage.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bbShowStaticArbitrage_ItemClick);
             // 
+            // bcExmo
+            // 
+            this.bcExmo.Caption = "Exmo";
+            this.bcExmo.Id = 21;
+            this.bcExmo.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bcExmo.ImageOptions.Image")));
+            this.bcExmo.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("bcExmo.ImageOptions.LargeImage")));
+            this.bcExmo.Name = "bcExmo";
+            this.bcExmo.CheckedChanged += new DevExpress.XtraBars.ItemClickEventHandler(this.bcExmo_CheckedChanged);
+            // 
+            // barButtonItem1
+            // 
+            this.barButtonItem1.Caption = "Active Trailing Orders";
+            this.barButtonItem1.Id = 22;
+            this.barButtonItem1.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("barButtonItem1.ImageOptions.Image")));
+            this.barButtonItem1.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("barButtonItem1.ImageOptions.LargeImage")));
+            this.barButtonItem1.Name = "barButtonItem1";
+            this.barButtonItem1.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItem1_ItemClick);
+            // 
             // ribbonPageCategory1
             // 
             this.ribbonPageCategory1.Name = "ribbonPageCategory1";
@@ -302,6 +326,8 @@
             this.ribbonPageGroup3.ItemLinks.Add(this.bcPoloniex);
             this.ribbonPageGroup3.ItemLinks.Add(this.bcBittrex);
             this.ribbonPageGroup3.ItemLinks.Add(this.bcHitBtc);
+            this.ribbonPageGroup3.ItemLinks.Add(this.bcExmo);
+            this.ribbonPageGroup3.ItemLinks.Add(this.barButtonItem1);
             this.ribbonPageGroup3.Name = "ribbonPageGroup3";
             this.ribbonPageGroup3.Text = "Connect";
             // 
@@ -346,6 +372,7 @@
             // 
             // ribbonStatusBar1
             // 
+            this.ribbonStatusBar1.AutoHeight = true;
             this.ribbonStatusBar1.Location = new System.Drawing.Point(0, 879);
             this.ribbonStatusBar1.Margin = new System.Windows.Forms.Padding(6);
             this.ribbonStatusBar1.Name = "ribbonStatusBar1";
@@ -378,6 +405,7 @@
             this.Ribbon = this.ribbonControl1;
             this.StatusBar = this.ribbonStatusBar1;
             this.Text = "Ultra Crypto";
+            this.Load += new System.EventHandler(this.MainForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemSpinEdit1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemSpinEdit2)).EndInit();
@@ -424,6 +452,8 @@
         private DevExpress.XtraBars.BarCheckItem bcHitBtc;
         private DevExpress.XtraBars.BarButtonItem bbShowStaticArbitrage;
         private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup8;
+        private DevExpress.XtraBars.BarCheckItem bcExmo;
+        private DevExpress.XtraBars.BarButtonItem barButtonItem1;
     }
 }
 

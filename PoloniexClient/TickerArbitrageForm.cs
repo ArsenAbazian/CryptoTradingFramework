@@ -1,6 +1,7 @@
 ﻿using CryptoMarketClient.Analytics;
 using CryptoMarketClient.Bittrex;
 using CryptoMarketClient.Common;
+using CryptoMarketClient.Exmo;
 using CryptoMarketClient.HitBtc;
 using CryptoMarketClient.Poloniex;
 using CryptoMarketClient.Strategies;
@@ -55,57 +56,96 @@ namespace CryptoMarketClient {
         void UpdateCurrencies() {
             UpdateBalanceNotification = true;
             while(AllowWorkThread) {
-                for(int i = 0; i < 3; i++) {
-                    if(BittrexModel.Default.GetBalance(ArbitrageList[0].BaseCurrency))
-                        break;
-                }
-
-                for(int i = 0; i < 3; i++) {
-                    if(HitBtcModel.Default.GetBalances())
-                        break;
-                }
-                for(int i = 0; i < 3; i++) {
-                    if(PoloniexModel.Default.GetBalances())
-                        break;
-                }
-                foreach(TickerCollection info in ArbitrageList) {
+                if(BittrexModel.Default.IsConnected) {
                     for(int i = 0; i < 3; i++) {
-                        if(BittrexModel.Default.GetBalance(info.MarketCurrency))
+                        if(BittrexModel.Default.GetBalance(ArbitrageList[0].BaseCurrency))
                             break;
                     }
                 }
 
-                for(int i = 0; i < 3; i++) {
-                    if(PoloniexModel.Default.UpdateCurrencies())
-                        break;
+                if(HitBtcModel.Default.IsConnected) {
+                    for(int i = 0; i < 3; i++) {
+                        if(HitBtcModel.Default.GetBalances())
+                            break;
+                    }
                 }
-                
-                for(int i = 0; i < 3; i++) {
-                    if(BittrexModel.Default.UpdateCurrencies())
-                        break;
+                if(PoloniexModel.Default.IsConnected) {
+                    for(int i = 0; i < 3; i++) {
+                        if(PoloniexModel.Default.GetBalances())
+                            break;
+                    }
+                }
+                if(ExmoModel.Default.IsConnected) {
+                    for(int i = 0; i < 3; i++) {
+                        if(PoloniexModel.Default.GetBalances())
+                            break;
+                    }
+                }
+                if(BittrexModel.Default.IsConnected) {
+                    foreach(TickerCollection info in ArbitrageList) {
+                        for(int i = 0; i < 3; i++) {
+                            if(BittrexModel.Default.GetBalance(info.MarketCurrency))
+                                break;
+                        }
+                    }
+                }
+                if(PoloniexModel.Default.IsConnected) {
+                    for(int i = 0; i < 3; i++) {
+                        if(PoloniexModel.Default.UpdateCurrencies())
+                            break;
+                    }
+                }
+
+                if(BittrexModel.Default.IsConnected) {
+                    for(int i = 0; i < 3; i++) {
+                        if(BittrexModel.Default.UpdateCurrencies())
+                            break;
+                    }
                 }
 
                 if(UpdateBalanceNotification) {
                     UpdateBalanceNotification = false;
-                    foreach(PoloniexAccountBalanceInfo info in PoloniexModel.Default.Balances) {
-                        if(info.Available > 0)
-                            TelegramBot.Default.SendNotification("poloniex balance " + info.Currency + " = <b>" + info.Available.ToString("0.########") + "</b>");
+                    if(PoloniexModel.Default.IsConnected) {
+                        foreach(PoloniexAccountBalanceInfo info in PoloniexModel.Default.Balances) {
+                            if(info.Available > 0)
+                                TelegramBot.Default.SendNotification("poloniex balance " + info.Currency + " = <b>" + info.Available.ToString("0.########") + "</b>");
+                        }
                     }
-                    foreach(BittrexAccountBalanceInfo info in BittrexModel.Default.Balances) {
-                        if(info.Available > 0)
-                            TelegramBot.Default.SendNotification("bittrex  balance " + info.Currency + " = <b>" + info.Available.ToString("0.########") + "</b>");
+                    if(BittrexModel.Default.IsConnected) {
+                        foreach(BittrexAccountBalanceInfo info in BittrexModel.Default.Balances) {
+                            if(info.Available > 0)
+                                TelegramBot.Default.SendNotification("bittrex  balance " + info.Currency + " = <b>" + info.Available.ToString("0.########") + "</b>");
+                        }
+                    }
+                    if(HitBtcModel.Default.IsConnected) {
+                        foreach(HitBtcBalanceInfo info in HitBtcModel.Default.Balances) {
+                            if(info.Available > 0)
+                                TelegramBot.Default.SendNotification("hitbtc  balance " + info.Currency + " = <b>" + info.Available.ToString("0.########") + "</b>");
+                        }
+                    }
+                    if(ExmoModel.Default.IsConnected) {
+                        foreach(ExmoBalanceInfo info in ExmoModel.Default.Balances) {
+                            if(info.Available > 0)
+                                TelegramBot.Default.SendNotification("exmo  balance " + info.Currency + " = <b>" + info.Available.ToString("0.########") + "</b>");
+                        }
+                    }
+
+                    if(PoloniexModel.Default.IsConnected) {
+                        foreach(PoloniexAccountBalanceInfo info in PoloniexModel.Default.Balances) {
+                            if(info.DepositChanged > 0.05m) {
+                                TelegramBot.Default.SendNotification("poloniex deposit changed: " + info.Currency + " = " + info.Available);
+                            }
+                        }
+                    }
+                    if(BittrexModel.Default.IsConnected) {
+                        foreach(BittrexAccountBalanceInfo info in BittrexModel.Default.Balances) {
+                            if(info.DepositChanged > 0.05m) {
+                                TelegramBot.Default.SendNotification("bittrex deposit changed: " + info.Currency + " = " + info.Available);
+                            }
+                        }
                     }
                 }
-                foreach(PoloniexAccountBalanceInfo info in PoloniexModel.Default.Balances) {
-                    if(info.DepositChanged > 0.05m) {
-                        TelegramBot.Default.SendNotification("poloniex deposit changed: " + info.Currency + " = " + info.Available);
-                    }
-                }
-                foreach(BittrexAccountBalanceInfo info in BittrexModel.Default.Balances) {
-                    if(info.DepositChanged > 0.05m) {
-                        TelegramBot.Default.SendNotification("bittrex deposit changed: " + info.Currency + " = " + info.Available);
-                    }
-                }
+                 
                 foreach(TickerCollection item in ArbitrageList) {
                     item.CalcTotalBalance();
                 }
@@ -318,7 +358,7 @@ namespace CryptoMarketClient {
         }
         void SendTelegramNotification(TickerCollection collection, decimal prev) {
             ArbitrageInfo info = collection.Arbitrage;
-            if(/*!info.Ready || */collection.SuppressNotification)
+            if(/*!info.Ready || */collection.Disabled)
                 return;
             if(prev <= 0 && info.MaxProfit <= 0)
                 return;

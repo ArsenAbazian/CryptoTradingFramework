@@ -65,7 +65,7 @@ namespace CryptoMarketClient {
         public decimal AskDispersionChange { get; set; }
         public decimal BidAskRelationChange { get; set; }
 
-        public BindingList<OrderBookStatisticItem> VolumeHistory { get; } = new BindingList<OrderBookStatisticItem>();
+        public List<OrderBookStatisticItem> VolumeHistory { get; } = new List<OrderBookStatisticItem>();
 
         public void UpdateHistory() {
             VolumeHistory.Add(new OrderBookStatisticItem() {
@@ -221,7 +221,7 @@ namespace CryptoMarketClient {
         public bool AskHipeStopped { get { return AskHipe < 60 && PrevAskHipe >= 60; } }
 
         public void CalcHipe() {
-            BindingList<OrderBookStatisticItem> h = VolumeHistory;
+            List<OrderBookStatisticItem> h = VolumeHistory;
             if(h.Count < 22) {
                 BidHipe = 0;
                 AskHipe = 0;

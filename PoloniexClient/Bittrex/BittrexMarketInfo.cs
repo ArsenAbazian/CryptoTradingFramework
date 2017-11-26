@@ -24,12 +24,12 @@ namespace CryptoMarketClient.Bittrex {
 
         public override decimal BaseCurrencyBalance { get { return BaseBalanceInfo == null ? 0 : BaseBalanceInfo.Available; } }
         public override decimal MarketCurrencyBalance { get { return MarketBalanceInfo == null ? 0 : MarketBalanceInfo.Available; } }
-        public override decimal MarketCurrencyTotalBalance { get { return MarketBalanceInfo == null ? 0 : MarketBalanceInfo.Balance; } }
+        public override decimal MarketCurrencyTotalBalance { get { return MarketBalanceInfo == null ? 0 : MarketBalanceInfo.Available; } }
         public override bool MarketCurrencyEnabled { get { return MarketCurrencyInfo == null ? false : MarketCurrencyInfo.IsActive; } }
 
         
         BittrexAccountBalanceInfo baseBalanceInfo, marketBalanceInfo;
-        protected BittrexAccountBalanceInfo BaseBalanceInfo {
+        public override BalanceBase BaseBalanceInfo {
             get {
                 if(baseBalanceInfo == null)
                     baseBalanceInfo = BittrexModel.Default.Balances.FirstOrDefault((b) => b.Currency == BaseCurrency);
@@ -37,7 +37,7 @@ namespace CryptoMarketClient.Bittrex {
             }
         }
 
-        protected BittrexAccountBalanceInfo MarketBalanceInfo {
+        public override BalanceBase MarketBalanceInfo {
             get {
                 if(marketBalanceInfo == null)
                     marketBalanceInfo = BittrexModel.Default.Balances.FirstOrDefault((b) => b.Currency == MarketCurrency);
@@ -105,14 +105,14 @@ namespace CryptoMarketClient.Bittrex {
             if(type == CurrencyType.BaseCurrency) {
                 if(BaseBalanceInfo == null)
                     return null;
-                if(!string.IsNullOrEmpty(BaseBalanceInfo.CryptoAddress))
-                    return BaseBalanceInfo.CryptoAddress;
+                if(!string.IsNullOrEmpty(BaseBalanceInfo.DepositAddress))
+                    return BaseBalanceInfo.DepositAddress;
                 return BittrexModel.Default.CheckCreateDeposit(BaseCurrency);
             }
             if(MarketBalanceInfo == null)
                 return null;
-            if(!string.IsNullOrEmpty(MarketBalanceInfo.CryptoAddress))
-                return BaseBalanceInfo.CryptoAddress;
+            if(!string.IsNullOrEmpty(MarketBalanceInfo.DepositAddress))
+                return BaseBalanceInfo.DepositAddress;
             return BittrexModel.Default.CheckCreateDeposit(MarketCurrency);
         }
         string GetCurrency(CurrencyType currencyType) {

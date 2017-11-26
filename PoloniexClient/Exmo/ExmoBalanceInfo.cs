@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CryptoMarketClient.HitBtc {
-    public class HitBtcBalanceInfo : BalanceBase {
-        public override string Exchange => "HitBtc";
+namespace CryptoMarketClient.Exmo {
+    public class ExmoBalanceInfo : BalanceBase {
+        public override string Exchange => "Exmo";
         public decimal Reserved { get; set; }
     }
 }

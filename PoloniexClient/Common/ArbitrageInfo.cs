@@ -230,9 +230,11 @@ namespace CryptoMarketClient.Common {
             st.MaxProfitUSD = MaxProfitUSD;
             st.Time = DateTime.Now;
             st.RateInUSD = UsdTicker == null? 1: UsdTicker.Last;
-            lock(ArbitrageHistoryHelper.Default.History) {
-                ArbitrageHistoryHelper.Default.History.Add(st);
-                ArbitrageHistoryHelper.Default.CheckSave();
+            if(!Owner.Disabled) {
+                lock(ArbitrageHistoryHelper.Default.History) {
+                    ArbitrageHistoryHelper.Default.History.Add(st);
+                    ArbitrageHistoryHelper.Default.CheckSave();
+                }
             }
         }
 

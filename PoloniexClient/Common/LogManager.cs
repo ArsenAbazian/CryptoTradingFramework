@@ -38,6 +38,7 @@ namespace CryptoMarketClient.Common {
                 Form = new LogForm();
             Form.Messages = Messages;
             Form.Show();
+            Form.Activate();
         }
     }
 }

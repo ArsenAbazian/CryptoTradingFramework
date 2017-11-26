@@ -30,9 +30,9 @@
             DevExpress.XtraEditors.FormatConditionRuleDataBar formatConditionRuleDataBar1 = new DevExpress.XtraEditors.FormatConditionRuleDataBar();
             this.colProfit = new DevExpress.XtraGrid.Columns.GridColumn();
             this.ribbonControl1 = new DevExpress.XtraBars.Ribbon.RibbonControl();
-            this.bbShowHistory = new DevExpress.XtraBars.BarButtonItem();
             this.ribbonPage1 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPageGroup1 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
+            this.ribbonStatusBar1 = new DevExpress.XtraBars.Ribbon.RibbonStatusBar();
             this.staticArbitrageInfoHistoryItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.gridView1 = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.colDisbalance = new DevExpress.XtraGrid.Columns.GridColumn();
@@ -44,6 +44,7 @@
             this.colFee = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gridColumn1 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gridControl1 = new DevExpress.XtraGrid.GridControl();
+            this.colEarned = new DevExpress.XtraGrid.Columns.GridColumn();
             ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.staticArbitrageInfoHistoryItemBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).BeginInit();
@@ -63,22 +64,15 @@
             // 
             this.ribbonControl1.ExpandCollapseItem.Id = 0;
             this.ribbonControl1.Items.AddRange(new DevExpress.XtraBars.BarItem[] {
-            this.ribbonControl1.ExpandCollapseItem,
-            this.bbShowHistory});
+            this.ribbonControl1.ExpandCollapseItem});
             this.ribbonControl1.Location = new System.Drawing.Point(0, 0);
-            this.ribbonControl1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.ribbonControl1.Margin = new System.Windows.Forms.Padding(4);
             this.ribbonControl1.MaxItemId = 4;
             this.ribbonControl1.Name = "ribbonControl1";
             this.ribbonControl1.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
             this.ribbonPage1});
             this.ribbonControl1.Size = new System.Drawing.Size(1782, 278);
-            // 
-            // bbShowHistory
-            // 
-            this.bbShowHistory.Caption = "ShowHistory";
-            this.bbShowHistory.Id = 3;
-            this.bbShowHistory.Name = "bbShowHistory";
-            this.bbShowHistory.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bbShowHistory_ItemClick);
+            this.ribbonControl1.StatusBar = this.ribbonStatusBar1;
             // 
             // ribbonPage1
             // 
@@ -91,6 +85,14 @@
             // 
             this.ribbonPageGroup1.Name = "ribbonPageGroup1";
             this.ribbonPageGroup1.Text = "Static Arbitrage";
+            // 
+            // ribbonStatusBar1
+            // 
+            this.ribbonStatusBar1.AutoHeight = true;
+            this.ribbonStatusBar1.Location = new System.Drawing.Point(0, 952);
+            this.ribbonStatusBar1.Name = "ribbonStatusBar1";
+            this.ribbonStatusBar1.Ribbon = this.ribbonControl1;
+            this.ribbonStatusBar1.Size = new System.Drawing.Size(1782, 54);
             // 
             // staticArbitrageInfoHistoryItemBindingSource
             // 
@@ -107,7 +109,8 @@
             this.colAmount,
             this.colProfit,
             this.colFee,
-            this.gridColumn1});
+            this.gridColumn1,
+            this.colEarned});
             gridFormatRule1.ApplyToRow = true;
             gridFormatRule1.Column = this.colProfit;
             gridFormatRule1.Enabled = false;
@@ -207,10 +210,10 @@
             // 
             this.gridControl1.DataSource = this.staticArbitrageInfoHistoryItemBindingSource;
             this.gridControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gridControl1.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.gridControl1.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(4);
             this.gridControl1.Location = new System.Drawing.Point(0, 278);
             this.gridControl1.MainView = this.gridView1;
-            this.gridControl1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.gridControl1.Margin = new System.Windows.Forms.Padding(4);
             this.gridControl1.MenuManager = this.ribbonControl1;
             this.gridControl1.Name = "gridControl1";
             this.gridControl1.Size = new System.Drawing.Size(1782, 728);
@@ -218,16 +221,25 @@
             this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridView1});
             // 
+            // colEarned
+            // 
+            this.colEarned.Caption = "Earned";
+            this.colEarned.FieldName = "Earned";
+            this.colEarned.Name = "colEarned";
+            this.colEarned.Visible = true;
+            this.colEarned.VisibleIndex = 9;
+            // 
             // StaticArbitrageHistoryForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1782, 1006);
+            this.Controls.Add(this.ribbonStatusBar1);
             this.Controls.Add(this.gridControl1);
             this.Controls.Add(this.ribbonControl1);
-            this.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.Margin = new System.Windows.Forms.Padding(6);
             this.Name = "StaticArbitrageHistoryForm";
-            this.Text = "StaticArbitrageHistoryForm";
+            this.Text = "Static Arbitrage";
             ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.staticArbitrageInfoHistoryItemBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).EndInit();
@@ -239,7 +251,6 @@
 
         #endregion
         private DevExpress.XtraBars.Ribbon.RibbonControl ribbonControl1;
-        private DevExpress.XtraBars.BarButtonItem bbShowHistory;
         private DevExpress.XtraBars.Ribbon.RibbonPage ribbonPage1;
         private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup1;
         private System.Windows.Forms.BindingSource staticArbitrageInfoHistoryItemBindingSource;
@@ -254,5 +265,7 @@
         private DevExpress.XtraGrid.Columns.GridColumn colFee;
         private DevExpress.XtraGrid.Columns.GridColumn gridColumn1;
         private DevExpress.XtraGrid.GridControl gridControl1;
+        private DevExpress.XtraBars.Ribbon.RibbonStatusBar ribbonStatusBar1;
+        private DevExpress.XtraGrid.Columns.GridColumn colEarned;
     }
 }

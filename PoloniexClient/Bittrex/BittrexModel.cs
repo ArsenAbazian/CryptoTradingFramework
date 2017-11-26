@@ -517,7 +517,7 @@ namespace CryptoMarketClient.Bittrex {
         void RaiseOpenedOrdersChanged() {
             
         }
-
+        
         public bool GetBalance(string currency) {
             string address = string.Format("https://bittrex.com/api/v1.1/account/getbalance?apikey={0}&nonce={1}&currency={2}", Uri.EscapeDataString(ApiKey), DateTime.Now, currency);
             WebClient client = GetWebClient();
@@ -554,7 +554,7 @@ namespace CryptoMarketClient.Bittrex {
                 info.Available = obj.Value<string>("Available") == null? 0: obj.Value<decimal>("Available");
                 info.Balance = obj.Value<string>("Balance") == null ? 0 : obj.Value<decimal>("Balance");
                 info.Pending = obj.Value<string>("Pending") == null ? 0 : obj.Value<decimal>("Pending");
-                info.CryptoAddress = obj.Value<string>("CryptoAddress");
+                info.DepositAddress = obj.Value<string>("CryptoAddress");
             }
             return true;
         }
@@ -608,7 +608,7 @@ namespace CryptoMarketClient.Bittrex {
                     item.Balance = obj.Value<decimal>("Balance");
                     item.Available = obj.Value<decimal>("Available");
                     item.Pending = obj.Value<decimal>("Pending");
-                    item.CryptoAddress = obj.Value<string>("CryptoAddress");
+                    item.DepositAddress = obj.Value<string>("CryptoAddress");
                     item.Requested = obj.Value<bool>("Requested");
                     item.Uuid = obj.Value<string>("Uuid");
                     Balances.Add(item);

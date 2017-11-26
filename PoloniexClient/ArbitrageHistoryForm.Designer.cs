@@ -68,7 +68,7 @@
             this.colLowestAskHost.FieldName = "LowestAskHost";
             this.colLowestAskHost.Name = "colLowestAskHost";
             this.colLowestAskHost.Visible = true;
-            this.colLowestAskHost.VisibleIndex = 0;
+            this.colLowestAskHost.VisibleIndex = 1;
             // 
             // colHighestBidEnabled
             // 
@@ -80,7 +80,7 @@
             this.colHighestBidHost.FieldName = "HighestBidHost";
             this.colHighestBidHost.Name = "colHighestBidHost";
             this.colHighestBidHost.Visible = true;
-            this.colHighestBidHost.VisibleIndex = 1;
+            this.colHighestBidHost.VisibleIndex = 2;
             // 
             // gridControl1
             // 
@@ -95,7 +95,7 @@
             this.repositoryItemCheckEdit1,
             this.repositoryItemCheckEdit2,
             this.repositoryItemCheckEdit3});
-            this.gridControl1.Size = new System.Drawing.Size(1850, 921);
+            this.gridControl1.Size = new System.Drawing.Size(2014, 921);
             this.gridControl1.TabIndex = 1;
             this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridView1});
@@ -148,6 +148,8 @@
             this.gridView1.OptionsBehavior.KeepFocusedRowOnUpdate = false;
             this.gridView1.OptionsDetail.EnableMasterViewMode = false;
             this.gridView1.OptionsView.ShowFilterPanelMode = DevExpress.XtraGrid.Views.Base.ShowFilterPanelMode.Never;
+            this.gridView1.SortInfo.AddRange(new DevExpress.XtraGrid.Columns.GridColumnSortInfo[] {
+            new DevExpress.XtraGrid.Columns.GridColumnSortInfo(this.colTime, DevExpress.Data.ColumnSortOrder.Descending)});
             // 
             // colTime
             // 
@@ -156,7 +158,7 @@
             this.colTime.FieldName = "Time";
             this.colTime.Name = "colTime";
             this.colTime.Visible = true;
-            this.colTime.VisibleIndex = 2;
+            this.colTime.VisibleIndex = 0;
             // 
             // colBaseCurrency
             // 
@@ -275,7 +277,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1850, 921);
+            this.ClientSize = new System.Drawing.Size(2014, 921);
             this.Controls.Add(this.gridControl1);
             this.Name = "ArbitrageHistoryForm";
             this.Text = "Arbitrage History";

@@ -44,6 +44,12 @@ namespace CryptoMarketClient {
         void OnTickersUpdate() {
             while(AllowWorking && PoloniexModel.Default.IsConnected) {
                 PoloniexModel.Default.UpdateTickersInfo();
+                foreach(TickerBase ticker in PoloniexModel.Default.Tickers) {
+                    if(ticker.UpdateMode == TickerUpdateMode.Self) {
+                        ticker.UpdateArbitrageOrderBook(100);
+                        ticker.UpdateTradeStatistic();
+                    }
+                }
                 lock(PoloniexModel.Default.Tickers) {
                     if(!IsDisposed && !Disposing)
                         BeginInvoke(new Action(UpdateGridAll));
@@ -63,7 +69,7 @@ namespace CryptoMarketClient {
             base.OnDeactivate(e);
             if(!HasShown)
               return;
-            StopBidAskThread();
+            //StopBidAskThread();
         }
 
         private void StopBidAskThread() {

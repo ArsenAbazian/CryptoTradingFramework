@@ -90,6 +90,7 @@ namespace CryptoMarketClient {
             this.repositoryItemSparklineEdit3 = new DevExpress.XtraEditors.Repository.RepositoryItemSparklineEdit();
             this.colAskEnergy = new DevExpress.XtraGrid.Columns.GridColumn();
             this.repositoryItemSparklineEdit4 = new DevExpress.XtraEditors.Repository.RepositoryItemSparklineEdit();
+            this.colTotalBalance = new DevExpress.XtraGrid.Columns.GridColumn();
             this.ribbonControl1 = new DevExpress.XtraBars.Ribbon.RibbonControl();
             this.bbAllCurrencies = new DevExpress.XtraBars.BarCheckItem();
             this.bbTryArbitrage = new DevExpress.XtraBars.BarButtonItem();
@@ -117,6 +118,7 @@ namespace CryptoMarketClient {
             this.bsShowTickerChart = new DevExpress.XtraBars.BarSubItem();
             this.bsStrategies = new DevExpress.XtraBars.BarSubItem();
             this.bsShowOrderBookHistory = new DevExpress.XtraBars.BarSubItem();
+            this.bcShowNonZeroAmout = new DevExpress.XtraBars.BarCheckItem();
             this.rpPoloniex = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPageGroup1 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.ribbonPageGroup2 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
@@ -127,8 +129,6 @@ namespace CryptoMarketClient {
             this.repositoryItemSpinEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemSpinEdit();
             this.sidePanel1 = new DevExpress.XtraEditors.SidePanel();
             this.popupMenu1 = new DevExpress.XtraBars.PopupMenu(this.components);
-            this.bcShowNonZeroAmout = new DevExpress.XtraBars.BarCheckItem();
-            this.colTotalBalance = new DevExpress.XtraGrid.Columns.GridColumn();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).BeginInit();
@@ -244,10 +244,10 @@ namespace CryptoMarketClient {
             // 
             this.gridControl1.DataSource = this.tickerArbitrageInfoBindingSource;
             this.gridControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gridControl1.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.gridControl1.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(6);
             this.gridControl1.Location = new System.Drawing.Point(0, 0);
             this.gridControl1.MainView = this.gridView1;
-            this.gridControl1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.gridControl1.Margin = new System.Windows.Forms.Padding(6);
             this.gridControl1.Name = "gridControl1";
             this.gridControl1.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repositoryItemCheckEdit1,
@@ -561,9 +561,9 @@ namespace CryptoMarketClient {
             // 
             // colSuppressNotification
             // 
-            this.colSuppressNotification.Caption = "Disable Notification";
+            this.colSuppressNotification.Caption = "Disable";
             this.colSuppressNotification.ColumnEdit = this.repositoryItemCheckEdit4;
-            this.colSuppressNotification.FieldName = "SuppressNotification";
+            this.colSuppressNotification.FieldName = "Disabled";
             this.colSuppressNotification.Name = "colSuppressNotification";
             this.colSuppressNotification.Visible = true;
             this.colSuppressNotification.VisibleIndex = 1;
@@ -655,6 +655,15 @@ namespace CryptoMarketClient {
             areaSparklineView2.Color = System.Drawing.Color.Red;
             this.repositoryItemSparklineEdit4.View = areaSparklineView2;
             // 
+            // colTotalBalance
+            // 
+            this.colTotalBalance.Caption = "TotalBalance";
+            this.colTotalBalance.FieldName = "TotalBalance";
+            this.colTotalBalance.Name = "colTotalBalance";
+            this.colTotalBalance.OptionsColumn.AllowEdit = false;
+            this.colTotalBalance.Visible = true;
+            this.colTotalBalance.VisibleIndex = 4;
+            // 
             // ribbonControl1
             // 
             this.ribbonControl1.AllowGlyphSkinning = true;
@@ -687,7 +696,7 @@ namespace CryptoMarketClient {
             this.bsShowOrderBookHistory,
             this.bcShowNonZeroAmout});
             this.ribbonControl1.Location = new System.Drawing.Point(0, 0);
-            this.ribbonControl1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.ribbonControl1.Margin = new System.Windows.Forms.Padding(6);
             this.ribbonControl1.MaxItemId = 33;
             this.ribbonControl1.Name = "ribbonControl1";
             this.ribbonControl1.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
@@ -909,6 +918,15 @@ namespace CryptoMarketClient {
             this.bsShowOrderBookHistory.Id = 30;
             this.bsShowOrderBookHistory.Name = "bsShowOrderBookHistory";
             // 
+            // bcShowNonZeroAmout
+            // 
+            this.bcShowNonZeroAmout.Caption = "Show NonZero Amount";
+            this.bcShowNonZeroAmout.Id = 32;
+            this.bcShowNonZeroAmout.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bcShowNonZeroAmout.ImageOptions.Image")));
+            this.bcShowNonZeroAmout.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("bcShowNonZeroAmout.ImageOptions.LargeImage")));
+            this.bcShowNonZeroAmout.Name = "bcShowNonZeroAmout";
+            this.bcShowNonZeroAmout.CheckedChanged += new DevExpress.XtraBars.ItemClickEventHandler(this.bcShowNonZeroAmout_CheckedChanged);
+            // 
             // rpPoloniex
             // 
             this.rpPoloniex.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] {
@@ -988,7 +1006,7 @@ namespace CryptoMarketClient {
             this.sidePanel1.Controls.Add(this.gridControl1);
             this.sidePanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.sidePanel1.Location = new System.Drawing.Point(0, 278);
-            this.sidePanel1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.sidePanel1.Margin = new System.Windows.Forms.Padding(4);
             this.sidePanel1.Name = "sidePanel1";
             this.sidePanel1.Size = new System.Drawing.Size(1916, 776);
             this.sidePanel1.TabIndex = 6;
@@ -1002,23 +1020,6 @@ namespace CryptoMarketClient {
             this.popupMenu1.Name = "popupMenu1";
             this.popupMenu1.Ribbon = this.ribbonControl1;
             // 
-            // bcShowNonZeroAmout
-            // 
-            this.bcShowNonZeroAmout.Caption = "Show NonZero Amount";
-            this.bcShowNonZeroAmout.Id = 32;
-            this.bcShowNonZeroAmout.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bcShowNonZeroAmout.ImageOptions.Image")));
-            this.bcShowNonZeroAmout.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("bcShowNonZeroAmout.ImageOptions.LargeImage")));
-            this.bcShowNonZeroAmout.Name = "bcShowNonZeroAmout";
-            this.bcShowNonZeroAmout.CheckedChanged += new DevExpress.XtraBars.ItemClickEventHandler(this.bcShowNonZeroAmout_CheckedChanged);
-            // 
-            // colTotalBalance
-            // 
-            this.colTotalBalance.Caption = "TotalBalance";
-            this.colTotalBalance.FieldName = "TotalBalance";
-            this.colTotalBalance.Name = "colTotalBalance";
-            this.colTotalBalance.Visible = true;
-            this.colTotalBalance.VisibleIndex = 4;
-            // 
             // TickerArbitrageForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
@@ -1026,7 +1027,7 @@ namespace CryptoMarketClient {
             this.ClientSize = new System.Drawing.Size(1916, 1054);
             this.Controls.Add(this.sidePanel1);
             this.Controls.Add(this.ribbonControl1);
-            this.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.Margin = new System.Windows.Forms.Padding(6);
             this.Name = "TickerArbitrageForm";
             this.Text = "Classic Arbitrage";
             this.Load += new System.EventHandler(this.TickerArbitrageForm_Load);

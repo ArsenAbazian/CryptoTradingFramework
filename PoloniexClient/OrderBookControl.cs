@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
 using DevExpress.XtraGrid.Views.Grid.ViewInfo;
+using DevExpress.XtraGrid.Views.Base;
 
 namespace CryptoMarketClient {
     public partial class OrderBookControl : XtraUserControl {
@@ -80,6 +81,14 @@ namespace CryptoMarketClient {
             Asks = TickerCollection.Arbitrage.LowestAskTicker == null ? null : TickerCollection.Arbitrage.LowestAskTicker.OrderBook.Asks;
             OrderBookCaption = TickerCollection.Name;
             UpdateAskTableHeight();
+        }
+        public OrderBookEntry GetAskEntry(int focusedRowHandle) {
+            return (OrderBookEntry)this.askGridView.GetRow(focusedRowHandle);
+        }
+
+        public event FocusedRowChangedEventHandler SelectedAskRowChanged {
+            add { this.askGridView.FocusedRowChanged += value; }
+            remove { this.askGridView.FocusedRowChanged -= value; }
         }
     }
 }

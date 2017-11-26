@@ -23,9 +23,34 @@ namespace CryptoMarketClient {
             this.rangeControl1.Client = RangeChart;
             RangeChart.Visible = false;
             this.Controls.Add(RangeChart);
+            Timer.Start();
         }
 
         protected ChartControl RangeChart { get; } = new ChartControl();
+        Timer timer;
+        protected Timer Timer {
+            get {
+                if(timer == null) {
+                    timer = new Timer();
+                    timer.Tick += OnChartUpdateTimer;
+                    timer.Interval = 2000;
+                }
+                return timer;
+            }
+        }
+
+        protected Form MdiParentForm { get; set; }
+        protected Form ParentFormCore { get; set; }
+
+        private void OnChartUpdateTimer(object sender, EventArgs e) {
+            if(Ticker == null)
+                return;
+            if(ParentFormCore == null)
+                ParentFormCore = FindForm();
+            if(ParentFormCore == null || ParentFormCore.MdiParent == null || ParentFormCore.MdiParent.ActiveMdiChild != ParentFormCore)
+                return;
+            this.chartControl1.RefreshData();
+        }
 
         protected override void OnLookAndFeelChanged() {
             if(BidSeries != null)
@@ -83,7 +108,7 @@ namespace CryptoMarketClient {
             Ticker.CandleStickData = CandleStickChartHelper.CreateCandleStickData(Ticker.History, Ticker.CandleStickPeriodMin * 60);
         }
 
-        Series CreateLineSeries(BindingList<OrderBookStatisticItem> list, string str, Color color) {
+        Series CreateLineSeries(List<OrderBookStatisticItem> list, string str, Color color) {
             Series s = new Series();
             s.Name = str;
             s.ArgumentDataMember = "Time";
@@ -98,7 +123,7 @@ namespace CryptoMarketClient {
             return s;
         }
 
-        Series CreateStepAreaSeries(BindingList<OrderBookStatisticItem> list, string str, Color color) {
+        Series CreateStepAreaSeries(List<OrderBookStatisticItem> list, string str, Color color) {
             Series s = new Series();
             s.Name = str;
             s.ArgumentDataMember = "Time";
@@ -112,7 +137,7 @@ namespace CryptoMarketClient {
             return s;
         }
 
-        Series CreateAreaSeries(BindingList<TickerHistoryItem> list, string str, Color color) {
+        Series CreateAreaSeries(List<TickerHistoryItem> list, string str, Color color) {
             Series s = new Series();
             s.Name = str;
             s.ArgumentDataMember = "Time";
@@ -126,7 +151,7 @@ namespace CryptoMarketClient {
             return s;
         }
 
-        Series CreateBarSeries(BindingList<OrderBookStatisticItem> list, string name, string value, Color color) {
+        Series CreateBarSeries(List<OrderBookStatisticItem> list, string name, string value, Color color) {
             Series s = new Series();
             s.Name = name;
             s.ArgumentDataMember = "Time";

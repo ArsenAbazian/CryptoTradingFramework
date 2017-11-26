@@ -35,26 +35,26 @@ namespace CryptoMarketClient {
             DevExpress.XtraGrid.GridFormatRule gridFormatRule4 = new DevExpress.XtraGrid.GridFormatRule();
             DevExpress.XtraEditors.FormatConditionRuleValue formatConditionRuleValue4 = new DevExpress.XtraEditors.FormatConditionRuleValue();
             this.gridControl1 = new DevExpress.XtraGrid.GridControl();
+            this.tickerCollectionItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.gridView1 = new DevExpress.XtraGrid.Views.Grid.GridView();
+            this.colSelected = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colHostName = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colTicker = new DevExpress.XtraGrid.Columns.GridColumn();
             this.repositoryItemCheckEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit();
             this.repositoryItemCheckEdit2 = new DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit();
             this.repositoryItemCheckEdit3 = new DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit();
             this.repositoryItemProgressBar1 = new DevExpress.XtraEditors.Repository.RepositoryItemProgressBar();
             this.repositoryItemCheckEdit4 = new DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit();
-            this.tickerCollectionItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.colSelected = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.colHostName = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.colTicker = new DevExpress.XtraGrid.Columns.GridColumn();
             this.layoutControl1 = new DevExpress.XtraLayout.LayoutControl();
             this.layoutControlGroup1 = new DevExpress.XtraLayout.LayoutControlGroup();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tickerCollectionItemBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemProgressBar1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit4)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.tickerCollectionItemBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup1)).BeginInit();
             this.SuspendLayout();
@@ -63,7 +63,7 @@ namespace CryptoMarketClient {
             // 
             this.gridControl1.DataSource = this.tickerCollectionItemBindingSource;
             this.gridControl1.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(6);
-            this.gridControl1.Location = new System.Drawing.Point(0, 0);
+            this.gridControl1.Location = new System.Drawing.Point(220, 73);
             this.gridControl1.MainView = this.gridView1;
             this.gridControl1.Margin = new System.Windows.Forms.Padding(6);
             this.gridControl1.Name = "gridControl1";
@@ -77,6 +77,10 @@ namespace CryptoMarketClient {
             this.gridControl1.TabIndex = 1;
             this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridView1});
+            // 
+            // tickerCollectionItemBindingSource
+            // 
+            this.tickerCollectionItemBindingSource.DataSource = typeof(CryptoMarketClient.TickerCollectionItem);
             // 
             // gridView1
             // 
@@ -126,6 +130,29 @@ namespace CryptoMarketClient {
             this.gridView1.OptionsView.ShowGroupPanel = false;
             this.gridView1.OptionsView.ShowIndicator = false;
             // 
+            // colSelected
+            // 
+            this.colSelected.FieldName = "Selected";
+            this.colSelected.Name = "colSelected";
+            this.colSelected.Visible = true;
+            this.colSelected.VisibleIndex = 0;
+            this.colSelected.Width = 104;
+            // 
+            // colHostName
+            // 
+            this.colHostName.FieldName = "HostName";
+            this.colHostName.Name = "colHostName";
+            this.colHostName.OptionsColumn.ReadOnly = true;
+            this.colHostName.Visible = true;
+            this.colHostName.VisibleIndex = 1;
+            this.colHostName.Width = 453;
+            // 
+            // colTicker
+            // 
+            this.colTicker.FieldName = "Ticker";
+            this.colTicker.Name = "colTicker";
+            this.colTicker.Width = 454;
+            // 
             // repositoryItemCheckEdit1
             // 
             this.repositoryItemCheckEdit1.AutoHeight = false;
@@ -161,33 +188,6 @@ namespace CryptoMarketClient {
             this.repositoryItemCheckEdit4.AutoHeight = false;
             this.repositoryItemCheckEdit4.Name = "repositoryItemCheckEdit4";
             // 
-            // tickerCollectionItemBindingSource
-            // 
-            this.tickerCollectionItemBindingSource.DataSource = typeof(CryptoMarketClient.TickerCollectionItem);
-            // 
-            // colSelected
-            // 
-            this.colSelected.FieldName = "Selected";
-            this.colSelected.Name = "colSelected";
-            this.colSelected.Visible = true;
-            this.colSelected.VisibleIndex = 0;
-            this.colSelected.Width = 104;
-            // 
-            // colHostName
-            // 
-            this.colHostName.FieldName = "HostName";
-            this.colHostName.Name = "colHostName";
-            this.colHostName.OptionsColumn.ReadOnly = true;
-            this.colHostName.Visible = true;
-            this.colHostName.VisibleIndex = 1;
-            this.colHostName.Width = 453;
-            // 
-            // colTicker
-            // 
-            this.colTicker.FieldName = "Ticker";
-            this.colTicker.Name = "colTicker";
-            this.colTicker.Width = 454;
-            // 
             // layoutControl1
             // 
             this.layoutControl1.Location = new System.Drawing.Point(287, 431);
@@ -201,7 +201,6 @@ namespace CryptoMarketClient {
             // 
             this.layoutControlGroup1.EnableIndentsWithoutBorders = DevExpress.Utils.DefaultBoolean.True;
             this.layoutControlGroup1.GroupBordersVisible = false;
-            this.layoutControlGroup1.Location = new System.Drawing.Point(0, 0);
             this.layoutControlGroup1.Name = "layoutControlGroup1";
             this.layoutControlGroup1.OptionsItemText.TextToControlDistance = 6;
             this.layoutControlGroup1.Size = new System.Drawing.Size(180, 120);
@@ -211,19 +210,19 @@ namespace CryptoMarketClient {
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(659, 718);
+            this.ClientSize = new System.Drawing.Size(1425, 947);
             this.Controls.Add(this.layoutControl1);
             this.Controls.Add(this.gridControl1);
             this.Name = "TickersCollectionForm";
             this.Text = "Select Tickers To Aply";
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tickerCollectionItemBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemProgressBar1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit4)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.tickerCollectionItemBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControl1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup1)).EndInit();
             this.ResumeLayout(false);

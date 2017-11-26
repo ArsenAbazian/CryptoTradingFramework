@@ -45,6 +45,11 @@ namespace CryptoMarketClient {
                 info.UsdTicker = markets.First().FirstOrDefault((t) => t.MarketCurrency == info.BaseCurrency && t.BaseCurrency == "USDT");
                 arbitrageList.Add(info);
             }
+            foreach(TickerCollection coll in arbitrageList) {
+                for(int i = 0; i < coll.Count; i++) {
+                    coll.Tickers[i].UpdateMode = TickerUpdateMode.Arbitrage;
+                }
+            }
             return arbitrageList;
         }
     }

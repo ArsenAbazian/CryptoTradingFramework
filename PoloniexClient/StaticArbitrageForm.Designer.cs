@@ -24,17 +24,25 @@
         /// </summary>
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
-            DevExpress.XtraGrid.GridFormatRule gridFormatRule1 = new DevExpress.XtraGrid.GridFormatRule();
-            DevExpress.XtraEditors.FormatConditionRuleValue formatConditionRuleValue1 = new DevExpress.XtraEditors.FormatConditionRuleValue();
-            DevExpress.XtraGrid.GridFormatRule gridFormatRule2 = new DevExpress.XtraGrid.GridFormatRule();
-            DevExpress.XtraEditors.FormatConditionRuleValue formatConditionRuleValue2 = new DevExpress.XtraEditors.FormatConditionRuleValue();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(StaticArbitrageForm));
+            DevExpress.XtraGrid.GridFormatRule gridFormatRule4 = new DevExpress.XtraGrid.GridFormatRule();
+            DevExpress.XtraEditors.FormatConditionRuleValue formatConditionRuleValue4 = new DevExpress.XtraEditors.FormatConditionRuleValue();
+            DevExpress.XtraGrid.GridFormatRule gridFormatRule5 = new DevExpress.XtraGrid.GridFormatRule();
+            DevExpress.XtraEditors.FormatConditionRuleValue formatConditionRuleValue5 = new DevExpress.XtraEditors.FormatConditionRuleValue();
+            DevExpress.XtraGrid.GridFormatRule gridFormatRule6 = new DevExpress.XtraGrid.GridFormatRule();
+            DevExpress.XtraEditors.FormatConditionRuleValue formatConditionRuleValue6 = new DevExpress.XtraEditors.FormatConditionRuleValue();
             this.colIsActual = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colAltCoin = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colProfit = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colIsSelected = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.repositoryItemCheckEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit();
             this.ribbonControl1 = new DevExpress.XtraBars.Ribbon.RibbonControl();
             this.bbMonitorSelected = new DevExpress.XtraBars.BarCheckItem();
             this.bbShowHistory = new DevExpress.XtraBars.BarButtonItem();
+            this.bbClearSelected = new DevExpress.XtraBars.BarButtonItem();
             this.ribbonPage1 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPageGroup1 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
+            this.ribbonStatusBar1 = new DevExpress.XtraBars.Ribbon.RibbonStatusBar();
             this.gridControl1 = new DevExpress.XtraGrid.GridControl();
             this.staticArbitrageInfoBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.gridView1 = new DevExpress.XtraGrid.Views.Grid.GridView();
@@ -46,9 +54,7 @@
             this.colAltBaseIndex = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colAltUsdtIndex = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colBaseUsdtIndex = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.colIsSelected = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colExchange = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.colAltCoin = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colBaseCoin = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colIsUpdating = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colObtainingData = new DevExpress.XtraGrid.Columns.GridColumn();
@@ -65,6 +71,10 @@
             this.colAmount = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colFee = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gridColumn1 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colTotalSpent = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colLastEarned = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.bbShowLog = new DevExpress.XtraBars.BarButtonItem();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.staticArbitrageInfoBindingSource)).BeginInit();
@@ -75,6 +85,15 @@
             // 
             this.colIsActual.FieldName = "IsActual";
             this.colIsActual.Name = "colIsActual";
+            // 
+            // colAltCoin
+            // 
+            this.colAltCoin.FieldName = "AltCoin";
+            this.colAltCoin.Name = "colAltCoin";
+            this.colAltCoin.OptionsColumn.AllowEdit = false;
+            this.colAltCoin.OptionsColumn.ReadOnly = true;
+            this.colAltCoin.Visible = true;
+            this.colAltCoin.VisibleIndex = 2;
             // 
             // colProfit
             // 
@@ -87,33 +106,65 @@
             this.colProfit.Visible = true;
             this.colProfit.VisibleIndex = 6;
             // 
+            // colIsSelected
+            // 
+            this.colIsSelected.ColumnEdit = this.repositoryItemCheckEdit1;
+            this.colIsSelected.FieldName = "IsSelected";
+            this.colIsSelected.Name = "colIsSelected";
+            this.colIsSelected.Visible = true;
+            this.colIsSelected.VisibleIndex = 0;
+            // 
+            // repositoryItemCheckEdit1
+            // 
+            this.repositoryItemCheckEdit1.AutoHeight = false;
+            this.repositoryItemCheckEdit1.Name = "repositoryItemCheckEdit1";
+            this.repositoryItemCheckEdit1.EditValueChanged += new System.EventHandler(this.repositoryItemCheckEdit1_EditValueChanged);
+            // 
             // ribbonControl1
             // 
             this.ribbonControl1.ExpandCollapseItem.Id = 0;
             this.ribbonControl1.Items.AddRange(new DevExpress.XtraBars.BarItem[] {
             this.ribbonControl1.ExpandCollapseItem,
             this.bbMonitorSelected,
-            this.bbShowHistory});
+            this.bbShowHistory,
+            this.bbClearSelected,
+            this.bbShowLog});
             this.ribbonControl1.Location = new System.Drawing.Point(0, 0);
-            this.ribbonControl1.Margin = new System.Windows.Forms.Padding(2);
-            this.ribbonControl1.MaxItemId = 4;
+            this.ribbonControl1.Margin = new System.Windows.Forms.Padding(4);
+            this.ribbonControl1.MaxItemId = 6;
             this.ribbonControl1.Name = "ribbonControl1";
             this.ribbonControl1.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
             this.ribbonPage1});
-            this.ribbonControl1.Size = new System.Drawing.Size(1052, 141);
+            this.ribbonControl1.Size = new System.Drawing.Size(2104, 278);
+            this.ribbonControl1.StatusBar = this.ribbonStatusBar1;
             // 
             // bbMonitorSelected
             // 
             this.bbMonitorSelected.Caption = "Monitor Only Selected";
             this.bbMonitorSelected.Id = 2;
+            this.bbMonitorSelected.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bbMonitorSelected.ImageOptions.Image")));
+            this.bbMonitorSelected.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("bbMonitorSelected.ImageOptions.LargeImage")));
             this.bbMonitorSelected.Name = "bbMonitorSelected";
             // 
             // bbShowHistory
             // 
             this.bbShowHistory.Caption = "ShowHistory";
             this.bbShowHistory.Id = 3;
+            this.bbShowHistory.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bbShowHistory.ImageOptions.Image")));
+            this.bbShowHistory.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("bbShowHistory.ImageOptions.LargeImage")));
             this.bbShowHistory.Name = "bbShowHistory";
             this.bbShowHistory.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bbShowHistory_ItemClick);
+            // 
+            // bbClearSelected
+            // 
+            this.bbClearSelected.Caption = "Disable Operations!!!";
+            this.bbClearSelected.Id = 4;
+            this.bbClearSelected.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bbClearSelected.ImageOptions.Image")));
+            this.bbClearSelected.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("bbClearSelected.ImageOptions.LargeImage")));
+            this.bbClearSelected.ItemAppearance.Normal.ForeColor = System.Drawing.Color.Red;
+            this.bbClearSelected.ItemAppearance.Normal.Options.UseForeColor = true;
+            this.bbClearSelected.Name = "bbClearSelected";
+            this.bbClearSelected.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bbClearSelected_ItemClick);
             // 
             // ribbonPage1
             // 
@@ -126,23 +177,35 @@
             // 
             this.ribbonPageGroup1.ItemLinks.Add(this.bbMonitorSelected);
             this.ribbonPageGroup1.ItemLinks.Add(this.bbShowHistory);
+            this.ribbonPageGroup1.ItemLinks.Add(this.bbClearSelected);
+            this.ribbonPageGroup1.ItemLinks.Add(this.bbShowLog);
             this.ribbonPageGroup1.Name = "ribbonPageGroup1";
             this.ribbonPageGroup1.Text = "Static Arbitrage";
+            // 
+            // ribbonStatusBar1
+            // 
+            this.ribbonStatusBar1.Location = new System.Drawing.Point(0, 879);
+            this.ribbonStatusBar1.Name = "ribbonStatusBar1";
+            this.ribbonStatusBar1.Ribbon = this.ribbonControl1;
+            this.ribbonStatusBar1.Size = new System.Drawing.Size(2104, 54);
             // 
             // gridControl1
             // 
             this.gridControl1.DataSource = this.staticArbitrageInfoBindingSource;
             this.gridControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gridControl1.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(2);
-            this.gridControl1.Location = new System.Drawing.Point(0, 141);
+            this.gridControl1.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(4);
+            this.gridControl1.Location = new System.Drawing.Point(0, 278);
             this.gridControl1.MainView = this.gridView1;
-            this.gridControl1.Margin = new System.Windows.Forms.Padding(2);
+            this.gridControl1.Margin = new System.Windows.Forms.Padding(4);
             this.gridControl1.MenuManager = this.ribbonControl1;
             this.gridControl1.Name = "gridControl1";
-            this.gridControl1.Size = new System.Drawing.Size(1052, 344);
+            this.gridControl1.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
+            this.repositoryItemCheckEdit1});
+            this.gridControl1.Size = new System.Drawing.Size(2104, 655);
             this.gridControl1.TabIndex = 2;
             this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridView1});
+            this.gridControl1.Click += new System.EventHandler(this.gridControl1_Click);
             // 
             // staticArbitrageInfoBindingSource
             // 
@@ -179,31 +242,44 @@
             this.colAmount,
             this.colProfit,
             this.colFee,
-            this.gridColumn1});
-            gridFormatRule1.ApplyToRow = true;
-            gridFormatRule1.Column = this.colIsActual;
-            gridFormatRule1.Name = "FormatIsActual";
-            formatConditionRuleValue1.Appearance.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-            formatConditionRuleValue1.Appearance.Options.UseBackColor = true;
-            formatConditionRuleValue1.Condition = DevExpress.XtraEditors.FormatCondition.Equal;
-            formatConditionRuleValue1.Value1 = false;
-            gridFormatRule1.Rule = formatConditionRuleValue1;
-            gridFormatRule2.ApplyToRow = true;
-            gridFormatRule2.Column = this.colProfit;
-            gridFormatRule2.Name = "Profit";
-            formatConditionRuleValue2.Appearance.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            formatConditionRuleValue2.Appearance.Options.UseBackColor = true;
-            formatConditionRuleValue2.Condition = DevExpress.XtraEditors.FormatCondition.Greater;
-            formatConditionRuleValue2.Value1 = new decimal(new int[] {
+            this.gridColumn1,
+            this.colTotalSpent,
+            this.colLastEarned});
+            gridFormatRule4.Column = this.colIsActual;
+            gridFormatRule4.ColumnApplyTo = this.colAltCoin;
+            gridFormatRule4.Name = "FormatIsActual";
+            formatConditionRuleValue4.Appearance.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
+            formatConditionRuleValue4.Appearance.Options.UseBackColor = true;
+            formatConditionRuleValue4.Condition = DevExpress.XtraEditors.FormatCondition.Equal;
+            formatConditionRuleValue4.Value1 = false;
+            gridFormatRule4.Rule = formatConditionRuleValue4;
+            gridFormatRule5.Column = this.colProfit;
+            gridFormatRule5.ColumnApplyTo = this.colProfit;
+            gridFormatRule5.Name = "FormatProfit";
+            formatConditionRuleValue5.Appearance.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            formatConditionRuleValue5.Appearance.Options.UseBackColor = true;
+            formatConditionRuleValue5.Condition = DevExpress.XtraEditors.FormatCondition.Greater;
+            formatConditionRuleValue5.Value1 = new decimal(new int[] {
             0,
             0,
             0,
             0});
-            gridFormatRule2.Rule = formatConditionRuleValue2;
-            this.gridView1.FormatRules.Add(gridFormatRule1);
-            this.gridView1.FormatRules.Add(gridFormatRule2);
+            gridFormatRule5.Rule = formatConditionRuleValue5;
+            gridFormatRule6.Column = this.colIsSelected;
+            gridFormatRule6.ColumnApplyTo = this.colIsSelected;
+            gridFormatRule6.Name = "FormatIsSelected";
+            formatConditionRuleValue6.Appearance.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            formatConditionRuleValue6.Appearance.Options.UseBackColor = true;
+            formatConditionRuleValue6.Condition = DevExpress.XtraEditors.FormatCondition.Equal;
+            formatConditionRuleValue6.Value1 = true;
+            gridFormatRule6.Rule = formatConditionRuleValue6;
+            this.gridView1.FormatRules.Add(gridFormatRule4);
+            this.gridView1.FormatRules.Add(gridFormatRule5);
+            this.gridView1.FormatRules.Add(gridFormatRule6);
             this.gridView1.GridControl = this.gridControl1;
             this.gridView1.Name = "gridView1";
+            this.gridView1.OptionsBehavior.AllowPixelScrolling = DevExpress.Utils.DefaultBoolean.True;
+            this.gridView1.OptionsDetail.EnableMasterViewMode = false;
             // 
             // colAltBase
             // 
@@ -238,7 +314,7 @@
             this.colDirection.OptionsColumn.AllowEdit = false;
             this.colDirection.OptionsColumn.ReadOnly = true;
             this.colDirection.Visible = true;
-            this.colDirection.VisibleIndex = 7;
+            this.colDirection.VisibleIndex = 8;
             // 
             // colAltBaseIndex
             // 
@@ -258,13 +334,6 @@
             this.colBaseUsdtIndex.Name = "colBaseUsdtIndex";
             this.colBaseUsdtIndex.OptionsColumn.ReadOnly = true;
             // 
-            // colIsSelected
-            // 
-            this.colIsSelected.FieldName = "IsSelected";
-            this.colIsSelected.Name = "colIsSelected";
-            this.colIsSelected.Visible = true;
-            this.colIsSelected.VisibleIndex = 0;
-            // 
             // colExchange
             // 
             this.colExchange.FieldName = "Exchange";
@@ -273,15 +342,6 @@
             this.colExchange.OptionsColumn.ReadOnly = true;
             this.colExchange.Visible = true;
             this.colExchange.VisibleIndex = 1;
-            // 
-            // colAltCoin
-            // 
-            this.colAltCoin.FieldName = "AltCoin";
-            this.colAltCoin.Name = "colAltCoin";
-            this.colAltCoin.OptionsColumn.AllowEdit = false;
-            this.colAltCoin.OptionsColumn.ReadOnly = true;
-            this.colAltCoin.Visible = true;
-            this.colAltCoin.VisibleIndex = 2;
             // 
             // colBaseCoin
             // 
@@ -311,18 +371,18 @@
             this.colAltBasePrice.OptionsColumn.AllowEdit = false;
             this.colAltBasePrice.OptionsColumn.ReadOnly = true;
             this.colAltBasePrice.Visible = true;
-            this.colAltBasePrice.VisibleIndex = 9;
+            this.colAltBasePrice.VisibleIndex = 10;
             // 
             // colAtlUsdtPrice
             // 
             this.colAtlUsdtPrice.DisplayFormat.FormatString = "0.########";
             this.colAtlUsdtPrice.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
-            this.colAtlUsdtPrice.FieldName = "AtlUsdtPrice";
+            this.colAtlUsdtPrice.FieldName = "AltUsdtPrice";
             this.colAtlUsdtPrice.Name = "colAtlUsdtPrice";
             this.colAtlUsdtPrice.OptionsColumn.AllowEdit = false;
             this.colAtlUsdtPrice.OptionsColumn.ReadOnly = true;
             this.colAtlUsdtPrice.Visible = true;
-            this.colAtlUsdtPrice.VisibleIndex = 8;
+            this.colAtlUsdtPrice.VisibleIndex = 9;
             // 
             // colBaseUsdtPrice
             // 
@@ -333,7 +393,7 @@
             this.colBaseUsdtPrice.OptionsColumn.AllowEdit = false;
             this.colBaseUsdtPrice.OptionsColumn.ReadOnly = true;
             this.colBaseUsdtPrice.Visible = true;
-            this.colBaseUsdtPrice.VisibleIndex = 10;
+            this.colBaseUsdtPrice.VisibleIndex = 11;
             // 
             // colNextOverdueMs
             // 
@@ -353,7 +413,7 @@
             this.colLastUpdate.Name = "colLastUpdate";
             this.colLastUpdate.OptionsColumn.AllowEdit = false;
             this.colLastUpdate.Visible = true;
-            this.colLastUpdate.VisibleIndex = 11;
+            this.colLastUpdate.VisibleIndex = 12;
             // 
             // colUpdateTimeMs
             // 
@@ -361,7 +421,7 @@
             this.colUpdateTimeMs.Name = "colUpdateTimeMs";
             this.colUpdateTimeMs.OptionsColumn.AllowEdit = false;
             this.colUpdateTimeMs.Visible = true;
-            this.colUpdateTimeMs.VisibleIndex = 12;
+            this.colUpdateTimeMs.VisibleIndex = 13;
             // 
             // colObtainDataSuccessCount
             // 
@@ -398,7 +458,7 @@
             this.colFee.FieldName = "Fee";
             this.colFee.Name = "colFee";
             this.colFee.Visible = true;
-            this.colFee.VisibleIndex = 13;
+            this.colFee.VisibleIndex = 14;
             // 
             // gridColumn1
             // 
@@ -406,20 +466,54 @@
             this.gridColumn1.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.gridColumn1.FieldName = "MaxProfit";
             this.gridColumn1.Name = "gridColumn1";
+            this.gridColumn1.OptionsColumn.AllowEdit = false;
             this.gridColumn1.Visible = true;
-            this.gridColumn1.VisibleIndex = 14;
+            this.gridColumn1.VisibleIndex = 15;
+            // 
+            // colTotalSpent
+            // 
+            this.colTotalSpent.Caption = "Total Spent";
+            this.colTotalSpent.DisplayFormat.FormatString = "0.########";
+            this.colTotalSpent.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+            this.colTotalSpent.FieldName = "TotalSpent";
+            this.colTotalSpent.Name = "colTotalSpent";
+            this.colTotalSpent.OptionsColumn.AllowEdit = false;
+            this.colTotalSpent.Visible = true;
+            this.colTotalSpent.VisibleIndex = 16;
+            // 
+            // colLastEarned
+            // 
+            this.colLastEarned.Caption = "Last Earned";
+            this.colLastEarned.DisplayFormat.FormatString = "0.########";
+            this.colLastEarned.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+            this.colLastEarned.FieldName = "LastEarned";
+            this.colLastEarned.Name = "colLastEarned";
+            this.colLastEarned.OptionsColumn.AllowEdit = false;
+            this.colLastEarned.Visible = true;
+            this.colLastEarned.VisibleIndex = 7;
+            // 
+            // bbShowLog
+            // 
+            this.bbShowLog.Caption = "Show Log";
+            this.bbShowLog.Id = 5;
+            this.bbShowLog.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bbShowLog.ImageOptions.Image")));
+            this.bbShowLog.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("bbShowLog.ImageOptions.LargeImage")));
+            this.bbShowLog.Name = "bbShowLog";
+            this.bbShowLog.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bbShowLog_ItemClick);
             // 
             // StaticArbitrageForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1052, 485);
+            this.ClientSize = new System.Drawing.Size(2104, 933);
+            this.Controls.Add(this.ribbonStatusBar1);
             this.Controls.Add(this.gridControl1);
             this.Controls.Add(this.ribbonControl1);
-            this.Margin = new System.Windows.Forms.Padding(2);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "StaticArbitrageForm";
             this.Text = "StaticArbitrageForm";
             this.Load += new System.EventHandler(this.StaticArbitrageForm_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.staticArbitrageInfoBindingSource)).EndInit();
@@ -467,5 +561,11 @@
         private DevExpress.XtraGrid.Columns.GridColumn colFee;
         private DevExpress.XtraBars.BarButtonItem bbShowHistory;
         private DevExpress.XtraGrid.Columns.GridColumn gridColumn1;
+        private DevExpress.XtraBars.Ribbon.RibbonStatusBar ribbonStatusBar1;
+        private DevExpress.XtraGrid.Columns.GridColumn colTotalSpent;
+        private DevExpress.XtraBars.BarButtonItem bbClearSelected;
+        private DevExpress.XtraGrid.Columns.GridColumn colLastEarned;
+        private DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit repositoryItemCheckEdit1;
+        private DevExpress.XtraBars.BarButtonItem bbShowLog;
     }
 }

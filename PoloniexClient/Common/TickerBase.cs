@@ -21,6 +21,12 @@ namespace CryptoMarketClient {
             OrderBookChart = CreateOrderBookChartControl();
             OrderBookSnapshot = CreateOrderBookSnapshotImage();
             BidAskSnapshot = CreateChartSnapshotImage();
+            UpdateMode = TickerUpdateMode.Self;
+        }
+
+        public TickerUpdateMode UpdateMode {
+            get;
+            set;
         }
 
         public BindingList<TickerHistoryItem> History { get; } = new BindingList<TickerHistoryItem>();
@@ -135,8 +141,12 @@ namespace CryptoMarketClient {
         public decimal AskChange { get; set; }
         public abstract decimal Fee { get; }
 
+        public TickerBase UsdTicker { get; set; }
+
         public abstract decimal BaseCurrencyBalance { get; }
         public abstract decimal MarketCurrencyBalance { get; }
+        public abstract BalanceBase BaseBalanceInfo { get; }
+        public abstract BalanceBase MarketBalanceInfo { get; }
         public abstract decimal MarketCurrencyTotalBalance { get; }
         public abstract bool MarketCurrencyEnabled { get; }
 
@@ -245,5 +255,10 @@ namespace CryptoMarketClient {
                 OnPaint(e);
             }
         }
+    }
+
+    public enum TickerUpdateMode {
+        Self,
+        Arbitrage
     }
 }

@@ -26,21 +26,21 @@
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TickerForm));
-            DevExpress.XtraEditors.Controls.EditorButtonImageOptions editorButtonImageOptions2 = new DevExpress.XtraEditors.Controls.EditorButtonImageOptions();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject5 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject6 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject7 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject8 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.XtraGrid.GridFormatRule gridFormatRule4 = new DevExpress.XtraGrid.GridFormatRule();
-            DevExpress.XtraEditors.FormatConditionRuleValue formatConditionRuleValue3 = new DevExpress.XtraEditors.FormatConditionRuleValue();
-            DevExpress.XtraGrid.GridFormatRule gridFormatRule5 = new DevExpress.XtraGrid.GridFormatRule();
-            DevExpress.XtraEditors.FormatConditionRuleValue formatConditionRuleValue4 = new DevExpress.XtraEditors.FormatConditionRuleValue();
-            DevExpress.XtraGrid.GridFormatRule gridFormatRule6 = new DevExpress.XtraGrid.GridFormatRule();
-            DevExpress.XtraEditors.FormatConditionRuleIconSet formatConditionRuleIconSet2 = new DevExpress.XtraEditors.FormatConditionRuleIconSet();
-            DevExpress.XtraEditors.FormatConditionIconSet formatConditionIconSet2 = new DevExpress.XtraEditors.FormatConditionIconSet();
-            DevExpress.XtraEditors.FormatConditionIconSetIcon formatConditionIconSetIcon4 = new DevExpress.XtraEditors.FormatConditionIconSetIcon();
-            DevExpress.XtraEditors.FormatConditionIconSetIcon formatConditionIconSetIcon5 = new DevExpress.XtraEditors.FormatConditionIconSetIcon();
-            DevExpress.XtraEditors.FormatConditionIconSetIcon formatConditionIconSetIcon6 = new DevExpress.XtraEditors.FormatConditionIconSetIcon();
+            DevExpress.XtraEditors.Controls.EditorButtonImageOptions editorButtonImageOptions1 = new DevExpress.XtraEditors.Controls.EditorButtonImageOptions();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject1 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject2 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject3 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject4 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.XtraGrid.GridFormatRule gridFormatRule1 = new DevExpress.XtraGrid.GridFormatRule();
+            DevExpress.XtraEditors.FormatConditionRuleValue formatConditionRuleValue1 = new DevExpress.XtraEditors.FormatConditionRuleValue();
+            DevExpress.XtraGrid.GridFormatRule gridFormatRule2 = new DevExpress.XtraGrid.GridFormatRule();
+            DevExpress.XtraEditors.FormatConditionRuleValue formatConditionRuleValue2 = new DevExpress.XtraEditors.FormatConditionRuleValue();
+            DevExpress.XtraGrid.GridFormatRule gridFormatRule3 = new DevExpress.XtraGrid.GridFormatRule();
+            DevExpress.XtraEditors.FormatConditionRuleIconSet formatConditionRuleIconSet1 = new DevExpress.XtraEditors.FormatConditionRuleIconSet();
+            DevExpress.XtraEditors.FormatConditionIconSet formatConditionIconSet1 = new DevExpress.XtraEditors.FormatConditionIconSet();
+            DevExpress.XtraEditors.FormatConditionIconSetIcon formatConditionIconSetIcon1 = new DevExpress.XtraEditors.FormatConditionIconSetIcon();
+            DevExpress.XtraEditors.FormatConditionIconSetIcon formatConditionIconSetIcon2 = new DevExpress.XtraEditors.FormatConditionIconSetIcon();
+            DevExpress.XtraEditors.FormatConditionIconSetIcon formatConditionIconSetIcon3 = new DevExpress.XtraEditors.FormatConditionIconSetIcon();
             this.colType = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colFill = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colAmount = new DevExpress.XtraGrid.Columns.GridColumn();
@@ -50,6 +50,8 @@
             this.repositoryItemTextEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemTextEdit();
             this.beAmount = new DevExpress.XtraBars.BarEditItem();
             this.repositoryItemButtonEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemButtonEdit();
+            this.biSellMarket = new DevExpress.XtraBars.BarButtonItem();
+            this.bbTrailing = new DevExpress.XtraBars.BarButtonItem();
             this.rpPoloniex = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPageGroup1 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.sidePanel1 = new DevExpress.XtraEditors.SidePanel();
@@ -69,7 +71,6 @@
             this.colAsk = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colCurrent = new DevExpress.XtraGrid.Columns.GridColumn();
             this.orderBookPanel = new DevExpress.XtraEditors.SidePanel();
-            this.biSellMarket = new DevExpress.XtraBars.BarButtonItem();
             ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemTextEdit1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemButtonEdit1)).BeginInit();
@@ -110,10 +111,11 @@
             this.biSell,
             this.bePrice,
             this.beAmount,
-            this.biSellMarket});
+            this.biSellMarket,
+            this.bbTrailing});
             this.ribbonControl1.Location = new System.Drawing.Point(0, 0);
             this.ribbonControl1.Margin = new System.Windows.Forms.Padding(6);
-            this.ribbonControl1.MaxItemId = 5;
+            this.ribbonControl1.MaxItemId = 6;
             this.ribbonControl1.Name = "ribbonControl1";
             this.ribbonControl1.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
             this.rpPoloniex});
@@ -163,7 +165,7 @@
             // 
             this.repositoryItemButtonEdit1.AutoHeight = false;
             this.repositoryItemButtonEdit1.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph, "All", 50, true, true, false, editorButtonImageOptions2, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject5, serializableAppearanceObject6, serializableAppearanceObject7, serializableAppearanceObject8, "", null, null, DevExpress.Utils.ToolTipAnchor.Default)});
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph, "All", 50, true, true, false, editorButtonImageOptions1, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject1, serializableAppearanceObject2, serializableAppearanceObject3, serializableAppearanceObject4, "", null, null, DevExpress.Utils.ToolTipAnchor.Default)});
             this.repositoryItemButtonEdit1.DisplayFormat.FormatString = "0.########";
             this.repositoryItemButtonEdit1.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.repositoryItemButtonEdit1.EditFormat.FormatString = "0.########";
@@ -171,6 +173,25 @@
             this.repositoryItemButtonEdit1.Mask.EditMask = "f8";
             this.repositoryItemButtonEdit1.Mask.MaskType = DevExpress.XtraEditors.Mask.MaskType.Numeric;
             this.repositoryItemButtonEdit1.Name = "repositoryItemButtonEdit1";
+            // 
+            // biSellMarket
+            // 
+            this.biSellMarket.Caption = "Sell Market";
+            this.biSellMarket.Id = 4;
+            this.biSellMarket.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("biSellMarket.ImageOptions.Image")));
+            this.biSellMarket.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("biSellMarket.ImageOptions.LargeImage")));
+            this.biSellMarket.Name = "biSellMarket";
+            this.biSellMarket.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large;
+            this.biSellMarket.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.biSellMarket_ItemClick);
+            // 
+            // bbTrailing
+            // 
+            this.bbTrailing.Caption = "Trailing";
+            this.bbTrailing.Id = 5;
+            this.bbTrailing.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bbTrailing.ImageOptions.Image")));
+            this.bbTrailing.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("bbTrailing.ImageOptions.LargeImage")));
+            this.bbTrailing.Name = "bbTrailing";
+            this.bbTrailing.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bbTrailing_ItemClick);
             // 
             // rpPoloniex
             // 
@@ -186,6 +207,7 @@
             this.ribbonPageGroup1.ItemLinks.Add(this.beAmount);
             this.ribbonPageGroup1.ItemLinks.Add(this.biSell);
             this.ribbonPageGroup1.ItemLinks.Add(this.biSellMarket);
+            this.ribbonPageGroup1.ItemLinks.Add(this.bbTrailing);
             this.ribbonPageGroup1.Name = "ribbonPageGroup1";
             this.ribbonPageGroup1.ShowCaptionButton = false;
             this.ribbonPageGroup1.Text = "Sell";
@@ -290,52 +312,52 @@
             this.colBid,
             this.colAsk,
             this.colCurrent});
-            gridFormatRule4.ApplyToRow = true;
-            gridFormatRule4.Column = this.colType;
-            gridFormatRule4.Name = "FormatRulesTradeBuy";
-            formatConditionRuleValue3.Appearance.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            formatConditionRuleValue3.Appearance.Options.UseBackColor = true;
-            formatConditionRuleValue3.Condition = DevExpress.XtraEditors.FormatCondition.Equal;
-            formatConditionRuleValue3.Value1 = CryptoMarketClient.TradeType.Buy;
-            gridFormatRule4.Rule = formatConditionRuleValue3;
-            gridFormatRule5.ApplyToRow = true;
-            gridFormatRule5.Column = this.colType;
-            gridFormatRule5.Name = "FormatRulesTradeSell";
-            formatConditionRuleValue4.Appearance.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-            formatConditionRuleValue4.Appearance.Options.UseBackColor = true;
-            formatConditionRuleValue4.Condition = DevExpress.XtraEditors.FormatCondition.Equal;
-            formatConditionRuleValue4.Value1 = CryptoMarketClient.TradeType.Sell;
-            gridFormatRule5.Rule = formatConditionRuleValue4;
-            gridFormatRule6.Column = this.colFill;
-            gridFormatRule6.ColumnApplyTo = this.colAmount;
-            gridFormatRule6.Name = "FormatRulesFillType";
-            formatConditionIconSet2.CategoryName = "Ratings";
-            formatConditionIconSetIcon4.PredefinedName = "Stars3_1.png";
-            formatConditionIconSetIcon4.Value = new decimal(new int[] {
+            gridFormatRule1.ApplyToRow = true;
+            gridFormatRule1.Column = this.colType;
+            gridFormatRule1.Name = "FormatRulesTradeBuy";
+            formatConditionRuleValue1.Appearance.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            formatConditionRuleValue1.Appearance.Options.UseBackColor = true;
+            formatConditionRuleValue1.Condition = DevExpress.XtraEditors.FormatCondition.Equal;
+            formatConditionRuleValue1.Value1 = CryptoMarketClient.TradeType.Buy;
+            gridFormatRule1.Rule = formatConditionRuleValue1;
+            gridFormatRule2.ApplyToRow = true;
+            gridFormatRule2.Column = this.colType;
+            gridFormatRule2.Name = "FormatRulesTradeSell";
+            formatConditionRuleValue2.Appearance.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
+            formatConditionRuleValue2.Appearance.Options.UseBackColor = true;
+            formatConditionRuleValue2.Condition = DevExpress.XtraEditors.FormatCondition.Equal;
+            formatConditionRuleValue2.Value1 = CryptoMarketClient.TradeType.Sell;
+            gridFormatRule2.Rule = formatConditionRuleValue2;
+            gridFormatRule3.Column = this.colFill;
+            gridFormatRule3.ColumnApplyTo = this.colAmount;
+            gridFormatRule3.Name = "FormatRulesFillType";
+            formatConditionIconSet1.CategoryName = "Ratings";
+            formatConditionIconSetIcon1.PredefinedName = "Stars3_1.png";
+            formatConditionIconSetIcon1.Value = new decimal(new int[] {
             67,
             0,
             0,
             0});
-            formatConditionIconSetIcon4.ValueComparison = DevExpress.XtraEditors.FormatConditionComparisonType.GreaterOrEqual;
-            formatConditionIconSetIcon5.PredefinedName = "Stars3_2.png";
-            formatConditionIconSetIcon5.Value = new decimal(new int[] {
+            formatConditionIconSetIcon1.ValueComparison = DevExpress.XtraEditors.FormatConditionComparisonType.GreaterOrEqual;
+            formatConditionIconSetIcon2.PredefinedName = "Stars3_2.png";
+            formatConditionIconSetIcon2.Value = new decimal(new int[] {
             33,
             0,
             0,
             0});
-            formatConditionIconSetIcon5.ValueComparison = DevExpress.XtraEditors.FormatConditionComparisonType.GreaterOrEqual;
-            formatConditionIconSetIcon6.PredefinedName = "Stars3_3.png";
-            formatConditionIconSetIcon6.ValueComparison = DevExpress.XtraEditors.FormatConditionComparisonType.GreaterOrEqual;
-            formatConditionIconSet2.Icons.Add(formatConditionIconSetIcon4);
-            formatConditionIconSet2.Icons.Add(formatConditionIconSetIcon5);
-            formatConditionIconSet2.Icons.Add(formatConditionIconSetIcon6);
-            formatConditionIconSet2.Name = "Stars3";
-            formatConditionIconSet2.ValueType = DevExpress.XtraEditors.FormatConditionValueType.Percent;
-            formatConditionRuleIconSet2.IconSet = formatConditionIconSet2;
-            gridFormatRule6.Rule = formatConditionRuleIconSet2;
-            this.gridView1.FormatRules.Add(gridFormatRule4);
-            this.gridView1.FormatRules.Add(gridFormatRule5);
-            this.gridView1.FormatRules.Add(gridFormatRule6);
+            formatConditionIconSetIcon2.ValueComparison = DevExpress.XtraEditors.FormatConditionComparisonType.GreaterOrEqual;
+            formatConditionIconSetIcon3.PredefinedName = "Stars3_3.png";
+            formatConditionIconSetIcon3.ValueComparison = DevExpress.XtraEditors.FormatConditionComparisonType.GreaterOrEqual;
+            formatConditionIconSet1.Icons.Add(formatConditionIconSetIcon1);
+            formatConditionIconSet1.Icons.Add(formatConditionIconSetIcon2);
+            formatConditionIconSet1.Icons.Add(formatConditionIconSetIcon3);
+            formatConditionIconSet1.Name = "Stars3";
+            formatConditionIconSet1.ValueType = DevExpress.XtraEditors.FormatConditionValueType.Percent;
+            formatConditionRuleIconSet1.IconSet = formatConditionIconSet1;
+            gridFormatRule3.Rule = formatConditionRuleIconSet1;
+            this.gridView1.FormatRules.Add(gridFormatRule1);
+            this.gridView1.FormatRules.Add(gridFormatRule2);
+            this.gridView1.FormatRules.Add(gridFormatRule3);
             this.gridView1.GridControl = this.tradeGridControl;
             this.gridView1.Name = "gridView1";
             this.gridView1.OptionsBehavior.AllowPixelScrolling = DevExpress.Utils.DefaultBoolean.True;
@@ -413,16 +435,6 @@
             this.orderBookPanel.TabIndex = 1;
             this.orderBookPanel.Text = "sidePanel2";
             // 
-            // biSellMarket
-            // 
-            this.biSellMarket.Caption = "Sell Market";
-            this.biSellMarket.Id = 4;
-            this.biSellMarket.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("biSellMarket.ImageOptions.Image")));
-            this.biSellMarket.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("biSellMarket.ImageOptions.LargeImage")));
-            this.biSellMarket.Name = "biSellMarket";
-            this.biSellMarket.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large;
-            this.biSellMarket.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.biSellMarket_ItemClick);
-            // 
             // TickerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
@@ -434,7 +446,7 @@
             this.Controls.Add(this.ribbonControl1);
             this.Margin = new System.Windows.Forms.Padding(6);
             this.Name = "TickerForm";
-            this.Text = "ProcessWMPaint Msg = 15  Time = 8";
+            this.Text = "Ticker Form";
             ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemTextEdit1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemButtonEdit1)).EndInit();
@@ -481,5 +493,6 @@
         private DevExpress.XtraBars.BarEditItem beAmount;
         private DevExpress.XtraEditors.Repository.RepositoryItemButtonEdit repositoryItemButtonEdit1;
         private DevExpress.XtraBars.BarButtonItem biSellMarket;
+        private DevExpress.XtraBars.BarButtonItem bbTrailing;
     }
 }

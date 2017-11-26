@@ -5,8 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using CryptoMarketClient.Common;
 
-namespace CryptoMarketClient.HitBtc {
-    public class HitBtcTicker : TickerBase {
+namespace CryptoMarketClient.Exmo {
+    public class ExmoTicker : TickerBase {
         public override string Name => MarketCurrency + "_" + BaseCurrency;
         string marketName = null;
         public string MarketName {
@@ -19,18 +19,18 @@ namespace CryptoMarketClient.HitBtc {
 
         public override decimal Fee => 0.1m * 0.01m;
 
-        HitBtcBalanceInfo firstInfo, secondInfo;
+        ExmoBalanceInfo firstInfo, secondInfo;
         public override BalanceBase BaseBalanceInfo {
             get {
                 if(firstInfo == null)
-                    firstInfo = HitBtcModel.Default.Balances.FirstOrDefault((b) => b.Currency == BaseCurrency);
+                    firstInfo = ExmoModel.Default.Balances.FirstOrDefault((b) => b.Currency == BaseCurrency);
                 return firstInfo;
             }
         }
         public override BalanceBase MarketBalanceInfo {
             get {
                 if(secondInfo == null)
-                    secondInfo = HitBtcModel.Default.Balances.FirstOrDefault((b) => b.Currency == MarketCurrency);
+                    secondInfo = ExmoModel.Default.Balances.FirstOrDefault((b) => b.Currency == MarketCurrency);
                 return secondInfo;
             }
         }
@@ -49,8 +49,8 @@ namespace CryptoMarketClient.HitBtc {
 
 
         public override bool MarketCurrencyEnabled => true;
-        public override string HostName => "HitBtc";
-        public override string WebPageAddress => "https://www.livecoin.net/en/trade/index?currencyPair=";
+        public override string HostName => "Exmo";
+        public override string WebPageAddress => "https://exmo.me/ru/trade#?pair=";
         public int Index { get; set; }
         public decimal Step { get; set; }
         public override bool Buy(decimal lowestAsk, decimal amount) {
@@ -78,7 +78,7 @@ namespace CryptoMarketClient.HitBtc {
         }
 
         public override bool UpdateArbitrageOrderBook(int depth) {
-            return HitBtcModel.Default.UpdateArbitrageOrderBook(this, depth);
+            return ExmoModel.Default.UpdateArbitrageOrderBook(this, depth);
         }
 
         public override bool UpdateBalance(CurrencyType type) {
@@ -98,7 +98,7 @@ namespace CryptoMarketClient.HitBtc {
         }
 
         public override bool UpdateTradeStatistic() {
-            return HitBtcModel.Default.UpdateTradesStatistic(this, 100);
+            return ExmoModel.Default.UpdateTradesStatistic(this, 100);
         }
 
         public override bool Withdraw(string currency, string address, decimal amount) {

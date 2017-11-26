@@ -1,4 +1,6 @@
-﻿using CryptoMarketClient.Common;
+﻿using CryptoMarketClient.Bittrex;
+using CryptoMarketClient.Common;
+using DevExpress.XtraBars;
 using DevExpress.XtraEditors;
 using System;
 using System.Collections.Generic;
@@ -18,20 +20,52 @@ namespace CryptoMarketClient {
             InitializeComponent();
             Items = StaticArbitrageHelper.Default.GetItems();
             this.staticArbitrageInfoBindingSource.DataSource = Items;
+            UpdateBalances();
+            GenerateBalanceItems();
+        }
+
+        void UpdateBalances() {
+            if(PoloniexModel.Default.IsConnected) {
+                for(int i = 0; i < 3; i++)
+                    if(PoloniexModel.Default.GetBalance("USDT"))
+                        break;
+            }
+            if(BittrexModel.Default.IsConnected)
+                for(int i = 0; i < 3; i++)
+                    if(BittrexModel.Default.GetBalance("USDT"))
+                        break;
+            foreach(StaticArbitrageInfo info in Items) {
+                for(int i = 0; i < 3; i++) {
+                    if(info.AltBase.UpdateBalance(CurrencyType.MarketCurrency)) {
+                        info.AltBalanceInfo = info.AltBase.MarketBalanceInfo;
+                        break;
+                    }
+                }
+                for(int i = 0; i < 3; i++) {
+                    if(info.BaseUsdt.UpdateBalance(CurrencyType.MarketCurrency)) {
+                        info.BaseBalanceInfo = info.BaseUsdt.MarketBalanceInfo;
+                        break;
+                    }
+                }
+                info.UsdtBalanceInfo = info.AltUsdt.BaseBalanceInfo;
+            }
+            UsdtBalances = StaticArbitrageHelper.Default.GetUsdtBalances();
         }
 
         public List<StaticArbitrageInfo> Items { get; private set; }
+        public List<BalanceBase> UsdtBalances { get; private set; }
         protected bool ShouldProcessArbitrage { get; set; }
 
-        int concurrentTickersCount = 0;
         Stopwatch timer = new Stopwatch();
         void OnUpdateTickers() {
             timer.Start();
             long lastGUIUpdateTime = 0;
             while(true) {
                 for(int i = 0; i < Items.Count; i++) {
-                    if(ShouldProcessArbitrage)
-                        ProcessSelectedArbitrageInfo();
+                    if(ShouldProcessArbitrage) {
+                        Thread.Sleep(10);
+                        continue;
+                    }
                     if(timer.ElapsedMilliseconds - lastGUIUpdateTime > 2000) {
                         lastGUIUpdateTime = timer.ElapsedMilliseconds;
                         if(IsHandleCreated)
@@ -84,8 +118,28 @@ namespace CryptoMarketClient {
 
         void IStaticArbitrageUpdateListener.OnUpdateInfo(StaticArbitrageInfo info, bool useInvokeForUI) {
             info.Calculate();
-            RefreshGridRow(info);
+            if(!ShouldProcessArbitrage && info.IsSelected) {
+                ShouldProcessArbitrage = true;
+                if(!info.MakeOperation()) {
+                    info.IsErrorState = true;
+                    XtraMessageBox.Show("Static Arbitrage Operation Failed. Resolve conflicts manually. " + info.Exchange + "-" + info.AltCoin + "-" + info.BaseCoin);
+                }
+                BeginInvoke(new MethodInvoker(UpdateBalanceItems));
+                ShouldProcessArbitrage = false;
+            }
+            this.BeginInvoke(new Action<StaticArbitrageInfo>(RefreshGridRow), info);
             info.IsUpdating = false;
+        }
+        void UpdateBalanceItems() {
+            this.ribbonStatusBar1.BeginUpdate();
+            try {
+                foreach(BarItemLink link in this.ribbonStatusBar1.ItemLinks) {
+                    UpdateBalanceItem(link.Item);
+                }
+            }
+            finally {
+                this.ribbonStatusBar1.EndUpdate();
+            }
         }
 
         private void bbShowHistory_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
@@ -94,6 +148,41 @@ namespace CryptoMarketClient {
             form.Info = info;
             form.MdiParent = MdiParent;
             form.Show();
+        }
+        void GenerateBalanceItems() {
+            foreach(BalanceBase b in UsdtBalances) {
+                
+                BarStaticItem item = new BarStaticItem();
+                item.ItemAppearance.Normal.FontSizeDelta = 3;
+                item.Tag = b;
+                this.ribbonControl1.Items.Add(item);
+                item.AllowHtmlText = DevExpress.Utils.DefaultBoolean.True;
+                UpdateBalanceItem(item);
+                this.ribbonStatusBar1.ItemLinks.Add(item);
+            }
+        }
+        void UpdateBalanceItem(BarItem item) {
+            BalanceBase b = (BalanceBase)item.Tag;
+            string text = b.Exchange + ": <b>" + b.Available.ToString("0.########") + "</b>";
+            item.Caption = text;
+        }
+
+        private void bbClearSelected_ItemClick(object sender, ItemClickEventArgs e) {
+            foreach(StaticArbitrageInfo info in Items)
+                info.IsSelected = false;
+            this.gridControl1.RefreshDataSource();
+        }
+
+        private void gridControl1_Click(object sender, EventArgs e) {
+
+        }
+
+        private void repositoryItemCheckEdit1_EditValueChanged(object sender, EventArgs e) {
+            this.gridView1.CloseEditor();
+        }
+
+        private void bbShowLog_ItemClick(object sender, ItemClickEventArgs e) {
+            LogManager.Default.Show();
         }
     }
 }

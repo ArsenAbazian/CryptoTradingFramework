@@ -1,4 +1,4 @@
-﻿using CryptoMarketClient.HitBtc;
+﻿using CryptoMarketClient.Exmo;
 using DevExpress.XtraEditors;
 using DevExpress.XtraGrid;
 using System;
@@ -12,21 +12,21 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace CryptoMarketClient.HitBtc {
-    public partial class HitBtcTickerCollectionForm : XtraForm {
-        public HitBtcTickerCollectionForm() {
+namespace CryptoMarketClient.Exmo {
+    public partial class ExmoTickerCollectionForm : XtraForm {
+        public ExmoTickerCollectionForm() {
             InitializeComponent();
         }
 
         protected bool HasShown { get; set; }
         protected override void OnShown(EventArgs e) {
             base.OnShown(e);
-            if(!HitBtcModel.Default.GetTickers()) {
+            if(!ExmoModel.Default.GetTickers()) {
                 XtraMessageBox.Show("Fatal Error: Can't obtain markets info");
                 BeginInvoke(new Action(Close));
                 return;
             }
-            this.gridControl1.DataSource = HitBtcModel.Default.Tickers;
+            this.gridControl1.DataSource = ExmoModel.Default.Tickers;
             HasShown = true;
             StartUpdateTickerThread();
         }
@@ -46,14 +46,14 @@ namespace CryptoMarketClient.HitBtc {
         }
         protected bool AllowWorking { get; set; }
         void OnBidAskUpdate() {
-            while(AllowWorking && HitBtcModel.Default.IsConnected) {
-                HitBtcModel.Default.UpdateTickersInfo();
+            while(AllowWorking && ExmoModel.Default.IsConnected) {
+                ExmoModel.Default.UpdateTickersInfo();
                 this.gridControl1.RefreshDataSource();
                 Thread.Sleep(900); //to avoid throttling
             }
         }
 
-        void UpdateGrid(HitBtcTicker info) {
+        void UpdateGrid(ExmoTicker info) {
             int rowHandle = this.gridView1.GetRowHandle(info.Index);
             this.gridView1.RefreshRow(rowHandle);
         }
@@ -87,7 +87,7 @@ namespace CryptoMarketClient.HitBtc {
                 return;
             TickerBase t = (TickerBase)this.gridView1.GetRow(this.gridView1.FocusedRowHandle);
             TickerForm form = new TickerForm();
-            form.MarketName = "HitBtc";
+            form.MarketName = "Exmo";
             form.Ticker = t;
             form.MdiParent = MdiParent;
             form.Show();

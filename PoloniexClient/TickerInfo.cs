@@ -56,14 +56,15 @@ namespace CryptoMarketClient {
         }
 
         public int CalcBestHeight() {
-            TileViewInfo viewInfo = (TileViewInfo)this.tileView1.GetViewInfo();
-            TileItem item = viewInfo.DefaultGroup.Items[0];
-            return item.ItemInfo.GetOptimizedTableSettings().ItemHeight;
+            //TileViewInfo viewInfo = (TileViewInfo)this.tileView1.GetViewInfo();
+            //TileItem item = viewInfo.DefaultGroup.Items[0];
+            //return item.ItemInfo.GetOptimizedTableSettings().ItemHeight;
+            return 0;
         }
 
         public void UpdateBestHeight() {
-            this.tileView1.OptionsTiles.ItemSize = new Size(this.tileView1.OptionsTiles.ItemSize.Width, this.CalcBestHeight());
-            Height = this.tileView1.OptionsTiles.ItemSize.Height + 20;
+            //this.tileView1.OptionsTiles.ItemSize = new Size(this.tileView1.OptionsTiles.ItemSize.Width, this.CalcBestHeight());
+            //Height = this.tileView1.OptionsTiles.ItemSize.Height + 20;
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace CryptoMarketClient.Bittrex {
+﻿namespace CryptoMarketClient.HitBtc {
     partial class HitBtcTickerCollectionForm {
         /// <summary>
         /// Required designer variable.

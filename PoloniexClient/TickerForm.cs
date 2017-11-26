@@ -1,4 +1,5 @@
-﻿using DevExpress.XtraCharts;
+﻿using CryptoMarketClient.Common;
+using DevExpress.XtraCharts;
 using DevExpress.XtraEditors;
 using DevExpress.XtraGrid;
 using System;
@@ -170,6 +171,26 @@ namespace CryptoMarketClient {
 
         private void biSellMarket_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
 
+        }
+
+        private void bbTrailing_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
+            TrailingSettingsForm form = new TrailingSettingsForm();
+            form.Owner = this;
+            TrailingSettings settings = new TrailingSettings();
+            settings.Ticker = Ticker;
+            settings.UsdTicker = Ticker.UsdTicker;
+            settings.BuyPrice = Ticker.OrderBook.Asks[0].Value;
+            settings.Amount = Ticker.OrderBook.Asks[0].Amount;
+            form.Settings = settings;
+
+            TrailingManager.Default.Items.Add(settings);
+            this.orderBookControl1.SelectedAskRowChanged += form.SelectedAskChanged;
+            form.Disposed += OnTrailingSettingsFormDisposed;
+            form.Show();
+        }
+        
+        void OnTrailingSettingsFormDisposed(object sender, EventArgs e) {
+            this.orderBookControl1.SelectedAskRowChanged -= ((TrailingSettingsForm)sender).SelectedAskChanged;
         }
     }
 }

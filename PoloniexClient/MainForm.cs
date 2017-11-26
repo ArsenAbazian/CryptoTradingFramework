@@ -18,6 +18,7 @@ using CryptoMarketClient.Bittrex;
 using DevExpress.XtraEditors;
 using CryptoMarketClient.Common;
 using CryptoMarketClient.HitBtc;
+using CryptoMarketClient.Exmo;
 
 namespace CryptoMarketClient {
     public partial class MainForm : DevExpress.XtraBars.Ribbon.RibbonForm {
@@ -35,10 +36,15 @@ namespace CryptoMarketClient {
             ModelBase.OrderBookDepth = Convert.ToInt32(this.beOrderBookDepth.EditValue);
             TelegramBot.Default.SendNotification("hello!");
 
-            BittrexModel.Default.IsConnected = true;
-            BittrextMarketsForm.Show();
-            PoloniexModel.Default.IsConnected = true;
-            PoloniexTickersForm.Show();
+            //BittrexModel.Default.IsConnected = true;
+            //BittrextMarketsForm.Show();
+
+            //PoloniexModel.Default.IsConnected = true;
+            //PoloniexTickersForm.Show();
+
+            //ExmoModel.Default.IsConnected = true;
+            //ExmoTickersForm.Show();
+
             //HitBtcModel.Default.IsConnected = true;
             //HitBtcMarketsForm.Show();
 
@@ -80,6 +86,17 @@ namespace CryptoMarketClient {
                     hitBtcMarketsForm.MdiParent = this;
                 }
                 return hitBtcMarketsForm;
+            }
+        }
+
+        ExmoTickerCollectionForm exemoTickersForm;
+        public ExmoTickerCollectionForm ExmoTickersForm {
+            get {
+                if(exemoTickersForm == null || exemoTickersForm.IsDisposed) {
+                    exemoTickersForm = new ExmoTickerCollectionForm();
+                    exemoTickersForm.MdiParent = this;
+                }
+                return exemoTickersForm;
             }
         }
 
@@ -159,7 +176,7 @@ namespace CryptoMarketClient {
         }
 
         private void bcHitBtc_CheckedChanged(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
-            if(this.bcBittrex.Checked) {
+            if(this.bcHitBtc.Checked) {
                 HitBtcModel.Default.IsConnected = true;
                 HitBtcMarketsForm.Show();
             }
@@ -180,9 +197,49 @@ namespace CryptoMarketClient {
             }
         }
 
+        private void bcExmo_CheckedChanged(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
+            if(this.bcExmo.Checked) {
+                ExmoModel.Default.IsConnected = true;
+                ExmoTickersForm.Show();
+            }
+            else {
+                ExmoModel.Default.IsConnected = false;
+                ExmoTickersForm.Hide();
+            }
+        }
+
         private void bbShowStaticArbitrage_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
             StaticArbitrageForm.Show();
             StaticArbitrageForm.Activate();
+        }
+
+        private void ribbonControl1_Merge(object sender, DevExpress.XtraBars.Ribbon.RibbonMergeEventArgs e) {
+            if(e.MergedChild.StatusBar != null)
+                this.ribbonStatusBar1.MergeStatusBar(e.MergedChild.StatusBar);
+        }
+
+        private void ribbonControl1_UnMerge(object sender, DevExpress.XtraBars.Ribbon.RibbonMergeEventArgs e) {
+            this.ribbonStatusBar1.UnMergeStatusBar();
+        }
+
+        private void MainForm_Load(object sender, EventArgs e) {
+
+        }
+
+        ActiveTrailngCollectionForm activeTrailing;
+        protected ActiveTrailngCollectionForm ActiveTrailng {
+            get {
+                if(activeTrailing == null || activeTrailing.IsDisposed) {
+                    activeTrailing = new ActiveTrailngCollectionForm();
+                    activeTrailing.MdiParent = this;
+                }
+                return activeTrailing;
+            }
+        }
+
+        private void barButtonItem1_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
+            ActiveTrailng.Show();
+            ActiveTrailng.Activate();
         }
     }
 }
