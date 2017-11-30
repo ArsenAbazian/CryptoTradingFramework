@@ -48,8 +48,8 @@ namespace CryptoMarketClient.Common {
 
             Task task = Task.Factory.StartNew(() => {
                 for(int i = 0; i < info.Count; i++) {
-                    if(info.Tickers[i].UpdateArbitrageOrderBook(OrderBook.Depth)) {
-                        if(info.Tickers[i].UpdateTradeStatistic() && info.Tickers[i].TradeStatistic.Count > 0)
+                    if(info.Tickers[i].UpdateOrderBook()) {
+                        if(info.Tickers[i].UpdateTrades() && info.Tickers[i].TradeStatistic.Count > 0)
                             info.Tickers[i].OrderBook.TradeInfo = info.Tickers[i].TradeStatistic.Last();
                         info.Tickers[i].OrderBook.CalcStatistics();
                         info.Tickers[i].OrderBook.UpdateHistory();
@@ -84,13 +84,13 @@ namespace CryptoMarketClient.Common {
             info.ObtainDataCount = 0;
 
             Task task = Task.Factory.StartNew(() => {
-                if(info.AltBase.UpdateArbitrageOrderBook(OrderBook.Depth))
+                if(info.AltBase.UpdateOrderBook())
                     info.ObtainDataSuccessCount++;
                 info.ObtainDataCount++;
-                if(info.AltUsdt.UpdateArbitrageOrderBook(OrderBook.Depth))
+                if(info.AltUsdt.UpdateOrderBook())
                     info.ObtainDataSuccessCount++;
                 info.ObtainDataCount++;
-                if(info.BaseUsdt.UpdateArbitrageOrderBook(OrderBook.Depth))
+                if(info.BaseUsdt.UpdateOrderBook())
                     info.ObtainDataSuccessCount++;
                 info.ObtainDataCount++;
             });

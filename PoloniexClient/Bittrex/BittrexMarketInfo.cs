@@ -9,8 +9,9 @@ using System.Threading;
 using System.Threading.Tasks;
 
 namespace CryptoMarketClient.Bittrex {
-    public class BittrexMarketInfo : TickerBase {
-        public int Index { get; set; }
+    public class BittrexTicker : TickerBase {
+        public BittrexTicker(ModelBase model) : base(model) { }
+
         public string MarketCurrencyLong { get; set; }
         public string BaseCurrencyLong { get; set; }
         public decimal MinTradeSize { get; set; }
@@ -28,7 +29,7 @@ namespace CryptoMarketClient.Bittrex {
         public override bool MarketCurrencyEnabled { get { return MarketCurrencyInfo == null ? false : MarketCurrencyInfo.IsActive; } }
 
         
-        BittrexAccountBalanceInfo baseBalanceInfo, marketBalanceInfo;
+        BalanceBase baseBalanceInfo, marketBalanceInfo;
         public override BalanceBase BaseBalanceInfo {
             get {
                 if(baseBalanceInfo == null)
@@ -54,20 +55,9 @@ namespace CryptoMarketClient.Bittrex {
             }
         }
 
-        public string MarketName { get; set; }
+        public override string CurrencyPair { get { return MarketName; } set { MarketName = value; } }
         public override string Name { get { return MarketName; } }
 
-        public override void UpdateOrderBook(int depth) {
-            BittrexModel.Default.UpdateArbitrageOrderBook(this, depth);
-        }
-
-        public override void UpdateTicker() {
-            BittrexModel.Default.GetTicker(this);
-        }
-        public override void UpdateTrades() {
-            BittrexModel.Default.UpdateTrades(this);
-        }
-        
         public override string DownloadString(string address) {
             try {
                 ApiRate.WaitToProceed();
@@ -75,22 +65,6 @@ namespace CryptoMarketClient.Bittrex {
             }
             catch { }
             return string.Empty;
-        }
-        public override bool UpdateArbitrageOrderBook(int depth) {
-            bool res = BittrexModel.Default.UpdateArbitrageOrderBook(this, depth);
-            if(res) {
-                HighestBid = OrderBook.Bids[0].Value;
-                LowestAsk = OrderBook.Asks[0].Value;
-                Time = DateTime.Now;
-                UpdateHistoryItem();
-            }
-            return res;
-        }
-        public override void ProcessOrderBook(string text) {
-            BittrexModel.Default.UpdateOrderBook(this, text, OrderBook.Depth);
-        }
-        public override void ProcessArbitrageOrderBook(string text) {
-            BittrexModel.Default.UpdateOrderBook(this, text, OrderBook.Depth);
         }
         public override bool UpdateBalance(CurrencyType type) {
             return BittrexModel.Default.GetBalance(type == CurrencyType.MarketCurrency? MarketCurrency: BaseCurrency);
@@ -120,9 +94,6 @@ namespace CryptoMarketClient.Bittrex {
         }
         public override bool Withdraw(string currency, string address, decimal amount) {
             return BittrexModel.Default.Withdraw(currency, amount, address, "");
-        }
-        public override bool UpdateTradeStatistic() {
-            return BittrexModel.Default.UpdateTradesStatistic(this, 25);
         }
         public override string HostName { get { return "Bittrex"; } }
         public override string WebPageAddress { get { return "https://bittrex.com/Market/Index?MarketName=" + Name; } }

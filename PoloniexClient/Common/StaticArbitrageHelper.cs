@@ -33,13 +33,13 @@ namespace CryptoMarketClient.Common {
             }
             if(BittrexModel.Default.IsConnected) {
                 foreach(string curr in baseCurr) {
-                    TickerBase btcUsdtTicker = BittrexModel.Default.Markets.FirstOrDefault(t => t.BaseCurrency == "USDT" && t.MarketCurrency == curr);
+                    TickerBase btcUsdtTicker = BittrexModel.Default.Tickers.FirstOrDefault(t => t.BaseCurrency == "USDT" && t.MarketCurrency == curr);
                     if(btcUsdtTicker == null)
                         throw new Exception("Static Arbitrage BtcUsdtTicker == null");
-                    foreach(TickerBase altUsdtTicker in BittrexModel.Default.Markets) {
+                    foreach(TickerBase altUsdtTicker in BittrexModel.Default.Tickers) {
                         if(altUsdtTicker.BaseCurrency != "USDT")
                             continue;
-                        TickerBase altBtcTicker = BittrexModel.Default.Markets.FirstOrDefault(t => t.BaseCurrency == curr && t.MarketCurrency == altUsdtTicker.MarketCurrency);
+                        TickerBase altBtcTicker = BittrexModel.Default.Tickers.FirstOrDefault(t => t.BaseCurrency == curr && t.MarketCurrency == altUsdtTicker.MarketCurrency);
                         if(altBtcTicker == null)
                             continue;
                         items.Add(new StaticArbitrageInfo { AltBase = altBtcTicker, AltUsdt = altUsdtTicker, BaseUsdt = btcUsdtTicker });

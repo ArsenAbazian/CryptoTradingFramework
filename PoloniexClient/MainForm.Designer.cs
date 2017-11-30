@@ -246,6 +246,7 @@
             this.bcHitBtc.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bcHitBtc.ImageOptions.Image")));
             this.bcHitBtc.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("bcHitBtc.ImageOptions.LargeImage")));
             this.bcHitBtc.Name = "bcHitBtc";
+            this.bcHitBtc.Visibility = DevExpress.XtraBars.BarItemVisibility.Never;
             this.bcHitBtc.CheckedChanged += new DevExpress.XtraBars.ItemClickEventHandler(this.bcHitBtc_CheckedChanged);
             // 
             // bbShowStaticArbitrage
@@ -264,6 +265,7 @@
             this.bcExmo.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bcExmo.ImageOptions.Image")));
             this.bcExmo.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("bcExmo.ImageOptions.LargeImage")));
             this.bcExmo.Name = "bcExmo";
+            this.bcExmo.Visibility = DevExpress.XtraBars.BarItemVisibility.Never;
             this.bcExmo.CheckedChanged += new DevExpress.XtraBars.ItemClickEventHandler(this.bcExmo_CheckedChanged);
             // 
             // barButtonItem1

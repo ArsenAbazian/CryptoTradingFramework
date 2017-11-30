@@ -1,4 +1,5 @@
 ﻿using CryptoMarketClient.Common;
+using DevExpress.XtraBars.Docking;
 using DevExpress.XtraCharts;
 using DevExpress.XtraEditors;
 using DevExpress.XtraGrid;
@@ -13,7 +14,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace CryptoMarketClient {
-    public partial class TickerForm : XtraForm {
+    public partial class TickerForm : TimerUpdateForm {
         static Color bidColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
         static Color askColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
         static Color currentColor = Color.BlueViolet;
@@ -27,6 +28,11 @@ namespace CryptoMarketClient {
         }
 
         public string MarketName { get; set; }
+
+        protected override void OnTimerUpdate(object sender, EventArgs e) {
+            base.OnTimerUpdate(sender, e);
+            this.tickerInfoControl.UpdateData();
+        }
 
         TickerBase ticker;
         public TickerBase Ticker {
@@ -56,7 +62,14 @@ namespace CryptoMarketClient {
             UpdateText();
             UpdateGrid();
             UpdateChart();
+            UpdateDockPanels();
             SubscribeEvents();
+        }
+        void UpdateDockPanels() {
+            if(Ticker == null)
+                return;
+            foreach(DockPanel panel in this.dockManager1.Panels)
+                panel.Text = Ticker.Name + " - " + panel.Text;
         }
         void UpdateTickerInfoControlHeight() {
             this.tickerInfoControl.UpdateBestHeight();

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Security.Cryptography;
@@ -23,17 +24,16 @@ namespace CryptoMarketClient.Exmo {
             }
         }
 
-        public BindingList<ExmoTicker> Tickers { get; } = new BindingList<ExmoTicker>();
         public BindingList<ExmoCurrencyInfo> Currencies { get; } = new BindingList<ExmoCurrencyInfo>();
         public BindingList<ExmoBalanceInfo> Balances { get; } = new BindingList<ExmoBalanceInfo>();
-        public bool GetTickers() {
+        public override bool GetTickersInfo() {
             string text = string.Empty;
-            string address = "https://api.exmo.com/v1/pair_settings";
+            string address = "https://api.exmo.me/v1/pair_settings";
 
             try {
                 text = GetDownloadString(address);
             }
-            catch(Exception e) {
+            catch(Exception) {
                 return false;
             }
             if(string.IsNullOrEmpty(text))
@@ -44,23 +44,22 @@ namespace CryptoMarketClient.Exmo {
             lock(JsonParser) {
                 res = (Dictionary<string, object>)JsonParser.Parse(text);
             }
-            List<object> symbols = (List<object>)res["symbols"];
             int index = 0;
-            foreach(Dictionary<string, object> s in symbols) {
+            foreach(string s in res.Keys) {
                 ExmoTicker t = new ExmoTicker();
                 t.Index = index;
+                string[] curr = s.Split('_');
+                t.BaseCurrency = curr[1];
+                t.MarketCurrency = curr[0];
                 index++;
-                t.BaseCurrency = s["currency"].ToString();
-                t.MarketCurrency = s["commodity"].ToString();
-                t.Step = Convert.ToDecimal(s["step"]);
                 Tickers.Add(t);
             }
 
             return true;
         }
-        public bool UpdateTickersInfo() {
+        public override bool UpdateTickersInfo() {
             string text = string.Empty;
-            string address = "	https://api.exmo.com/v1/ticker/";
+            string address = "	https://api.exmo.me/v1/ticker/";
 
             try {
                 text = GetDownloadString(address);
@@ -95,7 +94,7 @@ namespace CryptoMarketClient.Exmo {
                 string volume = (string)item["vol"];
                 if(!string.IsNullOrEmpty(volume))
                     t.BaseVolume = Convert.ToDecimal(volume);
-                string quoteVolume = (string)item["volume_quote"];
+                string quoteVolume = (string)item["vol_curr"];
                 if(!string.IsNullOrEmpty(quoteVolume))
                     t.Volume = Convert.ToDecimal(quoteVolume);
                 string time = (string)item["updated"];
@@ -105,9 +104,10 @@ namespace CryptoMarketClient.Exmo {
 
             return true;
         }
+
         public bool UpdateArbitrageOrderBook(ExmoTicker ticker, int depth) {
             string text = string.Empty;
-            string address = string.Format("https://api.exmo.com/v1/order_book/?pair={0}", ticker.MarketName);
+            string address = string.Format("https://api.exmo.me/v1/order_book/?pair={0}", ticker.MarketName);
 
             try {
                 text = GetDownloadString(address);
@@ -123,8 +123,10 @@ namespace CryptoMarketClient.Exmo {
                 res = (Dictionary<string, object>)JsonParser.Parse(text);
             }
 
-            List<object> bids = (List<object>)res["bids"];
-            List<object> asks = (List<object>)res["asks"];
+            res = (Dictionary<string, object>)res[ticker.MarketName];
+
+            List<object> bids = (List<object>)res["bid"];
+            List<object> asks = (List<object>)res["ask"];
 
             ticker.OrderBook.GetNewBidAsks();
             int index = 0;
@@ -154,7 +156,7 @@ namespace CryptoMarketClient.Exmo {
         }
         public bool UpdateTradesStatistic(ExmoTicker ticker, int count) {
             string text = string.Empty;
-            string address = string.Format("https://api.exmo.com/v1/trades/?pair={0}", ticker.MarketName);
+            string address = string.Format("https://api.exmo.me/v1/trades/?pair={0}", ticker.MarketName);
 
             try {
                 text = GetDownloadString(address);
@@ -169,7 +171,7 @@ namespace CryptoMarketClient.Exmo {
             lock(JsonParser) {
                 res = (Dictionary<string, object>)JsonParser.Parse(text);
             }
-            List<object> trades = (List<object>)res["trades"];
+            List<object> trades = (List<object>)res[ticker.MarketName];
             if(trades.Count == 0) {
                 ticker.TradeStatistic.Add(new TradeStatisticsItem() { Time = DateTime.Now });
                 if(ticker.TradeStatistic.Count > 5000) {
@@ -184,11 +186,11 @@ namespace CryptoMarketClient.Exmo {
             st.MinSellPrice = decimal.MaxValue;
             st.Time = DateTime.Now;
 
-            foreach(List<object> obj in trades) {
+            foreach(Dictionary<string, object> obj in trades) {
                 TradeHistoryItem item = new TradeHistoryItem();
-                decimal amount = Convert.ToDecimal(obj[1]);
-                decimal price = Convert.ToDecimal(obj[2]);
-                bool isBuy = obj[4].ToString().Length == 3;
+                decimal amount = Convert.ToDecimal(obj["amount"]);
+                decimal price = Convert.ToDecimal(obj["price"]);
+                bool isBuy = obj["type"].ToString().Length == 3;
                 if(isBuy) {
                     st.BuyAmount += amount;
                     st.MinBuyPrice = Math.Min(st.MinBuyPrice, price);
@@ -206,7 +208,7 @@ namespace CryptoMarketClient.Exmo {
                 st.MinSellPrice = 0;
             if(st.MinBuyPrice == decimal.MaxValue)
                 st.MinBuyPrice = 0;
-            ticker.LastTradeId = Convert.ToInt64(((List<object>)trades.First())[0]);
+            ticker.LastTradeId = Convert.ToInt64(((Dictionary<string, object>)trades.First())["trade_id"]);
             ticker.LastTradeStatisticTime = DateTime.Now;
             ticker.TradeStatistic.Add(st);
             if(ticker.TradeStatistic.Count > 5000) {
@@ -224,10 +226,10 @@ namespace CryptoMarketClient.Exmo {
         private static long GetNonce() {
             return DateTime.Now.Ticks * 10 / TimeSpan.TicksPerMillisecond; // use millisecond timestamp or whatever you want
         }
-        public bool GetBalances() {
+        public override bool GetBalances() {
             string query = string.Format("/api/1/trading/balance?nonce={0}&apikey={1}", GetNonce(), ApiKey);
 
-            var client = new RestClient("https://api.Exmo.com");
+            var client = new RestClient("https://api.exmo.me");
             var request = new RestRequest("/api/1/trading/balance", Method.GET);
             request.AddParameter("nonce", GetNonce());
             request.AddParameter("apikey", ApiKey);

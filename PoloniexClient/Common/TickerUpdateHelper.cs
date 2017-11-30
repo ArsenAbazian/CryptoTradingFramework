@@ -51,22 +51,11 @@ namespace CryptoMarketClient {
         void OnUpdate() {
             while(AllowUpdateOrderBook || AllowUpdateTicker || AllowUpdateTrades) {
                 if(AllowUpdateOrderBook)
-                    Ticker.UpdateOrderBook(OrderBook.Depth);
+                    Ticker.UpdateOrderBook();
                 if(AllowUpdateTicker)
                     Ticker.UpdateTicker();
                 if(AllowUpdateTrades)
                     Ticker.UpdateTrades();
-            }
-        }
-        public static void UpdateHistoryForTradeItem(TradeHistoryItem item, TickerBase ticker) {
-            for(int i = ticker.History.Count - 1; i >= 0; i--) {
-                TickerHistoryItem h = ticker.History[i];
-                if(h.Time.Ticks <= item.Time.Ticks) {
-                    item.Bid = h.Bid;
-                    item.Ask = h.Ask;
-                    item.Current = h.Current;
-                    break;
-                }
             }
         }
         public static void UpdateHistoryItem(TickerBase item) {

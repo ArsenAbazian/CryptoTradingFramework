@@ -23,10 +23,9 @@ namespace CryptoMarketClient.HitBtc {
             }
         }
 
-        public BindingList<HitBtcTicker> Tickers { get; } = new BindingList<HitBtcTicker>();
         public BindingList<HitBtcCurrencyInfo> Currencies { get; } = new BindingList<HitBtcCurrencyInfo>();
         public BindingList<HitBtcBalanceInfo> Balances { get; } = new BindingList<HitBtcBalanceInfo>();
-        public bool GetTickers() {
+        public override bool GetTickersInfo() {
             string text = string.Empty;
             string address = "http://api.hitbtc.com/api/1/public/symbols";
 
@@ -56,7 +55,7 @@ namespace CryptoMarketClient.HitBtc {
 
             return true;
         }
-        public bool UpdateTickersInfo() {
+        public override bool UpdateTickersInfo() {
             string text = string.Empty;
             string address = "http://api.hitbtc.com/api/1/public/ticker";
 
@@ -222,7 +221,7 @@ namespace CryptoMarketClient.HitBtc {
         private static long GetNonce() {
             return DateTime.Now.Ticks * 10 / TimeSpan.TicksPerMillisecond; // use millisecond timestamp or whatever you want
         }
-        public bool GetBalances() {
+        public override bool GetBalances() {
             string query = string.Format("/api/1/trading/balance?nonce={0}&apikey={1}", GetNonce(), ApiKey);
 
             var client = new RestClient("https://api.hitbtc.com");

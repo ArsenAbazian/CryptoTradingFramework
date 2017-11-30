@@ -1,5 +1,4 @@
-﻿using CryptoMarketClient.HitBtc;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,19 +8,9 @@ namespace CryptoMarketClient {
     public static class TickerCollectionHelper {
         static List<List<TickerBase>> GetMarketsList() {
             List<List<TickerBase>> tickersList = new List<List<TickerBase>>();
-            if(Bittrex.BittrexModel.Default.IsConnected) {
+            foreach(ModelBase model in ModelBase.ActiveModels) {
                 List<TickerBase> list = new List<TickerBase>();
-                list.AddRange(Bittrex.BittrexModel.Default.Markets);
-                tickersList.Add(list);
-            }
-            if(PoloniexModel.Default.IsConnected) {
-                List<TickerBase> list = new List<TickerBase>();
-                list.AddRange(PoloniexModel.Default.Tickers);
-                tickersList.Add(list);
-            }
-            if(HitBtcModel.Default.IsConnected) {
-                List<TickerBase> list = new List<TickerBase>();
-                list.AddRange(HitBtcModel.Default.Tickers);
+                list.AddRange(model.Tickers);
                 tickersList.Add(list);
             }
             return tickersList;

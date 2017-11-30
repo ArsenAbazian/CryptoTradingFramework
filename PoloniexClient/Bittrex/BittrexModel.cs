@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
-using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -25,14 +24,10 @@ namespace CryptoMarketClient.Bittrex {
 
         public override string Name => "Bittrex";
 
-        public List<BittrexMarketInfo> Markets { get; } = new List<BittrexMarketInfo>();
-        public List<BittrexOrderInfo> Orders { get; } = new List<BittrexOrderInfo>();
-        protected List<BittrexOrderInfo> UpdateOrders { get; } = new List<BittrexOrderInfo>();
-        public List<BittrexAccountBalanceInfo> Balances { get; } = new List<BittrexAccountBalanceInfo>();
         public List<BittrexCurrencyInfo> Currencies { get; } = new List<BittrexCurrencyInfo>();
         protected List<TradeHistoryItem> UpdateList { get; } = new List<TradeHistoryItem>(100);
 
-        public bool GetMarketsInfo() {
+        public override bool GetTickersInfo() {
             string address = "https://bittrex.com/api/v1.1/public/getmarkets";
             string text = string.Empty;
             try {
@@ -43,7 +38,7 @@ namespace CryptoMarketClient.Bittrex {
             }
             if(string.IsNullOrEmpty(text))
                 return false;
-            Markets.Clear();
+            Tickers.Clear();
             JObject res = (JObject)JsonConvert.DeserializeObject(text);
             foreach(JProperty prop in res.Children()) {
                 if(prop.Name == "success") {
@@ -55,7 +50,7 @@ namespace CryptoMarketClient.Bittrex {
                 if(prop.Name == "result") {
                     JArray markets = (JArray)prop.Value;
                     foreach(JObject obj in markets) {
-                        BittrexMarketInfo m = new BittrexMarketInfo();
+                        BittrexTicker m = new BittrexTicker(this);
                         m.MarketCurrency = obj.Value<string>("MarketCurrency");
                         m.BaseCurrency = obj.Value<string>("BaseCurrency");
                         m.MarketCurrencyLong = obj.Value<string>("MarketCurrencyLong");
@@ -64,14 +59,14 @@ namespace CryptoMarketClient.Bittrex {
                         m.MarketName = obj.Value<string>("MarketName");
                         m.IsActive = obj.Value<bool>("IsActive");
                         m.Created = obj.Value<DateTime>("Created");
-                        m.Index = Markets.Count;
-                        Markets.Add(m);
+                        m.Index = Tickers.Count;
+                        Tickers.Add(m);
                     }
                 }
             }
             return true;
         }
-        public bool UpdateCurrencies() {
+        public override bool UpdateCurrencies() {
             string address = "https://bittrex.com/api/v1.1/public/getcurrencies";
             string text = string.Empty;
             try {
@@ -132,7 +127,7 @@ namespace CryptoMarketClient.Bittrex {
             }
             return true;
         }
-        public void GetTicker(BittrexMarketInfo info) {
+        public void GetTicker(BittrexTicker info) {
             string address = string.Format("https://bittrex.com/api/v1.1/public/getticker?market={0}", Uri.EscapeDataString(info.MarketName));
             string text = GetDownloadString(info, address);
             if(string.IsNullOrEmpty(text))
@@ -155,7 +150,52 @@ namespace CryptoMarketClient.Bittrex {
                 }
             }
         }
-        public bool GetMarketsSummaryInfo() {
+        public override bool UpdateTicker(TickerBase tickerBase) {
+            string address = string.Format("https://bittrex.com/api/v1.1/public/getmarketsummary?market={0}", tickerBase.MarketName);
+            string text = string.Empty;
+            try {
+                text = GetDownloadString(address);
+            }
+            catch(Exception) {
+                return false;
+            }
+            if(string.IsNullOrEmpty(text))
+                return false;
+            JObject res = (JObject)JsonConvert.DeserializeObject(text);
+            foreach(JProperty prop in res.Children()) {
+                if(prop.Name == "success") {
+                    if(prop.Value.Value<bool>() == false)
+                        return false;
+                }
+                if(prop.Name == "message")
+                    continue;
+                if(prop.Name == "result") {
+                    JArray markets = (JArray)prop.Value;
+                    foreach(JObject obj in markets) {
+                        string marketName = obj.Value<string>("MarketName");
+                        BittrexTicker info = (BittrexTicker)Tickers.FirstOrDefault((m) => m.MarketName == marketName);
+                        if(info == null)
+                            continue;
+                        info.Hr24High = obj.Value<decimal>("High");
+                        info.Hr24Low = obj.Value<decimal>("Low");
+                        info.Volume = obj.Value<decimal>("Volume");
+                        info.Last = obj.Value<decimal>("Last");
+                        info.BaseVolume = obj.Value<decimal>("BaseVolume");
+                        info.Time = obj.Value<DateTime>("TimeStamp");
+                        info.HighestBid = obj.Value<decimal>("Bid");
+                        info.LowestAsk = obj.Value<decimal>("Ask");
+                        info.OpenBuyOrders = obj.Value<int>("OpenBuyOrders");
+                        info.OpenSellOrders = obj.Value<int>("OpenSellOrders");
+                        info.PrevDay = obj.Value<decimal>("PrevDay");
+                        info.Created = obj.Value<DateTime>("Created");
+                        info.DisplayMarketName = obj.Value<string>("DisplayMarketName");
+                        //info.UpdateHistoryItem();
+                    }
+                }
+            }
+            return true;
+        }
+        public override bool UpdateTickersInfo() {
             string address = string.Format("https://bittrex.com/api/v1.1/public/getmarketsummaries");
             string text = string.Empty;
             try {
@@ -178,7 +218,7 @@ namespace CryptoMarketClient.Bittrex {
                     JArray markets = (JArray)prop.Value;
                     foreach(JObject obj in markets) {
                         string marketName = obj.Value<string>("MarketName");
-                        BittrexMarketInfo info = Markets.FirstOrDefault((m) => m.MarketName == marketName);
+                        BittrexTicker info = (BittrexTicker)Tickers.FirstOrDefault((m) => m.MarketName == marketName);
                         if(info == null)
                             continue;
                         info.Hr24High = obj.Value<decimal>("High");
@@ -200,21 +240,26 @@ namespace CryptoMarketClient.Bittrex {
             }
             return true;
         }
-        public bool UpdateArbitrageOrderBook(BittrexMarketInfo info, int depth) {
+        public bool UpdateArbitrageOrderBook(TickerBase info, int depth) {
             string address = GetOrderBookString(info, depth);
             string text = GetDownloadString(info, address);
             if(string.IsNullOrEmpty(text))
                 return false;
             return UpdateOrderBook(info, text, false, depth);
         }
-        public string GetOrderBookString(BittrexMarketInfo info, int depth) {
+        public string GetOrderBookString(TickerBase info, int depth) {
             return string.Format("https://bittrex.com/api/v1.1/public/getorderbook?market={0}&type=both&depth={1}", Uri.EscapeDataString(info.MarketName), depth);
         }
-        public bool UpdateOrderBook(BittrexMarketInfo info, string text, int depth) {
+        public bool UpdateOrderBook(BittrexTicker info, string text, int depth) {
             return UpdateOrderBook(info, text, true, depth);
         }
-        
-        public bool UpdateOrderBook(BittrexMarketInfo ticker, string text, bool raiseChanged, int depth) {
+        public override bool UpdateOrderBook(TickerBase tickerBase) {
+            return UpdateArbitrageOrderBook(tickerBase, OrderBook.Depth);
+        }
+        public override bool ProcessOrderBook(TickerBase tickerBase, string text) {
+            return UpdateOrderBook(tickerBase, text, false, OrderBook.Depth);
+        }
+        public bool UpdateOrderBook(TickerBase ticker, string text, bool raiseChanged, int depth) {
             if(text == null)
                 return false;
             Dictionary<string, object> res2 = null;
@@ -261,14 +306,14 @@ namespace CryptoMarketClient.Bittrex {
             ticker.OrderBook.RaiseOnChanged(new OrderBookUpdateInfo() { Action = OrderBookUpdateType.RefreshAll });
             return true;
         }
-        public void GetOrderBook(BittrexMarketInfo info, int depth) {
+        public void GetOrderBook(BittrexTicker info, int depth) {
             string address = string.Format("https://bittrex.com/api/v1.1/public/getorderbook?market={0}&type=both&depth={1}", Uri.EscapeDataString(info.MarketName), depth);
             string text = GetDownloadString(info, address);
             if(string.IsNullOrEmpty(text))
                 return;
             UpdateOrderBook(info, text, depth);
         }
-        public bool GetTrades(BittrexMarketInfo info) {
+        public bool GetTrades(BittrexTicker info) {
             string address = string.Format("https://bittrex.com/api/v1.1/public/getmarkethistory?market={0}", Uri.EscapeDataString(info.MarketName));
             string text = string.Empty;
             try {
@@ -282,7 +327,7 @@ namespace CryptoMarketClient.Bittrex {
             JObject res = (JObject)JsonConvert.DeserializeObject(text);
             if(!res.Value<bool>("success"))
                 return false;
-            JArray trades = (JArray)res.Value<JArray>("result");
+            JArray trades = res.Value<JArray>("result");
             lock(info) {
                 info.TradeHistory.Clear();
                 foreach(JObject obj in trades) {
@@ -295,13 +340,12 @@ namespace CryptoMarketClient.Bittrex {
                     item.Type = obj.Value<string>("OrderType") == "BUY" ? TradeType.Buy : TradeType.Sell;
                     item.Fill = obj.Value<string>("FillType") == "FILL" ? TradeFillType.Fill : TradeFillType.PartialFill;
                     info.TradeHistory.Add(item);
-                    TickerUpdateHelper.UpdateHistoryForTradeItem(item, info);
                 }
             }
             info.RaiseTradeHistoryAdd();
             return true;
         }
-        public bool UpdateTrades(BittrexMarketInfo info) {
+        public override bool UpdateTrades(TickerBase info) {
             string address = string.Format("https://bittrex.com/api/v1.1/public/getmarkethistory?market={0}", Uri.EscapeDataString(info.MarketName));
             string text = string.Empty;
             try {
@@ -334,14 +378,13 @@ namespace CryptoMarketClient.Bittrex {
                     item.Total = obj.Value<decimal>("Total");
                     item.Type = obj.Value<string>("OrderType") == "BUY" ? TradeType.Buy : TradeType.Sell;
                     item.Fill = obj.Value<string>("FillType") == "FILL" ? TradeFillType.Fill : TradeFillType.PartialFill;
-                    TickerUpdateHelper.UpdateHistoryForTradeItem(item, info);
                     UpdateList.Add(item);
                 }
             }
             info.RaiseTradeHistoryAdd();
             return true;
         }
-        public bool UpdateTradesStatistic(BittrexMarketInfo info, int depth) {
+        public bool UpdateTradesStatistic(BittrexTicker info, int depth) {
             string address = string.Format("https://bittrex.com/api/v1.1/public/getmarkethistory?market={0}", Uri.EscapeDataString(info.MarketName));
             string text = GetDownloadString(info, address);
             if(string.IsNullOrEmpty(text))
@@ -399,8 +442,7 @@ namespace CryptoMarketClient.Bittrex {
             }
             return true;
         }
-
-        public string BuyLimit(BittrexMarketInfo info, decimal rate, decimal amount) {
+        public string BuyLimit(BittrexTicker info, decimal rate, decimal amount) {
             string address = string.Format("https://bittrex.com/api/v1.1/market/buylimit?apikey={0}&nonce={1}&market={2}&quantity={3}&rate={4}",
                 Uri.EscapeDataString(ApiKey),
                 DateTime.Now,
@@ -412,7 +454,7 @@ namespace CryptoMarketClient.Bittrex {
             client.Headers.Add("apisign", GetSign(address));
             return OnBuyLimit(client.DownloadString(address));
         }
-        public string SellLimit(BittrexMarketInfo info, decimal rate, decimal amount) {
+        public string SellLimit(BittrexTicker info, decimal rate, decimal amount) {
             string address = string.Format("https://bittrex.com/api/v1.1/market/selllimit?apikey={0}&nonce={1}&market={2}&quantity={3}&rate={4}",
                 Uri.EscapeDataString(ApiKey),
                 DateTime.Now,
@@ -434,7 +476,7 @@ namespace CryptoMarketClient.Bittrex {
             client.Headers.Add("apisign", GetSign(address));
             return client.DownloadStringTaskAsync(address);
         }
-        public Task<string> GetOpenOrders(BittrexMarketInfo info) {
+        public Task<string> GetOpenOrders(BittrexTicker info) {
             string address = string.Format("https://bittrex.com/api/v1.1/market/getopenorders?apikey={0}&nonce={1}&market={2}",
                 Uri.EscapeDataString(ApiKey),
                 DateTime.Now,
@@ -444,7 +486,17 @@ namespace CryptoMarketClient.Bittrex {
             client.Headers.Add("apisign", GetSign(address));
             return client.DownloadStringTaskAsync(address);
         }
-
+        public override bool UpdateOpenedOrders(TickerBase tickerBase) {
+            string address = string.Format("https://bittrex.com/api/v1.1/market/getopenorders?apikey={0}&nonce={1}&market={2}",
+                Uri.EscapeDataString(ApiKey),
+                DateTime.Now,
+                tickerBase.MarketName);
+            WebClient client = GetWebClient();
+            client.Headers.Clear();
+            client.Headers.Add("apisign", GetSign(address));
+            string text = client.DownloadString(address);
+            return OnUpdateOrders(tickerBase, text);
+        }
         protected string OnUuidResult(string result) {
             if(string.IsNullOrEmpty(result))
                 return null;
@@ -480,7 +532,7 @@ namespace CryptoMarketClient.Bittrex {
             }
             return false;
         }
-        public bool OnAppendOpenOrders(string result) {
+        public bool OnUpdateOrders(TickerBase ticker, string result) {
             if(string.IsNullOrEmpty(result))
                 return false;
             JObject res = (JObject)JsonConvert.DeserializeObject(result);
@@ -489,13 +541,14 @@ namespace CryptoMarketClient.Bittrex {
                 return false;
             }
 
-            JArray orders = (JArray)res.Value<JArray>("result");
+            ticker.OpenedOrders.Clear();
+            JArray orders = res.Value<JArray>("result");
             foreach(JObject obj in orders) {
                 BittrexOrderInfo info = new BittrexOrderInfo();
 
                 info.OrderUuid = obj.Value<string>("OrderUuid");
                 info.Exchange = obj.Value<string>("Exchange");
-                info.OrderType = obj.Value<string>("OrderType") == "LIMIT_SELL" ? OrderType.LimitSell : OrderType.LimitBuy;
+                info.OrderType = obj.Value<string>("OrderType") == "LIMIT_SELL" ? OrderType.Sell : OrderType.Buy;
                 info.Quantity = obj.Value<decimal>("Quantity");
                 info.QuantityRemaining = obj.Value<decimal>("QuantityRemaining");
                 info.Limit = obj.Value<decimal>("Limit");
@@ -509,15 +562,14 @@ namespace CryptoMarketClient.Bittrex {
                 info.Condition = obj.Value<string>("Condition");
                 info.ConditionTarget = obj.Value<string>("ConditionTarget");
 
-                UpdateOrders.Add(info);
+                ticker.OpenedOrders.Add(info);
             }
             RaiseOpenedOrdersChanged();
             return true;
         }
         void RaiseOpenedOrdersChanged() {
-            
+
         }
-        
         public bool GetBalance(string currency) {
             string address = string.Format("https://bittrex.com/api/v1.1/account/getbalance?apikey={0}&nonce={1}&currency={2}", Uri.EscapeDataString(ApiKey), DateTime.Now, currency);
             WebClient client = GetWebClient();
@@ -530,7 +582,6 @@ namespace CryptoMarketClient.Bittrex {
                 return false;
             }
         }
-
         public bool OnGetBalance(string text) {
             if(string.IsNullOrEmpty(text))
                 return false;
@@ -542,7 +593,7 @@ namespace CryptoMarketClient.Bittrex {
             JObject obj = res.Value<JObject>("result");
             lock(Balances) {
                 string currency = obj.Value<string>("Currency");
-                BittrexAccountBalanceInfo info = Balances.FirstOrDefault((b) => b.Currency == currency);
+                BittrexAccountBalanceInfo info = (BittrexAccountBalanceInfo)Balances.FirstOrDefault((b) => b.Currency == currency);
                 if(info == null) {
                     info = new BittrexAccountBalanceInfo();
                     info.Currency = obj.Value<string>("Currency");
@@ -551,14 +602,14 @@ namespace CryptoMarketClient.Bittrex {
                     Balances.Add(info);
                 }
                 info.LastAvailable = info.Available;
-                info.Available = obj.Value<string>("Available") == null? 0: obj.Value<decimal>("Available");
+                info.Available = obj.Value<string>("Available") == null ? 0 : obj.Value<decimal>("Available");
                 info.Balance = obj.Value<string>("Balance") == null ? 0 : obj.Value<decimal>("Balance");
                 info.Pending = obj.Value<string>("Pending") == null ? 0 : obj.Value<decimal>("Pending");
                 info.DepositAddress = obj.Value<string>("CryptoAddress");
             }
             return true;
         }
-        public bool GetBalances() {
+        public override bool UpdateBalances() {
             if(Currencies.Count == 0) {
                 if(!GetCurrenciesInfo())
                     return false;
@@ -618,7 +669,7 @@ namespace CryptoMarketClient.Bittrex {
             return true;
         }
         void RaiseBalancesChanged() {
-            
+
         }
 
         public bool Withdraw(string currency, decimal amount, string address, string paymentId) {
@@ -675,16 +726,7 @@ namespace CryptoMarketClient.Bittrex {
         public string OnWithdraw(string result) {
             return OnUuidResult(result);
         }
-        
-        public void StartUpdateOrders() {
-            UpdateOrders.Clear();
-        }
-        public void EndUpdateOrders() {
-            lock(Orders) {
-                Orders.Clear();
-                Orders.AddRange(UpdateOrders);
-            }
-        }
+
         public string CheckCreateDeposit(string currency) {
             string address = string.Format("https://bittrex.com/api/v1.1/account/getdepositaddress?apikey={0}&nonce={1}&currency={2}", Uri.EscapeDataString(ApiKey), DateTime.Now, currency);
             WebClient client = GetWebClient();
@@ -705,7 +747,7 @@ namespace CryptoMarketClient.Bittrex {
                 return null;
             }
             JObject addr = res.Value<JObject>("result");
-            BittrexAccountBalanceInfo info = Balances.FirstOrDefault(b => b.Currency == currency);
+            BittrexAccountBalanceInfo info = (BittrexAccountBalanceInfo)Balances.FirstOrDefault(b => b.Currency == currency);
             info.Currency = addr.Value<string>("Address");
             return info.Currency;
         }

@@ -12,13 +12,59 @@ using System.Diagnostics;
 using System.IO;
 using CryptoMarketClient.Common;
 using System.Text.Json;
+using CryptoMarketClient.Bittrex;
 
 namespace CryptoMarketClient {
     public abstract class ModelBase : IXtraSerializable {
+        public static List<ModelBase> RegisteredModels { get; } = new List<ModelBase>();
+        public static List<ModelBase> ActiveModels { get; } = new List<ModelBase>();
+
+
+        static ModelBase() {
+            RegisteredModels.Add(new PoloniexModel());
+            RegisteredModels.Add(new BittrexModel());
+
+            foreach(ModelBase model in RegisteredModels)
+                model.Load();
+        }
+
         public static int OrderBookDepth { get; set; }
         public static bool AllowTradeHistory { get; set; }
-        public bool IsConnected { get; set; }
+        public bool IsConnected {
+            get { return ActiveModels.Contains(this); }
+            set {
+                if(value) {
+                    if(IsConnected)
+                        return;
+                    ActiveModels.Add(this);
+                }
+                else {
+                    if(!IsConnected)
+                    ActiveModels.Remove(this);
+                }
+            }
+        }
         static string Text { get { return "Yes, man is mortal, but that would be only half the trouble. The worst of it is that he's sometimes unexpectedly mortal—there's the trick!"; } }
+
+        public abstract bool GetTickersInfo();
+        public abstract bool UpdateTickersInfo();
+
+        public List<TickerBase> Tickers { get; } = new List<TickerBase>();
+        public List<OpenedOrderInfo> OpenedOrders { get; } = new List<OpenedOrderInfo>();
+        public List<BalanceBase> Balances { get; } = new List<BalanceBase>();
+
+        [XtraSerializableProperty(XtraSerializationVisibility.Collection, true, false, true)]
+        public List<PinnedTickerInfo> PinnedTickers { get; set; } = new List<PinnedTickerInfo>();
+        PinnedTickerInfo XtraCreatePinnedTickersItem(XtraItemEventArgs e) {
+            return new PinnedTickerInfo();
+        }
+        void XtraSetIndexPinnedTickersItem(XtraSetItemIndexEventArgs e) {
+            if(e.NewIndex == -1) {
+                PinnedTickers.Add((PinnedTickerInfo)e.Item.Value);
+                return;
+            }
+            PinnedTickers.Insert(e.NewIndex, (PinnedTickerInfo)e.Item.Value);
+        }
 
         [XtraSerializableProperty]
         public string ApiKeyEncoded { get; set; }
@@ -228,6 +274,19 @@ namespace CryptoMarketClient {
                 return null;
             }
         }
+        public bool IsTickerPinned(TickerBase tickerBase) {
+            return PinnedTickers.FirstOrDefault(p => p.BaseCurrency == tickerBase.BaseCurrency && p.MarketCurrency == tickerBase.MarketCurrency) != null;
+        }
+        public TickerBase GetTicker(PinnedTickerInfo info) {
+            return Tickers.FirstOrDefault(t => t.BaseCurrency == info.BaseCurrency && t.MarketCurrency == info.MarketCurrency);
+        }
+        public abstract bool UpdateOrderBook(TickerBase tickerBase);
+        public abstract bool ProcessOrderBook(TickerBase tickerBase, string text);
+        public abstract bool UpdateTicker(TickerBase tickerBase);
+        public abstract bool UpdateTrades(TickerBase tickerBase);
+        public abstract bool UpdateOpenedOrders(TickerBase tickerBase);
+        public abstract bool UpdateCurrencies();
+        public abstract bool UpdateBalances();
 
         JsonParser jsonParser;
         protected JsonParser JsonParser {

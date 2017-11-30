@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CryptoMarketClient {
     public class OrderBook {
-        public const int Depth = 25;
+        public const int Depth = 200;
         public OrderBook(TickerBase owner) {
             Owner = owner;
             Bids = CreateOrderBookEntries();

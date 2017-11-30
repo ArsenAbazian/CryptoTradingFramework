@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CryptoMarketClient.Common {
     public enum OrderType {
-        LimitBuy,
-        LimitSell
+        Buy,
+        Sell
     }
 }

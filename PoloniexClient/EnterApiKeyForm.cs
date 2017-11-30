@@ -1,5 +1,4 @@
 ﻿using CryptoMarketClient.Bittrex;
-using CryptoMarketClient.HitBtc;
 using DevExpress.XtraEditors;
 using System;
 using System.Collections.Generic;
@@ -20,9 +19,8 @@ namespace CryptoMarketClient {
         protected override void OnShown(EventArgs e) {
             base.OnShown(e);
             List<ApiKeyInfo> list = new List<ApiKeyInfo>();
-            list.Add(new ApiKeyInfo() { Market = "Bittrex", ApiKey = BittrexModel.Default.ApiKey, Secret = BittrexModel.Default.ApiSecret });
-            list.Add(new ApiKeyInfo() { Market = "Poloniex", ApiKey = PoloniexModel.Default.ApiKey, Secret = PoloniexModel.Default.ApiSecret });
-            list.Add(new ApiKeyInfo() { Market = "HitBtc", ApiKey = HitBtcModel.Default.ApiKey, Secret = HitBtcModel.Default.ApiSecret });
+            foreach(ModelBase model in ModelBase.RegisteredModels)
+                list.Add(new ApiKeyInfo() { Model = model, Market = model.Name, ApiKey = model.ApiKey, Secret = model.ApiSecret });
             this.apiKeyInfoBindingSource.DataSource = list;
             Keys = list;
         }
@@ -33,15 +31,11 @@ namespace CryptoMarketClient {
         }
 
         private void simpleButton1_Click(object sender, EventArgs e) {
-            BittrexModel.Default.ApiKey = Keys.First((k) => k.Market == "Bittrex").ApiKey.Trim();
-            BittrexModel.Default.ApiSecret = Keys.First((k) => k.Market == "Bittrex").Secret.Trim();
-            PoloniexModel.Default.ApiKey = Keys.First((k) => k.Market == "Poloniex").ApiKey.Trim();
-            PoloniexModel.Default.ApiSecret = Keys.First((k) => k.Market == "Poloniex").Secret.Trim();
-            HitBtcModel.Default.ApiKey = Keys.First((k) => k.Market == "HitBtc").ApiKey.Trim();
-            HitBtcModel.Default.ApiSecret = Keys.First((k) => k.Market == "HitBtc").Secret.Trim();
-            BittrexModel.Default.Save();
-            PoloniexModel.Default.Save();
-            HitBtcModel.Default.Save();
+            foreach(ApiKeyInfo info in Keys) {
+                info.Model.ApiKey = info.ApiKey.Trim();
+                info.Model.ApiSecret = info.Secret.Trim();
+                info.Model.Save();
+            }
             Close();
         }
     }

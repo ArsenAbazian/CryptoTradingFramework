@@ -9,13 +9,15 @@ namespace CryptoMarketClient.Exmo {
     public class ExmoTicker : TickerBase {
         public override string Name => MarketCurrency + "_" + BaseCurrency;
         string marketName = null;
-        public string MarketName {
+        public override string MarketName {
             get {
                 if(string.IsNullOrEmpty(marketName))
-                    marketName = MarketCurrency + BaseCurrency;
+                    marketName = MarketCurrency + "_" + BaseCurrency;
                 return marketName;
             }
+            set { }
         }
+        public override string CurrencyPair { get { return MarketName; } set { } }
 
         public override decimal Fee => 0.1m * 0.01m;
 
@@ -51,7 +53,6 @@ namespace CryptoMarketClient.Exmo {
         public override bool MarketCurrencyEnabled => true;
         public override string HostName => "Exmo";
         public override string WebPageAddress => "https://exmo.me/ru/trade#?pair=";
-        public int Index { get; set; }
         public decimal Step { get; set; }
         public override bool Buy(decimal lowestAsk, decimal amount) {
             throw new NotImplementedException();

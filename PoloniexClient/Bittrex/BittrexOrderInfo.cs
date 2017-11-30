@@ -1,12 +1,8 @@
 ﻿using CryptoMarketClient.Common;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CryptoMarketClient.Bittrex {
-    public class BittrexOrderInfo {
+    public class BittrexOrderInfo : OpenedOrderInfo {
         public string MarketName { get; set; }
 		public string OrderUuid { get; set; }
 		public string Exchange { get; set; }

@@ -27,33 +27,63 @@
             DevExpress.XtraEditors.FormatConditionRuleDataBar formatConditionRuleDataBar1 = new DevExpress.XtraEditors.FormatConditionRuleDataBar();
             DevExpress.XtraGrid.GridFormatRule gridFormatRule2 = new DevExpress.XtraGrid.GridFormatRule();
             DevExpress.XtraEditors.FormatConditionRuleDataBar formatConditionRuleDataBar2 = new DevExpress.XtraEditors.FormatConditionRuleDataBar();
+            this.gcVolumePercent2 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.gcVolume2 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gcVolumePercent = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.gcVolume = new DevExpress.XtraGrid.Columns.GridColumn();
             this.bidPanel = new DevExpress.XtraEditors.SidePanel();
             this.bidGridControl = new DevExpress.XtraGrid.GridControl();
             this.bidGridView = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.gcRate2 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gcAmount2 = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.gcVolume2 = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.gcVolumePercent2 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.repositoryItemTextEdit2 = new DevExpress.XtraEditors.Repository.RepositoryItemTextEdit();
             this.askPanel = new DevExpress.XtraEditors.SidePanel();
             this.askGridControl = new DevExpress.XtraGrid.GridControl();
             this.askGridView = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.gcRate = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.repositoryItemTextEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemTextEdit();
             this.gcAmount = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.gcVolume = new DevExpress.XtraGrid.Columns.GridColumn();
             this.bidPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.bidGridControl)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bidGridView)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemTextEdit2)).BeginInit();
             this.askPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.askGridControl)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.askGridView)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemTextEdit1)).BeginInit();
             this.SuspendLayout();
+            // 
+            // gcVolumePercent2
+            // 
+            this.gcVolumePercent2.Caption = "VolumePercent";
+            this.gcVolumePercent2.FieldName = "VolumePercent";
+            this.gcVolumePercent2.Name = "gcVolumePercent2";
+            // 
+            // gcVolume2
+            // 
+            this.gcVolume2.Caption = "Volume";
+            this.gcVolume2.DisplayFormat.FormatString = "0.########";
+            this.gcVolume2.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+            this.gcVolume2.FieldName = "Volume";
+            this.gcVolume2.Name = "gcVolume2";
+            this.gcVolume2.Visible = true;
+            this.gcVolume2.VisibleIndex = 2;
             // 
             // gcVolumePercent
             // 
             this.gcVolumePercent.Caption = "VolumePercent";
             this.gcVolumePercent.FieldName = "VolumePercent";
             this.gcVolumePercent.Name = "gcVolumePercent";
+            // 
+            // gcVolume
+            // 
+            this.gcVolume.Caption = "Volume";
+            this.gcVolume.DisplayFormat.FormatString = "0.########";
+            this.gcVolume.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+            this.gcVolume.FieldName = "Volume";
+            this.gcVolume.Name = "gcVolume";
+            this.gcVolume.Visible = true;
+            this.gcVolume.VisibleIndex = 2;
             // 
             // bidPanel
             // 
@@ -74,6 +104,8 @@
             this.bidGridControl.MainView = this.bidGridView;
             this.bidGridControl.Margin = new System.Windows.Forms.Padding(6);
             this.bidGridControl.Name = "bidGridControl";
+            this.bidGridControl.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
+            this.repositoryItemTextEdit2});
             this.bidGridControl.Size = new System.Drawing.Size(458, 448);
             this.bidGridControl.TabIndex = 1;
             this.bidGridControl.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
@@ -81,9 +113,7 @@
             // 
             // bidGridView
             // 
-            this.bidGridView.Appearance.Row.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.bidGridView.Appearance.Row.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.bidGridView.Appearance.Row.Options.UseBackColor = true;
             this.bidGridView.Appearance.Row.Options.UseForeColor = true;
             this.bidGridView.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
             this.bidGridView.Columns.AddRange(new DevExpress.XtraGrid.Columns.GridColumn[] {
@@ -91,16 +121,21 @@
             this.gcAmount2,
             this.gcVolume2,
             this.gcVolumePercent2});
-            gridFormatRule1.Name = "Format0";
+            gridFormatRule1.Column = this.gcVolumePercent2;
+            gridFormatRule1.ColumnApplyTo = this.gcVolume2;
+            gridFormatRule1.Name = "fmtRuleVolume";
             formatConditionRuleDataBar1.AllowNegativeAxis = false;
-            formatConditionRuleDataBar1.Appearance.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
+            formatConditionRuleDataBar1.Appearance.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             formatConditionRuleDataBar1.Appearance.Options.UseBackColor = true;
+            formatConditionRuleDataBar1.AutomaticType = DevExpress.XtraEditors.FormatConditionAutomaticType.ZeroBased;
             formatConditionRuleDataBar1.DrawAxis = false;
             formatConditionRuleDataBar1.Maximum = new decimal(new int[] {
             1,
             0,
             0,
             0});
+            formatConditionRuleDataBar1.MaximumType = DevExpress.XtraEditors.FormatConditionValueType.Number;
+            formatConditionRuleDataBar1.MinimumType = DevExpress.XtraEditors.FormatConditionValueType.Number;
             formatConditionRuleDataBar1.PredefinedName = null;
             gridFormatRule1.Rule = formatConditionRuleDataBar1;
             this.bidGridView.FormatRules.Add(gridFormatRule1);
@@ -110,8 +145,10 @@
             this.bidGridView.OptionsBehavior.AllowSortAnimation = DevExpress.Utils.DefaultBoolean.True;
             this.bidGridView.OptionsBehavior.Editable = false;
             this.bidGridView.OptionsDetail.EnableMasterViewMode = false;
+            this.bidGridView.OptionsView.EnableAppearanceEvenRow = true;
             this.bidGridView.OptionsView.ShowColumnHeaders = false;
             this.bidGridView.OptionsView.ShowGroupPanel = false;
+            this.bidGridView.OptionsView.ShowIndicator = false;
             // 
             // gcRate2
             // 
@@ -133,19 +170,11 @@
             this.gcAmount2.Visible = true;
             this.gcAmount2.VisibleIndex = 1;
             // 
-            // gcVolume2
+            // repositoryItemTextEdit2
             // 
-            this.gcVolume2.Caption = "Volume";
-            this.gcVolume2.FieldName = "Volume";
-            this.gcVolume2.Name = "gcVolume2";
-            this.gcVolume2.Visible = true;
-            this.gcVolume2.VisibleIndex = 2;
-            // 
-            // gcVolumePercent2
-            // 
-            this.gcVolumePercent2.Caption = "VolumePercent";
-            this.gcVolumePercent2.FieldName = "VolumePercent";
-            this.gcVolumePercent2.Name = "gcVolumePercent2";
+            this.repositoryItemTextEdit2.AutoHeight = false;
+            this.repositoryItemTextEdit2.Name = "repositoryItemTextEdit2";
+            this.repositoryItemTextEdit2.Padding = new System.Windows.Forms.Padding(0, 5, 0, 5);
             // 
             // askPanel
             // 
@@ -166,6 +195,8 @@
             this.askGridControl.MainView = this.askGridView;
             this.askGridControl.Margin = new System.Windows.Forms.Padding(6);
             this.askGridControl.Name = "askGridControl";
+            this.askGridControl.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
+            this.repositoryItemTextEdit1});
             this.askGridControl.Size = new System.Drawing.Size(458, 480);
             this.askGridControl.TabIndex = 0;
             this.askGridControl.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
@@ -174,9 +205,7 @@
             // 
             // askGridView
             // 
-            this.askGridView.Appearance.Row.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
             this.askGridView.Appearance.Row.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.askGridView.Appearance.Row.Options.UseBackColor = true;
             this.askGridView.Appearance.Row.Options.UseForeColor = true;
             this.askGridView.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
             this.askGridView.Columns.AddRange(new DevExpress.XtraGrid.Columns.GridColumn[] {
@@ -184,18 +213,20 @@
             this.gcAmount,
             this.gcVolume,
             this.gcVolumePercent});
-            gridFormatRule2.ApplyToRow = true;
             gridFormatRule2.Column = this.gcVolumePercent;
-            gridFormatRule2.Name = "Format0";
-            formatConditionRuleDataBar2.AllowNegativeAxis = false;
-            formatConditionRuleDataBar2.Appearance.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
+            gridFormatRule2.ColumnApplyTo = this.gcVolume;
+            gridFormatRule2.Name = "fmtRuleVolume";
+            formatConditionRuleDataBar2.Appearance.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
             formatConditionRuleDataBar2.Appearance.Options.UseBackColor = true;
+            formatConditionRuleDataBar2.AutomaticType = DevExpress.XtraEditors.FormatConditionAutomaticType.ZeroBased;
             formatConditionRuleDataBar2.DrawAxis = false;
             formatConditionRuleDataBar2.Maximum = new decimal(new int[] {
             1,
             0,
             0,
             0});
+            formatConditionRuleDataBar2.MaximumType = DevExpress.XtraEditors.FormatConditionValueType.Number;
+            formatConditionRuleDataBar2.MinimumType = DevExpress.XtraEditors.FormatConditionValueType.Number;
             formatConditionRuleDataBar2.PredefinedName = null;
             gridFormatRule2.Rule = formatConditionRuleDataBar2;
             this.askGridView.FormatRules.Add(gridFormatRule2);
@@ -205,14 +236,16 @@
             this.askGridView.OptionsBehavior.AllowSortAnimation = DevExpress.Utils.DefaultBoolean.True;
             this.askGridView.OptionsBehavior.Editable = false;
             this.askGridView.OptionsDetail.EnableMasterViewMode = false;
+            this.askGridView.OptionsView.EnableAppearanceEvenRow = true;
             this.askGridView.OptionsView.ShowGroupPanel = false;
-            this.askGridView.OptionsView.ShowViewCaption = true;
+            this.askGridView.OptionsView.ShowIndicator = false;
             this.askGridView.SortInfo.AddRange(new DevExpress.XtraGrid.Columns.GridColumnSortInfo[] {
             new DevExpress.XtraGrid.Columns.GridColumnSortInfo(this.gcRate, DevExpress.Data.ColumnSortOrder.Descending)});
             // 
             // gcRate
             // 
             this.gcRate.Caption = "Rate";
+            this.gcRate.ColumnEdit = this.repositoryItemTextEdit1;
             this.gcRate.DisplayFormat.FormatString = "0.########";
             this.gcRate.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.gcRate.FieldName = "Value";
@@ -220,6 +253,12 @@
             this.gcRate.SortMode = DevExpress.XtraGrid.ColumnSortMode.Value;
             this.gcRate.Visible = true;
             this.gcRate.VisibleIndex = 0;
+            // 
+            // repositoryItemTextEdit1
+            // 
+            this.repositoryItemTextEdit1.AutoHeight = false;
+            this.repositoryItemTextEdit1.Name = "repositoryItemTextEdit1";
+            this.repositoryItemTextEdit1.Padding = new System.Windows.Forms.Padding(0, 5, 0, 5);
             // 
             // gcAmount
             // 
@@ -230,16 +269,6 @@
             this.gcAmount.Name = "gcAmount";
             this.gcAmount.Visible = true;
             this.gcAmount.VisibleIndex = 1;
-            // 
-            // gcVolume
-            // 
-            this.gcVolume.Caption = "Volume";
-            this.gcVolume.DisplayFormat.FormatString = "0.########";
-            this.gcVolume.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
-            this.gcVolume.FieldName = "Volume";
-            this.gcVolume.Name = "gcVolume";
-            this.gcVolume.Visible = true;
-            this.gcVolume.VisibleIndex = 2;
             // 
             // OrderBookControl
             // 
@@ -253,9 +282,11 @@
             this.bidPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.bidGridControl)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.bidGridView)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemTextEdit2)).EndInit();
             this.askPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.askGridControl)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.askGridView)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemTextEdit1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -276,5 +307,7 @@
         private DevExpress.XtraGrid.Columns.GridColumn gcVolume;
         private DevExpress.XtraGrid.Columns.GridColumn gcVolumePercent2;
         private DevExpress.XtraGrid.Columns.GridColumn gcVolumePercent;
+        private DevExpress.XtraEditors.Repository.RepositoryItemTextEdit repositoryItemTextEdit1;
+        private DevExpress.XtraEditors.Repository.RepositoryItemTextEdit repositoryItemTextEdit2;
     }
 }

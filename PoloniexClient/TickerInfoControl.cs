@@ -66,5 +66,25 @@ namespace CryptoMarketClient {
             //this.tileView1.OptionsTiles.ItemSize = new Size(this.tileView1.OptionsTiles.ItemSize.Width, this.CalcBestHeight());
             //Height = this.tileView1.OptionsTiles.ItemSize.Height + 20;
         }
+
+        private void gridView1_CustomDrawColumnHeader(object sender, DevExpress.XtraGrid.Views.Grid.ColumnHeaderCustomDrawEventArgs e) {
+            //using(StringFormat format = (StringFormat)e.Appearance.GetStringFormat().Clone()) {
+            //    SkinElement elem = GridSkins.GetSkin(this.gridControl1.LookAndFeel.ActiveLookAndFeel)[GridSkins.SkinGridLine];
+            //    e.Cache.DrawRectangle(e.Cache.GetPen(elem.Color.ForeColor), e.Bounds);
+            //    format.Alignment = StringAlignment.Center;
+            //    e.Cache.DrawString(e.Column.GetCaption(), e.Appearance.Font, e.Appearance.ForeColor, e.Bounds, format);
+            //    e.Handled = true;
+            //}
+        }
+        public void UpdateData() {
+            this.gridView1.RefreshRow(0);
+        }
+
+        private void gridControl1_PaintEx(object sender, DevExpress.XtraGrid.PaintExEventArgs e) {
+            SkinElement elem = GridSkins.GetSkin(this.gridControl1.LookAndFeel.ActiveLookAndFeel)[GridSkins.SkinGridLine];
+            e.Cache.DrawLine(e.Cache.GetPen(elem.Color.ForeColor), 
+                new Point(e.ClipRectangle.X, e.ClipRectangle.Top),
+                new Point(e.ClipRectangle.Right, e.ClipRectangle.Top));
+        }
     }
 }

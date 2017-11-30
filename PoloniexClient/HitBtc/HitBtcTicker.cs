@@ -9,13 +9,15 @@ namespace CryptoMarketClient.HitBtc {
     public class HitBtcTicker : TickerBase {
         public override string Name => MarketCurrency + "_" + BaseCurrency;
         string marketName = null;
-        public string MarketName {
+        public override string MarketName {
             get {
                 if(string.IsNullOrEmpty(marketName))
                     marketName = MarketCurrency + BaseCurrency;
                 return marketName;
             }
+            set { }
         }
+        public override string CurrencyPair { get { return Name; } set { } }
 
         public override decimal Fee => 0.1m * 0.01m;
 
@@ -51,7 +53,6 @@ namespace CryptoMarketClient.HitBtc {
         public override bool MarketCurrencyEnabled => true;
         public override string HostName => "HitBtc";
         public override string WebPageAddress => "https://www.livecoin.net/en/trade/index?currencyPair=";
-        public int Index { get; set; }
         public decimal Step { get; set; }
         public override bool Buy(decimal lowestAsk, decimal amount) {
             throw new NotImplementedException();

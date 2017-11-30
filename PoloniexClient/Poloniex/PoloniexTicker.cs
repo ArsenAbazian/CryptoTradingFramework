@@ -15,11 +15,12 @@ using WampSharp.V2;
 
 namespace CryptoMarketClient {
     public class PoloniexTicker : TickerBase {
-        public int Index { get; set; }
+        public PoloniexTicker(PoloniexModel model) : base(model) { }
+
         public int Id { get; set; }
 
         string currensyPair;
-        public string CurrencyPair {
+        public override string CurrencyPair {
             get { return currensyPair; }
             set {
                 currensyPair = value;
@@ -32,7 +33,7 @@ namespace CryptoMarketClient {
             MarketCurrency = curr[1];
         }
 
-        PoloniexAccountBalanceInfo firstInfo, secondInfo;
+        BalanceBase firstInfo, secondInfo;
         public override BalanceBase BaseBalanceInfo {
             get {
                 if(firstInfo == null)
@@ -65,37 +66,6 @@ namespace CryptoMarketClient {
         public override decimal Fee { get { return 0.25m * 0.01m; } }
         public override string Name { get { return CurrencyPair; } }
         
-        public override void UpdateOrderBook(int depth) {
-            PoloniexModel.Default.GetOrderBook(this, depth);
-        }
-        //void TickerBase.SubscribeOrderBookUpdates() {
-        //    UpdateHelper.SubscribeOrderBookUpdates();
-        //}
-        //void TickerBase.UnsubscribeOrderBookUpdates() {
-        //    UpdateHelper.UnsubscribeOrderBookUpdates();
-        //}
-        //void TickerBase.SubscribeTickerUpdates() {
-        //    PoloniexModel.Default.Connect();
-        //    //UpdateHelper.SubscribeTickerUpdates();
-        //}
-        //void TickerBase.UnsubscribeTickerUpdates() {
-        //    //UpdateHelper.UnsubscribeTickerUpdates();
-        //}
-        //void TickerBase.SubscribeTradeUpdates() {
-        //    UpdateHelper.SubscribeTradeUpdates();
-        //}
-        //void TickerBase.UnsubscribeTradeUpdates() {
-        //    UpdateHelper.UnsubscribeTradeUpdates();
-        //}
-        //void TickerBase.UpdateOrderBook() {
-        //    PoloniexModel.Default.GetOrderBook(this, 50);
-        //}
-        public override void UpdateTicker() {
-            PoloniexModel.Default.GetTicker(this);
-        }
-        public override void UpdateTrades() {
-            PoloniexModel.Default.UpdateTrades(this);
-        }
         public override string WebPageAddress { get { return "https://poloniex.com/exchange#" + Name.ToLower(); } }
         public override string DownloadString(string address) {
             try {
@@ -104,22 +74,6 @@ namespace CryptoMarketClient {
             }
             catch { }
             return string.Empty;
-        }
-        public override bool UpdateArbitrageOrderBook(int depth) {
-            bool res = PoloniexModel.Default.UpdateArbitrageOrderBook(this, depth);
-            if(res) {
-                HighestBid = OrderBook.Bids[0].Value;
-                LowestAsk = OrderBook.Asks[0].Value;
-                Time = DateTime.Now;
-                UpdateHistoryItem();
-            }
-            return res;
-        }
-        public override void ProcessOrderBook(string text) {
-            PoloniexModel.Default.UpdateOrderBook(this, text);
-        }
-        public override void ProcessArbitrageOrderBook(string text) {
-            PoloniexModel.Default.OnUpdateArbitrageOrderBook(this, text);
         }
         public override bool Buy(decimal rate, decimal amount) {
             return PoloniexModel.Default.BuyLimit(this, rate, amount) != -1;
@@ -142,9 +96,6 @@ namespace CryptoMarketClient {
         }
         public override bool Withdraw(string currency, string address, decimal amount) {
             return PoloniexModel.Default.Withdraw(currency, amount, address, "");
-        }
-        public override bool UpdateTradeStatistic() {
-            return PoloniexModel.Default.UpdateTradesStatistic(this, 100);
         }
     }
 }

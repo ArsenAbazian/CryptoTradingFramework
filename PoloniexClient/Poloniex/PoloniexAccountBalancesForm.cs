@@ -24,7 +24,7 @@ namespace CryptoMarketClient.Poloniex {
             UpdateBalances();
         }
         void UpdateBalances() {
-            PoloniexModel.Default.GetBalances();
+            PoloniexModel.Default.UpdateBalances();
             PoloniexModel.Default.GetDeposites();
             this.gridControl1.RefreshDataSource();
         }

@@ -70,7 +70,7 @@
             // 
             // poloniexOrderInfoBindingSource
             // 
-            this.poloniexOrderInfoBindingSource.DataSource = typeof(CryptoMarketClient.Poloniex.PoloniexOrderInfo);
+            this.poloniexOrderInfoBindingSource.DataSource = typeof(CryptoMarketClient.Common.OpenedOrderInfo);
             // 
             // colMarket
             // 

@@ -15,25 +15,34 @@ using System.Windows.Forms;
 
 namespace CryptoMarketClient {
     public abstract class TickerBase {
-        public TickerBase() {
+        public TickerBase(ModelBase model) {
+            Model = model;
             OrderBook = new OrderBook(this);
             BidAskChart = CreateChartSnapshotControl();
             OrderBookChart = CreateOrderBookChartControl();
             OrderBookSnapshot = CreateOrderBookSnapshotImage();
             BidAskSnapshot = CreateChartSnapshotImage();
             UpdateMode = TickerUpdateMode.Self;
+            IsActual = true;
         }
+
+        public ModelBase Model { get; private set; }
+        public int Index { get; set; }
+        public virtual string MarketName { get; set; }
+        public abstract string CurrencyPair { get; set; }
+        public bool IsSelected { get; set; }
 
         public TickerUpdateMode UpdateMode {
             get;
             set;
         }
 
-        public BindingList<TickerHistoryItem> History { get; } = new BindingList<TickerHistoryItem>();
-        public BindingList<TradeHistoryItem> TradeHistory { get; } = new BindingList<TradeHistoryItem>();
+        public List<OpenedOrderInfo> OpenedOrders { get; } = new List<OpenedOrderInfo>();
+        public List<TickerHistoryItem> History { get; } = new List<TickerHistoryItem>();
+        public List<TradeHistoryItem> TradeHistory { get; } = new List<TradeHistoryItem>();
         public BindingList<TradeStatisticsItem> TradeStatistic { get; } = new BindingList<TradeStatisticsItem>();
         public List<TickerStrategyBase> Strategies { get; } = new List<TickerStrategyBase>();
-        public BindingList<CandleStickData> CandleStickData { get; set; } = new BindingList<CryptoMarketClient.CandleStickData>();
+        public List<CandleStickData> CandleStickData { get; set; } = new List<CryptoMarketClient.CandleStickData>();
         public BindingList<CurrencyStatusHistoryItem> MarketCurrencyStatusHistory { get; set; } = new BindingList<CurrencyStatusHistoryItem>();
 
         Image BidAskSnapshot { get; }
@@ -158,10 +167,11 @@ namespace CryptoMarketClient {
         public DateTime LastTradeStatisticTime { get; set; }
         public long LastTradeId { get; set; }
         public abstract string WebPageAddress { get; }
-        public abstract void UpdateOrderBook(int depth);
-        public abstract void ProcessOrderBook(string text);
-        public abstract void UpdateTicker();
-        public abstract void UpdateTrades();
+        public bool UpdateOrderBook() { return Model.UpdateOrderBook(this); }
+        public bool ProcessOrderBook(string text) { return Model.ProcessOrderBook(this, text); }
+        public bool UpdateTicker() { return Model.UpdateTicker(this); }
+        public bool UpdateTrades() { return Model.UpdateTrades(this); }
+        public bool UpdateOpenedOrders() { return Model.UpdateOpenedOrders(this); }
         public abstract string DownloadString(string address);
 
         TickerUpdateHelper updateHelper;
@@ -192,9 +202,6 @@ namespace CryptoMarketClient {
                 TradeHistoryAdd(this, EventArgs.Empty);
         }
 
-        public abstract bool UpdateArbitrageOrderBook(int depth);
-        public abstract void ProcessArbitrageOrderBook(string text);
-
         public event EventHandler HistoryItemAdd;
         public event EventHandler TradeHistoryAdd;
         public event EventHandler Changed;
@@ -204,21 +211,15 @@ namespace CryptoMarketClient {
         public abstract bool Buy(decimal lowestAsk, decimal amount);
         public abstract bool Sell(decimal highestBid, decimal amount);
         public abstract bool Withdraw(string currency, string address, decimal amount);
-        public abstract bool UpdateTradeStatistic();
 
         protected WebClient WebClient { get; } = new MyWebClient();
+        public bool IsUpdating { get; set; }
+        public long UpdateTimeMs { get; set; }
+        public long StartUpdateTime { get; set; }
+        public long LastUpdateTime { get; set; }
+        public Task Task { get; set; }
+        public bool IsActual { get; set; }
 
-        public void UpdateHistoryForTradeItem(TradeHistoryItem item) {
-            for(int i = History.Count - 1; i >= 0; i--) {
-                TickerHistoryItem h = History[i];
-                if(h.Time.Ticks <= item.Time.Ticks) {
-                    item.Bid = h.Bid;
-                    item.Ask = h.Ask;
-                    item.Current = h.Current;
-                    break;
-                }
-            }
-        }
         public void UpdateHistoryItem() {
             TickerHistoryItem last = History.Count == 0 ? null : History.Last();
             if(History.Count > 72000) {

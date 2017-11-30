@@ -17,8 +17,6 @@ using DevExpress.XtraWaitForm;
 using CryptoMarketClient.Bittrex;
 using DevExpress.XtraEditors;
 using CryptoMarketClient.Common;
-using CryptoMarketClient.HitBtc;
-using CryptoMarketClient.Exmo;
 
 namespace CryptoMarketClient {
     public partial class MainForm : DevExpress.XtraBars.Ribbon.RibbonForm {
@@ -56,49 +54,49 @@ namespace CryptoMarketClient {
             //}
         }
 
-        PoloniexTickersForm tickersForm;
-        public PoloniexTickersForm PoloniexTickersForm {
+        TickersCollectionForm tickersForm;
+        public TickersCollectionForm PoloniexTickersForm {
             get {
                 if(tickersForm == null || tickersForm.IsDisposed) {
-                    tickersForm = new PoloniexTickersForm();
+                    tickersForm = new TickersCollectionForm(PoloniexModel.Default);
                     tickersForm.MdiParent = this;
                 }
                 return tickersForm;
             }
         }
 
-        BittrexTickerCollectionForm bittrexMarketsForm;
-        public BittrexTickerCollectionForm BittrextMarketsForm {
+        TickersCollectionForm bittrexMarketsForm;
+        public TickersCollectionForm BittrextMarketsForm {
             get {
                 if(bittrexMarketsForm == null || bittrexMarketsForm.IsDisposed) {
-                    bittrexMarketsForm = new BittrexTickerCollectionForm();
+                    bittrexMarketsForm = new TickersCollectionForm(BittrexModel.Default);
                     bittrexMarketsForm.MdiParent = this;
                 }
                 return bittrexMarketsForm;
             }
         }
 
-        HitBtcTickerCollectionForm hitBtcMarketsForm;
-        public HitBtcTickerCollectionForm HitBtcMarketsForm {
-            get {
-                if(hitBtcMarketsForm == null || hitBtcMarketsForm.IsDisposed) {
-                    hitBtcMarketsForm = new HitBtcTickerCollectionForm();
-                    hitBtcMarketsForm.MdiParent = this;
-                }
-                return hitBtcMarketsForm;
-            }
-        }
+        //TickersCollectionForm hitBtcMarketsForm;
+        //public TickersCollectionForm HitBtcMarketsForm {
+        //    get {
+        //        if(hitBtcMarketsForm == null || hitBtcMarketsForm.IsDisposed) {
+        //            hitBtcMarketsForm = new TickersCollectionForm(HitBtcModel.Default);
+        //            hitBtcMarketsForm.MdiParent = this;
+        //        }
+        //        return hitBtcMarketsForm;
+        //    }
+        //}
 
-        ExmoTickerCollectionForm exemoTickersForm;
-        public ExmoTickerCollectionForm ExmoTickersForm {
-            get {
-                if(exemoTickersForm == null || exemoTickersForm.IsDisposed) {
-                    exemoTickersForm = new ExmoTickerCollectionForm();
-                    exemoTickersForm.MdiParent = this;
-                }
-                return exemoTickersForm;
-            }
-        }
+        //TickersCollectionForm exemoTickersForm;
+        //public TickersCollectionForm ExmoTickersForm {
+        //    get {
+        //        if(exemoTickersForm == null || exemoTickersForm.IsDisposed) {
+        //            exemoTickersForm = new TickersCollectionForm(ExmoModel.Default);
+        //            exemoTickersForm.MdiParent = this;
+        //        }
+        //        return exemoTickersForm;
+        //    }
+        //}
 
         private void bcPoloniex_CheckedChanged(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
             if(this.bcPoloniex.Checked) {
@@ -134,10 +132,6 @@ namespace CryptoMarketClient {
         }
 
         private void btClassicArbitrage_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
-            if(!BittrexModel.Default.IsConnected || !PoloniexModel.Default.IsConnected) {
-                XtraMessageBox.Show("Please connect at least two markets to make arbitrage possible...");
-                return;
-            }
             ArbitrageForm.Show();
             ArbitrageForm.Activate();
         }
@@ -176,14 +170,14 @@ namespace CryptoMarketClient {
         }
 
         private void bcHitBtc_CheckedChanged(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
-            if(this.bcHitBtc.Checked) {
-                HitBtcModel.Default.IsConnected = true;
-                HitBtcMarketsForm.Show();
-            }
-            else {
-                HitBtcModel.Default.IsConnected = false;
-                HitBtcMarketsForm.Hide();
-            }
+            //if(this.bcHitBtc.Checked) {
+            //    HitBtcModel.Default.IsConnected = true;
+            //    HitBtcMarketsForm.Show();
+            //}
+            //else {
+            //    HitBtcModel.Default.IsConnected = false;
+            //    HitBtcMarketsForm.Hide();
+            //}
         }
 
         StaticArbitrageForm staticArbitrageForm;
@@ -198,14 +192,14 @@ namespace CryptoMarketClient {
         }
 
         private void bcExmo_CheckedChanged(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
-            if(this.bcExmo.Checked) {
-                ExmoModel.Default.IsConnected = true;
-                ExmoTickersForm.Show();
-            }
-            else {
-                ExmoModel.Default.IsConnected = false;
-                ExmoTickersForm.Hide();
-            }
+            //if(this.bcExmo.Checked) {
+            //    ExmoModel.Default.IsConnected = true;
+            //    ExmoTickersForm.Show();
+            //}
+            //else {
+            //    ExmoModel.Default.IsConnected = false;
+            //    ExmoTickersForm.Hide();
+            //}
         }
 
         private void bbShowStaticArbitrage_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
