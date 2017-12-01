@@ -8,9 +8,9 @@ namespace CryptoMarketClient {
     public static class TickerCollectionHelper {
         static List<List<TickerBase>> GetMarketsList() {
             List<List<TickerBase>> tickersList = new List<List<TickerBase>>();
-            foreach(ModelBase model in ModelBase.ActiveModels) {
+            foreach(Exchange exchange in Exchange.Connected) {
                 List<TickerBase> list = new List<TickerBase>();
-                list.AddRange(model.Tickers);
+                list.AddRange(exchange.Tickers);
                 tickersList.Add(list);
             }
             return tickersList;

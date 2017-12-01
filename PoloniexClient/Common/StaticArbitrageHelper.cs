@@ -16,30 +16,30 @@ namespace CryptoMarketClient.Common {
         public List<StaticArbitrageInfo> GetItems() {
             List<StaticArbitrageInfo> items = new List<StaticArbitrageInfo>();
             string[] baseCurr = new string[] { "XMR", "ETH", "BTC" };
-            if(PoloniexModel.Default.IsConnected) {
+            if(PoloniexExchange.Default.IsConnected) {
                 foreach(string curr in baseCurr) {
-                    TickerBase btcUsdtTicker = PoloniexModel.Default.Tickers.FirstOrDefault(t => t.BaseCurrency == "USDT" && t.MarketCurrency == curr);
+                    TickerBase btcUsdtTicker = PoloniexExchange.Default.Tickers.FirstOrDefault(t => t.BaseCurrency == "USDT" && t.MarketCurrency == curr);
                     if(btcUsdtTicker == null)
                         throw new Exception("Static Arbitrage BtcUsdtTicker == null");
-                    foreach(TickerBase altUsdtTicker in PoloniexModel.Default.Tickers) {
+                    foreach(TickerBase altUsdtTicker in PoloniexExchange.Default.Tickers) {
                         if(altUsdtTicker.BaseCurrency != "USDT")
                             continue;
-                        TickerBase altBtcTicker = PoloniexModel.Default.Tickers.FirstOrDefault(t => t.BaseCurrency == curr && t.MarketCurrency == altUsdtTicker.MarketCurrency);
+                        TickerBase altBtcTicker = PoloniexExchange.Default.Tickers.FirstOrDefault(t => t.BaseCurrency == curr && t.MarketCurrency == altUsdtTicker.MarketCurrency);
                         if(altBtcTicker == null)
                             continue;
                         items.Add(new StaticArbitrageInfo { AltBase = altBtcTicker, AltUsdt = altUsdtTicker, BaseUsdt = btcUsdtTicker });
                     }
                 }
             }
-            if(BittrexModel.Default.IsConnected) {
+            if(BittrexExchange.Default.IsConnected) {
                 foreach(string curr in baseCurr) {
-                    TickerBase btcUsdtTicker = BittrexModel.Default.Tickers.FirstOrDefault(t => t.BaseCurrency == "USDT" && t.MarketCurrency == curr);
+                    TickerBase btcUsdtTicker = BittrexExchange.Default.Tickers.FirstOrDefault(t => t.BaseCurrency == "USDT" && t.MarketCurrency == curr);
                     if(btcUsdtTicker == null)
                         throw new Exception("Static Arbitrage BtcUsdtTicker == null");
-                    foreach(TickerBase altUsdtTicker in BittrexModel.Default.Tickers) {
+                    foreach(TickerBase altUsdtTicker in BittrexExchange.Default.Tickers) {
                         if(altUsdtTicker.BaseCurrency != "USDT")
                             continue;
-                        TickerBase altBtcTicker = BittrexModel.Default.Tickers.FirstOrDefault(t => t.BaseCurrency == curr && t.MarketCurrency == altUsdtTicker.MarketCurrency);
+                        TickerBase altBtcTicker = BittrexExchange.Default.Tickers.FirstOrDefault(t => t.BaseCurrency == curr && t.MarketCurrency == altUsdtTicker.MarketCurrency);
                         if(altBtcTicker == null)
                             continue;
                         items.Add(new StaticArbitrageInfo { AltBase = altBtcTicker, AltUsdt = altUsdtTicker, BaseUsdt = btcUsdtTicker });
@@ -55,12 +55,12 @@ namespace CryptoMarketClient.Common {
         }
         public List<BalanceBase> GetUsdtBalances() {
             List<BalanceBase> list = new List<BalanceBase>();
-            if(PoloniexModel.Default.IsConnected) {
-                BalanceBase item = PoloniexModel.Default.Balances.FirstOrDefault(b => b.Currency == "USDT");
+            if(PoloniexExchange.Default.IsConnected) {
+                BalanceBase item = PoloniexExchange.Default.Balances.FirstOrDefault(b => b.Currency == "USDT");
                 if(item != null) list.Add(item);
             }
-            if(BittrexModel.Default.IsConnected) {
-                BalanceBase item = BittrexModel.Default.Balances.FirstOrDefault(b => b.Currency == "USDT");
+            if(BittrexExchange.Default.IsConnected) {
+                BalanceBase item = BittrexExchange.Default.Balances.FirstOrDefault(b => b.Currency == "USDT");
                 if(item != null) list.Add(item);
             }
             return list;

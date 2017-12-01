@@ -18,24 +18,24 @@ using System.Windows.Forms;
 
 namespace CryptoMarketClient {
     public partial class TickersCollectionForm : XtraForm {
-        public TickersCollectionForm(ModelBase model) {
+        public TickersCollectionForm(Exchange exchange) {
             InitializeComponent();
-            Model = model;
-            Text = Model.Name;
+            Exchange = exchange;
+            Text = Exchange.Name;
         }
 
-        public ModelBase Model { get; set; }
+        public Exchange Exchange { get; set; }
 
         protected override void OnShown(EventArgs e) {
             base.OnShown(e);
-            Model.GetTickersInfo();
-            //Model.GetBalances();
-            this.gridControl1.DataSource = Model.Tickers;
+            Exchange.GetTickersInfo();
+            //Exchange.GetBalances();
+            this.gridControl1.DataSource = Exchange.Tickers;
             HasShown = true;
-            UpdateSelectedTickersFromModel();
+            UpdateSelectedTickersFromExchange();
             StartUpdateTickersThread();
         }
-        void UpdateSelectedTickersFromModel() {
+        void UpdateSelectedTickersFromExchange() {
             UpdatePinnedItems();
         }
         protected override void OnActivated(EventArgs e) {
@@ -56,12 +56,14 @@ namespace CryptoMarketClient {
             Stopwatch timer = new Stopwatch();
             timer.Start();
             int runningTasksCount = 0;
-            while(AllowWorking && Model.IsConnected) {
-                Model.UpdateTickersInfo();
-                foreach(TickerBase ticker in Model.Tickers) {
+            while(AllowWorking && Exchange.IsConnected) {
+                Exchange.UpdateTickersInfo();
+                foreach(TickerBase ticker in Exchange.Tickers) {
                     while(runningTasksCount > 10)
                         Thread.Sleep(10);
                     if(ticker.UpdateMode != TickerUpdateMode.Self)
+                        continue;
+                    if(this.bbMonitorOnlySelected.Checked && !ticker.IsSelected)
                         continue;
                     if(ticker.IsUpdating) {
                         ticker.UpdateTimeMs = timer.ElapsedMilliseconds - ticker.StartUpdateTime;
@@ -95,7 +97,7 @@ namespace CryptoMarketClient {
             }
         }
         void UpdateRow(TickerBase t) {
-            int index = Model.Tickers.IndexOf(t);
+            int index = Exchange.Tickers.IndexOf(t);
             int rowHandle = this.gridView1.GetRowHandle(index);
             this.gridView1.RefreshRow(rowHandle);
         }
@@ -176,7 +178,7 @@ namespace CryptoMarketClient {
         protected void UpdatePinnedItems() {
             List<BarItem> addItems = new List<BarItem>();
             List<BarItem> removeItems = new List<BarItem>();
-            foreach(PinnedTickerInfo info in Model.PinnedTickers) {
+            foreach(PinnedTickerInfo info in Exchange.PinnedTickers) {
                 BarItemLink link = this.bar1.ItemLinks.FirstOrDefault(l => l.Item.Tag == info);
                 if(link == null) {
                     BarButtonItem item = new BarButtonItem(this.barManager1, info.ToString());
@@ -187,7 +189,7 @@ namespace CryptoMarketClient {
             foreach(BarItemLink link in this.bar1.ItemLinks) {
                 PinnedTickerInfo info = link.Item.Tag as PinnedTickerInfo;
                 if(info == null) continue;
-                if(!Model.PinnedTickers.Contains(info))
+                if(!Exchange.PinnedTickers.Contains(info))
                     removeItems.Add(link.Item);
             }
             this.barManager1.BeginUpdate();
@@ -212,7 +214,7 @@ namespace CryptoMarketClient {
 
         private void barManager1_ItemClick(object sender, ItemClickEventArgs e) {
             if(e.Item.Tag is PinnedTickerInfo) {
-                TickerBase t = Model.GetTicker((PinnedTickerInfo)e.Item.Tag);
+                TickerBase t = Exchange.GetTicker((PinnedTickerInfo)e.Item.Tag);
                 ShowDetailsForSelectedItemCore(t);
             }
         }
@@ -232,22 +234,22 @@ namespace CryptoMarketClient {
             this.popupMenu1.ShowPopup(this.barManager1, this.gridControl1.PointToScreen(e.Location));
         }
         bool IsTickerPinned(TickerBase t) {
-            return Model.PinnedTickers.FirstOrDefault(i => i.BaseCurrency == t.BaseCurrency && i.MarketCurrency == t.MarketCurrency) != null;
+            return Exchange.PinnedTickers.FirstOrDefault(i => i.BaseCurrency == t.BaseCurrency && i.MarketCurrency == t.MarketCurrency) != null;
         }
 
         private void bbAddQuickPanel_ItemClick(object sender, ItemClickEventArgs e) {
             TickerBase ticker = (TickerBase)this.gridView1.GetFocusedRow();
-            Model.PinnedTickers.Add(new Common.PinnedTickerInfo() { BaseCurrency = ticker.BaseCurrency, MarketCurrency = ticker.MarketCurrency });
+            Exchange.PinnedTickers.Add(new Common.PinnedTickerInfo() { BaseCurrency = ticker.BaseCurrency, MarketCurrency = ticker.MarketCurrency });
             UpdatePinnedItems();
-            Model.Save();
+            Exchange.Save();
         }
 
         private void bbRemoveQuickPanel_ItemClick(object sender, ItemClickEventArgs e) {
             TickerBase t = (TickerBase)this.gridView1.GetFocusedRow();
-            PinnedTickerInfo info = Model.PinnedTickers.FirstOrDefault(i => i.BaseCurrency == t.BaseCurrency && i.MarketCurrency == t.MarketCurrency);
-            Model.PinnedTickers.Remove(info);
+            PinnedTickerInfo info = Exchange.PinnedTickers.FirstOrDefault(i => i.BaseCurrency == t.BaseCurrency && i.MarketCurrency == t.MarketCurrency);
+            Exchange.PinnedTickers.Remove(info);
             UpdatePinnedItems();
-            Model.Save();
+            Exchange.Save();
         }
 
         private void barManager1_ItemPress(object sender, ItemClickEventArgs e) {
@@ -257,7 +259,7 @@ namespace CryptoMarketClient {
             if(info == null)
 
                 return;
-            if(Model.PinnedTickers.Contains(info)) {
+            if(Exchange.PinnedTickers.Contains(info)) {
                 this.bbAddQuickPanel.Visibility = BarItemVisibility.Never;
                 this.bbRemoveQuickPanel.Visibility = BarItemVisibility.Always;
             }
@@ -282,12 +284,16 @@ namespace CryptoMarketClient {
 
         private void bbRemoveByRightClick_ItemClick(object sender, ItemClickEventArgs e) {
             PinnedTickerInfo info = (PinnedTickerInfo)e.Item.Tag;
-            Model.PinnedTickers.Remove(info);
+            Exchange.PinnedTickers.Remove(info);
             UpdatePinnedItems();
-            Model.Save();
+            Exchange.Save();
         }
 
         private void gridControl1_Click(object sender, EventArgs e) {
+
+        }
+
+        private void bbMonitorOnlySelected_CheckedChanged(object sender, ItemClickEventArgs e) {
 
         }
     }

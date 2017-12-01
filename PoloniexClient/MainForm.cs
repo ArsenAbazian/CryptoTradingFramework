@@ -30,25 +30,25 @@ namespace CryptoMarketClient {
 
         protected override void OnShown(EventArgs e) {
             base.OnShown(e);
-            ModelBase.AllowTradeHistory = this.bcAllowTradeHistory.Checked;
-            ModelBase.OrderBookDepth = Convert.ToInt32(this.beOrderBookDepth.EditValue);
+            Exchange.AllowTradeHistory = this.bcAllowTradeHistory.Checked;
+            Exchange.OrderBookDepth = Convert.ToInt32(this.beOrderBookDepth.EditValue);
             TelegramBot.Default.SendNotification("hello!");
 
-            //BittrexModel.Default.IsConnected = true;
+            //BittrexExchange.Default.IsConnected = true;
             //BittrextMarketsForm.Show();
 
-            //PoloniexModel.Default.IsConnected = true;
+            //PoloniexExchange.Default.IsConnected = true;
             //PoloniexTickersForm.Show();
 
-            //ExmoModel.Default.IsConnected = true;
+            //ExmoExchange.Default.IsConnected = true;
             //ExmoTickersForm.Show();
 
-            //HitBtcModel.Default.IsConnected = true;
+            //HitBtcExchange.Default.IsConnected = true;
             //HitBtcMarketsForm.Show();
 
-            //if(BittrexModel.Default.IsConnected && 
-            //    PoloniexModel.Default.IsConnected/* && 
-            //    HitBtcModel.Default.IsConnected*/) {
+            //if(BittrexExchange.Default.IsConnected && 
+            //    PoloniexExchange.Default.IsConnected/* && 
+            //    HitBtcExchange.Default.IsConnected*/) {
             //    ArbitrageForm.Show();
             //    ArbitrageForm.Activate();
             //}
@@ -58,7 +58,7 @@ namespace CryptoMarketClient {
         public TickersCollectionForm PoloniexTickersForm {
             get {
                 if(tickersForm == null || tickersForm.IsDisposed) {
-                    tickersForm = new TickersCollectionForm(PoloniexModel.Default);
+                    tickersForm = new TickersCollectionForm(PoloniexExchange.Default);
                     tickersForm.MdiParent = this;
                 }
                 return tickersForm;
@@ -69,7 +69,7 @@ namespace CryptoMarketClient {
         public TickersCollectionForm BittrextMarketsForm {
             get {
                 if(bittrexMarketsForm == null || bittrexMarketsForm.IsDisposed) {
-                    bittrexMarketsForm = new TickersCollectionForm(BittrexModel.Default);
+                    bittrexMarketsForm = new TickersCollectionForm(BittrexExchange.Default);
                     bittrexMarketsForm.MdiParent = this;
                 }
                 return bittrexMarketsForm;
@@ -80,7 +80,7 @@ namespace CryptoMarketClient {
         //public TickersCollectionForm HitBtcMarketsForm {
         //    get {
         //        if(hitBtcMarketsForm == null || hitBtcMarketsForm.IsDisposed) {
-        //            hitBtcMarketsForm = new TickersCollectionForm(HitBtcModel.Default);
+        //            hitBtcMarketsForm = new TickersCollectionForm(HitBtcExchange.Default);
         //            hitBtcMarketsForm.MdiParent = this;
         //        }
         //        return hitBtcMarketsForm;
@@ -91,7 +91,7 @@ namespace CryptoMarketClient {
         //public TickersCollectionForm ExmoTickersForm {
         //    get {
         //        if(exemoTickersForm == null || exemoTickersForm.IsDisposed) {
-        //            exemoTickersForm = new TickersCollectionForm(ExmoModel.Default);
+        //            exemoTickersForm = new TickersCollectionForm(ExmoExchange.Default);
         //            exemoTickersForm.MdiParent = this;
         //        }
         //        return exemoTickersForm;
@@ -100,22 +100,22 @@ namespace CryptoMarketClient {
 
         private void bcPoloniex_CheckedChanged(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
             if(this.bcPoloniex.Checked) {
-                PoloniexModel.Default.IsConnected = true;
+                PoloniexExchange.Default.IsConnected = true;
                 PoloniexTickersForm.Show();
             }
             else {
-                PoloniexModel.Default.IsConnected = false;
+                PoloniexExchange.Default.IsConnected = false;
                 PoloniexTickersForm.Hide();
             }
         }
 
         private void bcBittrex_CheckedChanged(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
             if(this.bcBittrex.Checked) {
-                BittrexModel.Default.IsConnected = true;
+                BittrexExchange.Default.IsConnected = true;
                 BittrextMarketsForm.Show();
             }
             else {
-                BittrexModel.Default.IsConnected = false;
+                BittrexExchange.Default.IsConnected = false;
                 BittrextMarketsForm.Hide();
             }
         }
@@ -137,11 +137,11 @@ namespace CryptoMarketClient {
         }
 
         private void beOrderBookDepth_EditValueChanged(object sender, EventArgs e) {
-            ModelBase.OrderBookDepth = Convert.ToInt32(this.beOrderBookDepth.EditValue);
+            Exchange.OrderBookDepth = Convert.ToInt32(this.beOrderBookDepth.EditValue);
         }
 
         private void bcAllowTradeHistory_CheckedChanged(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
-            ModelBase.AllowTradeHistory = this.bcAllowTradeHistory.Checked;
+            Exchange.AllowTradeHistory = this.bcAllowTradeHistory.Checked;
         }
 
         private void btShowApiKeys_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
@@ -171,11 +171,11 @@ namespace CryptoMarketClient {
 
         private void bcHitBtc_CheckedChanged(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
             //if(this.bcHitBtc.Checked) {
-            //    HitBtcModel.Default.IsConnected = true;
+            //    HitBtcExchange.Default.IsConnected = true;
             //    HitBtcMarketsForm.Show();
             //}
             //else {
-            //    HitBtcModel.Default.IsConnected = false;
+            //    HitBtcExchange.Default.IsConnected = false;
             //    HitBtcMarketsForm.Hide();
             //}
         }
@@ -193,11 +193,11 @@ namespace CryptoMarketClient {
 
         private void bcExmo_CheckedChanged(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
             //if(this.bcExmo.Checked) {
-            //    ExmoModel.Default.IsConnected = true;
+            //    ExmoExchange.Default.IsConnected = true;
             //    ExmoTickersForm.Show();
             //}
             //else {
-            //    ExmoModel.Default.IsConnected = false;
+            //    ExmoExchange.Default.IsConnected = false;
             //    ExmoTickersForm.Hide();
             //}
         }

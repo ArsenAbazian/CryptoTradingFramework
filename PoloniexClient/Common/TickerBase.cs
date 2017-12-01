@@ -15,8 +15,8 @@ using System.Windows.Forms;
 
 namespace CryptoMarketClient {
     public abstract class TickerBase {
-        public TickerBase(ModelBase model) {
-            Model = model;
+        public TickerBase(Exchange exchange) {
+            Exchange = exchange;
             OrderBook = new OrderBook(this);
             BidAskChart = CreateChartSnapshotControl();
             OrderBookChart = CreateOrderBookChartControl();
@@ -26,7 +26,7 @@ namespace CryptoMarketClient {
             IsActual = true;
         }
 
-        public ModelBase Model { get; private set; }
+        public Exchange Exchange { get; private set; }
         public int Index { get; set; }
         public virtual string MarketName { get; set; }
         public abstract string CurrencyPair { get; set; }
@@ -40,7 +40,7 @@ namespace CryptoMarketClient {
         public List<OpenedOrderInfo> OpenedOrders { get; } = new List<OpenedOrderInfo>();
         public List<TickerHistoryItem> History { get; } = new List<TickerHistoryItem>();
         public List<TradeHistoryItem> TradeHistory { get; } = new List<TradeHistoryItem>();
-        public BindingList<TradeStatisticsItem> TradeStatistic { get; } = new BindingList<TradeStatisticsItem>();
+        public List<TradeStatisticsItem> TradeStatistic { get; } = new List<TradeStatisticsItem>();
         public List<TickerStrategyBase> Strategies { get; } = new List<TickerStrategyBase>();
         public List<CandleStickData> CandleStickData { get; set; } = new List<CryptoMarketClient.CandleStickData>();
         public BindingList<CurrencyStatusHistoryItem> MarketCurrencyStatusHistory { get; set; } = new BindingList<CurrencyStatusHistoryItem>();
@@ -167,11 +167,29 @@ namespace CryptoMarketClient {
         public DateTime LastTradeStatisticTime { get; set; }
         public long LastTradeId { get; set; }
         public abstract string WebPageAddress { get; }
-        public bool UpdateOrderBook() { return Model.UpdateOrderBook(this); }
-        public bool ProcessOrderBook(string text) { return Model.ProcessOrderBook(this, text); }
-        public bool UpdateTicker() { return Model.UpdateTicker(this); }
-        public bool UpdateTrades() { return Model.UpdateTrades(this); }
-        public bool UpdateOpenedOrders() { return Model.UpdateOpenedOrders(this); }
+        public bool UpdateOrderBook() {
+            bool res = Exchange.UpdateOrderBook(this);
+            if(res) {
+                HighestBid = OrderBook.Bids[0].Value;
+                LowestAsk = OrderBook.Asks[0].Value;
+                Time = DateTime.Now;
+                UpdateHistoryItem();
+                CandleStickChartHelper.AddCandleStickData(CandleStickData, History.Last(), 60);
+            }
+            return res;
+        }
+        public bool ProcessOrderBook(string text) { return Exchange.ProcessOrderBook(this, text); }
+        public bool UpdateTicker() {
+            bool res = Exchange.UpdateTicker(this);
+            if(res) {
+                Time = DateTime.Now;
+                UpdateHistoryItem();
+                CandleStickChartHelper.AddCandleStickData(CandleStickData, History.Last(), 60);
+            }
+            return res;
+        }
+        public bool UpdateTrades() { return Exchange.UpdateTrades(this); }
+        public bool UpdateOpenedOrders() { return Exchange.UpdateOpenedOrders(this); }
         public abstract string DownloadString(string address);
 
         TickerUpdateHelper updateHelper;

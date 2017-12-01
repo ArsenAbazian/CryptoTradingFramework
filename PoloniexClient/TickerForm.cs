@@ -32,6 +32,8 @@ namespace CryptoMarketClient {
         protected override void OnTimerUpdate(object sender, EventArgs e) {
             base.OnTimerUpdate(sender, e);
             this.tickerInfoControl.UpdateData();
+            this.gvTrades.RefreshData();
+            this.gvOrders.RefreshData();
         }
 
         TickerBase ticker;

@@ -18,9 +18,9 @@ namespace CryptoMarketClient.Poloniex {
         protected override bool AllowUpdateInactive => true;
 
         protected override void OnThreadUpdate() {
-            Task<byte[]> task1 = PoloniexModel.Default.GetOpenedOrders();
+            Task<byte[]> task1 = PoloniexExchange.Default.GetOpenedOrders();
             task1.Wait();
-            PoloniexModel.Default.OnGetOpenedOrders(task1.Result);
+            PoloniexExchange.Default.OnGetOpenedOrders(task1.Result);
             Invoke(new Action(RefreshGrid));
         }
         void RefreshGrid() {

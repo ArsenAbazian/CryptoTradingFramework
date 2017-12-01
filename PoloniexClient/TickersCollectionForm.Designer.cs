@@ -88,6 +88,7 @@
             this.barDockControlLeft = new DevExpress.XtraBars.BarDockControl();
             this.barDockControlRight = new DevExpress.XtraBars.BarDockControl();
             this.popupMenu1 = new DevExpress.XtraBars.PopupMenu(this.components);
+            this.bbMonitorOnlySelected = new DevExpress.XtraBars.BarCheckItem();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit1)).BeginInit();
@@ -158,10 +159,10 @@
             // gridControl1
             // 
             this.gridControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gridControl1.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.gridControl1.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(6);
             this.gridControl1.Location = new System.Drawing.Point(0, 316);
             this.gridControl1.MainView = this.gridView1;
-            this.gridControl1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.gridControl1.Margin = new System.Windows.Forms.Padding(6);
             this.gridControl1.Name = "gridControl1";
             this.gridControl1.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repositoryItemSparklineEdit1,
@@ -273,6 +274,7 @@
             this.gridView1.Name = "gridView1";
             this.gridView1.OptionsBehavior.AllowPixelScrolling = DevExpress.Utils.DefaultBoolean.True;
             this.gridView1.OptionsDetail.EnableMasterViewMode = false;
+            this.gridView1.OptionsFind.AlwaysVisible = true;
             this.gridView1.SortInfo.AddRange(new DevExpress.XtraGrid.Columns.GridColumnSortInfo[] {
             new DevExpress.XtraGrid.Columns.GridColumnSortInfo(this.gcFirst, DevExpress.Data.ColumnSortOrder.Ascending)});
             this.gridView1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.gridView1_MouseDown);
@@ -409,10 +411,11 @@
             this.bbAddQuickPanel,
             this.bbRemoveQuickPanel,
             this.barButtonItem2,
-            this.bbRemoveByRightClick});
+            this.bbRemoveByRightClick,
+            this.bbMonitorOnlySelected});
             this.bbOpenedOrders.Location = new System.Drawing.Point(0, 0);
-            this.bbOpenedOrders.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
-            this.bbOpenedOrders.MaxItemId = 13;
+            this.bbOpenedOrders.Margin = new System.Windows.Forms.Padding(6);
+            this.bbOpenedOrders.MaxItemId = 14;
             this.bbOpenedOrders.Name = "bbOpenedOrders";
             this.bbOpenedOrders.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
             this.ribbonPage1});
@@ -494,8 +497,9 @@
             this.ribbonPageGroup1.ItemLinks.Add(this.ShowDetailsForSelectedItem);
             this.ribbonPageGroup1.ItemLinks.Add(this.bbShowBalances);
             this.ribbonPageGroup1.ItemLinks.Add(this.barButtonItem1);
+            this.ribbonPageGroup1.ItemLinks.Add(this.bbMonitorOnlySelected);
             this.ribbonPageGroup1.Name = "ribbonPageGroup1";
-            this.ribbonPageGroup1.Text = "Poloniex";
+            this.ribbonPageGroup1.Text = "Market";
             // 
             // barManager1
             // 
@@ -536,7 +540,7 @@
             this.standaloneBarDockControl1.Dock = System.Windows.Forms.DockStyle.Top;
             this.standaloneBarDockControl1.Location = new System.Drawing.Point(0, 278);
             this.standaloneBarDockControl1.Manager = this.barManager1;
-            this.standaloneBarDockControl1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.standaloneBarDockControl1.Margin = new System.Windows.Forms.Padding(4);
             this.standaloneBarDockControl1.Name = "standaloneBarDockControl1";
             this.standaloneBarDockControl1.Size = new System.Drawing.Size(1916, 38);
             this.standaloneBarDockControl1.Text = "standaloneBarDockControl1";
@@ -547,7 +551,7 @@
             this.barDockControlTop.Dock = System.Windows.Forms.DockStyle.Top;
             this.barDockControlTop.Location = new System.Drawing.Point(0, 0);
             this.barDockControlTop.Manager = this.barManager1;
-            this.barDockControlTop.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.barDockControlTop.Margin = new System.Windows.Forms.Padding(4);
             this.barDockControlTop.Size = new System.Drawing.Size(1916, 0);
             // 
             // barDockControlBottom
@@ -556,7 +560,7 @@
             this.barDockControlBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.barDockControlBottom.Location = new System.Drawing.Point(0, 908);
             this.barDockControlBottom.Manager = this.barManager1;
-            this.barDockControlBottom.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.barDockControlBottom.Margin = new System.Windows.Forms.Padding(4);
             this.barDockControlBottom.Size = new System.Drawing.Size(1916, 0);
             // 
             // barDockControlLeft
@@ -565,7 +569,7 @@
             this.barDockControlLeft.Dock = System.Windows.Forms.DockStyle.Left;
             this.barDockControlLeft.Location = new System.Drawing.Point(0, 0);
             this.barDockControlLeft.Manager = this.barManager1;
-            this.barDockControlLeft.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.barDockControlLeft.Margin = new System.Windows.Forms.Padding(4);
             this.barDockControlLeft.Size = new System.Drawing.Size(0, 908);
             // 
             // barDockControlRight
@@ -574,7 +578,7 @@
             this.barDockControlRight.Dock = System.Windows.Forms.DockStyle.Right;
             this.barDockControlRight.Location = new System.Drawing.Point(1916, 0);
             this.barDockControlRight.Manager = this.barManager1;
-            this.barDockControlRight.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.barDockControlRight.Margin = new System.Windows.Forms.Padding(4);
             this.barDockControlRight.Size = new System.Drawing.Size(0, 908);
             // 
             // popupMenu1
@@ -583,6 +587,15 @@
             this.popupMenu1.ItemLinks.Add(this.bbRemoveQuickPanel);
             this.popupMenu1.Name = "popupMenu1";
             this.popupMenu1.Ribbon = this.bbOpenedOrders;
+            // 
+            // bbMonitorOnlySelected
+            // 
+            this.bbMonitorOnlySelected.Caption = "Monitor Only Selected";
+            this.bbMonitorOnlySelected.Id = 13;
+            this.bbMonitorOnlySelected.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bbMonitorOnlySelected.ImageOptions.Image")));
+            this.bbMonitorOnlySelected.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("bbMonitorOnlySelected.ImageOptions.LargeImage")));
+            this.bbMonitorOnlySelected.Name = "bbMonitorOnlySelected";
+            this.bbMonitorOnlySelected.CheckedChanged += new DevExpress.XtraBars.ItemClickEventHandler(this.bbMonitorOnlySelected_CheckedChanged);
             // 
             // TickersCollectionForm
             // 
@@ -596,7 +609,7 @@
             this.Controls.Add(this.barDockControlRight);
             this.Controls.Add(this.barDockControlBottom);
             this.Controls.Add(this.barDockControlTop);
-            this.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.Margin = new System.Windows.Forms.Padding(6);
             this.Name = "TickersCollectionForm";
             this.Text = "Poloniex Markets";
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).EndInit();
@@ -655,5 +668,6 @@
         private DevExpress.XtraBars.BarButtonItem bbRemoveByRightClick;
         private DevExpress.XtraGrid.Columns.GridColumn colUpdateTimeMs;
         private DevExpress.XtraGrid.Columns.GridColumn colIsActual;
+        private DevExpress.XtraBars.BarCheckItem bbMonitorOnlySelected;
     }
 }

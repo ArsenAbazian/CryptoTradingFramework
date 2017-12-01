@@ -26,33 +26,33 @@ namespace CryptoMarketClient.Common {
         }
 
         public void FillDepositTotalBittrex(List<DepositInfo> list) {
-            if(!BittrexModel.Default.UpdateBalances()) {
+            if(!BittrexExchange.Default.UpdateBalances()) {
                 LogManager.Default.AddError("FillDepositTotalBittrex: can't get balances");
                 return;
             }
 
-            if(!BittrexModel.Default.UpdateTickersInfo()) {
+            if(!BittrexExchange.Default.UpdateTickersInfo()) {
                 LogManager.Default.AddError("FillDepositTotalBittrex: can't get markets info");
                 return;
             }
 
-            BittrexTicker btcMarket = (BittrexTicker)BittrexModel.Default.Tickers.FirstOrDefault(m => m.BaseCurrency == "USDT" && m.MarketCurrency == "BTC");
+            BittrexTicker btcMarket = (BittrexTicker)BittrexExchange.Default.Tickers.FirstOrDefault(m => m.BaseCurrency == "USDT" && m.MarketCurrency == "BTC");
             if(btcMarket == null) {
                 LogManager.Default.AddError("FillDepositTotalBittrex: can't get BTC currency info");
                 return;
             }
             
 
-            foreach(BittrexAccountBalanceInfo info in BittrexModel.Default.Balances) {
+            foreach(BittrexAccountBalanceInfo info in BittrexExchange.Default.Balances) {
                 if(info.Available == 0)
                     continue;
                 DepositInfo dep = new DepositInfo();
-                dep.HostName = PoloniexModel.Default.Name;
+                dep.HostName = PoloniexExchange.Default.Name;
                 dep.Currency = info.Currency;
                 dep.Amount = info.Available;
 
                 if(dep.Currency != "BTC") {
-                    BittrexTicker market = (BittrexTicker)BittrexModel.Default.Tickers.FirstOrDefault(m => m.MarketCurrency == dep.Currency);
+                    BittrexTicker market = (BittrexTicker)BittrexExchange.Default.Tickers.FirstOrDefault(m => m.MarketCurrency == dep.Currency);
                     if(market == null) {
                         LogManager.Default.AddWarning("FillDepositTotalBittrex: can't get " + dep.Currency + " currency info");
                         continue;
@@ -67,32 +67,32 @@ namespace CryptoMarketClient.Common {
             }
         }
         public void FillDepositTotalPoloniex(List<DepositInfo> list) {
-            if(!PoloniexModel.Default.UpdateBalances()) {
+            if(!PoloniexExchange.Default.UpdateBalances()) {
                 LogManager.Default.AddError("FillDepositTotalPoloniex: can't get balances");
                 return;
             }
 
-            if(!PoloniexModel.Default.UpdateTickersInfo()) {
+            if(!PoloniexExchange.Default.UpdateTickersInfo()) {
                 LogManager.Default.AddError("FillDepositTotalPoloniex: can't get update markets info");
                 return;
             }
 
-            PoloniexTicker btcMarket = (PoloniexTicker)PoloniexModel.Default.Tickers.FirstOrDefault(m => m.BaseCurrency == "USDT" && m.MarketCurrency == "BTC");
+            PoloniexTicker btcMarket = (PoloniexTicker)PoloniexExchange.Default.Tickers.FirstOrDefault(m => m.BaseCurrency == "USDT" && m.MarketCurrency == "BTC");
             if(btcMarket == null) {
                 LogManager.Default.AddError("FillDepositTotalPoloniex: can't get BTC currency info");
                 return;
             }
 
-            foreach(PoloniexAccountBalanceInfo info in PoloniexModel.Default.Balances) {
+            foreach(PoloniexAccountBalanceInfo info in PoloniexExchange.Default.Balances) {
                 if(info.Available == 0)
                     continue;
                 DepositInfo dep = new DepositInfo();
-                dep.HostName = BittrexModel.Default.Name;
+                dep.HostName = BittrexExchange.Default.Name;
                 dep.Currency = info.Currency;
                 dep.Amount = info.Available;
 
                 if(dep.Currency != "BTC") {
-                    PoloniexTicker market = (PoloniexTicker)PoloniexModel.Default.Tickers.FirstOrDefault(m => m.MarketCurrency == dep.Currency);
+                    PoloniexTicker market = (PoloniexTicker)PoloniexExchange.Default.Tickers.FirstOrDefault(m => m.MarketCurrency == dep.Currency);
                     if(market == null) {
                         LogManager.Default.AddError("FillDepositTotalPoloniex: can't get " + dep.Currency + " currency info");
                         continue;

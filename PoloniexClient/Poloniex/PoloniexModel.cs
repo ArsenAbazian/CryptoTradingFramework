@@ -19,17 +19,17 @@ using WampSharp.V2;
 using WampSharp.V2.Rpc;
 
 namespace CryptoMarketClient {
-    public class PoloniexModel : ModelBase {
+    public class PoloniexExchange : Exchange {
         const string PoloniexServerAddress = "wss://api.poloniex.com";
 
-        static PoloniexModel defaultModel;
-        public static PoloniexModel Default {
+        static PoloniexExchange defaultExchange;
+        public static PoloniexExchange Default {
             get {
-                if(defaultModel == null) {
-                    defaultModel = new PoloniexModel();
-                    defaultModel.Load();
+                if(defaultExchange == null) {
+                    defaultExchange = new PoloniexExchange();
+                    defaultExchange.Load();
                 }
-                return defaultModel;
+                return defaultExchange;
             }
         }
 
@@ -231,8 +231,9 @@ namespace CryptoMarketClient {
             if(trades.Count == 0)
                 return true;
 
-            DateTime lastTime = trades.First().Value<DateTime>("date");
-            if(lastTime == ticker.LastTradeStatisticTime) {
+            int lastTradeId = trades.First().Value<int>("tradeID");
+            int lastGotTradeId = ticker.TradeHistory.Count > 0 ? ticker.TradeHistory.First().Id : 0;
+            if(lastGotTradeId == lastTradeId) {
                 ticker.TradeStatistic.Add(new TradeStatisticsItem() { Time = DateTime.Now });
                 if(ticker.TradeStatistic.Count > 5000) {
                     for(int i = 0; i < 100; i++)
@@ -243,11 +244,13 @@ namespace CryptoMarketClient {
             TradeStatisticsItem st = new TradeStatisticsItem();
             st.MinBuyPrice = decimal.MaxValue;
             st.MinSellPrice = decimal.MaxValue;
-            st.Time = lastTime;
-
+            st.Time = DateTime.Now;
+            
+            int index = 0;
             foreach(JObject obj in trades) {
                 DateTime time = obj.Value<DateTime>("date");
-                if(time == ticker.LastTradeStatisticTime)
+                int tradeId = obj.Value<int>("tradeID");
+                if(lastGotTradeId == tradeId)
                     break;
 
                 TradeHistoryItem item = new TradeHistoryItem();
@@ -259,6 +262,7 @@ namespace CryptoMarketClient {
                 item.Time = time;
                 item.Type = isBuy ? TradeType.Buy : TradeType.Sell;
                 item.Rate = price;
+                item.Id = tradeId;
                 item.Total = item.Amount * item.Rate;
                 if(isBuy) {
                     st.BuyAmount += amount;
@@ -272,14 +276,16 @@ namespace CryptoMarketClient {
                     st.MaxSellPrice = Math.Max(st.MaxSellPrice, price);
                     st.SellVolume += amount * price;
                 }
-                ticker.TradeHistory.Add(item);
+                ticker.TradeHistory.Insert(index, item);
+                index++;
             }
             if(st.MinSellPrice == decimal.MaxValue)
                 st.MinSellPrice = 0;
             if(st.MinBuyPrice == decimal.MaxValue)
                 st.MinBuyPrice = 0;
-            ticker.LastTradeStatisticTime = lastTime;
+            ticker.LastTradeStatisticTime = DateTime.Now;
             ticker.TradeStatistic.Add(st);
+            Debug.WriteLine(ticker.TradeHistory[0].Rate + " " + ticker.TradeHistory[0].Amount);
             if(ticker.TradeStatistic.Count > 5000) {
                 for(int i = 0; i < 100; i++)
                     ticker.TradeStatistic.RemoveAt(0);

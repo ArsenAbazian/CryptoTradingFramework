@@ -19,8 +19,8 @@ namespace CryptoMarketClient {
         protected override void OnShown(EventArgs e) {
             base.OnShown(e);
             List<ApiKeyInfo> list = new List<ApiKeyInfo>();
-            foreach(ModelBase model in ModelBase.RegisteredModels)
-                list.Add(new ApiKeyInfo() { Model = model, Market = model.Name, ApiKey = model.ApiKey, Secret = model.ApiSecret });
+            foreach(Exchange exchange in Exchange.Registered)
+                list.Add(new ApiKeyInfo() { Exchange = exchange, Market = exchange.Name, ApiKey = exchange.ApiKey, Secret = exchange.ApiSecret });
             this.apiKeyInfoBindingSource.DataSource = list;
             Keys = list;
         }
@@ -32,9 +32,9 @@ namespace CryptoMarketClient {
 
         private void simpleButton1_Click(object sender, EventArgs e) {
             foreach(ApiKeyInfo info in Keys) {
-                info.Model.ApiKey = info.ApiKey.Trim();
-                info.Model.ApiSecret = info.Secret.Trim();
-                info.Model.Save();
+                info.Exchange.ApiKey = info.ApiKey.Trim();
+                info.Exchange.ApiSecret = info.Secret.Trim();
+                info.Exchange.Save();
             }
             Close();
         }

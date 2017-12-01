@@ -12,20 +12,20 @@ namespace CryptoMarketClient.Poloniex {
     public partial class PoloniexAccountBalancesForm : ThreadUpdateForm {
         public PoloniexAccountBalancesForm() {
             InitializeComponent();
-            this.poloniexAccountBalanceInfoBindingSource.DataSource = PoloniexModel.Default.Balances;
+            this.poloniexAccountBalanceInfoBindingSource.DataSource = PoloniexExchange.Default.Balances;
         }
 
         protected override int UpdateInervalMs => 3000;
         protected override bool AllowUpdateInactive => false;
 
         protected override void OnThreadUpdate() {
-            if(!PoloniexModel.Default.IsConnected)
+            if(!PoloniexExchange.Default.IsConnected)
                 return;
             UpdateBalances();
         }
         void UpdateBalances() {
-            PoloniexModel.Default.UpdateBalances();
-            PoloniexModel.Default.GetDeposites();
+            PoloniexExchange.Default.UpdateBalances();
+            PoloniexExchange.Default.GetDeposites();
             this.gridControl1.RefreshDataSource();
         }
     }

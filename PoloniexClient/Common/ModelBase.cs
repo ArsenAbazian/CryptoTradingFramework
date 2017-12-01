@@ -15,32 +15,32 @@ using System.Text.Json;
 using CryptoMarketClient.Bittrex;
 
 namespace CryptoMarketClient {
-    public abstract class ModelBase : IXtraSerializable {
-        public static List<ModelBase> RegisteredModels { get; } = new List<ModelBase>();
-        public static List<ModelBase> ActiveModels { get; } = new List<ModelBase>();
+    public abstract class Exchange : IXtraSerializable {
+        public static List<Exchange> Registered { get; } = new List<Exchange>();
+        public static List<Exchange> Connected { get; } = new List<Exchange>();
 
 
-        static ModelBase() {
-            RegisteredModels.Add(new PoloniexModel());
-            RegisteredModels.Add(new BittrexModel());
+        static Exchange() {
+            Registered.Add(new PoloniexExchange());
+            Registered.Add(new BittrexExchange());
 
-            foreach(ModelBase model in RegisteredModels)
-                model.Load();
+            foreach(Exchange exchange in Registered)
+                exchange.Load();
         }
 
         public static int OrderBookDepth { get; set; }
         public static bool AllowTradeHistory { get; set; }
         public bool IsConnected {
-            get { return ActiveModels.Contains(this); }
+            get { return Connected.Contains(this); }
             set {
                 if(value) {
                     if(IsConnected)
                         return;
-                    ActiveModels.Add(this);
+                    Connected.Add(this);
                 }
                 else {
                     if(!IsConnected)
-                    ActiveModels.Remove(this);
+                    Connected.Remove(this);
                 }
             }
         }
@@ -128,7 +128,7 @@ namespace CryptoMarketClient {
 
         protected XtraObjectInfo[] GetXtraObjectInfo() {
             ArrayList result = new ArrayList();
-            result.Add(new XtraObjectInfo("Model", this));
+            result.Add(new XtraObjectInfo("Exchange", this));
             return (XtraObjectInfo[])result.ToArray(typeof(XtraObjectInfo));
         }
         protected virtual bool SaveLayoutCore(XtraSerializer serializer, object path) {

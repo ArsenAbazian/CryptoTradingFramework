@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace CryptoMarketClient.Bittrex {
     public class BittrexTicker : TickerBase {
-        public BittrexTicker(ModelBase model) : base(model) { }
+        public BittrexTicker(Exchange exchange) : base(exchange) { }
 
         public string MarketCurrencyLong { get; set; }
         public string BaseCurrencyLong { get; set; }
@@ -33,7 +33,7 @@ namespace CryptoMarketClient.Bittrex {
         public override BalanceBase BaseBalanceInfo {
             get {
                 if(baseBalanceInfo == null)
-                    baseBalanceInfo = BittrexModel.Default.Balances.FirstOrDefault((b) => b.Currency == BaseCurrency);
+                    baseBalanceInfo = BittrexExchange.Default.Balances.FirstOrDefault((b) => b.Currency == BaseCurrency);
                 return baseBalanceInfo;
             }
         }
@@ -41,7 +41,7 @@ namespace CryptoMarketClient.Bittrex {
         public override BalanceBase MarketBalanceInfo {
             get {
                 if(marketBalanceInfo == null)
-                    marketBalanceInfo = BittrexModel.Default.Balances.FirstOrDefault((b) => b.Currency == MarketCurrency);
+                    marketBalanceInfo = BittrexExchange.Default.Balances.FirstOrDefault((b) => b.Currency == MarketCurrency);
                 return marketBalanceInfo;
             }
         }
@@ -50,7 +50,7 @@ namespace CryptoMarketClient.Bittrex {
         protected BittrexCurrencyInfo MarketCurrencyInfo {
             get {
                 if(marketCurrencyInfo == null)
-                    marketCurrencyInfo = BittrexModel.Default.Currencies.FirstOrDefault(c => c.Currency == MarketCurrency);
+                    marketCurrencyInfo = BittrexExchange.Default.Currencies.FirstOrDefault(c => c.Currency == MarketCurrency);
                 return marketCurrencyInfo;
             }
         }
@@ -61,19 +61,19 @@ namespace CryptoMarketClient.Bittrex {
         public override string DownloadString(string address) {
             try {
                 ApiRate.WaitToProceed();
-                return BittrexModel.Default.GetWebClient().DownloadString(address);
+                return BittrexExchange.Default.GetWebClient().DownloadString(address);
             }
             catch { }
             return string.Empty;
         }
         public override bool UpdateBalance(CurrencyType type) {
-            return BittrexModel.Default.GetBalance(type == CurrencyType.MarketCurrency? MarketCurrency: BaseCurrency);
+            return BittrexExchange.Default.GetBalance(type == CurrencyType.MarketCurrency? MarketCurrency: BaseCurrency);
         }
         public override bool Buy(decimal rate, decimal amount) {
-            return BittrexModel.Default.BuyLimit(this, rate, amount) != null;
+            return BittrexExchange.Default.BuyLimit(this, rate, amount) != null;
         }
         public override bool Sell(decimal rate, decimal amount) {
-            return BittrexModel.Default.SellLimit(this, rate, amount) != null;
+            return BittrexExchange.Default.SellLimit(this, rate, amount) != null;
         }
         public override string GetDepositAddress(CurrencyType type) {
             if(type == CurrencyType.BaseCurrency) {
@@ -81,19 +81,19 @@ namespace CryptoMarketClient.Bittrex {
                     return null;
                 if(!string.IsNullOrEmpty(BaseBalanceInfo.DepositAddress))
                     return BaseBalanceInfo.DepositAddress;
-                return BittrexModel.Default.CheckCreateDeposit(BaseCurrency);
+                return BittrexExchange.Default.CheckCreateDeposit(BaseCurrency);
             }
             if(MarketBalanceInfo == null)
                 return null;
             if(!string.IsNullOrEmpty(MarketBalanceInfo.DepositAddress))
                 return BaseBalanceInfo.DepositAddress;
-            return BittrexModel.Default.CheckCreateDeposit(MarketCurrency);
+            return BittrexExchange.Default.CheckCreateDeposit(MarketCurrency);
         }
         string GetCurrency(CurrencyType currencyType) {
             return currencyType == CurrencyType.BaseCurrency ? BaseCurrency : MarketCurrency;
         }
         public override bool Withdraw(string currency, string address, decimal amount) {
-            return BittrexModel.Default.Withdraw(currency, amount, address, "");
+            return BittrexExchange.Default.Withdraw(currency, amount, address, "");
         }
         public override string HostName { get { return "Bittrex"; } }
         public override string WebPageAddress { get { return "https://bittrex.com/Market/Index?MarketName=" + Name; } }

@@ -29,8 +29,8 @@ namespace CryptoMarketClient {
             Application.Run(new MainForm());
         }
         static void CheckShowApiKeysForm() {
-            foreach(ModelBase model in ModelBase.RegisteredModels) {
-                if(!model.IsApiKeyExists)
+            foreach(Exchange exchange in Exchange.Registered) {
+                if(!exchange.IsApiKeyExists)
                     Application.Run(new EnterApiKeyForm());
             }
         }

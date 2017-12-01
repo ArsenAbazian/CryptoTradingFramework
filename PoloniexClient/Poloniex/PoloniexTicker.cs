@@ -15,7 +15,7 @@ using WampSharp.V2;
 
 namespace CryptoMarketClient {
     public class PoloniexTicker : TickerBase {
-        public PoloniexTicker(PoloniexModel model) : base(model) { }
+        public PoloniexTicker(PoloniexExchange exchange) : base(exchange) { }
 
         public int Id { get; set; }
 
@@ -37,14 +37,14 @@ namespace CryptoMarketClient {
         public override BalanceBase BaseBalanceInfo {
             get {
                 if(firstInfo == null)
-                    firstInfo = PoloniexModel.Default.Balances.FirstOrDefault((b) => b.Currency == BaseCurrency);
+                    firstInfo = PoloniexExchange.Default.Balances.FirstOrDefault((b) => b.Currency == BaseCurrency);
                 return firstInfo;
             }
         }
         public override BalanceBase MarketBalanceInfo {
             get {
                 if(secondInfo == null)
-                    secondInfo = PoloniexModel.Default.Balances.FirstOrDefault((b) => b.Currency == MarketCurrency);
+                    secondInfo = PoloniexExchange.Default.Balances.FirstOrDefault((b) => b.Currency == MarketCurrency);
                 return secondInfo;
             }
         }
@@ -53,7 +53,7 @@ namespace CryptoMarketClient {
         protected PoloniexCurrencyInfo MarketCurrencyInfo {
             get {
                 if(marketCurrencyInfo == null)
-                    marketCurrencyInfo = PoloniexModel.Default.Currencies.FirstOrDefault(c => c.Currency == MarketCurrency);
+                    marketCurrencyInfo = PoloniexExchange.Default.Currencies.FirstOrDefault(c => c.Currency == MarketCurrency);
                 return marketCurrencyInfo;
             }
         }
@@ -70,32 +70,32 @@ namespace CryptoMarketClient {
         public override string DownloadString(string address) {
             try {
                 ApiRate.WaitToProceed();
-                return PoloniexModel.Default.GetWebClient().DownloadString(address);
+                return PoloniexExchange.Default.GetWebClient().DownloadString(address);
             }
             catch { }
             return string.Empty;
         }
         public override bool Buy(decimal rate, decimal amount) {
-            return PoloniexModel.Default.BuyLimit(this, rate, amount) != -1;
+            return PoloniexExchange.Default.BuyLimit(this, rate, amount) != -1;
         }
         public override bool Sell(decimal rate, decimal amount) {
-            return PoloniexModel.Default.SellLimit(this, rate, amount) != -1;
+            return PoloniexExchange.Default.SellLimit(this, rate, amount) != -1;
         }
         public override bool UpdateBalance(CurrencyType type) {
-            return PoloniexModel.Default.GetBalance(type == CurrencyType.BaseCurrency? BaseCurrency: MarketCurrency);
+            return PoloniexExchange.Default.GetBalance(type == CurrencyType.BaseCurrency? BaseCurrency: MarketCurrency);
         }
         public override string GetDepositAddress(CurrencyType type) {
             if(type == CurrencyType.BaseCurrency) {
                 if(!string.IsNullOrEmpty(BaseBalanceInfo.DepositAddress))
                     return BaseBalanceInfo.DepositAddress;
-                return PoloniexModel.Default.CreateDeposit(BaseCurrency);
+                return PoloniexExchange.Default.CreateDeposit(BaseCurrency);
             }
             if(!string.IsNullOrEmpty(MarketBalanceInfo.DepositAddress))
                 return MarketBalanceInfo.DepositAddress;
-            return PoloniexModel.Default.CreateDeposit(MarketCurrency);
+            return PoloniexExchange.Default.CreateDeposit(MarketCurrency);
         }
         public override bool Withdraw(string currency, string address, decimal amount) {
-            return PoloniexModel.Default.Withdraw(currency, amount, address, "");
+            return PoloniexExchange.Default.Withdraw(currency, amount, address, "");
         }
     }
 }

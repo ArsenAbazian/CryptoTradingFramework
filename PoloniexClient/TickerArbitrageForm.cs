@@ -54,32 +54,32 @@ namespace CryptoMarketClient {
         void UpdateCurrencies() {
             UpdateBalanceNotification = true;
             while(AllowWorkThread) {
-                foreach(ModelBase model in ModelBase.ActiveModels) {
+                foreach(Exchange exchange in Exchange.Connected) {
                     for(int i = 0; i < 3; i++) {
-                        if(model.UpdateCurrencies())
+                        if(exchange.UpdateCurrencies())
                             break;
                     }
                 }
 
-                foreach(ModelBase model in ModelBase.ActiveModels) {
+                foreach(Exchange exchange in Exchange.Connected) {
                     for(int i = 0; i < 3; i++) {
-                        if(model.UpdateBalances())
+                        if(exchange.UpdateBalances())
                             break;
                     }
                 }
 
                 if(UpdateBalanceNotification) {
                     UpdateBalanceNotification = false;
-                    foreach(ModelBase model in ModelBase.ActiveModels) {
-                        foreach(BalanceBase info in model.Balances) {
-                            TelegramBot.Default.SendNotification(model.Name + " balance " + info.Currency + " = <b>" + info.Available.ToString("0.########") + "</b>");
+                    foreach(Exchange exchange in Exchange.Connected) {
+                        foreach(BalanceBase info in exchange.Balances) {
+                            TelegramBot.Default.SendNotification(exchange.Name + " balance " + info.Currency + " = <b>" + info.Available.ToString("0.########") + "</b>");
                         }
                     }
 
-                    foreach(ModelBase model in ModelBase.ActiveModels) {
-                        foreach(BalanceBase info in model.Balances) {
+                    foreach(Exchange exchange in Exchange.Connected) {
+                        foreach(BalanceBase info in exchange.Balances) {
                             if(info.DepositChanged > 0.05m) {
-                                TelegramBot.Default.SendNotification(model.Name + " deposit changed: " + info.Currency + " = " + info.Available);
+                                TelegramBot.Default.SendNotification(exchange.Name + " deposit changed: " + info.Currency + " = " + info.Available);
                             }
                         }
                     }

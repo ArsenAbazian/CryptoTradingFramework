@@ -18,6 +18,7 @@ namespace CryptoMarketClient {
     public partial class TickerChartViewer : XtraUserControl {
         public TickerChartViewer() {
             InitializeComponent();
+            InitializeCheckItems();
             SetCandleStickCheckItemValues();
             this.barManager1.ForceInitialize();
             this.rangeControl1.Client = RangeChart;
@@ -225,38 +226,19 @@ namespace CryptoMarketClient {
         void UpdateChart() {
             if(Ticker == null)
                 return;
-            this.chartControl1.Series.Clear();
+            this.chartControl1.Series["Highest bid"].DataSource = Ticker.History;
+            this.chartControl1.Series["Lowest ask"].DataSource = Ticker.History;
+            this.chartControl1.Series["Highest bid"].ArgumentDataMember = "Time";
+            this.chartControl1.Series["Highest bid"].ValueDataMembers.AddRange("Bid");
+            this.chartControl1.Series["Lowest ask"].ArgumentDataMember = "Time";
+            this.chartControl1.Series["Lowest ask"].ValueDataMembers.AddRange("Ask");
 
-            this.chartControl1.Series.Add(AskSeries = CreateLineSeries(Ticker.OrderBook.VolumeHistory, "LowestAsk", Color.Red));
-            this.chartControl1.Series.Add(BidSeries = CreateLineSeries(Ticker.OrderBook.VolumeHistory, "HighestBid", Color.Green));
-            
-            ((XYDiagram)this.chartControl1.Diagram).SecondaryAxesY.Add(new SecondaryAxisY("Volumes"));
-
-            this.chartControl1.Series.Add(CreateBarSeries(Ticker.OrderBook.VolumeHistory, "Bid Volumes", "BidHipe", Color.Green));
-            this.chartControl1.Series.Add(CreateBarSeries(Ticker.OrderBook.VolumeHistory, "Ask Volumes", "AskHipe", Color.Red));
-
-            //this.chartControl1.Series.Add(CreateBarSeries(Ticker.OrderBook.VolumeHistory, "Bid Energy", "BidEnergy", Color.Green));
-            //this.chartControl1.Series.Add(CreateBarSeries(Ticker.OrderBook.VolumeHistory, "Ask Energy", "AskEnergy", Color.Red));
-
-            RangeChart.Series.Add(CurrentSeries = CreateAreaSeries(Ticker.History, "Current", CurrentColor));
-            //((XYDiagram2DSeriesViewBase)RangeChart.Series[0].View).RangeControlOptions.Visible = true;
-
-            ((XYDiagram)this.chartControl1.Diagram).DefaultPane.Weight = 3;
-            ((XYDiagram)this.chartControl1.Diagram).Panes.Add(new XYDiagramPane("Volumes") { Weight = 1 });
-            //((XYDiagram)this.chartControl1.Diagram).Panes.Add(new XYDiagramPane("Energies") { Weight = 1 });
-
-            ((XYDiagram)this.chartControl1.Diagram).EnableAxisXScrolling = true;
-            ((XYDiagram)this.chartControl1.Diagram).EnableAxisXZooming = true;
-            ((XYDiagram)this.chartControl1.Diagram).AxisX.DateTimeScaleOptions.MeasureUnit = DateTimeMeasureUnit.Second;
-            ((XYDiagram)this.chartControl1.Diagram).AxisY.WholeRange.AlwaysShowZeroLevel = false;
-            ((XYDiagram)this.chartControl1.Diagram).AxisY.Label.TextPattern = "{V:f8}";
-
-            ((XYDiagramSeriesViewBase)this.chartControl1.Series[2].View).Pane = ((XYDiagram)this.chartControl1.Diagram).Panes[0];
-            ((XYDiagramSeriesViewBase)this.chartControl1.Series[3].View).Pane = ((XYDiagram)this.chartControl1.Diagram).Panes[0];
-
-            //((XYDiagramSeriesViewBase)this.chartControl1.Series[4].View).Pane = ((XYDiagram)this.chartControl1.Diagram).Panes[1];
-            //((XYDiagramSeriesViewBase)this.chartControl1.Series[5].View).Pane = ((XYDiagram)this.chartControl1.Diagram).Panes[1];
-            
+            this.chartControl1.Series["Sell volume"].DataSource = Ticker.TradeStatistic;
+            this.chartControl1.Series["Sell volume"].ArgumentDataMember = "Time";
+            this.chartControl1.Series["Sell volume"].ValueDataMembers.AddRange("SellVolume");
+            this.chartControl1.Series["Buy volume"].DataSource = Ticker.TradeStatistic;
+            this.chartControl1.Series["Buy volume"].ArgumentDataMember = "Time";
+            this.chartControl1.Series["Buy volume"].ValueDataMembers.AddRange("BuyVolume");
         }
         Series CreateLastSeries() {
             if(this.bcStock.Checked)
@@ -299,8 +281,24 @@ namespace CryptoMarketClient {
         private void OnChartTypeChanged(object sender, ItemClickEventArgs e) {
             if(!((BarCheckItem)e.Item).Checked)
                 return;
-            this.chartControl1.Series.RemoveAt(2);
-            this.chartControl1.Series.Add(CreateLastSeries());
+            ConfigurateChart((ViewType)e.Item.Tag);
+            //this.chartControl1.Series.RemoveAt(2);
+            //this.chartControl1.Series.Add(CreateLastSeries());
+        }
+        void ConfigurateChart(ViewType type) {
+            this.chartControl1.Series["Current"].ChangeView(type);
+            this.chartControl1.Series["Current"].DataSource = null;
+            if(type == ViewType.CandleStick || type == ViewType.Stock) {
+                this.chartControl1.Series["Current"].BindToData(Ticker.CandleStickData, "Time", "Low", "High", "Open", "Close");
+            }
+            else {
+                this.chartControl1.Series["Current"].BindToData(Ticker.History, "Time", "Current");
+            }
+        }
+        void InitializeCheckItems() {
+            this.bcStock.Tag = ViewType.Stock;
+            this.bcLine.Tag = ViewType.Line;
+            this.bcCandle.Tag = ViewType.CandleStick;
         }
     }
 }

@@ -10,15 +10,15 @@ using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace CryptoMarketClient.Bittrex {
-    public class BittrexModel : ModelBase {
-        static BittrexModel defaultModel;
-        public static BittrexModel Default {
+    public class BittrexExchange : Exchange {
+        static BittrexExchange defaultExchange;
+        public static BittrexExchange Default {
             get {
-                if(defaultModel == null) {
-                    defaultModel = new BittrexModel();
-                    defaultModel.Load();
+                if(defaultExchange == null) {
+                    defaultExchange = new BittrexExchange();
+                    defaultExchange.Load();
                 }
-                return defaultModel;
+                return defaultExchange;
             }
         }
 
