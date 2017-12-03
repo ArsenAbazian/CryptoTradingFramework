@@ -220,11 +220,11 @@ namespace CryptoMarketClient {
 
         }
 
-        ActiveTrailngCollectionForm activeTrailing;
-        protected ActiveTrailngCollectionForm ActiveTrailng {
+        TrailngCollectionForm activeTrailing;
+        protected TrailngCollectionForm ActiveTrailng {
             get {
                 if(activeTrailing == null || activeTrailing.IsDisposed) {
-                    activeTrailing = new ActiveTrailngCollectionForm();
+                    activeTrailing = new TrailngCollectionForm();
                     activeTrailing.MdiParent = this;
                 }
                 return activeTrailing;

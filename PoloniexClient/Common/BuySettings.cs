@@ -8,10 +8,14 @@ using System.Threading.Tasks;
 
 namespace CryptoMarketClient.Common {
     public class TrailingSettings : INotifyPropertyChanged {
+        public TrailingSettings() {
+            Enabled = true;
+        }
+
         public TickerBase Ticker { get; set; }
+        public bool Enabled { get; set; }
 
         decimal buyPrice;
-        [Required(AllowEmptyStrings =false, ErrorMessage = "This field must be set!")]
         public decimal BuyPrice {
             get { return buyPrice; }
             set {
@@ -40,8 +44,9 @@ namespace CryptoMarketClient.Common {
             RaisePropertyChanged("BuyPrice");
         }
 
+        public DateTime Date { get; set; }
+
         decimal amount;
-        [Required(AllowEmptyStrings = false, ErrorMessage = "This field must be set!")]
         public decimal Amount {
             get { return amount; }
             set {
@@ -58,7 +63,6 @@ namespace CryptoMarketClient.Common {
             RaisePropertyChanged("Amount");
         }
 
-        [Required(AllowEmptyStrings = false, ErrorMessage = "This field must be set!")]
         public decimal StopLossSellPrice { get; set; }
 
         decimal totalSpendInBaseCurrency;
@@ -96,8 +100,12 @@ namespace CryptoMarketClient.Common {
         }
         public string Name {
             get {
+                if(Ticker == null)
+                    return string.Empty;
                 return Ticker.HostName + " - " + Ticker.Name;
             }
         }
+
+        public bool EnableIncrementalStopLoss { get; set; }
     }
 }

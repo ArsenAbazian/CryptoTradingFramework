@@ -78,6 +78,7 @@
             this.bbRemoveQuickPanel = new DevExpress.XtraBars.BarButtonItem();
             this.barButtonItem2 = new DevExpress.XtraBars.BarButtonItem();
             this.bbRemoveByRightClick = new DevExpress.XtraBars.BarButtonItem();
+            this.bbMonitorOnlySelected = new DevExpress.XtraBars.BarCheckItem();
             this.ribbonPage1 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPageGroup1 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.barManager1 = new DevExpress.XtraBars.BarManager(this.components);
@@ -88,7 +89,7 @@
             this.barDockControlLeft = new DevExpress.XtraBars.BarDockControl();
             this.barDockControlRight = new DevExpress.XtraBars.BarDockControl();
             this.popupMenu1 = new DevExpress.XtraBars.PopupMenu(this.components);
-            this.bbMonitorOnlySelected = new DevExpress.XtraBars.BarCheckItem();
+            this.repositoryItemTextEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemTextEdit();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit1)).BeginInit();
@@ -96,6 +97,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.bbOpenedOrders)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.barManager1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.popupMenu1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemTextEdit1)).BeginInit();
             this.SuspendLayout();
             // 
             // gcPercentChange
@@ -149,6 +151,7 @@
             // gcSecond
             // 
             this.gcSecond.Caption = "Market Currency";
+            this.gcSecond.ColumnEdit = this.repositoryItemTextEdit1;
             this.gcSecond.FieldName = "MarketCurrency";
             this.gcSecond.Name = "gcSecond";
             this.gcSecond.OptionsColumn.AllowEdit = false;
@@ -160,14 +163,15 @@
             // 
             this.gridControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gridControl1.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(6);
-            this.gridControl1.Location = new System.Drawing.Point(0, 316);
+            this.gridControl1.Location = new System.Drawing.Point(0, 205);
             this.gridControl1.MainView = this.gridView1;
             this.gridControl1.Margin = new System.Windows.Forms.Padding(6);
             this.gridControl1.Name = "gridControl1";
             this.gridControl1.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repositoryItemSparklineEdit1,
-            this.repositoryItemCheckEdit1});
-            this.gridControl1.Size = new System.Drawing.Size(1916, 592);
+            this.repositoryItemCheckEdit1,
+            this.repositoryItemTextEdit1});
+            this.gridControl1.Size = new System.Drawing.Size(1916, 703);
             this.gridControl1.TabIndex = 0;
             this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridView1});
@@ -275,6 +279,7 @@
             this.gridView1.OptionsBehavior.AllowPixelScrolling = DevExpress.Utils.DefaultBoolean.True;
             this.gridView1.OptionsDetail.EnableMasterViewMode = false;
             this.gridView1.OptionsFind.AlwaysVisible = true;
+            this.gridView1.OptionsView.EnableAppearanceEvenRow = true;
             this.gridView1.SortInfo.AddRange(new DevExpress.XtraGrid.Columns.GridColumnSortInfo[] {
             new DevExpress.XtraGrid.Columns.GridColumnSortInfo(this.gcFirst, DevExpress.Data.ColumnSortOrder.Ascending)});
             this.gridView1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.gridView1_MouseDown);
@@ -419,7 +424,8 @@
             this.bbOpenedOrders.Name = "bbOpenedOrders";
             this.bbOpenedOrders.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
             this.ribbonPage1});
-            this.bbOpenedOrders.Size = new System.Drawing.Size(1916, 278);
+            this.bbOpenedOrders.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonControlStyle.OfficeUniversal;
+            this.bbOpenedOrders.Size = new System.Drawing.Size(1916, 167);
             // 
             // barCheckItem1
             // 
@@ -485,6 +491,15 @@
             this.bbRemoveByRightClick.Name = "bbRemoveByRightClick";
             this.bbRemoveByRightClick.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bbRemoveByRightClick_ItemClick);
             // 
+            // bbMonitorOnlySelected
+            // 
+            this.bbMonitorOnlySelected.Caption = "Monitor Only Selected";
+            this.bbMonitorOnlySelected.Id = 13;
+            this.bbMonitorOnlySelected.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bbMonitorOnlySelected.ImageOptions.Image")));
+            this.bbMonitorOnlySelected.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("bbMonitorOnlySelected.ImageOptions.LargeImage")));
+            this.bbMonitorOnlySelected.Name = "bbMonitorOnlySelected";
+            this.bbMonitorOnlySelected.CheckedChanged += new DevExpress.XtraBars.ItemClickEventHandler(this.bbMonitorOnlySelected_CheckedChanged);
+            // 
             // ribbonPage1
             // 
             this.ribbonPage1.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] {
@@ -513,6 +528,7 @@
             this.barManager1.Form = this;
             this.barManager1.MaxItemId = 0;
             this.barManager1.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barManager1_ItemClick);
+            this.barManager1.ItemDoubleClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barManager1_ItemDoubleClick);
             this.barManager1.ItemPress += new DevExpress.XtraBars.ItemClickEventHandler(this.barManager1_ItemPress);
             this.barManager1.ShowToolbarsContextMenu += new DevExpress.XtraBars.ShowToolbarsContextMenuEventHandler(this.barManager1_ShowToolbarsContextMenu);
             // 
@@ -538,7 +554,7 @@
             this.standaloneBarDockControl1.AutoSize = true;
             this.standaloneBarDockControl1.CausesValidation = false;
             this.standaloneBarDockControl1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.standaloneBarDockControl1.Location = new System.Drawing.Point(0, 278);
+            this.standaloneBarDockControl1.Location = new System.Drawing.Point(0, 167);
             this.standaloneBarDockControl1.Manager = this.barManager1;
             this.standaloneBarDockControl1.Margin = new System.Windows.Forms.Padding(4);
             this.standaloneBarDockControl1.Name = "standaloneBarDockControl1";
@@ -588,14 +604,11 @@
             this.popupMenu1.Name = "popupMenu1";
             this.popupMenu1.Ribbon = this.bbOpenedOrders;
             // 
-            // bbMonitorOnlySelected
+            // repositoryItemTextEdit1
             // 
-            this.bbMonitorOnlySelected.Caption = "Monitor Only Selected";
-            this.bbMonitorOnlySelected.Id = 13;
-            this.bbMonitorOnlySelected.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bbMonitorOnlySelected.ImageOptions.Image")));
-            this.bbMonitorOnlySelected.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("bbMonitorOnlySelected.ImageOptions.LargeImage")));
-            this.bbMonitorOnlySelected.Name = "bbMonitorOnlySelected";
-            this.bbMonitorOnlySelected.CheckedChanged += new DevExpress.XtraBars.ItemClickEventHandler(this.bbMonitorOnlySelected_CheckedChanged);
+            this.repositoryItemTextEdit1.AutoHeight = false;
+            this.repositoryItemTextEdit1.Name = "repositoryItemTextEdit1";
+            this.repositoryItemTextEdit1.Padding = new System.Windows.Forms.Padding(0, 5, 0, 5);
             // 
             // TickersCollectionForm
             // 
@@ -619,6 +632,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.bbOpenedOrders)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.barManager1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.popupMenu1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemTextEdit1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -669,5 +683,6 @@
         private DevExpress.XtraGrid.Columns.GridColumn colUpdateTimeMs;
         private DevExpress.XtraGrid.Columns.GridColumn colIsActual;
         private DevExpress.XtraBars.BarCheckItem bbMonitorOnlySelected;
+        private DevExpress.XtraEditors.Repository.RepositoryItemTextEdit repositoryItemTextEdit1;
     }
 }

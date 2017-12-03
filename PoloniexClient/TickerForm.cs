@@ -15,10 +15,6 @@ using System.Windows.Forms;
 
 namespace CryptoMarketClient {
     public partial class TickerForm : TimerUpdateForm {
-        static Color bidColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-        static Color askColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-        static Color currentColor = Color.BlueViolet;
-
         public TickerForm() {
             InitializeComponent();
         }
@@ -49,7 +45,15 @@ namespace CryptoMarketClient {
                 OnTickerChanged(prev);
             }
         }
-        
+
+        void UpdateBuySellSettings() {
+            if(Ticker == null)
+                return;
+            TrailingSettings s = new TrailingSettings();
+            s.Ticker = Ticker;
+            s.UsdTicker = Ticker.UsdTicker;
+            this.buySettingsControl.Settings = s;
+        }
         void OnTickerChanged(TickerBase prev) {
             if(prev != null) {
                 ClearText();
@@ -58,6 +62,7 @@ namespace CryptoMarketClient {
                 UnsubscribeEvents(prev);
             }
             this.tickerInfoControl.Ticker = Ticker;
+            this.activeTrailingCollectionControl1.Ticker = Ticker;
             if(Ticker == null)
                 return;
             UpdateTickerInfoControlHeight();
@@ -65,12 +70,13 @@ namespace CryptoMarketClient {
             UpdateGrid();
             UpdateChart();
             UpdateDockPanels();
+            UpdateBuySellSettings();
             SubscribeEvents();
         }
         void UpdateDockPanels() {
             if(Ticker == null)
                 return;
-            foreach(DockPanel panel in this.dockManager1.Panels)
+            foreach(DockPanel panel in this.dockManager1.RootPanels)
                 panel.Text = Ticker.Name + " - " + panel.Text;
         }
         void UpdateTickerInfoControlHeight() {
@@ -131,81 +137,53 @@ namespace CryptoMarketClient {
             BeginInvoke(new Action(RefreshAskGrid));
             BeginInvoke(new Action(RefreshBidGrid));
         }
-        void OnModifyBid(OrderBookEventArgs obj) {
-            RefreshBidGrid();
-        }
-        void OnModifyAsk(OrderBookEventArgs obj) {
-            RefreshAskGrid();
-        }
-        void OnAddBid(OrderBookEventArgs obj) {
-            RefreshBidGrid();
-        }
-        void OnAddAsk(OrderBookEventArgs obj) {
-            RefreshAskGrid();
-        }
-        void OnRemoveBid(OrderBookEventArgs obj) {
-            RefreshBidGrid();
-        }
-        void OnRemoveAsk(OrderBookEventArgs obj) {
-            RefreshAskGrid();
-        }
         void RefreshBidGrid() {
             this.orderBookControl1.Bids = Ticker.OrderBook.Bids;
         }
         void RefreshAskGrid() {
             this.orderBookControl1.Asks = Ticker.OrderBook.Asks;
+            this.orderBookControl1.RefreshAsks();
         }
 
         private void biSell_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
-            decimal price = 0;
-            decimal amount = 0;
-            try {
-                price = Convert.ToDecimal(this.bePrice.EditValue);
-            }
-            catch(Exception ee) {
-                XtraMessageBox.Show("Can't sell: get price = " + ee.ToString());
-                return;
-            }
-            if(Ticker.HighestBid / price > 10m) {
-                if(XtraMessageBox.Show("It seems that you made mistake on price?", "Sell", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                    return;
-            }
-            try {
-                amount = Convert.ToDecimal(this.beAmount.EditValue);
-            }
-            catch(Exception ee) {
-                XtraMessageBox.Show("Can't sell: get amount = " + ee.ToString());
-                return;
-            }
-            if(!Ticker.Sell(price, amount)) {
-                XtraMessageBox.Show("Error: can't place sell " + amount + " " + Ticker.MarketCurrency + " for " + price);
-                return;
-            }
-            XtraMessageBox.Show("Place sell " + amount + " " + Ticker.MarketCurrency + " for " + price);
+            //decimal price = 0;
+            //decimal amount = 0;
+            //try {
+            //    price = Convert.ToDecimal(this.bePrice.EditValue);
+            //}
+            //catch(Exception ee) {
+            //    XtraMessageBox.Show("Can't sell: get price = " + ee.ToString());
+            //    return;
+            //}
+            //if(Ticker.HighestBid / price > 10m) {
+            //    if(XtraMessageBox.Show("It seems that you made mistake on price?", "Sell", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            //        return;
+            //}
+            //try {
+            //    amount = Convert.ToDecimal(this.beAmount.EditValue);
+            //}
+            //catch(Exception ee) {
+            //    XtraMessageBox.Show("Can't sell: get amount = " + ee.ToString());
+            //    return;
+            //}
+            //if(!Ticker.Sell(price, amount)) {
+            //    XtraMessageBox.Show("Error: can't place sell " + amount + " " + Ticker.MarketCurrency + " for " + price);
+            //    return;
+            //}
+            //XtraMessageBox.Show("Place sell " + amount + " " + Ticker.MarketCurrency + " for " + price);
         }
 
         private void biSellMarket_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
 
         }
 
-        private void bbTrailing_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
-            TrailingSettingsForm form = new TrailingSettingsForm();
-            form.Owner = this;
-            TrailingSettings settings = new TrailingSettings();
-            settings.Ticker = Ticker;
-            settings.UsdTicker = Ticker.UsdTicker;
-            settings.BuyPrice = Ticker.OrderBook.Asks[0].Value;
-            settings.Amount = Ticker.OrderBook.Asks[0].Amount;
-            form.Settings = settings;
-
-            TrailingManager.Default.Items.Add(settings);
-            this.orderBookControl1.SelectedAskRowChanged += form.SelectedAskChanged;
-            form.Disposed += OnTrailingSettingsFormDisposed;
-            form.Show();
+        private void orderBookControl1_SelectedAskRowChanged(object sender, SelectedOrderBookEntryChangedEventArgs e) {
+            this.buySettingsControl.Settings.BuyPrice = e.Entry.Value;
+            this.buySettingsControl.Settings.Amount = e.Entry.Amount;
         }
-        
-        void OnTrailingSettingsFormDisposed(object sender, EventArgs e) {
-            this.orderBookControl1.SelectedAskRowChanged -= ((TrailingSettingsForm)sender).SelectedAskChanged;
+
+        private void orderBookControl1_SelectedBidRowChanged(object sender, SelectedOrderBookEntryChangedEventArgs e) {
+
         }
     }
 }

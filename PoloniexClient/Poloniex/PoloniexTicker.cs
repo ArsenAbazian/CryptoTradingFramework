@@ -76,7 +76,7 @@ namespace CryptoMarketClient {
             return string.Empty;
         }
         public override bool Buy(decimal rate, decimal amount) {
-            return PoloniexExchange.Default.BuyLimit(this, rate, amount) != -1;
+            return PoloniexExchange.Default.BuyLimit(this, rate, amount);
         }
         public override bool Sell(decimal rate, decimal amount) {
             return PoloniexExchange.Default.SellLimit(this, rate, amount) != -1;

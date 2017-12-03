@@ -43,6 +43,7 @@
             this.gcRate = new DevExpress.XtraGrid.Columns.GridColumn();
             this.repositoryItemTextEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemTextEdit();
             this.gcAmount = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.panel1 = new System.Windows.Forms.Panel();
             this.bidPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.bidGridControl)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bidGridView)).BeginInit();
@@ -89,10 +90,10 @@
             // 
             this.bidPanel.Controls.Add(this.bidGridControl);
             this.bidPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.bidPanel.Location = new System.Drawing.Point(0, 481);
+            this.bidPanel.Location = new System.Drawing.Point(0, 491);
             this.bidPanel.Margin = new System.Windows.Forms.Padding(6);
             this.bidPanel.Name = "bidPanel";
-            this.bidPanel.Size = new System.Drawing.Size(458, 448);
+            this.bidPanel.Size = new System.Drawing.Size(458, 438);
             this.bidPanel.TabIndex = 2;
             this.bidPanel.Text = "sidePanel5";
             // 
@@ -106,15 +107,15 @@
             this.bidGridControl.Name = "bidGridControl";
             this.bidGridControl.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repositoryItemTextEdit2});
-            this.bidGridControl.Size = new System.Drawing.Size(458, 448);
+            this.bidGridControl.Size = new System.Drawing.Size(458, 438);
             this.bidGridControl.TabIndex = 1;
             this.bidGridControl.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.bidGridView});
             // 
             // bidGridView
             // 
-            this.bidGridView.Appearance.Row.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.bidGridView.Appearance.Row.Options.UseForeColor = true;
+            this.bidGridView.Appearance.Row.Font = new System.Drawing.Font("Segoe UI", 7.875F);
+            this.bidGridView.Appearance.Row.Options.UseFont = true;
             this.bidGridView.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
             this.bidGridView.Columns.AddRange(new DevExpress.XtraGrid.Columns.GridColumn[] {
             this.gcRate2,
@@ -149,6 +150,7 @@
             this.bidGridView.OptionsView.ShowColumnHeaders = false;
             this.bidGridView.OptionsView.ShowGroupPanel = false;
             this.bidGridView.OptionsView.ShowIndicator = false;
+            this.bidGridView.MouseDown += new System.Windows.Forms.MouseEventHandler(this.bidGridView_MouseDown);
             // 
             // gcRate2
             // 
@@ -205,8 +207,8 @@
             // 
             // askGridView
             // 
-            this.askGridView.Appearance.Row.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.askGridView.Appearance.Row.Options.UseForeColor = true;
+            this.askGridView.Appearance.Row.Font = new System.Drawing.Font("Segoe UI", 7.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.askGridView.Appearance.Row.Options.UseFont = true;
             this.askGridView.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
             this.askGridView.Columns.AddRange(new DevExpress.XtraGrid.Columns.GridColumn[] {
             this.gcRate,
@@ -241,6 +243,7 @@
             this.askGridView.OptionsView.ShowIndicator = false;
             this.askGridView.SortInfo.AddRange(new DevExpress.XtraGrid.Columns.GridColumnSortInfo[] {
             new DevExpress.XtraGrid.Columns.GridColumnSortInfo(this.gcRate, DevExpress.Data.ColumnSortOrder.Descending)});
+            this.askGridView.MouseDown += new System.Windows.Forms.MouseEventHandler(this.askGridView_MouseDown);
             // 
             // gcRate
             // 
@@ -270,11 +273,21 @@
             this.gcAmount.Visible = true;
             this.gcAmount.VisibleIndex = 1;
             // 
+            // panel1
+            // 
+            this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel1.Location = new System.Drawing.Point(0, 481);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(458, 10);
+            this.panel1.TabIndex = 1;
+            // 
             // OrderBookControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.bidPanel);
+            this.Controls.Add(this.panel1);
             this.Controls.Add(this.askPanel);
             this.Name = "OrderBookControl";
             this.Size = new System.Drawing.Size(458, 929);
@@ -309,5 +322,6 @@
         private DevExpress.XtraGrid.Columns.GridColumn gcVolumePercent;
         private DevExpress.XtraEditors.Repository.RepositoryItemTextEdit repositoryItemTextEdit1;
         private DevExpress.XtraEditors.Repository.RepositoryItemTextEdit repositoryItemTextEdit2;
+        private System.Windows.Forms.Panel panel1;
     }
 }

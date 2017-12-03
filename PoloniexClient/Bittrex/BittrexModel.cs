@@ -360,8 +360,11 @@ namespace CryptoMarketClient.Bittrex {
             if(!res.Value<bool>("success"))
                 return false;
             JArray trades = res.Value<JArray>("result");
+            int index = 0;
             lock(info) {
-                UpdateList.Clear();
+                info.TradeHistory.Clear();
+                if(trades == null)
+                    return true;
                 int lastId = info.TradeHistory.Count > 0 ? info.TradeHistory.First().Id : -1;
                 foreach(JObject obj in trades) {
                     int id = obj.Value<int>("Id");
@@ -378,7 +381,8 @@ namespace CryptoMarketClient.Bittrex {
                     item.Total = obj.Value<decimal>("Total");
                     item.Type = obj.Value<string>("OrderType") == "BUY" ? TradeType.Buy : TradeType.Sell;
                     item.Fill = obj.Value<string>("FillType") == "FILL" ? TradeFillType.Fill : TradeFillType.PartialFill;
-                    UpdateList.Add(item);
+                    info.TradeHistory.Insert(index, item);
+                    index++;
                 }
             }
             info.RaiseTradeHistoryAdd();

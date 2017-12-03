@@ -497,7 +497,7 @@ namespace CryptoMarketClient {
             return true;
         }
 
-        public long BuyLimit(PoloniexTicker ticker, decimal rate, decimal amount) {
+        public bool BuyLimit(PoloniexTicker ticker, decimal rate, decimal amount) {
             string address = string.Format("https://poloniex.com/tradingApi");
 
             NameValueCollection coll = new NameValueCollection();
@@ -513,11 +513,11 @@ namespace CryptoMarketClient {
             client.Headers.Add("Key", ApiKey);
             try {
                 byte[] data = client.UploadValues(address, coll);
-                return OnBuyLimit(data);
+                return OnBuyLimit(ticker, data);
             }
             catch(Exception e) {
                 Debug.WriteLine(e.ToString());
-                return -1;
+                return false;
             }
         }
 
@@ -546,12 +546,28 @@ namespace CryptoMarketClient {
             
         }
 
-        public long OnBuyLimit(byte[] data) {
+        public bool OnBuyLimit(TickerBase ticker, byte[] data) {
             string text = System.Text.Encoding.ASCII.GetString(data);
             if(string.IsNullOrEmpty(text))
-                return -1;
+                return false;
             JObject res = (JObject)JsonConvert.DeserializeObject(text);
-            return res.Value<long>("orderNumber");
+            TradingResult tr = new TradingResult();
+            tr.OrderNumber = res.Value<long>("orderNumber");
+            tr.Type = OrderType.Buy;
+            JArray array = res.Value<JArray>("resultingTrades");
+            foreach(JObject trade in array) {
+                TradeEntry e = new TradeEntry();
+                e.Amount = trade.Value<decimal>("amount");
+                e.Date = trade.Value<DateTime>("date");
+                e.Rate = trade.Value<decimal>("rate");
+                e.Total = trade.Value<decimal>("total");
+                e.Id = trade.Value<long>("tradeID");
+                e.Type = trade.Value<string>("type").Length == 3 ? OrderType.Buy : OrderType.Sell;
+                tr.Trades.Add(e);
+            }
+            tr.Calculate();
+            ticker.Trades.Add(tr);
+            return true;
         }
 
         public string OnCreateDeposit(string currency, byte[] data) {

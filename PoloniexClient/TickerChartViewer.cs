@@ -21,13 +21,10 @@ namespace CryptoMarketClient {
             InitializeCheckItems();
             SetCandleStickCheckItemValues();
             this.barManager1.ForceInitialize();
-            this.rangeControl1.Client = RangeChart;
-            RangeChart.Visible = false;
-            this.Controls.Add(RangeChart);
+            this.rangeControl1.Client = this.chartControl1;
             Timer.Start();
         }
 
-        protected ChartControl RangeChart { get; } = new ChartControl();
         Timer timer;
         protected Timer Timer {
             get {
@@ -51,15 +48,6 @@ namespace CryptoMarketClient {
             if(ParentFormCore == null || ParentFormCore.MdiParent == null || ParentFormCore.MdiParent.ActiveMdiChild != ParentFormCore)
                 return;
             this.chartControl1.RefreshData();
-        }
-
-        protected override void OnLookAndFeelChanged() {
-            if(BidSeries != null)
-                ((XYDiagram2DSeriesViewBase)BidSeries.View).Color = Color.Green;
-            if(AskSeries != null)
-                ((XYDiagram2DSeriesViewBase)AskSeries.View).Color = Color.Red;
-            if(CurrentSeries != null)
-                ((XYDiagram2DSeriesViewBase)CurrentSeries.View).Color = CurrentColor;
         }
 
         TickerBase ticker;

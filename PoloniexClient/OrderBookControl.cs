@@ -13,6 +13,9 @@ using DevExpress.XtraGrid.Views.Base;
 
 namespace CryptoMarketClient {
     public partial class OrderBookControl : XtraUserControl {
+        private readonly object selectedAskChanged = new object();
+        private readonly object selectedBidChanged = new object();
+
         public OrderBookControl() {
             InitializeComponent();
             this.askGridView.ViewCaptionHeight = 32;
@@ -29,22 +32,14 @@ namespace CryptoMarketClient {
         }
 
         public void RefreshData() {
-            //this.bidGridControl.RefreshDataSource();
-            //this.askGridControl.RefreshDataSource();
             this.askGridView.TopRowIndex = Asks.Length;
         }
 
         public void RefreshAsks() {
-            //this.askGridControl.RefreshDataSource();
             this.askGridView.TopRowIndex = Asks.Length;
-            //this.askGridControl.Invalidate();
-            //this.askGridControl.Update();
         }
 
         public void RefreshBids() {
-            //this.bidGridControl.RefreshDataSource();
-            //this.bidGridControl.Invalidate();
-            //this.bidGridControl.Update();
         }
 
         private void askGridControl_Resize(object sender, EventArgs e) {
@@ -86,9 +81,47 @@ namespace CryptoMarketClient {
             return (OrderBookEntry)this.askGridView.GetRow(focusedRowHandle);
         }
 
-        public event FocusedRowChangedEventHandler SelectedAskRowChanged {
-            add { this.askGridView.FocusedRowChanged += value; }
-            remove { this.askGridView.FocusedRowChanged -= value; }
+        public event SelectedOrderBookEntryChangedHandler SelectedAskRowChanged {
+            add { Events.AddHandler(selectedAskChanged, value); }
+            remove { Events.RemoveHandler(selectedAskChanged, value); }
         }
+
+        public event SelectedOrderBookEntryChangedHandler SelectedBidRowChanged {
+            add { Events.AddHandler(selectedBidChanged, value); }
+            remove { Events.RemoveHandler(selectedBidChanged, value); }
+        }
+
+        private void RaiseAskRowChanged(OrderBookEntry en) {
+            SelectedOrderBookEntryChangedHandler handler = (SelectedOrderBookEntryChangedHandler)Events[selectedAskChanged];
+            if(handler != null)
+                handler(this, new SelectedOrderBookEntryChangedEventArgs() { Entry = en });
+        }
+
+        private void RaiseBidRowChanged(OrderBookEntry en) {
+            SelectedOrderBookEntryChangedHandler handler = (SelectedOrderBookEntryChangedHandler)Events[selectedBidChanged];
+            if(handler != null)
+                handler(this, new SelectedOrderBookEntryChangedEventArgs() { Entry = en });
+        }
+
+        private void askGridView_MouseDown(object sender, MouseEventArgs e) {
+            GridHitInfo hi = this.askGridView.CalcHitInfo(e.Location);
+            if(!hi.InDataRow)
+                return;
+            OrderBookEntry ee = (OrderBookEntry)this.askGridView.GetRow(hi.RowHandle);
+            RaiseAskRowChanged(ee);
+        }
+
+        private void bidGridView_MouseDown(object sender, MouseEventArgs e) {
+            GridHitInfo hi = this.bidGridView.CalcHitInfo(e.Location);
+            if(!hi.InDataRow)
+                return;
+            OrderBookEntry ee = (OrderBookEntry)this.bidGridView.GetRow(hi.RowHandle);
+            RaiseBidRowChanged(ee);
+        }
+    }
+
+    public delegate void SelectedOrderBookEntryChangedHandler(object sender, SelectedOrderBookEntryChangedEventArgs e);
+    public class SelectedOrderBookEntryChangedEventArgs : EventArgs {
+        public OrderBookEntry Entry { get; set; }
     }
 }

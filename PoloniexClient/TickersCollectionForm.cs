@@ -215,7 +215,8 @@ namespace CryptoMarketClient {
         private void barManager1_ItemClick(object sender, ItemClickEventArgs e) {
             if(e.Item.Tag is PinnedTickerInfo) {
                 TickerBase t = Exchange.GetTicker((PinnedTickerInfo)e.Item.Tag);
-                ShowDetailsForSelectedItemCore(t);
+                this.gridView1.FocusedRowHandle = this.gridView1.GetRowHandle(Exchange.Tickers.IndexOf(t));
+                //ShowDetailsForSelectedItemCore(t);
             }
         }
 
@@ -295,6 +296,13 @@ namespace CryptoMarketClient {
 
         private void bbMonitorOnlySelected_CheckedChanged(object sender, ItemClickEventArgs e) {
 
+        }
+
+        private void barManager1_ItemDoubleClick(object sender, ItemClickEventArgs e) {
+            if(e.Item.Tag is PinnedTickerInfo) {
+                TickerBase t = Exchange.GetTicker((PinnedTickerInfo)e.Item.Tag);
+                ShowDetailsForSelectedItemCore(t);
+            }
         }
     }
 }

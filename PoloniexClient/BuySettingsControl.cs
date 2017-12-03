@@ -13,10 +13,14 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace CryptoMarketClient {
-    public partial class TrailingSettingsForm : XtraForm {
-        public TrailingSettingsForm() {
+    public partial class BuySettingsControl : XtraUserControl {
+        public BuySettingsControl() {
             InitializeComponent();
         }
+
+        public ITradingResultOperationsProvider OperationsProvider { get; set; }
+
+        public TickerBase Ticker { get; set; }
         TrailingSettings settings;
         public TrailingSettings Settings {
             get {
@@ -31,26 +35,41 @@ namespace CryptoMarketClient {
         }
         void OnSettingsChanged() {
             this.tralingSettingsBindingSource.DataSource = Settings;
-            Text = "Trailing Settings: " + Settings.Name;
+            if(Settings.Ticker != null) {
+                layoutControlItem3.Text = "Total " + Settings.Ticker.BaseCurrency;
+            }
         }
 
-        private void simpleButton2_Click(object sender, EventArgs e) {
-            DialogResult = DialogResult.Cancel;
-            Close();
+        protected bool ValidateChildrenCore() {
+            return false;
         }
-
         private void simpleButton1_Click(object sender, EventArgs e) {
-            DialogResult = DialogResult.OK;
-            if(!this.ValidateChildren()) {
+            if(!ValidateChildrenCore()) {
                 XtraMessageBox.Show("Not all fields are filled!");
                 return;
             }
-            TrailingManager.Default.Items.Add(Settings);
-            Close();
+            if(Ticker.Buy(Settings.BuyPrice, Settings.Amount)) {
+                XtraMessageBox.Show("Error buying. Please try later again.");
+                return;
+            }
+            if(Settings.EnableIncrementalStopLoss) {
+                Ticker.SellTrailings.Add(Settings);
+                //TrailingManager.Default.Items.Add(Settings);
+            }
+            if(OperationsProvider != null)
+                OperationsProvider.ShowTradingResult(Ticker);
         }
         public void SelectedAskChanged(object sender, FocusedRowChangedEventArgs e) {
             OrderBookEntry entry = (OrderBookEntry)((GridView)sender).GetRow(e.FocusedRowHandle);
             BuyPriceTextEdit.EditValue = entry.Value;
         }
+
+        private void checkEdit1_CheckedChanged(object sender, EventArgs e) {
+            ItemForStopLossPricePercent.Enabled = ItemForTakeProfitPercent.Enabled = this.checkEdit1.Checked;
+        }
+    }
+
+    public interface ITradingResultOperationsProvider {
+        void ShowTradingResult(TickerBase ticker);
     }
 }

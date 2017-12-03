@@ -37,6 +37,9 @@ namespace CryptoMarketClient {
             set;
         }
 
+        public List<TrailingSettings> SellTrailings { get; } = new List<TrailingSettings>();
+        public List<TrailingSettings> BuyTrailings { get; } = new List<TrailingSettings>();
+        public List<TradingResult> Trades { get; } = new List<TradingResult>();
         public List<OpenedOrderInfo> OpenedOrders { get; } = new List<OpenedOrderInfo>();
         public List<TickerHistoryItem> History { get; } = new List<TickerHistoryItem>();
         public List<TradeHistoryItem> TradeHistory { get; } = new List<TradeHistoryItem>();
@@ -237,7 +240,7 @@ namespace CryptoMarketClient {
         public long LastUpdateTime { get; set; }
         public Task Task { get; set; }
         public bool IsActual { get; set; }
-
+        
         public void UpdateHistoryItem() {
             TickerHistoryItem last = History.Count == 0 ? null : History.Last();
             if(History.Count > 72000) {

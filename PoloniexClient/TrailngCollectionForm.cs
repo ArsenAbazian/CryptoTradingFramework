@@ -9,8 +9,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace CryptoMarketClient {
-    public partial class ActiveTrailngCollectionForm : Form {
-        public ActiveTrailngCollectionForm() {
+    public partial class TrailngCollectionForm : Form {
+        public TrailngCollectionForm() {
             InitializeComponent();
         }
     }

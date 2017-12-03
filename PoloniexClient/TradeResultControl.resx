@@ -117,64 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="biSell.ImageOptions.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAABl0RVh0U29m
-        dHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAALdEVYdFRpdGxlAEluZm87bRIthgAAAJlJREFUOE+t
-        k9EJgDAQQzuKg/Tb6XQKh3EdwQE0r7SgErVShQe2yQXvWkOM8UovRjGLJcM7e2gn/3HRiUGsYrsBDQ/e
-        UwAbk3BFDrwppASQ6oxPUJMC6Mt+tp4AThPU9IgMxxneAmBEZMJOrAmYETkmJ9YELL8E3LZQQWqheYjN
-        xwhNFwmar3IJIdW2k0HDk4rhGFD48DvHsANkuY1Mp0kAqQAAAABJRU5ErkJggg==
-</value>
-  </data>
-  <data name="biSell.ImageOptions.LargeImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAAABl0RVh0U29m
-        dHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAALdEVYdFRpdGxlAEluZm87bRIthgAAAVxJREFUWEfF
-        l7FxwzAMRT2Bq4yjPp1nyAAZxNu4dZkt0rnLCm4ZPF+gg5LPCLJko3h3Ovn/T5gCSWnXWitF3nwm48Uw
-        DHPsjYNxNM7Gxbj+wDX3+A0NWpUxsqSAF+Pd+DBaErR48KrMdAGvxslQg2TAS8af7EwBb8anoYKXQAZZ
-        k/y5AjB8GSrwHsiaFPFfAUzZFv/8N2SOj6NXAE2z5pnPQfatMXsF0LnKuCWMIQtg7aaXmvuCX+oEjLF3
-        XwxgA1EGifuCX+o6HNwXA9jFlFjivuCXug5H98UAtlIllrgv+KWuw9l9MYD9XIkl7gt+qetwcV8M4FBR
-        Yon7gl/qOlzdFwPKCyh/BOVNWL4MF21EK5EbUflWDOnDyH3BL3WC7mEE5ccxlL6QOKWvZA6GLWaCjMng
-        kCkAmLI1PYF3nPZItgCgaejc9BI10OK5NZxiSQHOYz/NqpA3n0fbfQM/tJcKTygMggAAAABJRU5ErkJg
-        gg==
-</value>
-  </data>
-  <data name="biSellMarket.ImageOptions.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAABl0RVh0U29m
-        dHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAALdEVYdFRpdGxlAEluZm87bRIthgAAAJlJREFUOE+t
-        k9EJgDAQQzuKg/Tb6XQKh3EdwQE0r7SgErVShQe2yQXvWkOM8UovRjGLJcM7e2gn/3HRiUGsYrsBDQ/e
-        UwAbk3BFDrwppASQ6oxPUJMC6Mt+tp4AThPU9IgMxxneAmBEZMJOrAmYETkmJ9YELL8E3LZQQWqheYjN
-        xwhNFwmar3IJIdW2k0HDk4rhGFD48DvHsANkuY1Mp0kAqQAAAABJRU5ErkJggg==
-</value>
-  </data>
-  <data name="biSellMarket.ImageOptions.LargeImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAAABl0RVh0U29m
-        dHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAALdEVYdFRpdGxlAEluZm87bRIthgAAAVxJREFUWEfF
-        l7FxwzAMRT2Bq4yjPp1nyAAZxNu4dZkt0rnLCm4ZPF+gg5LPCLJko3h3Ovn/T5gCSWnXWitF3nwm48Uw
-        DHPsjYNxNM7Gxbj+wDX3+A0NWpUxsqSAF+Pd+DBaErR48KrMdAGvxslQg2TAS8af7EwBb8anoYKXQAZZ
-        k/y5AjB8GSrwHsiaFPFfAUzZFv/8N2SOj6NXAE2z5pnPQfatMXsF0LnKuCWMIQtg7aaXmvuCX+oEjLF3
-        XwxgA1EGifuCX+o6HNwXA9jFlFjivuCXug5H98UAtlIllrgv+KWuw9l9MYD9XIkl7gt+qetwcV8M4FBR
-        Yon7gl/qOlzdFwPKCyh/BOVNWL4MF21EK5EbUflWDOnDyH3BL3WC7mEE5ccxlL6QOKWvZA6GLWaCjMng
-        kCkAmLI1PYF3nPZItgCgaejc9BI10OK5NZxiSQHOYz/NqpA3n0fbfQM/tJcKTygMggAAAABJRU5ErkJg
-        gg==
-</value>
-  </data>
-  <metadata name="tradeHistoryItemBindingSource.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+  <metadata name="tradeEntryBindingSource.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
-  </metadata>
-  <metadata name="dockManager1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>430, 17</value>
-  </metadata>
-  <metadata name="openedOrderInfoBindingSource.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>665, 17</value>
-  </metadata>
-  <metadata name="tradingResultBindingSource1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>1458, 17</value>
-  </metadata>
-  <metadata name="tradingResultBindingSource.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>1084, 17</value>
   </metadata>
 </root>
