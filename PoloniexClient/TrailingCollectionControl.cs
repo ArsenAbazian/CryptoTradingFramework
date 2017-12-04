@@ -35,10 +35,12 @@ namespace CryptoMarketClient {
             settings.Ticker = Ticker;
             settings.UsdTicker = Ticker.UsdTicker;
             TrailingSettinsForm form = new TrailingSettinsForm();
+            form.Ticker = Ticker;
             form.Settings = settings;
             if(form.ShowDialog() != DialogResult.OK)
                 return;
             Ticker.SellTrailings.Add(settings);
+            this.gvTrailings.RefreshData();
         }
     }
 }

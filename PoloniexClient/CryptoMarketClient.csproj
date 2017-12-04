@@ -256,7 +256,7 @@
     <Compile Include="Common\TradeHistoryItem.cs" />
     <Compile Include="Common\TradingResult.cs" />
     <Compile Include="Common\TrailingManager.cs" />
-    <Compile Include="Common\BuySettings.cs" />
+    <Compile Include="Common\TrailingSettings.cs" />
     <Compile Include="DepositsTotal.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -31,6 +31,8 @@
             this.TotalSpendInBaseCurrencyTextEdit = new DevExpress.XtraEditors.TextEdit();
             this.StopLossPricePercentTextEdit = new DevExpress.XtraEditors.TextEdit();
             this.TakeProfitPercentTextEdit = new DevExpress.XtraEditors.TextEdit();
+            this.btOk = new DevExpress.XtraEditors.SimpleButton();
+            this.btCancel = new DevExpress.XtraEditors.SimpleButton();
             this.layoutControlGroup1 = new DevExpress.XtraLayout.LayoutControlGroup();
             this.layoutControlGroup2 = new DevExpress.XtraLayout.LayoutControlGroup();
             this.ItemForBuyPrice = new DevExpress.XtraLayout.LayoutControlItem();
@@ -38,9 +40,7 @@
             this.ItemForTotalSpendInBaseCurrency = new DevExpress.XtraLayout.LayoutControlItem();
             this.ItemForStopLossPricePercent = new DevExpress.XtraLayout.LayoutControlItem();
             this.ItemForTakeProfitPercent = new DevExpress.XtraLayout.LayoutControlItem();
-            this.simpleButton1 = new DevExpress.XtraEditors.SimpleButton();
             this.layoutControlItem1 = new DevExpress.XtraLayout.LayoutControlItem();
-            this.simpleButton2 = new DevExpress.XtraEditors.SimpleButton();
             this.layoutControlItem2 = new DevExpress.XtraLayout.LayoutControlItem();
             this.emptySpaceItem1 = new DevExpress.XtraLayout.EmptySpaceItem();
             this.emptySpaceItem2 = new DevExpress.XtraLayout.EmptySpaceItem();
@@ -74,8 +74,8 @@
             this.dataLayoutControl1.Controls.Add(this.TotalSpendInBaseCurrencyTextEdit);
             this.dataLayoutControl1.Controls.Add(this.StopLossPricePercentTextEdit);
             this.dataLayoutControl1.Controls.Add(this.TakeProfitPercentTextEdit);
-            this.dataLayoutControl1.Controls.Add(this.simpleButton1);
-            this.dataLayoutControl1.Controls.Add(this.simpleButton2);
+            this.dataLayoutControl1.Controls.Add(this.btOk);
+            this.dataLayoutControl1.Controls.Add(this.btCancel);
             this.dataLayoutControl1.DataSource = this.trailingSettingsBindingSource;
             this.dataLayoutControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataLayoutControl1.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -160,6 +160,30 @@
             this.TakeProfitPercentTextEdit.StyleController = this.dataLayoutControl1;
             this.TakeProfitPercentTextEdit.TabIndex = 8;
             // 
+            // btOk
+            // 
+            this.btOk.AutoWidthInLayoutControl = true;
+            this.btOk.Location = new System.Drawing.Point(363, 371);
+            this.btOk.Name = "btOk";
+            this.btOk.Padding = new System.Windows.Forms.Padding(40, 0, 40, 0);
+            this.btOk.Size = new System.Drawing.Size(136, 56);
+            this.btOk.StyleController = this.dataLayoutControl1;
+            this.btOk.TabIndex = 9;
+            this.btOk.Text = "OK";
+            this.btOk.Click += new System.EventHandler(this.OnOkClick);
+            // 
+            // btCancel
+            // 
+            this.btCancel.AutoWidthInLayoutControl = true;
+            this.btCancel.Location = new System.Drawing.Point(519, 371);
+            this.btCancel.Name = "btCancel";
+            this.btCancel.Padding = new System.Windows.Forms.Padding(20, 0, 20, 0);
+            this.btCancel.Size = new System.Drawing.Size(147, 56);
+            this.btCancel.StyleController = this.dataLayoutControl1;
+            this.btCancel.TabIndex = 10;
+            this.btCancel.Text = "Cancel";
+            this.btCancel.Click += new System.EventHandler(this.OnCancelClick);
+            // 
             // layoutControlGroup1
             // 
             this.layoutControlGroup1.EnableIndentsWithoutBorders = DevExpress.Utils.DefaultBoolean.True;
@@ -235,20 +259,9 @@
             this.ItemForTakeProfitPercent.Text = "Take Profit Percent";
             this.ItemForTakeProfitPercent.TextSize = new System.Drawing.Size(281, 25);
             // 
-            // simpleButton1
-            // 
-            this.simpleButton1.AutoWidthInLayoutControl = true;
-            this.simpleButton1.Location = new System.Drawing.Point(363, 371);
-            this.simpleButton1.Name = "simpleButton1";
-            this.simpleButton1.Padding = new System.Windows.Forms.Padding(40, 0, 40, 0);
-            this.simpleButton1.Size = new System.Drawing.Size(136, 56);
-            this.simpleButton1.StyleController = this.dataLayoutControl1;
-            this.simpleButton1.TabIndex = 9;
-            this.simpleButton1.Text = "OK";
-            // 
             // layoutControlItem1
             // 
-            this.layoutControlItem1.Control = this.simpleButton1;
+            this.layoutControlItem1.Control = this.btOk;
             this.layoutControlItem1.Location = new System.Drawing.Point(339, 335);
             this.layoutControlItem1.Name = "layoutControlItem1";
             this.layoutControlItem1.Padding = new DevExpress.XtraLayout.Utils.Padding(4, 16, 16, 4);
@@ -256,20 +269,9 @@
             this.layoutControlItem1.TextSize = new System.Drawing.Size(0, 0);
             this.layoutControlItem1.TextVisible = false;
             // 
-            // simpleButton2
-            // 
-            this.simpleButton2.AutoWidthInLayoutControl = true;
-            this.simpleButton2.Location = new System.Drawing.Point(519, 371);
-            this.simpleButton2.Name = "simpleButton2";
-            this.simpleButton2.Padding = new System.Windows.Forms.Padding(20, 0, 20, 0);
-            this.simpleButton2.Size = new System.Drawing.Size(147, 56);
-            this.simpleButton2.StyleController = this.dataLayoutControl1;
-            this.simpleButton2.TabIndex = 10;
-            this.simpleButton2.Text = "Cancel";
-            // 
             // layoutControlItem2
             // 
-            this.layoutControlItem2.Control = this.simpleButton2;
+            this.layoutControlItem2.Control = this.btCancel;
             this.layoutControlItem2.Location = new System.Drawing.Point(495, 335);
             this.layoutControlItem2.Name = "layoutControlItem2";
             this.layoutControlItem2.Padding = new DevExpress.XtraLayout.Utils.Padding(4, 4, 16, 4);
@@ -340,8 +342,8 @@
         private DevExpress.XtraLayout.LayoutControlItem ItemForTotalSpendInBaseCurrency;
         private DevExpress.XtraLayout.LayoutControlItem ItemForStopLossPricePercent;
         private DevExpress.XtraLayout.LayoutControlItem ItemForTakeProfitPercent;
-        private DevExpress.XtraEditors.SimpleButton simpleButton1;
-        private DevExpress.XtraEditors.SimpleButton simpleButton2;
+        private DevExpress.XtraEditors.SimpleButton btOk;
+        private DevExpress.XtraEditors.SimpleButton btCancel;
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItem1;
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItem2;
         private DevExpress.XtraLayout.EmptySpaceItem emptySpaceItem1;
