@@ -61,6 +61,39 @@ namespace CryptoMarketClient {
             }
         }
 
+        decimal volume;
+        public decimal Volume {
+            get { return volume; }
+            set {
+                if(Volume == value)
+                    return;
+                volume = value;
+                RaisePropertyChanged("Volume");
+            }
+        }
+
+        decimal quoteVolume;
+        public decimal QuoteVolume {
+            get { return quoteVolume; }
+            set {
+                if(QuoteVolume == value)
+                    return;
+                quoteVolume = value;
+                RaisePropertyChanged("QuoteVolume");
+            }
+        }
+
+        decimal weightedAverage;
+        public decimal WeightedAverage {
+            get { return volume; }
+            set {
+                if(WeightedAverage == value)
+                    return;
+                weightedAverage = value;
+                RaisePropertyChanged("WeightedAverage");
+            }
+        }
+
         event PropertyChangedEventHandler propertyChanged;
         event PropertyChangedEventHandler INotifyPropertyChanged.PropertyChanged {
             add { this.propertyChanged += value; }
@@ -74,8 +107,8 @@ namespace CryptoMarketClient {
     }
 
     public static class CandleStickChartHelper {
-        public static List<CandleStickData> CreateCandleStickData(List<TickerHistoryItem> list, long rangeInSeconds) {
-            List<CandleStickData> res = new List<CandleStickData>();
+        public static BindingList<CandleStickData> CreateCandleStickData(IList<TickerHistoryItem> list, long rangeInSeconds) {
+            BindingList<CandleStickData> res = new BindingList<CandleStickData>();
             CandleStickData candleItem = null;
             long maxTickCount = rangeInSeconds * TimeSpan.TicksPerSecond;
             foreach(TickerHistoryItem item in list) {
@@ -93,7 +126,7 @@ namespace CryptoMarketClient {
             }
             return res;
         }
-        public static void AddCandleStickData(List<CandleStickData> list, TickerHistoryItem item, long rangeInSeconds) {
+        public static void AddCandleStickData(IList<CandleStickData> list, TickerHistoryItem item, long rangeInSeconds) {
             CandleStickData candleItem = null;
             long maxTickCount = rangeInSeconds * TimeSpan.TicksPerSecond;
             if(list.Count == 0 || (item.Time.Ticks - list[list.Count - 1].Time.Ticks) > maxTickCount) {
@@ -109,7 +142,7 @@ namespace CryptoMarketClient {
             candleItem.High = Math.Max(candleItem.High, item.Current);
             return;
         }
-        public static List<CandleStickData> CreateCandleStickData(TickerBase ticker) {
+        public static IList<CandleStickData> CreateCandleStickData(TickerBase ticker) {
             ticker.CandleStickData.Clear();
             return CreateCandleStickData(ticker.History, ticker.CandleStickPeriodMin * 60);
         }

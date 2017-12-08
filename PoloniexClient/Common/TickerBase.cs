@@ -41,11 +41,11 @@ namespace CryptoMarketClient {
         public List<TrailingSettings> BuyTrailings { get; } = new List<TrailingSettings>();
         public List<TradingResult> Trades { get; } = new List<TradingResult>();
         public List<OpenedOrderInfo> OpenedOrders { get; } = new List<OpenedOrderInfo>();
-        public List<TickerHistoryItem> History { get; } = new List<TickerHistoryItem>();
+        public BindingList<TickerHistoryItem> History { get; } = new BindingList<TickerHistoryItem>();
         public List<TradeHistoryItem> TradeHistory { get; } = new List<TradeHistoryItem>();
-        public List<TradeStatisticsItem> TradeStatistic { get; } = new List<TradeStatisticsItem>();
+        public BindingList<TradeStatisticsItem> TradeStatistic { get; } = new BindingList<TradeStatisticsItem>();
         public List<TickerStrategyBase> Strategies { get; } = new List<TickerStrategyBase>();
-        public List<CandleStickData> CandleStickData { get; set; } = new List<CryptoMarketClient.CandleStickData>();
+        public BindingList<CandleStickData> CandleStickData { get; set; } = new BindingList<CryptoMarketClient.CandleStickData>();
         public BindingList<CurrencyStatusHistoryItem> MarketCurrencyStatusHistory { get; set; } = new BindingList<CurrencyStatusHistoryItem>();
 
         Image BidAskSnapshot { get; }
@@ -267,6 +267,9 @@ namespace CryptoMarketClient {
             if(MarketCurrencyStatusHistory.Last().Enabled == MarketCurrencyEnabled)
                 return;
             MarketCurrencyStatusHistory.Add(new CurrencyStatusHistoryItem() { Enabled = MarketCurrencyEnabled, Time = DateTime.Now });
+        }
+        public BindingList<CandleStickData> GetCandleStickData(int candleStickPeriodMin, DateTime start, int periodInSeconds) {
+            return Exchange.GetCandleStickData(this, candleStickPeriodMin, start, periodInSeconds);
         }
     }
 

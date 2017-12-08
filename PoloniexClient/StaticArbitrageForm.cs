@@ -131,14 +131,14 @@ namespace CryptoMarketClient {
             info.IsUpdating = false;
         }
         void UpdateBalanceItems() {
-            this.ribbonStatusBar1.BeginUpdate();
+            //this.ribbonStatusBar1.BeginUpdate();
             try {
                 foreach(BarItemLink link in this.ribbonStatusBar1.ItemLinks) {
                     UpdateBalanceItem(link.Item);
                 }
             }
             finally {
-                this.ribbonStatusBar1.EndUpdate();
+                //this.ribbonStatusBar1.EndUpdate();
             }
         }
 

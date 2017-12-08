@@ -15,7 +15,9 @@ using WampSharp.V2;
 
 namespace CryptoMarketClient {
     public class PoloniexTicker : TickerBase {
-        public PoloniexTicker(PoloniexExchange exchange) : base(exchange) { }
+        public PoloniexTicker(PoloniexExchange exchange) : base(exchange) {
+            CandleStickPeriodMin = 5;
+        }
 
         public int Id { get; set; }
 

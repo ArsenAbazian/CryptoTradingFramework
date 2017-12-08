@@ -7,6 +7,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
@@ -52,6 +53,42 @@ namespace CryptoMarketClient {
         }
         public IDisposable ConnectOrderBook(PoloniexTicker ticker) {
             return null;
+        }
+
+        public override BindingList<CandleStickData> GetCandleStickData(TickerBase ticker, int candleStickPeriodMin, DateTime start, int periodInSeconds) {
+            int startSec = (Int32)(start.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
+            int end = startSec + periodInSeconds;
+
+            string address = string.Format("https://poloniex.com/public?command=returnChartData&currencyPair={0}&period={1}&start={2}&end={3}",
+                Uri.EscapeDataString(ticker.CurrencyPair), candleStickPeriodMin * 60, startSec, end);
+            string text = string.Empty;
+            try {
+                text = GetDownloadString(address);
+            }
+            catch(Exception) {
+                return null;
+            }
+            if(string.IsNullOrEmpty(text))
+                return null;
+
+            DateTime startTime = new DateTime(1970, 1, 1);
+
+            long deltaSeconds = 0;
+            BindingList<CandleStickData> list = new BindingList<CandleStickData>();
+            JArray res = (JArray)JsonConvert.DeserializeObject(text);
+            foreach(JObject item in res.Children()) {
+                CandleStickData data = new CandleStickData();
+                data.Time = startTime.AddSeconds(item.Value<long>("date") + deltaSeconds);
+                data.Open = item.Value<decimal>("open");
+                data.Close = item.Value<decimal>("close");
+                data.High = item.Value<decimal>("high");
+                data.Low = item.Value<decimal>("low");
+                data.Volume = item.Value<decimal>("volume");
+                data.QuoteVolume = item.Value<decimal>("quoteVolume");
+                data.WeightedAverage = item.Value<decimal>("weightedAverage");
+                list.Add(data);
+            }
+            return list;
         }
 
         public override bool UpdateCurrencies() {

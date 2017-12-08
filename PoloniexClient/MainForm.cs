@@ -17,6 +17,8 @@ using DevExpress.XtraWaitForm;
 using CryptoMarketClient.Bittrex;
 using DevExpress.XtraEditors;
 using CryptoMarketClient.Common;
+using Tesseract;
+using System.IO;
 
 namespace CryptoMarketClient {
     public partial class MainForm : DevExpress.XtraBars.Ribbon.RibbonForm {
@@ -234,6 +236,21 @@ namespace CryptoMarketClient {
         private void barButtonItem1_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
             ActiveTrailng.Show();
             ActiveTrailng.Activate();
+        }
+
+        private void barButtonItem2_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
+            OpenFileDialog dialog = new OpenFileDialog();
+            if(dialog.ShowDialog() == DialogResult.OK) {
+                string datapath = Path.GetDirectoryName(Application.ExecutablePath) + Path.DirectorySeparatorChar + "tessdata";
+                using(TesseractEngine en = new Tesseract.TesseractEngine(datapath, "eng", EngineMode.TesseractOnly)) {
+                    using(Pix pix = Pix.LoadFromFile(dialog.FileName)) {
+                        using(Page page = en.Process(pix)) {
+                            string text = page.GetText();
+                            XtraMessageBox.Show(text);
+                        }
+                    }
+                }
+            }
         }
     }
 }

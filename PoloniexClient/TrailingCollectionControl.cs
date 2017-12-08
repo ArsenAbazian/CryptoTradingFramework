@@ -26,7 +26,7 @@ namespace CryptoMarketClient {
             }
         }
         void OnTickerChanged() {
-            this.trailingSettingsBindingSource.DataSource = Ticker.SellTrailings;
+            this.trailingSettingsBindingSource.DataSource = Ticker == null? null: Ticker.SellTrailings;
         }
 
         private void btAdd_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {

@@ -13,6 +13,7 @@ using System.IO;
 using CryptoMarketClient.Common;
 using System.Text.Json;
 using CryptoMarketClient.Bittrex;
+using System.ComponentModel;
 
 namespace CryptoMarketClient {
     public abstract class Exchange : IXtraSerializable {
@@ -287,6 +288,9 @@ namespace CryptoMarketClient {
         public abstract bool UpdateOpenedOrders(TickerBase tickerBase);
         public abstract bool UpdateCurrencies();
         public abstract bool UpdateBalances();
+        public virtual BindingList<CandleStickData> GetCandleStickData(TickerBase ticker, int candleStickPeriodMin, DateTime start, int periodInSeconds) {
+            return new BindingList<CandleStickData>();
+        }
 
         JsonParser jsonParser;
         protected JsonParser JsonParser {

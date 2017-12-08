@@ -39,56 +39,56 @@
     <Reference Include="Castle.Core, Version=4.1.1.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <HintPath>..\packages\Castle.Core.4.1.1\lib\net45\Castle.Core.dll</HintPath>
     </Reference>
-    <Reference Include="DevExpress.Charts.v17.2.Core, Version=17.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
+    <Reference Include="DevExpress.Charts.v18.1.Core, Version=18.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.Data.v17.2, Version=17.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
+    <Reference Include="DevExpress.Data.v18.1, Version=18.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.Office.v17.2.Core, Version=17.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
+    <Reference Include="DevExpress.Office.v18.1.Core, Version=18.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.RichEdit.v17.2.Core, Version=17.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
+    <Reference Include="DevExpress.RichEdit.v18.1.Core, Version=18.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.RichEdit.v17.2.Export, Version=17.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
+    <Reference Include="DevExpress.RichEdit.v18.1.Export, Version=18.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.Printing.v17.2.Core, Version=17.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
+    <Reference Include="DevExpress.Printing.v18.1.Core, Version=18.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.Sparkline.v17.2.Core, Version=17.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4, processorArchitecture=MSIL">
+    <Reference Include="DevExpress.Sparkline.v18.1.Core, Version=18.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4, processorArchitecture=MSIL">
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.Utils.v17.2, Version=17.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
+    <Reference Include="DevExpress.Utils.v18.1, Version=18.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.Xpo.v17.2, Version=17.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4" />
-    <Reference Include="DevExpress.XtraBars.v17.2, Version=17.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
+    <Reference Include="DevExpress.Xpo.v18.1, Version=18.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4" />
+    <Reference Include="DevExpress.XtraBars.v18.1, Version=18.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.XtraCharts.v17.2, Version=17.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
+    <Reference Include="DevExpress.XtraCharts.v18.1, Version=18.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.XtraCharts.v17.2.UI, Version=17.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
+    <Reference Include="DevExpress.XtraCharts.v18.1.UI, Version=18.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.XtraCharts.v17.2.Wizard, Version=17.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
+    <Reference Include="DevExpress.XtraCharts.v18.1.Wizard, Version=18.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.XtraEditors.v17.2, Version=17.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
+    <Reference Include="DevExpress.XtraEditors.v18.1, Version=18.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.XtraGrid.v17.2, Version=17.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
+    <Reference Include="DevExpress.XtraGrid.v18.1, Version=18.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.XtraLayout.v17.2, Version=17.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
+    <Reference Include="DevExpress.XtraLayout.v18.1, Version=18.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.XtraPrinting.v17.2, Version=17.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
+    <Reference Include="DevExpress.XtraPrinting.v18.1, Version=18.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.XtraVerticalGrid.v17.2, Version=17.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
+    <Reference Include="DevExpress.XtraVerticalGrid.v18.1, Version=18.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
       <Private>True</Private>
     </Reference>
     <Reference Include="Fleck, Version=0.14.0.59, Culture=neutral, processorArchitecture=MSIL">
@@ -164,6 +164,9 @@
     <Reference Include="System.Xml" />
     <Reference Include="Telegram.Bot, Version=13.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Telegram.Bot.13.1.0\lib\netstandard1.1\Telegram.Bot.dll</HintPath>
+    </Reference>
+    <Reference Include="Tesseract, Version=3.0.2.0, Culture=neutral, PublicKeyToken=ebeb3d86bef60cbe, processorArchitecture=MSIL">
+      <HintPath>..\packages\Tesseract.3.0.2.0\lib\net451\Tesseract.dll</HintPath>
     </Reference>
     <Reference Include="UIAutomationClient" />
     <Reference Include="WampSharp, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -551,6 +554,19 @@
   <ItemGroup>
     <None Include="Resources\chart.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="x64\liblept172.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="x64\libtesseract304.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="x86\liblept172.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="x86\libtesseract304.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

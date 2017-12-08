@@ -21,9 +21,13 @@ namespace CryptoMarketClient {
             this.askGridView.ViewCaptionHeight = 32;
         }
 
+        protected int LastAskTopRowIndex { get; set; } = -1;
         public OrderBookEntry[] Asks {
             get { return (OrderBookEntry[])this.askGridControl.DataSource; }
-            set { this.askGridControl.DataSource = value; }
+            set {
+                LastAskTopRowIndex = this.askGridView.TopRowIndex;
+                this.askGridControl.DataSource = value;
+            }
         }
 
         public OrderBookEntry[] Bids {
@@ -32,11 +36,13 @@ namespace CryptoMarketClient {
         }
 
         public void RefreshData() {
-            this.askGridView.TopRowIndex = Asks.Length;
+            if(LastAskTopRowIndex == -1)
+                LastAskTopRowIndex = Asks.Length;
+            this.askGridView.TopRowIndex = LastAskTopRowIndex;
         }
 
         public void RefreshAsks() {
-            this.askGridView.TopRowIndex = Asks.Length;
+            this.askGridView.TopRowIndex = LastAskTopRowIndex;
         }
 
         public void RefreshBids() {
