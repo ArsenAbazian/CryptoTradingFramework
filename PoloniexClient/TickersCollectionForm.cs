@@ -56,6 +56,7 @@ namespace CryptoMarketClient {
             Stopwatch timer = new Stopwatch();
             timer.Start();
             int runningTasksCount = 0;
+            long lastGuiUpdateTime = 0;
             while(AllowWorking && Exchange.IsConnected) {
                 Exchange.UpdateTickersInfo();
                 foreach(TickerBase ticker in Exchange.Tickers) {
@@ -78,22 +79,24 @@ namespace CryptoMarketClient {
                     ticker.StartUpdateTime = timer.ElapsedMilliseconds;
 
                     Task t = Task.Factory.StartNew(() => {
-                        ticker.UpdateOrderBook();
-                        ticker.UpdateTrades();
-                        ticker.UpdateOpenedOrders();
+                        if(!ticker.IsActive) {
+                            ticker.UpdateTicker();
+                        }
                     }).ContinueWith(tt => {
                         ticker.UpdateTimeMs = timer.ElapsedMilliseconds - ticker.LastUpdateTime;
                         ticker.LastUpdateTime = timer.ElapsedMilliseconds;
-                        if(!IsDisposed && !Disposing && IsHandleCreated)
-                            BeginInvoke(new Action<TickerBase>(UpdateRow), ticker);
+                        ticker.UpdateTrailings();
                         runningTasksCount--;
                         ticker.IsUpdating = false;
                         ticker.IsActual = true;
                     });
                     ticker.Task = t;
                 }
-                if(!IsDisposed && !Disposing && IsHandleCreated)
-                    BeginInvoke(new Action(UpdateGridAll));
+                if(timer.ElapsedMilliseconds - lastGuiUpdateTime > 1000) {
+                    lastGuiUpdateTime = timer.ElapsedMilliseconds;
+                    if(!IsDisposed && !Disposing && IsHandleCreated)
+                        BeginInvoke(new Action(UpdateGridAll));
+                }
             }
         }
         void UpdateRow(TickerBase t) {

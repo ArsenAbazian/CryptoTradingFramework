@@ -21,7 +21,7 @@ namespace CryptoMarketClient.Common {
 
         public List<LogMessage> Messages { get; } = new List<LogMessage>();
         public void AddMessage(LogType type, string message, string description) {
-            Messages.Add(new LogMessage() { Type = type, Text = message, Description = description, Time = DateTime.Now });
+            Messages.Add(new LogMessage() { Type = type, Text = message, Description = description, Time = DateTime.UtcNow });
             if(Form != null && !Form.IsDisposed)
                 Form.Invoke(new MethodInvoker(Form.RefreshData));
         }

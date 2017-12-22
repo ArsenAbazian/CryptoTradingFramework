@@ -31,6 +31,7 @@ namespace CryptoMarketClient {
         public virtual string MarketName { get; set; }
         public abstract string CurrencyPair { get; set; }
         public bool IsSelected { get; set; }
+        public bool IsActive { get; set; }
 
         public TickerUpdateMode UpdateMode {
             get;
@@ -40,6 +41,7 @@ namespace CryptoMarketClient {
         public List<TrailingSettings> SellTrailings { get; } = new List<TrailingSettings>();
         public List<TrailingSettings> BuyTrailings { get; } = new List<TrailingSettings>();
         public List<TradingResult> Trades { get; } = new List<TradingResult>();
+        public List<TradeHistoryItem> MyTradeHistory { get; } = new List<TradeHistoryItem>();
         public List<OpenedOrderInfo> OpenedOrders { get; } = new List<OpenedOrderInfo>();
         public BindingList<TickerHistoryItem> History { get; } = new BindingList<TickerHistoryItem>();
         public List<TradeHistoryItem> TradeHistory { get; } = new List<TradeHistoryItem>();
@@ -123,12 +125,30 @@ namespace CryptoMarketClient {
 
         public OrderBook OrderBook { get; private set; }
         public abstract string Name { get; }
+        string lowestAskString = null;
+        public string LowestAskString {
+            get {
+                if(lowestAskString == null)
+                    lowestAskString = GetStringWithChangePercent(LowestAsk, AskChange);
+                return lowestAskString;
+            }
+        }
+        string highestBidString = null;
+        public string HighestBidString {
+            get {
+                if(highestBidString == null)
+                    highestBidString = GetStringWithChangePercent(HighestBid, BidChange);
+                return highestBidString;
+            }
+        }
         decimal lowestAsk;
         public decimal LowestAsk {
             get { return lowestAsk; }
             set {
-                if(value != LowestAsk)
+                if(value != LowestAsk) {
                     AskChange = value - LowestAsk;
+                    lowestAskString = null;
+                }
                 lowestAsk = value;
             }
         }
@@ -136,13 +156,36 @@ namespace CryptoMarketClient {
         public decimal HighestBid {
             get { return highestBid; }
             set {
-                if(value != HighestBid)
+                if(value != HighestBid) {
                     BidChange = value - HighestBid;
+                    highestBidString = null;
+                }
                 highestBid = value;
             }
         }
         public bool IsFrozen { get; set; }
-        public decimal Last { get; set; }
+        decimal last;
+        public decimal Last {
+            get { return last; }
+            set {
+                if(value == Last)
+                    return;
+                Change = value - Last;
+                lastString = null;
+                last = value;
+            }
+        }
+        string lastString = null;
+        public string LastString {
+            get {
+                if(lastString == null)
+                    lastString = GetStringWithChangePercent(Last, Change);
+                return lastString;
+            }
+        }
+        protected virtual string GetStringWithChangePercent(decimal value, decimal change) {
+            return string.Format("<b>{0:0.########}</b> <size=-2>{1:0.##}%</size>", value, change / value * 100);
+        }
         public decimal BaseVolume { get; set; }
         public decimal Volume { get; set; }
         public decimal Hr24High { get; set; }
@@ -175,9 +218,9 @@ namespace CryptoMarketClient {
             if(res) {
                 HighestBid = OrderBook.Bids[0].Value;
                 LowestAsk = OrderBook.Asks[0].Value;
-                Time = DateTime.Now;
+                Time = DateTime.UtcNow;
                 UpdateHistoryItem();
-                CandleStickChartHelper.AddCandleStickData(CandleStickData, History.Last(), 60);
+                CandleStickChartHelper.AddCandleStickData(CandleStickData, History.Last(), CandleStickPeriodMin * 60);
             }
             return res;
         }
@@ -185,9 +228,9 @@ namespace CryptoMarketClient {
         public bool UpdateTicker() {
             bool res = Exchange.UpdateTicker(this);
             if(res) {
-                Time = DateTime.Now;
+                Time = DateTime.UtcNow;
                 UpdateHistoryItem();
-                CandleStickChartHelper.AddCandleStickData(CandleStickData, History.Last(), 60);
+                CandleStickChartHelper.AddCandleStickData(CandleStickData, History.Last(), CandleStickPeriodMin * 60);
             }
             return res;
         }
@@ -240,7 +283,8 @@ namespace CryptoMarketClient {
         public long LastUpdateTime { get; set; }
         public Task Task { get; set; }
         public bool IsActual { get; set; }
-        
+        public bool PrevMarketCurrencyEnabled { get; set; }
+
         public void UpdateHistoryItem() {
             TickerHistoryItem last = History.Count == 0 ? null : History.Last();
             if(History.Count > 72000) {
@@ -261,15 +305,35 @@ namespace CryptoMarketClient {
         }
         public void UpdateMarketCurrencyStatusHistory() {
             if(MarketCurrencyStatusHistory.Count == 0) {
-                MarketCurrencyStatusHistory.Add(new CurrencyStatusHistoryItem() { Enabled = MarketCurrencyEnabled, Time = DateTime.Now });
+                MarketCurrencyStatusHistory.Add(new CurrencyStatusHistoryItem() { Enabled = MarketCurrencyEnabled, Time = DateTime.UtcNow });
                 return;
             }
             if(MarketCurrencyStatusHistory.Last().Enabled == MarketCurrencyEnabled)
                 return;
-            MarketCurrencyStatusHistory.Add(new CurrencyStatusHistoryItem() { Enabled = MarketCurrencyEnabled, Time = DateTime.Now });
+            MarketCurrencyStatusHistory.Add(new CurrencyStatusHistoryItem() { Enabled = MarketCurrencyEnabled, Time = DateTime.UtcNow });
         }
         public BindingList<CandleStickData> GetCandleStickData(int candleStickPeriodMin, DateTime start, int periodInSeconds) {
             return Exchange.GetCandleStickData(this, candleStickPeriodMin, start, periodInSeconds);
+        }
+        public virtual bool UpdateMyTrades() {
+            return Exchange.UpdateMyTrades(this);
+        }
+        public void UpdateTrailings() {
+            lock(this) {
+                UpdateByTrailings();
+                UpdateSellTrailings();
+            }
+        }
+        protected virtual void UpdateByTrailings() {
+            
+        }
+        protected virtual void UpdateSellTrailings() {
+            foreach(TrailingSettings tr in SellTrailings) {
+                tr.Ticker = this;
+                tr.UsdTicker = UsdTicker;
+                tr.Update();
+            }
+            RaiseChanged();
         }
     }
 

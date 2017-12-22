@@ -14,6 +14,7 @@ namespace CryptoMarketClient.Common {
 
         public TickerBase Ticker { get; set; }
         public bool Enabled { get; set; }
+        public ActionMode Mode { get; set; } = ActionMode.Execute;
 
         decimal buyPrice;
         public decimal BuyPrice {
@@ -95,9 +96,7 @@ namespace CryptoMarketClient.Common {
         public decimal PriceDelta {
             get { return MaxPrice * TakeProfitPercent * 0.01m; }
         }
-        public decimal TakeProfitPrice {
-            get { return MaxPrice - PriceDelta; }
-        }
+        public decimal TakeProfitPrice { get { return MaxPrice - PriceDelta; } }
         public string Name {
             get {
                 if(Ticker == null)
@@ -106,6 +105,18 @@ namespace CryptoMarketClient.Common {
             }
         }
 
+        public TrailingType Type { get; set; } = TrailingType.Sell;
+
         public bool EnableIncrementalStopLoss { get; set; }
+        public void Update() {
+            if(Type == TrailingType.Sell) {
+                ActualPrice = Ticker.HighestBid;
+                MaxPrice = Math.Max(MaxPrice, ActualPrice);
+            }
+        }
     }
+
+    public enum EditingMode { Add, Edit }
+    public enum ActionMode { Execute, Notify }
+    public enum TrailingType { Buy, Sell }
 }

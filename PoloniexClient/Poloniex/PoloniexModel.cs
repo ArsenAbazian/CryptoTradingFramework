@@ -73,12 +73,11 @@ namespace CryptoMarketClient {
 
             DateTime startTime = new DateTime(1970, 1, 1);
 
-            long deltaSeconds = 0;
             BindingList<CandleStickData> list = new BindingList<CandleStickData>();
             JArray res = (JArray)JsonConvert.DeserializeObject(text);
             foreach(JObject item in res.Children()) {
                 CandleStickData data = new CandleStickData();
-                data.Time = startTime.AddSeconds(item.Value<long>("date") + deltaSeconds);
+                data.Time = startTime.AddSeconds(item.Value<long>("date"));
                 data.Open = item.Value<decimal>("open");
                 data.Close = item.Value<decimal>("close");
                 data.High = item.Value<decimal>("high");
@@ -269,9 +268,9 @@ namespace CryptoMarketClient {
                 return true;
 
             int lastTradeId = trades.First().Value<int>("tradeID");
-            int lastGotTradeId = ticker.TradeHistory.Count > 0 ? ticker.TradeHistory.First().Id : 0;
+            long lastGotTradeId = ticker.TradeHistory.Count > 0 ? ticker.TradeHistory.First().Id : 0;
             if(lastGotTradeId == lastTradeId) {
-                ticker.TradeStatistic.Add(new TradeStatisticsItem() { Time = DateTime.Now });
+                ticker.TradeStatistic.Add(new TradeStatisticsItem() { Time = DateTime.UtcNow });
                 if(ticker.TradeStatistic.Count > 5000) {
                     for(int i = 0; i < 100; i++)
                         ticker.TradeStatistic.RemoveAt(0);
@@ -281,7 +280,7 @@ namespace CryptoMarketClient {
             TradeStatisticsItem st = new TradeStatisticsItem();
             st.MinBuyPrice = decimal.MaxValue;
             st.MinSellPrice = decimal.MaxValue;
-            st.Time = DateTime.Now;
+            st.Time = DateTime.UtcNow;
             
             int index = 0;
             foreach(JObject obj in trades) {
@@ -320,12 +319,62 @@ namespace CryptoMarketClient {
                 st.MinSellPrice = 0;
             if(st.MinBuyPrice == decimal.MaxValue)
                 st.MinBuyPrice = 0;
-            ticker.LastTradeStatisticTime = DateTime.Now;
+            ticker.LastTradeStatisticTime = DateTime.UtcNow;
             ticker.TradeStatistic.Add(st);
             Debug.WriteLine(ticker.TradeHistory[0].Rate + " " + ticker.TradeHistory[0].Amount);
             if(ticker.TradeStatistic.Count > 5000) {
                 for(int i = 0; i < 100; i++)
                     ticker.TradeStatistic.RemoveAt(0);
+            }
+            return true;
+        }
+        public override bool UpdateMyTrades(TickerBase ticker) {
+            string address = string.Format("https://poloniex.com/tradingApi");
+
+            NameValueCollection coll = new NameValueCollection();
+            coll.Add("command", "returnTradeHistory");
+            coll.Add("nonce", DateTime.Now.Ticks.ToString());
+            coll.Add("currencyPair", ticker.MarketName);
+
+            WebClient client = GetWebClient();
+            client.Headers.Clear();
+            client.Headers.Add("Sign", GetSign(ToQueryString(coll)));
+            client.Headers.Add("Key", ApiKey);
+            try {
+                byte[] data = client.UploadValues(address, coll);
+                return OnUpdateMyTrades(ticker, data);
+            }
+            catch(Exception e) {
+                Debug.WriteLine("get my trade history exception: " + e.ToString());
+                return false;
+            }
+        }
+        bool OnUpdateMyTrades(TickerBase ticker, byte[] data) {
+            string text = System.Text.Encoding.ASCII.GetString(data);
+            if(string.IsNullOrEmpty(text))
+                return false;
+            JObject res = (JObject)JsonConvert.DeserializeObject(text);
+            lock(ticker.OpenedOrders) {
+                ticker.OpenedOrders.Clear();
+                foreach(JProperty prop in res.Children()) {
+                    if(prop.Name == "error") {
+                        Debug.WriteLine("OnGetOpenedOrders fails: " + prop.Value<string>());
+                        return false;
+                    }
+                    JArray array = (JArray)prop.Value;
+                    ticker.MyTradeHistory.Clear();
+                    foreach(JObject obj in array) {
+                        TradeHistoryItem info = new TradeHistoryItem();
+                        info.OrderNumber = obj.Value<int>("orderNumber");
+                        info.Time = obj.Value<DateTime>("date");
+                        info.Type = obj.Value<string>("type") == "sell" ? TradeType.Sell : TradeType.Buy;
+                        info.Rate = obj.Value<decimal>("rate");
+                        info.Amount = obj.Value<decimal>("amount");
+                        info.Total = obj.Value<decimal>("total");
+                        info.Fee = obj.Value<decimal>("fee");
+                        ticker.MyTradeHistory.Add(info);
+                    }
+                }
             }
             return true;
         }
@@ -460,8 +509,13 @@ namespace CryptoMarketClient {
             client.Headers.Clear();
             client.Headers.Add("Sign", GetSign(ToQueryString(coll)));
             client.Headers.Add("Key", ApiKey);
-            byte[] data = client.UploadValues(address, coll);
-            return OnGetOpenedOrders(ticker, data);
+            try {
+                byte[] data = client.UploadValues(address, coll);
+                return OnGetOpenedOrders(ticker, data);
+            }
+            catch(Exception) {
+                return false;
+            }
         }
         public Task<byte[]> GetOpenedOrders() {
             string address = string.Format("https://poloniex.com/tradingApi");

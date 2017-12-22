@@ -145,7 +145,7 @@ namespace CryptoMarketClient.Bittrex {
                     info.HighestBid = obj.Value<decimal>("Bid");
                     info.LowestAsk = obj.Value<decimal>("Ask");
                     info.Last = obj.Value<decimal>("Last");
-                    info.Time = DateTime.Now;
+                    info.Time = DateTime.UtcNow;
                     info.UpdateHistoryItem();
                 }
             }
@@ -345,6 +345,20 @@ namespace CryptoMarketClient.Bittrex {
             info.RaiseTradeHistoryAdd();
             return true;
         }
+        public override bool UpdateMyTrades(TickerBase ticker) {
+            string address = string.Format("https://bittrex.com/api/v1.1/market/getopenorders?apikey={0}&nonce={1}&market={2}",
+                Uri.EscapeDataString(ApiKey),
+                DateTime.UtcNow,
+                ticker.MarketName);
+            WebClient client = GetWebClient();
+            client.Headers.Clear();
+            client.Headers.Add("apisign", GetSign(address));
+            string text = client.DownloadString(address);
+            return OnGetMyTrades(ticker, text);
+        }
+        bool OnGetMyTrades(TickerBase ticker, string text) {
+            throw new NotImplementedException();
+        }
         public override bool UpdateTrades(TickerBase info) {
             string address = string.Format("https://bittrex.com/api/v1.1/public/getmarkethistory?market={0}", Uri.EscapeDataString(info.MarketName));
             string text = string.Empty;
@@ -365,7 +379,7 @@ namespace CryptoMarketClient.Bittrex {
                 info.TradeHistory.Clear();
                 if(trades == null)
                     return true;
-                int lastId = info.TradeHistory.Count > 0 ? info.TradeHistory.First().Id : -1;
+                long lastId = info.TradeHistory.Count > 0 ? info.TradeHistory.First().Id : -1;
                 foreach(JObject obj in trades) {
                     int id = obj.Value<int>("Id");
                     if(id == lastId) {
@@ -401,7 +415,7 @@ namespace CryptoMarketClient.Bittrex {
                 return true;
             int lastTradeId = trades.First().Value<int>("Id");
             if(lastTradeId == info.LastTradeId) {
-                info.TradeStatistic.Add(new TradeStatisticsItem() { Time = DateTime.Now });
+                info.TradeStatistic.Add(new TradeStatisticsItem() { Time = DateTime.UtcNow });
                 if(info.TradeStatistic.Count > 5000) {
                     for(int i = 0; i < 100; i++)
                         info.TradeStatistic.RemoveAt(0);
@@ -449,7 +463,7 @@ namespace CryptoMarketClient.Bittrex {
         public string BuyLimit(BittrexTicker info, decimal rate, decimal amount) {
             string address = string.Format("https://bittrex.com/api/v1.1/market/buylimit?apikey={0}&nonce={1}&market={2}&quantity={3}&rate={4}",
                 Uri.EscapeDataString(ApiKey),
-                DateTime.Now,
+                DateTime.UtcNow,
                 Uri.EscapeDataString(info.MarketName),
                 amount.ToString("0.########"),
                 rate.ToString("0.########"));
@@ -461,7 +475,7 @@ namespace CryptoMarketClient.Bittrex {
         public string SellLimit(BittrexTicker info, decimal rate, decimal amount) {
             string address = string.Format("https://bittrex.com/api/v1.1/market/selllimit?apikey={0}&nonce={1}&market={2}&quantity={3}&rate={4}",
                 Uri.EscapeDataString(ApiKey),
-                DateTime.Now,
+                DateTime.UtcNow,
                 Uri.EscapeDataString(info.MarketName),
                 amount.ToString("0.########"),
                 rate.ToString("0.########"));
@@ -473,7 +487,7 @@ namespace CryptoMarketClient.Bittrex {
         public Task<string> CancelOrder(string uuid) {
             string address = string.Format("https://bittrex.com/api/v1.1/market/cancel?apikey={0}&nonce={1}&uuid={2}",
                 Uri.EscapeDataString(ApiKey),
-                DateTime.Now,
+                DateTime.UtcNow,
                 uuid);
             WebClient client = GetWebClient();
             client.Headers.Clear();
@@ -483,7 +497,7 @@ namespace CryptoMarketClient.Bittrex {
         public Task<string> GetOpenOrders(BittrexTicker info) {
             string address = string.Format("https://bittrex.com/api/v1.1/market/getopenorders?apikey={0}&nonce={1}&market={2}",
                 Uri.EscapeDataString(ApiKey),
-                DateTime.Now,
+                DateTime.UtcNow,
                 info.MarketName);
             WebClient client = GetWebClient();
             client.Headers.Clear();
@@ -493,7 +507,7 @@ namespace CryptoMarketClient.Bittrex {
         public override bool UpdateOpenedOrders(TickerBase tickerBase) {
             string address = string.Format("https://bittrex.com/api/v1.1/market/getopenorders?apikey={0}&nonce={1}&market={2}",
                 Uri.EscapeDataString(ApiKey),
-                DateTime.Now,
+                DateTime.UtcNow,
                 tickerBase.MarketName);
             WebClient client = GetWebClient();
             client.Headers.Clear();
@@ -575,7 +589,7 @@ namespace CryptoMarketClient.Bittrex {
 
         }
         public bool GetBalance(string currency) {
-            string address = string.Format("https://bittrex.com/api/v1.1/account/getbalance?apikey={0}&nonce={1}&currency={2}", Uri.EscapeDataString(ApiKey), DateTime.Now, currency);
+            string address = string.Format("https://bittrex.com/api/v1.1/account/getbalance?apikey={0}&nonce={1}&currency={2}", Uri.EscapeDataString(ApiKey), DateTime.UtcNow, currency);
             WebClient client = GetWebClient();
             client.Headers.Clear();
             client.Headers.Add("apisign", GetSign(address));
@@ -620,7 +634,7 @@ namespace CryptoMarketClient.Bittrex {
             }
             WebClient client = GetWebClient();
             foreach(BittrexCurrencyInfo info in Currencies) {
-                string address = string.Format("https://bittrex.com/api/v1.1/account/getbalance?apikey={0}&nonce={1}&currency={2}", Uri.EscapeDataString(ApiKey), DateTime.Now, info.Currency);
+                string address = string.Format("https://bittrex.com/api/v1.1/account/getbalance?apikey={0}&nonce={1}&currency={2}", Uri.EscapeDataString(ApiKey), DateTime.UtcNow, info.Currency);
                 client.Headers.Clear();
                 client.Headers.Add("apisign", GetSign(address));
                 int tryIndex = 0;
@@ -640,7 +654,7 @@ namespace CryptoMarketClient.Bittrex {
             return true;
         }
         public Task<string> GetBalancesAsync() {
-            string address = string.Format("https://bittrex.com/api/v1.1/account/getbalances?apikey={0}&nonce={1}", Uri.EscapeDataString(ApiKey), DateTime.Now);
+            string address = string.Format("https://bittrex.com/api/v1.1/account/getbalances?apikey={0}&nonce={1}", Uri.EscapeDataString(ApiKey), DateTime.UtcNow);
             WebClient client = GetWebClient();
             client.Headers.Clear();
             client.Headers.Add("apisign", GetSign(address));
@@ -681,14 +695,14 @@ namespace CryptoMarketClient.Bittrex {
             if(string.IsNullOrEmpty(paymentId)) {
                 addr = string.Format("https://bittrex.com/api/v1.1/account/withdraw?apikey={0}&nonce={1}&currency={2}&quantity={3}",
                     Uri.EscapeDataString(ApiKey),
-                    DateTime.Now,
+                    DateTime.UtcNow,
                     Uri.EscapeDataString(currency),
                     amount.ToString("0.########"));
             }
             else {
                 addr = string.Format("https://bittrex.com/api/v1.1/account/withdraw?apikey={0}&nonce={1}&currency={2}&quantity={3}&paymentid={4}",
                         Uri.EscapeDataString(ApiKey),
-                        DateTime.Now,
+                        DateTime.UtcNow,
                         Uri.EscapeDataString(currency),
                         amount.ToString("0.########"),
                         Uri.EscapeDataString(paymentId));
@@ -710,14 +724,14 @@ namespace CryptoMarketClient.Bittrex {
             if(string.IsNullOrEmpty(paymentId)) {
                 addr = string.Format("https://bittrex.com/api/v1.1/account/withdraw?apikey={0}&nonce={1}&currency={2}&quantity={3}",
                     Uri.EscapeDataString(ApiKey),
-                    DateTime.Now,
+                    DateTime.UtcNow,
                     Uri.EscapeDataString(currency),
                     amount.ToString("0.########"));
             }
             else {
                 addr = string.Format("https://bittrex.com/api/v1.1/account/withdraw?apikey={0}&nonce={1}&currency={2}&quantity={3}&paymentid={4}",
                         Uri.EscapeDataString(ApiKey),
-                        DateTime.Now,
+                        DateTime.UtcNow,
                         Uri.EscapeDataString(currency),
                         amount.ToString("0.########"),
                         Uri.EscapeDataString(paymentId));
@@ -732,7 +746,7 @@ namespace CryptoMarketClient.Bittrex {
         }
 
         public string CheckCreateDeposit(string currency) {
-            string address = string.Format("https://bittrex.com/api/v1.1/account/getdepositaddress?apikey={0}&nonce={1}&currency={2}", Uri.EscapeDataString(ApiKey), DateTime.Now, currency);
+            string address = string.Format("https://bittrex.com/api/v1.1/account/getdepositaddress?apikey={0}&nonce={1}&currency={2}", Uri.EscapeDataString(ApiKey), DateTime.UtcNow, currency);
             WebClient client = GetWebClient();
             client.Headers.Clear();
             client.Headers.Add("apisign", GetSign(address));

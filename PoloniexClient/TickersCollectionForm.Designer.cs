@@ -53,6 +53,7 @@
             this.gcLowestAsk = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colIsActual = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gcSecond = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.repositoryItemTextEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemTextEdit();
             this.gridControl1 = new DevExpress.XtraGrid.GridControl();
             this.gridView1 = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.colIsSelected = new DevExpress.XtraGrid.Columns.GridColumn();
@@ -89,7 +90,8 @@
             this.barDockControlLeft = new DevExpress.XtraBars.BarDockControl();
             this.barDockControlRight = new DevExpress.XtraBars.BarDockControl();
             this.popupMenu1 = new DevExpress.XtraBars.PopupMenu(this.components);
-            this.repositoryItemTextEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemTextEdit();
+            this.teValueWithChange = new DevExpress.XtraEditors.Repository.RepositoryItemTextEdit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemTextEdit1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit1)).BeginInit();
@@ -97,7 +99,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.bbOpenedOrders)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.barManager1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.popupMenu1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemTextEdit1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.teValueWithChange)).BeginInit();
             this.SuspendLayout();
             // 
             // gcPercentChange
@@ -106,8 +108,6 @@
             this.gcPercentChange.FieldName = "PercentChange";
             this.gcPercentChange.Name = "gcPercentChange";
             this.gcPercentChange.OptionsColumn.AllowEdit = false;
-            this.gcPercentChange.Visible = true;
-            this.gcPercentChange.VisibleIndex = 9;
             this.gcPercentChange.Width = 86;
             // 
             // gcDeltaBid
@@ -119,7 +119,8 @@
             // gcHighestBid
             // 
             this.gcHighestBid.Caption = "Highest Bid";
-            this.gcHighestBid.FieldName = "HighestBid";
+            this.gcHighestBid.ColumnEdit = this.teValueWithChange;
+            this.gcHighestBid.FieldName = "HighestBidString";
             this.gcHighestBid.Name = "gcHighestBid";
             this.gcHighestBid.OptionsColumn.AllowEdit = false;
             this.gcHighestBid.Visible = true;
@@ -135,7 +136,8 @@
             // gcLowestAsk
             // 
             this.gcLowestAsk.Caption = "Lowest Ask";
-            this.gcLowestAsk.FieldName = "LowestAsk";
+            this.gcLowestAsk.ColumnEdit = this.teValueWithChange;
+            this.gcLowestAsk.FieldName = "LowestAskString";
             this.gcLowestAsk.Name = "gcLowestAsk";
             this.gcLowestAsk.OptionsColumn.AllowEdit = false;
             this.gcLowestAsk.Visible = true;
@@ -159,19 +161,26 @@
             this.gcSecond.VisibleIndex = 1;
             this.gcSecond.Width = 86;
             // 
+            // repositoryItemTextEdit1
+            // 
+            this.repositoryItemTextEdit1.AutoHeight = false;
+            this.repositoryItemTextEdit1.Name = "repositoryItemTextEdit1";
+            this.repositoryItemTextEdit1.Padding = new System.Windows.Forms.Padding(0, 5, 0, 5);
+            // 
             // gridControl1
             // 
             this.gridControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gridControl1.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(6);
-            this.gridControl1.Location = new System.Drawing.Point(0, 205);
+            this.gridControl1.Location = new System.Drawing.Point(0, 141);
             this.gridControl1.MainView = this.gridView1;
             this.gridControl1.Margin = new System.Windows.Forms.Padding(6);
             this.gridControl1.Name = "gridControl1";
             this.gridControl1.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repositoryItemSparklineEdit1,
             this.repositoryItemCheckEdit1,
-            this.repositoryItemTextEdit1});
-            this.gridControl1.Size = new System.Drawing.Size(1916, 703);
+            this.repositoryItemTextEdit1,
+            this.teValueWithChange});
+            this.gridControl1.Size = new System.Drawing.Size(1916, 767);
             this.gridControl1.TabIndex = 0;
             this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridView1});
@@ -315,7 +324,8 @@
             // gcLast
             // 
             this.gcLast.Caption = "Last";
-            this.gcLast.FieldName = "Last";
+            this.gcLast.ColumnEdit = this.teValueWithChange;
+            this.gcLast.FieldName = "LastString";
             this.gcLast.Name = "gcLast";
             this.gcLast.OptionsColumn.AllowEdit = false;
             this.gcLast.Visible = true;
@@ -339,7 +349,7 @@
             this.gcQuoteVolume.Name = "gcQuoteVolume";
             this.gcQuoteVolume.OptionsColumn.AllowEdit = false;
             this.gcQuoteVolume.Visible = true;
-            this.gcQuoteVolume.VisibleIndex = 10;
+            this.gcQuoteVolume.VisibleIndex = 9;
             this.gcQuoteVolume.Width = 81;
             // 
             // gcIsFrozen
@@ -391,7 +401,7 @@
             this.colUpdateTimeMs.Name = "colUpdateTimeMs";
             this.colUpdateTimeMs.OptionsColumn.AllowEdit = false;
             this.colUpdateTimeMs.Visible = true;
-            this.colUpdateTimeMs.VisibleIndex = 11;
+            this.colUpdateTimeMs.VisibleIndex = 10;
             this.colUpdateTimeMs.Width = 44;
             // 
             // repositoryItemSparklineEdit1
@@ -425,7 +435,7 @@
             this.bbOpenedOrders.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
             this.ribbonPage1});
             this.bbOpenedOrders.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonControlStyle.OfficeUniversal;
-            this.bbOpenedOrders.Size = new System.Drawing.Size(1916, 167);
+            this.bbOpenedOrders.Size = new System.Drawing.Size(1916, 103);
             // 
             // barCheckItem1
             // 
@@ -554,7 +564,7 @@
             this.standaloneBarDockControl1.AutoSize = true;
             this.standaloneBarDockControl1.CausesValidation = false;
             this.standaloneBarDockControl1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.standaloneBarDockControl1.Location = new System.Drawing.Point(0, 167);
+            this.standaloneBarDockControl1.Location = new System.Drawing.Point(0, 103);
             this.standaloneBarDockControl1.Manager = this.barManager1;
             this.standaloneBarDockControl1.Margin = new System.Windows.Forms.Padding(4);
             this.standaloneBarDockControl1.Name = "standaloneBarDockControl1";
@@ -604,11 +614,12 @@
             this.popupMenu1.Name = "popupMenu1";
             this.popupMenu1.Ribbon = this.bbOpenedOrders;
             // 
-            // repositoryItemTextEdit1
+            // teValueWithChange
             // 
-            this.repositoryItemTextEdit1.AutoHeight = false;
-            this.repositoryItemTextEdit1.Name = "repositoryItemTextEdit1";
-            this.repositoryItemTextEdit1.Padding = new System.Windows.Forms.Padding(0, 5, 0, 5);
+            this.teValueWithChange.AllowHtmlDraw = DevExpress.Utils.DefaultBoolean.True;
+            this.teValueWithChange.AutoHeight = false;
+            this.teValueWithChange.Name = "teValueWithChange";
+            this.teValueWithChange.Padding = new System.Windows.Forms.Padding(0, 0, 0, 0);
             // 
             // TickersCollectionForm
             // 
@@ -625,6 +636,7 @@
             this.Margin = new System.Windows.Forms.Padding(6);
             this.Name = "TickersCollectionForm";
             this.Text = "Poloniex Markets";
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemTextEdit1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit1)).EndInit();
@@ -632,7 +644,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.bbOpenedOrders)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.barManager1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.popupMenu1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemTextEdit1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.teValueWithChange)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -684,5 +696,6 @@
         private DevExpress.XtraGrid.Columns.GridColumn colIsActual;
         private DevExpress.XtraBars.BarCheckItem bbMonitorOnlySelected;
         private DevExpress.XtraEditors.Repository.RepositoryItemTextEdit repositoryItemTextEdit1;
+        private DevExpress.XtraEditors.Repository.RepositoryItemTextEdit teValueWithChange;
     }
 }

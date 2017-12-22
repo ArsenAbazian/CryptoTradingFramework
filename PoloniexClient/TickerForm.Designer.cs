@@ -26,35 +26,31 @@
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TickerForm));
-            DevExpress.XtraEditors.Controls.EditorButtonImageOptions editorButtonImageOptions6 = new DevExpress.XtraEditors.Controls.EditorButtonImageOptions();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject21 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject22 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject23 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject24 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.XtraEditors.Controls.EditorButtonImageOptions editorButtonImageOptions7 = new DevExpress.XtraEditors.Controls.EditorButtonImageOptions();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject25 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject26 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject27 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject28 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.XtraEditors.Controls.EditorButtonImageOptions editorButtonImageOptions8 = new DevExpress.XtraEditors.Controls.EditorButtonImageOptions();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject29 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject30 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject31 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject32 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.XtraEditors.Controls.EditorButtonImageOptions editorButtonImageOptions9 = new DevExpress.XtraEditors.Controls.EditorButtonImageOptions();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject33 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject34 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject35 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject36 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.XtraEditors.Controls.EditorButtonImageOptions editorButtonImageOptions10 = new DevExpress.XtraEditors.Controls.EditorButtonImageOptions();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject37 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject38 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject39 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject40 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.XtraGrid.GridFormatRule gridFormatRule7 = new DevExpress.XtraGrid.GridFormatRule();
-            DevExpress.XtraEditors.FormatConditionRuleValue formatConditionRuleValue7 = new DevExpress.XtraEditors.FormatConditionRuleValue();
-            DevExpress.XtraGrid.GridFormatRule gridFormatRule8 = new DevExpress.XtraGrid.GridFormatRule();
-            DevExpress.XtraEditors.FormatConditionRuleValue formatConditionRuleValue8 = new DevExpress.XtraEditors.FormatConditionRuleValue();
+            DevExpress.XtraEditors.Controls.EditorButtonImageOptions editorButtonImageOptions1 = new DevExpress.XtraEditors.Controls.EditorButtonImageOptions();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject1 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject2 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject3 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject4 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.XtraEditors.Controls.EditorButtonImageOptions editorButtonImageOptions2 = new DevExpress.XtraEditors.Controls.EditorButtonImageOptions();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject5 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject6 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject7 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject8 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.XtraEditors.Controls.EditorButtonImageOptions editorButtonImageOptions3 = new DevExpress.XtraEditors.Controls.EditorButtonImageOptions();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject9 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject10 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject11 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject12 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.XtraEditors.Controls.EditorButtonImageOptions editorButtonImageOptions4 = new DevExpress.XtraEditors.Controls.EditorButtonImageOptions();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject13 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject14 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject15 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject16 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.XtraEditors.Controls.EditorButtonImageOptions editorButtonImageOptions5 = new DevExpress.XtraEditors.Controls.EditorButtonImageOptions();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject17 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject18 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject19 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject20 = new DevExpress.Utils.SerializableAppearanceObject();
             DevExpress.XtraGrid.GridFormatRule gridFormatRule1 = new DevExpress.XtraGrid.GridFormatRule();
             DevExpress.XtraEditors.FormatConditionRuleValue formatConditionRuleValue1 = new DevExpress.XtraEditors.FormatConditionRuleValue();
             DevExpress.XtraGrid.GridFormatRule gridFormatRule2 = new DevExpress.XtraGrid.GridFormatRule();
@@ -63,6 +59,10 @@
             DevExpress.XtraEditors.FormatConditionRuleValue formatConditionRuleValue3 = new DevExpress.XtraEditors.FormatConditionRuleValue();
             DevExpress.XtraGrid.GridFormatRule gridFormatRule4 = new DevExpress.XtraGrid.GridFormatRule();
             DevExpress.XtraEditors.FormatConditionRuleValue formatConditionRuleValue4 = new DevExpress.XtraEditors.FormatConditionRuleValue();
+            DevExpress.XtraGrid.GridFormatRule gridFormatRule5 = new DevExpress.XtraGrid.GridFormatRule();
+            DevExpress.XtraEditors.FormatConditionRuleValue formatConditionRuleValue5 = new DevExpress.XtraEditors.FormatConditionRuleValue();
+            DevExpress.XtraGrid.GridFormatRule gridFormatRule6 = new DevExpress.XtraGrid.GridFormatRule();
+            DevExpress.XtraEditors.FormatConditionRuleValue formatConditionRuleValue6 = new DevExpress.XtraEditors.FormatConditionRuleValue();
             this.colType = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colType1 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colFill = new DevExpress.XtraGrid.Columns.GridColumn();
@@ -90,6 +90,8 @@
             this.dpOrderBook = new DevExpress.XtraBars.Docking.DockPanel();
             this.dockPanel1_Container = new DevExpress.XtraBars.Docking.ControlContainer();
             this.panelContainer1 = new DevExpress.XtraBars.Docking.DockPanel();
+            this.dpTrades = new DevExpress.XtraBars.Docking.DockPanel();
+            this.dockPanel2_Container = new DevExpress.XtraBars.Docking.ControlContainer();
             this.dpBuy = new DevExpress.XtraBars.Docking.DockPanel();
             this.controlContainer2 = new DevExpress.XtraBars.Docking.ControlContainer();
             this.buySettingsControl = new CryptoMarketClient.BuySettingsControl();
@@ -104,8 +106,6 @@
             this.colValue = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colAmount1 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colTotal1 = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.dpTrades = new DevExpress.XtraBars.Docking.DockPanel();
-            this.dockPanel2_Container = new DevExpress.XtraBars.Docking.ControlContainer();
             this.dockPanel1 = new DevExpress.XtraBars.Docking.DockPanel();
             this.controlContainer3 = new DevExpress.XtraBars.Docking.ControlContainer();
             this.gcOrderHistory = new DevExpress.XtraGrid.GridControl();
@@ -116,12 +116,15 @@
             this.colAmount2 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colTotal2 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colType2 = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.dpInfo = new DevExpress.XtraBars.Docking.DockPanel();
-            this.dockPanel3_Container = new DevExpress.XtraBars.Docking.ControlContainer();
-            this.tradingResultBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.dpActiveTrailings = new DevExpress.XtraBars.Docking.DockPanel();
             this.controlContainer4 = new DevExpress.XtraBars.Docking.ControlContainer();
             this.activeTrailingCollectionControl1 = new CryptoMarketClient.TrailingCollectionControl();
+            this.dpInfo = new DevExpress.XtraBars.Docking.DockPanel();
+            this.dockPanel3_Container = new DevExpress.XtraBars.Docking.ControlContainer();
+            this.tradingResultBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.dpMyTrades = new DevExpress.XtraBars.Docking.DockPanel();
+            this.controlContainer5 = new DevExpress.XtraBars.Docking.ControlContainer();
+            this.myTradesCollectionControl1 = new CryptoMarketClient.MyTradesCollectionControl();
             ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemTextEdit1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemButtonEdit1)).BeginInit();
@@ -133,6 +136,8 @@
             this.dpOrderBook.SuspendLayout();
             this.dockPanel1_Container.SuspendLayout();
             this.panelContainer1.SuspendLayout();
+            this.dpTrades.SuspendLayout();
+            this.dockPanel2_Container.SuspendLayout();
             this.dpBuy.SuspendLayout();
             this.controlContainer2.SuspendLayout();
             this.dpOpenedOrders.SuspendLayout();
@@ -140,18 +145,18 @@
             ((System.ComponentModel.ISupportInitialize)(this.gcOpenedOrders)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.openedOrderInfoBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gvOrders)).BeginInit();
-            this.dpTrades.SuspendLayout();
-            this.dockPanel2_Container.SuspendLayout();
             this.dockPanel1.SuspendLayout();
             this.controlContainer3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gcOrderHistory)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tradingResultBindingSource1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gvOderHistory)).BeginInit();
+            this.dpActiveTrailings.SuspendLayout();
+            this.controlContainer4.SuspendLayout();
             this.dpInfo.SuspendLayout();
             this.dockPanel3_Container.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tradingResultBindingSource)).BeginInit();
-            this.dpActiveTrailings.SuspendLayout();
-            this.controlContainer4.SuspendLayout();
+            this.dpMyTrades.SuspendLayout();
+            this.controlContainer5.SuspendLayout();
             this.SuspendLayout();
             // 
             // colType
@@ -255,12 +260,13 @@
             this.repositoryItemTextEdit1.Mask.EditMask = "f8";
             this.repositoryItemTextEdit1.Mask.MaskType = DevExpress.XtraEditors.Mask.MaskType.Numeric;
             this.repositoryItemTextEdit1.Name = "repositoryItemTextEdit1";
+            this.repositoryItemTextEdit1.Padding = new System.Windows.Forms.Padding(0, 0, 0, 0);
             // 
             // repositoryItemButtonEdit1
             // 
             this.repositoryItemButtonEdit1.AutoHeight = false;
             this.repositoryItemButtonEdit1.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph, "All", 50, true, true, false, editorButtonImageOptions6, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject21, serializableAppearanceObject22, serializableAppearanceObject23, serializableAppearanceObject24, "", null, null, DevExpress.Utils.ToolTipAnchor.Default)});
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph, "All", 50, true, true, false, editorButtonImageOptions1, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject1, serializableAppearanceObject2, serializableAppearanceObject3, serializableAppearanceObject4, "", null, null, DevExpress.Utils.ToolTipAnchor.Default)});
             this.repositoryItemButtonEdit1.DisplayFormat.FormatString = "0.########";
             this.repositoryItemButtonEdit1.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.repositoryItemButtonEdit1.EditFormat.FormatString = "0.########";
@@ -268,16 +274,18 @@
             this.repositoryItemButtonEdit1.Mask.EditMask = "f8";
             this.repositoryItemButtonEdit1.Mask.MaskType = DevExpress.XtraEditors.Mask.MaskType.Numeric;
             this.repositoryItemButtonEdit1.Name = "repositoryItemButtonEdit1";
+            this.repositoryItemButtonEdit1.Padding = new System.Windows.Forms.Padding(0, 0, 0, 0);
             // 
             // repositoryItemButtonEdit2
             // 
             this.repositoryItemButtonEdit2.AutoHeight = false;
             this.repositoryItemButtonEdit2.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "25%", -1, true, true, false, editorButtonImageOptions7, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject25, serializableAppearanceObject26, serializableAppearanceObject27, serializableAppearanceObject28, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "50%", -1, true, true, false, editorButtonImageOptions8, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject29, serializableAppearanceObject30, serializableAppearanceObject31, serializableAppearanceObject32, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "75%", -1, true, true, false, editorButtonImageOptions9, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject33, serializableAppearanceObject34, serializableAppearanceObject35, serializableAppearanceObject36, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "100%", -1, true, true, false, editorButtonImageOptions10, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject37, serializableAppearanceObject38, serializableAppearanceObject39, serializableAppearanceObject40, "", null, null, DevExpress.Utils.ToolTipAnchor.Default)});
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "25%", -1, true, true, false, editorButtonImageOptions2, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject5, serializableAppearanceObject6, serializableAppearanceObject7, serializableAppearanceObject8, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "50%", -1, true, true, false, editorButtonImageOptions3, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject9, serializableAppearanceObject10, serializableAppearanceObject11, serializableAppearanceObject12, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "75%", -1, true, true, false, editorButtonImageOptions4, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject13, serializableAppearanceObject14, serializableAppearanceObject15, serializableAppearanceObject16, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis, "100%", -1, true, true, false, editorButtonImageOptions5, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject17, serializableAppearanceObject18, serializableAppearanceObject19, serializableAppearanceObject20, "", null, null, DevExpress.Utils.ToolTipAnchor.Default)});
             this.repositoryItemButtonEdit2.Name = "repositoryItemButtonEdit2";
+            this.repositoryItemButtonEdit2.Padding = new System.Windows.Forms.Padding(0, 0, 0, 0);
             // 
             // tickerChartViewer1
             // 
@@ -346,24 +354,24 @@
             this.colFill,
             this.colType,
             this.colId});
-            gridFormatRule7.Column = this.colType;
-            gridFormatRule7.ColumnApplyTo = this.colType;
-            gridFormatRule7.Name = "FormatRulesTradeBuy";
-            formatConditionRuleValue7.Appearance.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
-            formatConditionRuleValue7.Appearance.Options.UseForeColor = true;
-            formatConditionRuleValue7.Condition = DevExpress.XtraEditors.FormatCondition.Equal;
-            formatConditionRuleValue7.Value1 = CryptoMarketClient.TradeType.Buy;
-            gridFormatRule7.Rule = formatConditionRuleValue7;
-            gridFormatRule8.Column = this.colType;
-            gridFormatRule8.ColumnApplyTo = this.colType;
-            gridFormatRule8.Name = "FormatRulesTradeSell";
-            formatConditionRuleValue8.Appearance.ForeColor = System.Drawing.Color.Red;
-            formatConditionRuleValue8.Appearance.Options.UseForeColor = true;
-            formatConditionRuleValue8.Condition = DevExpress.XtraEditors.FormatCondition.Equal;
-            formatConditionRuleValue8.Value1 = CryptoMarketClient.TradeType.Sell;
-            gridFormatRule8.Rule = formatConditionRuleValue8;
-            this.gvTrades.FormatRules.Add(gridFormatRule7);
-            this.gvTrades.FormatRules.Add(gridFormatRule8);
+            gridFormatRule1.Column = this.colType;
+            gridFormatRule1.ColumnApplyTo = this.colType;
+            gridFormatRule1.Name = "FormatRulesTradeBuy";
+            formatConditionRuleValue1.Appearance.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
+            formatConditionRuleValue1.Appearance.Options.UseForeColor = true;
+            formatConditionRuleValue1.Condition = DevExpress.XtraEditors.FormatCondition.Equal;
+            formatConditionRuleValue1.Value1 = CryptoMarketClient.TradeType.Buy;
+            gridFormatRule1.Rule = formatConditionRuleValue1;
+            gridFormatRule2.Column = this.colType;
+            gridFormatRule2.ColumnApplyTo = this.colType;
+            gridFormatRule2.Name = "FormatRulesTradeSell";
+            formatConditionRuleValue2.Appearance.ForeColor = System.Drawing.Color.Red;
+            formatConditionRuleValue2.Appearance.Options.UseForeColor = true;
+            formatConditionRuleValue2.Condition = DevExpress.XtraEditors.FormatCondition.Equal;
+            formatConditionRuleValue2.Value1 = CryptoMarketClient.TradeType.Sell;
+            gridFormatRule2.Rule = formatConditionRuleValue2;
+            this.gvTrades.FormatRules.Add(gridFormatRule1);
+            this.gvTrades.FormatRules.Add(gridFormatRule2);
             this.gvTrades.GridControl = this.gcTrades;
             this.gvTrades.Name = "gvTrades";
             this.gvTrades.OptionsBehavior.AllowPixelScrolling = DevExpress.Utils.DefaultBoolean.True;
@@ -418,6 +426,7 @@
             "DevExpress.XtraBars.Navigation.OfficeNavigationBar",
             "DevExpress.XtraBars.Navigation.TileNavPane",
             "DevExpress.XtraBars.TabFormControl"});
+            this.dockManager1.ActivePanelChanged += new DevExpress.XtraBars.Docking.ActivePanelChangedEventHandler(this.dockManager1_ActivePanelChanged);
             // 
             // dpOrderBook
             // 
@@ -442,9 +451,10 @@
             // 
             // panelContainer1
             // 
-            this.panelContainer1.ActiveChild = this.dpActiveTrailings;
+            this.panelContainer1.ActiveChild = this.dpMyTrades;
             this.panelContainer1.Controls.Add(this.dpBuy);
             this.panelContainer1.Controls.Add(this.dpOpenedOrders);
+            this.panelContainer1.Controls.Add(this.dpMyTrades);
             this.panelContainer1.Controls.Add(this.dpTrades);
             this.panelContainer1.Controls.Add(this.dockPanel1);
             this.panelContainer1.Controls.Add(this.dpActiveTrailings);
@@ -456,6 +466,27 @@
             this.panelContainer1.Size = new System.Drawing.Size(648, 959);
             this.panelContainer1.Tabbed = true;
             this.panelContainer1.Text = "panelContainer1";
+            // 
+            // dpTrades
+            // 
+            this.dpTrades.Controls.Add(this.dockPanel2_Container);
+            this.dpTrades.Dock = DevExpress.XtraBars.Docking.DockingStyle.Fill;
+            this.dpTrades.ID = new System.Guid("cecd3d8a-da7f-4a81-90ca-fe5b5710f049");
+            this.dpTrades.Location = new System.Drawing.Point(13, 46);
+            this.dpTrades.Margin = new System.Windows.Forms.Padding(4);
+            this.dpTrades.Name = "dpTrades";
+            this.dpTrades.OriginalSize = new System.Drawing.Size(544, 859);
+            this.dpTrades.Size = new System.Drawing.Size(627, 859);
+            this.dpTrades.Text = "Trades";
+            // 
+            // dockPanel2_Container
+            // 
+            this.dockPanel2_Container.Controls.Add(this.gcTrades);
+            this.dockPanel2_Container.Location = new System.Drawing.Point(0, 0);
+            this.dockPanel2_Container.Margin = new System.Windows.Forms.Padding(4);
+            this.dockPanel2_Container.Name = "dockPanel2_Container";
+            this.dockPanel2_Container.Size = new System.Drawing.Size(627, 859);
+            this.dockPanel2_Container.TabIndex = 0;
             // 
             // dpBuy
             // 
@@ -541,22 +572,22 @@
             this.colValue,
             this.colAmount1,
             this.colTotal1});
-            gridFormatRule1.Column = this.colType1;
-            gridFormatRule1.ColumnApplyTo = this.colType1;
-            gridFormatRule1.Name = "FormatSell";
-            formatConditionRuleValue1.Appearance.ForeColor = System.Drawing.Color.Red;
-            formatConditionRuleValue1.Appearance.Options.UseForeColor = true;
-            formatConditionRuleValue1.Condition = DevExpress.XtraEditors.FormatCondition.Equal;
-            formatConditionRuleValue1.Value1 = 1;
-            gridFormatRule1.Rule = formatConditionRuleValue1;
-            gridFormatRule2.Column = this.colType1;
-            gridFormatRule2.ColumnApplyTo = this.colType1;
-            gridFormatRule2.Name = "FormatBuy";
-            formatConditionRuleValue2.Condition = DevExpress.XtraEditors.FormatCondition.Equal;
-            formatConditionRuleValue2.Value1 = 0;
-            gridFormatRule2.Rule = formatConditionRuleValue2;
-            this.gvOrders.FormatRules.Add(gridFormatRule1);
-            this.gvOrders.FormatRules.Add(gridFormatRule2);
+            gridFormatRule3.Column = this.colType1;
+            gridFormatRule3.ColumnApplyTo = this.colType1;
+            gridFormatRule3.Name = "FormatSell";
+            formatConditionRuleValue3.Appearance.ForeColor = System.Drawing.Color.Red;
+            formatConditionRuleValue3.Appearance.Options.UseForeColor = true;
+            formatConditionRuleValue3.Condition = DevExpress.XtraEditors.FormatCondition.Equal;
+            formatConditionRuleValue3.Value1 = 1;
+            gridFormatRule3.Rule = formatConditionRuleValue3;
+            gridFormatRule4.Column = this.colType1;
+            gridFormatRule4.ColumnApplyTo = this.colType1;
+            gridFormatRule4.Name = "FormatBuy";
+            formatConditionRuleValue4.Condition = DevExpress.XtraEditors.FormatCondition.Equal;
+            formatConditionRuleValue4.Value1 = 0;
+            gridFormatRule4.Rule = formatConditionRuleValue4;
+            this.gvOrders.FormatRules.Add(gridFormatRule3);
+            this.gvOrders.FormatRules.Add(gridFormatRule4);
             this.gvOrders.GridControl = this.gcOpenedOrders;
             this.gvOrders.Name = "gvOrders";
             this.gvOrders.OptionsBehavior.Editable = false;
@@ -610,27 +641,6 @@
             this.colTotal1.Visible = true;
             this.colTotal1.VisibleIndex = 3;
             // 
-            // dpTrades
-            // 
-            this.dpTrades.Controls.Add(this.dockPanel2_Container);
-            this.dpTrades.Dock = DevExpress.XtraBars.Docking.DockingStyle.Fill;
-            this.dpTrades.ID = new System.Guid("cecd3d8a-da7f-4a81-90ca-fe5b5710f049");
-            this.dpTrades.Location = new System.Drawing.Point(13, 46);
-            this.dpTrades.Margin = new System.Windows.Forms.Padding(4);
-            this.dpTrades.Name = "dpTrades";
-            this.dpTrades.OriginalSize = new System.Drawing.Size(544, 859);
-            this.dpTrades.Size = new System.Drawing.Size(627, 859);
-            this.dpTrades.Text = "Trades";
-            // 
-            // dockPanel2_Container
-            // 
-            this.dockPanel2_Container.Controls.Add(this.gcTrades);
-            this.dockPanel2_Container.Location = new System.Drawing.Point(0, 0);
-            this.dockPanel2_Container.Margin = new System.Windows.Forms.Padding(4);
-            this.dockPanel2_Container.Name = "dockPanel2_Container";
-            this.dockPanel2_Container.Size = new System.Drawing.Size(627, 859);
-            this.dockPanel2_Container.TabIndex = 0;
-            // 
             // dockPanel1
             // 
             this.dockPanel1.Controls.Add(this.controlContainer3);
@@ -680,20 +690,20 @@
             this.colAmount2,
             this.colTotal2,
             this.colType2});
-            gridFormatRule3.Name = "FormatRulesTradeBuy";
-            formatConditionRuleValue3.Appearance.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
-            formatConditionRuleValue3.Appearance.Options.UseForeColor = true;
-            formatConditionRuleValue3.Condition = DevExpress.XtraEditors.FormatCondition.Equal;
-            formatConditionRuleValue3.Value1 = CryptoMarketClient.TradeType.Buy;
-            gridFormatRule3.Rule = formatConditionRuleValue3;
-            gridFormatRule4.Name = "FormatRulesTradeSell";
-            formatConditionRuleValue4.Appearance.ForeColor = System.Drawing.Color.Red;
-            formatConditionRuleValue4.Appearance.Options.UseForeColor = true;
-            formatConditionRuleValue4.Condition = DevExpress.XtraEditors.FormatCondition.Equal;
-            formatConditionRuleValue4.Value1 = CryptoMarketClient.TradeType.Sell;
-            gridFormatRule4.Rule = formatConditionRuleValue4;
-            this.gvOderHistory.FormatRules.Add(gridFormatRule3);
-            this.gvOderHistory.FormatRules.Add(gridFormatRule4);
+            gridFormatRule5.Name = "FormatRulesTradeBuy";
+            formatConditionRuleValue5.Appearance.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
+            formatConditionRuleValue5.Appearance.Options.UseForeColor = true;
+            formatConditionRuleValue5.Condition = DevExpress.XtraEditors.FormatCondition.Equal;
+            formatConditionRuleValue5.Value1 = CryptoMarketClient.TradeType.Buy;
+            gridFormatRule5.Rule = formatConditionRuleValue5;
+            gridFormatRule6.Name = "FormatRulesTradeSell";
+            formatConditionRuleValue6.Appearance.ForeColor = System.Drawing.Color.Red;
+            formatConditionRuleValue6.Appearance.Options.UseForeColor = true;
+            formatConditionRuleValue6.Condition = DevExpress.XtraEditors.FormatCondition.Equal;
+            formatConditionRuleValue6.Value1 = CryptoMarketClient.TradeType.Sell;
+            gridFormatRule6.Rule = formatConditionRuleValue6;
+            this.gvOderHistory.FormatRules.Add(gridFormatRule5);
+            this.gvOderHistory.FormatRules.Add(gridFormatRule6);
             this.gvOderHistory.GridControl = this.gcOrderHistory;
             this.gvOderHistory.Name = "gvOderHistory";
             this.gvOderHistory.OptionsBehavior.AllowPixelScrolling = DevExpress.Utils.DefaultBoolean.True;
@@ -738,31 +748,6 @@
             this.colType2.Visible = true;
             this.colType2.VisibleIndex = 2;
             // 
-            // dpInfo
-            // 
-            this.dpInfo.Controls.Add(this.dockPanel3_Container);
-            this.dpInfo.Dock = DevExpress.XtraBars.Docking.DockingStyle.Top;
-            this.dpInfo.ID = new System.Guid("7b677dba-e9f9-46a7-b2ee-3f7b60447fd7");
-            this.dpInfo.Location = new System.Drawing.Point(742, 103);
-            this.dpInfo.Margin = new System.Windows.Forms.Padding(4);
-            this.dpInfo.Name = "dpInfo";
-            this.dpInfo.OriginalSize = new System.Drawing.Size(200, 207);
-            this.dpInfo.Size = new System.Drawing.Size(1316, 207);
-            this.dpInfo.Text = "Info";
-            // 
-            // dockPanel3_Container
-            // 
-            this.dockPanel3_Container.Controls.Add(this.tickerInfoControl);
-            this.dockPanel3_Container.Location = new System.Drawing.Point(8, 46);
-            this.dockPanel3_Container.Margin = new System.Windows.Forms.Padding(4);
-            this.dockPanel3_Container.Name = "dockPanel3_Container";
-            this.dockPanel3_Container.Size = new System.Drawing.Size(1300, 148);
-            this.dockPanel3_Container.TabIndex = 0;
-            // 
-            // tradingResultBindingSource
-            // 
-            this.tradingResultBindingSource.DataSource = typeof(CryptoMarketClient.Common.TradingResult);
-            // 
             // dpActiveTrailings
             // 
             this.dpActiveTrailings.Controls.Add(this.controlContainer4);
@@ -789,6 +774,60 @@
             this.activeTrailingCollectionControl1.Name = "activeTrailingCollectionControl1";
             this.activeTrailingCollectionControl1.Size = new System.Drawing.Size(627, 859);
             this.activeTrailingCollectionControl1.TabIndex = 0;
+            this.activeTrailingCollectionControl1.Ticker = null;
+            // 
+            // dpInfo
+            // 
+            this.dpInfo.Controls.Add(this.dockPanel3_Container);
+            this.dpInfo.Dock = DevExpress.XtraBars.Docking.DockingStyle.Top;
+            this.dpInfo.ID = new System.Guid("7b677dba-e9f9-46a7-b2ee-3f7b60447fd7");
+            this.dpInfo.Location = new System.Drawing.Point(742, 103);
+            this.dpInfo.Margin = new System.Windows.Forms.Padding(4);
+            this.dpInfo.Name = "dpInfo";
+            this.dpInfo.OriginalSize = new System.Drawing.Size(200, 207);
+            this.dpInfo.Size = new System.Drawing.Size(1316, 207);
+            this.dpInfo.Text = "Info";
+            // 
+            // dockPanel3_Container
+            // 
+            this.dockPanel3_Container.Controls.Add(this.tickerInfoControl);
+            this.dockPanel3_Container.Location = new System.Drawing.Point(8, 46);
+            this.dockPanel3_Container.Margin = new System.Windows.Forms.Padding(4);
+            this.dockPanel3_Container.Name = "dockPanel3_Container";
+            this.dockPanel3_Container.Size = new System.Drawing.Size(1300, 148);
+            this.dockPanel3_Container.TabIndex = 0;
+            // 
+            // tradingResultBindingSource
+            // 
+            this.tradingResultBindingSource.DataSource = typeof(CryptoMarketClient.Common.TradingResult);
+            // 
+            // dpMyTrades
+            // 
+            this.dpMyTrades.Controls.Add(this.controlContainer5);
+            this.dpMyTrades.Dock = DevExpress.XtraBars.Docking.DockingStyle.Fill;
+            this.dpMyTrades.ID = new System.Guid("804e2b28-254a-4f8d-a3f8-9513e0057258");
+            this.dpMyTrades.Location = new System.Drawing.Point(13, 46);
+            this.dpMyTrades.Name = "dpMyTrades";
+            this.dpMyTrades.OriginalSize = new System.Drawing.Size(200, 200);
+            this.dpMyTrades.Size = new System.Drawing.Size(627, 859);
+            this.dpMyTrades.Text = "My Trades";
+            // 
+            // controlContainer5
+            // 
+            this.controlContainer5.Controls.Add(this.myTradesCollectionControl1);
+            this.controlContainer5.Location = new System.Drawing.Point(0, 0);
+            this.controlContainer5.Name = "controlContainer5";
+            this.controlContainer5.Size = new System.Drawing.Size(627, 859);
+            this.controlContainer5.TabIndex = 0;
+            // 
+            // myTradesCollectionControl1
+            // 
+            this.myTradesCollectionControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.myTradesCollectionControl1.Location = new System.Drawing.Point(0, 0);
+            this.myTradesCollectionControl1.Name = "myTradesCollectionControl1";
+            this.myTradesCollectionControl1.Size = new System.Drawing.Size(627, 859);
+            this.myTradesCollectionControl1.TabIndex = 0;
+            this.myTradesCollectionControl1.Ticker = null;
             // 
             // TickerForm
             // 
@@ -814,6 +853,8 @@
             this.dpOrderBook.ResumeLayout(false);
             this.dockPanel1_Container.ResumeLayout(false);
             this.panelContainer1.ResumeLayout(false);
+            this.dpTrades.ResumeLayout(false);
+            this.dockPanel2_Container.ResumeLayout(false);
             this.dpBuy.ResumeLayout(false);
             this.controlContainer2.ResumeLayout(false);
             this.dpOpenedOrders.ResumeLayout(false);
@@ -821,18 +862,18 @@
             ((System.ComponentModel.ISupportInitialize)(this.gcOpenedOrders)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.openedOrderInfoBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gvOrders)).EndInit();
-            this.dpTrades.ResumeLayout(false);
-            this.dockPanel2_Container.ResumeLayout(false);
             this.dockPanel1.ResumeLayout(false);
             this.controlContainer3.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.gcOrderHistory)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tradingResultBindingSource1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gvOderHistory)).EndInit();
+            this.dpActiveTrailings.ResumeLayout(false);
+            this.controlContainer4.ResumeLayout(false);
             this.dpInfo.ResumeLayout(false);
             this.dockPanel3_Container.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.tradingResultBindingSource)).EndInit();
-            this.dpActiveTrailings.ResumeLayout(false);
-            this.controlContainer4.ResumeLayout(false);
+            this.dpMyTrades.ResumeLayout(false);
+            this.controlContainer5.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -899,5 +940,8 @@
         private DevExpress.XtraBars.Docking.DockPanel dpActiveTrailings;
         private DevExpress.XtraBars.Docking.ControlContainer controlContainer4;
         private TrailingCollectionControl activeTrailingCollectionControl1;
+        private DevExpress.XtraBars.Docking.DockPanel dpMyTrades;
+        private DevExpress.XtraBars.Docking.ControlContainer controlContainer5;
+        private MyTradesCollectionControl myTradesCollectionControl1;
     }
 }

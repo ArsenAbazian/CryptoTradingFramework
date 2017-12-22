@@ -13,8 +13,11 @@ namespace CryptoMarketClient {
         public decimal Amount { get; set; }
         public decimal Rate { get; set; }
         public decimal Total { get; set; }
+        public decimal Fee { get; set; }
+        public long OrderNumber { get; set; }
         public TradeFillType Fill { get; set;}
         public TradeType Type { get; set; }
-        public int Id { get; set; }
+        public long Id { get; set; }
+        public long GlobalId { get; set; }
     }
 }

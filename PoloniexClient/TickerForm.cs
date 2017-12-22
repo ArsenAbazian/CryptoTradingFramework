@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace CryptoMarketClient {
-    public partial class TickerForm : TimerUpdateForm {
+    public partial class TickerForm : ThreadUpdateForm {
         public TickerForm() {
             InitializeComponent();
         }
@@ -24,13 +24,23 @@ namespace CryptoMarketClient {
         }
 
         public string MarketName { get; set; }
-
-        protected override void OnTimerUpdate(object sender, EventArgs e) {
-            base.OnTimerUpdate(sender, e);
-            this.tickerInfoControl.UpdateData();
-            this.gvTrades.RefreshData();
-            this.gvOrders.RefreshData();
+        protected override bool AllowUpdateInactive => true;
+        protected override void OnThreadUpdate() {
+            base.OnThreadUpdate();
+            while(true) {
+                Ticker.UpdateOrderBook();
+                Ticker.UpdateTrades();
+                Ticker.UpdateOpenedOrders();
+                Ticker.UpdateTrailings();
+            }
         }
+
+        //protected override void OnTimerUpdate(object sender, EventArgs e) {
+        //    base.OnTimerUpdate(sender, e);
+        //    this.tickerInfoControl.UpdateData();
+        //    this.gvTrades.RefreshData();
+        //    this.gvOrders.RefreshData();
+        //}
 
         TickerBase ticker;
         public TickerBase Ticker {
@@ -56,15 +66,18 @@ namespace CryptoMarketClient {
         }
         void OnTickerChanged(TickerBase prev) {
             if(prev != null) {
+                prev.IsActive = false;
                 ClearText();
                 ClearGrid();
                 ClearChart();
                 UnsubscribeEvents(prev);
             }
             this.tickerInfoControl.Ticker = Ticker;
+            this.myTradesCollectionControl1.Ticker = Ticker;
             this.activeTrailingCollectionControl1.Ticker = Ticker;
             if(Ticker == null)
                 return;
+            Ticker.IsActive = true;
             UpdateTickerInfoControlHeight();
             UpdateText();
             UpdateGrid();
@@ -184,6 +197,12 @@ namespace CryptoMarketClient {
 
         private void orderBookControl1_SelectedBidRowChanged(object sender, SelectedOrderBookEntryChangedEventArgs e) {
 
+        }
+
+        private void dockManager1_ActivePanelChanged(object sender, ActivePanelChangedEventArgs e) {
+            if(e.Panel == this.dpMyTrades) {
+                this.myTradesCollectionControl1.UpdateTrades();
+            }
         }
     }
 }

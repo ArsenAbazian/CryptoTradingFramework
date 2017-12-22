@@ -196,6 +196,18 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CurrencyMonitoringForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CurrencyMonitoringForm.Designer.cs">
+      <DependentUpon>CurrencyMonitoringForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MyTradesCollectionControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MyTradesCollectionControl.Designer.cs">
+      <DependentUpon>MyTradesCollectionControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="TrailingCollectionControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -428,6 +440,12 @@
     <Compile Include="TrailingSettinsForm.Designer.cs">
       <DependentUpon>TrailingSettinsForm.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="CurrencyMonitoringForm.resx">
+      <DependentUpon>CurrencyMonitoringForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MyTradesCollectionControl.resx">
+      <DependentUpon>MyTradesCollectionControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="TrailingCollectionControl.resx">
       <DependentUpon>TrailingCollectionControl.cs</DependentUpon>
     </EmbeddedResource>
@@ -531,6 +549,7 @@
     </EmbeddedResource>
     <None Include="app.manifest" />
     <None Include="packages.config" />
+    <None Include="Properties\DataSources\TickerBase.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

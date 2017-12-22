@@ -396,7 +396,7 @@ namespace CryptoMarketClient.Common {
             get {
                 if(Disbalance == 0 || IsErrorState || !IsSelected)
                     return false;
-                if((DateTime.Now.Ticks - LastOperationTime.Ticks) / TimeSpan.TicksPerSecond < 10)
+                if((DateTime.UtcNow.Ticks - LastOperationTime.Ticks) / TimeSpan.TicksPerSecond < 10)
                     return false;
                 if(Direction == OperationDirection.None)
                     return false;
@@ -465,7 +465,7 @@ namespace CryptoMarketClient.Common {
             timer.Start();
             try {
                 if(UsdtBalanceInfo.Available < 5) {
-                    LastOperationTime = DateTime.Now;
+                    LastOperationTime = DateTime.UtcNow;
                     return true;
                 }
                 decimal altAmount = CalculateAllowedAltAmount();
@@ -543,7 +543,7 @@ namespace CryptoMarketClient.Common {
                     //}
                 }
                 LastEarned = UsdtBalanceInfo.Available - usdtBefore;
-                LastOperationTime = DateTime.Now;
+                LastOperationTime = DateTime.UtcNow;
                 IsSelected = false;
 
                 if(LastEarned < 0) {

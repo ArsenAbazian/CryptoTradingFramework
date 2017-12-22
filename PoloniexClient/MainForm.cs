@@ -252,5 +252,11 @@ namespace CryptoMarketClient {
                 }
             }
         }
+
+        private void bbShowBittrex_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
+            CurrencyMonitoringForm form = new CurrencyMonitoringForm(BittrexExchange.Default);
+            form.MdiParent = this;
+            form.Show();
+        }
     }
 }

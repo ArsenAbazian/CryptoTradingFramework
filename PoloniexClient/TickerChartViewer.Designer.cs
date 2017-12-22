@@ -26,22 +26,24 @@ namespace CryptoMarketClient {
         /// </summary>
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
-            DevExpress.XtraEditors.RangeControlRange rangeControlRange3 = new DevExpress.XtraEditors.RangeControlRange();
-            DevExpress.XtraCharts.XYDiagram xyDiagram3 = new DevExpress.XtraCharts.XYDiagram();
-            DevExpress.XtraCharts.XYDiagramPane xyDiagramPane3 = new DevExpress.XtraCharts.XYDiagramPane();
-            DevExpress.XtraCharts.SecondaryAxisY secondaryAxisY3 = new DevExpress.XtraCharts.SecondaryAxisY();
-            DevExpress.XtraCharts.Legend legend3 = new DevExpress.XtraCharts.Legend();
-            DevExpress.XtraCharts.Series series11 = new DevExpress.XtraCharts.Series();
-            DevExpress.XtraCharts.CandleStickSeriesView candleStickSeriesView3 = new DevExpress.XtraCharts.CandleStickSeriesView();
-            DevExpress.XtraCharts.ExponentialMovingAverage exponentialMovingAverage3 = new DevExpress.XtraCharts.ExponentialMovingAverage();
-            DevExpress.XtraCharts.Series series12 = new DevExpress.XtraCharts.Series();
-            DevExpress.XtraCharts.SideBySideBarSeriesView sideBySideBarSeriesView5 = new DevExpress.XtraCharts.SideBySideBarSeriesView();
-            DevExpress.XtraCharts.Series series13 = new DevExpress.XtraCharts.Series();
-            DevExpress.XtraCharts.SideBySideBarSeriesView sideBySideBarSeriesView6 = new DevExpress.XtraCharts.SideBySideBarSeriesView();
-            DevExpress.XtraCharts.Series series14 = new DevExpress.XtraCharts.Series();
-            DevExpress.XtraCharts.StepLineSeriesView stepLineSeriesView5 = new DevExpress.XtraCharts.StepLineSeriesView();
-            DevExpress.XtraCharts.Series series15 = new DevExpress.XtraCharts.Series();
-            DevExpress.XtraCharts.StepLineSeriesView stepLineSeriesView6 = new DevExpress.XtraCharts.StepLineSeriesView();
+            DevExpress.XtraEditors.RangeControlRange rangeControlRange1 = new DevExpress.XtraEditors.RangeControlRange();
+            DevExpress.XtraCharts.XYDiagram xyDiagram1 = new DevExpress.XtraCharts.XYDiagram();
+            DevExpress.XtraCharts.XYDiagramPane xyDiagramPane1 = new DevExpress.XtraCharts.XYDiagramPane();
+            DevExpress.XtraCharts.SecondaryAxisY secondaryAxisY1 = new DevExpress.XtraCharts.SecondaryAxisY();
+            DevExpress.XtraCharts.SecondaryAxisY secondaryAxisY2 = new DevExpress.XtraCharts.SecondaryAxisY();
+            DevExpress.XtraCharts.Legend legend1 = new DevExpress.XtraCharts.Legend();
+            DevExpress.XtraCharts.Series series1 = new DevExpress.XtraCharts.Series();
+            DevExpress.XtraCharts.SideBySideBarSeriesView sideBySideBarSeriesView1 = new DevExpress.XtraCharts.SideBySideBarSeriesView();
+            DevExpress.XtraCharts.Series series2 = new DevExpress.XtraCharts.Series();
+            DevExpress.XtraCharts.CandleStickSeriesView candleStickSeriesView1 = new DevExpress.XtraCharts.CandleStickSeriesView();
+            DevExpress.XtraCharts.Series series3 = new DevExpress.XtraCharts.Series();
+            DevExpress.XtraCharts.SideBySideBarSeriesView sideBySideBarSeriesView2 = new DevExpress.XtraCharts.SideBySideBarSeriesView();
+            DevExpress.XtraCharts.Series series4 = new DevExpress.XtraCharts.Series();
+            DevExpress.XtraCharts.SideBySideBarSeriesView sideBySideBarSeriesView3 = new DevExpress.XtraCharts.SideBySideBarSeriesView();
+            DevExpress.XtraCharts.Series series5 = new DevExpress.XtraCharts.Series();
+            DevExpress.XtraCharts.StepLineSeriesView stepLineSeriesView1 = new DevExpress.XtraCharts.StepLineSeriesView();
+            DevExpress.XtraCharts.Series series6 = new DevExpress.XtraCharts.Series();
+            DevExpress.XtraCharts.StepLineSeriesView stepLineSeriesView2 = new DevExpress.XtraCharts.StepLineSeriesView();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TickerChartViewer));
             this.rangeControl1 = new DevExpress.XtraEditors.RangeControl();
             this.chartControl1 = new DevExpress.XtraCharts.ChartControl();
@@ -62,6 +64,7 @@ namespace CryptoMarketClient {
             this.bcCandle = new DevExpress.XtraBars.BarCheckItem();
             this.bcLine = new DevExpress.XtraBars.BarCheckItem();
             this.barSubItem1 = new DevExpress.XtraBars.BarSubItem();
+            this.barButtonItem3 = new DevExpress.XtraBars.BarButtonItem();
             this.barDockControlTop = new DevExpress.XtraBars.BarDockControl();
             this.barDockControlBottom = new DevExpress.XtraBars.BarDockControl();
             this.barDockControlLeft = new DevExpress.XtraBars.BarDockControl();
@@ -75,23 +78,24 @@ namespace CryptoMarketClient {
             this.repositoryItemComboBox1 = new DevExpress.XtraEditors.Repository.RepositoryItemComboBox();
             this.sidePanel1 = new DevExpress.XtraEditors.SidePanel();
             this.sidePanel2 = new DevExpress.XtraEditors.SidePanel();
-            this.barButtonItem3 = new DevExpress.XtraBars.BarButtonItem();
             ((System.ComponentModel.ISupportInitialize)(this.rangeControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chartControl1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(xyDiagram3)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(xyDiagramPane3)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(secondaryAxisY3)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(series11)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(candleStickSeriesView3)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(exponentialMovingAverage3)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(series12)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(sideBySideBarSeriesView5)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(series13)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(sideBySideBarSeriesView6)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(series14)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(stepLineSeriesView5)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(series15)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(stepLineSeriesView6)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(xyDiagram1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(xyDiagramPane1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(secondaryAxisY1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(secondaryAxisY2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(series1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(sideBySideBarSeriesView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(series2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(candleStickSeriesView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(series3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(sideBySideBarSeriesView2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(series4)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(sideBySideBarSeriesView3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(series5)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(stepLineSeriesView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(series6)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(stepLineSeriesView2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.barManager1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckedComboBoxEdit1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemComboBox1)).BeginInit();
@@ -106,13 +110,14 @@ namespace CryptoMarketClient {
             this.rangeControl1.Client = this.chartControl1;
             this.rangeControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.rangeControl1.Location = new System.Drawing.Point(0, 1);
+            this.rangeControl1.Margin = new System.Windows.Forms.Padding(4);
             this.rangeControl1.Name = "rangeControl1";
-            rangeControlRange3.Maximum = new System.DateTime(2017, 12, 8, 18, 53, 36, 600);
-            rangeControlRange3.Minimum = new System.DateTime(2017, 12, 8, 18, 53, 26, 400);
-            rangeControlRange3.Owner = this.rangeControl1;
-            this.rangeControl1.SelectedRange = rangeControlRange3;
+            rangeControlRange1.Maximum = new System.DateTime(2017, 12, 17, 13, 51, 0, 0);
+            rangeControlRange1.Minimum = new System.DateTime(2017, 12, 17, 13, 50, 0, 0);
+            rangeControlRange1.Owner = this.rangeControl1;
+            this.rangeControl1.SelectedRange = rangeControlRange1;
             this.rangeControl1.SelectionType = DevExpress.XtraEditors.RangeControlSelectionType.ThumbAndFlag;
-            this.rangeControl1.Size = new System.Drawing.Size(1855, 176);
+            this.rangeControl1.Size = new System.Drawing.Size(1856, 176);
             this.rangeControl1.TabIndex = 10;
             this.rangeControl1.Text = "rangeControl1";
             // 
@@ -120,34 +125,51 @@ namespace CryptoMarketClient {
             // 
             this.chartControl1.AutoLayout = false;
             this.chartControl1.BorderOptions.Visibility = DevExpress.Utils.DefaultBoolean.False;
-            xyDiagram3.AxisX.DateTimeScaleOptions.MeasureUnit = DevExpress.XtraCharts.DateTimeMeasureUnit.Second;
-            xyDiagram3.AxisX.Label.Font = new System.Drawing.Font("Segoe UI", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            xyDiagram3.AxisX.Label.TextPattern = "{A:d MMM h:mm:ss}";
-            xyDiagram3.AxisX.StickToEnd = true;
-            xyDiagram3.AxisX.VisibleInPanesSerializable = "-1;0";
-            xyDiagram3.AxisX.VisualRange.Auto = false;
-            xyDiagram3.AxisX.VisualRange.MaxValueSerializable = "12/08/2017 18:53:36.600";
-            xyDiagram3.AxisX.VisualRange.MinValueSerializable = "12/08/2017 18:53:26.400";
-            xyDiagram3.AxisY.Label.Font = new System.Drawing.Font("Segoe UI", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            xyDiagram3.AxisY.Label.TextPattern = "{V:f8}";
-            xyDiagram3.AxisY.VisibleInPanesSerializable = "-1";
-            xyDiagram3.AxisY.WholeRange.AlwaysShowZeroLevel = false;
-            xyDiagram3.EnableAxisXScrolling = true;
-            xyDiagram3.EnableAxisXZooming = true;
-            xyDiagramPane3.Name = "Volume Pane";
-            xyDiagramPane3.PaneID = 0;
-            xyDiagramPane3.Weight = 0.3D;
-            xyDiagram3.Panes.AddRange(new DevExpress.XtraCharts.XYDiagramPane[] {
-            xyDiagramPane3});
-            secondaryAxisY3.Alignment = DevExpress.XtraCharts.AxisAlignment.Near;
-            secondaryAxisY3.AxisID = 0;
-            secondaryAxisY3.Label.Font = new System.Drawing.Font("Segoe UI", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            secondaryAxisY3.Label.TextPattern = "{V:f8}";
-            secondaryAxisY3.Name = "Secondary AxisY 1";
-            secondaryAxisY3.VisibleInPanesSerializable = "0";
-            xyDiagram3.SecondaryAxesY.AddRange(new DevExpress.XtraCharts.SecondaryAxisY[] {
-            secondaryAxisY3});
-            this.chartControl1.Diagram = xyDiagram3;
+            xyDiagram1.AxisX.DateTimeScaleOptions.MeasureUnit = DevExpress.XtraCharts.DateTimeMeasureUnit.Minute;
+            xyDiagram1.AxisX.Label.Font = new System.Drawing.Font("Segoe UI", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            xyDiagram1.AxisX.Label.TextPattern = "{A:d MMM h:mm:ss}";
+            xyDiagram1.AxisX.StickToEnd = true;
+            xyDiagram1.AxisX.VisibleInPanesSerializable = "-1;0";
+            xyDiagram1.AxisX.VisualRange.Auto = false;
+            xyDiagram1.AxisX.VisualRange.AutoSideMargins = false;
+            xyDiagram1.AxisX.VisualRange.MaxValueSerializable = "12/17/2017 13:51:00.000";
+            xyDiagram1.AxisX.VisualRange.MinValueSerializable = "12/17/2017 13:50:00.000";
+            xyDiagram1.AxisX.VisualRange.SideMarginsValue = 0D;
+            xyDiagram1.AxisX.WholeRange.AutoSideMargins = false;
+            xyDiagram1.AxisX.WholeRange.SideMarginsValue = 0D;
+            xyDiagram1.AxisY.Alignment = DevExpress.XtraCharts.AxisAlignment.Far;
+            xyDiagram1.AxisY.Label.Font = new System.Drawing.Font("Segoe UI", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            xyDiagram1.AxisY.Label.TextPattern = "{V:f8}";
+            xyDiagram1.AxisY.VisibleInPanesSerializable = "-1";
+            xyDiagram1.AxisY.WholeRange.AlwaysShowZeroLevel = false;
+            xyDiagram1.DependentAxesYRange = DevExpress.Utils.DefaultBoolean.True;
+            xyDiagram1.EnableAxisXScrolling = true;
+            xyDiagram1.EnableAxisXZooming = true;
+            xyDiagramPane1.Name = "Volume Pane";
+            xyDiagramPane1.PaneID = 0;
+            xyDiagramPane1.Weight = 0.3D;
+            xyDiagram1.Panes.AddRange(new DevExpress.XtraCharts.XYDiagramPane[] {
+            xyDiagramPane1});
+            xyDiagram1.RangeControlDateTimeGridOptions.GridAlignment = DevExpress.XtraCharts.DateTimeGridAlignment.Year;
+            xyDiagram1.RangeControlDateTimeGridOptions.GridMode = DevExpress.XtraCharts.ChartRangeControlClientGridMode.Manual;
+            xyDiagram1.RangeControlDateTimeGridOptions.GridSpacing = 3D;
+            xyDiagram1.RangeControlDateTimeGridOptions.SnapAlignment = DevExpress.XtraCharts.DateTimeGridAlignment.Minute;
+            xyDiagram1.RangeControlDateTimeGridOptions.SnapMode = DevExpress.XtraCharts.ChartRangeControlClientSnapMode.Manual;
+            xyDiagram1.RangeControlDateTimeGridOptions.SnapSpacing = 3D;
+            secondaryAxisY1.Alignment = DevExpress.XtraCharts.AxisAlignment.Near;
+            secondaryAxisY1.AxisID = 0;
+            secondaryAxisY1.Label.Font = new System.Drawing.Font("Segoe UI", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            secondaryAxisY1.Label.TextPattern = "{V:f8}";
+            secondaryAxisY1.Name = "Secondary AxisY 1";
+            secondaryAxisY1.VisibleInPanesSerializable = "0";
+            secondaryAxisY2.AxisID = 1;
+            secondaryAxisY2.Name = "Secondary AxisY 2";
+            secondaryAxisY2.Visibility = DevExpress.Utils.DefaultBoolean.False;
+            secondaryAxisY2.VisibleInPanesSerializable = "-1";
+            xyDiagram1.SecondaryAxesY.AddRange(new DevExpress.XtraCharts.SecondaryAxisY[] {
+            secondaryAxisY1,
+            secondaryAxisY2});
+            this.chartControl1.Diagram = xyDiagram1;
             this.chartControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.chartControl1.Legend.AlignmentHorizontal = DevExpress.XtraCharts.LegendAlignmentHorizontal.Left;
             this.chartControl1.Legend.AlignmentVertical = DevExpress.XtraCharts.LegendAlignmentVertical.TopOutside;
@@ -156,57 +178,63 @@ namespace CryptoMarketClient {
             this.chartControl1.Legend.MarkerMode = DevExpress.XtraCharts.LegendMarkerMode.CheckBoxAndMarker;
             this.chartControl1.Legend.Name = "Default Legend";
             this.chartControl1.Legend.Visibility = DevExpress.Utils.DefaultBoolean.True;
-            legend3.AlignmentHorizontal = DevExpress.XtraCharts.LegendAlignmentHorizontal.Left;
-            legend3.AlignmentVertical = DevExpress.XtraCharts.LegendAlignmentVertical.TopOutside;
-            legend3.Direction = DevExpress.XtraCharts.LegendDirection.LeftToRight;
-            legend3.DockTargetName = "Volume Pane";
-            legend3.MarkerMode = DevExpress.XtraCharts.LegendMarkerMode.CheckBoxAndMarker;
-            legend3.Name = "Legend1";
+            legend1.AlignmentHorizontal = DevExpress.XtraCharts.LegendAlignmentHorizontal.Left;
+            legend1.AlignmentVertical = DevExpress.XtraCharts.LegendAlignmentVertical.TopOutside;
+            legend1.Direction = DevExpress.XtraCharts.LegendDirection.LeftToRight;
+            legend1.DockTargetName = "Volume Pane";
+            legend1.MarkerMode = DevExpress.XtraCharts.LegendMarkerMode.CheckBoxAndMarker;
+            legend1.Name = "Legend1";
             this.chartControl1.Legends.AddRange(new DevExpress.XtraCharts.Legend[] {
-            legend3});
+            legend1});
             this.chartControl1.Location = new System.Drawing.Point(0, 0);
             this.chartControl1.Margin = new System.Windows.Forms.Padding(6);
             this.chartControl1.Name = "chartControl1";
-            series11.ArgumentScaleType = DevExpress.XtraCharts.ScaleType.DateTime;
-            series11.Name = "Current";
-            candleStickSeriesView3.Color = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(128)))), ((int)(((byte)(66)))));
-            exponentialMovingAverage3.Name = "Exponential Moving Average 1";
-            exponentialMovingAverage3.PointsCount = 50;
-            exponentialMovingAverage3.ValueLevel = DevExpress.XtraCharts.ValueLevel.Close;
-            candleStickSeriesView3.Indicators.AddRange(new DevExpress.XtraCharts.Indicator[] {
-            exponentialMovingAverage3});
-            series11.View = candleStickSeriesView3;
-            series12.ArgumentScaleType = DevExpress.XtraCharts.ScaleType.DateTime;
-            series12.LegendName = "Legend1";
-            series12.Name = "Sell volume";
-            sideBySideBarSeriesView5.AxisYName = "Secondary AxisY 1";
-            sideBySideBarSeriesView5.Color = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            sideBySideBarSeriesView5.PaneName = "Volume Pane";
-            sideBySideBarSeriesView5.RangeControlOptions.Visible = false;
-            series12.View = sideBySideBarSeriesView5;
-            series13.ArgumentScaleType = DevExpress.XtraCharts.ScaleType.DateTime;
-            series13.LegendName = "Legend1";
-            series13.Name = "Buy volume";
-            sideBySideBarSeriesView6.AxisYName = "Secondary AxisY 1";
-            sideBySideBarSeriesView6.Color = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(128)))), ((int)(((byte)(66)))));
-            sideBySideBarSeriesView6.PaneName = "Volume Pane";
-            sideBySideBarSeriesView6.RangeControlOptions.Visible = false;
-            series13.View = sideBySideBarSeriesView6;
-            series14.ArgumentScaleType = DevExpress.XtraCharts.ScaleType.DateTime;
-            series14.Name = "Highest bid";
-            stepLineSeriesView5.Color = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(128)))), ((int)(((byte)(66)))));
-            series14.View = stepLineSeriesView5;
-            series15.Name = "Lowest ask";
-            stepLineSeriesView6.Color = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            stepLineSeriesView6.RangeControlOptions.Visible = false;
-            series15.View = stepLineSeriesView6;
+            series1.Name = "Volume";
+            sideBySideBarSeriesView1.AxisYName = "Secondary AxisY 2";
+            sideBySideBarSeriesView1.BarWidth = 0.9D;
+            sideBySideBarSeriesView1.Color = System.Drawing.Color.Silver;
+            series1.View = sideBySideBarSeriesView1;
+            series2.ArgumentScaleType = DevExpress.XtraCharts.ScaleType.DateTime;
+            series2.CrosshairEnabled = DevExpress.Utils.DefaultBoolean.True;
+            series2.Name = "Current";
+            candleStickSeriesView1.Color = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(128)))), ((int)(((byte)(66)))));
+            candleStickSeriesView1.ReductionOptions.ColorMode = DevExpress.XtraCharts.ReductionColorMode.OpenToCloseValue;
+            series2.View = candleStickSeriesView1;
+            series3.ArgumentScaleType = DevExpress.XtraCharts.ScaleType.DateTime;
+            series3.LegendName = "Legend1";
+            series3.Name = "Sell volume";
+            sideBySideBarSeriesView2.AxisYName = "Secondary AxisY 1";
+            sideBySideBarSeriesView2.Color = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            sideBySideBarSeriesView2.PaneName = "Volume Pane";
+            sideBySideBarSeriesView2.RangeControlOptions.Visible = false;
+            series3.View = sideBySideBarSeriesView2;
+            series4.ArgumentScaleType = DevExpress.XtraCharts.ScaleType.DateTime;
+            series4.LegendName = "Legend1";
+            series4.Name = "Buy volume";
+            sideBySideBarSeriesView3.AxisYName = "Secondary AxisY 1";
+            sideBySideBarSeriesView3.Color = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(128)))), ((int)(((byte)(66)))));
+            sideBySideBarSeriesView3.PaneName = "Volume Pane";
+            sideBySideBarSeriesView3.RangeControlOptions.Visible = false;
+            series4.View = sideBySideBarSeriesView3;
+            series5.ArgumentScaleType = DevExpress.XtraCharts.ScaleType.DateTime;
+            series5.Name = "Highest bid";
+            stepLineSeriesView1.Color = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(128)))), ((int)(((byte)(66)))));
+            series5.View = stepLineSeriesView1;
+            series5.Visible = false;
+            series6.Name = "Lowest ask";
+            stepLineSeriesView2.Color = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            stepLineSeriesView2.RangeControlOptions.Visible = false;
+            series6.View = stepLineSeriesView2;
+            series6.Visible = false;
             this.chartControl1.SeriesSerializable = new DevExpress.XtraCharts.Series[] {
-        series11,
-        series12,
-        series13,
-        series14,
-        series15};
-            this.chartControl1.Size = new System.Drawing.Size(1855, 917);
+        series1,
+        series2,
+        series3,
+        series4,
+        series5,
+        series6};
+            this.chartControl1.SideBySideBarDistanceFixed = 0;
+            this.chartControl1.Size = new System.Drawing.Size(1856, 917);
             this.chartControl1.TabIndex = 4;
             // 
             // barManager1
@@ -394,6 +422,13 @@ namespace CryptoMarketClient {
             this.barSubItem1.Id = 21;
             this.barSubItem1.Name = "barSubItem1";
             // 
+            // barButtonItem3
+            // 
+            this.barButtonItem3.Caption = "Update From Server";
+            this.barButtonItem3.Id = 22;
+            this.barButtonItem3.Name = "barButtonItem3";
+            this.barButtonItem3.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItem3_ItemClick);
+            // 
             // barDockControlTop
             // 
             this.barDockControlTop.CausesValidation = false;
@@ -401,7 +436,7 @@ namespace CryptoMarketClient {
             this.barDockControlTop.Location = new System.Drawing.Point(0, 0);
             this.barDockControlTop.Manager = this.barManager1;
             this.barDockControlTop.Margin = new System.Windows.Forms.Padding(6);
-            this.barDockControlTop.Size = new System.Drawing.Size(1855, 60);
+            this.barDockControlTop.Size = new System.Drawing.Size(1856, 60);
             // 
             // barDockControlBottom
             // 
@@ -410,7 +445,7 @@ namespace CryptoMarketClient {
             this.barDockControlBottom.Location = new System.Drawing.Point(0, 1154);
             this.barDockControlBottom.Manager = this.barManager1;
             this.barDockControlBottom.Margin = new System.Windows.Forms.Padding(6);
-            this.barDockControlBottom.Size = new System.Drawing.Size(1855, 0);
+            this.barDockControlBottom.Size = new System.Drawing.Size(1856, 0);
             // 
             // barDockControlLeft
             // 
@@ -425,7 +460,7 @@ namespace CryptoMarketClient {
             // 
             this.barDockControlRight.CausesValidation = false;
             this.barDockControlRight.Dock = System.Windows.Forms.DockStyle.Right;
-            this.barDockControlRight.Location = new System.Drawing.Point(1855, 60);
+            this.barDockControlRight.Location = new System.Drawing.Point(1856, 60);
             this.barDockControlRight.Manager = this.barManager1;
             this.barDockControlRight.Margin = new System.Windows.Forms.Padding(6);
             this.barDockControlRight.Size = new System.Drawing.Size(0, 1094);
@@ -489,8 +524,9 @@ namespace CryptoMarketClient {
             this.sidePanel1.Controls.Add(this.chartControl1);
             this.sidePanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.sidePanel1.Location = new System.Drawing.Point(0, 60);
+            this.sidePanel1.Margin = new System.Windows.Forms.Padding(4);
             this.sidePanel1.Name = "sidePanel1";
-            this.sidePanel1.Size = new System.Drawing.Size(1855, 917);
+            this.sidePanel1.Size = new System.Drawing.Size(1856, 917);
             this.sidePanel1.TabIndex = 9;
             this.sidePanel1.Text = "sidePanel1";
             // 
@@ -499,17 +535,11 @@ namespace CryptoMarketClient {
             this.sidePanel2.Controls.Add(this.rangeControl1);
             this.sidePanel2.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.sidePanel2.Location = new System.Drawing.Point(0, 977);
+            this.sidePanel2.Margin = new System.Windows.Forms.Padding(4);
             this.sidePanel2.Name = "sidePanel2";
-            this.sidePanel2.Size = new System.Drawing.Size(1855, 177);
+            this.sidePanel2.Size = new System.Drawing.Size(1856, 177);
             this.sidePanel2.TabIndex = 15;
             this.sidePanel2.Text = "sidePanel2";
-            // 
-            // barButtonItem3
-            // 
-            this.barButtonItem3.Caption = "Update From Server";
-            this.barButtonItem3.Id = 22;
-            this.barButtonItem3.Name = "barButtonItem3";
-            this.barButtonItem3.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItem3_ItemClick);
             // 
             // TickerChartViewer
             // 
@@ -523,22 +553,24 @@ namespace CryptoMarketClient {
             this.Controls.Add(this.barDockControlTop);
             this.Margin = new System.Windows.Forms.Padding(6);
             this.Name = "TickerChartViewer";
-            this.Size = new System.Drawing.Size(1855, 1154);
+            this.Size = new System.Drawing.Size(1856, 1154);
             ((System.ComponentModel.ISupportInitialize)(this.rangeControl1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(xyDiagramPane3)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(secondaryAxisY3)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(xyDiagram3)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(exponentialMovingAverage3)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(candleStickSeriesView3)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(series11)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(sideBySideBarSeriesView5)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(series12)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(sideBySideBarSeriesView6)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(series13)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(stepLineSeriesView5)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(series14)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(stepLineSeriesView6)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(series15)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(xyDiagramPane1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(secondaryAxisY1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(secondaryAxisY2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(xyDiagram1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(sideBySideBarSeriesView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(series1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(candleStickSeriesView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(series2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(sideBySideBarSeriesView2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(series3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(sideBySideBarSeriesView3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(series4)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(stepLineSeriesView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(series5)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(stepLineSeriesView2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(series6)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.chartControl1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.barManager1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckedComboBoxEdit1)).EndInit();

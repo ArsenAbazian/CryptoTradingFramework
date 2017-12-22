@@ -228,7 +228,7 @@ namespace CryptoMarketClient.Common {
             st.MarketCurrency = LowestAskTicker.MarketCurrency;
             st.MaxProfit = MaxProfit;
             st.MaxProfitUSD = MaxProfitUSD;
-            st.Time = DateTime.Now;
+            st.Time = DateTime.UtcNow;
             st.RateInUSD = UsdTicker == null? 1: UsdTicker.Last;
             if(!Owner.Disabled) {
                 lock(ArbitrageHistoryHelper.Default.History) {

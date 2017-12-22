@@ -291,6 +291,7 @@ namespace CryptoMarketClient {
         public virtual BindingList<CandleStickData> GetCandleStickData(TickerBase ticker, int candleStickPeriodMin, DateTime start, int periodInSeconds) {
             return new BindingList<CandleStickData>();
         }
+        public abstract bool UpdateMyTrades(TickerBase ticker);
 
         JsonParser jsonParser;
         protected JsonParser JsonParser {

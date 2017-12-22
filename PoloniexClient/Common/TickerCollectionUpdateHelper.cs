@@ -70,7 +70,7 @@ namespace CryptoMarketClient.Common {
                 if(listener != null)
                     listener.OnUpdateTickerCollection(info, true);
             }
-            info.LastUpdate = DateTime.Now;
+            info.LastUpdate = DateTime.UtcNow;
         }
         public async void Update(StaticArbitrageInfo info, IStaticArbitrageUpdateListener listener) {
             if(concurrentTickersCount2 > 8)
@@ -105,7 +105,7 @@ namespace CryptoMarketClient.Common {
                 if(listener != null)
                     listener.OnUpdateInfo(info, true);
             }
-            info.LastUpdate = DateTime.Now;
+            info.LastUpdate = DateTime.UtcNow;
         }
     }
 

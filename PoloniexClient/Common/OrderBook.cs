@@ -82,7 +82,7 @@ namespace CryptoMarketClient {
                 BidHipe = BidHipe,
                 AskHipe = AskHipe,
                 TradeInfo = TradeInfo,
-                Time = DateTime.Now
+                Time = DateTime.UtcNow
             });
         }
         

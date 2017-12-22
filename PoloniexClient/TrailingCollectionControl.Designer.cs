@@ -1,4 +1,6 @@
-﻿namespace CryptoMarketClient {
+﻿using CryptoMarketClient.Common;
+
+namespace CryptoMarketClient {
     partial class TrailingCollectionControl {
         /// <summary> 
         /// Required designer variable.
@@ -28,15 +30,21 @@
             DevExpress.XtraEditors.FormatConditionRuleValue formatConditionRuleValue1 = new DevExpress.XtraEditors.FormatConditionRuleValue();
             DevExpress.XtraGrid.GridFormatRule gridFormatRule2 = new DevExpress.XtraGrid.GridFormatRule();
             DevExpress.XtraEditors.FormatConditionRuleValue formatConditionRuleValue2 = new DevExpress.XtraEditors.FormatConditionRuleValue();
+            DevExpress.XtraGrid.GridFormatRule gridFormatRule3 = new DevExpress.XtraGrid.GridFormatRule();
+            DevExpress.XtraEditors.FormatConditionRuleValue formatConditionRuleValue3 = new DevExpress.XtraEditors.FormatConditionRuleValue();
+            DevExpress.XtraGrid.GridFormatRule gridFormatRule4 = new DevExpress.XtraGrid.GridFormatRule();
+            DevExpress.XtraEditors.FormatConditionRuleValue formatConditionRuleValue4 = new DevExpress.XtraEditors.FormatConditionRuleValue();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TrailingCollectionControl));
+            this.colActualProfit = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gcTrailings = new DevExpress.XtraGrid.GridControl();
-            this.gvTrailings = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.trailingSettingsBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.gvTrailings = new DevExpress.XtraGrid.Views.Grid.GridView();
+            this.colName = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colBuyPrice = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.repositoryItemTextEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemTextEdit();
             this.colAmount = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colStopLossSellPrice = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colTotalSpendInBaseCurrency = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.colActualProfit = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colActualProfitUSD = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colUsdTicker = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colStopLossPricePercent = new DevExpress.XtraGrid.Columns.GridColumn();
@@ -46,39 +54,50 @@
             this.colMaxPrice = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colPriceDelta = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colTakeProfitPrice = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.colName = new DevExpress.XtraGrid.Columns.GridColumn();
             this.barManager1 = new DevExpress.XtraBars.BarManager(this.components);
+            this.bar1 = new DevExpress.XtraBars.Bar();
+            this.btAdd = new DevExpress.XtraBars.BarButtonItem();
+            this.btRemove = new DevExpress.XtraBars.BarButtonItem();
+            this.barButtonItem1 = new DevExpress.XtraBars.BarButtonItem();
+            this.btEdit = new DevExpress.XtraBars.BarButtonItem();
             this.barDockControlTop = new DevExpress.XtraBars.BarDockControl();
             this.barDockControlBottom = new DevExpress.XtraBars.BarDockControl();
             this.barDockControlLeft = new DevExpress.XtraBars.BarDockControl();
             this.barDockControlRight = new DevExpress.XtraBars.BarDockControl();
-            this.bar1 = new DevExpress.XtraBars.Bar();
-            this.btAdd = new DevExpress.XtraBars.BarButtonItem();
-            this.btRemove = new DevExpress.XtraBars.BarButtonItem();
-            this.btEdit = new DevExpress.XtraBars.BarButtonItem();
-            this.repositoryItemTextEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemTextEdit();
+            this.colType = new DevExpress.XtraGrid.Columns.GridColumn();
             ((System.ComponentModel.ISupportInitialize)(this.gcTrailings)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gvTrailings)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trailingSettingsBindingSource)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.barManager1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gvTrailings)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemTextEdit1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.barManager1)).BeginInit();
             this.SuspendLayout();
+            // 
+            // colActualProfit
+            // 
+            this.colActualProfit.FieldName = "ActualProfit";
+            this.colActualProfit.Name = "colActualProfit";
+            this.colActualProfit.OptionsColumn.ReadOnly = true;
+            this.colActualProfit.Visible = true;
+            this.colActualProfit.VisibleIndex = 4;
+            this.colActualProfit.Width = 173;
             // 
             // gcTrailings
             // 
             this.gcTrailings.DataSource = this.trailingSettingsBindingSource;
             this.gcTrailings.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gcTrailings.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(6);
-            this.gcTrailings.Location = new System.Drawing.Point(0, 60);
+            this.gcTrailings.Location = new System.Drawing.Point(0, 31);
             this.gcTrailings.MainView = this.gvTrailings;
-            this.gcTrailings.Margin = new System.Windows.Forms.Padding(6);
             this.gcTrailings.Name = "gcTrailings";
             this.gcTrailings.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repositoryItemTextEdit1});
-            this.gcTrailings.Size = new System.Drawing.Size(1237, 823);
+            this.gcTrailings.Size = new System.Drawing.Size(618, 428);
             this.gcTrailings.TabIndex = 1;
             this.gcTrailings.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gvTrailings});
+            // 
+            // trailingSettingsBindingSource
+            // 
+            this.trailingSettingsBindingSource.DataSource = typeof(CryptoMarketClient.Common.TrailingSettings);
             // 
             // gvTrailings
             // 
@@ -86,6 +105,7 @@
             this.gvTrailings.Appearance.Row.Options.UseFont = true;
             this.gvTrailings.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
             this.gvTrailings.Columns.AddRange(new DevExpress.XtraGrid.Columns.GridColumn[] {
+            this.colType,
             this.colName,
             this.colBuyPrice,
             this.colAmount,
@@ -121,8 +141,24 @@
             0,
             0});
             gridFormatRule2.Rule = formatConditionRuleValue2;
+            gridFormatRule3.Column = this.colType;
+            gridFormatRule3.ColumnApplyTo = this.colType;
+            gridFormatRule3.Name = "SellRule";
+            formatConditionRuleValue3.Condition = DevExpress.XtraEditors.FormatCondition.Equal;
+            formatConditionRuleValue3.PredefinedName = "Red Bold Text";
+            formatConditionRuleValue3.Value1 = TrailingType.Sell;
+            gridFormatRule3.Rule = formatConditionRuleValue3;
+            gridFormatRule4.Column = this.colType;
+            gridFormatRule4.ColumnApplyTo = this.colType;
+            gridFormatRule4.Name = "BuyRule";
+            formatConditionRuleValue4.Condition = DevExpress.XtraEditors.FormatCondition.Equal;
+            formatConditionRuleValue4.PredefinedName = "Green Bold Text";
+            formatConditionRuleValue4.Value1 = TrailingType.Buy;
+            gridFormatRule4.Rule = formatConditionRuleValue4;
             this.gvTrailings.FormatRules.Add(gridFormatRule1);
             this.gvTrailings.FormatRules.Add(gridFormatRule2);
+            this.gvTrailings.FormatRules.Add(gridFormatRule3);
+            this.gvTrailings.FormatRules.Add(gridFormatRule4);
             this.gvTrailings.GridControl = this.gcTrailings;
             this.gvTrailings.Name = "gvTrailings";
             this.gvTrailings.OptionsBehavior.AllowPixelScrolling = DevExpress.Utils.DefaultBoolean.True;
@@ -132,9 +168,12 @@
             this.gvTrailings.OptionsView.ShowGroupPanel = false;
             this.gvTrailings.OptionsView.ShowIndicator = false;
             // 
-            // trailingSettingsBindingSource
+            // colName
             // 
-            this.trailingSettingsBindingSource.DataSource = typeof(CryptoMarketClient.Common.TrailingSettings);
+            this.colName.FieldName = "Name";
+            this.colName.Name = "colName";
+            this.colName.OptionsColumn.ReadOnly = true;
+            this.colName.Width = 217;
             // 
             // colBuyPrice
             // 
@@ -142,23 +181,27 @@
             this.colBuyPrice.FieldName = "BuyPrice";
             this.colBuyPrice.Name = "colBuyPrice";
             this.colBuyPrice.Visible = true;
-            this.colBuyPrice.VisibleIndex = 0;
+            this.colBuyPrice.VisibleIndex = 1;
             this.colBuyPrice.Width = 217;
+            // 
+            // repositoryItemTextEdit1
+            // 
+            this.repositoryItemTextEdit1.AutoHeight = false;
+            this.repositoryItemTextEdit1.Name = "repositoryItemTextEdit1";
+            this.repositoryItemTextEdit1.Padding = new System.Windows.Forms.Padding(0, 8, 0, 8);
             // 
             // colAmount
             // 
             this.colAmount.FieldName = "Amount";
             this.colAmount.Name = "colAmount";
             this.colAmount.Visible = true;
-            this.colAmount.VisibleIndex = 2;
+            this.colAmount.VisibleIndex = 3;
             this.colAmount.Width = 217;
             // 
             // colStopLossSellPrice
             // 
             this.colStopLossSellPrice.FieldName = "StopLossSellPrice";
             this.colStopLossSellPrice.Name = "colStopLossSellPrice";
-            this.colStopLossSellPrice.Visible = true;
-            this.colStopLossSellPrice.VisibleIndex = 5;
             this.colStopLossSellPrice.Width = 287;
             // 
             // colTotalSpendInBaseCurrency
@@ -166,15 +209,6 @@
             this.colTotalSpendInBaseCurrency.FieldName = "TotalSpendInBaseCurrency";
             this.colTotalSpendInBaseCurrency.Name = "colTotalSpendInBaseCurrency";
             this.colTotalSpendInBaseCurrency.Width = 316;
-            // 
-            // colActualProfit
-            // 
-            this.colActualProfit.FieldName = "ActualProfit";
-            this.colActualProfit.Name = "colActualProfit";
-            this.colActualProfit.OptionsColumn.ReadOnly = true;
-            this.colActualProfit.Visible = true;
-            this.colActualProfit.VisibleIndex = 3;
-            this.colActualProfit.Width = 173;
             // 
             // colActualProfitUSD
             // 
@@ -194,7 +228,7 @@
             this.colStopLossPricePercent.FieldName = "StopLossPricePercent";
             this.colStopLossPricePercent.Name = "colStopLossPricePercent";
             this.colStopLossPricePercent.Visible = true;
-            this.colStopLossPricePercent.VisibleIndex = 4;
+            this.colStopLossPricePercent.VisibleIndex = 5;
             this.colStopLossPricePercent.Width = 259;
             // 
             // colStopLossStartPrice
@@ -202,6 +236,8 @@
             this.colStopLossStartPrice.FieldName = "StopLossStartPrice";
             this.colStopLossStartPrice.Name = "colStopLossStartPrice";
             this.colStopLossStartPrice.OptionsColumn.ReadOnly = true;
+            this.colStopLossStartPrice.Visible = true;
+            this.colStopLossStartPrice.VisibleIndex = 7;
             this.colStopLossStartPrice.Width = 241;
             // 
             // colTakeProfitPercent
@@ -217,7 +253,7 @@
             this.colActualPrice.FieldName = "ActualPrice";
             this.colActualPrice.Name = "colActualPrice";
             this.colActualPrice.Visible = true;
-            this.colActualPrice.VisibleIndex = 1;
+            this.colActualPrice.VisibleIndex = 2;
             this.colActualPrice.Width = 161;
             // 
             // colMaxPrice
@@ -238,16 +274,7 @@
             this.colTakeProfitPrice.FieldName = "TakeProfitPrice";
             this.colTakeProfitPrice.Name = "colTakeProfitPrice";
             this.colTakeProfitPrice.OptionsColumn.ReadOnly = true;
-            this.colTakeProfitPrice.Visible = true;
-            this.colTakeProfitPrice.VisibleIndex = 7;
             this.colTakeProfitPrice.Width = 172;
-            // 
-            // colName
-            // 
-            this.colName.FieldName = "Name";
-            this.colName.Name = "colName";
-            this.colName.OptionsColumn.ReadOnly = true;
-            this.colName.Width = 217;
             // 
             // barManager1
             // 
@@ -261,40 +288,9 @@
             this.barManager1.Items.AddRange(new DevExpress.XtraBars.BarItem[] {
             this.btAdd,
             this.btRemove,
-            this.btEdit});
-            this.barManager1.MaxItemId = 3;
-            // 
-            // barDockControlTop
-            // 
-            this.barDockControlTop.CausesValidation = false;
-            this.barDockControlTop.Dock = System.Windows.Forms.DockStyle.Top;
-            this.barDockControlTop.Location = new System.Drawing.Point(0, 0);
-            this.barDockControlTop.Manager = this.barManager1;
-            this.barDockControlTop.Size = new System.Drawing.Size(1237, 60);
-            // 
-            // barDockControlBottom
-            // 
-            this.barDockControlBottom.CausesValidation = false;
-            this.barDockControlBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.barDockControlBottom.Location = new System.Drawing.Point(0, 883);
-            this.barDockControlBottom.Manager = this.barManager1;
-            this.barDockControlBottom.Size = new System.Drawing.Size(1237, 0);
-            // 
-            // barDockControlLeft
-            // 
-            this.barDockControlLeft.CausesValidation = false;
-            this.barDockControlLeft.Dock = System.Windows.Forms.DockStyle.Left;
-            this.barDockControlLeft.Location = new System.Drawing.Point(0, 60);
-            this.barDockControlLeft.Manager = this.barManager1;
-            this.barDockControlLeft.Size = new System.Drawing.Size(0, 823);
-            // 
-            // barDockControlRight
-            // 
-            this.barDockControlRight.CausesValidation = false;
-            this.barDockControlRight.Dock = System.Windows.Forms.DockStyle.Right;
-            this.barDockControlRight.Location = new System.Drawing.Point(1237, 60);
-            this.barDockControlRight.Manager = this.barManager1;
-            this.barDockControlRight.Size = new System.Drawing.Size(0, 823);
+            this.btEdit,
+            this.barButtonItem1});
+            this.barManager1.MaxItemId = 4;
             // 
             // bar1
             // 
@@ -305,6 +301,7 @@
             this.bar1.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
             new DevExpress.XtraBars.LinkPersistInfo(this.btAdd),
             new DevExpress.XtraBars.LinkPersistInfo(this.btRemove),
+            new DevExpress.XtraBars.LinkPersistInfo(this.barButtonItem1),
             new DevExpress.XtraBars.LinkPersistInfo(this.btEdit)});
             this.bar1.OptionsBar.DrawBorder = false;
             this.bar1.OptionsBar.UseWholeRow = true;
@@ -328,6 +325,17 @@
             this.btRemove.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("btRemove.ImageOptions.LargeImage")));
             this.btRemove.Name = "btRemove";
             this.btRemove.PaintStyle = DevExpress.XtraBars.BarItemPaintStyle.CaptionGlyph;
+            this.btRemove.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btRemove_ItemClick);
+            // 
+            // barButtonItem1
+            // 
+            this.barButtonItem1.Caption = "Remove All";
+            this.barButtonItem1.Id = 3;
+            this.barButtonItem1.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("barButtonItem1.ImageOptions.Image")));
+            this.barButtonItem1.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("barButtonItem1.ImageOptions.LargeImage")));
+            this.barButtonItem1.Name = "barButtonItem1";
+            this.barButtonItem1.PaintStyle = DevExpress.XtraBars.BarItemPaintStyle.CaptionGlyph;
+            this.barButtonItem1.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItem1_ItemClick);
             // 
             // btEdit
             // 
@@ -338,28 +346,66 @@
             this.btEdit.Name = "btEdit";
             this.btEdit.PaintStyle = DevExpress.XtraBars.BarItemPaintStyle.CaptionGlyph;
             // 
-            // repositoryItemTextEdit1
+            // barDockControlTop
             // 
-            this.repositoryItemTextEdit1.AutoHeight = false;
-            this.repositoryItemTextEdit1.Name = "repositoryItemTextEdit1";
-            this.repositoryItemTextEdit1.Padding = new System.Windows.Forms.Padding(0, 8, 0, 8);
+            this.barDockControlTop.CausesValidation = false;
+            this.barDockControlTop.Dock = System.Windows.Forms.DockStyle.Top;
+            this.barDockControlTop.Location = new System.Drawing.Point(0, 0);
+            this.barDockControlTop.Manager = this.barManager1;
+            this.barDockControlTop.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.barDockControlTop.Size = new System.Drawing.Size(618, 31);
             // 
-            // ActiveTrailingCollectionControl
+            // barDockControlBottom
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
+            this.barDockControlBottom.CausesValidation = false;
+            this.barDockControlBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.barDockControlBottom.Location = new System.Drawing.Point(0, 459);
+            this.barDockControlBottom.Manager = this.barManager1;
+            this.barDockControlBottom.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.barDockControlBottom.Size = new System.Drawing.Size(618, 0);
+            // 
+            // barDockControlLeft
+            // 
+            this.barDockControlLeft.CausesValidation = false;
+            this.barDockControlLeft.Dock = System.Windows.Forms.DockStyle.Left;
+            this.barDockControlLeft.Location = new System.Drawing.Point(0, 31);
+            this.barDockControlLeft.Manager = this.barManager1;
+            this.barDockControlLeft.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.barDockControlLeft.Size = new System.Drawing.Size(0, 428);
+            // 
+            // barDockControlRight
+            // 
+            this.barDockControlRight.CausesValidation = false;
+            this.barDockControlRight.Dock = System.Windows.Forms.DockStyle.Right;
+            this.barDockControlRight.Location = new System.Drawing.Point(618, 31);
+            this.barDockControlRight.Manager = this.barManager1;
+            this.barDockControlRight.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.barDockControlRight.Size = new System.Drawing.Size(0, 428);
+            // 
+            // colType
+            // 
+            this.colType.FieldName = "Type";
+            this.colType.Name = "colType";
+            this.colType.Visible = true;
+            this.colType.VisibleIndex = 0;
+            // 
+            // TrailingCollectionControl
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.gcTrailings);
             this.Controls.Add(this.barDockControlLeft);
             this.Controls.Add(this.barDockControlRight);
             this.Controls.Add(this.barDockControlBottom);
             this.Controls.Add(this.barDockControlTop);
-            this.Name = "ActiveTrailingCollectionControl";
-            this.Size = new System.Drawing.Size(1237, 883);
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Name = "TrailingCollectionControl";
+            this.Size = new System.Drawing.Size(618, 459);
             ((System.ComponentModel.ISupportInitialize)(this.gcTrailings)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gvTrailings)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trailingSettingsBindingSource)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.barManager1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gvTrailings)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemTextEdit1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.barManager1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -395,5 +441,7 @@
         private DevExpress.XtraBars.BarDockControl barDockControlLeft;
         private DevExpress.XtraBars.BarDockControl barDockControlRight;
         private DevExpress.XtraEditors.Repository.RepositoryItemTextEdit repositoryItemTextEdit1;
+        private DevExpress.XtraBars.BarButtonItem barButtonItem1;
+        private DevExpress.XtraGrid.Columns.GridColumn colType;
     }
 }

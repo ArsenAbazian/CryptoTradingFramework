@@ -14,7 +14,7 @@ namespace CryptoMarketClient.Common {
         public OrderType Type { get; set; }
 
         public void Calculate() {
-            Date = DateTime.Now;
+            Date = DateTime.UtcNow;
             decimal amount = 0;
             decimal total = 0;
             foreach(TradeEntry e in Trades) {

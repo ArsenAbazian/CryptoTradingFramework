@@ -32,8 +32,8 @@ namespace CryptoMarketClient {
 
         private void simpleButton1_Click(object sender, EventArgs e) {
             foreach(ApiKeyInfo info in Keys) {
-                info.Exchange.ApiKey = info.ApiKey.Trim();
-                info.Exchange.ApiSecret = info.Secret.Trim();
+                info.Exchange.ApiKey = string.IsNullOrEmpty(info.ApiKey) ? "": info.ApiKey.Trim();
+                info.Exchange.ApiSecret = string.IsNullOrEmpty(info.Secret)? "": info.Secret.Trim();
                 info.Exchange.Save();
             }
             Close();

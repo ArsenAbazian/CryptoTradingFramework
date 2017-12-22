@@ -173,18 +173,6 @@ namespace CryptoMarketClient {
             return s;
         }
         
-        public Color AskColor {
-            get { return System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192))))); }
-        }
-
-        public Color BidColor {
-            get { return System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192))))); }
-        }
-
-        public Color CurrentColor {
-            get { return Color.FromArgb(128, Color.BlueViolet); }
-        }
-
         protected Series BidSeries { get; set; }
         protected Series AskSeries { get; set; }
         protected Series CurrentSeries { get; set; }
@@ -206,7 +194,11 @@ namespace CryptoMarketClient {
             this.chartControl1.Series["Buy volume"].ArgumentDataMember = "Time";
             this.chartControl1.Series["Buy volume"].ValueDataMembers.AddRange("BuyVolume");
 
+            this.chartControl1.Series["Volume"].ArgumentDataMember = "Time";
+            this.chartControl1.Series["Volume"].ValueDataMembers.AddRange("Volume");
+
             ConfigurateChart(ViewType.CandleStick);
+            //this.rangeControl1.SelectedRange = new RangeControlRange(DateTime.Now.AddHours(-12), DateTime.Now);
         }
         Series CreateLastSeries() {
             if(this.bcStock.Checked)
@@ -254,12 +246,11 @@ namespace CryptoMarketClient {
         void ConfigurateChart(ViewType type) {
             this.chartControl1.Series["Current"].ChangeView(type);
             this.chartControl1.Series["Current"].DataSource = null;
-            if(type == ViewType.CandleStick || type == ViewType.Stock) {
+            if(type == ViewType.CandleStick || type == ViewType.Stock)
                 this.chartControl1.Series["Current"].BindToData(Ticker.CandleStickData, "Time", "Low", "High", "Open", "Close");
-            }
-            else {
+            else
                 this.chartControl1.Series["Current"].BindToData(Ticker.History, "Time", "Current");
-            }
+            UpdateChartProperties();
         }
         void InitializeCheckItems() {
             this.bcStock.Tag = ViewType.Stock;
@@ -273,6 +264,14 @@ namespace CryptoMarketClient {
             BindingList<CandleStickData> data = Ticker.GetCandleStickData(Ticker.CandleStickPeriodMin, start, hours * 60 * 60);
             Ticker.CandleStickData = data;
             this.chartControl1.Series["Current"].DataSource = data;
+            this.chartControl1.Series["Volume"].DataSource = data;
+            UpdateChartProperties();
+        }
+
+        protected void UpdateChartProperties() {
+            ((BarSeriesView)this.chartControl1.Series["Volume"].View).BarWidth = 0.6 * Ticker.CandleStickPeriodMin;
+            ((BarSeriesView)this.chartControl1.Series["Volume"].View).Border.Visibility = DevExpress.Utils.DefaultBoolean.False;
+            ((CandleStickSeriesView)this.chartControl1.Series["Current"].View).LevelLineLength = 0.6 / 2 * Ticker.CandleStickPeriodMin;
         }
 
         private void barButtonItem3_ItemClick(object sender, ItemClickEventArgs e) {
