@@ -1,0 +1,572 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{544E62E5-DC81-410C-9F75-F914A0B711C1}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>CryptoMarketClient</RootNamespace>
+    <AssemblyName>PoloniexClient</AssemblyName>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Castle.Core, Version=4.1.1.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <HintPath>..\packages\Castle.Core.4.1.1\lib\net45\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Charts.v17.2.Core, Version=17.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.Data.v17.2, Version=17.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.Office.v17.2.Core, Version=17.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.RichEdit.v17.2.Core, Version=17.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.RichEdit.v17.2.Export, Version=17.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.Printing.v17.2.Core, Version=17.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.Sparkline.v17.2.Core, Version=17.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.Utils.v17.2, Version=17.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.Xpo.v17.2, Version=17.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4" />
+    <Reference Include="DevExpress.XtraBars.v17.2, Version=17.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.XtraCharts.v17.2, Version=17.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.XtraCharts.v17.2.UI, Version=17.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.XtraCharts.v17.2.Wizard, Version=17.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.XtraEditors.v17.2, Version=17.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.XtraGrid.v17.2, Version=17.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.XtraLayout.v17.2, Version=17.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.XtraPrinting.v17.2, Version=17.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.XtraVerticalGrid.v17.2, Version=17.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Fleck, Version=0.14.0.59, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Fleck.0.14.0.59\lib\net40\Fleck.dll</HintPath>
+    </Reference>
+    <Reference Include="MsgPack, Version=0.6.0.0, Culture=neutral, PublicKeyToken=a2625990d5dc0167, processorArchitecture=MSIL">
+      <HintPath>..\packages\MsgPack.Cli.0.6.2\lib\net45\MsgPack.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Msgpack, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Msgpack.0.1.10\lib\net45\Newtonsoft.Msgpack.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="RestSharp, Version=105.2.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\RestSharp.105.2.3\lib\net452\RestSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="SuperSocket.ClientEngine, Version=0.8.0.12, Culture=neutral, PublicKeyToken=ee9af13f57f00acc, processorArchitecture=MSIL">
+      <HintPath>..\packages\SuperSocket.ClientEngine.Core.0.8.0.12\lib\net45\SuperSocket.ClientEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Collections.Immutable, Version=1.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Collections.Immutable.1.3.1\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Reactive.Core, Version=3.0.1000.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Reactive.Core.3.1.1\lib\net45\System.Reactive.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.Interfaces, Version=3.0.1000.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Reactive.Interfaces.3.1.1\lib\net45\System.Reactive.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.Linq, Version=3.0.1000.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Reactive.Linq.3.1.1\lib\net45\System.Reactive.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.PlatformServices, Version=3.0.1000.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Reactive.PlatformServices.3.1.1\lib\net45\System.Reactive.PlatformServices.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.Windows.Threading, Version=3.0.1000.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Reactive.Windows.Threading.3.1.1\lib\net45\System.Reactive.Windows.Threading.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.InteropServices.RuntimeInformation, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.InteropServices.RuntimeInformation.4.3.0\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Remoting" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Text.Json, Version=2.0.0.11, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Text.Json.2.0.0.11\lib\net40\System.Text.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Dataflow, Version=4.6.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Dataflow.4.7.0\lib\portable-net45+win8+wpa81\System.Threading.Tasks.Dataflow.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ValueTuple, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.4.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.Windows" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Telegram.Bot, Version=13.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Telegram.Bot.13.1.0\lib\netstandard1.1\Telegram.Bot.dll</HintPath>
+    </Reference>
+    <Reference Include="Tesseract, Version=3.0.2.0, Culture=neutral, PublicKeyToken=ebeb3d86bef60cbe, processorArchitecture=MSIL">
+      <HintPath>..\packages\Tesseract.3.0.2.0\lib\net451\Tesseract.dll</HintPath>
+    </Reference>
+    <Reference Include="UIAutomationClient" />
+    <Reference Include="WampSharp, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WampSharp.1.2.6.41-beta\lib\net45\WampSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="WampSharp.Default.Client, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WampSharp.Default.Client.1.2.6.41-beta\lib\net45\WampSharp.Default.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="WampSharp.Default.Router, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WampSharp.Default.Router.1.2.6.41-beta\lib\net45\WampSharp.Default.Router.dll</HintPath>
+    </Reference>
+    <Reference Include="WampSharp.Fleck, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WampSharp.Fleck.1.2.6.41-beta\lib\net45\WampSharp.Fleck.dll</HintPath>
+    </Reference>
+    <Reference Include="WampSharp.NewtonsoftJson, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WampSharp.NewtonsoftJson.1.2.6.41-beta\lib\net45\WampSharp.NewtonsoftJson.dll</HintPath>
+    </Reference>
+    <Reference Include="WampSharp.NewtonsoftMsgpack, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WampSharp.NewtonsoftMsgpack.1.2.6.41-beta\lib\net45\WampSharp.NewtonsoftMsgpack.dll</HintPath>
+    </Reference>
+    <Reference Include="WampSharp.WebSocket4Net, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WampSharp.WebSocket4Net.1.2.6.41-beta\lib\net45\WampSharp.WebSocket4Net.dll</HintPath>
+    </Reference>
+    <Reference Include="WebSocket4Net, Version=0.15.0.9, Culture=neutral, PublicKeyToken=eb4e154b696bf72a, processorArchitecture=MSIL">
+      <HintPath>..\packages\WebSocket4Net.0.15.0-beta9\lib\net45\WebSocket4Net.dll</HintPath>
+    </Reference>
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="TrailingCollectionControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="TrailingCollectionControl.Designer.cs">
+      <DependentUpon>TrailingCollectionControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TrailngCollectionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TrailngCollectionForm.Designer.cs">
+      <DependentUpon>TrailngCollectionForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="AnalyticsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AnalyticsForm.Designer.cs">
+      <DependentUpon>AnalyticsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Common\ArbitrageInfo.cs" />
+    <Compile Include="Analytics\OrderBookChangeAnalyser.cs" />
+    <Compile Include="Analytics\TickerAnalyserBase.cs" />
+    <Compile Include="Analytics\TickerCollectionAnalyserBase.cs" />
+    <Compile Include="Bittrex\BittrexAccountBalanceInfo.cs" />
+    <Compile Include="Bittrex\BittrexMarketInfo.cs" />
+    <Compile Include="Bittrex\BittrexModel.cs" />
+    <Compile Include="Bittrex\BittrexOrderInfo.cs" />
+    <Compile Include="CombinedBidAskForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CombinedBidAskForm.Designer.cs">
+      <DependentUpon>CombinedBidAskForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Common\ApiKeyInfo.cs" />
+    <Compile Include="Common\ArbitrageHistoryHelper.cs" />
+    <Compile Include="Common\BalanceBase.cs" />
+    <Compile Include="Common\CandleStickChartHelper.cs" />
+    <Compile Include="Common\FafovireTickerInfo.cs" />
+    <Compile Include="Common\StaticArbitrageHelper.cs" />
+    <Compile Include="Common\StaticArbitrageInfo.cs" />
+    <Compile Include="Common\CurrencyStatusHistoryItem.cs" />
+    <Compile Include="Common\CurrencyType.cs" />
+    <Compile Include="Common\DepositInfo.cs" />
+    <Compile Include="Common\SimpleJsonParser.cs" />
+    <Compile Include="Common\TickerBase.cs" />
+    <Compile Include="Common\LogManager.cs" />
+    <Compile Include="Common\LogMessage.cs" />
+    <Compile Include="Common\ModelBase.cs" />
+    <Compile Include="Common\MyWebClient.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Common\OrderBookEntry.cs" />
+    <Compile Include="Common\OrderBookUpdateInfo.cs" />
+    <Compile Include="Common\OrderType.cs" />
+    <Compile Include="Common\RateGate.cs" />
+    <Compile Include="Common\TelegramBot.cs" />
+    <Compile Include="Common\TickerCollectionHelper.cs" />
+    <Compile Include="Common\TickerCollectionInfo.cs" />
+    <Compile Include="Common\TickerCollectionUpdateHelper.cs" />
+    <Compile Include="Common\TickerHistoryItem.cs" />
+    <Compile Include="Common\TickerUpdateHelper.cs" />
+    <Compile Include="Common\TradeHistoryItem.cs" />
+    <Compile Include="Common\TradingResult.cs" />
+    <Compile Include="Common\TrailingManager.cs" />
+    <Compile Include="Common\TrailingSettings.cs" />
+    <Compile Include="DepositsTotal.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DepositsTotal.Designer.cs">
+      <DependentUpon>DepositsTotal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EnterApiKeyForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EnterApiKeyForm.Designer.cs">
+      <DependentUpon>EnterApiKeyForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ArbitrageHistoryForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ArbitrageHistoryForm.Designer.cs">
+      <DependentUpon>ArbitrageHistoryForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="LogForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="LogForm.Designer.cs">
+      <DependentUpon>LogForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CalculatorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CalculatorForm.Designer.cs">
+      <DependentUpon>CalculatorForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NotificationForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NotificationForm.Designer.cs">
+      <DependentUpon>NotificationForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="OrderBookControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="OrderBookControl.Designer.cs">
+      <DependentUpon>OrderBookControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="OrderBookVolumeHistoryForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OrderBookVolumeHistoryForm.Designer.cs">
+      <DependentUpon>OrderBookVolumeHistoryForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Poloniex\PoloniexAccountBalanceInfo.cs" />
+    <Compile Include="Poloniex\PoloniexAccountBalancesForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Poloniex\PoloniexAccountBalancesForm.Designer.cs">
+      <DependentUpon>PoloniexAccountBalancesForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Poloniex\PoloniexCurrencyInfo.cs" />
+    <Compile Include="Poloniex\PoloniexOrderInfo.cs" />
+    <Compile Include="Poloniex\PoloniexOrdersForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Poloniex\PoloniexOrdersForm.Designer.cs">
+      <DependentUpon>PoloniexOrdersForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ProfitTickersControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ProfitTickersControl.Designer.cs">
+      <DependentUpon>ProfitTickersControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ProfitTickersForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ProfitTickersForm.Designer.cs">
+      <DependentUpon>ProfitTickersForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="StaticArbitrageForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="StaticArbitrageForm.Designer.cs">
+      <DependentUpon>StaticArbitrageForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="StaticArbitrageHistoryForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="StaticArbitrageHistoryForm.Designer.cs">
+      <DependentUpon>StaticArbitrageHistoryForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Strategies\BaseGridStrategy.cs" />
+    <Compile Include="Strategies\StaticGridStrategy.cs" />
+    <Compile Include="Strategies\StrategyBase.cs" />
+    <Compile Include="ThreadUpdateForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TickerArbitrageForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TickerArbitrageForm.Designer.cs">
+      <DependentUpon>TickerArbitrageForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TickerChartViewer.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="TickerChartViewer.Designer.cs">
+      <DependentUpon>TickerChartViewer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TickerForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TickerForm.Designer.cs">
+      <DependentUpon>TickerForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Common\OrderBook.cs" />
+    <Compile Include="Poloniex\PoloniexOrderBookUpdateInfoConverter.cs" />
+    <Compile Include="Poloniex\PoloniexTicker.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Poloniex\PoloniexModel.cs" />
+    <Compile Include="TickersCollectionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TickersCollectionForm.Designer.cs">
+      <DependentUpon>TickersCollectionForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TickerInfoControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="TickerInfoControl.Designer.cs">
+      <DependentUpon>TickerInfoControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TickerStrategyCollectionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TickerStrategyCollectionForm.Designer.cs">
+      <DependentUpon>TickerStrategyCollectionForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TickerStrategyParametersForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TickerStrategyParametersForm.Designer.cs">
+      <DependentUpon>TickerStrategyParametersForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TimerUpdateForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BuySettingsControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="BuySettingsControl.Designer.cs">
+      <DependentUpon>BuySettingsControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TradeResultControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="TradeResultControl.Designer.cs">
+      <DependentUpon>TradeResultControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TrailingSettinsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TrailingSettinsForm.Designer.cs">
+      <DependentUpon>TrailingSettinsForm.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="TrailingCollectionControl.resx">
+      <DependentUpon>TrailingCollectionControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TrailngCollectionForm.resx">
+      <DependentUpon>TrailngCollectionForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AnalyticsForm.resx">
+      <DependentUpon>AnalyticsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CombinedBidAskForm.resx">
+      <DependentUpon>CombinedBidAskForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DepositsTotal.resx">
+      <DependentUpon>DepositsTotal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EnterApiKeyForm.resx">
+      <DependentUpon>EnterApiKeyForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ArbitrageHistoryForm.resx">
+      <DependentUpon>ArbitrageHistoryForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LogForm.resx">
+      <DependentUpon>LogForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CalculatorForm.resx">
+      <DependentUpon>CalculatorForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NotificationForm.resx">
+      <DependentUpon>NotificationForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OrderBookControl.resx">
+      <DependentUpon>OrderBookControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OrderBookVolumeHistoryForm.resx">
+      <DependentUpon>OrderBookVolumeHistoryForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Poloniex\PoloniexAccountBalancesForm.resx">
+      <DependentUpon>PoloniexAccountBalancesForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Poloniex\PoloniexOrdersForm.resx">
+      <DependentUpon>PoloniexOrdersForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ProfitTickersControl.resx">
+      <DependentUpon>ProfitTickersControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ProfitTickersForm.resx">
+      <DependentUpon>ProfitTickersForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\licenses.licx" />
+    <EmbeddedResource Include="StaticArbitrageForm.resx">
+      <DependentUpon>StaticArbitrageForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="StaticArbitrageHistoryForm.resx">
+      <DependentUpon>StaticArbitrageHistoryForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ThreadUpdateForm.resx">
+      <DependentUpon>ThreadUpdateForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TickerArbitrageForm.resx">
+      <DependentUpon>TickerArbitrageForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TickerChartViewer.resx">
+      <DependentUpon>TickerChartViewer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TickerForm.resx">
+      <DependentUpon>TickerForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <EmbeddedResource Include="TickersCollectionForm.resx">
+      <DependentUpon>TickersCollectionForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TickerInfoControl.resx">
+      <DependentUpon>TickerInfoControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TickerStrategyCollectionForm.resx">
+      <DependentUpon>TickerStrategyCollectionForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TickerStrategyParametersForm.resx">
+      <DependentUpon>TickerStrategyParametersForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="BuySettingsControl.resx">
+      <DependentUpon>BuySettingsControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TradeResultControl.resx">
+      <DependentUpon>TradeResultControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TrailingSettinsForm.resx">
+      <DependentUpon>TrailingSettinsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="app.manifest" />
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Images\TrendDown.png" />
+    <EmbeddedResource Include="Images\TrendUp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Images\TrendNew.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\chart.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="x64\liblept172.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="x64\libtesseract304.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="x86\liblept172.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="x86\libtesseract304.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
