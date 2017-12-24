@@ -142,7 +142,7 @@ namespace CryptoMarketClient {
                 t.Last = obj.Value<decimal>("last");
                 t.LowestAsk = obj.Value<decimal>("lowestAsk");
                 t.HighestBid = obj.Value<decimal>("highestBid");
-                t.Change = obj.Value<decimal>("percentChange");
+                //t.Change = obj.Value<decimal>("percentChange");
                 t.BaseVolume = obj.Value<decimal>("baseVolume");
                 t.Volume = obj.Value<decimal>("quoteVolume");
                 t.IsFrozen = obj.Value<int>("isFrozen") != 0;
@@ -175,7 +175,7 @@ namespace CryptoMarketClient {
                 t.Last = obj.Value<decimal>("last");
                 t.LowestAsk = obj.Value<decimal>("lowestAsk");
                 t.HighestBid = obj.Value<decimal>("highestBid");
-                t.Change = obj.Value<decimal>("percentChange");
+                //t.Change = obj.Value<decimal>("percentChange");
                 t.BaseVolume = obj.Value<decimal>("baseVolume");
                 t.Volume = obj.Value<decimal>("quoteVolume");
                 t.IsFrozen = obj.Value<int>("isFrozen") != 0;

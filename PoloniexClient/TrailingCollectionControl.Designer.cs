@@ -36,6 +36,7 @@ namespace CryptoMarketClient {
             DevExpress.XtraEditors.FormatConditionRuleValue formatConditionRuleValue4 = new DevExpress.XtraEditors.FormatConditionRuleValue();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TrailingCollectionControl));
             this.colActualProfit = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colType = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gcTrailings = new DevExpress.XtraGrid.GridControl();
             this.trailingSettingsBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.gvTrailings = new DevExpress.XtraGrid.Views.Grid.GridView();
@@ -64,7 +65,7 @@ namespace CryptoMarketClient {
             this.barDockControlBottom = new DevExpress.XtraBars.BarDockControl();
             this.barDockControlLeft = new DevExpress.XtraBars.BarDockControl();
             this.barDockControlRight = new DevExpress.XtraBars.BarDockControl();
-            this.colType = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.gridColumn1 = new DevExpress.XtraGrid.Columns.GridColumn();
             ((System.ComponentModel.ISupportInitialize)(this.gcTrailings)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trailingSettingsBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gvTrailings)).BeginInit();
@@ -79,7 +80,15 @@ namespace CryptoMarketClient {
             this.colActualProfit.OptionsColumn.ReadOnly = true;
             this.colActualProfit.Visible = true;
             this.colActualProfit.VisibleIndex = 4;
-            this.colActualProfit.Width = 173;
+            this.colActualProfit.Width = 67;
+            // 
+            // colType
+            // 
+            this.colType.FieldName = "Type";
+            this.colType.Name = "colType";
+            this.colType.Visible = true;
+            this.colType.VisibleIndex = 0;
+            this.colType.Width = 59;
             // 
             // gcTrailings
             // 
@@ -120,7 +129,8 @@ namespace CryptoMarketClient {
             this.colActualPrice,
             this.colMaxPrice,
             this.colPriceDelta,
-            this.colTakeProfitPrice});
+            this.colTakeProfitPrice,
+            this.gridColumn1});
             gridFormatRule1.Column = this.colActualProfit;
             gridFormatRule1.ColumnApplyTo = this.colActualProfit;
             gridFormatRule1.Name = "FormatRulesPositiveProfit";
@@ -146,14 +156,14 @@ namespace CryptoMarketClient {
             gridFormatRule3.Name = "SellRule";
             formatConditionRuleValue3.Condition = DevExpress.XtraEditors.FormatCondition.Equal;
             formatConditionRuleValue3.PredefinedName = "Red Bold Text";
-            formatConditionRuleValue3.Value1 = TrailingType.Sell;
+            formatConditionRuleValue3.Value1 = CryptoMarketClient.Common.TrailingType.Sell;
             gridFormatRule3.Rule = formatConditionRuleValue3;
             gridFormatRule4.Column = this.colType;
             gridFormatRule4.ColumnApplyTo = this.colType;
             gridFormatRule4.Name = "BuyRule";
             formatConditionRuleValue4.Condition = DevExpress.XtraEditors.FormatCondition.Equal;
             formatConditionRuleValue4.PredefinedName = "Green Bold Text";
-            formatConditionRuleValue4.Value1 = TrailingType.Buy;
+            formatConditionRuleValue4.Value1 = CryptoMarketClient.Common.TrailingType.Buy;
             gridFormatRule4.Rule = formatConditionRuleValue4;
             this.gvTrailings.FormatRules.Add(gridFormatRule1);
             this.gvTrailings.FormatRules.Add(gridFormatRule2);
@@ -177,12 +187,13 @@ namespace CryptoMarketClient {
             // 
             // colBuyPrice
             // 
+            this.colBuyPrice.Caption = "Buy Price";
             this.colBuyPrice.ColumnEdit = this.repositoryItemTextEdit1;
             this.colBuyPrice.FieldName = "BuyPrice";
             this.colBuyPrice.Name = "colBuyPrice";
             this.colBuyPrice.Visible = true;
             this.colBuyPrice.VisibleIndex = 1;
-            this.colBuyPrice.Width = 217;
+            this.colBuyPrice.Width = 79;
             // 
             // repositoryItemTextEdit1
             // 
@@ -196,7 +207,7 @@ namespace CryptoMarketClient {
             this.colAmount.Name = "colAmount";
             this.colAmount.Visible = true;
             this.colAmount.VisibleIndex = 3;
-            this.colAmount.Width = 217;
+            this.colAmount.Width = 77;
             // 
             // colStopLossSellPrice
             // 
@@ -225,28 +236,26 @@ namespace CryptoMarketClient {
             // 
             // colStopLossPricePercent
             // 
-            this.colStopLossPricePercent.FieldName = "StopLossPricePercent";
+            this.colStopLossPricePercent.FieldName = "StopLossStartPrice";
             this.colStopLossPricePercent.Name = "colStopLossPricePercent";
             this.colStopLossPricePercent.Visible = true;
             this.colStopLossPricePercent.VisibleIndex = 5;
-            this.colStopLossPricePercent.Width = 259;
+            this.colStopLossPricePercent.Width = 95;
             // 
             // colStopLossStartPrice
             // 
             this.colStopLossStartPrice.FieldName = "StopLossStartPrice";
             this.colStopLossStartPrice.Name = "colStopLossStartPrice";
             this.colStopLossStartPrice.OptionsColumn.ReadOnly = true;
-            this.colStopLossStartPrice.Visible = true;
-            this.colStopLossStartPrice.VisibleIndex = 7;
-            this.colStopLossStartPrice.Width = 241;
+            this.colStopLossStartPrice.Width = 101;
             // 
             // colTakeProfitPercent
             // 
-            this.colTakeProfitPercent.FieldName = "TakeProfitPercent";
+            this.colTakeProfitPercent.FieldName = "TakeProfitPrice";
             this.colTakeProfitPercent.Name = "colTakeProfitPercent";
             this.colTakeProfitPercent.Visible = true;
             this.colTakeProfitPercent.VisibleIndex = 6;
-            this.colTakeProfitPercent.Width = 220;
+            this.colTakeProfitPercent.Width = 73;
             // 
             // colActualPrice
             // 
@@ -254,7 +263,7 @@ namespace CryptoMarketClient {
             this.colActualPrice.Name = "colActualPrice";
             this.colActualPrice.Visible = true;
             this.colActualPrice.VisibleIndex = 2;
-            this.colActualPrice.Width = 161;
+            this.colActualPrice.Width = 67;
             // 
             // colMaxPrice
             // 
@@ -352,7 +361,7 @@ namespace CryptoMarketClient {
             this.barDockControlTop.Dock = System.Windows.Forms.DockStyle.Top;
             this.barDockControlTop.Location = new System.Drawing.Point(0, 0);
             this.barDockControlTop.Manager = this.barManager1;
-            this.barDockControlTop.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.barDockControlTop.Margin = new System.Windows.Forms.Padding(2);
             this.barDockControlTop.Size = new System.Drawing.Size(618, 31);
             // 
             // barDockControlBottom
@@ -361,7 +370,7 @@ namespace CryptoMarketClient {
             this.barDockControlBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.barDockControlBottom.Location = new System.Drawing.Point(0, 459);
             this.barDockControlBottom.Manager = this.barManager1;
-            this.barDockControlBottom.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.barDockControlBottom.Margin = new System.Windows.Forms.Padding(2);
             this.barDockControlBottom.Size = new System.Drawing.Size(618, 0);
             // 
             // barDockControlLeft
@@ -370,7 +379,7 @@ namespace CryptoMarketClient {
             this.barDockControlLeft.Dock = System.Windows.Forms.DockStyle.Left;
             this.barDockControlLeft.Location = new System.Drawing.Point(0, 31);
             this.barDockControlLeft.Manager = this.barManager1;
-            this.barDockControlLeft.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.barDockControlLeft.Margin = new System.Windows.Forms.Padding(2);
             this.barDockControlLeft.Size = new System.Drawing.Size(0, 428);
             // 
             // barDockControlRight
@@ -379,15 +388,12 @@ namespace CryptoMarketClient {
             this.barDockControlRight.Dock = System.Windows.Forms.DockStyle.Right;
             this.barDockControlRight.Location = new System.Drawing.Point(618, 31);
             this.barDockControlRight.Manager = this.barManager1;
-            this.barDockControlRight.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.barDockControlRight.Margin = new System.Windows.Forms.Padding(2);
             this.barDockControlRight.Size = new System.Drawing.Size(0, 428);
             // 
-            // colType
+            // gridColumn1
             // 
-            this.colType.FieldName = "Type";
-            this.colType.Name = "colType";
-            this.colType.Visible = true;
-            this.colType.VisibleIndex = 0;
+            this.gridColumn1.Name = "gridColumn1";
             // 
             // TrailingCollectionControl
             // 
@@ -398,7 +404,7 @@ namespace CryptoMarketClient {
             this.Controls.Add(this.barDockControlRight);
             this.Controls.Add(this.barDockControlBottom);
             this.Controls.Add(this.barDockControlTop);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "TrailingCollectionControl";
             this.Size = new System.Drawing.Size(618, 459);
             ((System.ComponentModel.ISupportInitialize)(this.gcTrailings)).EndInit();
@@ -443,5 +449,6 @@ namespace CryptoMarketClient {
         private DevExpress.XtraEditors.Repository.RepositoryItemTextEdit repositoryItemTextEdit1;
         private DevExpress.XtraBars.BarButtonItem barButtonItem1;
         private DevExpress.XtraGrid.Columns.GridColumn colType;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumn1;
     }
 }

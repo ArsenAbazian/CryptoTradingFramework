@@ -240,7 +240,7 @@ namespace CryptoMarketClient {
             // 
             // MyTradesCollectionControl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.gcTrades);
             this.Controls.Add(this.barDockControlLeft);

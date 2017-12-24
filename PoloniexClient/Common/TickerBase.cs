@@ -2,11 +2,15 @@
 using CryptoMarketClient.Common;
 using CryptoMarketClient.Strategies;
 using DevExpress.Skins;
+using DevExpress.Utils;
+using DevExpress.Utils.Serializing;
 using DevExpress.XtraCharts;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -14,7 +18,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace CryptoMarketClient {
-    public abstract class TickerBase {
+    public abstract class TickerBase : IXtraSerializable {
         public TickerBase(Exchange exchange) {
             Exchange = exchange;
             OrderBook = new OrderBook(this);
@@ -26,20 +30,92 @@ namespace CryptoMarketClient {
             IsActual = true;
         }
 
+        protected string FileName {
+            get {
+                return Exchange.TickersDirectory + "\\" + Name.ToLower() + ".xml";
+            }
+        }
+
+        #region Settings
+        public void Save() {
+            SaveLayoutToXml(FileName);
+        }
+        public void Load() {
+            if(!File.Exists(FileName))
+                return;
+            RestoreLayoutFromXml(FileName);
+        }
+
+        void IXtraSerializable.OnEndDeserializing(string restoredVersion) {
+
+        }
+
+        void IXtraSerializable.OnEndSerializing() {
+
+        }
+
+        void IXtraSerializable.OnStartDeserializing(LayoutAllowEventArgs e) {
+
+        }
+
+        void IXtraSerializable.OnStartSerializing() {
+            
+        }
+
+        protected XtraObjectInfo[] GetXtraObjectInfo() {
+            ArrayList result = new ArrayList();
+            result.Add(new XtraObjectInfo("Ticker", this));
+            return (XtraObjectInfo[])result.ToArray(typeof(XtraObjectInfo));
+        }
+        protected virtual bool SaveLayoutCore(XtraSerializer serializer, object path) {
+            System.IO.Stream stream = path as System.IO.Stream;
+            if(stream != null)
+                return serializer.SerializeObjects(GetXtraObjectInfo(), stream, this.GetType().Name);
+            else
+                return serializer.SerializeObjects(GetXtraObjectInfo(), path.ToString(), this.GetType().Name);
+        }
+        protected virtual void RestoreLayoutCore(XtraSerializer serializer, object path) {
+            System.IO.Stream stream = path as System.IO.Stream;
+            if(stream != null)
+                serializer.DeserializeObjects(GetXtraObjectInfo(), stream, this.GetType().Name);
+            else
+                serializer.DeserializeObjects(GetXtraObjectInfo(), path.ToString(), this.GetType().Name);
+        }
+        //layout
+        public virtual void SaveLayoutToXml(string xmlFile) {
+            SaveLayoutCore(new XmlXtraSerializer(), xmlFile);
+        }
+        public virtual void RestoreLayoutFromXml(string xmlFile) {
+            RestoreLayoutCore(new XmlXtraSerializer(), xmlFile);
+        }
+        #endregion
+
         public Exchange Exchange { get; private set; }
         public int Index { get; set; }
         public virtual string MarketName { get; set; }
         public abstract string CurrencyPair { get; set; }
         public bool IsSelected { get; set; }
-        public bool IsActive { get; set; }
+        public bool IsOpened { get; set; }
 
         public TickerUpdateMode UpdateMode {
             get;
             set;
         }
 
-        public List<TrailingSettings> SellTrailings { get; } = new List<TrailingSettings>();
-        public List<TrailingSettings> BuyTrailings { get; } = new List<TrailingSettings>();
+        [XtraSerializableProperty(XtraSerializationVisibility.Collection, true, false, true)]
+        public List<TrailingSettings> Trailings { get; } = new List<TrailingSettings>();
+
+        TrailingSettings XtraCreateTrailingsItem(XtraItemEventArgs e) {
+            return new TrailingSettings(this);
+        }
+        void XtraSetIndexTrailingsItem(XtraSetItemIndexEventArgs e) {
+            if(e.NewIndex == -1) {
+                Trailings.Add((TrailingSettings)e.Item.Value);
+                return;
+            }
+            Trailings.Insert(e.NewIndex, (TrailingSettings)e.Item.Value);
+        }
+
         public List<TradingResult> Trades { get; } = new List<TradingResult>();
         public List<TradeHistoryItem> MyTradeHistory { get; } = new List<TradeHistoryItem>();
         public List<OpenedOrderInfo> OpenedOrders { get; } = new List<OpenedOrderInfo>();
@@ -320,18 +396,9 @@ namespace CryptoMarketClient {
         }
         public void UpdateTrailings() {
             lock(this) {
-                UpdateByTrailings();
-                UpdateSellTrailings();
-            }
-        }
-        protected virtual void UpdateByTrailings() {
-            
-        }
-        protected virtual void UpdateSellTrailings() {
-            foreach(TrailingSettings tr in SellTrailings) {
-                tr.Ticker = this;
-                tr.UsdTicker = UsdTicker;
-                tr.Update();
+                foreach(TrailingSettings tr in Trailings) {
+                    tr.Update();
+                }
             }
             RaiseChanged();
         }

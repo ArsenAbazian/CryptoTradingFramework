@@ -53,11 +53,12 @@ namespace CryptoMarketClient {
                 return;
             }
             if(Settings.EnableIncrementalStopLoss) {
-                Ticker.SellTrailings.Add(Settings);
-                //TrailingManager.Default.Items.Add(Settings);
+                Settings.Date = DateTime.Now;
+                Ticker.Trailings.Add(Settings);
             }
             if(OperationsProvider != null)
                 OperationsProvider.ShowTradingResult(Ticker);
+            Ticker.Save();
         }
         public void SelectedAskChanged(object sender, FocusedRowChangedEventArgs e) {
             OrderBookEntry entry = (OrderBookEntry)((GridView)sender).GetRow(e.FocusedRowHandle);

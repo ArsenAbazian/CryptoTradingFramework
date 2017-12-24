@@ -14,7 +14,7 @@ namespace CryptoMarketClient {
         public CurrencyMonitoringForm(Exchange exchange) {
             InitializeComponent();
             Exchange = exchange;
-            Exchange.GetTickersInfo();
+            Exchange.LoadTickers();
             Exchange.UpdateCurrencies();
             this.gridControl1.DataSource = Exchange.Tickers.Where(t => t.BaseCurrency == "BTC").ToList();
         }

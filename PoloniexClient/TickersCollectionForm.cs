@@ -26,78 +26,42 @@ namespace CryptoMarketClient {
 
         public Exchange Exchange { get; set; }
 
+        System.Threading.Timer timer;
+        public System.Threading.Timer Timer {
+            get {
+                if(timer == null) {
+                    timer = new System.Threading.Timer(OnThreadUpdate);
+                    timer.Change(0, 2000);
+                }
+                return timer;
+            }
+        }
+
         protected override void OnShown(EventArgs e) {
             base.OnShown(e);
-            Exchange.GetTickersInfo();
-            //Exchange.GetBalances();
+            Exchange.LoadTickers();
             this.gridControl1.DataSource = Exchange.Tickers;
             HasShown = true;
             UpdateSelectedTickersFromExchange();
-            StartUpdateTickersThread();
+            Timer.InitializeLifetimeService();
         }
         void UpdateSelectedTickersFromExchange() {
             UpdatePinnedItems();
         }
-        protected override void OnActivated(EventArgs e) {
-            base.OnActivated(e);
-            if(!HasShown || (BidAskThread != null && BidAskThread.IsAlive))
+        protected bool IsUpdating { get; set; }
+        void OnThreadUpdate(object state) {
+            if(IsUpdating)
                 return;
-            StartUpdateTickersThread();
-        }
-
-        protected Thread BidAskThread { get; set; }
-        void StartUpdateTickersThread() {
-            AllowWorking = true;
-            BidAskThread = new Thread(OnTickersUpdate);
-            BidAskThread.Start();
-        }
-        protected bool AllowWorking { get; set; }
-        void OnTickersUpdate() {
-            Stopwatch timer = new Stopwatch();
-            timer.Start();
-            int runningTasksCount = 0;
-            long lastGuiUpdateTime = 0;
-            while(AllowWorking && Exchange.IsConnected) {
+            IsUpdating = true;
+            try {
                 Exchange.UpdateTickersInfo();
-                foreach(TickerBase ticker in Exchange.Tickers) {
-                    while(runningTasksCount > 10)
-                        Thread.Sleep(10);
-                    if(ticker.UpdateMode != TickerUpdateMode.Self)
-                        continue;
-                    if(this.bbMonitorOnlySelected.Checked && !ticker.IsSelected)
-                        continue;
-                    if(ticker.IsUpdating) {
-                        ticker.UpdateTimeMs = timer.ElapsedMilliseconds - ticker.StartUpdateTime;
-                        if(ticker.UpdateTimeMs > 2000)
-                            ticker.IsActual = false;
-                        continue;
-                    }
-                    if(timer.ElapsedMilliseconds - ticker.LastUpdateTime < 200)
-                        continue;
-                    runningTasksCount++;
-                    ticker.IsUpdating = true;
-                    ticker.StartUpdateTime = timer.ElapsedMilliseconds;
-
-                    Task t = Task.Factory.StartNew(() => {
-                        if(!ticker.IsActive) {
-                            ticker.UpdateTicker();
-                        }
-                    }).ContinueWith(tt => {
-                        ticker.UpdateTimeMs = timer.ElapsedMilliseconds - ticker.LastUpdateTime;
-                        ticker.LastUpdateTime = timer.ElapsedMilliseconds;
-                        ticker.UpdateTrailings();
-                        runningTasksCount--;
-                        ticker.IsUpdating = false;
-                        ticker.IsActual = true;
-                    });
-                    ticker.Task = t;
-                }
-                if(timer.ElapsedMilliseconds - lastGuiUpdateTime > 1000) {
-                    lastGuiUpdateTime = timer.ElapsedMilliseconds;
-                    if(!IsDisposed && !Disposing && IsHandleCreated)
-                        BeginInvoke(new Action(UpdateGridAll));
-                }
+                foreach(TickerBase ticker in Exchange.Tickers)
+                    ticker.UpdateTrailings();
             }
+            finally {
+                IsUpdating = false;
+            }
+            BeginInvoke(new Action(UpdateGridAll));
         }
         void UpdateRow(TickerBase t) {
             int index = Exchange.Tickers.IndexOf(t);
@@ -110,21 +74,6 @@ namespace CryptoMarketClient {
         }
         void UpdateGridAll() {
             this.gridView1.RefreshData();
-        }
-
-        protected override void OnDeactivate(EventArgs e) {
-            base.OnDeactivate(e);
-            if(!HasShown)
-              return;
-            //StopBidAskThread();
-        }
-
-        private void StopBidAskThread() {
-            if(BidAskThread != null) {
-                AllowWorking = false;
-                BidAskThread.Abort();
-                BidAskThread = null;
-            }
         }
 
         protected bool HasShown { get; set; }

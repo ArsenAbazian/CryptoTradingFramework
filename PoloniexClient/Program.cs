@@ -16,16 +16,14 @@ namespace CryptoMarketClient {
         /// </summary>
         [STAThread]
         static void Main() {
-            DevExpress.Data.CurrencyDataController.DisableThreadingProblemsDetection = true;
             WindowsFormsSettings.DefaultFont = new System.Drawing.Font("Segoe UI", 9);
             WindowsFormsSettings.ScrollUIMode = ScrollUIMode.Desktop;
             UserLookAndFeel.Default.SetSkinStyle("Office 2013");
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(true);
-            //WindowsFormsSettings.ForceDirectXPaint();
+            WindowsFormsSettings.ForceDirectXPaint();
 
             CheckShowApiKeysForm();
-            
             Application.Run(new MainForm());
         }
         static void CheckShowApiKeysForm() {

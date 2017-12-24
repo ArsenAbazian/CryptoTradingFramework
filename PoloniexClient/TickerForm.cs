@@ -7,14 +7,16 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace CryptoMarketClient {
-    public partial class TickerForm : ThreadUpdateForm {
+    public partial class TickerForm : XtraForm {
         public TickerForm() {
             InitializeComponent();
         }
@@ -24,15 +26,37 @@ namespace CryptoMarketClient {
         }
 
         public string MarketName { get; set; }
-        protected override bool AllowUpdateInactive => true;
-        protected override void OnThreadUpdate() {
-            base.OnThreadUpdate();
-            while(true) {
+        //protected override bool AllowUpdateInactive => true;
+        protected override void OnShown(EventArgs e) {
+            base.OnShown(e);
+            Timer.InitializeLifetimeService();
+        }
+        System.Threading.Timer timer;
+        public System.Threading.Timer Timer {
+            get {
+                if(timer == null) {
+                    timer = new System.Threading.Timer(OnThreadUpdate);
+                    timer.Change(0, 500);
+                }
+                return timer;
+            }
+        }
+        protected void OnThreadUpdate(object state) {
+            //Stopwatch timer = new Stopwatch();
+            //timer.Start();
+            //long lastUpdateTime = 0;
+            //while(true) {
+            //    if(timer.ElapsedMilliseconds - lastUpdateTime < 1000) {
+            //        Thread.Sleep(200);
+            //        continue;
+            //    }
+                //lastUpdateTime = timer.ElapsedMilliseconds;
                 Ticker.UpdateOrderBook();
                 Ticker.UpdateTrades();
                 Ticker.UpdateOpenedOrders();
                 Ticker.UpdateTrailings();
-            }
+                Ticker.Time = DateTime.Now;
+            //}
         }
 
         //protected override void OnTimerUpdate(object sender, EventArgs e) {
@@ -59,14 +83,12 @@ namespace CryptoMarketClient {
         void UpdateBuySellSettings() {
             if(Ticker == null)
                 return;
-            TrailingSettings s = new TrailingSettings();
-            s.Ticker = Ticker;
-            s.UsdTicker = Ticker.UsdTicker;
+            TrailingSettings s = new TrailingSettings(Ticker);
             this.buySettingsControl.Settings = s;
         }
         void OnTickerChanged(TickerBase prev) {
             if(prev != null) {
-                prev.IsActive = false;
+                prev.IsOpened = false;
                 ClearText();
                 ClearGrid();
                 ClearChart();
@@ -77,7 +99,7 @@ namespace CryptoMarketClient {
             this.activeTrailingCollectionControl1.Ticker = Ticker;
             if(Ticker == null)
                 return;
-            Ticker.IsActive = true;
+            Ticker.IsOpened = true;
             UpdateTickerInfoControlHeight();
             UpdateText();
             UpdateGrid();

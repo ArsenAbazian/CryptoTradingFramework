@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DevExpress.Utils.Serializing;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -8,15 +9,47 @@ using System.Threading.Tasks;
 
 namespace CryptoMarketClient.Common {
     public class TrailingSettings : INotifyPropertyChanged {
-        public TrailingSettings() {
+        public TrailingSettings(TickerBase ticker) {
             Enabled = true;
+            Ticker = ticker;
         }
 
-        public TickerBase Ticker { get; set; }
+        TickerBase ticker;
+        public TickerBase Ticker {
+            get { return ticker; }
+            private set {
+                if(Ticker == value)
+                    return;
+                ticker = value;
+                OnTickerChanged();
+            }
+        }
+        void OnTickerChanged() {
+            TickerName = Ticker.Name;
+        }
+        [XtraSerializableProperty]
+        public string TickerName { get; set; }
+        public TickerBase UsdTicker { get { return Ticker == null ? null : Ticker.UsdTicker; } }
+        [XtraSerializableProperty]
         public bool Enabled { get; set; }
+        [XtraSerializableProperty]
         public ActionMode Mode { get; set; } = ActionMode.Execute;
+        [XtraSerializableProperty]
+        public DateTime Date { get; set; }
 
+        event PropertyChangedEventHandler PropertyChangedCore;
+        event PropertyChangedEventHandler INotifyPropertyChanged.PropertyChanged {
+            add { PropertyChangedCore += value; }
+            remove { PropertyChangedCore -= value; }
+        }
+        void RaisePropertyChanged(string propName) {
+            if(PropertyChangedCore != null)
+                PropertyChangedCore.Invoke(this, new PropertyChangedEventArgs(propName));
+        }
+
+        bool blockTotalSpend = false;
         decimal buyPrice;
+        [XtraSerializableProperty]
         public decimal BuyPrice {
             get { return buyPrice; }
             set {
@@ -26,28 +59,14 @@ namespace CryptoMarketClient.Common {
                 OnBuyPriceChanged();
             }
         }
-        bool blockTotalSpend = false;
-        event PropertyChangedEventHandler PropertyChangedCore;
-        event PropertyChangedEventHandler INotifyPropertyChanged.PropertyChanged {
-            add { PropertyChangedCore += value; }
-            remove { PropertyChangedCore -= value; }
-        }
-
-        void RaisePropertyChanged(string propName) {
-            if(PropertyChangedCore != null)
-                PropertyChangedCore.Invoke(this, new PropertyChangedEventArgs(propName));
-        }
-
         void OnBuyPriceChanged() {
             blockTotalSpend = true;
             TotalSpendInBaseCurrency = Amount * BuyPrice;
             blockTotalSpend = false;
             RaisePropertyChanged("BuyPrice");
         }
-
-        public DateTime Date { get; set; }
-
         decimal amount;
+        [XtraSerializableProperty]
         public decimal Amount {
             get { return amount; }
             set {
@@ -63,10 +82,8 @@ namespace CryptoMarketClient.Common {
             blockTotalSpend = false;
             RaisePropertyChanged("Amount");
         }
-
-        public decimal StopLossSellPrice { get; set; }
-
         decimal totalSpendInBaseCurrency;
+        [XtraSerializableProperty]
         public decimal TotalSpendInBaseCurrency {
             get { return totalSpendInBaseCurrency; }
             set {
@@ -81,21 +98,20 @@ namespace CryptoMarketClient.Common {
             RaisePropertyChanged("TotalSpendInBaseCurrency");
         }
 
-        public decimal ActualProfit { get { return ActualPrice - BuyPrice; } }
-        public decimal ActualProfitUSD { get { return ActualProfit * UsdTicker.Last; } }
-
-        public TickerBase UsdTicker { get; set; }
-
+        [XtraSerializableProperty]
         public decimal StopLossPricePercent { get; set; } = 10m;
         public decimal StopLossStartPrice { get { return BuyPrice * (100 - StopLossPricePercent) * 0.01m; } }
 
+        [XtraSerializableProperty]
         public decimal TakeProfitPercent { get; set; } = 10m;
 
+        public decimal ActualProfit { get { return ActualPrice - BuyPrice; } }
+        public decimal ActualProfitUSD { get { return UsdTicker == null? 0: ActualProfit * UsdTicker.Last; } }
+        [XtraSerializableProperty]
         public decimal ActualPrice { get; set; }
+        [XtraSerializableProperty]
         public decimal MaxPrice { get; set; }
-        public decimal PriceDelta {
-            get { return MaxPrice * TakeProfitPercent * 0.01m; }
-        }
+        public decimal PriceDelta { get { return MaxPrice * TakeProfitPercent * 0.01m; } }
         public decimal TakeProfitPrice { get { return MaxPrice - PriceDelta; } }
         public string Name {
             get {
@@ -105,13 +121,48 @@ namespace CryptoMarketClient.Common {
             }
         }
 
+        [XtraSerializableProperty]
         public TrailingType Type { get; set; } = TrailingType.Sell;
-
+        [XtraSerializableProperty]
+        public TrailingState State { get; set; } = TrailingState.Analyze;
+        [XtraSerializableProperty]
         public bool EnableIncrementalStopLoss { get; set; }
+
         public void Update() {
+            if(State == TrailingState.Analyze)
+                Analyze();
+            else if(State == TrailingState.StopLoss)
+                OnExecuteStopLoss();
+            else if(State == TrailingState.TakeProfit)
+                OnExecuteTakeProfit();
+        }
+        void Analyze() {
             if(Type == TrailingType.Sell) {
                 ActualPrice = Ticker.HighestBid;
                 MaxPrice = Math.Max(MaxPrice, ActualPrice);
+
+                if(ActualPrice < StopLossStartPrice) {
+                    OnExecuteStopLoss();
+                    return;
+                }
+                else if(ActualPrice < TakeProfitPrice) {
+                    OnExecuteTakeProfit();
+                    return;
+                }
+            }
+        }
+        void OnExecuteStopLoss() {
+            State = TrailingState.StopLoss;
+            if(Mode == ActionMode.Notify) {
+                TelegramBot.Default.SendNotification(Ticker.Exchange + " - " + Ticker.Name + " - STOPLOSS!!");
+                State = TrailingState.Done;
+            }
+        }
+        void OnExecuteTakeProfit() {
+            State = TrailingState.TakeProfit;
+            if(Mode == ActionMode.Notify) {
+                TelegramBot.Default.SendNotification(Ticker.Exchange + " - " + Ticker.Name + " - TAKEPROFIT!!");
+                State = TrailingState.Done;
             }
         }
     }
@@ -119,4 +170,5 @@ namespace CryptoMarketClient.Common {
     public enum EditingMode { Add, Edit }
     public enum ActionMode { Execute, Notify }
     public enum TrailingType { Buy, Sell }
+    public enum TrailingState { Analyze, StopLoss, TakeProfit, Done } 
 }

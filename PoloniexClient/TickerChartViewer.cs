@@ -21,7 +21,6 @@ namespace CryptoMarketClient {
             InitializeCheckItems();
             SetCandleStickCheckItemValues();
             this.barManager1.ForceInitialize();
-            this.rangeControl1.Client = this.chartControl1;
         }
 
         protected Form MdiParentForm { get; set; }
@@ -141,7 +140,7 @@ namespace CryptoMarketClient {
             s.ValueScaleType = ScaleType.Numerical;
             CandleStickSeriesView view = new CandleStickSeriesView();
 
-            view.LineThickness = 2;
+            view.LineThickness = (int)(1 * DpiProvider.Default.DpiScaleFactor);
             view.LevelLineLength = 0.25;
             view.ReductionOptions.ColorMode = ReductionColorMode.OpenToCloseValue;
             view.ReductionOptions.FillMode = CandleStickFillMode.FilledOnReduction;
@@ -180,13 +179,6 @@ namespace CryptoMarketClient {
         void UpdateChart() {
             if(Ticker == null)
                 return;
-            this.chartControl1.Series["Highest bid"].DataSource = Ticker.History;
-            this.chartControl1.Series["Lowest ask"].DataSource = Ticker.History;
-            this.chartControl1.Series["Highest bid"].ArgumentDataMember = "Time";
-            this.chartControl1.Series["Highest bid"].ValueDataMembers.AddRange("Bid");
-            this.chartControl1.Series["Lowest ask"].ArgumentDataMember = "Time";
-            this.chartControl1.Series["Lowest ask"].ValueDataMembers.AddRange("Ask");
-
             this.chartControl1.Series["Sell volume"].DataSource = Ticker.TradeStatistic;
             this.chartControl1.Series["Sell volume"].ArgumentDataMember = "Time";
             this.chartControl1.Series["Sell volume"].ValueDataMembers.AddRange("SellVolume");
@@ -198,7 +190,6 @@ namespace CryptoMarketClient {
             this.chartControl1.Series["Volume"].ValueDataMembers.AddRange("Volume");
 
             ConfigurateChart(ViewType.CandleStick);
-            //this.rangeControl1.SelectedRange = new RangeControlRange(DateTime.Now.AddHours(-12), DateTime.Now);
         }
         Series CreateLastSeries() {
             if(this.bcStock.Checked)
@@ -224,7 +215,7 @@ namespace CryptoMarketClient {
                 return;
             Ticker.CandleStickPeriodMin = (int)e.Item.Tag;
             Ticker.CandleStickData.Clear();
-            CandleStickChartHelper.CreateCandleStickData(Ticker);
+            UpdateDataFromServer();
         }
         void SetCandleStickCheckItemValues() {
             this.bcFifteenMinutes.Tag = 15;

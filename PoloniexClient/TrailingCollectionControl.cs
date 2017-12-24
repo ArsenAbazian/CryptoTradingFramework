@@ -28,7 +28,8 @@ namespace CryptoMarketClient {
         }
         void OnTickerChanged() {
             Ticker.Changed += OnTickerUpdated;
-            this.trailingSettingsBindingSource.DataSource = Ticker == null? null: Ticker.SellTrailings;
+            this.gcTrailings.DataSource = Ticker == null ? null : Ticker.Trailings;
+            //this.trailingSettingsBindingSource.DataSource = Ticker == null? null: Ticker.Trailings;
         }
 
         private void OnTickerUpdated(object sender, EventArgs e) {
@@ -36,10 +37,8 @@ namespace CryptoMarketClient {
         }
 
         protected TrailingSettings CreateNewSettings() {
-            TrailingSettings settings = new TrailingSettings();
+            TrailingSettings settings = new TrailingSettings(Ticker);
             settings.EnableIncrementalStopLoss = true;
-            settings.Ticker = Ticker;
-            settings.UsdTicker = Ticker.UsdTicker;
             settings.Mode = ActionMode.Notify;
             return settings;
         }
@@ -67,7 +66,9 @@ namespace CryptoMarketClient {
         private void OnTrailingSettingsFormAccepted(object sender, EventArgs e) {
             TrailingSettinsForm form = (TrailingSettinsForm)sender;
             if(form.Mode == EditingMode.Add) {
-                Ticker.SellTrailings.Add(form.Settings);
+                form.Settings.Date = DateTime.Now;
+                Ticker.Trailings.Add(form.Settings);
+                Ticker.Save();
                 this.gcTrailings.RefreshDataSource();
             }
         }
@@ -78,14 +79,14 @@ namespace CryptoMarketClient {
             TrailingSettings settings = (TrailingSettings)this.gvTrailings.GetFocusedRow();
             if(settings == null)
                 return;
-            Ticker.SellTrailings.Remove(settings);
+            Ticker.Trailings.Remove(settings);
             this.gcTrailings.RefreshDataSource();
         }
 
         private void barButtonItem1_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
             if(XtraMessageBox.Show("Are you shure to remove all trailings?", "Remove Trailings", MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
                 return;
-            Ticker.SellTrailings.Clear();
+            Ticker.Trailings.Clear();
             this.gcTrailings.RefreshDataSource();
         }
     }

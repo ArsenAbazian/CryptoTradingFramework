@@ -14,6 +14,7 @@ using CryptoMarketClient.Common;
 using System.Text.Json;
 using CryptoMarketClient.Bittrex;
 using System.ComponentModel;
+using System.Windows.Forms;
 
 namespace CryptoMarketClient {
     public abstract class Exchange : IXtraSerializable {
@@ -47,6 +48,15 @@ namespace CryptoMarketClient {
         }
         static string Text { get { return "Yes, man is mortal, but that would be only half the trouble. The worst of it is that he's sometimes unexpectedly mortal—there's the trick!"; } }
 
+        public bool LoadTickers() {
+            if(GetTickersInfo()) {
+                foreach(TickerBase ticker in Tickers) {
+                    ticker.Load();
+                }
+                return true;
+            }
+            return false;
+        }
         public abstract bool GetTickersInfo();
         public abstract bool UpdateTickersInfo();
 
@@ -103,7 +113,12 @@ namespace CryptoMarketClient {
         public void Save() {
             SaveLayoutToXml(Name + ".xml");
         }
+        public string TickersDirectory { get { return Path.GetDirectoryName(Application.ExecutablePath) + "\\Tickers\\" + Name; } }
         public void Load() {
+            string dir = TickersDirectory;
+            if(!Directory.Exists(dir))
+                Directory.CreateDirectory(dir);
+
             if(!File.Exists(Name + ".xml"))
                 return;
             RestoreLayoutFromXml(Name + ".xml");
