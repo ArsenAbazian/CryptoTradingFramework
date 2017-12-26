@@ -221,7 +221,7 @@ namespace CryptoMarketClient {
         public decimal LowestAsk {
             get { return lowestAsk; }
             set {
-                if(value != LowestAsk) {
+                if(value != LowestAsk && LowestAsk != 0) {
                     AskChange = value - LowestAsk;
                     lowestAskString = null;
                 }
@@ -232,7 +232,7 @@ namespace CryptoMarketClient {
         public decimal HighestBid {
             get { return highestBid; }
             set {
-                if(value != HighestBid) {
+                if(value != HighestBid && HighestBid != 0) {
                     BidChange = value - HighestBid;
                     highestBidString = null;
                 }
@@ -246,7 +246,8 @@ namespace CryptoMarketClient {
             set {
                 if(value == Last)
                     return;
-                Change = value - Last;
+                if(Last != 0)
+                    Change = value - Last;
                 lastString = null;
                 last = value;
             }

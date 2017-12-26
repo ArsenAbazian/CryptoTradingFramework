@@ -25,28 +25,28 @@
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
             DevExpress.XtraGrid.GridFormatRule gridFormatRule1 = new DevExpress.XtraGrid.GridFormatRule();
+            DevExpress.XtraEditors.FormatConditionRuleValue formatConditionRuleValue1 = new DevExpress.XtraEditors.FormatConditionRuleValue();
+            DevExpress.XtraGrid.GridFormatRule gridFormatRule2 = new DevExpress.XtraGrid.GridFormatRule();
+            DevExpress.XtraEditors.FormatConditionRuleValue formatConditionRuleValue2 = new DevExpress.XtraEditors.FormatConditionRuleValue();
+            DevExpress.XtraGrid.GridFormatRule gridFormatRule3 = new DevExpress.XtraGrid.GridFormatRule();
             DevExpress.XtraEditors.FormatConditionRuleIconSet formatConditionRuleIconSet1 = new DevExpress.XtraEditors.FormatConditionRuleIconSet();
             DevExpress.XtraEditors.FormatConditionIconSet formatConditionIconSet1 = new DevExpress.XtraEditors.FormatConditionIconSet();
             DevExpress.XtraEditors.FormatConditionIconSetIcon formatConditionIconSetIcon1 = new DevExpress.XtraEditors.FormatConditionIconSetIcon();
             DevExpress.XtraEditors.FormatConditionIconSetIcon formatConditionIconSetIcon2 = new DevExpress.XtraEditors.FormatConditionIconSetIcon();
             DevExpress.XtraEditors.FormatConditionIconSetIcon formatConditionIconSetIcon3 = new DevExpress.XtraEditors.FormatConditionIconSetIcon();
-            DevExpress.XtraGrid.GridFormatRule gridFormatRule2 = new DevExpress.XtraGrid.GridFormatRule();
+            DevExpress.XtraGrid.GridFormatRule gridFormatRule4 = new DevExpress.XtraGrid.GridFormatRule();
             DevExpress.XtraEditors.FormatConditionRuleIconSet formatConditionRuleIconSet2 = new DevExpress.XtraEditors.FormatConditionRuleIconSet();
             DevExpress.XtraEditors.FormatConditionIconSet formatConditionIconSet2 = new DevExpress.XtraEditors.FormatConditionIconSet();
             DevExpress.XtraEditors.FormatConditionIconSetIcon formatConditionIconSetIcon4 = new DevExpress.XtraEditors.FormatConditionIconSetIcon();
             DevExpress.XtraEditors.FormatConditionIconSetIcon formatConditionIconSetIcon5 = new DevExpress.XtraEditors.FormatConditionIconSetIcon();
             DevExpress.XtraEditors.FormatConditionIconSetIcon formatConditionIconSetIcon6 = new DevExpress.XtraEditors.FormatConditionIconSetIcon();
-            DevExpress.XtraGrid.GridFormatRule gridFormatRule3 = new DevExpress.XtraGrid.GridFormatRule();
-            DevExpress.XtraEditors.FormatConditionRuleIconSet formatConditionRuleIconSet3 = new DevExpress.XtraEditors.FormatConditionRuleIconSet();
-            DevExpress.XtraEditors.FormatConditionIconSet formatConditionIconSet3 = new DevExpress.XtraEditors.FormatConditionIconSet();
-            DevExpress.XtraEditors.FormatConditionIconSetIcon formatConditionIconSetIcon7 = new DevExpress.XtraEditors.FormatConditionIconSetIcon();
-            DevExpress.XtraEditors.FormatConditionIconSetIcon formatConditionIconSetIcon8 = new DevExpress.XtraEditors.FormatConditionIconSetIcon();
-            DevExpress.XtraEditors.FormatConditionIconSetIcon formatConditionIconSetIcon9 = new DevExpress.XtraEditors.FormatConditionIconSetIcon();
-            DevExpress.XtraGrid.GridFormatRule gridFormatRule4 = new DevExpress.XtraGrid.GridFormatRule();
-            DevExpress.XtraEditors.FormatConditionRuleValue formatConditionRuleValue1 = new DevExpress.XtraEditors.FormatConditionRuleValue();
+            DevExpress.XtraGrid.GridFormatRule gridFormatRule5 = new DevExpress.XtraGrid.GridFormatRule();
+            DevExpress.XtraEditors.FormatConditionRuleValue formatConditionRuleValue3 = new DevExpress.XtraEditors.FormatConditionRuleValue();
             DevExpress.Sparkline.LineSparklineView lineSparklineView1 = new DevExpress.Sparkline.LineSparklineView();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TickersCollectionForm));
             this.gcPercentChange = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.gcLast = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.teValueWithChange = new DevExpress.XtraEditors.Repository.RepositoryItemTextEdit();
             this.gcDeltaBid = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gcHighestBid = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gcDeltaAsk = new DevExpress.XtraGrid.Columns.GridColumn();
@@ -59,7 +59,6 @@
             this.colIsSelected = new DevExpress.XtraGrid.Columns.GridColumn();
             this.repositoryItemCheckEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit();
             this.gcCurrencyPair = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.gcLast = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gcBaseVolume = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gcQuoteVolume = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gcIsFrozen = new DevExpress.XtraGrid.Columns.GridColumn();
@@ -90,7 +89,7 @@
             this.barDockControlLeft = new DevExpress.XtraBars.BarDockControl();
             this.barDockControlRight = new DevExpress.XtraBars.BarDockControl();
             this.popupMenu1 = new DevExpress.XtraBars.PopupMenu(this.components);
-            this.teValueWithChange = new DevExpress.XtraEditors.Repository.RepositoryItemTextEdit();
+            ((System.ComponentModel.ISupportInitialize)(this.teValueWithChange)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemTextEdit1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).BeginInit();
@@ -99,7 +98,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.bbOpenedOrders)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.barManager1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.popupMenu1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.teValueWithChange)).BeginInit();
             this.SuspendLayout();
             // 
             // gcPercentChange
@@ -109,6 +107,24 @@
             this.gcPercentChange.Name = "gcPercentChange";
             this.gcPercentChange.OptionsColumn.AllowEdit = false;
             this.gcPercentChange.Width = 86;
+            // 
+            // gcLast
+            // 
+            this.gcLast.Caption = "Last";
+            this.gcLast.ColumnEdit = this.teValueWithChange;
+            this.gcLast.FieldName = "LastString";
+            this.gcLast.Name = "gcLast";
+            this.gcLast.OptionsColumn.AllowEdit = false;
+            this.gcLast.Visible = true;
+            this.gcLast.VisibleIndex = 5;
+            this.gcLast.Width = 86;
+            // 
+            // teValueWithChange
+            // 
+            this.teValueWithChange.AllowHtmlDraw = DevExpress.Utils.DefaultBoolean.True;
+            this.teValueWithChange.AutoHeight = false;
+            this.teValueWithChange.Name = "teValueWithChange";
+            this.teValueWithChange.Padding = new System.Windows.Forms.Padding(0, 0, 0, 0);
             // 
             // gcDeltaBid
             // 
@@ -170,17 +186,17 @@
             // gridControl1
             // 
             this.gridControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gridControl1.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(6);
+            this.gridControl1.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(24, 23, 24, 23);
             this.gridControl1.Location = new System.Drawing.Point(0, 141);
             this.gridControl1.MainView = this.gridView1;
-            this.gridControl1.Margin = new System.Windows.Forms.Padding(6);
+            this.gridControl1.Margin = new System.Windows.Forms.Padding(24, 23, 24, 23);
             this.gridControl1.Name = "gridControl1";
             this.gridControl1.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repositoryItemSparklineEdit1,
             this.repositoryItemCheckEdit1,
             this.repositoryItemTextEdit1,
             this.teValueWithChange});
-            this.gridControl1.Size = new System.Drawing.Size(1916, 767);
+            this.gridControl1.Size = new System.Drawing.Size(1451, 721);
             this.gridControl1.TabIndex = 0;
             this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridView1});
@@ -208,8 +224,28 @@
             this.colUpdateTimeMs,
             this.colIsActual});
             gridFormatRule1.Column = this.gcPercentChange;
-            gridFormatRule1.ColumnApplyTo = this.gcPercentChange;
-            gridFormatRule1.Name = "FormatRulePercentChange";
+            gridFormatRule1.ColumnApplyTo = this.gcLast;
+            gridFormatRule1.Name = "FormatRulePercentChangeNegative";
+            formatConditionRuleValue1.Condition = DevExpress.XtraEditors.FormatCondition.Less;
+            formatConditionRuleValue1.PredefinedName = "Red Bold Text";
+            formatConditionRuleValue1.Value1 = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+            gridFormatRule1.Rule = formatConditionRuleValue1;
+            gridFormatRule2.Name = "FormatRulePercentChangePositive";
+            formatConditionRuleValue2.Condition = DevExpress.XtraEditors.FormatCondition.GreaterOrEqual;
+            formatConditionRuleValue2.PredefinedName = "Green Bold Text";
+            formatConditionRuleValue2.Value1 = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+            gridFormatRule2.Rule = formatConditionRuleValue2;
+            gridFormatRule3.Column = this.gcDeltaBid;
+            gridFormatRule3.ColumnApplyTo = this.gcHighestBid;
+            gridFormatRule3.Name = "FormatRuleBidDelta";
             formatConditionIconSet1.CategoryName = "Positive/Negative";
             formatConditionIconSetIcon1.PredefinedName = "Arrows3_3.png";
             formatConditionIconSetIcon1.Value = new decimal(new int[] {
@@ -227,10 +263,10 @@
             formatConditionIconSet1.Name = "PositiveNegativeArrows";
             formatConditionIconSet1.ValueType = DevExpress.XtraEditors.FormatConditionValueType.Number;
             formatConditionRuleIconSet1.IconSet = formatConditionIconSet1;
-            gridFormatRule1.Rule = formatConditionRuleIconSet1;
-            gridFormatRule2.Column = this.gcDeltaBid;
-            gridFormatRule2.ColumnApplyTo = this.gcHighestBid;
-            gridFormatRule2.Name = "FormatRuleBidDelta";
+            gridFormatRule3.Rule = formatConditionRuleIconSet1;
+            gridFormatRule4.Column = this.gcDeltaAsk;
+            gridFormatRule4.ColumnApplyTo = this.gcLowestAsk;
+            gridFormatRule4.Name = "FormatRuleAskDelta";
             formatConditionIconSet2.CategoryName = "Positive/Negative";
             formatConditionIconSetIcon4.PredefinedName = "Arrows3_3.png";
             formatConditionIconSetIcon4.Value = new decimal(new int[] {
@@ -248,40 +284,20 @@
             formatConditionIconSet2.Name = "PositiveNegativeArrows";
             formatConditionIconSet2.ValueType = DevExpress.XtraEditors.FormatConditionValueType.Number;
             formatConditionRuleIconSet2.IconSet = formatConditionIconSet2;
-            gridFormatRule2.Rule = formatConditionRuleIconSet2;
-            gridFormatRule3.Column = this.gcDeltaAsk;
-            gridFormatRule3.ColumnApplyTo = this.gcLowestAsk;
-            gridFormatRule3.Name = "FormatRuleAskDelta";
-            formatConditionIconSet3.CategoryName = "Positive/Negative";
-            formatConditionIconSetIcon7.PredefinedName = "Arrows3_3.png";
-            formatConditionIconSetIcon7.Value = new decimal(new int[] {
-            -1,
-            -1,
-            -1,
-            -2147483648});
-            formatConditionIconSetIcon7.ValueComparison = DevExpress.XtraEditors.FormatConditionComparisonType.GreaterOrEqual;
-            formatConditionIconSetIcon8.PredefinedName = "Arrows3_2.png";
-            formatConditionIconSetIcon8.ValueComparison = DevExpress.XtraEditors.FormatConditionComparisonType.GreaterOrEqual;
-            formatConditionIconSetIcon9.PredefinedName = "Arrows3_1.png";
-            formatConditionIconSet3.Icons.Add(formatConditionIconSetIcon7);
-            formatConditionIconSet3.Icons.Add(formatConditionIconSetIcon8);
-            formatConditionIconSet3.Icons.Add(formatConditionIconSetIcon9);
-            formatConditionIconSet3.Name = "PositiveNegativeArrows";
-            formatConditionIconSet3.ValueType = DevExpress.XtraEditors.FormatConditionValueType.Number;
-            formatConditionRuleIconSet3.IconSet = formatConditionIconSet3;
-            gridFormatRule3.Rule = formatConditionRuleIconSet3;
-            gridFormatRule4.Column = this.colIsActual;
-            gridFormatRule4.ColumnApplyTo = this.gcSecond;
-            gridFormatRule4.Name = "FormatSuspended";
-            formatConditionRuleValue1.Appearance.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-            formatConditionRuleValue1.Appearance.Options.UseBackColor = true;
-            formatConditionRuleValue1.Condition = DevExpress.XtraEditors.FormatCondition.Equal;
-            formatConditionRuleValue1.Value1 = false;
-            gridFormatRule4.Rule = formatConditionRuleValue1;
+            gridFormatRule4.Rule = formatConditionRuleIconSet2;
+            gridFormatRule5.Column = this.colIsActual;
+            gridFormatRule5.ColumnApplyTo = this.gcSecond;
+            gridFormatRule5.Name = "FormatSuspended";
+            formatConditionRuleValue3.Appearance.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
+            formatConditionRuleValue3.Appearance.Options.UseBackColor = true;
+            formatConditionRuleValue3.Condition = DevExpress.XtraEditors.FormatCondition.Equal;
+            formatConditionRuleValue3.Value1 = false;
+            gridFormatRule5.Rule = formatConditionRuleValue3;
             this.gridView1.FormatRules.Add(gridFormatRule1);
             this.gridView1.FormatRules.Add(gridFormatRule2);
             this.gridView1.FormatRules.Add(gridFormatRule3);
             this.gridView1.FormatRules.Add(gridFormatRule4);
+            this.gridView1.FormatRules.Add(gridFormatRule5);
             this.gridView1.GridControl = this.gridControl1;
             this.gridView1.GroupCount = 1;
             this.gridView1.Name = "gridView1";
@@ -320,17 +336,6 @@
             this.gcCurrencyPair.Visible = true;
             this.gcCurrencyPair.VisibleIndex = 2;
             this.gcCurrencyPair.Width = 86;
-            // 
-            // gcLast
-            // 
-            this.gcLast.Caption = "Last";
-            this.gcLast.ColumnEdit = this.teValueWithChange;
-            this.gcLast.FieldName = "LastString";
-            this.gcLast.Name = "gcLast";
-            this.gcLast.OptionsColumn.AllowEdit = false;
-            this.gcLast.Visible = true;
-            this.gcLast.VisibleIndex = 5;
-            this.gcLast.Width = 86;
             // 
             // gcBaseVolume
             // 
@@ -400,8 +405,6 @@
             this.colUpdateTimeMs.FieldName = "UpdateTimeMs";
             this.colUpdateTimeMs.Name = "colUpdateTimeMs";
             this.colUpdateTimeMs.OptionsColumn.AllowEdit = false;
-            this.colUpdateTimeMs.Visible = true;
-            this.colUpdateTimeMs.VisibleIndex = 10;
             this.colUpdateTimeMs.Width = 44;
             // 
             // repositoryItemSparklineEdit1
@@ -429,13 +432,13 @@
             this.bbRemoveByRightClick,
             this.bbMonitorOnlySelected});
             this.bbOpenedOrders.Location = new System.Drawing.Point(0, 0);
-            this.bbOpenedOrders.Margin = new System.Windows.Forms.Padding(6);
+            this.bbOpenedOrders.Margin = new System.Windows.Forms.Padding(24, 23, 24, 23);
             this.bbOpenedOrders.MaxItemId = 14;
             this.bbOpenedOrders.Name = "bbOpenedOrders";
             this.bbOpenedOrders.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
             this.ribbonPage1});
             this.bbOpenedOrders.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonControlStyle.OfficeUniversal;
-            this.bbOpenedOrders.Size = new System.Drawing.Size(1916, 103);
+            this.bbOpenedOrders.Size = new System.Drawing.Size(1451, 103);
             // 
             // barCheckItem1
             // 
@@ -566,9 +569,9 @@
             this.standaloneBarDockControl1.Dock = System.Windows.Forms.DockStyle.Top;
             this.standaloneBarDockControl1.Location = new System.Drawing.Point(0, 103);
             this.standaloneBarDockControl1.Manager = this.barManager1;
-            this.standaloneBarDockControl1.Margin = new System.Windows.Forms.Padding(4);
+            this.standaloneBarDockControl1.Margin = new System.Windows.Forms.Padding(16, 15, 16, 15);
             this.standaloneBarDockControl1.Name = "standaloneBarDockControl1";
-            this.standaloneBarDockControl1.Size = new System.Drawing.Size(1916, 38);
+            this.standaloneBarDockControl1.Size = new System.Drawing.Size(1451, 38);
             this.standaloneBarDockControl1.Text = "standaloneBarDockControl1";
             // 
             // barDockControlTop
@@ -577,17 +580,17 @@
             this.barDockControlTop.Dock = System.Windows.Forms.DockStyle.Top;
             this.barDockControlTop.Location = new System.Drawing.Point(0, 0);
             this.barDockControlTop.Manager = this.barManager1;
-            this.barDockControlTop.Margin = new System.Windows.Forms.Padding(4);
-            this.barDockControlTop.Size = new System.Drawing.Size(1916, 0);
+            this.barDockControlTop.Margin = new System.Windows.Forms.Padding(16, 15, 16, 15);
+            this.barDockControlTop.Size = new System.Drawing.Size(1451, 0);
             // 
             // barDockControlBottom
             // 
             this.barDockControlBottom.CausesValidation = false;
             this.barDockControlBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.barDockControlBottom.Location = new System.Drawing.Point(0, 908);
+            this.barDockControlBottom.Location = new System.Drawing.Point(0, 862);
             this.barDockControlBottom.Manager = this.barManager1;
-            this.barDockControlBottom.Margin = new System.Windows.Forms.Padding(4);
-            this.barDockControlBottom.Size = new System.Drawing.Size(1916, 0);
+            this.barDockControlBottom.Margin = new System.Windows.Forms.Padding(16, 15, 16, 15);
+            this.barDockControlBottom.Size = new System.Drawing.Size(1451, 0);
             // 
             // barDockControlLeft
             // 
@@ -595,17 +598,17 @@
             this.barDockControlLeft.Dock = System.Windows.Forms.DockStyle.Left;
             this.barDockControlLeft.Location = new System.Drawing.Point(0, 0);
             this.barDockControlLeft.Manager = this.barManager1;
-            this.barDockControlLeft.Margin = new System.Windows.Forms.Padding(4);
-            this.barDockControlLeft.Size = new System.Drawing.Size(0, 908);
+            this.barDockControlLeft.Margin = new System.Windows.Forms.Padding(16, 15, 16, 15);
+            this.barDockControlLeft.Size = new System.Drawing.Size(0, 862);
             // 
             // barDockControlRight
             // 
             this.barDockControlRight.CausesValidation = false;
             this.barDockControlRight.Dock = System.Windows.Forms.DockStyle.Right;
-            this.barDockControlRight.Location = new System.Drawing.Point(1916, 0);
+            this.barDockControlRight.Location = new System.Drawing.Point(1451, 0);
             this.barDockControlRight.Manager = this.barManager1;
-            this.barDockControlRight.Margin = new System.Windows.Forms.Padding(4);
-            this.barDockControlRight.Size = new System.Drawing.Size(0, 908);
+            this.barDockControlRight.Margin = new System.Windows.Forms.Padding(16, 15, 16, 15);
+            this.barDockControlRight.Size = new System.Drawing.Size(0, 862);
             // 
             // popupMenu1
             // 
@@ -614,18 +617,11 @@
             this.popupMenu1.Name = "popupMenu1";
             this.popupMenu1.Ribbon = this.bbOpenedOrders;
             // 
-            // teValueWithChange
-            // 
-            this.teValueWithChange.AllowHtmlDraw = DevExpress.Utils.DefaultBoolean.True;
-            this.teValueWithChange.AutoHeight = false;
-            this.teValueWithChange.Name = "teValueWithChange";
-            this.teValueWithChange.Padding = new System.Windows.Forms.Padding(0, 0, 0, 0);
-            // 
             // TickersCollectionForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1916, 908);
+            this.ClientSize = new System.Drawing.Size(1451, 862);
             this.Controls.Add(this.gridControl1);
             this.Controls.Add(this.standaloneBarDockControl1);
             this.Controls.Add(this.bbOpenedOrders);
@@ -633,9 +629,10 @@
             this.Controls.Add(this.barDockControlRight);
             this.Controls.Add(this.barDockControlBottom);
             this.Controls.Add(this.barDockControlTop);
-            this.Margin = new System.Windows.Forms.Padding(6);
+            this.Margin = new System.Windows.Forms.Padding(24, 23, 24, 23);
             this.Name = "TickersCollectionForm";
             this.Text = "Poloniex Markets";
+            ((System.ComponentModel.ISupportInitialize)(this.teValueWithChange)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemTextEdit1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).EndInit();
@@ -644,7 +641,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.bbOpenedOrders)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.barManager1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.popupMenu1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.teValueWithChange)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

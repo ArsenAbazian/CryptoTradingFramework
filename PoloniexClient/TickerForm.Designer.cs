@@ -196,7 +196,7 @@
             this.biSell,
             this.biSellMarket});
             this.ribbonControl1.Location = new System.Drawing.Point(0, 0);
-            this.ribbonControl1.Margin = new System.Windows.Forms.Padding(6);
+            this.ribbonControl1.Margin = new System.Windows.Forms.Padding(12, 12, 12, 12);
             this.ribbonControl1.MaxItemId = 8;
             this.ribbonControl1.Name = "ribbonControl1";
             this.ribbonControl1.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
@@ -206,7 +206,7 @@
             this.repositoryItemButtonEdit1,
             this.repositoryItemButtonEdit2});
             this.ribbonControl1.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonControlStyle.OfficeUniversal;
-            this.ribbonControl1.Size = new System.Drawing.Size(1924, 84);
+            this.ribbonControl1.Size = new System.Drawing.Size(3848, 103);
             // 
             // biSell
             // 
@@ -290,10 +290,10 @@
             // tickerChartViewer1
             // 
             this.tickerChartViewer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tickerChartViewer1.Location = new System.Drawing.Point(742, 291);
-            this.tickerChartViewer1.Margin = new System.Windows.Forms.Padding(14, 13, 14, 13);
+            this.tickerChartViewer1.Location = new System.Drawing.Point(742, 310);
+            this.tickerChartViewer1.Margin = new System.Windows.Forms.Padding(28, 25, 28, 25);
             this.tickerChartViewer1.Name = "tickerChartViewer1";
-            this.tickerChartViewer1.Size = new System.Drawing.Size(534, 770);
+            this.tickerChartViewer1.Size = new System.Drawing.Size(2458, 1730);
             this.tickerChartViewer1.TabIndex = 0;
             this.tickerChartViewer1.Ticker = null;
             // 
@@ -301,9 +301,9 @@
             // 
             this.tickerInfoControl.Dock = System.Windows.Forms.DockStyle.Top;
             this.tickerInfoControl.Location = new System.Drawing.Point(0, 0);
-            this.tickerInfoControl.Margin = new System.Windows.Forms.Padding(14, 13, 14, 13);
+            this.tickerInfoControl.Margin = new System.Windows.Forms.Padding(28, 25, 28, 25);
             this.tickerInfoControl.Name = "tickerInfoControl";
-            this.tickerInfoControl.Size = new System.Drawing.Size(526, 144);
+            this.tickerInfoControl.Size = new System.Drawing.Size(2442, 277);
             this.tickerInfoControl.TabIndex = 0;
             this.tickerInfoControl.Ticker = null;
             // 
@@ -313,10 +313,10 @@
             this.orderBookControl1.Bids = null;
             this.orderBookControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.orderBookControl1.Location = new System.Drawing.Point(0, 0);
-            this.orderBookControl1.Margin = new System.Windows.Forms.Padding(2);
+            this.orderBookControl1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.orderBookControl1.Name = "orderBookControl1";
             this.orderBookControl1.OrderBookCaption = "";
-            this.orderBookControl1.Size = new System.Drawing.Size(733, 950);
+            this.orderBookControl1.Size = new System.Drawing.Size(721, 1883);
             this.orderBookControl1.TabIndex = 3;
             this.orderBookControl1.TickerCollection = null;
             this.orderBookControl1.SelectedAskRowChanged += new CryptoMarketClient.SelectedOrderBookEntryChangedHandler(this.orderBookControl1_SelectedAskRowChanged);
@@ -326,13 +326,13 @@
             // 
             this.gcTrades.DataSource = this.tradeHistoryItemBindingSource;
             this.gcTrades.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gcTrades.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(6);
+            this.gcTrades.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(12, 12, 12, 12);
             this.gcTrades.Location = new System.Drawing.Point(0, 0);
             this.gcTrades.MainView = this.gvTrades;
-            this.gcTrades.Margin = new System.Windows.Forms.Padding(6);
+            this.gcTrades.Margin = new System.Windows.Forms.Padding(12, 12, 12, 12);
             this.gcTrades.MenuManager = this.ribbonControl1;
             this.gcTrades.Name = "gcTrades";
-            this.gcTrades.Size = new System.Drawing.Size(639, 923);
+            this.gcTrades.Size = new System.Drawing.Size(627, 1837);
             this.gcTrades.TabIndex = 0;
             this.gcTrades.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gvTrades});
@@ -433,20 +433,20 @@
             this.dpOrderBook.Controls.Add(this.dockPanel1_Container);
             this.dpOrderBook.Dock = DevExpress.XtraBars.Docking.DockingStyle.Left;
             this.dpOrderBook.ID = new System.Guid("09e5b5a5-8f81-4084-ad97-5cb8e0447355");
-            this.dpOrderBook.Location = new System.Drawing.Point(0, 84);
-            this.dpOrderBook.Margin = new System.Windows.Forms.Padding(4);
+            this.dpOrderBook.Location = new System.Drawing.Point(0, 103);
+            this.dpOrderBook.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
             this.dpOrderBook.Name = "dpOrderBook";
             this.dpOrderBook.OriginalSize = new System.Drawing.Size(742, 200);
-            this.dpOrderBook.Size = new System.Drawing.Size(742, 977);
+            this.dpOrderBook.Size = new System.Drawing.Size(742, 1937);
             this.dpOrderBook.Text = "Order Book";
             // 
             // dockPanel1_Container
             // 
             this.dockPanel1_Container.Controls.Add(this.orderBookControl1);
-            this.dockPanel1_Container.Location = new System.Drawing.Point(4, 23);
-            this.dockPanel1_Container.Margin = new System.Windows.Forms.Padding(4);
+            this.dockPanel1_Container.Location = new System.Drawing.Point(8, 46);
+            this.dockPanel1_Container.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
             this.dockPanel1_Container.Name = "dockPanel1_Container";
-            this.dockPanel1_Container.Size = new System.Drawing.Size(733, 950);
+            this.dockPanel1_Container.Size = new System.Drawing.Size(721, 1883);
             this.dockPanel1_Container.TabIndex = 0;
             // 
             // panelContainer1
@@ -460,10 +460,11 @@
             this.panelContainer1.Controls.Add(this.dpActiveTrailings);
             this.panelContainer1.Dock = DevExpress.XtraBars.Docking.DockingStyle.Right;
             this.panelContainer1.ID = new System.Guid("1698e180-145b-44bc-b717-dc185a4311c6");
-            this.panelContainer1.Location = new System.Drawing.Point(1276, 84);
+            this.panelContainer1.Location = new System.Drawing.Point(3200, 103);
+            this.panelContainer1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.panelContainer1.Name = "panelContainer1";
             this.panelContainer1.OriginalSize = new System.Drawing.Size(648, 200);
-            this.panelContainer1.Size = new System.Drawing.Size(648, 977);
+            this.panelContainer1.Size = new System.Drawing.Size(648, 1937);
             this.panelContainer1.Tabbed = true;
             this.panelContainer1.Text = "panelContainer1";
             // 
@@ -472,26 +473,29 @@
             this.dpMyTrades.Controls.Add(this.controlContainer5);
             this.dpMyTrades.Dock = DevExpress.XtraBars.Docking.DockingStyle.Fill;
             this.dpMyTrades.ID = new System.Guid("804e2b28-254a-4f8d-a3f8-9513e0057258");
-            this.dpMyTrades.Location = new System.Drawing.Point(5, 23);
+            this.dpMyTrades.Location = new System.Drawing.Point(13, 46);
+            this.dpMyTrades.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.dpMyTrades.Name = "dpMyTrades";
-            this.dpMyTrades.OriginalSize = new System.Drawing.Size(627, 859);
-            this.dpMyTrades.Size = new System.Drawing.Size(639, 923);
+            this.dpMyTrades.OriginalSize = new System.Drawing.Size(1278, 1775);
+            this.dpMyTrades.Size = new System.Drawing.Size(627, 1837);
             this.dpMyTrades.Text = "My Trades";
             // 
             // controlContainer5
             // 
             this.controlContainer5.Controls.Add(this.myTradesCollectionControl1);
             this.controlContainer5.Location = new System.Drawing.Point(0, 0);
+            this.controlContainer5.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.controlContainer5.Name = "controlContainer5";
-            this.controlContainer5.Size = new System.Drawing.Size(639, 923);
+            this.controlContainer5.Size = new System.Drawing.Size(627, 1837);
             this.controlContainer5.TabIndex = 0;
             // 
             // myTradesCollectionControl1
             // 
             this.myTradesCollectionControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.myTradesCollectionControl1.Location = new System.Drawing.Point(0, 0);
+            this.myTradesCollectionControl1.Margin = new System.Windows.Forms.Padding(12, 12, 12, 12);
             this.myTradesCollectionControl1.Name = "myTradesCollectionControl1";
-            this.myTradesCollectionControl1.Size = new System.Drawing.Size(639, 923);
+            this.myTradesCollectionControl1.Size = new System.Drawing.Size(627, 1837);
             this.myTradesCollectionControl1.TabIndex = 0;
             this.myTradesCollectionControl1.Ticker = null;
             // 
@@ -501,28 +505,31 @@
             this.dpBuy.Dock = DevExpress.XtraBars.Docking.DockingStyle.Fill;
             this.dpBuy.FloatSize = new System.Drawing.Size(776, 551);
             this.dpBuy.ID = new System.Guid("d224c417-887b-4895-8bb9-1918c2c72ab7");
-            this.dpBuy.Location = new System.Drawing.Point(5, 23);
+            this.dpBuy.Location = new System.Drawing.Point(13, 46);
+            this.dpBuy.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.dpBuy.Name = "dpBuy";
-            this.dpBuy.OriginalSize = new System.Drawing.Size(627, 859);
-            this.dpBuy.Size = new System.Drawing.Size(639, 923);
+            this.dpBuy.OriginalSize = new System.Drawing.Size(1278, 1775);
+            this.dpBuy.Size = new System.Drawing.Size(627, 1837);
             this.dpBuy.Text = "Buy";
             // 
             // controlContainer2
             // 
             this.controlContainer2.Controls.Add(this.buySettingsControl);
             this.controlContainer2.Location = new System.Drawing.Point(0, 0);
+            this.controlContainer2.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.controlContainer2.Name = "controlContainer2";
-            this.controlContainer2.Size = new System.Drawing.Size(639, 923);
+            this.controlContainer2.Size = new System.Drawing.Size(627, 1837);
             this.controlContainer2.TabIndex = 0;
             // 
             // buySettingsControl
             // 
             this.buySettingsControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.buySettingsControl.Location = new System.Drawing.Point(0, 0);
+            this.buySettingsControl.Margin = new System.Windows.Forms.Padding(12, 12, 12, 12);
             this.buySettingsControl.Name = "buySettingsControl";
             this.buySettingsControl.OperationsProvider = null;
             this.buySettingsControl.Settings = null;
-            this.buySettingsControl.Size = new System.Drawing.Size(639, 923);
+            this.buySettingsControl.Size = new System.Drawing.Size(627, 1837);
             this.buySettingsControl.TabIndex = 0;
             this.buySettingsControl.Ticker = null;
             // 
@@ -532,33 +539,33 @@
             this.dpOpenedOrders.Dock = DevExpress.XtraBars.Docking.DockingStyle.Fill;
             this.dpOpenedOrders.FloatVertical = true;
             this.dpOpenedOrders.ID = new System.Guid("147661ac-3074-41c2-a188-4f22f789a286");
-            this.dpOpenedOrders.Location = new System.Drawing.Point(5, 23);
-            this.dpOpenedOrders.Margin = new System.Windows.Forms.Padding(4);
+            this.dpOpenedOrders.Location = new System.Drawing.Point(13, 46);
+            this.dpOpenedOrders.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
             this.dpOpenedOrders.Name = "dpOpenedOrders";
-            this.dpOpenedOrders.OriginalSize = new System.Drawing.Size(627, 859);
-            this.dpOpenedOrders.Size = new System.Drawing.Size(639, 923);
+            this.dpOpenedOrders.OriginalSize = new System.Drawing.Size(1278, 1775);
+            this.dpOpenedOrders.Size = new System.Drawing.Size(627, 1837);
             this.dpOpenedOrders.Text = "Opened Orders";
             // 
             // controlContainer1
             // 
             this.controlContainer1.Controls.Add(this.gcOpenedOrders);
             this.controlContainer1.Location = new System.Drawing.Point(0, 0);
-            this.controlContainer1.Margin = new System.Windows.Forms.Padding(4);
+            this.controlContainer1.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
             this.controlContainer1.Name = "controlContainer1";
-            this.controlContainer1.Size = new System.Drawing.Size(639, 923);
+            this.controlContainer1.Size = new System.Drawing.Size(627, 1837);
             this.controlContainer1.TabIndex = 0;
             // 
             // gcOpenedOrders
             // 
             this.gcOpenedOrders.DataSource = this.openedOrderInfoBindingSource;
             this.gcOpenedOrders.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gcOpenedOrders.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(4);
+            this.gcOpenedOrders.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
             this.gcOpenedOrders.Location = new System.Drawing.Point(0, 0);
             this.gcOpenedOrders.MainView = this.gvOrders;
-            this.gcOpenedOrders.Margin = new System.Windows.Forms.Padding(4);
+            this.gcOpenedOrders.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
             this.gcOpenedOrders.MenuManager = this.ribbonControl1;
             this.gcOpenedOrders.Name = "gcOpenedOrders";
-            this.gcOpenedOrders.Size = new System.Drawing.Size(639, 923);
+            this.gcOpenedOrders.Size = new System.Drawing.Size(627, 1837);
             this.gcOpenedOrders.TabIndex = 0;
             this.gcOpenedOrders.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gvOrders});
@@ -653,20 +660,20 @@
             this.dpTrades.Controls.Add(this.dockPanel2_Container);
             this.dpTrades.Dock = DevExpress.XtraBars.Docking.DockingStyle.Fill;
             this.dpTrades.ID = new System.Guid("cecd3d8a-da7f-4a81-90ca-fe5b5710f049");
-            this.dpTrades.Location = new System.Drawing.Point(5, 23);
-            this.dpTrades.Margin = new System.Windows.Forms.Padding(4);
+            this.dpTrades.Location = new System.Drawing.Point(13, 46);
+            this.dpTrades.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
             this.dpTrades.Name = "dpTrades";
-            this.dpTrades.OriginalSize = new System.Drawing.Size(627, 859);
-            this.dpTrades.Size = new System.Drawing.Size(639, 923);
+            this.dpTrades.OriginalSize = new System.Drawing.Size(1278, 1775);
+            this.dpTrades.Size = new System.Drawing.Size(627, 1837);
             this.dpTrades.Text = "Trades";
             // 
             // dockPanel2_Container
             // 
             this.dockPanel2_Container.Controls.Add(this.gcTrades);
             this.dockPanel2_Container.Location = new System.Drawing.Point(0, 0);
-            this.dockPanel2_Container.Margin = new System.Windows.Forms.Padding(4);
+            this.dockPanel2_Container.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
             this.dockPanel2_Container.Name = "dockPanel2_Container";
-            this.dockPanel2_Container.Size = new System.Drawing.Size(639, 923);
+            this.dockPanel2_Container.Size = new System.Drawing.Size(627, 1837);
             this.dockPanel2_Container.TabIndex = 0;
             // 
             // dockPanel1
@@ -674,31 +681,33 @@
             this.dockPanel1.Controls.Add(this.controlContainer3);
             this.dockPanel1.Dock = DevExpress.XtraBars.Docking.DockingStyle.Fill;
             this.dockPanel1.ID = new System.Guid("313b74ef-1e55-4c59-a136-df2e0eb211b5");
-            this.dockPanel1.Location = new System.Drawing.Point(5, 23);
+            this.dockPanel1.Location = new System.Drawing.Point(13, 46);
+            this.dockPanel1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.dockPanel1.Name = "dockPanel1";
-            this.dockPanel1.OriginalSize = new System.Drawing.Size(627, 859);
-            this.dockPanel1.Size = new System.Drawing.Size(639, 923);
+            this.dockPanel1.OriginalSize = new System.Drawing.Size(1278, 1775);
+            this.dockPanel1.Size = new System.Drawing.Size(627, 1837);
             this.dockPanel1.Text = "My Orders History";
             // 
             // controlContainer3
             // 
             this.controlContainer3.Controls.Add(this.gcOrderHistory);
             this.controlContainer3.Location = new System.Drawing.Point(0, 0);
+            this.controlContainer3.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.controlContainer3.Name = "controlContainer3";
-            this.controlContainer3.Size = new System.Drawing.Size(639, 923);
+            this.controlContainer3.Size = new System.Drawing.Size(627, 1837);
             this.controlContainer3.TabIndex = 0;
             // 
             // gcOrderHistory
             // 
             this.gcOrderHistory.DataSource = this.tradingResultBindingSource1;
             this.gcOrderHistory.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gcOrderHistory.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(6);
+            this.gcOrderHistory.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(12, 12, 12, 12);
             this.gcOrderHistory.Location = new System.Drawing.Point(0, 0);
             this.gcOrderHistory.MainView = this.gvOderHistory;
-            this.gcOrderHistory.Margin = new System.Windows.Forms.Padding(6);
+            this.gcOrderHistory.Margin = new System.Windows.Forms.Padding(12, 12, 12, 12);
             this.gcOrderHistory.MenuManager = this.ribbonControl1;
             this.gcOrderHistory.Name = "gcOrderHistory";
-            this.gcOrderHistory.Size = new System.Drawing.Size(639, 923);
+            this.gcOrderHistory.Size = new System.Drawing.Size(627, 1837);
             this.gcOrderHistory.TabIndex = 1;
             this.gcOrderHistory.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gvOderHistory});
@@ -781,27 +790,29 @@
             this.dpActiveTrailings.Controls.Add(this.controlContainer4);
             this.dpActiveTrailings.Dock = DevExpress.XtraBars.Docking.DockingStyle.Fill;
             this.dpActiveTrailings.ID = new System.Guid("3f8f5646-7327-4f6e-8fb7-734e3b94c318");
-            this.dpActiveTrailings.Location = new System.Drawing.Point(5, 23);
+            this.dpActiveTrailings.Location = new System.Drawing.Point(13, 46);
+            this.dpActiveTrailings.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.dpActiveTrailings.Name = "dpActiveTrailings";
-            this.dpActiveTrailings.OriginalSize = new System.Drawing.Size(627, 859);
-            this.dpActiveTrailings.Size = new System.Drawing.Size(639, 923);
+            this.dpActiveTrailings.OriginalSize = new System.Drawing.Size(1278, 1775);
+            this.dpActiveTrailings.Size = new System.Drawing.Size(627, 1837);
             this.dpActiveTrailings.Text = "Active Trailings";
             // 
             // controlContainer4
             // 
             this.controlContainer4.Controls.Add(this.activeTrailingCollectionControl1);
             this.controlContainer4.Location = new System.Drawing.Point(0, 0);
+            this.controlContainer4.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.controlContainer4.Name = "controlContainer4";
-            this.controlContainer4.Size = new System.Drawing.Size(639, 923);
+            this.controlContainer4.Size = new System.Drawing.Size(627, 1837);
             this.controlContainer4.TabIndex = 0;
             // 
             // activeTrailingCollectionControl1
             // 
             this.activeTrailingCollectionControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.activeTrailingCollectionControl1.Location = new System.Drawing.Point(0, 0);
-            this.activeTrailingCollectionControl1.Margin = new System.Windows.Forms.Padding(2);
+            this.activeTrailingCollectionControl1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.activeTrailingCollectionControl1.Name = "activeTrailingCollectionControl1";
-            this.activeTrailingCollectionControl1.Size = new System.Drawing.Size(639, 923);
+            this.activeTrailingCollectionControl1.Size = new System.Drawing.Size(627, 1837);
             this.activeTrailingCollectionControl1.TabIndex = 0;
             this.activeTrailingCollectionControl1.Ticker = null;
             // 
@@ -810,20 +821,20 @@
             this.dpInfo.Controls.Add(this.dockPanel3_Container);
             this.dpInfo.Dock = DevExpress.XtraBars.Docking.DockingStyle.Top;
             this.dpInfo.ID = new System.Guid("7b677dba-e9f9-46a7-b2ee-3f7b60447fd7");
-            this.dpInfo.Location = new System.Drawing.Point(742, 84);
-            this.dpInfo.Margin = new System.Windows.Forms.Padding(4);
+            this.dpInfo.Location = new System.Drawing.Point(742, 103);
+            this.dpInfo.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
             this.dpInfo.Name = "dpInfo";
             this.dpInfo.OriginalSize = new System.Drawing.Size(200, 207);
-            this.dpInfo.Size = new System.Drawing.Size(534, 207);
+            this.dpInfo.Size = new System.Drawing.Size(2458, 207);
             this.dpInfo.Text = "Info";
             // 
             // dockPanel3_Container
             // 
             this.dockPanel3_Container.Controls.Add(this.tickerInfoControl);
-            this.dockPanel3_Container.Location = new System.Drawing.Point(4, 23);
-            this.dockPanel3_Container.Margin = new System.Windows.Forms.Padding(4);
+            this.dockPanel3_Container.Location = new System.Drawing.Point(8, 46);
+            this.dockPanel3_Container.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
             this.dockPanel3_Container.Name = "dockPanel3_Container";
-            this.dockPanel3_Container.Size = new System.Drawing.Size(526, 179);
+            this.dockPanel3_Container.Size = new System.Drawing.Size(2442, 148);
             this.dockPanel3_Container.TabIndex = 0;
             // 
             // tradingResultBindingSource
@@ -832,15 +843,15 @@
             // 
             // TickerForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1924, 1061);
+            this.ClientSize = new System.Drawing.Size(3848, 2040);
             this.Controls.Add(this.tickerChartViewer1);
             this.Controls.Add(this.dpOrderBook);
             this.Controls.Add(this.dpInfo);
             this.Controls.Add(this.panelContainer1);
             this.Controls.Add(this.ribbonControl1);
-            this.Margin = new System.Windows.Forms.Padding(6);
+            this.Margin = new System.Windows.Forms.Padding(12, 12, 12, 12);
             this.Name = "TickerForm";
             this.Text = "Ticker Form";
             ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).EndInit();
