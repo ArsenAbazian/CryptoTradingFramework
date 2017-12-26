@@ -36,34 +36,34 @@ namespace CryptoMarketClient {
             return seqNo == SeqNumber + 1;
         }
 
-        public decimal BidVolume { get; private set; }
-        public decimal AskVolume { get; private set; }
-        public decimal BidExpectation { get; private set; }
-        public decimal AskExpectation { get; private set; }
-        public decimal BidDispersion { get; private set; }
-        public decimal AskDispersion { get; private set; }
-        public decimal BidAskRelation {
+        public double BidVolume { get; private set; }
+        public double AskVolume { get; private set; }
+        public double BidExpectation { get; private set; }
+        public double AskExpectation { get; private set; }
+        public double BidDispersion { get; private set; }
+        public double AskDispersion { get; private set; }
+        public double BidAskRelation {
             get {
                 if(BidVolume == 0) return 0;
                 return 100 * BidVolume / (BidVolume + AskVolume);
             }
         }
 
-        public decimal PrevBidVolume { get; private set; }
-        public decimal PrevAskVolume { get; private set; }
-        public decimal PrevBidExpectation { get; private set; }
-        public decimal PrevAskExpectation { get; private set; }
-        public decimal PrevBidDispersion { get; private set; }
-        public decimal PrevAskDispersion { get; private set; }
-        public decimal PrevBidAskRelation { get; private set; }
+        public double PrevBidVolume { get; private set; }
+        public double PrevAskVolume { get; private set; }
+        public double PrevBidExpectation { get; private set; }
+        public double PrevAskExpectation { get; private set; }
+        public double PrevBidDispersion { get; private set; }
+        public double PrevAskDispersion { get; private set; }
+        public double PrevBidAskRelation { get; private set; }
 
-        public decimal BidVolumeChange { get; set; }
-        public decimal AskVolumeChange { get; set; }
-        public decimal BidExpectationChange { get; set; }
-        public decimal AskExpectationChange { get; set; }
-        public decimal BidDispersionChange { get; set; }
-        public decimal AskDispersionChange { get; set; }
-        public decimal BidAskRelationChange { get; set; }
+        public double BidVolumeChange { get; set; }
+        public double AskVolumeChange { get; set; }
+        public double BidExpectationChange { get; set; }
+        public double AskExpectationChange { get; set; }
+        public double BidDispersionChange { get; set; }
+        public double AskDispersionChange { get; set; }
+        public double BidAskRelationChange { get; set; }
 
         public List<OrderBookStatisticItem> VolumeHistory { get; } = new List<OrderBookStatisticItem>();
 
@@ -86,7 +86,7 @@ namespace CryptoMarketClient {
             });
         }
         
-        protected decimal CalcChange(decimal prev, decimal current) {
+        protected double CalcChange(double prev, double current) {
             if(prev == 0) return 0;
             return 100 * (current - prev) / prev;
         }
@@ -104,9 +104,9 @@ namespace CryptoMarketClient {
             PrevAskDispersion = AskDispersion;
             PrevBidAskRelation = BidAskRelation;
 
-            decimal bidVolume = 0, askVolume = 0;
-            decimal bidExpectation = 0, askExpectation = 0;
-            decimal bidDispersion = 0, askDispersion = 0;
+            double bidVolume = 0, askVolume = 0;
+            double bidExpectation = 0, askExpectation = 0;
+            double bidDispersion = 0, askDispersion = 0;
             CalcVolume(Bids, out bidVolume, out bidExpectation, out bidDispersion, depth);
             CalcVolume(Asks, out askVolume, out askExpectation, out askDispersion, depth);
 
@@ -125,7 +125,7 @@ namespace CryptoMarketClient {
             AskDispersionChange = CalcChange(PrevAskDispersion, AskDispersion);
             BidAskRelationChange = CalcChange(PrevBidAskRelation, BidAskRelation);
         }
-        void CalcVolume(OrderBookEntry[] list, out decimal volume, out decimal exp, out decimal disp, int depth) {
+        void CalcVolume(OrderBookEntry[] list, out double volume, out double exp, out double disp, int depth) {
             int count = Math.Min(depth, list.Length);
             int index = 0;
             volume = 0;
@@ -145,8 +145,8 @@ namespace CryptoMarketClient {
             }
 
             index = 0;
-            decimal invVolume = 1.0m / volume;
-            decimal qexp = exp * exp;
+            double invVolume = 1.0 / volume;
+            double qexp = exp * exp;
             foreach(OrderBookEntry e in list) {
                 disp += (e.Value * e.Value) * e.Amount * invVolume - qexp;
                 index++;
@@ -159,7 +159,7 @@ namespace CryptoMarketClient {
         }
         protected double MaxVolume { get; set; }
         public void UpdateEntries() {
-            decimal MaxVolume = 0;
+            double MaxVolume = 0;
             for(int i = 0; i < Depth; i++) {
                 Bids[i].Volume = Bids[i].Value * Bids[i].Amount;
                 Asks[i].Volume = Asks[i].Value * Asks[i].Amount;
@@ -174,18 +174,18 @@ namespace CryptoMarketClient {
                 Asks[i].VolumePercent = Asks[i].Volume * MaxVolume;
             }
         }
-        public decimal BidEnergy { get; set; }
-        public decimal AskEnergy { get; set; }
+        public double BidEnergy { get; set; }
+        public double AskEnergy { get; set; }
         public void CalcEnergy() {
             OrderBookEntry[] pb = BidsHistory.Last();
             OrderBookEntry[] pa = AskHistory.Last();
 
-            decimal bidEnergy = 0;
-            decimal askEnerty = 0;
+            double bidEnergy = 0;
+            double askEnerty = 0;
 
             for(int i = 0; i < OrderBook.Depth; i++) {
-                decimal bidSpeed = Bids[i].Value - pb[i].Value;
-                decimal askSpeed = Asks[i].Value - pa[i].Value;
+                double bidSpeed = Bids[i].Value - pb[i].Value;
+                double askSpeed = Asks[i].Value - pa[i].Value;
                 bidEnergy += Bids[i].Amount * (bidSpeed * bidSpeed);
                 askEnerty += Asks[i].Amount * (askSpeed * askSpeed);
             }
@@ -204,16 +204,16 @@ namespace CryptoMarketClient {
 
         protected List<OrderBookEntry[]> BidsHistory { get; } = new List<OrderBookEntry[]>();
         protected List<OrderBookEntry[]> AskHistory { get; } = new List<OrderBookEntry[]>();
-        public decimal BidHipe { get; set; }
-        public decimal AskHipe { get; set; }
-        public decimal PrevBidHipe { get { return BidHipes[BidHipes.Length - 1]; } }
-        public decimal PrevAskHipe { get { return AskHipes[AskHipes.Length - 1]; } }
+        public double BidHipe { get; set; }
+        public double AskHipe { get; set; }
+        public double PrevBidHipe { get { return BidHipes[BidHipes.Length - 1]; } }
+        public double PrevAskHipe { get { return AskHipes[AskHipes.Length - 1]; } }
         public TradeStatisticsItem TradeInfo { get; set; }
 
-        public decimal[] BidHipes { get; set; } = new decimal[22];
-        public decimal[] AskHipes { get; set; } = new decimal[22];
-        public decimal[] BidEnergies { get; set; } = new decimal[22];
-        public decimal[] AskEnergies { get; set; } = new decimal[22];
+        public double[] BidHipes { get; set; } = new double[22];
+        public double[] AskHipes { get; set; } = new double[22];
+        public double[] BidEnergies { get; set; } = new double[22];
+        public double[] AskEnergies { get; set; } = new double[22];
         public bool BidHipeStarted { get { return BidHipe >= 60 && PrevBidHipe < 60; } }
         public bool BidHipeStopped { get { return BidHipe < 60 && PrevBidHipe >= 60; } }
 
@@ -240,8 +240,8 @@ namespace CryptoMarketClient {
                 BidHipes[hi] = BidHipes[hi + 1];
                 AskHipes[hi] = AskHipes[hi + 1];
             }
-            BidHipe = buyCount / 20m * 100m;
-            AskHipe = sellCount / 20m * 100m;
+            BidHipe = buyCount / 20 * 100;
+            AskHipe = sellCount / 20 * 100;
             BidHipes[hi] = BidHipe;
             AskHipes[hi] = AskHipe;
         }
@@ -272,20 +272,20 @@ namespace CryptoMarketClient {
         public OrderBookEntry[] Bids { get; set; }
         public OrderBookEntry[] Asks { get; set; }
 
-        public decimal LowestAsk { get; set; }
-        public decimal HighestBid { get; set; }
-        public decimal BidVolume { get; set; }
-        public decimal AskVolume { get; set; }
-        public decimal BidExpectation { get; set; }
-        public decimal AskExpectation { get; set; }
-        public decimal BidDispersion { get; set; }
-        public decimal AskDispersion { get; set; }
-        public decimal BidEnergy { get; set; }
-        public decimal AskEnergy { get; set; }
-        public decimal BidHipe { get; set; }
-        public decimal AskHipe { get; set; }
+        public double LowestAsk { get; set; }
+        public double HighestBid { get; set; }
+        public double BidVolume { get; set; }
+        public double AskVolume { get; set; }
+        public double BidExpectation { get; set; }
+        public double AskExpectation { get; set; }
+        public double BidDispersion { get; set; }
+        public double AskDispersion { get; set; }
+        public double BidEnergy { get; set; }
+        public double AskEnergy { get; set; }
+        public double BidHipe { get; set; }
+        public double AskHipe { get; set; }
         
-        public decimal BidAskRelation {
+        public double BidAskRelation {
             get {
                 if(BidVolume == 0) return 0;
                 return 100 * BidVolume / (BidVolume + AskVolume);
@@ -295,14 +295,14 @@ namespace CryptoMarketClient {
 
         public TradeStatisticsItem TradeInfo { get; set; }
 
-        public decimal MinBuyPrice { get { return TradeInfo == null ? 0 : TradeInfo.MinBuyPrice; } }
-        public decimal MaxBuyPrice { get { return TradeInfo == null ? 0 : TradeInfo.MaxBuyPrice; } }
-        public decimal BuyAmount { get { return TradeInfo == null ? 0 : TradeInfo.BuyAmount; } }
-        public decimal BuyVolume { get { return TradeInfo == null ? 0 : TradeInfo.BuyVolume; } }
-        public decimal MinSellPrice { get { return TradeInfo == null ? 0 : TradeInfo.MinSellPrice; } }
-        public decimal MaxSellPrice { get { return TradeInfo == null ? 0 : TradeInfo.MaxSellPrice; } }
-        public decimal SellAmount { get { return TradeInfo == null ? 0 : TradeInfo.SellAmount; } }
-        public decimal SellVolume { get { return TradeInfo == null ? 0 : TradeInfo.SellVolume; } }
+        public double MinBuyPrice { get { return TradeInfo == null ? 0 : TradeInfo.MinBuyPrice; } }
+        public double MaxBuyPrice { get { return TradeInfo == null ? 0 : TradeInfo.MaxBuyPrice; } }
+        public double BuyAmount { get { return TradeInfo == null ? 0 : TradeInfo.BuyAmount; } }
+        public double BuyVolume { get { return TradeInfo == null ? 0 : TradeInfo.BuyVolume; } }
+        public double MinSellPrice { get { return TradeInfo == null ? 0 : TradeInfo.MinSellPrice; } }
+        public double MaxSellPrice { get { return TradeInfo == null ? 0 : TradeInfo.MaxSellPrice; } }
+        public double SellAmount { get { return TradeInfo == null ? 0 : TradeInfo.SellAmount; } }
+        public double SellVolume { get { return TradeInfo == null ? 0 : TradeInfo.SellVolume; } }
     }
 
     public static class OrderBookAllocator {

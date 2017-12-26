@@ -14,18 +14,18 @@ namespace CryptoMarketClient.Bittrex {
 
         public string MarketCurrencyLong { get; set; }
         public string BaseCurrencyLong { get; set; }
-        public decimal MinTradeSize { get; set; }
+        public double MinTradeSize { get; set; }
         public bool IsActive { get; set; }
         public DateTime Created { get; set; }
         public int OpenBuyOrders { get; set; }
         public int OpenSellOrders { get; set; }
-        public decimal PrevDay { get; set; }
+        public double PrevDay { get; set; }
         public string DisplayMarketName { get; set; }
-        public override decimal Fee { get { return 0.25m * 0.01m; } }
+        public override double Fee { get { return 0.25 * 0.01; } }
 
-        public override decimal BaseCurrencyBalance { get { return BaseBalanceInfo == null ? 0 : BaseBalanceInfo.Available; } }
-        public override decimal MarketCurrencyBalance { get { return MarketBalanceInfo == null ? 0 : MarketBalanceInfo.Available; } }
-        public override decimal MarketCurrencyTotalBalance { get { return MarketBalanceInfo == null ? 0 : MarketBalanceInfo.Available; } }
+        public override double BaseCurrencyBalance { get { return BaseBalanceInfo == null ? 0 : BaseBalanceInfo.Available; } }
+        public override double MarketCurrencyBalance { get { return MarketBalanceInfo == null ? 0 : MarketBalanceInfo.Available; } }
+        public override double MarketCurrencyTotalBalance { get { return MarketBalanceInfo == null ? 0 : MarketBalanceInfo.Available; } }
         public override bool MarketCurrencyEnabled { get { return MarketCurrencyInfo == null ? false : MarketCurrencyInfo.IsActive; } }
 
         
@@ -69,10 +69,10 @@ namespace CryptoMarketClient.Bittrex {
         public override bool UpdateBalance(CurrencyType type) {
             return BittrexExchange.Default.GetBalance(type == CurrencyType.MarketCurrency? MarketCurrency: BaseCurrency);
         }
-        public override bool Buy(decimal rate, decimal amount) {
+        public override bool Buy(double rate, double amount) {
             return BittrexExchange.Default.BuyLimit(this, rate, amount) != null;
         }
-        public override bool Sell(decimal rate, decimal amount) {
+        public override bool Sell(double rate, double amount) {
             return BittrexExchange.Default.SellLimit(this, rate, amount) != null;
         }
         public override string GetDepositAddress(CurrencyType type) {
@@ -92,7 +92,7 @@ namespace CryptoMarketClient.Bittrex {
         string GetCurrency(CurrencyType currencyType) {
             return currencyType == CurrencyType.BaseCurrency ? BaseCurrency : MarketCurrency;
         }
-        public override bool Withdraw(string currency, string address, decimal amount) {
+        public override bool Withdraw(string currency, string address, double amount) {
             return BittrexExchange.Default.Withdraw(currency, amount, address, "");
         }
         public override string HostName { get { return "Bittrex"; } }
@@ -103,7 +103,7 @@ namespace CryptoMarketClient.Bittrex {
         public string Currency { get; set; }
         public string CurrencyLong { get; set; }
         public int MinConfirmation { get; set; }
-        public decimal TxFree { get; set; }
+        public double TxFree { get; set; }
         public bool IsActive { get; set; }
         public string CoinType { get; set; }
         public string BaseAddress { get; set; }

@@ -24,28 +24,28 @@ namespace CryptoMarketClient.Common {
             Earned = info.LastEarned;
         }
 
-        public decimal Disbalance { get; private set; }
+        public double Disbalance { get; private set; }
         public OperationDirection Direction { get; private set; }
 
         [DisplayName("Alt in Base")]
-        public decimal AltBasePrice {
+        public double AltBasePrice {
             get; set;
         }
         [DisplayName("Alt in USDT")]
-        public decimal AtlUsdtPrice {
+        public double AtlUsdtPrice {
             get; set;
         }
         [DisplayName("Base in USDT")]
-        public decimal BaseUsdtPrice {
+        public double BaseUsdtPrice {
             get; set;
         }
         public DateTime Time { get; set; }
-        public decimal Amount { get; set; }
-        public decimal Profit { get; set; }
-        public decimal Fee { get; set; }
-        public decimal MaxProfit { get; set; }
-        public decimal UsdtBalance { get; set; }
-        public decimal Earned { get; set; }
+        public double Amount { get; set; }
+        public double Profit { get; set; }
+        public double Fee { get; set; }
+        public double MaxProfit { get; set; }
+        public double UsdtBalance { get; set; }
+        public double Earned { get; set; }
     }
 
     public class StaticArbitrageInfo {
@@ -55,7 +55,7 @@ namespace CryptoMarketClient.Common {
         public TickerBase BaseUsdt { get; set; }
         public TickerBase AltUsdt { get; set; }
 
-        public decimal Disbalance { get; private set; }
+        public double Disbalance { get; private set; }
         public OperationDirection Direction { get; private set; }
         public int AltBaseIndex { get; private set; }
         public int AltUsdtIndex { get; private set; }
@@ -68,10 +68,10 @@ namespace CryptoMarketClient.Common {
 
         public bool IsUpdating { get; set; }
         public bool ObtainingData { get; set; }
-        public decimal UsdtBalance { get; set; }
+        public double UsdtBalance { get; set; }
 
         [DisplayName("Alt in Base")]
-        public decimal AltBasePrice {
+        public double AltBasePrice {
             get {
                 if(Disbalance == 0)
                     return 0;
@@ -81,7 +81,7 @@ namespace CryptoMarketClient.Common {
             }
         }
         [DisplayName("Alt in USDT")]
-        public decimal AltUsdtPrice {
+        public double AltUsdtPrice {
             get {
                 if(Disbalance == 0)
                     return 0;
@@ -91,7 +91,7 @@ namespace CryptoMarketClient.Common {
             }
         }
         [DisplayName("Base in USDT")]
-        public decimal BaseUsdtPrice {
+        public double BaseUsdtPrice {
             get {
                 if(Disbalance == 0)
                     return 0;
@@ -121,12 +121,12 @@ namespace CryptoMarketClient.Common {
         public int ObtainDataCount {
             get; set;
         }
-        public decimal Amount { get; set; }
-        public decimal Profit { get; set; }
-        public decimal MaxProfit { get; set; }
-        public decimal Fee { get; set; }
-        public decimal LastEarned { get; set; }
-        public decimal TotalSpent { get { return Amount * AltUsdtPrice; } }
+        public double Amount { get; set; }
+        public double Profit { get; set; }
+        public double MaxProfit { get; set; }
+        public double Fee { get; set; }
+        public double LastEarned { get; set; }
+        public double TotalSpent { get { return Amount * AltUsdtPrice; } }
         public int Count { get { return 3; } }
         public BalanceBase UsdtBalanceInfo { get; set; }
         public BalanceBase AltBalanceInfo { get; set; }
@@ -139,20 +139,20 @@ namespace CryptoMarketClient.Common {
             AltUsdtIndex = -1;
             BaseUsdtIndex = -1;
 
-            const decimal koeff = 0.9975m * 0.9975m * 0.9975m;
+            const double koeff = 0.9975 * 0.9975 * 0.9975;
             for(int altBaseIndex = 0; altBaseIndex < 5; altBaseIndex++) {
                 for(int baseUsdtIndex = 0; baseUsdtIndex < 5; baseUsdtIndex++) {
                     for(int altUsdtIndex = 0; altUsdtIndex < 5; altUsdtIndex++) {
-                        decimal sellAltByUstd = AltUsdt.OrderBook.Bids[altUsdtIndex].Value;
-                        decimal buyBaseByUstd = BaseUsdt.OrderBook.Asks[baseUsdtIndex].Value;
-                        decimal buyAltByBase = AltBase.OrderBook.Asks[altBaseIndex].Value;
+                        double sellAltByUstd = AltUsdt.OrderBook.Bids[altUsdtIndex].Value;
+                        double buyBaseByUstd = BaseUsdt.OrderBook.Asks[baseUsdtIndex].Value;
+                        double buyAltByBase = AltBase.OrderBook.Asks[altBaseIndex].Value;
 
-                        decimal disbalance = sellAltByUstd * koeff - buyBaseByUstd * buyAltByBase;
+                        double disbalance = sellAltByUstd * koeff - buyBaseByUstd * buyAltByBase;
 
-                        decimal buyAltByUstd = AltUsdt.OrderBook.Asks[altUsdtIndex].Value;
-                        decimal sellAltByBase = AltBase.OrderBook.Bids[altBaseIndex].Value;
-                        decimal sellBaseByUstd = BaseUsdt.OrderBook.Bids[baseUsdtIndex].Value;
-                        decimal disbalance2 = sellAltByBase * sellBaseByUstd *koeff - buyAltByUstd;
+                        double buyAltByUstd = AltUsdt.OrderBook.Asks[altUsdtIndex].Value;
+                        double sellAltByBase = AltBase.OrderBook.Bids[altBaseIndex].Value;
+                        double sellBaseByUstd = BaseUsdt.OrderBook.Bids[baseUsdtIndex].Value;
+                        double disbalance2 = sellAltByBase * sellBaseByUstd *koeff - buyAltByUstd;
 
                         if(Disbalance > Math.Max(disbalance, disbalance2))
                             continue;
@@ -179,9 +179,9 @@ namespace CryptoMarketClient.Common {
             
             CalculateCore();
 
-            decimal altUstdAmount = 0;
-            decimal baseUsdtAmount = 0;
-            decimal altBaseAmount = 0;
+            double altUstdAmount = 0;
+            double baseUsdtAmount = 0;
+            double altBaseAmount = 0;
 
             Profit = 0;
             Fee = 0;
@@ -197,9 +197,9 @@ namespace CryptoMarketClient.Common {
                     altBaseAmount = CalcAmount(AltBase.OrderBook.Bids, AltBaseIndex);
                 }
 
-                decimal minAmount = 0.9m * Math.Min(altBaseAmount, Math.Min(baseUsdtAmount / AltBasePrice, altUstdAmount));
+                double minAmount = 0.9 * Math.Min(altBaseAmount, Math.Min(baseUsdtAmount / AltBasePrice, altUstdAmount));
                 baseUsdtAmount = minAmount * AltBasePrice;
-                decimal usdtAmount = Math.Min(10000, minAmount * AltUsdtPrice);
+                double usdtAmount = Math.Min(10000, minAmount * AltUsdtPrice);
                 usdtAmount = Math.Min(usdtAmount, baseUsdtAmount * BaseUsdtPrice);
 
                 if(BaseUsdtPrice == 0 || AltBasePrice == 0 || AltUsdtPrice == 0) {
@@ -210,24 +210,24 @@ namespace CryptoMarketClient.Common {
                 }
 
                 if(Direction == OperationDirection.BuyBaseSellUsdt) {
-                    decimal baseAmount = usdtAmount / BaseUsdtPrice * 0.9975m;
-                    decimal altAmount = baseAmount / AltBasePrice * 0.9975m;
-                    decimal earnedUsdt = altAmount * AltUsdtPrice * 0.9975m;
+                    double baseAmount = usdtAmount / BaseUsdtPrice * 0.9975;
+                    double altAmount = baseAmount / AltBasePrice * 0.9975;
+                    double earnedUsdt = altAmount * AltUsdtPrice * 0.9975;
 
                     Profit = earnedUsdt - usdtAmount;
-                    Fee = usdtAmount / BaseUsdtPrice * 0.0025m * BaseUsdtPrice;
-                    Fee += baseAmount / AltBasePrice * 0.0025m * AltBasePrice * BaseUsdtPrice;
-                    Fee += altAmount * AltUsdtPrice * 0.0025m * AltUsdtPrice;
+                    Fee = usdtAmount / BaseUsdtPrice * 0.0025 * BaseUsdtPrice;
+                    Fee += baseAmount / AltBasePrice * 0.0025 * AltBasePrice * BaseUsdtPrice;
+                    Fee += altAmount * AltUsdtPrice * 0.0025 * AltUsdtPrice;
                 }
                 else {
-                    decimal altAmount = usdtAmount / AltUsdtPrice * 0.9975m;
-                    decimal baseAmount = altAmount * AltBasePrice * 0.9975m;
-                    decimal earnedUsdt = baseAmount * BaseUsdtPrice * 0.9975m;
+                    double altAmount = usdtAmount / AltUsdtPrice * 0.9975;
+                    double baseAmount = altAmount * AltBasePrice * 0.9975;
+                    double earnedUsdt = baseAmount * BaseUsdtPrice * 0.9975;
 
                     Profit = earnedUsdt - usdtAmount;
-                    Fee = usdtAmount * 0.0025m;
-                    Fee += altAmount * AltBasePrice * 0.0025m * BaseUsdtPrice;
-                    Fee += baseAmount * BaseUsdtPrice * 0.0025m;
+                    Fee = usdtAmount * 0.0025;
+                    Fee += altAmount * AltBasePrice * 0.0025 * BaseUsdtPrice;
+                    Fee += baseAmount * BaseUsdtPrice * 0.0025;
                 }
                 Amount = minAmount;
                 MaxProfit = Math.Max(MaxProfit, Profit);
@@ -243,8 +243,8 @@ namespace CryptoMarketClient.Common {
 
             return true;
         }
-        public decimal CalcAmount(OrderBookEntry[] entries, int indexIncluded) {
-            decimal amount = 0;
+        public double CalcAmount(OrderBookEntry[] entries, int indexIncluded) {
+            double amount = 0;
             for(int i = 0; i <= indexIncluded; i++)
                 amount += entries[i].Amount;
             return amount;
@@ -275,8 +275,8 @@ namespace CryptoMarketClient.Common {
             }
             return false;
         }
-        protected bool CheckUpdateBaseBalance(decimal amount) {
-            decimal prev = BaseBalanceInfo.Available;
+        protected bool CheckUpdateBaseBalance(double amount) {
+            double prev = BaseBalanceInfo.Available;
             for(int i = 0; i < 10; i++) {
                 if(!UpdateBaseBalance())
                     return false;
@@ -285,8 +285,8 @@ namespace CryptoMarketClient.Common {
                     continue;
                 }
                 if(amount > 0) {
-                    decimal delta = BaseBalanceInfo.Available - prev;
-                    bool res = delta > amount * 0.95m;
+                    double delta = BaseBalanceInfo.Available - prev;
+                    bool res = delta > amount * 0.95;
                     if(!res) {
                         string text = "check increase base balance fail. should be +" + amount.ToString("0.########") + " but was +" + delta.ToString("0.########");
                         LogManager.Default.AddError(text);
@@ -296,8 +296,8 @@ namespace CryptoMarketClient.Common {
                     return res;
                 }
                 else {
-                    decimal delta = prev - BaseBalanceInfo.Available;
-                    bool res = delta > (-amount) * 0.95m;
+                    double delta = prev - BaseBalanceInfo.Available;
+                    bool res = delta > (-amount) * 0.95;
                     if(!res) {
                         string text = "check decrease base balance fail. should be -" + amount.ToString("0.########") + " but was -" + delta.ToString("0.########");
                         LogManager.Default.AddError(text);
@@ -309,8 +309,8 @@ namespace CryptoMarketClient.Common {
             }
             return true;
         }
-        protected bool CheckUpdateAltBalance(decimal amount) {
-            decimal prev = AltBalanceInfo.Available;
+        protected bool CheckUpdateAltBalance(double amount) {
+            double prev = AltBalanceInfo.Available;
             for(int i = 0; i < 10; i++) {
                 if(!UpdateAltBalance())
                     return false;
@@ -319,8 +319,8 @@ namespace CryptoMarketClient.Common {
                     continue;
                 }
                 if(amount > 0) {
-                    decimal delta = AltBalanceInfo.Available - prev;
-                    bool res = delta > amount * 0.95m;
+                    double delta = AltBalanceInfo.Available - prev;
+                    bool res = delta > amount * 0.95;
                     if(!res) {
                         string text = "check increase alt balance fail. should be +" + amount.ToString("0.########") + " but was +" + delta.ToString("0.########");
                         LogManager.Default.AddError(text);
@@ -330,8 +330,8 @@ namespace CryptoMarketClient.Common {
                     return res;
                 }
                 else {
-                    decimal delta = prev - AltBalanceInfo.Available;
-                    bool res = delta > (-amount) * 0.95m;
+                    double delta = prev - AltBalanceInfo.Available;
+                    bool res = delta > (-amount) * 0.95;
                     if(!res) {
                         string text = "check decrease alt balance fail. should be -" + amount.ToString("0.########") + " but was -" + delta.ToString("0.########");
                         LogManager.Default.AddError(text);
@@ -343,8 +343,8 @@ namespace CryptoMarketClient.Common {
             }
             return true;
         }
-        protected bool CheckUpdateUstdBalance(decimal amount) {
-            decimal prev = UsdtBalanceInfo.Available;
+        protected bool CheckUpdateUstdBalance(double amount) {
+            double prev = UsdtBalanceInfo.Available;
             for(int i = 0; i < 10; i++) {
                 if(!UpdateUsdtBalance())
                     return false;
@@ -353,8 +353,8 @@ namespace CryptoMarketClient.Common {
                     continue;
                 }
                 if(amount > 0) {
-                    decimal delta = UsdtBalanceInfo.Available - prev;
-                    bool res = delta > amount * 0.95m;
+                    double delta = UsdtBalanceInfo.Available - prev;
+                    bool res = delta > amount * 0.95;
                     if(!res) {
                         string text = "check increase usdt balance fail. should be +" + amount.ToString("0.########") + " but was +" + delta.ToString("0.########");
                         LogManager.Default.AddError(text);
@@ -364,8 +364,8 @@ namespace CryptoMarketClient.Common {
                     return res;
                 }
                 else {
-                    decimal delta = prev - UsdtBalanceInfo.Available;
-                    bool res = delta > (-amount) * 0.95m;
+                    double delta = prev - UsdtBalanceInfo.Available;
+                    bool res = delta > (-amount) * 0.95;
                     if(!res) {
                         string text = "check decrease usdt balance fail. should be -" + amount.ToString("0.########") + " but was -" + delta.ToString("0.########");
                         LogManager.Default.AddError(text);
@@ -420,18 +420,18 @@ namespace CryptoMarketClient.Common {
             }
             return true;
         }
-        public decimal MaxAllowedUsdtSpent { get; set; } = 50;
-        protected decimal CalculateAllowedUsdtAmount() {
+        public double MaxAllowedUsdtSpent { get; set; } = 50;
+        protected double CalculateAllowedUsdtAmount() {
             return Math.Min(UsdtBalanceInfo.Available, MaxAllowedUsdtSpent);
         }
-        protected decimal CalculateAllowedAltAmount() {
-            decimal usdt = CalculateAllowedUsdtAmount();
-            return Math.Min(usdt / AltUsdtPrice, Amount) * 0.9m;
+        protected double CalculateAllowedAltAmount() {
+            double usdt = CalculateAllowedUsdtAmount();
+            return Math.Min(usdt / AltUsdtPrice, Amount) * 0.9;
         }
-        protected decimal CalcAltAmountByBase(decimal allowedAmount) {
-            return Math.Min(allowedAmount, (BaseBalanceInfo.Available / AltBasePrice) * 0.9970m);
+        protected double CalcAltAmountByBase(double allowedAmount) {
+            return Math.Min(allowedAmount, (BaseBalanceInfo.Available / AltBasePrice) * 0.9970);
         }
-        protected bool BuyBaseByUsdt(decimal price, decimal amount) {
+        protected bool BuyBaseByUsdt(double price, double amount) {
             if(!BaseUsdt.Buy(price, amount)) {
                 LogManager.Default.AddError("usdt -> base fail. " + ToString());
                 Debug.WriteLine("usdt -> base fail.");
@@ -440,7 +440,7 @@ namespace CryptoMarketClient.Common {
             Debug.WriteLine("usdt -> base succes.");
             return true;
         }
-        protected bool BuyAltByBase(decimal price, decimal amount) {
+        protected bool BuyAltByBase(double price, double amount) {
             if(!AltBase.Buy(price, amount)) {
                 LogManager.Default.AddError("base -> alt fail. " + ToString());
                 Debug.WriteLine("base -> alt fail.");
@@ -449,7 +449,7 @@ namespace CryptoMarketClient.Common {
             Debug.WriteLine("base -> alt succes.");
             return true;
         }
-        protected bool SellAltByUsdt(decimal price, decimal amount) {
+        protected bool SellAltByUsdt(double price, double amount) {
             if(!AltUsdt.Sell(price, amount)) {
                 LogManager.Default.AddError("alt -> usdt fail. " + ToString());
                 Debug.WriteLine("alt -> usdt fail.");
@@ -468,10 +468,10 @@ namespace CryptoMarketClient.Common {
                     LastOperationTime = DateTime.UtcNow;
                     return true;
                 }
-                decimal altAmount = CalculateAllowedAltAmount();
-                decimal usdtBefore = UsdtBalanceInfo.Available;
-                decimal baseBefore = BaseBalanceInfo.Available;
-                decimal altBefore = AltBalanceInfo.Available;
+                double altAmount = CalculateAllowedAltAmount();
+                double usdtBefore = UsdtBalanceInfo.Available;
+                double baseBefore = BaseBalanceInfo.Available;
+                double altBefore = AltBalanceInfo.Available;
 
                 Debug.WriteLine("make operation -> " + ToString());
                 Debug.WriteLine("calculated alt amount = " + altAmount.ToString("0.########"));

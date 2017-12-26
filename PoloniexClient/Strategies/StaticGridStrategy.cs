@@ -13,18 +13,18 @@ namespace CryptoMarketClient.Strategies {
         [XtraSerializableProperty]
         public int GridCount { get; set; }
         [XtraSerializableProperty]
-        public decimal GridDelta { get; set; }
+        public double GridDelta { get; set; }
         [XtraSerializableProperty]
-        public decimal GridFirstLineDelta { get; set; }
+        public double GridFirstLineDelta { get; set; }
 
         protected override void GenerateLines() {
             ClearLines();
-            decimal latest = Ticker.Last;
-            decimal bid = latest, ask = latest;
-            decimal bidAmount = BaseCurrencyMaximum / GridCount;
-            decimal askAmount = MarketCurrencyMaximum / GridCount;
+            double latest = Ticker.Last;
+            double bid = latest, ask = latest;
+            double bidAmount = BaseCurrencyMaximum / GridCount;
+            double askAmount = MarketCurrencyMaximum / GridCount;
             for(int i = 0; i < GridCount; i++) {
-                decimal delta = i == 0 ? GridFirstLineDelta : GridDelta;
+                double delta = i == 0 ? GridFirstLineDelta : GridDelta;
                 bid -= delta;
                 ask -= delta;
                 BidLines.Add(new OrderInfo() { Rate = bid, Amount = bidAmount });

@@ -42,29 +42,12 @@ namespace CryptoMarketClient {
             }
         }
         protected void OnThreadUpdate(object state) {
-            //Stopwatch timer = new Stopwatch();
-            //timer.Start();
-            //long lastUpdateTime = 0;
-            //while(true) {
-            //    if(timer.ElapsedMilliseconds - lastUpdateTime < 1000) {
-            //        Thread.Sleep(200);
-            //        continue;
-            //    }
-                //lastUpdateTime = timer.ElapsedMilliseconds;
-                Ticker.UpdateOrderBook();
-                Ticker.UpdateTrades();
-                Ticker.UpdateOpenedOrders();
-                Ticker.UpdateTrailings();
-                Ticker.Time = DateTime.Now;
-            //}
+            Ticker.UpdateOrderBook();
+            Ticker.UpdateTrades();
+            Ticker.UpdateOpenedOrders();
+            Ticker.UpdateTrailings();
+            Ticker.Time = DateTime.Now;
         }
-
-        //protected override void OnTimerUpdate(object sender, EventArgs e) {
-        //    base.OnTimerUpdate(sender, e);
-        //    this.tickerInfoControl.UpdateData();
-        //    this.gvTrades.RefreshData();
-        //    this.gvOrders.RefreshData();
-        //}
 
         TickerBase ticker;
         public TickerBase Ticker {
@@ -181,10 +164,10 @@ namespace CryptoMarketClient {
         }
 
         private void biSell_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
-            //decimal price = 0;
-            //decimal amount = 0;
+            //double price = 0;
+            //double amount = 0;
             //try {
-            //    price = Convert.ToDecimal(this.bePrice.EditValue);
+            //    price = Convert.Todouble(this.bePrice.EditValue);
             //}
             //catch(Exception ee) {
             //    XtraMessageBox.Show("Can't sell: get price = " + ee.ToString());
@@ -195,7 +178,7 @@ namespace CryptoMarketClient {
             //        return;
             //}
             //try {
-            //    amount = Convert.ToDecimal(this.beAmount.EditValue);
+            //    amount = Convert.Todouble(this.beAmount.EditValue);
             //}
             //catch(Exception ee) {
             //    XtraMessageBox.Show("Can't sell: get amount = " + ee.ToString());

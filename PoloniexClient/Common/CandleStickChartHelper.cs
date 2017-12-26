@@ -17,8 +17,8 @@ namespace CryptoMarketClient {
                 RaisePropertyChanged("Time");
             }
         }
-        decimal open;
-        public decimal Open {
+        double open;
+        public double Open {
             get { return open; }
             set {
                 if(Open == value)
@@ -28,8 +28,8 @@ namespace CryptoMarketClient {
             }
         }
 
-        decimal close;
-        public decimal Close {
+        double close;
+        public double Close {
             get { return close; }
             set {
                 if(Close == value)
@@ -39,8 +39,8 @@ namespace CryptoMarketClient {
             }
         }
 
-        decimal high;
-        public decimal High {
+        double high;
+        public double High {
             get { return high; }
             set {
                 if(High == value)
@@ -50,8 +50,8 @@ namespace CryptoMarketClient {
             }
         }
 
-        decimal low;
-        public decimal Low {
+        double low;
+        public double Low {
             get { return low; }
             set {
                 if(Low == value)
@@ -61,8 +61,8 @@ namespace CryptoMarketClient {
             }
         }
 
-        decimal volume;
-        public decimal Volume {
+        double volume;
+        public double Volume {
             get { return volume; }
             set {
                 if(Volume == value)
@@ -72,8 +72,8 @@ namespace CryptoMarketClient {
             }
         }
 
-        decimal quoteVolume;
-        public decimal QuoteVolume {
+        double quoteVolume;
+        public double QuoteVolume {
             get { return quoteVolume; }
             set {
                 if(QuoteVolume == value)
@@ -83,8 +83,8 @@ namespace CryptoMarketClient {
             }
         }
 
-        decimal weightedAverage;
-        public decimal WeightedAverage {
+        double weightedAverage;
+        public double WeightedAverage {
             get { return volume; }
             set {
                 if(WeightedAverage == value)

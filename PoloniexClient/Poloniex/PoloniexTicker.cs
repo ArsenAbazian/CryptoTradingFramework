@@ -60,12 +60,12 @@ namespace CryptoMarketClient {
             }
         }
 
-        public override decimal BaseCurrencyBalance { get { return BaseBalanceInfo == null? 0: BaseBalanceInfo.Available; } }
-        public override decimal MarketCurrencyBalance { get { return MarketBalanceInfo == null? 0: MarketBalanceInfo.Available; } }
-        public override decimal MarketCurrencyTotalBalance { get { return MarketBalanceInfo == null ? 0 : MarketBalanceInfo.OnOrders + MarketBalanceInfo.Available; } }
+        public override double BaseCurrencyBalance { get { return BaseBalanceInfo == null? 0: BaseBalanceInfo.Available; } }
+        public override double MarketCurrencyBalance { get { return MarketBalanceInfo == null? 0: MarketBalanceInfo.Available; } }
+        public override double MarketCurrencyTotalBalance { get { return MarketBalanceInfo == null ? 0 : MarketBalanceInfo.OnOrders + MarketBalanceInfo.Available; } }
         public override bool MarketCurrencyEnabled { get { return MarketCurrencyInfo == null ? false : !MarketCurrencyInfo.Disabled; } }
         public override string HostName { get { return "Poloniex"; } }
-        public override decimal Fee { get { return 0.25m * 0.01m; } }
+        public override double Fee { get { return 0.25 * 0.01; } }
         public override string Name { get { return CurrencyPair; } }
         
         public override string WebPageAddress { get { return "https://poloniex.com/exchange#" + Name.ToLower(); } }
@@ -77,10 +77,10 @@ namespace CryptoMarketClient {
             catch { }
             return string.Empty;
         }
-        public override bool Buy(decimal rate, decimal amount) {
+        public override bool Buy(double rate, double amount) {
             return PoloniexExchange.Default.BuyLimit(this, rate, amount);
         }
-        public override bool Sell(decimal rate, decimal amount) {
+        public override bool Sell(double rate, double amount) {
             return PoloniexExchange.Default.SellLimit(this, rate, amount) != -1;
         }
         public override bool UpdateBalance(CurrencyType type) {
@@ -96,7 +96,7 @@ namespace CryptoMarketClient {
                 return MarketBalanceInfo.DepositAddress;
             return PoloniexExchange.Default.CreateDeposit(MarketCurrency);
         }
-        public override bool Withdraw(string currency, string address, decimal amount) {
+        public override bool Withdraw(string currency, string address, double amount) {
             return PoloniexExchange.Default.Withdraw(currency, amount, address, "");
         }
     }

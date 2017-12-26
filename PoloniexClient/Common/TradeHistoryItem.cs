@@ -10,10 +10,33 @@ namespace CryptoMarketClient {
 
     public class TradeHistoryItem {
         public DateTime Time { get; set; }
-        public decimal Amount { get; set; }
-        public decimal Rate { get; set; }
-        public decimal Total { get; set; }
-        public decimal Fee { get; set; }
+        public string AmountString { get; set; }
+        public string RateString { get; set; }
+        double rate = 0;
+        public double Rate {
+            get {
+                if(rate == 0) {
+                    if(string.IsNullOrEmpty(RateString))
+                        return amount;
+                    rate = FastDoubleConverter.Convert(RateString);
+                    RateString = rate.ToString("0.########");
+                }
+                return rate;
+            }
+        }
+        double amount = 0;
+        public double Amount {
+            get {
+                if(amount == 0) {
+                    if(string.IsNullOrEmpty(AmountString))
+                        return amount;
+                    amount = FastDoubleConverter.Convert(AmountString);
+                }
+                return amount;
+            }
+        }
+        public double Total { get; set; }
+        public double Fee { get; set; }
         public long OrderNumber { get; set; }
         public TradeFillType Fill { get; set;}
         public TradeType Type { get; set; }

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace CryptoMarketClient.Common {
     public class ArbitrageInfo {
         public static int Depth { get; set; } = 7;
-        public static decimal InvalidValue = -10000000;
+        public static double InvalidValue = -10000000;
 
         TickerBase lowestAskTicker;
         TickerBase highestBidTicker;
@@ -38,36 +38,36 @@ namespace CryptoMarketClient.Common {
                 OnHighestBidTickerChanged();
             }
         }
-        public decimal Amount { get; set; }
+        public double Amount { get; set; }
         public string LowestAskHost { get; set; }
         public string HighestBidHost { get; set; }
-        public decimal LowestAskBalance { get; set; }
-        public decimal HighestBidBalance { get; set; }
-        public decimal AvailableAmount { get; set; }
-        public decimal BuyTotal { get; set; }
-        public decimal LowestAsk { get; set; }
-        public decimal HighestBid { get; set; }
-        public decimal Spread { get; set; }
-        public decimal Total { get; set; }
-        public decimal LowestBidAskRelation { get; set; }
-        public decimal HighestBidAskRelation { get; set; }
-        public decimal TotalFee { get; set; }
-        public decimal ExpectedProfitUSD { get; set; }
-        public decimal MaxProfit { get; set; }
-        public decimal AvailableProfit { get; set; }
-        public decimal AvailableProfitUSD { get; set; }
-        public decimal MaxProfitUSD { get; set; }
+        public double LowestAskBalance { get; set; }
+        public double HighestBidBalance { get; set; }
+        public double AvailableAmount { get; set; }
+        public double BuyTotal { get; set; }
+        public double LowestAsk { get; set; }
+        public double HighestBid { get; set; }
+        public double Spread { get; set; }
+        public double Total { get; set; }
+        public double LowestBidAskRelation { get; set; }
+        public double HighestBidAskRelation { get; set; }
+        public double TotalFee { get; set; }
+        public double ExpectedProfitUSD { get; set; }
+        public double MaxProfit { get; set; }
+        public double AvailableProfit { get; set; }
+        public double AvailableProfitUSD { get; set; }
+        public double MaxProfitUSD { get; set; }
         public bool LowestAskEnabled { get; set; }
         public bool HighestBidEnabled { get; set; }
         public bool Ready { get { return LowestAskEnabled && HighestBidEnabled; } }
-        public decimal BidShift { get; set; }
-        public decimal AskShift { get; set; }
+        public double BidShift { get; set; }
+        public double AskShift { get; set; }
 
         public TickerCollection Owner { get; set; }
-        public decimal PrevHipe { get; set; }
-        public decimal PrevSellHipe { get; set; }
-        public decimal BidHipe { get; set; }
-        public decimal AskHipe { get; set; }
+        public double PrevHipe { get; set; }
+        public double PrevSellHipe { get; set; }
+        public double BidHipe { get; set; }
+        public double AskHipe { get; set; }
         
         public bool IsBoosted { get { return BidHipe > 60 && PrevHipe <= 60; } }
         public bool IsBoostStopped { get { return PrevHipe > 60 && BidHipe <= 60; } }
@@ -87,7 +87,7 @@ namespace CryptoMarketClient.Common {
         }
 
         public void Calculate() {
-            decimal prev = MaxProfitUSD;
+            double prev = MaxProfitUSD;
             UsdTicker = Owner.UsdTicker;
 
             CalculateHipe();
@@ -118,23 +118,23 @@ namespace CryptoMarketClient.Common {
             OrderBookEntry[] bids = HighestBidTicker.OrderBook.Bids;
             OrderBookEntry[] asks = LowestAskTicker.OrderBook.Asks;
 
-            decimal bidAmount = 0;
+            double bidAmount = 0;
             for(int bidIndex = 0; bidIndex < Depth; bidIndex++) {
                 bidAmount += bids[bidIndex].Amount;
-                decimal bid = bids[bidIndex].Value;
-                decimal askAmount = 0;
+                double bid = bids[bidIndex].Value;
+                double askAmount = 0;
                 for(int askIndex = 0; askIndex < Depth; askIndex++) {
-                    decimal ask = asks[askIndex].Value;
+                    double ask = asks[askIndex].Value;
                     if(ask > bid)
                         break;
                     askAmount += asks[askIndex].Amount;
-                    decimal amount = Math.Min(bidAmount, askAmount);
-                    decimal spread = bid - ask;
+                    double amount = Math.Min(bidAmount, askAmount);
+                    double spread = bid - ask;
                     if(spread < 0)
                         break;
-                    decimal total = spread * amount;
-                    decimal fee = (bid + ask) * amount * 0.0025m;
-                    decimal profit = total - fee;
+                    double total = spread * amount;
+                    double fee = (bid + ask) * amount * 0.0025;
+                    double profit = total - fee;
                     if(profit > MaxProfit) {
                         TotalFee = fee;
                         MaxProfit = profit;
@@ -154,19 +154,19 @@ namespace CryptoMarketClient.Common {
             }
             MaxProfitUSD = CalcProfitUSD(MaxProfit);
 
-            decimal buyAmount = LowestAsk == 0? 0: LowestAskBalance / LowestAsk;
-            decimal sellAmount = HighestBidBalance;
+            double buyAmount = LowestAsk == 0? 0: LowestAskBalance / LowestAsk;
+            double sellAmount = HighestBidBalance;
 
             AvailableAmount = Math.Min(buyAmount, sellAmount);
-            AvailableProfit = Spread * AvailableAmount - (HighestBid + LowestAsk) * AvailableAmount * 0.0025m;
+            AvailableProfit = Spread * AvailableAmount - (HighestBid + LowestAsk) * AvailableAmount * 0.0025;
             AvailableProfitUSD = CalcProfitUSD(AvailableProfit);
 
             if(LowestAskTicker.OrderBook.Bids[0].Value != 0) {
-                decimal lowestBid = LowestAskTicker.OrderBook.Bids[0].Value;
+                double lowestBid = LowestAskTicker.OrderBook.Bids[0].Value;
                 BidShift = HighestBidTicker.OrderBook.Bids[0].Value - lowestBid;
                 BidShift /= lowestBid;
 
-                decimal lowestAsk = LowestAskTicker.OrderBook.Asks[0].Value;
+                double lowestAsk = LowestAskTicker.OrderBook.Asks[0].Value;
                 AskShift = HighestBidTicker.OrderBook.Asks[0].Value - lowestAsk;
                 AskShift /= lowestAsk;
             }
@@ -176,10 +176,10 @@ namespace CryptoMarketClient.Common {
             if(Owner.Count == 2)
                 return Tickers[0].LowestAsk > Tickers[1].LowestAsk? Tickers[1] : Tickers[0];
 
-            decimal lowAsk = Tickers[0].LowestAsk;
+            double lowAsk = Tickers[0].LowestAsk;
             TickerBase lowTicker = Tickers[0];
             for(int i = 1; i < Owner.Count; i++) {
-                decimal ask = Tickers[i].LowestAsk;
+                double ask = Tickers[i].LowestAsk;
                 if(lowAsk > ask) {
                     lowTicker = Tickers[i];
                     lowAsk = ask;
@@ -191,10 +191,10 @@ namespace CryptoMarketClient.Common {
             if(Owner.Count == 2)
                 return Tickers[0].HighestBid < Tickers[1].HighestBid ? Tickers[1] : Tickers[0];
 
-            decimal highBid = Tickers[0].HighestBid;
+            double highBid = Tickers[0].HighestBid;
             TickerBase highTicker = Tickers[0];
             for(int i = 1; i < Owner.Count; i++) {
-                decimal bid = Tickers[i].HighestBid;
+                double bid = Tickers[i].HighestBid;
                 if(highBid < bid) {
                     highTicker = Tickers[i];
                     highBid = bid;
@@ -202,7 +202,7 @@ namespace CryptoMarketClient.Common {
             }
             return highTicker;
         }
-        decimal CalcProfitUSD(decimal profit) {
+        double CalcProfitUSD(double profit) {
             if(LowestAskTicker == HighestBidTicker)
                 return 0;
             if(UsdTicker == null)
@@ -210,10 +210,10 @@ namespace CryptoMarketClient.Common {
             return profit * UsdTicker.Last;
         }
 
-        void UpdateHistory(decimal prev) {
+        void UpdateHistory(double prev) {
             if(MaxProfitUSD < 0 && prev < 0)
                 return;
-            if(Math.Abs(MaxProfitUSD - prev) < 0.0000001m)
+            if(Math.Abs(MaxProfitUSD - prev) < 0.0000001)
                 return;
             ArbitrageStatisticsItem st = new ArbitrageStatisticsItem();
             st.Amount = Amount;
@@ -276,9 +276,9 @@ namespace CryptoMarketClient.Common {
             ExpectedProfitUSD = MaxProfitUSD;
         }
         public void UpateAmountByBalance() {
-            decimal buyAmount = LowestAskTicker.BaseCurrencyBalance / LowestAsk;
-            decimal sellAmount = HighestBidTicker.MarketCurrencyBalance;
-            decimal maxAmount = Math.Min(buyAmount, sellAmount);
+            double buyAmount = LowestAskTicker.BaseCurrencyBalance / LowestAsk;
+            double sellAmount = HighestBidTicker.MarketCurrencyBalance;
+            double maxAmount = Math.Min(buyAmount, sellAmount);
 
             Amount = maxAmount;
             BuyTotal = LowestAsk * Amount;
@@ -288,9 +288,9 @@ namespace CryptoMarketClient.Common {
 
     public class ArbitrageHistoryItem {
         public DateTime Time { get; set; }
-        public decimal Amount { get; set; }
-        public decimal Spread { get; set; }
-        public decimal Value { get; set; }
-        public decimal ValueUSD { get; set; }
+        public double Amount { get; set; }
+        public double Spread { get; set; }
+        public double Value { get; set; }
+        public double ValueUSD { get; set; }
     }
 }

@@ -28,9 +28,9 @@ namespace CryptoMarketClient {
                 if(prop.Name == "type")
                     info.Type = prop.Value.ToObject<string>() == "bid" ? OrderBookEntryType.Bid : OrderBookEntryType.Ask;
                 else if(prop.Name == "rate")
-                    info.Entry.Value = prop.Value.ToObject<decimal>();
+                    info.Entry.ValueString = prop.Value.ToObject<string>();
                 else if(prop.Name == "amount")
-                    info.Entry.Amount = prop.Value.ToObject<decimal>();
+                    info.Entry.AmountString = prop.Value.ToObject<string>();
             }
             info.SeqNo = @event.ArgumentsKeywords["seq"].Deserialize<int>();
             //Debug.WriteLine("seq = " + info.SeqNo + " update = " + info.Update + " type = " + info.Type + " rate = " + info.Entry.Rate + " amount = " + info.Entry.Amount);

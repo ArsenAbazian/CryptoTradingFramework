@@ -155,9 +155,7 @@
             // gcRate2
             // 
             this.gcRate2.Caption = "Rate";
-            this.gcRate2.DisplayFormat.FormatString = "0.########";
-            this.gcRate2.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
-            this.gcRate2.FieldName = "Value";
+            this.gcRate2.FieldName = "ValueString";
             this.gcRate2.Name = "gcRate2";
             this.gcRate2.Visible = true;
             this.gcRate2.VisibleIndex = 0;
@@ -165,9 +163,7 @@
             // gcAmount2
             // 
             this.gcAmount2.Caption = "Amount";
-            this.gcAmount2.DisplayFormat.FormatString = "0.########";
-            this.gcAmount2.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
-            this.gcAmount2.FieldName = "Amount";
+            this.gcAmount2.FieldName = "AmountString";
             this.gcAmount2.Name = "gcAmount2";
             this.gcAmount2.Visible = true;
             this.gcAmount2.VisibleIndex = 1;
@@ -249,9 +245,7 @@
             // 
             this.gcRate.Caption = "Rate";
             this.gcRate.ColumnEdit = this.repositoryItemTextEdit1;
-            this.gcRate.DisplayFormat.FormatString = "0.########";
-            this.gcRate.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
-            this.gcRate.FieldName = "Value";
+            this.gcRate.FieldName = "ValueString";
             this.gcRate.Name = "gcRate";
             this.gcRate.SortMode = DevExpress.XtraGrid.ColumnSortMode.Value;
             this.gcRate.Visible = true;
@@ -266,9 +260,7 @@
             // gcAmount
             // 
             this.gcAmount.Caption = "Amount";
-            this.gcAmount.DisplayFormat.FormatString = "0.########";
-            this.gcAmount.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
-            this.gcAmount.FieldName = "Amount";
+            this.gcAmount.FieldName = "AmountString";
             this.gcAmount.Name = "gcAmount";
             this.gcAmount.Visible = true;
             this.gcAmount.VisibleIndex = 1;

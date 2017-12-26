@@ -48,9 +48,9 @@ namespace CryptoMarketClient.Common {
         }
 
         bool blockTotalSpend = false;
-        decimal buyPrice;
+        double buyPrice;
         [XtraSerializableProperty]
-        public decimal BuyPrice {
+        public double BuyPrice {
             get { return buyPrice; }
             set {
                 if(BuyPrice == value)
@@ -65,9 +65,9 @@ namespace CryptoMarketClient.Common {
             blockTotalSpend = false;
             RaisePropertyChanged("BuyPrice");
         }
-        decimal amount;
+        double amount;
         [XtraSerializableProperty]
-        public decimal Amount {
+        public double Amount {
             get { return amount; }
             set {
                 if(Amount == value)
@@ -82,9 +82,9 @@ namespace CryptoMarketClient.Common {
             blockTotalSpend = false;
             RaisePropertyChanged("Amount");
         }
-        decimal totalSpendInBaseCurrency;
+        double totalSpendInBaseCurrency;
         [XtraSerializableProperty]
-        public decimal TotalSpendInBaseCurrency {
+        public double TotalSpendInBaseCurrency {
             get { return totalSpendInBaseCurrency; }
             set {
                 if(TotalSpendInBaseCurrency == value)
@@ -99,20 +99,20 @@ namespace CryptoMarketClient.Common {
         }
 
         [XtraSerializableProperty]
-        public decimal StopLossPricePercent { get; set; } = 10m;
-        public decimal StopLossStartPrice { get { return BuyPrice * (100 - StopLossPricePercent) * 0.01m; } }
+        public double StopLossPricePercent { get; set; } = 10;
+        public double StopLossStartPrice { get { return BuyPrice * (100 - StopLossPricePercent) * 0.01; } }
 
         [XtraSerializableProperty]
-        public decimal TakeProfitPercent { get; set; } = 10m;
+        public double TakeProfitPercent { get; set; } = 10;
 
-        public decimal ActualProfit { get { return ActualPrice - BuyPrice; } }
-        public decimal ActualProfitUSD { get { return UsdTicker == null? 0: ActualProfit * UsdTicker.Last; } }
+        public double ActualProfit { get { return ActualPrice - BuyPrice; } }
+        public double ActualProfitUSD { get { return UsdTicker == null? 0: ActualProfit * UsdTicker.Last; } }
         [XtraSerializableProperty]
-        public decimal ActualPrice { get; set; }
+        public double ActualPrice { get; set; }
         [XtraSerializableProperty]
-        public decimal MaxPrice { get; set; }
-        public decimal PriceDelta { get { return MaxPrice * TakeProfitPercent * 0.01m; } }
-        public decimal TakeProfitPrice { get { return MaxPrice - PriceDelta; } }
+        public double MaxPrice { get; set; }
+        public double PriceDelta { get { return MaxPrice * TakeProfitPercent * 0.01; } }
+        public double TakeProfitPrice { get { return MaxPrice - PriceDelta; } }
         public string Name {
             get {
                 if(Ticker == null)

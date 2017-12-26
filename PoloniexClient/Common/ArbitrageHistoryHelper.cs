@@ -125,21 +125,21 @@ namespace CryptoMarketClient.Common {
         [XtraSerializableProperty]
         public bool HighestBidEnabled { get; set; }
         [XtraSerializableProperty]
-        public decimal LowestAsk { get; set; }
+        public double LowestAsk { get; set; }
         [XtraSerializableProperty]
-        public decimal HighestBid { get; set; }
+        public double HighestBid { get; set; }
         [XtraSerializableProperty]
-        public decimal Spread { get; set; }
+        public double Spread { get; set; }
         [XtraSerializableProperty]
-        public decimal Amount { get; set; }
+        public double Amount { get; set; }
         [XtraSerializableProperty]
-        public decimal MaxProfit { get; set; }
+        public double MaxProfit { get; set; }
         [XtraSerializableProperty]
-        public decimal MaxProfitUSD { get; set; }
-        public decimal TotalSpent { get { return Amount * LowestAsk; } }
+        public double MaxProfitUSD { get; set; }
+        public double TotalSpent { get { return Amount * LowestAsk; } }
         [XtraSerializableProperty]
-        public decimal RateInUSD { get; set; }
-        public decimal TotalSpentUSD { get { return TotalSpent * RateInUSD; } }
-        public decimal ProfitPercent { get { return TotalSpent == 0? 0: MaxProfit / TotalSpent * 100; } }
+        public double RateInUSD { get; set; }
+        public double TotalSpentUSD { get { return TotalSpent * RateInUSD; } }
+        public double ProfitPercent { get { return TotalSpent == 0? 0: MaxProfit / TotalSpent * 100; } }
     }
 }

@@ -65,9 +65,9 @@ namespace CryptoMarketClient {
                 foreach(var ci in ri.Cells) {
                     if(ci.Column == null)
                         continue;
-                    if(ci.Column.FieldName == "Value")
+                    if(ci.Column.FieldName == "ValueString")
                         ci.CellValue = entry.Value;
-                    else if(ci.Column.FieldName == "Amount")
+                    else if(ci.Column.FieldName == "AmountString")
                         ci.CellValue = entry.Amount;
                     else if(ci.Column.FieldName == "Volume")
                         ci.CellValue = entry.Volume;

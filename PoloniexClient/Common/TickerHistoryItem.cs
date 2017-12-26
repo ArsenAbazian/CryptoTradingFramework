@@ -11,11 +11,11 @@ namespace CryptoMarketClient {
         [XtraSerializableProperty]
         public DateTime Time { get; set; }
         [XtraSerializableProperty]
-        public decimal Bid { get; set; }
+        public double Bid { get; set; }
         [XtraSerializableProperty]
-        public decimal Ask { get; set; }
+        public double Ask { get; set; }
         [XtraSerializableProperty]
-        public decimal Current { get; set; }
+        public double Current { get; set; }
 
         public OrderBookEntry[] Bids { get; set; }
         public OrderBookEntry[] Asks { get; set; }
@@ -26,13 +26,13 @@ namespace CryptoMarketClient {
 
     public class TradeStatisticsItem {
         public DateTime Time { get; set; }
-        public decimal MinBuyPrice { get; set; }
-        public decimal MaxBuyPrice { get; set; }
-        public decimal BuyAmount { get; set; }
-        public decimal BuyVolume { get; set; }
-        public decimal MinSellPrice { get; set; }
-        public decimal MaxSellPrice { get; set; }
-        public decimal SellAmount { get; set; }
-        public decimal SellVolume { get; set; }
+        public double MinBuyPrice { get; set; }
+        public double MaxBuyPrice { get; set; }
+        public double BuyAmount { get; set; }
+        public double BuyVolume { get; set; }
+        public double MinSellPrice { get; set; }
+        public double MaxSellPrice { get; set; }
+        public double SellAmount { get; set; }
+        public double SellVolume { get; set; }
     }
 }

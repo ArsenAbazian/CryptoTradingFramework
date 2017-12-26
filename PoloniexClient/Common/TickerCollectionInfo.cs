@@ -60,39 +60,39 @@ namespace CryptoMarketClient {
 
         public TickerBase LowestAskTicker { get { return Arbitrage.LowestAskTicker; } }
         public TickerBase HighestBidTicker { get { return Arbitrage.HighestBidTicker; } }
-        public decimal Amount { get { return Arbitrage.Amount; } }
+        public double Amount { get { return Arbitrage.Amount; } }
         public string LowestAskHost { get { return Arbitrage.LowestAskHost; } }
         public string HighestBidHost { get { return Arbitrage.HighestBidHost; } }
-        public decimal LowestAskBalance { get { return Arbitrage.LowestAskBalance; } }
-        public decimal HighestBidBalance { get { return Arbitrage.HighestBidBalance; } }
-        public decimal AvailableAmount { get { return Arbitrage.AvailableAmount; } }
-        public decimal BuyTotal { get { return Arbitrage.BuyTotal; } }
-        public decimal LowestAsk { get { return Arbitrage.LowestAsk; } }
-        public decimal HighestBid { get { return Arbitrage.HighestBid; } }
-        public decimal Spread { get { return Arbitrage.Spread; } }
-        public decimal Total { get { return Arbitrage.Total; } }
-        public decimal LowestBidAskRelation { get { return Arbitrage.LowestBidAskRelation; } }
-        public decimal HighestBidAskRelation { get { return Arbitrage.HighestBidAskRelation; } }
-        public decimal TotalFee { get { return Arbitrage.TotalFee; } }
-        public decimal ExpectedProfitUSD { get { return Arbitrage.ExpectedProfitUSD; } }
-        public decimal MaxProfit { get { return Arbitrage.MaxProfit; } }
-        public decimal AvailableProfit { get { return Arbitrage.AvailableProfit; } }
-        public decimal AvailableProfitUSD { get { return Arbitrage.AvailableProfit; } }
-        public decimal MaxProfitUSD { get { return Arbitrage.MaxProfitUSD; } }
+        public double LowestAskBalance { get { return Arbitrage.LowestAskBalance; } }
+        public double HighestBidBalance { get { return Arbitrage.HighestBidBalance; } }
+        public double AvailableAmount { get { return Arbitrage.AvailableAmount; } }
+        public double BuyTotal { get { return Arbitrage.BuyTotal; } }
+        public double LowestAsk { get { return Arbitrage.LowestAsk; } }
+        public double HighestBid { get { return Arbitrage.HighestBid; } }
+        public double Spread { get { return Arbitrage.Spread; } }
+        public double Total { get { return Arbitrage.Total; } }
+        public double LowestBidAskRelation { get { return Arbitrage.LowestBidAskRelation; } }
+        public double HighestBidAskRelation { get { return Arbitrage.HighestBidAskRelation; } }
+        public double TotalFee { get { return Arbitrage.TotalFee; } }
+        public double ExpectedProfitUSD { get { return Arbitrage.ExpectedProfitUSD; } }
+        public double MaxProfit { get { return Arbitrage.MaxProfit; } }
+        public double AvailableProfit { get { return Arbitrage.AvailableProfit; } }
+        public double AvailableProfitUSD { get { return Arbitrage.AvailableProfit; } }
+        public double MaxProfitUSD { get { return Arbitrage.MaxProfitUSD; } }
         public bool LowestAskEnabled { get { return Arbitrage.LowestAskEnabled; } }
         public bool HighestBidEnabled { get { return Arbitrage.HighestBidEnabled; } }
         public bool Ready { get { return LowestAskEnabled && HighestBidEnabled; } }
-        public decimal BidShift { get { return Arbitrage.BidShift; } }
-        public decimal AskShift { get { return Arbitrage.AskShift; } }
-        public decimal BidHipe { get { return Arbitrage.BidHipe; } }
-        public decimal AskHipe { get { return Arbitrage.AskHipe; } }
+        public double BidShift { get { return Arbitrage.BidShift; } }
+        public double AskShift { get { return Arbitrage.AskShift; } }
+        public double BidHipe { get { return Arbitrage.BidHipe; } }
+        public double AskHipe { get { return Arbitrage.AskHipe; } }
 
-        public decimal[] BidHipes { get { return Tickers[0].OrderBook.BidHipes; } }
-        public decimal[] AskHipes { get { return Tickers[0].OrderBook.AskHipes; } }
+        public double[] BidHipes { get { return Tickers[0].OrderBook.BidHipes; } }
+        public double[] AskHipes { get { return Tickers[0].OrderBook.AskHipes; } }
 
-        public decimal[] BidEnergies { get { return Tickers[0].OrderBook.BidEnergies; } }
-        public decimal[] AskEnergies { get { return Tickers[0].OrderBook.AskEnergies; } }
-        public decimal TotalBalance { get;set; }
+        public double[] BidEnergies { get { return Tickers[0].OrderBook.BidEnergies; } }
+        public double[] AskEnergies { get { return Tickers[0].OrderBook.AskEnergies; } }
+        public double TotalBalance { get;set; }
     }
     
     public class SyncronizationItemInfo {
@@ -100,7 +100,7 @@ namespace CryptoMarketClient {
         public TickerBase Destination { get; set; }
 
         public string DestinationAddress { get; set; }
-        public decimal Amount { get; set; }
+        public double Amount { get; set; }
 
         public bool HasDestinationAddress { get { return !string.IsNullOrEmpty(DestinationAddress); } }
         public bool ObtainDestinationAddress() {

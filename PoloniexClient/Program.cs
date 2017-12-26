@@ -5,6 +5,7 @@ using DevExpress.XtraEditors;
 using DevExpress.XtraGrid;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -22,6 +23,23 @@ namespace CryptoMarketClient {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(true);
             WindowsFormsSettings.ForceDirectXPaint();
+
+            //string value = "0.4543530";
+            //Stopwatch timer = new Stopwatch();
+            //timer.Start();
+            //for(int i = 0; i < 1000000; i++) {
+            //    double dv = doubleConverter.Convert(value);
+            //}
+            //timer.Stop();
+            //long my = timer.ElapsedMilliseconds;
+            //timer.Reset();
+            //timer.Start();
+            //for(int i = 0; i < 1000000; i++) {
+            //    decimal dv = decimal.Parse(value);
+            //}
+            //timer.Stop();
+            //long their = timer.ElapsedMilliseconds;
+            //XtraMessageBox.Show("my = " + my + " their = " + their);
 
             CheckShowApiKeysForm();
             Application.Run(new MainForm());

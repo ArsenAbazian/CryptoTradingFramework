@@ -180,9 +180,7 @@
             // 
             // colAmount
             // 
-            this.colAmount.DisplayFormat.FormatString = "0.########";
-            this.colAmount.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
-            this.colAmount.FieldName = "Amount";
+            this.colAmount.FieldName = "AmountString";
             this.colAmount.Name = "colAmount";
             this.colAmount.Visible = true;
             this.colAmount.VisibleIndex = 2;
@@ -391,9 +389,7 @@
             // 
             // colRate
             // 
-            this.colRate.DisplayFormat.FormatString = "0.########";
-            this.colRate.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
-            this.colRate.FieldName = "Rate";
+            this.colRate.FieldName = "RateString";
             this.colRate.Name = "colRate";
             this.colRate.Visible = true;
             this.colRate.VisibleIndex = 3;
@@ -639,9 +635,7 @@
             // 
             // colAmount1
             // 
-            this.colAmount1.DisplayFormat.FormatString = "0.########";
-            this.colAmount1.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
-            this.colAmount1.FieldName = "Amount";
+            this.colAmount1.FieldName = "AmountString";
             this.colAmount1.Name = "colAmount1";
             this.colAmount1.Visible = true;
             this.colAmount1.VisibleIndex = 2;

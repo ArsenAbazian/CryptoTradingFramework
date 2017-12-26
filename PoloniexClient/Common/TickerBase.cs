@@ -217,8 +217,8 @@ namespace CryptoMarketClient {
                 return highestBidString;
             }
         }
-        decimal lowestAsk;
-        public decimal LowestAsk {
+        double lowestAsk;
+        public double LowestAsk {
             get { return lowestAsk; }
             set {
                 if(value != LowestAsk && LowestAsk != 0) {
@@ -228,8 +228,8 @@ namespace CryptoMarketClient {
                 lowestAsk = value;
             }
         }
-        decimal highestBid;
-        public decimal HighestBid {
+        double highestBid;
+        public double HighestBid {
             get { return highestBid; }
             set {
                 if(value != HighestBid && HighestBid != 0) {
@@ -240,8 +240,8 @@ namespace CryptoMarketClient {
             }
         }
         public bool IsFrozen { get; set; }
-        decimal last;
-        public decimal Last {
+        double last;
+        public double Last {
             get { return last; }
             set {
                 if(value == Last)
@@ -260,26 +260,26 @@ namespace CryptoMarketClient {
                 return lastString;
             }
         }
-        protected virtual string GetStringWithChangePercent(decimal value, decimal change) {
+        protected virtual string GetStringWithChangePercent(double value, double change) {
             return string.Format("<b>{0:0.########}</b> <size=-2>{1:0.##}%</size>", value, change / value * 100);
         }
-        public decimal BaseVolume { get; set; }
-        public decimal Volume { get; set; }
-        public decimal Hr24High { get; set; }
-        public decimal Hr24Low { get; set; }
-        public decimal Change { get; set; }
-        public decimal Spread { get { return LowestAsk - HighestBid; } }
-        public decimal BidChange { get; set; }
-        public decimal AskChange { get; set; }
-        public abstract decimal Fee { get; }
+        public double BaseVolume { get; set; }
+        public double Volume { get; set; }
+        public double Hr24High { get; set; }
+        public double Hr24Low { get; set; }
+        public double Change { get; set; }
+        public double Spread { get { return LowestAsk - HighestBid; } }
+        public double BidChange { get; set; }
+        public double AskChange { get; set; }
+        public abstract double Fee { get; }
 
         public TickerBase UsdTicker { get; set; }
 
-        public abstract decimal BaseCurrencyBalance { get; }
-        public abstract decimal MarketCurrencyBalance { get; }
+        public abstract double BaseCurrencyBalance { get; }
+        public abstract double MarketCurrencyBalance { get; }
         public abstract BalanceBase BaseBalanceInfo { get; }
         public abstract BalanceBase MarketBalanceInfo { get; }
-        public abstract decimal MarketCurrencyTotalBalance { get; }
+        public abstract double MarketCurrencyTotalBalance { get; }
         public abstract bool MarketCurrencyEnabled { get; }
 
         public string BaseCurrency { get; set; }
@@ -349,9 +349,9 @@ namespace CryptoMarketClient {
 
         public abstract bool UpdateBalance(CurrencyType type);
         public abstract string GetDepositAddress(CurrencyType type);
-        public abstract bool Buy(decimal lowestAsk, decimal amount);
-        public abstract bool Sell(decimal highestBid, decimal amount);
-        public abstract bool Withdraw(string currency, string address, decimal amount);
+        public abstract bool Buy(double lowestAsk, double amount);
+        public abstract bool Sell(double highestBid, double amount);
+        public abstract bool Withdraw(string currency, string address, double amount);
 
         protected WebClient WebClient { get; } = new MyWebClient();
         public bool IsUpdating { get; set; }

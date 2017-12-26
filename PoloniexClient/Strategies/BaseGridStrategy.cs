@@ -20,9 +20,9 @@ namespace CryptoMarketClient.Strategies {
         public List<OrderInfo> AskLines { get; } = new List<OrderInfo>();
 
         [XtraSerializableProperty]
-        public decimal BaseCurrencyMaximum { get; set; }
+        public double BaseCurrencyMaximum { get; set; }
         [XtraSerializableProperty]
-        public decimal MarketCurrencyMaximum { get; set; }
+        public double MarketCurrencyMaximum { get; set; }
 
         public override object HistoryDataSource => throw new NotImplementedException();
 
@@ -38,13 +38,13 @@ namespace CryptoMarketClient.Strategies {
         }
 
         /*
-        protected decimal CalcBuyTotalAmount(decimal baseCurrencyAmount, out decimal totalSpent, out decimal lowestAsk) {
+        protected double CalcBuyTotalAmount(double baseCurrencyAmount, out double totalSpent, out double lowestAsk) {
             totalSpent = TotalSpent;
-            decimal totalAmount = 0;
+            double totalAmount = 0;
             lowestAsk = 0;
             for(int i = 0; i < OrderBook.Depth; i++) {
                 OrderBookEntry e = Ticker.OrderBook.Asks[i];
-                decimal amount = e.Amount;
+                double amount = e.Amount;
                 lowestAsk = e.Value;
                 if(lowestAsk > AverageMarketPrice - GridStep)
                     break;
@@ -62,9 +62,9 @@ namespace CryptoMarketClient.Strategies {
         }
 
         public override bool Buy() {
-            decimal totalSpent = 0;
-            decimal lowestAsk = 0;
-            decimal totalAmount = CalcBuyTotalAmount(BaseCurrencyAmount, out totalSpent, out lowestAsk);
+            double totalSpent = 0;
+            double lowestAsk = 0;
+            double totalAmount = CalcBuyTotalAmount(BaseCurrencyAmount, out totalSpent, out lowestAsk);
 
             if(totalAmount == 0)
                 return true;
@@ -80,8 +80,8 @@ namespace CryptoMarketClient.Strategies {
             return false;
         }
 
-        protected decimal CalcTotalSellAmount(decimal marketCurrencyAmount, out decimal highestBid, out decimal totalProfit) {
-            decimal totalAmount = 0;
+        protected double CalcTotalSellAmount(double marketCurrencyAmount, out double highestBid, out double totalProfit) {
+            double totalAmount = 0;
             totalProfit = 0;
             highestBid = 0;
             for(int i = 0; i < OrderBook.Depth; i++) {
@@ -89,7 +89,7 @@ namespace CryptoMarketClient.Strategies {
                 if(e.Value < AverageMarketPrice + GridStep)
                     break;
                 if(totalAmount + e.Amount > marketCurrencyAmount) {
-                    decimal amount = marketCurrencyAmount - totalAmount;
+                    double amount = marketCurrencyAmount - totalAmount;
                     totalAmount = marketCurrencyAmount;
                     highestBid = e.Value;
                     totalProfit += (1 - 0.0025m) * amount * e.Value;
@@ -103,9 +103,9 @@ namespace CryptoMarketClient.Strategies {
         }
 
         public override bool Sell() {
-            decimal highestBid = 0;
-            decimal totalProfit = 0;
-            decimal totalAmount = CalcTotalSellAmount(MarketCurrencyAmount, out highestBid, out totalProfit);
+            double highestBid = 0;
+            double totalProfit = 0;
+            double totalAmount = CalcTotalSellAmount(MarketCurrencyAmount, out highestBid, out totalProfit);
             if(totalAmount == 0 || highestBid == 0)
                 return true;
             if(SellCore(highestBid, totalAmount, totalProfit)) {
@@ -120,7 +120,7 @@ namespace CryptoMarketClient.Strategies {
     }
 
     public class OrderInfo {
-        public decimal Rate { get; set; }
-        public decimal Amount { get; set; }
+        public double Rate { get; set; }
+        public double Amount { get; set; }
     }
 }

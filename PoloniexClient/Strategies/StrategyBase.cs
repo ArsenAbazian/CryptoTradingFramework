@@ -30,10 +30,10 @@ namespace CryptoMarketClient.Strategies {
         protected virtual void Log(LogType logType, string text) {
             LogManager.Default.AddMessage(logType, Name + "-" + Ticker.HostName + "-" + Ticker.Name, text);
         }
-        protected string GetRateAmountString(decimal rate, decimal amount) {
+        protected string GetRateAmountString(double rate, double amount) {
             return amount.ToString("0.########") + " by " + rate.ToString("0.########");
         }
-        protected virtual bool Buy(decimal rate, decimal amount) {
+        protected virtual bool Buy(double rate, double amount) {
             if(!DemoMode && !Ticker.Buy(rate, amount)) {
                 Log(LogType.Error, "Buy " + GetRateAmountString(rate, amount) + " failed.");
                 return false;
@@ -41,7 +41,7 @@ namespace CryptoMarketClient.Strategies {
             Log(LogType.Success, "Buy " + GetRateAmountString(rate, amount) + " succeded.");
             return true;
         }
-        protected virtual bool Sell(decimal rate, decimal amount) {
+        protected virtual bool Sell(double rate, double amount) {
             if(!DemoMode && !Ticker.Sell(rate, amount)) {
                 Log(LogType.Error, "Sell " + GetRateAmountString(rate, amount) + " failed.");
                 return false;
@@ -49,7 +49,7 @@ namespace CryptoMarketClient.Strategies {
             Log(LogType.Success, "Sell " + GetRateAmountString(rate, amount) + " succeded.");
             return true;
         }
-        protected virtual bool PlaceBid(decimal rate, decimal amount) {
+        protected virtual bool PlaceBid(double rate, double amount) {
             if(!DemoMode && !Ticker.Buy(rate, amount)) {
                 Log(LogType.Error, "Place Bid " + GetRateAmountString(rate, amount) + " failed.");
                 return false;
@@ -57,7 +57,7 @@ namespace CryptoMarketClient.Strategies {
             Log(LogType.Success, "Place Bid " + GetRateAmountString(rate, amount) + " succeded.");
             return true;
         }
-        protected virtual bool PlaceAsk(decimal rate, decimal amount) {
+        protected virtual bool PlaceAsk(double rate, double amount) {
             if(!DemoMode && !Ticker.Sell(rate, amount)) {
                 Log(LogType.Error, "Place Ask " + GetRateAmountString(rate, amount) + " failed.");
                 return false;
@@ -79,8 +79,8 @@ namespace CryptoMarketClient.Strategies {
     public class StrategyHistoryItem {
         public DateTime Time { get; set; }
         public StrategyOperation Operation { get; set; }
-        public decimal Rate { get; set; }
-        public decimal Amount { get; set; }
-        public decimal Total { get; set; }
+        public double Rate { get; set; }
+        public double Amount { get; set; }
+        public double Total { get; set; }
     }
 }
