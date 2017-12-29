@@ -22,10 +22,6 @@ namespace CryptoMarketClient {
         public TickerBase(Exchange exchange) {
             Exchange = exchange;
             OrderBook = new OrderBook(this);
-            BidAskChart = CreateChartSnapshotControl();
-            OrderBookChart = CreateOrderBookChartControl();
-            OrderBookSnapshot = CreateOrderBookSnapshotImage();
-            BidAskSnapshot = CreateChartSnapshotImage();
             UpdateMode = TickerUpdateMode.Self;
             IsActual = true;
         }
@@ -126,11 +122,39 @@ namespace CryptoMarketClient {
         public BindingList<CandleStickData> CandleStickData { get; set; } = new BindingList<CryptoMarketClient.CandleStickData>();
         public BindingList<CurrencyStatusHistoryItem> MarketCurrencyStatusHistory { get; set; } = new BindingList<CurrencyStatusHistoryItem>();
 
-        Image BidAskSnapshot { get; }
-        Image OrderBookSnapshot { get; }
+        Image bidAskSnapshot;
+        Image BidAskSnapshot {
+            get {
+                if(bidAskSnapshot == null)
+                    bidAskSnapshot = CreateChartSnapshotImage();
+                return bidAskSnapshot;
+            }
+        }
+        Image orderBookSnapshot;
+        Image OrderBookSnapshot {
+            get {
+                if(orderBookSnapshot == null)
+                    orderBookSnapshot = CreateOrderBookSnapshotImage();
+                return orderBookSnapshot;
+            }
+        }
 
-        protected SnapshotChartControl BidAskChart { get; private set; }
-        protected SnapshotChartControl OrderBookChart { get; private set; }
+        SnapshotChartControl bidAskChart;
+        protected SnapshotChartControl BidAskChart {
+            get {
+                if(bidAskChart == null)
+                    bidAskChart = CreateChartSnapshotControl();
+                return bidAskChart;
+            }
+        }
+        SnapshotChartControl orderBookChart;
+        protected SnapshotChartControl OrderBookChart {
+            get {
+                if(orderBookChart == null)
+                    orderBookChart = CreateOrderBookChartControl();
+                return orderBookChart;
+            }
+        }
 
         public virtual void MakeBidAskSnapshot() {
             BidAskChart.Render(BidAskSnapshot);

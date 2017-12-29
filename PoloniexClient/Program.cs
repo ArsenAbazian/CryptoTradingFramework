@@ -24,7 +24,7 @@ namespace CryptoMarketClient {
             Application.SetCompatibleTextRenderingDefault(true);
             WindowsFormsSettings.ForceDirectXPaint();
 
-            //string value = "0.4543530";
+            //string value = "0.45435300";
             //Stopwatch timer = new Stopwatch();
             //timer.Start();
             //for(int i = 0; i < 1000000; i++) {
