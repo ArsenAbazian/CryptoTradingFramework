@@ -72,14 +72,14 @@ namespace CryptoMarketClient {
                     UpdateBalanceNotification = false;
                     foreach(Exchange exchange in Exchange.Connected) {
                         foreach(BalanceBase info in exchange.Balances) {
-                            TelegramBot.Default.SendNotification(exchange.Name + " balance " + info.Currency + " = <b>" + info.Available.ToString("0.########") + "</b>");
+                            TelegramBot.Default.SendNotification(exchange.Name + " balance " + info.CurrencyTicker + " = <b>" + info.Available.ToString("0.########") + "</b>");
                         }
                     }
 
                     foreach(Exchange exchange in Exchange.Connected) {
                         foreach(BalanceBase info in exchange.Balances) {
                             if(info.DepositChanged > 0.05) {
-                                TelegramBot.Default.SendNotification(exchange.Name + " deposit changed: " + info.Currency + " = " + info.Available);
+                                TelegramBot.Default.SendNotification(exchange.Name + " deposit changed: " + info.CurrencyTicker + " = " + info.Available);
                             }
                         }
                     }

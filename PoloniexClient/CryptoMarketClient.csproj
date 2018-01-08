@@ -196,11 +196,32 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BalancesUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="BalancesUserControl.Designer.cs">
+      <DependentUpon>BalancesUserControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Bittrex\BittrexCurrencyInfo.cs" />
+    <Compile Include="Common\CachedCollection.cs" />
+    <Compile Include="Common\Extensions.cs" />
     <Compile Include="CurrencyMonitoringForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="CurrencyMonitoringForm.Designer.cs">
       <DependentUpon>CurrencyMonitoringForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ExchangeForm2.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ExchangeForm2.Designer.cs">
+      <DependentUpon>ExchangeForm2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FavoritePairsUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="FavoritePairsUserControl.Designer.cs">
+      <DependentUpon>FavoritePairsUserControl.cs</DependentUpon>
     </Compile>
     <Compile Include="MyTradesCollectionControl.cs">
       <SubType>UserControl</SubType>
@@ -214,11 +235,11 @@
     <Compile Include="TrailingCollectionControl.Designer.cs">
       <DependentUpon>TrailingCollectionControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="TrailngCollectionForm.cs">
+    <Compile Include="TrailingCollectionForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="TrailngCollectionForm.Designer.cs">
-      <DependentUpon>TrailngCollectionForm.cs</DependentUpon>
+    <Compile Include="TrailingCollectionForm.Designer.cs">
+      <DependentUpon>TrailingCollectionForm.cs</DependentUpon>
     </Compile>
     <Compile Include="AnalyticsForm.cs">
       <SubType>Form</SubType>
@@ -440,8 +461,17 @@
     <Compile Include="TrailingSettinsForm.Designer.cs">
       <DependentUpon>TrailingSettinsForm.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="BalancesUserControl.resx">
+      <DependentUpon>BalancesUserControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="CurrencyMonitoringForm.resx">
       <DependentUpon>CurrencyMonitoringForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ExchangeForm2.resx">
+      <DependentUpon>ExchangeForm2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FavoritePairsUserControl.resx">
+      <DependentUpon>FavoritePairsUserControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MyTradesCollectionControl.resx">
       <DependentUpon>MyTradesCollectionControl.cs</DependentUpon>
@@ -449,8 +479,8 @@
     <EmbeddedResource Include="TrailingCollectionControl.resx">
       <DependentUpon>TrailingCollectionControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="TrailngCollectionForm.resx">
-      <DependentUpon>TrailngCollectionForm.cs</DependentUpon>
+    <EmbeddedResource Include="TrailingCollectionForm.resx">
+      <DependentUpon>TrailingCollectionForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="AnalyticsForm.resx">
       <DependentUpon>AnalyticsForm.cs</DependentUpon>
@@ -528,6 +558,7 @@
     </Compile>
     <EmbeddedResource Include="TickersCollectionForm.resx">
       <DependentUpon>TickersCollectionForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="TickerInfoControl.resx">
       <DependentUpon>TickerInfoControl.cs</DependentUpon>

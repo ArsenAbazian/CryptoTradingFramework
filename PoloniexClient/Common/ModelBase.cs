@@ -62,7 +62,7 @@ namespace CryptoMarketClient {
 
         public List<TickerBase> Tickers { get; } = new List<TickerBase>();
         public List<OpenedOrderInfo> OpenedOrders { get; } = new List<OpenedOrderInfo>();
-        public List<BalanceBase> Balances { get; } = new List<BalanceBase>();
+        public IEnumerable<BalanceBase> Balances { get; protected set; }
 
         [XtraSerializableProperty(XtraSerializationVisibility.Collection, true, false, true)]
         public List<PinnedTickerInfo> PinnedTickers { get; set; } = new List<PinnedTickerInfo>();
@@ -303,6 +303,7 @@ namespace CryptoMarketClient {
         public abstract bool UpdateOpenedOrders(TickerBase tickerBase);
         public abstract bool UpdateCurrencies();
         public abstract bool UpdateBalances();
+        public abstract bool GetCurrenciesInfo();
         public virtual BindingList<CandleStickData> GetCandleStickData(TickerBase ticker, int candleStickPeriodMin, DateTime start, int periodInSeconds) {
             return new BindingList<CandleStickData>();
         }

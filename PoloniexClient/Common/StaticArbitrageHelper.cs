@@ -56,11 +56,11 @@ namespace CryptoMarketClient.Common {
         public List<BalanceBase> GetUsdtBalances() {
             List<BalanceBase> list = new List<BalanceBase>();
             if(PoloniexExchange.Default.IsConnected) {
-                BalanceBase item = PoloniexExchange.Default.Balances.FirstOrDefault(b => b.Currency == "USDT");
+                BalanceBase item = PoloniexExchange.Default.Balances.FirstOrDefault(b => b.CurrencyTicker == "USDT");
                 if(item != null) list.Add(item);
             }
             if(BittrexExchange.Default.IsConnected) {
-                BalanceBase item = BittrexExchange.Default.Balances.FirstOrDefault(b => b.Currency == "USDT");
+                BalanceBase item = BittrexExchange.Default.Balances.FirstOrDefault(b => b.CurrencyTicker == "USDT");
                 if(item != null) list.Add(item);
             }
             return list;

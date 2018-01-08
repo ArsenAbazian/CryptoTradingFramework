@@ -1,5 +1,5 @@
 ﻿namespace CryptoMarketClient {
-    partial class TrailngCollectionForm {
+    partial class TrailingCollectionForm {
         /// <summary>
         /// Required designer variable.
         /// </summary>

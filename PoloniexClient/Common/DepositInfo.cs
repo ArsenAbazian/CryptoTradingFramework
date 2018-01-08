@@ -48,7 +48,7 @@ namespace CryptoMarketClient.Common {
                     continue;
                 DepositInfo dep = new DepositInfo();
                 dep.HostName = PoloniexExchange.Default.Name;
-                dep.Currency = info.Currency;
+                dep.Currency = info.CurrencyTicker;
                 dep.Amount = info.Available;
 
                 if(dep.Currency != "BTC") {
@@ -88,7 +88,7 @@ namespace CryptoMarketClient.Common {
                     continue;
                 DepositInfo dep = new DepositInfo();
                 dep.HostName = BittrexExchange.Default.Name;
-                dep.Currency = info.Currency;
+                dep.Currency = info.CurrencyTicker;
                 dep.Amount = info.Available;
 
                 if(dep.Currency != "BTC") {

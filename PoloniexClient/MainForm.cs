@@ -67,8 +67,19 @@ namespace CryptoMarketClient {
             }
         }
 
+        ExchangeForm2 bittrexForm;
+        public ExchangeForm2 BittrexForm {
+            get {
+                if (bittrexForm == null || bittrexForm.IsDisposed) {
+                    bittrexForm = new ExchangeForm2(BittrexExchange.Default);
+                    bittrexForm.MdiParent = this;
+                }
+                return bittrexForm;
+            }
+        }
+
         TickersCollectionForm bittrexMarketsForm;
-        public TickersCollectionForm BittrextMarketsForm {
+        public TickersCollectionForm BittrexMarketsForm {
             get {
                 if(bittrexMarketsForm == null || bittrexMarketsForm.IsDisposed) {
                     bittrexMarketsForm = new TickersCollectionForm(BittrexExchange.Default);
@@ -114,11 +125,13 @@ namespace CryptoMarketClient {
         private void bcBittrex_CheckedChanged(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
             if(this.bcBittrex.Checked) {
                 BittrexExchange.Default.IsConnected = true;
-                BittrextMarketsForm.Show();
+                BittrexForm.Show();
+                //BittrexMarketsForm.Show();
             }
             else {
                 BittrexExchange.Default.IsConnected = false;
-                BittrextMarketsForm.Hide();
+                BittrexForm.Close();
+                //BittrexMarketsForm.Hide();
             }
         }
 
@@ -222,11 +235,11 @@ namespace CryptoMarketClient {
 
         }
 
-        TrailngCollectionForm activeTrailing;
-        protected TrailngCollectionForm ActiveTrailng {
+        TrailingCollectionForm activeTrailing;
+        protected TrailingCollectionForm ActiveTrailing {
             get {
                 if(activeTrailing == null || activeTrailing.IsDisposed) {
-                    activeTrailing = new TrailngCollectionForm();
+                    activeTrailing = new TrailingCollectionForm();
                     activeTrailing.MdiParent = this;
                 }
                 return activeTrailing;
@@ -234,8 +247,8 @@ namespace CryptoMarketClient {
         }
 
         private void barButtonItem1_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
-            ActiveTrailng.Show();
-            ActiveTrailng.Activate();
+            ActiveTrailing.Show();
+            ActiveTrailing.Activate();
         }
 
         private void barButtonItem2_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {

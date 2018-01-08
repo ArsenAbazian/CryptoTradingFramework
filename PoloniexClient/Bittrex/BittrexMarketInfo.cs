@@ -33,7 +33,7 @@ namespace CryptoMarketClient.Bittrex {
         public override BalanceBase BaseBalanceInfo {
             get {
                 if(baseBalanceInfo == null)
-                    baseBalanceInfo = BittrexExchange.Default.Balances.FirstOrDefault((b) => b.Currency == BaseCurrency);
+                    baseBalanceInfo = BittrexExchange.Default.Balances.FirstOrDefault((b) => b.CurrencyTicker == BaseCurrency);
                 return baseBalanceInfo;
             }
         }
@@ -41,7 +41,7 @@ namespace CryptoMarketClient.Bittrex {
         public override BalanceBase MarketBalanceInfo {
             get {
                 if(marketBalanceInfo == null)
-                    marketBalanceInfo = BittrexExchange.Default.Balances.FirstOrDefault((b) => b.Currency == MarketCurrency);
+                    marketBalanceInfo = BittrexExchange.Default.Balances.FirstOrDefault((b) => b.CurrencyTicker == MarketCurrency);
                 return marketBalanceInfo;
             }
         }
@@ -50,7 +50,7 @@ namespace CryptoMarketClient.Bittrex {
         protected BittrexCurrencyInfo MarketCurrencyInfo {
             get {
                 if(marketCurrencyInfo == null)
-                    marketCurrencyInfo = BittrexExchange.Default.Currencies.FirstOrDefault(c => c.Currency == MarketCurrency);
+                    marketCurrencyInfo = BittrexExchange.Default.Currencies.FirstOrDefault(c => c.CurrencyTicker == MarketCurrency);
                 return marketCurrencyInfo;
             }
         }
@@ -97,15 +97,5 @@ namespace CryptoMarketClient.Bittrex {
         }
         public override string HostName { get { return "Bittrex"; } }
         public override string WebPageAddress { get { return "https://bittrex.com/Market/Index?MarketName=" + Name; } }
-    }
-
-    public class BittrexCurrencyInfo {
-        public string Currency { get; set; }
-        public string CurrencyLong { get; set; }
-        public int MinConfirmation { get; set; }
-        public double TxFree { get; set; }
-        public bool IsActive { get; set; }
-        public string CoinType { get; set; }
-        public string BaseAddress { get; set; }
     }
 }

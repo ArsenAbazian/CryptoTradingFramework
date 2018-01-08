@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using CryptoMarketClient.Common;
 
 namespace CryptoMarketClient.Poloniex {
     public class PoloniexCurrencyInfo {
@@ -11,5 +9,14 @@ namespace CryptoMarketClient.Poloniex {
         public double TxFee { get; set; }
         public double MinConfirmation { get; set; }
         public bool Disabled { get; set; }
+    }
+
+    public class PoloniexCurrencyInfoList : CachedList<string, PoloniexCurrencyInfo> {
+        public PoloniexCurrencyInfoList() {
+        }
+
+        protected override string GetKey(PoloniexCurrencyInfo item) {
+            return item.Currency;
+        }
     }
 }

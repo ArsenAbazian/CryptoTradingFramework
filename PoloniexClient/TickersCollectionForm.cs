@@ -39,12 +39,20 @@ namespace CryptoMarketClient {
 
         protected override void OnShown(EventArgs e) {
             base.OnShown(e);
-            Exchange.LoadTickers();
+
+            gridView1.ShowLoadingPanel();
             this.gridControl1.DataSource = Exchange.Tickers;
             HasShown = true;
+            InitExchange();
+        }
+
+        async void InitExchange() {
+            await Task<bool>.Factory.StartNew(() => Exchange.LoadTickers(), TaskCreationOptions.LongRunning);
             UpdateSelectedTickersFromExchange();
             Timer.InitializeLifetimeService();
+            gridView1.HideLoadingPanel();
         }
+
         void UpdateSelectedTickersFromExchange() {
             UpdatePinnedItems();
         }

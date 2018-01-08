@@ -1,13 +1,23 @@
-﻿using CryptoMarketClient.Common;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using CryptoMarketClient.Common;
 
 namespace CryptoMarketClient.Poloniex {
     public class PoloniexAccountBalanceInfo : BalanceBase {
-        public override string Exchange => "Poloniex";
+        public PoloniexAccountBalanceInfo(string ticker)
+            : base(ticker) {
+        }
 
+        public override string Exchange => "Poloniex";
+    }
+
+    public class PoloniexAccountBalanceInfoList : CachedList<string, PoloniexAccountBalanceInfo> {
+        public PoloniexAccountBalanceInfoList() {
+        }
+
+        protected override string GetKey(PoloniexAccountBalanceInfo item) {
+            return item.CurrencyTicker;
+        }
     }
 }

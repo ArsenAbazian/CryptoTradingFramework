@@ -6,8 +6,13 @@ using System.Threading.Tasks;
 
 namespace CryptoMarketClient.Common {
     public abstract class BalanceBase {
+        protected BalanceBase(string ticker) {
+            CurrencyTicker = ticker;
+        }
+
         public abstract string Exchange { get; }
-        public string Currency { get; set; }
+        public string CurrencyTicker { get; set; }
+        public string CurrencyName { get; set; }
         public double Available { get; set; }
         public double LastAvailable { get; set; }
         public double OnOrders { get; set; }
@@ -16,9 +21,9 @@ namespace CryptoMarketClient.Common {
         public double DepositChanged {
             get {
                 double max = Math.Max(Available, LastAvailable);
-                double delta = Math.Abs(Available - LastAvailable);
-                if(max == 0)
+                if (max == 0)
                     return 0;
+                double delta = Math.Abs(Available - LastAvailable);
                 return (delta / max);
             }
         }

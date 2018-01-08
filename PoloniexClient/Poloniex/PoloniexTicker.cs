@@ -39,14 +39,14 @@ namespace CryptoMarketClient {
         public override BalanceBase BaseBalanceInfo {
             get {
                 if(firstInfo == null)
-                    firstInfo = PoloniexExchange.Default.Balances.FirstOrDefault((b) => b.Currency == BaseCurrency);
+                    firstInfo = PoloniexExchange.Default.Balances.FirstOrDefault((b) => b.CurrencyTicker == BaseCurrency);
                 return firstInfo;
             }
         }
         public override BalanceBase MarketBalanceInfo {
             get {
                 if(secondInfo == null)
-                    secondInfo = PoloniexExchange.Default.Balances.FirstOrDefault((b) => b.Currency == MarketCurrency);
+                    secondInfo = PoloniexExchange.Default.Balances.FirstOrDefault((b) => b.CurrencyTicker == MarketCurrency);
                 return secondInfo;
             }
         }

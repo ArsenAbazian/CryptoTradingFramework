@@ -1,14 +1,8 @@
-﻿using CryptoMarketClient.Bittrex;
-using DevExpress.LookAndFeel;
-using DevExpress.Utils.DirectXPaint;
-using DevExpress.XtraEditors;
-using DevExpress.XtraGrid;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using DevExpress.LookAndFeel;
+using DevExpress.XtraEditors;
 
 namespace CryptoMarketClient {
     static class Program {
@@ -22,7 +16,8 @@ namespace CryptoMarketClient {
             UserLookAndFeel.Default.SetSkinStyle("Office 2013");
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(true);
-            WindowsFormsSettings.ForceDirectXPaint();
+            DevExpress.Data.CurrencyDataController.DisableThreadingProblemsDetection = true;
+            //WindowsFormsSettings.ForceDirectXPaint();
 
             //string value = "0.4543530";
             //Stopwatch timer = new Stopwatch();

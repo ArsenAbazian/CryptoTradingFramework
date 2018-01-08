@@ -186,17 +186,17 @@
             // gridControl1
             // 
             this.gridControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gridControl1.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(24, 23, 24, 23);
-            this.gridControl1.Location = new System.Drawing.Point(0, 141);
+            this.gridControl1.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(12);
+            this.gridControl1.Location = new System.Drawing.Point(0, 113);
             this.gridControl1.MainView = this.gridView1;
-            this.gridControl1.Margin = new System.Windows.Forms.Padding(24, 23, 24, 23);
+            this.gridControl1.Margin = new System.Windows.Forms.Padding(12);
             this.gridControl1.Name = "gridControl1";
             this.gridControl1.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repositoryItemSparklineEdit1,
             this.repositoryItemCheckEdit1,
             this.repositoryItemTextEdit1,
             this.teValueWithChange});
-            this.gridControl1.Size = new System.Drawing.Size(1451, 721);
+            this.gridControl1.Size = new System.Drawing.Size(726, 335);
             this.gridControl1.TabIndex = 0;
             this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridView1});
@@ -432,13 +432,13 @@
             this.bbRemoveByRightClick,
             this.bbMonitorOnlySelected});
             this.bbOpenedOrders.Location = new System.Drawing.Point(0, 0);
-            this.bbOpenedOrders.Margin = new System.Windows.Forms.Padding(24, 23, 24, 23);
+            this.bbOpenedOrders.Margin = new System.Windows.Forms.Padding(12);
             this.bbOpenedOrders.MaxItemId = 14;
             this.bbOpenedOrders.Name = "bbOpenedOrders";
             this.bbOpenedOrders.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
             this.ribbonPage1});
             this.bbOpenedOrders.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonControlStyle.OfficeUniversal;
-            this.bbOpenedOrders.Size = new System.Drawing.Size(1451, 103);
+            this.bbOpenedOrders.Size = new System.Drawing.Size(726, 84);
             // 
             // barCheckItem1
             // 
@@ -567,11 +567,11 @@
             this.standaloneBarDockControl1.AutoSize = true;
             this.standaloneBarDockControl1.CausesValidation = false;
             this.standaloneBarDockControl1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.standaloneBarDockControl1.Location = new System.Drawing.Point(0, 103);
+            this.standaloneBarDockControl1.Location = new System.Drawing.Point(0, 84);
             this.standaloneBarDockControl1.Manager = this.barManager1;
-            this.standaloneBarDockControl1.Margin = new System.Windows.Forms.Padding(16, 15, 16, 15);
+            this.standaloneBarDockControl1.Margin = new System.Windows.Forms.Padding(8);
             this.standaloneBarDockControl1.Name = "standaloneBarDockControl1";
-            this.standaloneBarDockControl1.Size = new System.Drawing.Size(1451, 38);
+            this.standaloneBarDockControl1.Size = new System.Drawing.Size(726, 29);
             this.standaloneBarDockControl1.Text = "standaloneBarDockControl1";
             // 
             // barDockControlTop
@@ -580,17 +580,17 @@
             this.barDockControlTop.Dock = System.Windows.Forms.DockStyle.Top;
             this.barDockControlTop.Location = new System.Drawing.Point(0, 0);
             this.barDockControlTop.Manager = this.barManager1;
-            this.barDockControlTop.Margin = new System.Windows.Forms.Padding(16, 15, 16, 15);
-            this.barDockControlTop.Size = new System.Drawing.Size(1451, 0);
+            this.barDockControlTop.Margin = new System.Windows.Forms.Padding(8);
+            this.barDockControlTop.Size = new System.Drawing.Size(726, 0);
             // 
             // barDockControlBottom
             // 
             this.barDockControlBottom.CausesValidation = false;
             this.barDockControlBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.barDockControlBottom.Location = new System.Drawing.Point(0, 862);
+            this.barDockControlBottom.Location = new System.Drawing.Point(0, 448);
             this.barDockControlBottom.Manager = this.barManager1;
-            this.barDockControlBottom.Margin = new System.Windows.Forms.Padding(16, 15, 16, 15);
-            this.barDockControlBottom.Size = new System.Drawing.Size(1451, 0);
+            this.barDockControlBottom.Margin = new System.Windows.Forms.Padding(8);
+            this.barDockControlBottom.Size = new System.Drawing.Size(726, 0);
             // 
             // barDockControlLeft
             // 
@@ -598,17 +598,17 @@
             this.barDockControlLeft.Dock = System.Windows.Forms.DockStyle.Left;
             this.barDockControlLeft.Location = new System.Drawing.Point(0, 0);
             this.barDockControlLeft.Manager = this.barManager1;
-            this.barDockControlLeft.Margin = new System.Windows.Forms.Padding(16, 15, 16, 15);
-            this.barDockControlLeft.Size = new System.Drawing.Size(0, 862);
+            this.barDockControlLeft.Margin = new System.Windows.Forms.Padding(8);
+            this.barDockControlLeft.Size = new System.Drawing.Size(0, 448);
             // 
             // barDockControlRight
             // 
             this.barDockControlRight.CausesValidation = false;
             this.barDockControlRight.Dock = System.Windows.Forms.DockStyle.Right;
-            this.barDockControlRight.Location = new System.Drawing.Point(1451, 0);
+            this.barDockControlRight.Location = new System.Drawing.Point(726, 0);
             this.barDockControlRight.Manager = this.barManager1;
-            this.barDockControlRight.Margin = new System.Windows.Forms.Padding(16, 15, 16, 15);
-            this.barDockControlRight.Size = new System.Drawing.Size(0, 862);
+            this.barDockControlRight.Margin = new System.Windows.Forms.Padding(8);
+            this.barDockControlRight.Size = new System.Drawing.Size(0, 448);
             // 
             // popupMenu1
             // 
@@ -619,9 +619,9 @@
             // 
             // TickersCollectionForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1451, 862);
+            this.ClientSize = new System.Drawing.Size(726, 448);
             this.Controls.Add(this.gridControl1);
             this.Controls.Add(this.standaloneBarDockControl1);
             this.Controls.Add(this.bbOpenedOrders);
@@ -629,7 +629,7 @@
             this.Controls.Add(this.barDockControlRight);
             this.Controls.Add(this.barDockControlBottom);
             this.Controls.Add(this.barDockControlTop);
-            this.Margin = new System.Windows.Forms.Padding(24, 23, 24, 23);
+            this.Margin = new System.Windows.Forms.Padding(12);
             this.Name = "TickersCollectionForm";
             this.Text = "Poloniex Markets";
             ((System.ComponentModel.ISupportInitialize)(this.teValueWithChange)).EndInit();
