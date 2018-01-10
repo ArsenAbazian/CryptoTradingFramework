@@ -250,10 +250,6 @@ namespace CryptoMarketClient {
             Exchange.Save();
         }
 
-        private void gridControl1_Click(object sender, EventArgs e) {
-
-        }
-
         private void bbMonitorOnlySelected_CheckedChanged(object sender, ItemClickEventArgs e) {
 
         }

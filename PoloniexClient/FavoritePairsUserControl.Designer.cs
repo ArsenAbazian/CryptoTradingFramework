@@ -89,7 +89,6 @@
             this.searchLookUpEdit1.Properties.DisplayMember = "CurrencyTicker";
             this.searchLookUpEdit1.Properties.NullText = "";
             this.searchLookUpEdit1.Properties.NullValuePromptShowForEmptyValue = true;
-            this.searchLookUpEdit1.Properties.Padding = new System.Windows.Forms.Padding(0, 0, 0, 0);
             this.searchLookUpEdit1.Properties.PopupView = this.searchLookUpEdit1View;
             this.searchLookUpEdit1.Size = new System.Drawing.Size(305, 20);
             this.searchLookUpEdit1.TabIndex = 1;

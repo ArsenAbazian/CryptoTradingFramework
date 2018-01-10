@@ -1,19 +1,35 @@
-﻿using CryptoMarketClient.Common;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using CryptoMarketClient.Common;
 
 namespace CryptoMarketClient.Bittrex {
     public class BittrexAccountBalanceInfo : BalanceBase {
+        double balance;
+        double pending;
+
         public BittrexAccountBalanceInfo(string ticker)
             : base(ticker) {
         }
 
         public override string Exchange => "Bittrex";
-        public double Balance { get; set; }
-        public double Pending { get; set; }
+        public double Balance {
+            get { return this.balance; }
+            set {
+                if (this.balance == value)
+                    return;
+                this.balance = value;
+                RaisePropertyChanged(nameof(Balance));
+            }
+        }
+        public double Pending {
+            get { return this.pending; }
+            set {
+                if (this.pending == value)
+                    return;
+                this.pending = value;
+                RaisePropertyChanged(nameof(Pending));
+            }
+        }
         public bool Requested { get; set; }
         public string Uuid { get; set; }
     }

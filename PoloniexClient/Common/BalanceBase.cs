@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CryptoMarketClient.Common {
-    public abstract class BalanceBase {
+    public abstract class BalanceBase : INotifyPropertyChanged {
+        double available;
         protected BalanceBase(string ticker) {
             CurrencyTicker = ticker;
         }
@@ -13,7 +12,15 @@ namespace CryptoMarketClient.Common {
         public abstract string Exchange { get; }
         public string CurrencyTicker { get; set; }
         public string CurrencyName { get; set; }
-        public double Available { get; set; }
+        public double Available {
+            get { return this.available; }
+            set {
+                if (this.available == value)
+                    return;
+                this.available = value;
+                RaisePropertyChanged(nameof(Available));
+            }
+        }
         public double LastAvailable { get; set; }
         public double OnOrders { get; set; }
         public double BtcValue { get; set; }
@@ -26,6 +33,13 @@ namespace CryptoMarketClient.Common {
                 double delta = Math.Abs(Available - LastAvailable);
                 return (delta / max);
             }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void RaisePropertyChanged(string propertyName) {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

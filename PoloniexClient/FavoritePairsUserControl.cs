@@ -18,7 +18,6 @@ namespace CryptoMarketClient {
         async void FavoritePairsUserControl_Load(object sender, EventArgs e) {
             await Task<bool>.Factory.StartNew(() => Exchange.GetCurrenciesInfo(), TaskCreationOptions.LongRunning);
             searchLookUpEdit1.Properties.DataSource = ((BittrexExchange)Exchange).Currencies;
-            //glueCurrencies.Properties.DataSource = ((BittrexExchange)Exchange).Currencies;
         }
 
         void searchLookUpEdit1_Popup(object sender, EventArgs e) {
