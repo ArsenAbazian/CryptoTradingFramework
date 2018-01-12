@@ -24,9 +24,10 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
+            this.components = new System.ComponentModel.Container();
             this.dataLayoutControl1 = new DevExpress.XtraDataLayout.DataLayoutControl();
             this.BuyPriceTextEdit = new DevExpress.XtraEditors.TextEdit();
-            this.trailingSettingsBindingSource = new System.Windows.Forms.BindingSource();
+            this.trailingSettingsBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.AmountTextEdit = new DevExpress.XtraEditors.TextEdit();
             this.TotalSpendInBaseCurrencyTextEdit = new DevExpress.XtraEditors.TextEdit();
             this.StopLossPricePercentTextEdit = new DevExpress.XtraEditors.TextEdit();
@@ -34,6 +35,7 @@
             this.btOk = new DevExpress.XtraEditors.SimpleButton();
             this.btCancel = new DevExpress.XtraEditors.SimpleButton();
             this.imageComboBoxEdit1 = new DevExpress.XtraEditors.ImageComboBoxEdit();
+            this.checkEdit1 = new DevExpress.XtraEditors.CheckEdit();
             this.layoutControlGroup1 = new DevExpress.XtraLayout.LayoutControlGroup();
             this.layoutControlGroup2 = new DevExpress.XtraLayout.LayoutControlGroup();
             this.ItemForBuyPrice = new DevExpress.XtraLayout.LayoutControlItem();
@@ -46,6 +48,7 @@
             this.emptySpaceItem1 = new DevExpress.XtraLayout.EmptySpaceItem();
             this.emptySpaceItem2 = new DevExpress.XtraLayout.EmptySpaceItem();
             this.layoutControlItem3 = new DevExpress.XtraLayout.LayoutControlItem();
+            this.layoutControlItem4 = new DevExpress.XtraLayout.LayoutControlItem();
             ((System.ComponentModel.ISupportInitialize)(this.dataLayoutControl1)).BeginInit();
             this.dataLayoutControl1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.BuyPriceTextEdit.Properties)).BeginInit();
@@ -55,6 +58,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.StopLossPricePercentTextEdit.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.TakeProfitPercentTextEdit.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.imageComboBoxEdit1.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.checkEdit1.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ItemForBuyPrice)).BeginInit();
@@ -67,6 +71,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItem1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItem2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem4)).BeginInit();
             this.SuspendLayout();
             // 
             // dataLayoutControl1
@@ -81,13 +86,15 @@
             this.dataLayoutControl1.Controls.Add(this.btOk);
             this.dataLayoutControl1.Controls.Add(this.btCancel);
             this.dataLayoutControl1.Controls.Add(this.imageComboBoxEdit1);
+            this.dataLayoutControl1.Controls.Add(this.checkEdit1);
             this.dataLayoutControl1.DataSource = this.trailingSettingsBindingSource;
             this.dataLayoutControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataLayoutControl1.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.dataLayoutControl1.Location = new System.Drawing.Point(0, 0);
+            this.dataLayoutControl1.Margin = new System.Windows.Forms.Padding(6);
             this.dataLayoutControl1.Name = "dataLayoutControl1";
             this.dataLayoutControl1.Root = this.layoutControlGroup1;
-            this.dataLayoutControl1.Size = new System.Drawing.Size(729, 537);
+            this.dataLayoutControl1.Size = new System.Drawing.Size(1445, 1033);
             this.dataLayoutControl1.TabIndex = 0;
             this.dataLayoutControl1.Text = "dataLayoutControl1";
             // 
@@ -102,7 +109,7 @@
             this.BuyPriceTextEdit.Properties.Mask.MaskType = DevExpress.XtraEditors.Mask.MaskType.Numeric;
             this.BuyPriceTextEdit.Properties.Mask.UseMaskAsDisplayFormat = true;
             this.BuyPriceTextEdit.Properties.Padding = new System.Windows.Forms.Padding(0, 0, 0, 0);
-            this.BuyPriceTextEdit.Size = new System.Drawing.Size(394, 52);
+            this.BuyPriceTextEdit.Size = new System.Drawing.Size(1110, 52);
             this.BuyPriceTextEdit.StyleController = this.dataLayoutControl1;
             this.BuyPriceTextEdit.TabIndex = 4;
             // 
@@ -121,7 +128,7 @@
             this.AmountTextEdit.Properties.Mask.MaskType = DevExpress.XtraEditors.Mask.MaskType.Numeric;
             this.AmountTextEdit.Properties.Mask.UseMaskAsDisplayFormat = true;
             this.AmountTextEdit.Properties.Padding = new System.Windows.Forms.Padding(0, 0, 0, 0);
-            this.AmountTextEdit.Size = new System.Drawing.Size(394, 52);
+            this.AmountTextEdit.Size = new System.Drawing.Size(1110, 52);
             this.AmountTextEdit.StyleController = this.dataLayoutControl1;
             this.AmountTextEdit.TabIndex = 5;
             // 
@@ -136,7 +143,7 @@
             this.TotalSpendInBaseCurrencyTextEdit.Properties.Mask.MaskType = DevExpress.XtraEditors.Mask.MaskType.Numeric;
             this.TotalSpendInBaseCurrencyTextEdit.Properties.Mask.UseMaskAsDisplayFormat = true;
             this.TotalSpendInBaseCurrencyTextEdit.Properties.Padding = new System.Windows.Forms.Padding(0, 0, 0, 0);
-            this.TotalSpendInBaseCurrencyTextEdit.Size = new System.Drawing.Size(394, 52);
+            this.TotalSpendInBaseCurrencyTextEdit.Size = new System.Drawing.Size(1110, 52);
             this.TotalSpendInBaseCurrencyTextEdit.StyleController = this.dataLayoutControl1;
             this.TotalSpendInBaseCurrencyTextEdit.TabIndex = 6;
             // 
@@ -151,7 +158,7 @@
             this.StopLossPricePercentTextEdit.Properties.Mask.MaskType = DevExpress.XtraEditors.Mask.MaskType.Numeric;
             this.StopLossPricePercentTextEdit.Properties.Mask.UseMaskAsDisplayFormat = true;
             this.StopLossPricePercentTextEdit.Properties.Padding = new System.Windows.Forms.Padding(0, 0, 0, 0);
-            this.StopLossPricePercentTextEdit.Size = new System.Drawing.Size(394, 52);
+            this.StopLossPricePercentTextEdit.Size = new System.Drawing.Size(1110, 52);
             this.StopLossPricePercentTextEdit.StyleController = this.dataLayoutControl1;
             this.StopLossPricePercentTextEdit.TabIndex = 7;
             // 
@@ -166,14 +173,14 @@
             this.TakeProfitPercentTextEdit.Properties.Mask.MaskType = DevExpress.XtraEditors.Mask.MaskType.Numeric;
             this.TakeProfitPercentTextEdit.Properties.Mask.UseMaskAsDisplayFormat = true;
             this.TakeProfitPercentTextEdit.Properties.Padding = new System.Windows.Forms.Padding(0, 0, 0, 0);
-            this.TakeProfitPercentTextEdit.Size = new System.Drawing.Size(394, 52);
+            this.TakeProfitPercentTextEdit.Size = new System.Drawing.Size(1110, 52);
             this.TakeProfitPercentTextEdit.StyleController = this.dataLayoutControl1;
             this.TakeProfitPercentTextEdit.TabIndex = 8;
             // 
             // btOk
             // 
             this.btOk.AutoWidthInLayoutControl = true;
-            this.btOk.Location = new System.Drawing.Point(402, 457);
+            this.btOk.Location = new System.Drawing.Point(1118, 953);
             this.btOk.Name = "btOk";
             this.btOk.Padding = new System.Windows.Forms.Padding(40, 0, 40, 0);
             this.btOk.Size = new System.Drawing.Size(136, 56);
@@ -185,7 +192,7 @@
             // btCancel
             // 
             this.btCancel.AutoWidthInLayoutControl = true;
-            this.btCancel.Location = new System.Drawing.Point(558, 457);
+            this.btCancel.Location = new System.Drawing.Point(1274, 953);
             this.btCancel.Name = "btCancel";
             this.btCancel.Padding = new System.Windows.Forms.Padding(20, 0, 20, 0);
             this.btCancel.Size = new System.Drawing.Size(147, 56);
@@ -202,9 +209,20 @@
             this.imageComboBoxEdit1.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
             this.imageComboBoxEdit1.Properties.Padding = new System.Windows.Forms.Padding(0, 0, 0, 0);
-            this.imageComboBoxEdit1.Size = new System.Drawing.Size(394, 52);
+            this.imageComboBoxEdit1.Size = new System.Drawing.Size(1110, 52);
             this.imageComboBoxEdit1.StyleController = this.dataLayoutControl1;
             this.imageComboBoxEdit1.TabIndex = 11;
+            // 
+            // checkEdit1
+            // 
+            this.checkEdit1.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.trailingSettingsBindingSource, "ShowOnChart", true));
+            this.checkEdit1.Location = new System.Drawing.Point(24, 384);
+            this.checkEdit1.Name = "checkEdit1";
+            this.checkEdit1.Properties.Caption = "Show On Chart";
+            this.checkEdit1.Properties.GlyphAlignment = DevExpress.Utils.HorzAlignment.Far;
+            this.checkEdit1.Size = new System.Drawing.Size(1397, 49);
+            this.checkEdit1.StyleController = this.dataLayoutControl1;
+            this.checkEdit1.TabIndex = 12;
             // 
             // layoutControlGroup1
             // 
@@ -214,7 +232,7 @@
             this.layoutControlGroup2});
             this.layoutControlGroup1.Name = "layoutControlGroup1";
             this.layoutControlGroup1.OptionsItemText.TextToControlDistance = 6;
-            this.layoutControlGroup1.Size = new System.Drawing.Size(729, 537);
+            this.layoutControlGroup1.Size = new System.Drawing.Size(1445, 1033);
             this.layoutControlGroup1.TextVisible = false;
             // 
             // layoutControlGroup2
@@ -231,18 +249,19 @@
             this.layoutControlItem2,
             this.emptySpaceItem1,
             this.emptySpaceItem2,
-            this.layoutControlItem3});
+            this.layoutControlItem3,
+            this.layoutControlItem4});
             this.layoutControlGroup2.Location = new System.Drawing.Point(0, 0);
             this.layoutControlGroup2.Name = "autoGeneratedGroup0";
             this.layoutControlGroup2.OptionsItemText.TextToControlDistance = 6;
-            this.layoutControlGroup2.Size = new System.Drawing.Size(689, 497);
+            this.layoutControlGroup2.Size = new System.Drawing.Size(1405, 993);
             // 
             // ItemForBuyPrice
             // 
             this.ItemForBuyPrice.Control = this.BuyPriceTextEdit;
             this.ItemForBuyPrice.Location = new System.Drawing.Point(0, 0);
             this.ItemForBuyPrice.Name = "ItemForBuyPrice";
-            this.ItemForBuyPrice.Size = new System.Drawing.Size(689, 60);
+            this.ItemForBuyPrice.Size = new System.Drawing.Size(1405, 60);
             this.ItemForBuyPrice.Text = "Buy Price";
             this.ItemForBuyPrice.TextSize = new System.Drawing.Size(281, 25);
             // 
@@ -251,7 +270,7 @@
             this.ItemForAmount.Control = this.AmountTextEdit;
             this.ItemForAmount.Location = new System.Drawing.Point(0, 60);
             this.ItemForAmount.Name = "ItemForAmount";
-            this.ItemForAmount.Size = new System.Drawing.Size(689, 60);
+            this.ItemForAmount.Size = new System.Drawing.Size(1405, 60);
             this.ItemForAmount.Text = "Amount";
             this.ItemForAmount.TextSize = new System.Drawing.Size(281, 25);
             // 
@@ -260,7 +279,7 @@
             this.ItemForTotalSpendInBaseCurrency.Control = this.TotalSpendInBaseCurrencyTextEdit;
             this.ItemForTotalSpendInBaseCurrency.Location = new System.Drawing.Point(0, 120);
             this.ItemForTotalSpendInBaseCurrency.Name = "ItemForTotalSpendInBaseCurrency";
-            this.ItemForTotalSpendInBaseCurrency.Size = new System.Drawing.Size(689, 60);
+            this.ItemForTotalSpendInBaseCurrency.Size = new System.Drawing.Size(1405, 60);
             this.ItemForTotalSpendInBaseCurrency.Text = "Total Spend In Base Currency";
             this.ItemForTotalSpendInBaseCurrency.TextSize = new System.Drawing.Size(281, 25);
             // 
@@ -269,7 +288,7 @@
             this.ItemForStopLossPricePercent.Control = this.StopLossPricePercentTextEdit;
             this.ItemForStopLossPricePercent.Location = new System.Drawing.Point(0, 180);
             this.ItemForStopLossPricePercent.Name = "ItemForStopLossPricePercent";
-            this.ItemForStopLossPricePercent.Size = new System.Drawing.Size(689, 60);
+            this.ItemForStopLossPricePercent.Size = new System.Drawing.Size(1405, 60);
             this.ItemForStopLossPricePercent.Text = "Stop Loss Price Percent";
             this.ItemForStopLossPricePercent.TextSize = new System.Drawing.Size(281, 25);
             // 
@@ -278,14 +297,14 @@
             this.ItemForTakeProfitPercent.Control = this.TakeProfitPercentTextEdit;
             this.ItemForTakeProfitPercent.Location = new System.Drawing.Point(0, 240);
             this.ItemForTakeProfitPercent.Name = "ItemForTakeProfitPercent";
-            this.ItemForTakeProfitPercent.Size = new System.Drawing.Size(689, 60);
+            this.ItemForTakeProfitPercent.Size = new System.Drawing.Size(1405, 60);
             this.ItemForTakeProfitPercent.Text = "Take Profit Percent";
             this.ItemForTakeProfitPercent.TextSize = new System.Drawing.Size(281, 25);
             // 
             // layoutControlItem1
             // 
             this.layoutControlItem1.Control = this.btOk;
-            this.layoutControlItem1.Location = new System.Drawing.Point(378, 421);
+            this.layoutControlItem1.Location = new System.Drawing.Point(1094, 917);
             this.layoutControlItem1.Name = "layoutControlItem1";
             this.layoutControlItem1.Padding = new DevExpress.XtraLayout.Utils.Padding(4, 16, 16, 4);
             this.layoutControlItem1.Size = new System.Drawing.Size(156, 76);
@@ -295,7 +314,7 @@
             // layoutControlItem2
             // 
             this.layoutControlItem2.Control = this.btCancel;
-            this.layoutControlItem2.Location = new System.Drawing.Point(534, 421);
+            this.layoutControlItem2.Location = new System.Drawing.Point(1250, 917);
             this.layoutControlItem2.Name = "layoutControlItem2";
             this.layoutControlItem2.Padding = new DevExpress.XtraLayout.Utils.Padding(4, 4, 16, 4);
             this.layoutControlItem2.Size = new System.Drawing.Size(155, 76);
@@ -305,17 +324,17 @@
             // emptySpaceItem1
             // 
             this.emptySpaceItem1.AllowHotTrack = false;
-            this.emptySpaceItem1.Location = new System.Drawing.Point(0, 360);
+            this.emptySpaceItem1.Location = new System.Drawing.Point(0, 417);
             this.emptySpaceItem1.Name = "emptySpaceItem1";
-            this.emptySpaceItem1.Size = new System.Drawing.Size(378, 137);
+            this.emptySpaceItem1.Size = new System.Drawing.Size(1094, 576);
             this.emptySpaceItem1.TextSize = new System.Drawing.Size(0, 0);
             // 
             // emptySpaceItem2
             // 
             this.emptySpaceItem2.AllowHotTrack = false;
-            this.emptySpaceItem2.Location = new System.Drawing.Point(378, 360);
+            this.emptySpaceItem2.Location = new System.Drawing.Point(1094, 417);
             this.emptySpaceItem2.Name = "emptySpaceItem2";
-            this.emptySpaceItem2.Size = new System.Drawing.Size(311, 61);
+            this.emptySpaceItem2.Size = new System.Drawing.Size(311, 500);
             this.emptySpaceItem2.TextSize = new System.Drawing.Size(0, 0);
             // 
             // layoutControlItem3
@@ -323,16 +342,26 @@
             this.layoutControlItem3.Control = this.imageComboBoxEdit1;
             this.layoutControlItem3.Location = new System.Drawing.Point(0, 300);
             this.layoutControlItem3.Name = "layoutControlItem3";
-            this.layoutControlItem3.Size = new System.Drawing.Size(689, 60);
+            this.layoutControlItem3.Size = new System.Drawing.Size(1405, 60);
             this.layoutControlItem3.Text = "Mode";
             this.layoutControlItem3.TextSize = new System.Drawing.Size(281, 25);
             // 
+            // layoutControlItem4
+            // 
+            this.layoutControlItem4.Control = this.checkEdit1;
+            this.layoutControlItem4.Location = new System.Drawing.Point(0, 360);
+            this.layoutControlItem4.Name = "layoutControlItem4";
+            this.layoutControlItem4.Size = new System.Drawing.Size(1405, 57);
+            this.layoutControlItem4.TextSize = new System.Drawing.Size(0, 0);
+            this.layoutControlItem4.TextVisible = false;
+            // 
             // TrailingSettinsForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(729, 537);
+            this.ClientSize = new System.Drawing.Size(1445, 1033);
             this.Controls.Add(this.dataLayoutControl1);
+            this.Margin = new System.Windows.Forms.Padding(6);
             this.Name = "TrailingSettinsForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Trailing Settings";
@@ -346,6 +375,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.StopLossPricePercentTextEdit.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.TakeProfitPercentTextEdit.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.imageComboBoxEdit1.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.checkEdit1.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ItemForBuyPrice)).EndInit();
@@ -358,6 +388,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItem1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItem2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem4)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -386,5 +417,7 @@
         private DevExpress.XtraLayout.EmptySpaceItem emptySpaceItem2;
         private DevExpress.XtraEditors.ImageComboBoxEdit imageComboBoxEdit1;
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItem3;
+        private DevExpress.XtraEditors.CheckEdit checkEdit1;
+        private DevExpress.XtraLayout.LayoutControlItem layoutControlItem4;
     }
 }

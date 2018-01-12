@@ -88,6 +88,10 @@
     <Reference Include="DevExpress.XtraPrinting.v18.1, Version=18.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
       <Private>True</Private>
     </Reference>
+    <Reference Include="DevExpress.XtraTreeList.v18.1, Version=18.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Work\2018.1\Bin\Framework4\DevExpress.XtraTreeList.v18.1.dll</HintPath>
+    </Reference>
     <Reference Include="DevExpress.XtraVerticalGrid.v18.1, Version=18.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
       <Private>True</Private>
     </Reference>
@@ -196,11 +200,18 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\GrabDataSettings.cs" />
     <Compile Include="CurrencyMonitoringForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="CurrencyMonitoringForm.Designer.cs">
       <DependentUpon>CurrencyMonitoringForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GrabDataSettingsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GrabDataSettingsForm.Designer.cs">
+      <DependentUpon>GrabDataSettingsForm.cs</DependentUpon>
     </Compile>
     <Compile Include="MyTradesCollectionControl.cs">
       <SubType>UserControl</SubType>
@@ -442,6 +453,9 @@
     </Compile>
     <EmbeddedResource Include="CurrencyMonitoringForm.resx">
       <DependentUpon>CurrencyMonitoringForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GrabDataSettingsForm.resx">
+      <DependentUpon>GrabDataSettingsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MyTradesCollectionControl.resx">
       <DependentUpon>MyTradesCollectionControl.cs</DependentUpon>

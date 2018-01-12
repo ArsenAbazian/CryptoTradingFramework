@@ -54,6 +54,8 @@ namespace CryptoMarketClient {
             }
         }
         protected void UpdateView(GridView view, OrderBookEntry[] entries) {
+            if(entries == null)
+                return;
             GridViewInfo vi = (GridViewInfo)view.GetViewInfo();
             if(vi.RowsInfo.Count == 0) {
                 vi.GridControl.Invalidate();

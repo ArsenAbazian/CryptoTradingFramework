@@ -1,8 +1,11 @@
 ﻿using DevExpress.Utils.Serializing;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,6 +30,10 @@ namespace CryptoMarketClient.Common {
         void OnTickerChanged() {
             TickerName = Ticker.Name;
         }
+        [XtraSerializableProperty]
+        public DateTime StartDate { get; set; }
+        [XtraSerializableProperty]
+        public bool ShowOnChart { get; set; }
         [XtraSerializableProperty]
         public string TickerName { get; set; }
         public TickerBase UsdTicker { get { return Ticker == null ? null : Ticker.UsdTicker; } }
@@ -127,6 +134,7 @@ namespace CryptoMarketClient.Common {
         public TrailingState State { get; set; } = TrailingState.Analyze;
         [XtraSerializableProperty]
         public bool EnableIncrementalStopLoss { get; set; }
+        public string IndicatorText { get { return "Trailing indicator"; } }
 
         public void Update() {
             if(State == TrailingState.Analyze)
@@ -157,6 +165,7 @@ namespace CryptoMarketClient.Common {
                 TelegramBot.Default.SendNotification(Ticker.Exchange + " - " + Ticker.Name + " - STOPLOSS!!");
                 State = TrailingState.Done;
             }
+            Ticker.Events.Add(new TickerEvent() { Time = DateTime.UtcNow, Text = "Stoploss!" });
         }
         void OnExecuteTakeProfit() {
             State = TrailingState.TakeProfit;
@@ -164,6 +173,23 @@ namespace CryptoMarketClient.Common {
                 TelegramBot.Default.SendNotification(Ticker.Exchange + " - " + Ticker.Name + " - TAKEPROFIT!!");
                 State = TrailingState.Done;
             }
+            Ticker.Events.Add(new TickerEvent() { Time = DateTime.UtcNow, Text = "Takeprofit!" });
+        }
+        
+        public void Start() {
+            StartDate = DateTime.UtcNow;
+            Ticker.Events.Add(new TickerEvent() {
+                Text = string.Format("Trailing started! bought {0:0.########} at price {1:0.########}. Stoploss at {2:0.########}", Amount, BuyPrice, StopLossStartPrice),
+                Time = Ticker.Time,
+                Current = Ticker.Last
+            });
+        }
+        public void Change() {
+            Ticker.Events.Add(new TickerEvent() {
+                Text = string.Format("Trailing changed! New values: amount {0:0.########}, stoploss at {1:0.########}", Amount, StopLossStartPrice),
+                Time = Ticker.Time,
+                Current = Ticker.Last
+            });
         }
     }
 
@@ -171,4 +197,19 @@ namespace CryptoMarketClient.Common {
     public enum ActionMode { Execute, Notify }
     public enum TrailingType { Buy, Sell }
     public enum TrailingState { Analyze, StopLoss, TakeProfit, Done } 
+
+    public class TickerEvent {
+        public TickerEvent() {
+            Color = Color.Pink;
+        }
+
+        [XtraSerializableProperty]
+        public string Text { get; set; }
+        [XtraSerializableProperty]
+        public DateTime Time { get; set; }
+        [XtraSerializableProperty]
+        public double Current { get; set; }
+        [XtraSerializableProperty]
+        public Color Color { get; set; }
+    }
 }

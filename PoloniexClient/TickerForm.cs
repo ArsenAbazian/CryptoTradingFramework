@@ -22,6 +22,7 @@ namespace CryptoMarketClient {
         }
 
         protected virtual void DisposeCore() {
+            Timer.Dispose();
             Ticker = null;
         }
 
@@ -42,11 +43,16 @@ namespace CryptoMarketClient {
             }
         }
         protected void OnThreadUpdate(object state) {
-            Ticker.UpdateOrderBook();
-            Ticker.UpdateTrades();
-            Ticker.UpdateOpenedOrders();
-            Ticker.UpdateTrailings();
-            Ticker.Time = DateTime.Now;
+            if(Ticker != null)
+                Ticker.UpdateOrderBook();
+            if(Ticker != null)
+                Ticker.UpdateTrades();
+            if(Ticker != null)
+                Ticker.UpdateOpenedOrders();
+            if(Ticker != null)
+                Ticker.UpdateTrailings();
+            if(Ticker != null)
+                Ticker.Time = DateTime.UtcNow;
         }
 
         TickerBase ticker;
@@ -82,6 +88,7 @@ namespace CryptoMarketClient {
             this.activeTrailingCollectionControl1.Ticker = Ticker;
             if(Ticker == null)
                 return;
+            this.rpMain.Text = Ticker.Name;
             Ticker.IsOpened = true;
             UpdateTickerInfoControlHeight();
             UpdateText();
@@ -207,6 +214,13 @@ namespace CryptoMarketClient {
         private void dockManager1_ActivePanelChanged(object sender, ActivePanelChangedEventArgs e) {
             if(e.Panel == this.dpMyTrades) {
                 this.myTradesCollectionControl1.UpdateTrades();
+            }
+        }
+
+        private void barButtonItem1_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
+            using(GrabDataSettingsForm form = new GrabDataSettingsForm()) {
+                form.Ticker = Ticker;
+                form.ShowDialog();
             }
         }
     }

@@ -39,6 +39,8 @@ namespace CryptoMarketClient {
             DevExpress.XtraCharts.SideBySideBarSeriesView sideBySideBarSeriesView2 = new DevExpress.XtraCharts.SideBySideBarSeriesView();
             DevExpress.XtraCharts.Series series4 = new DevExpress.XtraCharts.Series();
             DevExpress.XtraCharts.SideBySideBarSeriesView sideBySideBarSeriesView3 = new DevExpress.XtraCharts.SideBySideBarSeriesView();
+            DevExpress.XtraCharts.Series series5 = new DevExpress.XtraCharts.Series();
+            DevExpress.XtraCharts.PointSeriesView pointSeriesView1 = new DevExpress.XtraCharts.PointSeriesView();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TickerChartViewer));
             this.chartControl1 = new DevExpress.XtraCharts.ChartControl();
             this.barManager1 = new DevExpress.XtraBars.BarManager(this.components);
@@ -84,6 +86,8 @@ namespace CryptoMarketClient {
             ((System.ComponentModel.ISupportInitialize)(sideBySideBarSeriesView2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(series4)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(sideBySideBarSeriesView3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(series5)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(pointSeriesView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.barManager1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckedComboBoxEdit1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemComboBox1)).BeginInit();
@@ -101,8 +105,8 @@ namespace CryptoMarketClient {
             xyDiagram1.AxisX.VisibleInPanesSerializable = "-1;0";
             xyDiagram1.AxisX.VisualRange.Auto = false;
             xyDiagram1.AxisX.VisualRange.AutoSideMargins = false;
-            xyDiagram1.AxisX.VisualRange.MaxValueSerializable = "12/26/2017 16:37:00.000";
-            xyDiagram1.AxisX.VisualRange.MinValueSerializable = "12/26/2017 16:28:00.000";
+            xyDiagram1.AxisX.VisualRange.MaxValueSerializable = "01/12/2018 16:59:00.000";
+            xyDiagram1.AxisX.VisualRange.MinValueSerializable = "01/12/2018 16:50:00.000";
             xyDiagram1.AxisX.VisualRange.SideMarginsValue = 0D;
             xyDiagram1.AxisX.WholeRange.AutoSideMargins = false;
             xyDiagram1.AxisX.WholeRange.SideMarginsValue = 0D;
@@ -157,18 +161,20 @@ namespace CryptoMarketClient {
             this.chartControl1.Legends.AddRange(new DevExpress.XtraCharts.Legend[] {
             legend1});
             this.chartControl1.Location = new System.Drawing.Point(0, 0);
-            this.chartControl1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.chartControl1.Margin = new System.Windows.Forms.Padding(6);
             this.chartControl1.Name = "chartControl1";
             series1.Name = "Volume";
+            series1.ToolTipEnabled = DevExpress.Utils.DefaultBoolean.True;
             sideBySideBarSeriesView1.AxisYName = "Secondary AxisY 2";
             sideBySideBarSeriesView1.BarWidth = 0.9D;
-            sideBySideBarSeriesView1.Color = System.Drawing.Color.Silver;
+            sideBySideBarSeriesView1.Color = System.Drawing.Color.FromArgb(((int)(((byte)(150)))), ((int)(((byte)(181)))), ((int)(((byte)(200)))), ((int)(((byte)(201)))));
             series1.View = sideBySideBarSeriesView1;
             series2.ArgumentScaleType = DevExpress.XtraCharts.ScaleType.DateTime;
             series2.CrosshairEnabled = DevExpress.Utils.DefaultBoolean.True;
             series2.Name = "Current";
-            candleStickSeriesView1.Color = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(128)))), ((int)(((byte)(66)))));
+            candleStickSeriesView1.Color = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(147)))), ((int)(((byte)(73)))));
             candleStickSeriesView1.LineThickness = 1;
+            candleStickSeriesView1.ReductionOptions.Color = System.Drawing.Color.FromArgb(((int)(((byte)(164)))), ((int)(((byte)(32)))), ((int)(((byte)(21)))));
             candleStickSeriesView1.ReductionOptions.ColorMode = DevExpress.XtraCharts.ReductionColorMode.OpenToCloseValue;
             candleStickSeriesView1.ReductionOptions.FillMode = DevExpress.XtraCharts.CandleStickFillMode.AlwaysFilled;
             series2.View = candleStickSeriesView1;
@@ -176,7 +182,7 @@ namespace CryptoMarketClient {
             series3.LegendName = "Legend1";
             series3.Name = "Sell volume";
             sideBySideBarSeriesView2.AxisYName = "Secondary AxisY 1";
-            sideBySideBarSeriesView2.Color = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            sideBySideBarSeriesView2.Color = System.Drawing.Color.FromArgb(((int)(((byte)(164)))), ((int)(((byte)(32)))), ((int)(((byte)(21)))));
             sideBySideBarSeriesView2.PaneName = "Volume Pane";
             sideBySideBarSeriesView2.RangeControlOptions.Visible = false;
             series3.View = sideBySideBarSeriesView2;
@@ -184,15 +190,19 @@ namespace CryptoMarketClient {
             series4.LegendName = "Legend1";
             series4.Name = "Buy volume";
             sideBySideBarSeriesView3.AxisYName = "Secondary AxisY 1";
-            sideBySideBarSeriesView3.Color = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(128)))), ((int)(((byte)(66)))));
+            sideBySideBarSeriesView3.Color = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(147)))), ((int)(((byte)(73)))));
             sideBySideBarSeriesView3.PaneName = "Volume Pane";
             sideBySideBarSeriesView3.RangeControlOptions.Visible = false;
             series4.View = sideBySideBarSeriesView3;
+            series5.Name = "Events";
+            pointSeriesView1.PointMarkerOptions.Size = 12;
+            series5.View = pointSeriesView1;
             this.chartControl1.SeriesSerializable = new DevExpress.XtraCharts.Series[] {
         series1,
         series2,
         series3,
-        series4};
+        series4,
+        series5};
             this.chartControl1.SideBySideBarDistanceFixed = 0;
             this.chartControl1.Size = new System.Drawing.Size(1856, 1094);
             this.chartControl1.TabIndex = 4;
@@ -397,7 +407,7 @@ namespace CryptoMarketClient {
             this.barDockControlTop.Dock = System.Windows.Forms.DockStyle.Top;
             this.barDockControlTop.Location = new System.Drawing.Point(0, 0);
             this.barDockControlTop.Manager = this.barManager1;
-            this.barDockControlTop.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.barDockControlTop.Margin = new System.Windows.Forms.Padding(6);
             this.barDockControlTop.Size = new System.Drawing.Size(1856, 60);
             // 
             // barDockControlBottom
@@ -406,7 +416,7 @@ namespace CryptoMarketClient {
             this.barDockControlBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.barDockControlBottom.Location = new System.Drawing.Point(0, 1154);
             this.barDockControlBottom.Manager = this.barManager1;
-            this.barDockControlBottom.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.barDockControlBottom.Margin = new System.Windows.Forms.Padding(6);
             this.barDockControlBottom.Size = new System.Drawing.Size(1856, 0);
             // 
             // barDockControlLeft
@@ -415,7 +425,7 @@ namespace CryptoMarketClient {
             this.barDockControlLeft.Dock = System.Windows.Forms.DockStyle.Left;
             this.barDockControlLeft.Location = new System.Drawing.Point(0, 60);
             this.barDockControlLeft.Manager = this.barManager1;
-            this.barDockControlLeft.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.barDockControlLeft.Margin = new System.Windows.Forms.Padding(6);
             this.barDockControlLeft.Size = new System.Drawing.Size(0, 1094);
             // 
             // barDockControlRight
@@ -424,7 +434,7 @@ namespace CryptoMarketClient {
             this.barDockControlRight.Dock = System.Windows.Forms.DockStyle.Right;
             this.barDockControlRight.Location = new System.Drawing.Point(1856, 60);
             this.barDockControlRight.Manager = this.barManager1;
-            this.barDockControlRight.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.barDockControlRight.Margin = new System.Windows.Forms.Padding(6);
             this.barDockControlRight.Size = new System.Drawing.Size(0, 1094);
             // 
             // barButtonItem1
@@ -471,7 +481,6 @@ namespace CryptoMarketClient {
             this.repositoryItemCheckedComboBoxEdit1.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
             this.repositoryItemCheckedComboBoxEdit1.Name = "repositoryItemCheckedComboBoxEdit1";
-            this.repositoryItemCheckedComboBoxEdit1.Padding = new System.Windows.Forms.Padding(0, 0, 0, 0);
             // 
             // repositoryItemComboBox1
             // 
@@ -479,14 +488,13 @@ namespace CryptoMarketClient {
             this.repositoryItemComboBox1.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
             this.repositoryItemComboBox1.Name = "repositoryItemComboBox1";
-            this.repositoryItemComboBox1.Padding = new System.Windows.Forms.Padding(0, 0, 0, 0);
             // 
             // sidePanel1
             // 
             this.sidePanel1.Controls.Add(this.chartControl1);
             this.sidePanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.sidePanel1.Location = new System.Drawing.Point(0, 60);
-            this.sidePanel1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.sidePanel1.Margin = new System.Windows.Forms.Padding(4);
             this.sidePanel1.Name = "sidePanel1";
             this.sidePanel1.Size = new System.Drawing.Size(1856, 1094);
             this.sidePanel1.TabIndex = 9;
@@ -501,7 +509,7 @@ namespace CryptoMarketClient {
             this.Controls.Add(this.barDockControlRight);
             this.Controls.Add(this.barDockControlBottom);
             this.Controls.Add(this.barDockControlTop);
-            this.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.Margin = new System.Windows.Forms.Padding(6);
             this.Name = "TickerChartViewer";
             this.Size = new System.Drawing.Size(1856, 1154);
             ((System.ComponentModel.ISupportInitialize)(xyDiagramPane1)).EndInit();
@@ -516,6 +524,8 @@ namespace CryptoMarketClient {
             ((System.ComponentModel.ISupportInitialize)(series3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(sideBySideBarSeriesView3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(series4)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(pointSeriesView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(series5)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.chartControl1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.barManager1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckedComboBoxEdit1)).EndInit();

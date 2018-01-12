@@ -8,6 +8,8 @@ using DevExpress.XtraCharts;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Drawing;
 using System.IO;
@@ -43,7 +45,7 @@ namespace CryptoMarketClient {
         }
 
         void IXtraSerializable.OnEndDeserializing(string restoredVersion) {
-
+            SuppressSave = false;
         }
 
         void IXtraSerializable.OnEndSerializing() {
@@ -51,13 +53,14 @@ namespace CryptoMarketClient {
         }
 
         void IXtraSerializable.OnStartDeserializing(LayoutAllowEventArgs e) {
-
+            SuppressSave = true;
         }
 
         void IXtraSerializable.OnStartSerializing() {
             
         }
 
+        protected bool SuppressSave { get; set; }
         protected XtraObjectInfo[] GetXtraObjectInfo() {
             ArrayList result = new ArrayList();
             result.Add(new XtraObjectInfo("Ticker", this));
@@ -426,6 +429,37 @@ namespace CryptoMarketClient {
                 }
             }
             RaiseChanged();
+        }
+
+
+        ObservableCollection<TickerEvent> events;
+        [XtraSerializableProperty(XtraSerializationVisibility.Collection, true, false, true)]
+        public ObservableCollection<TickerEvent> Events {
+            get {
+                if(events == null) {
+                    events = new ObservableCollection<TickerEvent>();
+                    events.CollectionChanged += OnEventsChanged;
+                }
+                return events;
+            }
+        }
+        protected TickerEvent XtraCreateEventsItem(XtraItemEventArgs e) {
+            return new TickerEvent();
+        }
+        void XtraSetIndexEventsItem(XtraSetItemIndexEventArgs e) {
+            if(e.NewIndex == -1) {
+                Events.Add((TickerEvent)e.Item.Value);
+                return;
+            }
+            Events.Insert(e.NewIndex, (TickerEvent)e.Item.Value);
+        }
+        public event NotifyCollectionChangedEventHandler EventsChanged {
+            add { Events.CollectionChanged += value; }
+            remove { Events.CollectionChanged -= value; }
+        }
+
+        private void OnEventsChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) {
+            Save();
         }
     }
 
