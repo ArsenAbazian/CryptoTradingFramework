@@ -110,7 +110,9 @@ namespace CryptoMarketClient.Common {
         public double StopLossStartPrice { get { return BuyPrice * (100 - StopLossPricePercent) * 0.01; } }
 
         [XtraSerializableProperty]
-        public double TakeProfitPercent { get; set; } = 10;
+        public double TakeProfitStartPercent { get; set; } = 10;
+        [XtraSerializableProperty]
+        public double TakeProfitPercent { get; set; } = 5;
 
         public double ActualProfit { get { return ActualPrice - BuyPrice; } }
         public double ActualProfitUSD { get { return UsdTicker == null? 0: ActualProfit * UsdTicker.Last; } }
@@ -118,8 +120,7 @@ namespace CryptoMarketClient.Common {
         public double ActualPrice { get; set; }
         [XtraSerializableProperty]
         public double MaxPrice { get; set; }
-        public double PriceDelta { get { return MaxPrice * TakeProfitPercent * 0.01; } }
-        public double TakeProfitPrice { get { return MaxPrice - PriceDelta; } }
+        public double TakeProfitStartPrice { get { return BuyPrice * (100 + TakeProfitStartPercent) * 0.01; } }
         public string Name {
             get {
                 if(Ticker == null)
@@ -153,7 +154,11 @@ namespace CryptoMarketClient.Common {
                     OnExecuteStopLoss();
                     return;
                 }
-                else if(ActualPrice < TakeProfitPrice) {
+                else if(ActualPrice >= TakeProfitStartPrice) {
+                    OnStartTakeProdit();
+                    return;
+                }
+                else if(State == TrailingState.TakeProfit && ActualPrice < (MaxPrice * (100 - TakeProfitPercent) * 0.01)) {
                     OnExecuteTakeProfit();
                     return;
                 }
@@ -166,6 +171,11 @@ namespace CryptoMarketClient.Common {
                 State = TrailingState.Done;
             }
             Ticker.Events.Add(new TickerEvent() { Time = DateTime.UtcNow, Text = "Stoploss!" });
+        }
+        void OnStartTakeProdit() {
+            State = TrailingState.TakeProfit;
+            if (Mode == ActionMode.Notify) 
+                TelegramBot.Default.SendNotification(Ticker.Exchange + " - " + Ticker.Name + " - Start TAKEPROFIT!!");
         }
         void OnExecuteTakeProfit() {
             State = TrailingState.TakeProfit;
