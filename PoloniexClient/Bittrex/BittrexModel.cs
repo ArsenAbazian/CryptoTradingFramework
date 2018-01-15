@@ -357,7 +357,7 @@ namespace CryptoMarketClient.Bittrex {
             return OnGetMyTrades(ticker, text);
         }
         bool OnGetMyTrades(TickerBase ticker, string text) {
-            throw new NotImplementedException();
+            return true;
         }
         public override bool UpdateTrades(TickerBase info) {
             string address = string.Format("https://bittrex.com/api/v1.1/public/getmarkethistory?market={0}", Uri.EscapeDataString(info.MarketName));

@@ -92,5 +92,9 @@ namespace CryptoMarketClient {
             if(handler != null)
                 handler.Invoke(this, EventArgs.Empty);
         }
+
+        private void ceIgnoreStopLoss_CheckedChanged(object sender, EventArgs e) {
+            ceIncrimentalStopLoss.Enabled = StopLossPricePercentTextEdit.Enabled = !ceIgnoreStopLoss.Checked;
+        }
     }
 }

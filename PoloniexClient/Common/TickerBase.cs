@@ -351,6 +351,7 @@ namespace CryptoMarketClient {
         public abstract string GetDepositAddress(CurrencyType type);
         public abstract bool Buy(double lowestAsk, double amount);
         public abstract bool Sell(double highestBid, double amount);
+        public abstract bool MarketSell(double amount);
         public abstract bool Withdraw(string currency, string address, double amount);
 
         protected WebClient WebClient { get; } = new MyWebClient();
