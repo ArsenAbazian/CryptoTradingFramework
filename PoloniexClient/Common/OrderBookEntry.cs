@@ -40,7 +40,8 @@ namespace CryptoMarketClient {
     }
 
     public static class FastDoubleConverter {
-        static double[] divider = new double[] { 1,
+        static double[] divider = new double[] {
+            1,
             0.1,
             0.01,
             0.001,
@@ -53,24 +54,52 @@ namespace CryptoMarketClient {
             0.0000000001,
             0.00000000001
         };
+        static double[] multiplier = new double[] {
+            1,
+            10,
+            100,
+            1000,
+            10000,
+            100000,
+            1000000,
+            10000000,
+            100000000,
+            1000000000
+        };
+        static int GetExponent(string str, int startIndex) {
+            int exponent = 0;
+            if(str[startIndex] == '-') {
+                startIndex++;
+                for(int i = startIndex; i < str.Length; i++)
+                    exponent = (exponent << 3) + (exponent << 1) + str[i] - 0x30;
+                return -exponent;
+            }
+            for(int i = startIndex; i < str.Length; i++)
+                exponent = (exponent << 3) + (exponent << 1) + str[i] - 0x30;
+            return exponent;
+        }
+        static double ParseExponent(string str, double value, int startIndex) {
+            int exponent = GetExponent(str, startIndex);
+            if(exponent < 0)
+                return value * divider[-exponent];
+            return value * multiplier[exponent];
+        }
         public static double Convert(string str) {
             int value = 0;
             int fix = 0;
-            int i = 0;
-            for(i = 0; i < str.Length; i++) {
+            for(int i = 0; i < str.Length; i++) {
                 if(str[i] == '.') {
                     int count = str.Length - i - 1;
                     for(int j = i + 1; j < str.Length; j++) {
-                        int vv = str[j] - 0x30;
-                        fix = (fix << 3) + (fix << 1) + vv;
+                        fix = (fix << 3) + (fix << 1) + str[j] - 0x30;
+                        if(str[i] == 'e' || str[i] == 'E')
+                            return ParseExponent(str, value + fix * divider[count], i + 1);
                     }
                     return value + fix * divider[count];
                 }
-                if(str[i] == 'e' || str[i] == 'E') {
-                    return double.Parse(str);
-                }
-                int v = str[i] - 0x30;
-                value = (value << 3) + (value << 1) + v;
+                if(str[i] == 'e' || str[i] == 'E')
+                    return ParseExponent(str, value, i + 1);
+                value = (value << 3) + (value << 1) + str[i] - 0x30;
             }
             return value;
         }

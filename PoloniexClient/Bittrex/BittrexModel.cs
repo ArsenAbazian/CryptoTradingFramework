@@ -359,6 +359,44 @@ namespace CryptoMarketClient.Bittrex {
         bool OnGetMyTrades(TickerBase ticker, string text) {
             return true;
         }
+        public override List<TradeHistoryItem> GetTrades(TickerBase info, DateTime starTime) {
+            string address = string.Format("https://bittrex.com/api/v1.1/public/getmarkethistory?market={0}", Uri.EscapeDataString(info.MarketName));
+            string text = string.Empty;
+            try {
+                text = GetDownloadString(info, address);
+            }
+            catch(Exception) {
+                return null;
+            }
+            if(string.IsNullOrEmpty(text))
+                return null;
+            JObject res = (JObject)JsonConvert.DeserializeObject(text);
+            if(!res.Value<bool>("success"))
+                return null;
+            JArray trades = res.Value<JArray>("result");
+            int index = 0;
+            List<TradeHistoryItem> list = new List<TradeHistoryItem>();
+            lock(info) {
+                if(trades == null)
+                    return list;
+                foreach(JObject obj in trades) {
+                    int id = obj.Value<int>("Id");
+                    TradeHistoryItem item = new TradeHistoryItem();
+                    item.Id = id;
+                    item.Time = obj.Value<DateTime>("TimeStamp");
+                    if(item.Time < starTime)
+                        break;
+                    item.AmountString = obj.Value<string>("Quantity");
+                    item.RateString = obj.Value<string>("Price");
+                    item.Total = obj.Value<double>("Total");
+                    item.Type = obj.Value<string>("OrderType") == "BUY" ? TradeType.Buy : TradeType.Sell;
+                    item.Fill = obj.Value<string>("FillType") == "FILL" ? TradeFillType.Fill : TradeFillType.PartialFill;
+                    list.Insert(index, item);
+                    index++;
+                }
+            }
+            return list;
+        }
         public override bool UpdateTrades(TickerBase info) {
             string address = string.Format("https://bittrex.com/api/v1.1/public/getmarkethistory?market={0}", Uri.EscapeDataString(info.MarketName));
             string text = string.Empty;

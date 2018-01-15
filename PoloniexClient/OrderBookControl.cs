@@ -54,6 +54,8 @@ namespace CryptoMarketClient {
             }
         }
         protected void UpdateView(GridView view, OrderBookEntry[] entries) {
+            if(entries == null)
+                return;
             GridViewInfo vi = (GridViewInfo)view.GetViewInfo();
             if(vi.RowsInfo.Count == 0) {
                 vi.GridControl.Invalidate();
@@ -66,9 +68,9 @@ namespace CryptoMarketClient {
                     if(ci.Column == null)
                         continue;
                     if(ci.Column.FieldName == "ValueString")
-                        ci.CellValue = entry.Value;
+                        ci.CellValue = entry.ValueString;
                     else if(ci.Column.FieldName == "AmountString")
-                        ci.CellValue = entry.Amount;
+                        ci.CellValue = entry.AmountString;
                     else if(ci.Column.FieldName == "Volume")
                         ci.CellValue = entry.Volume;
                     else if(ci.Column.FieldName == "VolumePercent")

@@ -26,6 +26,8 @@ namespace CryptoMarketClient {
             }
         }
         void OnTickerChanged() {
+            if(Ticker == null)
+                return;
             this.gcTrades.DataSource = Ticker.MyTradeHistory;
             UpdateTrades();
         }

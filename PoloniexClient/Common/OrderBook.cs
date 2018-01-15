@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 namespace CryptoMarketClient {
     public class OrderBook {
         public const int Depth = 200;
+        public static bool AllowOrderBookHistory { get; set; } = false;
         public OrderBook(TickerBase owner) {
             Owner = owner;
             Bids = CreateOrderBookEntries();
@@ -155,6 +156,11 @@ namespace CryptoMarketClient {
         }
 
         protected internal OrderBookEntry[] CreateOrderBookEntries() {
+            if(!AllowOrderBookHistory) {
+                OrderBookEntry[] res = new OrderBookEntry[OrderBook.Depth];
+                for(int i = 0; i < res.Length; i++) res[i] = new OrderBookEntry();
+                return res;
+            }
             return OrderBookAllocator.GetNew();
         }
         protected double MaxVolume { get; set; }
@@ -254,6 +260,8 @@ namespace CryptoMarketClient {
             }
         }
         public void GetNewBidAsks() {
+            if(!AllowOrderBookHistory)
+                return;
             lock(OrderBookAllocator.Pool) {
                 Save();
                 Bids = CreateOrderBookEntries();
@@ -310,6 +318,8 @@ namespace CryptoMarketClient {
         public static List<OrderBookEntry[]> Pool { get { return pool; } }
 
         static OrderBookAllocator() {
+            if(!OrderBook.AllowOrderBookHistory)
+                return;
             pool = new List<OrderBookEntry[]>(100000);
             for(int i = 0; i < 100000; i++) {
                 OrderBookEntry[] list = new OrderBookEntry[OrderBook.Depth];

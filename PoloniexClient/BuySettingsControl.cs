@@ -53,8 +53,9 @@ namespace CryptoMarketClient {
                 return;
             }
             if(Settings.EnableIncrementalStopLoss) {
-                Settings.Date = DateTime.Now;
+                Settings.Date = DateTime.UtcNow;
                 Ticker.Trailings.Add(Settings);
+                Settings.Start();
             }
             if(OperationsProvider != null)
                 OperationsProvider.ShowTradingResult(Ticker);

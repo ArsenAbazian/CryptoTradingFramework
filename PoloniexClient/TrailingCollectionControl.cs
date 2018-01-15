@@ -9,12 +9,16 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using CryptoMarketClient.Common;
 using DevExpress.XtraEditors;
+using DevExpress.XtraCharts;
 
 namespace CryptoMarketClient {
     public partial class TrailingCollectionControl : UserControl {
         public TrailingCollectionControl() {
             InitializeComponent();
         }
+
+        [DefaultValue(null)]
+        public TickerChartViewer ChartControl { get; set; }
 
         TickerBase ticker;
         public TickerBase Ticker {
@@ -27,13 +31,20 @@ namespace CryptoMarketClient {
             }
         }
         void OnTickerChanged() {
-            Ticker.Changed += OnTickerUpdated;
+            if(Ticker != null)
+                Ticker.Changed += OnTickerUpdated;
             this.gcTrailings.DataSource = Ticker == null ? null : Ticker.Trailings;
-            //this.trailingSettingsBindingSource.DataSource = Ticker == null? null: Ticker.Trailings;
+            if(ChartControl != null && Ticker != null) {
+                foreach(TrailingSettings settings in Ticker.Trailings) {
+                    if(settings.ShowOnChart)
+                        ChartControl.AddIndicator(settings);
+                }
+            }
         }
 
         private void OnTickerUpdated(object sender, EventArgs e) {
-            this.gvTrailings.RefreshData();
+            if(IsHandleCreated)
+                BeginInvoke(new MethodInvoker(() => this.gvTrailings.RefreshData()));
         }
 
         protected TrailingSettings CreateNewSettings() {
@@ -66,10 +77,20 @@ namespace CryptoMarketClient {
         private void OnTrailingSettingsFormAccepted(object sender, EventArgs e) {
             TrailingSettinsForm form = (TrailingSettinsForm)sender;
             if(form.Mode == EditingMode.Add) {
-                form.Settings.Date = DateTime.Now;
+                form.Settings.Date = DateTime.UtcNow;
                 Ticker.Trailings.Add(form.Settings);
+                form.Settings.Start();
                 Ticker.Save();
                 this.gcTrailings.RefreshDataSource();
+            }
+            else {
+                form.Settings.Change();
+            }
+            if(ChartControl != null) {
+                if(form.Settings.ShowOnChart)
+                    ChartControl.AddIndicator(form.Settings);
+                else
+                    ChartControl.RemoveIndicator(form.Settings);
             }
         }
 
@@ -80,12 +101,15 @@ namespace CryptoMarketClient {
             if(settings == null)
                 return;
             Ticker.Trailings.Remove(settings);
+            if(ChartControl != null)
+                ChartControl.RemoveIndicator(settings);
             this.gcTrailings.RefreshDataSource();
         }
 
         private void barButtonItem1_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
             if(XtraMessageBox.Show("Are you shure to remove all trailings?", "Remove Trailings", MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
                 return;
+            if(ChartControl != null) Ticker.Trailings.ForEach(t => ChartControl.RemoveIndicator(t));
             Ticker.Trailings.Clear();
             this.gcTrailings.RefreshDataSource();
         }

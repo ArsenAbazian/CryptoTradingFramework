@@ -300,10 +300,11 @@ namespace CryptoMarketClient {
         public abstract bool ProcessOrderBook(TickerBase tickerBase, string text);
         public abstract bool UpdateTicker(TickerBase tickerBase);
         public abstract bool UpdateTrades(TickerBase tickerBase);
+        public abstract List<TradeHistoryItem> GetTrades(TickerBase ticker, DateTime starTime);
         public abstract bool UpdateOpenedOrders(TickerBase tickerBase);
         public abstract bool UpdateCurrencies();
         public abstract bool UpdateBalances();
-        public virtual BindingList<CandleStickData> GetCandleStickData(TickerBase ticker, int candleStickPeriodMin, DateTime start, int periodInSeconds) {
+        public virtual BindingList<CandleStickData> GetCandleStickData(TickerBase ticker, int candleStickPeriodMin, DateTime start, long periodInSeconds) {
             return new BindingList<CandleStickData>();
         }
         public abstract bool UpdateMyTrades(TickerBase ticker);

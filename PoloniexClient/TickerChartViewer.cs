@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CryptoMarketClient.Common;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -41,14 +42,18 @@ namespace CryptoMarketClient {
             if(prev != null) {
                 prev.OrderBook.OnChanged -= OrderBook_OnChanged;
                 prev.HistoryItemAdd -= Ticker_HistoryItemAdd;
+                prev.EventsChanged -= Settings_EventsChanged;
             }
             if(Ticker != null) {
                 Ticker.OrderBook.OnChanged += OrderBook_OnChanged;
                 Ticker.HistoryItemAdd += Ticker_HistoryItemAdd;
+                Ticker.EventsChanged += Settings_EventsChanged;
             }
-            UpdateDataFromServer();
-            UpdateCandleStickMenu();
-            UpdateChart();
+            if(Ticker != null) {
+                UpdateDataFromServer();
+                UpdateCandleStickMenu();
+                UpdateChart();
+            }
         }
         void UpdateCandleStickMenu() {
             if(Ticker == null)
@@ -67,7 +72,7 @@ namespace CryptoMarketClient {
         }
 
         private void OrderBook_OnChanged(object sender, OrderBookEventArgs e) {
-            
+
         }
 
         void CreateCandleStickDataSource() {
@@ -171,7 +176,7 @@ namespace CryptoMarketClient {
             s.DataSource = Ticker.CandleStickData;
             return s;
         }
-        
+
         protected Series BidSeries { get; set; }
         protected Series AskSeries { get; set; }
         protected Series CurrentSeries { get; set; }
@@ -190,6 +195,7 @@ namespace CryptoMarketClient {
             this.chartControl1.Series["Volume"].ValueDataMembers.AddRange("Volume");
 
             ConfigurateChart(ViewType.CandleStick);
+            UpdateEvents(null);
         }
         Series CreateLastSeries() {
             if(this.bcStock.Checked)
@@ -267,6 +273,42 @@ namespace CryptoMarketClient {
 
         private void barButtonItem3_ItemClick(object sender, ItemClickEventArgs e) {
             UpdateDataFromServer();
+        }
+        public void AddIndicator(TrailingSettings settings) {
+            if(Ticker == null)
+                return;
+            UpdateEvents(null);
+        }
+
+        private void Settings_EventsChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) {
+            UpdateEvents(e);
+        }
+
+        protected SeriesPoint CreateEventPoint(TickerEvent ev) {
+            SeriesPoint pt = new SeriesPoint(ev.Time, ev.Current);
+            pt.ToolTipHint = ev.Text;
+            pt.Tag = ev;
+            pt.Color = ev.Color;
+            return pt;
+        }
+
+        void UpdateEvents(System.Collections.Specialized.NotifyCollectionChangedEventArgs e) {
+            Series s = this.chartControl1.Series["Events"];
+            if(e == null || e.Action != System.Collections.Specialized.NotifyCollectionChangedAction.Add) {
+                s.Points.Clear();
+                foreach(TickerEvent ev in Ticker.Events)
+                    s.Points.Add(CreateEventPoint(ev));
+            }
+            else {
+                foreach(TickerEvent ev in e.NewItems)
+                    s.Points.Add(CreateEventPoint(ev));
+            }
+        }
+
+        public void RemoveIndicator(TrailingSettings settings) {
+            if(Ticker == null)
+                return;
+            UpdateEvents(null);
         }
     }
 }

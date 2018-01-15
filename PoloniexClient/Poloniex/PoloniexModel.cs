@@ -55,9 +55,9 @@ namespace CryptoMarketClient {
             return null;
         }
 
-        public override BindingList<CandleStickData> GetCandleStickData(TickerBase ticker, int candleStickPeriodMin, DateTime start, int periodInSeconds) {
-            int startSec = (Int32)(start.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
-            int end = startSec + periodInSeconds;
+        public override BindingList<CandleStickData> GetCandleStickData(TickerBase ticker, int candleStickPeriodMin, DateTime start, long periodInSeconds) {
+            long startSec = (long)(start.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
+            long end = startSec + periodInSeconds;
 
             string address = string.Format("https://poloniex.com/public?command=returnChartData&currencyPair={0}&period={1}&start={2}&end={3}",
                 Uri.EscapeDataString(ticker.CurrencyPair), candleStickPeriodMin * 60, startSec, end);
@@ -257,6 +257,41 @@ namespace CryptoMarketClient {
             UpdateOrderBook(ticker, text);
             return true;
         }
+
+        public override List<TradeHistoryItem> GetTrades(TickerBase ticker, DateTime starTime) {
+            string address = string.Format("https://poloniex.com/public?command=returnTradeHistory&currencyPair={0}", Uri.EscapeDataString(ticker.CurrencyPair));
+            string text = GetDownloadString(address);
+            if(string.IsNullOrEmpty(text))
+                return null;
+            JArray trades = (JArray)JsonConvert.DeserializeObject(text);
+            if(trades.Count == 0)
+                return null;
+
+            List<TradeHistoryItem> list = new List<TradeHistoryItem>();
+
+            int index = 0;
+            foreach(JObject obj in trades) {
+                DateTime time = obj.Value<DateTime>("date");
+                int tradeId = obj.Value<int>("tradeID");
+                if(time < starTime)
+                    break;
+
+                TradeHistoryItem item = new TradeHistoryItem();
+                bool isBuy = obj.Value<string>("type").Length == 3;
+                item.AmountString = obj.Value<string>("amount");
+                item.Time = time;
+                item.Type = isBuy ? TradeType.Buy : TradeType.Sell;
+                item.RateString = obj.Value<string>("rate");
+                item.Id = tradeId;
+                double price = item.Rate;
+                double amount = item.Amount;
+                item.Total = price * amount;
+                list.Insert(index, item);
+                index++;
+            }
+            return list;
+        }
+
         protected List<TradeHistoryItem> UpdateList { get; } = new List<TradeHistoryItem>(100);
         public override bool UpdateTrades(TickerBase ticker) {
             string address = string.Format("https://poloniex.com/public?command=returnTradeHistory&currencyPair={0}", Uri.EscapeDataString(ticker.CurrencyPair));
