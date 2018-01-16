@@ -49,7 +49,6 @@ namespace CryptoMarketClient {
 
         protected TrailingSettings CreateNewSettings() {
             TrailingSettings settings = new TrailingSettings(Ticker);
-            settings.EnableIncrementalStopLoss = true;
             settings.Mode = ActionMode.Notify;
             return settings;
         }

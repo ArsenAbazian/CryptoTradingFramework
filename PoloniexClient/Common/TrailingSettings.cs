@@ -21,7 +21,7 @@ namespace CryptoMarketClient.Common {
         public TickerBase Ticker {
             get { return ticker; }
             private set {
-                if(Ticker == value)
+                if (Ticker == value)
                     return;
                 ticker = value;
                 OnTickerChanged();
@@ -50,7 +50,7 @@ namespace CryptoMarketClient.Common {
             remove { PropertyChangedCore -= value; }
         }
         void RaisePropertyChanged(string propName) {
-            if(PropertyChangedCore != null)
+            if (PropertyChangedCore != null)
                 PropertyChangedCore.Invoke(this, new PropertyChangedEventArgs(propName));
         }
 
@@ -60,7 +60,7 @@ namespace CryptoMarketClient.Common {
         public double BuyPrice {
             get { return buyPrice; }
             set {
-                if(BuyPrice == value)
+                if (BuyPrice == value)
                     return;
                 buyPrice = value;
                 OnBuyPriceChanged();
@@ -77,7 +77,7 @@ namespace CryptoMarketClient.Common {
         public double Amount {
             get { return amount; }
             set {
-                if(Amount == value)
+                if (Amount == value)
                     return;
                 amount = value;
                 OnAmountChanged();
@@ -94,7 +94,7 @@ namespace CryptoMarketClient.Common {
         public double TotalSpendInBaseCurrency {
             get { return totalSpendInBaseCurrency; }
             set {
-                if(TotalSpendInBaseCurrency == value)
+                if (TotalSpendInBaseCurrency == value)
                     return;
                 totalSpendInBaseCurrency = value;
                 OnTotalSpendInBaseCurrencyChanged();
@@ -114,7 +114,7 @@ namespace CryptoMarketClient.Common {
         public double TakeProfitPercent { get; set; } = 5;
 
         public double ActualProfit { get { return ActualPrice - BuyPrice; } }
-        public double ActualProfitUSD { get { return UsdTicker == null? 0: ActualProfit * UsdTicker.Last; } }
+        public double ActualProfitUSD { get { return UsdTicker == null ? 0 : ActualProfit * UsdTicker.Last; } }
         [XtraSerializableProperty]
         public double ActualPrice { get; set; }
         [XtraSerializableProperty]
@@ -122,11 +122,11 @@ namespace CryptoMarketClient.Common {
         public double SellPrice { get { return GetSellPrice(); } }
         public double TakeProfitStartPrice { get { return BuyPrice * (100 + TakeProfitStartPercent) * 0.01; } }
         [XtraSerializableProperty]
-        public bool IgnoreStopLoss { get; set; }
+        public bool IgnoreStopLoss { get; set; } = false;
 
         public string Name {
             get {
-                if(Ticker == null)
+                if (Ticker == null)
                     return string.Empty;
                 return Ticker.HostName + " - " + Ticker.Name;
             }
@@ -141,19 +141,18 @@ namespace CryptoMarketClient.Common {
         public string IndicatorText { get { return "Trailing indicator"; } }
 
         public void Update() {
-            if(State == TrailingState.Analyze && State == TrailingState.TakeProfit)
+            if (State == TrailingState.Analyze && State == TrailingState.TakeProfit)
                 Analyze();
         }
         void Analyze() {
-            if(Type == TrailingType.Sell) {
+            if (Type == TrailingType.Sell) {
                 ActualPrice = Ticker.HighestBid;
                 MaxPrice = Math.Max(MaxPrice, ActualPrice);
 
-                if(ActualPrice < SellPrice) {
+                if (ActualPrice < SellPrice) {
                     OnExecuteSell();
                     return;
-                }
-                else if(ActualPrice >= TakeProfitStartPrice) {
+                } else if (ActualPrice >= TakeProfitStartPrice) {
                     OnStartTakeProdit();
                     return;
                 }
@@ -173,41 +172,42 @@ namespace CryptoMarketClient.Common {
         }
 
         void OnExecuteSell() {
-            if(Mode == ActionMode.Notify) {
+            if (Mode == ActionMode.Notify) {
                 TelegramBot.Default.SendNotification(Ticker.Exchange + " - " + Ticker.Name + " - Sell!!");
                 State = TrailingState.Done;
-            }else if (Mode == ActionMode.Execute) {
+            } else if (Mode == ActionMode.Execute) {
                 if (Ticker.MarketSell(Amount))
                     State = TrailingState.Done;
                 else
                     TelegramBot.Default.SendNotification($"{Ticker.Exchange}. Error!! Can't sell {Ticker.Name}");
             }
-            
+
             Ticker.Events.Add(new TickerEvent() { Time = DateTime.UtcNow, Text = "Stoploss!" });
-            
+
         }
         void OnStartTakeProdit() {
             State = TrailingState.TakeProfit;
-            if (Mode == ActionMode.Notify) 
+            if (Mode == ActionMode.Notify)
                 TelegramBot.Default.SendNotification(Ticker.Exchange + " - " + Ticker.Name + " - Start TAKEPROFIT!!");
-        }
             Ticker.Events.Add(new TickerEvent() { Time = DateTime.UtcNow, Text = "Takeprofit!" });
         }
-        
+
         public void Start() {
             StartDate = DateTime.UtcNow;
             Ticker.Events.Add(new TickerEvent() {
-                Text = string.Format("Trailing started! bought {0:0.########} at price {1:0.########}. Stoploss at {2:0.########}", Amount, BuyPrice, StopLossStartPrice),
+                Text = string.Format("Trailing started! bought {0:0.########} at price {1:0.########}", Amount, BuyPrice),
                 Time = Ticker.Time,
                 Current = Ticker.Last
             });
         }
         public void Change() {
             Ticker.Events.Add(new TickerEvent() {
-                Text = string.Format("Trailing changed! New values: amount {0:0.########}, stoploss at {1:0.########}", Amount, StopLossStartPrice),
+                Text = string.Format("Trailing changed! New values: amount {0:0.########}", Amount),
                 Time = Ticker.Time,
                 Current = Ticker.Last
             });
+        }
+
     }
 
     public enum EditingMode { Add, Edit }
@@ -230,3 +230,4 @@ namespace CryptoMarketClient.Common {
         public Color Color { get; set; }
     }
 }
+
