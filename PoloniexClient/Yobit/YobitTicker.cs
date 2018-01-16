@@ -70,6 +70,9 @@ namespace CryptoMarketClient.Yobit {
         public override bool Sell(double highestBid, double amount) {
             throw new NotImplementedException();
         }
+        public override bool MarketSell(double amount) {
+            throw new NotImplementedException();
+        }
 
         public override string DownloadString(string address) {
             try {
