@@ -46,8 +46,12 @@ namespace CryptoMarketClient {
         }
         static void CheckShowApiKeysForm() {
             foreach(Exchange exchange in Exchange.Registered) {
-                if(!exchange.IsApiKeyExists)
+                if (exchange.IsApiKeyExists)
+                    continue;
+                else {
                     Application.Run(new EnterApiKeyForm());
+                    break;
+                }
             }
         }
     }
