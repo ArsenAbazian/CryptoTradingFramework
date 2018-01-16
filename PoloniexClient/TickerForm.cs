@@ -44,6 +44,8 @@ namespace CryptoMarketClient {
         }
         protected void OnThreadUpdate(object state) {
             if(Ticker != null)
+                Ticker.UpdateTicker();
+            if(Ticker != null)
                 Ticker.UpdateOrderBook();
             if(Ticker != null)
                 Ticker.UpdateTrades();

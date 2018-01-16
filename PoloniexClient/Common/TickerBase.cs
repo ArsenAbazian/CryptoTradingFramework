@@ -298,7 +298,7 @@ namespace CryptoMarketClient {
         public double Spread { get { return LowestAsk - HighestBid; } }
         public double BidChange { get; set; }
         public double AskChange { get; set; }
-        public abstract double Fee { get; }
+        public abstract double Fee { get; set; }
 
         public TickerBase UsdTicker { get; set; }
 

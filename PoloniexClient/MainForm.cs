@@ -19,6 +19,7 @@ using DevExpress.XtraEditors;
 using CryptoMarketClient.Common;
 using Tesseract;
 using System.IO;
+using CryptoMarketClient.Yobit;
 
 namespace CryptoMarketClient {
     public partial class MainForm : DevExpress.XtraBars.Ribbon.RibbonForm {
@@ -54,6 +55,17 @@ namespace CryptoMarketClient {
             //    ArbitrageForm.Show();
             //    ArbitrageForm.Activate();
             //}
+        }
+
+        TickersCollectionForm yobitForm;
+        public TickersCollectionForm YobitTickersForm {
+            get {
+                if(yobitForm == null || yobitForm.IsDisposed) {
+                    yobitForm = new TickersCollectionForm(YobitExchange.Default);
+                    yobitForm.MdiParent = this;
+                }
+                return yobitForm;
+            }
         }
 
         TickersCollectionForm tickersForm;
@@ -257,6 +269,17 @@ namespace CryptoMarketClient {
             CurrencyMonitoringForm form = new CurrencyMonitoringForm(BittrexExchange.Default);
             form.MdiParent = this;
             form.Show();
+        }
+
+        private void bcYobit_CheckedChanged(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
+            if(this.bcYobit.Checked) {
+                YobitExchange.Default.IsConnected = true;
+                YobitTickersForm.Show();
+            }
+            else {
+                YobitExchange.Default.IsConnected = false;
+                YobitTickersForm.Hide();
+            }
         }
     }
 }
