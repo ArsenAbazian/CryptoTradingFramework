@@ -21,7 +21,7 @@ namespace CryptoMarketClient.Bittrex {
         public int OpenSellOrders { get; set; }
         public double PrevDay { get; set; }
         public string DisplayMarketName { get; set; }
-        public override double Fee { get { return 0.25 * 0.01; } }
+        public override double Fee { get { return 0.25 * 0.01; } set { } }
 
         public override double BaseCurrencyBalance { get { return BaseBalanceInfo == null ? 0 : BaseBalanceInfo.Available; } }
         public override double MarketCurrencyBalance { get { return MarketBalanceInfo == null ? 0 : MarketBalanceInfo.Available; } }

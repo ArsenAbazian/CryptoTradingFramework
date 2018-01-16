@@ -39,14 +39,14 @@ namespace CryptoMarketClient {
         public override BalanceBase BaseBalanceInfo {
             get {
                 if(firstInfo == null)
-                    firstInfo = PoloniexExchange.Default.Balances.FirstOrDefault((b) => b.Currency == BaseCurrency);
+                    firstInfo = Exchange.Balances.FirstOrDefault((b) => b.Currency == BaseCurrency);
                 return firstInfo;
             }
         }
         public override BalanceBase MarketBalanceInfo {
             get {
                 if(secondInfo == null)
-                    secondInfo = PoloniexExchange.Default.Balances.FirstOrDefault((b) => b.Currency == MarketCurrency);
+                    secondInfo = Exchange.Balances.FirstOrDefault((b) => b.Currency == MarketCurrency);
                 return secondInfo;
             }
         }
@@ -65,14 +65,14 @@ namespace CryptoMarketClient {
         public override double MarketCurrencyTotalBalance { get { return MarketBalanceInfo == null ? 0 : MarketBalanceInfo.OnOrders + MarketBalanceInfo.Available; } }
         public override bool MarketCurrencyEnabled { get { return MarketCurrencyInfo == null ? false : !MarketCurrencyInfo.Disabled; } }
         public override string HostName { get { return "Poloniex"; } }
-        public override double Fee { get { return 0.25 * 0.01; } }
+        public override double Fee { get { return 0.25 * 0.01; } set { } }
         public override string Name { get { return CurrencyPair; } }
         
         public override string WebPageAddress { get { return "https://poloniex.com/exchange#" + Name.ToLower(); } }
         public override string DownloadString(string address) {
             try {
                 ApiRate.WaitToProceed();
-                return PoloniexExchange.Default.GetWebClient().DownloadString(address);
+                return Exchange.GetWebClient().DownloadString(address);
             }
             catch { }
             return string.Empty;

@@ -15,6 +15,7 @@ using System.Text.Json;
 using CryptoMarketClient.Bittrex;
 using System.ComponentModel;
 using System.Windows.Forms;
+using CryptoMarketClient.Yobit;
 
 namespace CryptoMarketClient {
     public abstract class Exchange : IXtraSerializable {
@@ -25,6 +26,7 @@ namespace CryptoMarketClient {
         static Exchange() {
             Registered.Add(new PoloniexExchange());
             Registered.Add(new BittrexExchange());
+            Registered.Add(new YobitExchange());
 
             foreach(Exchange exchange in Registered)
                 exchange.Load();

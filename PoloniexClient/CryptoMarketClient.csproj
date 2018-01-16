@@ -451,6 +451,9 @@
     <Compile Include="TrailingSettinsForm.Designer.cs">
       <DependentUpon>TrailingSettinsForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Yobit\YobitCurrencyInfo.cs" />
+    <Compile Include="Yobit\YobitModel.cs" />
+    <Compile Include="Yobit\YobitTicker.cs" />
     <EmbeddedResource Include="CurrencyMonitoringForm.resx">
       <DependentUpon>CurrencyMonitoringForm.cs</DependentUpon>
     </EmbeddedResource>
