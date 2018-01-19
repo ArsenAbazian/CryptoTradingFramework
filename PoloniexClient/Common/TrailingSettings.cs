@@ -141,7 +141,7 @@ namespace CryptoMarketClient.Common {
         public string IndicatorText { get { return "Trailing indicator"; } }
 
         public void Update() {
-            if (State == TrailingState.Analyze && State == TrailingState.TakeProfit)
+            if (State == TrailingState.Analyze || State == TrailingState.TakeProfit)
                 Analyze();
         }
         void Analyze() {

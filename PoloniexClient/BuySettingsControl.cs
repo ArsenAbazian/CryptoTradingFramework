@@ -67,7 +67,7 @@ namespace CryptoMarketClient {
         }
 
         private void checkEdit1_CheckedChanged(object sender, EventArgs e) {
-            ItemForStopLossPricePercent.Enabled = ItemForTakeProfitPercent.Enabled = this.checkEdit1.Checked;
+            ItemForStopLossPricePercent.Enabled = ItemForTakeProfitPercent.Enabled = ItemForTakeProfitStartPercent.Enabled = this.checkEdit1.Checked;
         }
     }
 

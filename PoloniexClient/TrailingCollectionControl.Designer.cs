@@ -354,6 +354,7 @@ namespace CryptoMarketClient {
             this.btEdit.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("btEdit.ImageOptions.LargeImage")));
             this.btEdit.Name = "btEdit";
             this.btEdit.PaintStyle = DevExpress.XtraBars.BarItemPaintStyle.CaptionGlyph;
+            this.btEdit.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btEdit_ItemClick);
             // 
             // barDockControlTop
             // 
@@ -415,6 +416,10 @@ namespace CryptoMarketClient {
             this.ResumeLayout(false);
             this.PerformLayout();
 
+        }
+
+        private void BtEdit_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
+            throw new System.NotImplementedException();
         }
 
         #endregion
