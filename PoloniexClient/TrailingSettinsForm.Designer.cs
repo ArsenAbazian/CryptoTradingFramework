@@ -24,6 +24,7 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
+            this.components = new System.ComponentModel.Container();
             this.dataLayoutControl1 = new DevExpress.XtraDataLayout.DataLayoutControl();
             this.ceIncrimentalStopLoss = new DevExpress.XtraEditors.CheckEdit();
             this.ceIgnoreStopLoss = new DevExpress.XtraEditors.CheckEdit();
@@ -53,7 +54,7 @@
             this.layoutControlItem5 = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItem6 = new DevExpress.XtraLayout.LayoutControlItem();
             this.itemForTakeProfitStartPercent = new DevExpress.XtraLayout.LayoutControlItem();
-            this.trailingSettingsBindingSource = new System.Windows.Forms.BindingSource();
+            this.trailingSettingsBindingSource = new System.Windows.Forms.BindingSource(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.dataLayoutControl1)).BeginInit();
             this.dataLayoutControl1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ceIncrimentalStopLoss.Properties)).BeginInit();
@@ -142,7 +143,6 @@
             this.teTakeProfitStartPercent.Properties.Mask.EditMask = "P";
             this.teTakeProfitStartPercent.Properties.Mask.MaskType = DevExpress.XtraEditors.Mask.MaskType.Numeric;
             this.teTakeProfitStartPercent.Properties.Mask.UseMaskAsDisplayFormat = true;
-            this.teTakeProfitStartPercent.Properties.Padding = new System.Windows.Forms.Padding(0, 0, 0, 0);
             this.teTakeProfitStartPercent.Size = new System.Drawing.Size(549, 28);
             this.teTakeProfitStartPercent.StyleController = this.dataLayoutControl1;
             this.teTakeProfitStartPercent.TabIndex = 12;
@@ -157,7 +157,6 @@
             this.BuyPriceTextEdit.Properties.Mask.EditMask = "f8";
             this.BuyPriceTextEdit.Properties.Mask.MaskType = DevExpress.XtraEditors.Mask.MaskType.Numeric;
             this.BuyPriceTextEdit.Properties.Mask.UseMaskAsDisplayFormat = true;
-            this.BuyPriceTextEdit.Properties.Padding = new System.Windows.Forms.Padding(0, 0, 0, 0);
             this.BuyPriceTextEdit.Size = new System.Drawing.Size(549, 28);
             this.BuyPriceTextEdit.StyleController = this.dataLayoutControl1;
             this.BuyPriceTextEdit.TabIndex = 4;
@@ -172,7 +171,6 @@
             this.AmountTextEdit.Properties.Mask.EditMask = "f8";
             this.AmountTextEdit.Properties.Mask.MaskType = DevExpress.XtraEditors.Mask.MaskType.Numeric;
             this.AmountTextEdit.Properties.Mask.UseMaskAsDisplayFormat = true;
-            this.AmountTextEdit.Properties.Padding = new System.Windows.Forms.Padding(0, 0, 0, 0);
             this.AmountTextEdit.Size = new System.Drawing.Size(549, 28);
             this.AmountTextEdit.StyleController = this.dataLayoutControl1;
             this.AmountTextEdit.TabIndex = 5;
@@ -187,7 +185,6 @@
             this.TotalSpendInBaseCurrencyTextEdit.Properties.Mask.EditMask = "f8";
             this.TotalSpendInBaseCurrencyTextEdit.Properties.Mask.MaskType = DevExpress.XtraEditors.Mask.MaskType.Numeric;
             this.TotalSpendInBaseCurrencyTextEdit.Properties.Mask.UseMaskAsDisplayFormat = true;
-            this.TotalSpendInBaseCurrencyTextEdit.Properties.Padding = new System.Windows.Forms.Padding(0, 0, 0, 0);
             this.TotalSpendInBaseCurrencyTextEdit.Size = new System.Drawing.Size(549, 28);
             this.TotalSpendInBaseCurrencyTextEdit.StyleController = this.dataLayoutControl1;
             this.TotalSpendInBaseCurrencyTextEdit.TabIndex = 6;
@@ -202,7 +199,6 @@
             this.StopLossPricePercentTextEdit.Properties.Mask.EditMask = "P";
             this.StopLossPricePercentTextEdit.Properties.Mask.MaskType = DevExpress.XtraEditors.Mask.MaskType.Numeric;
             this.StopLossPricePercentTextEdit.Properties.Mask.UseMaskAsDisplayFormat = true;
-            this.StopLossPricePercentTextEdit.Properties.Padding = new System.Windows.Forms.Padding(0, 0, 0, 0);
             this.StopLossPricePercentTextEdit.Size = new System.Drawing.Size(549, 28);
             this.StopLossPricePercentTextEdit.StyleController = this.dataLayoutControl1;
             this.StopLossPricePercentTextEdit.TabIndex = 7;
@@ -217,7 +213,6 @@
             this.TakeProfitPercentTextEdit.Properties.Mask.EditMask = "P";
             this.TakeProfitPercentTextEdit.Properties.Mask.MaskType = DevExpress.XtraEditors.Mask.MaskType.Numeric;
             this.TakeProfitPercentTextEdit.Properties.Mask.UseMaskAsDisplayFormat = true;
-            this.TakeProfitPercentTextEdit.Properties.Padding = new System.Windows.Forms.Padding(0, 0, 0, 0);
             this.TakeProfitPercentTextEdit.Size = new System.Drawing.Size(549, 28);
             this.TakeProfitPercentTextEdit.StyleController = this.dataLayoutControl1;
             this.TakeProfitPercentTextEdit.TabIndex = 8;
@@ -253,7 +248,6 @@
             this.imageComboBoxEdit1.Name = "imageComboBoxEdit1";
             this.imageComboBoxEdit1.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.imageComboBoxEdit1.Properties.Padding = new System.Windows.Forms.Padding(0, 0, 0, 0);
             this.imageComboBoxEdit1.Size = new System.Drawing.Size(549, 28);
             this.imageComboBoxEdit1.StyleController = this.dataLayoutControl1;
             this.imageComboBoxEdit1.TabIndex = 11;
