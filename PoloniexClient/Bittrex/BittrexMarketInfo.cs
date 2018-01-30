@@ -58,14 +58,6 @@ namespace CryptoMarketClient.Bittrex {
         public override string CurrencyPair { get { return MarketName; } set { MarketName = value; } }
         public override string Name { get { return MarketName; } }
 
-        public override string DownloadString(string address) {
-            try {
-                ApiRate.WaitToProceed();
-                return BittrexExchange.Default.GetWebClient().DownloadString(address);
-            }
-            catch { }
-            return string.Empty;
-        }
         public override bool UpdateBalance(CurrencyType type) {
             return BittrexExchange.Default.GetBalance(type == CurrencyType.MarketCurrency? MarketCurrency: BaseCurrency);
         }

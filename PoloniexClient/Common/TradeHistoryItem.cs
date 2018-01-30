@@ -9,7 +9,17 @@ namespace CryptoMarketClient {
     public enum TradeType { Buy, Sell }
 
     public class TradeHistoryItem {
-        public DateTime Time { get; set; }
+        DateTime? time;
+        public DateTime Time {
+            get {
+                if(!time.HasValue)
+                    time = Convert.ToDateTime(TimeString);
+                return time.Value;
+            }
+            set {
+                time = value;
+            }
+        }
         public string AmountString { get; set; }
         public string RateString { get; set; }
         double rate = 0;
@@ -41,6 +51,8 @@ namespace CryptoMarketClient {
         public TradeFillType Fill { get; set;}
         public TradeType Type { get; set; }
         public long Id { get; set; }
+        public string IdString { get; set; }
         public long GlobalId { get; set; }
+        public string TimeString { get; set; }
     }
 }

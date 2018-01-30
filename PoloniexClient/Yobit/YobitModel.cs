@@ -27,6 +27,10 @@ namespace CryptoMarketClient.Yobit {
 
         public List<YobitCurrencyInfo> Currencies { get; } = new List<YobitCurrencyInfo>();
 
+        public override List<CandleStickIntervalInfo> GetAllowedCandleStickIntervals() {
+            return new List<CandleStickIntervalInfo>();
+        }
+
         public override BindingList<CandleStickData> GetCandleStickData(TickerBase ticker, int candleStickPeriodMin, DateTime start, long periodInSeconds) {
             string address = string.Format("https://yobit.net/ajax/system_chart.php");
             NameValueCollection coll = new NameValueCollection();

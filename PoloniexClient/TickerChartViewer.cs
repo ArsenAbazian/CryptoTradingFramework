@@ -20,7 +20,6 @@ namespace CryptoMarketClient {
         public TickerChartViewer() {
             InitializeComponent();
             InitializeCheckItems();
-            SetCandleStickCheckItemValues();
             this.barManager1.ForceInitialize();
         }
 
@@ -50,6 +49,7 @@ namespace CryptoMarketClient {
                 Ticker.EventsChanged += Settings_EventsChanged;
             }
             if(Ticker != null) {
+                SetCandleStickCheckItemValues();
                 UpdateDataFromServer();
                 UpdateCandleStickMenu();
                 UpdateChart();
@@ -59,7 +59,7 @@ namespace CryptoMarketClient {
             if(Ticker == null)
                 return;
             foreach(BarCheckItemLink link in this.bsCandleStickPeriod.ItemLinks) {
-                if(((int)link.Item.Tag) == Ticker.CandleStickPeriodMin) {
+                if(((TimeSpan)link.Item.Tag).Minutes == Ticker.CandleStickPeriodMin) {
                     link.Item.Down = true;
                     this.bsCandleStickPeriod.Caption = link.Item.Caption;
                     break;
@@ -224,15 +224,24 @@ namespace CryptoMarketClient {
             UpdateDataFromServer();
         }
         void SetCandleStickCheckItemValues() {
-            this.bcFifteenMinutes.Tag = 15;
-            this.bcFiveMinutes.Tag = 5;
-            this.bcOneDay.Tag = 24 * 60;
-            this.bcOneHour.Tag = 60;
-            this.bcOneMinute.Tag = 1;
-            this.bcOneMonth.Tag = 30 * 24 * 60;
-            this.bcOneWeek.Tag = 7 * 24 * 60;
-            this.bcThirtyMinutes.Tag = 30;
-            this.bcThreeDays.Tag = 3 * 24 * 60;
+            if(Ticker == null)
+                return;
+            var intervals = Ticker.Exchange.GetAllowedCandleStickIntervals();
+            foreach(CandleStickIntervalInfo info in intervals) {
+                BarCheckItem item = new BarCheckItem(this.barManager1) { Caption = info.Text, Tag = info.Interval, GroupIndex = 22 };
+                item.CheckedChanged += OnIntervalItemCheckedChanged;
+                this.bsCandleStickPeriod.ItemLinks.Add(item);
+            }
+        }
+
+        private void OnIntervalItemCheckedChanged(object sender, ItemClickEventArgs e) {
+            BarCheckItem item = (BarCheckItem)sender;
+            if(!item.Checked)
+                return;
+            if(((TimeSpan)item.Tag).Minutes == Ticker.CandleStickPeriodMin)
+                return;
+            Ticker.CandleStickPeriodMin = ((TimeSpan)item.Tag).Minutes;
+            UpdateDataFromServer();
         }
 
         private void OnChartTypeChanged(object sender, ItemClickEventArgs e) {

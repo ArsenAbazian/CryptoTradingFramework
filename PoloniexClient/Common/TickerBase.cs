@@ -318,29 +318,84 @@ namespace CryptoMarketClient {
         public long LastTradeId { get; set; }
         public abstract string WebPageAddress { get; }
         public bool UpdateOrderBook() {
-            bool res = Exchange.UpdateOrderBook(this);
-            if(res) {
-                HighestBid = OrderBook.Bids[0].Value;
-                LowestAsk = OrderBook.Asks[0].Value;
-                Time = DateTime.UtcNow;
-                UpdateHistoryItem();
-                CandleStickChartHelper.AddCandleStickData(CandleStickData, History.Last(), CandleStickPeriodMin * 60);
+            if(IsUpdatingOrderBook)
+                return true;
+            try {
+                IsUpdatingOrderBook = true;
+                bool res = Exchange.UpdateOrderBook(this);
+                if(res) {
+                    HighestBid = OrderBook.Bids[0].Value;
+                    LowestAsk = OrderBook.Asks[0].Value;
+                    Time = DateTime.UtcNow;
+                    UpdateHistoryItem();
+                    CandleStickChartHelper.AddCandleStickData(CandleStickData, History.Last(), CandleStickPeriodMin * 60);
+                }
+                return res;
             }
-            return res;
+            finally {
+                IsUpdatingOrderBook = false;
+            }
         }
         public bool ProcessOrderBook(string text) { return Exchange.ProcessOrderBook(this, text); }
+        protected bool IsUpdatingTicker { get; set; }
         public bool UpdateTicker() {
-            bool res = Exchange.UpdateTicker(this);
-            if(res) {
-                Time = DateTime.UtcNow;
-                UpdateHistoryItem();
-                CandleStickChartHelper.AddCandleStickData(CandleStickData, History.Last(), CandleStickPeriodMin * 60);
+            if(IsUpdatingTicker)
+                return true;
+            IsUpdatingTicker = true;
+            try {
+                bool res = Exchange.UpdateTicker(this);
+                if(res) {
+                    Time = DateTime.UtcNow;
+                    UpdateHistoryItem();
+                    CandleStickChartHelper.AddCandleStickData(CandleStickData, History.Last(), CandleStickPeriodMin * 60);
+                }
+                return res;
             }
-            return res;
+            finally {
+                IsUpdatingTicker = false;
+            }
         }
-        public bool UpdateTrades() { return Exchange.UpdateTrades(this); }
-        public bool UpdateOpenedOrders() { return Exchange.UpdateOpenedOrders(this); }
-        public abstract string DownloadString(string address);
+        protected bool IsUpdatingOrderBook { get; set; }
+        protected bool IsUpdatingTrades { get; set; }
+        public bool UpdateTrades() {
+            if(IsUpdatingTrades)
+                return true;
+            try {
+                IsUpdatingTrades = true;
+                return Exchange.UpdateTrades(this);
+            }
+            finally {
+                IsUpdatingTrades = false;
+            }
+        }
+        protected bool IsUpdatingOpenedOrders { get; set; }
+        public bool UpdateOpenedOrders() {
+            if(IsUpdatingOpenedOrders)
+                return true;
+            try {
+                IsUpdatingOpenedOrders = true;
+                return Exchange.UpdateOpenedOrders(this);
+            }
+            finally {
+                IsUpdatingOpenedOrders = false;
+            }
+        }
+        public string DownloadString(string address) {
+            try {
+                ApiRate.WaitToProceed();
+                return Exchange.GetWebClient().DownloadString(address);
+            }
+            catch { }
+            return string.Empty;
+        }
+        public byte[] DownloadBytes(string address) {
+            try {
+                ApiRate.WaitToProceed();
+                return Exchange.GetWebClient().DownloadData(address);
+            }
+            catch { }
+            return null;
+        }
 
         TickerUpdateHelper updateHelper;
         protected TickerUpdateHelper UpdateHelper {

@@ -46,15 +46,6 @@ namespace CryptoMarketClient {
             this.barManager1 = new DevExpress.XtraBars.BarManager(this.components);
             this.bar1 = new DevExpress.XtraBars.Bar();
             this.bsCandleStickPeriod = new DevExpress.XtraBars.BarSubItem();
-            this.bcOneDay = new DevExpress.XtraBars.BarCheckItem();
-            this.bcThreeDays = new DevExpress.XtraBars.BarCheckItem();
-            this.bcOneWeek = new DevExpress.XtraBars.BarCheckItem();
-            this.bcOneMonth = new DevExpress.XtraBars.BarCheckItem();
-            this.bcOneMinute = new DevExpress.XtraBars.BarCheckItem();
-            this.bcFiveMinutes = new DevExpress.XtraBars.BarCheckItem();
-            this.bcFifteenMinutes = new DevExpress.XtraBars.BarCheckItem();
-            this.bcThirtyMinutes = new DevExpress.XtraBars.BarCheckItem();
-            this.bcOneHour = new DevExpress.XtraBars.BarCheckItem();
             this.bsChartType = new DevExpress.XtraBars.BarSubItem();
             this.bcStock = new DevExpress.XtraBars.BarCheckItem();
             this.bcCandle = new DevExpress.XtraBars.BarCheckItem();
@@ -164,7 +155,7 @@ namespace CryptoMarketClient {
             this.chartControl1.Margin = new System.Windows.Forms.Padding(6);
             this.chartControl1.Name = "chartControl1";
             series1.Name = "Volume";
-            series1.ToolTipEnabled = DevExpress.Utils.DefaultBoolean.True;
+            //series1.ToolTipEnabled = DevExpress.Utils.DefaultBoolean.True;
             sideBySideBarSeriesView1.AxisYName = "Secondary AxisY 2";
             sideBySideBarSeriesView1.BarWidth = 0.9D;
             sideBySideBarSeriesView1.Color = System.Drawing.Color.FromArgb(((int)(((byte)(150)))), ((int)(((byte)(181)))), ((int)(((byte)(200)))), ((int)(((byte)(201)))));
@@ -218,15 +209,6 @@ namespace CryptoMarketClient {
             this.barManager1.Form = this;
             this.barManager1.Items.AddRange(new DevExpress.XtraBars.BarItem[] {
             this.bsCandleStickPeriod,
-            this.bcOneDay,
-            this.bcThreeDays,
-            this.bcOneWeek,
-            this.bcOneMonth,
-            this.bcOneMinute,
-            this.bcFiveMinutes,
-            this.bcFifteenMinutes,
-            this.bcThirtyMinutes,
-            this.bcOneHour,
             this.bsChartType,
             this.bcStock,
             this.barButtonItem1,
@@ -252,7 +234,6 @@ namespace CryptoMarketClient {
             this.bar1.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
             new DevExpress.XtraBars.LinkPersistInfo(this.bsCandleStickPeriod),
             new DevExpress.XtraBars.LinkPersistInfo(this.bsChartType),
-            new DevExpress.XtraBars.LinkPersistInfo(this.barSubItem1),
             new DevExpress.XtraBars.LinkPersistInfo(this.barButtonItem3)});
             this.bar1.OptionsBar.DrawBorder = false;
             this.bar1.OptionsBar.MultiLine = true;
@@ -265,99 +246,14 @@ namespace CryptoMarketClient {
             this.bsCandleStickPeriod.Id = 2;
             this.bsCandleStickPeriod.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bsCandleStickPeriod.ImageOptions.Image")));
             this.bsCandleStickPeriod.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("bsCandleStickPeriod.ImageOptions.LargeImage")));
-            this.bsCandleStickPeriod.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
-            new DevExpress.XtraBars.LinkPersistInfo(this.bcOneDay),
-            new DevExpress.XtraBars.LinkPersistInfo(this.bcThreeDays),
-            new DevExpress.XtraBars.LinkPersistInfo(this.bcOneWeek),
-            new DevExpress.XtraBars.LinkPersistInfo(this.bcOneMonth),
-            new DevExpress.XtraBars.LinkPersistInfo(this.bcOneMinute, true),
-            new DevExpress.XtraBars.LinkPersistInfo(this.bcFiveMinutes),
-            new DevExpress.XtraBars.LinkPersistInfo(this.bcFifteenMinutes),
-            new DevExpress.XtraBars.LinkPersistInfo(this.bcThirtyMinutes),
-            new DevExpress.XtraBars.LinkPersistInfo(this.bcOneHour, true)});
             this.bsCandleStickPeriod.Name = "bsCandleStickPeriod";
             this.bsCandleStickPeriod.PaintStyle = DevExpress.XtraBars.BarItemPaintStyle.CaptionGlyph;
-            // 
-            // bcOneDay
-            // 
-            this.bcOneDay.Caption = "1 Day";
-            this.bcOneDay.GroupIndex = 22;
-            this.bcOneDay.Id = 3;
-            this.bcOneDay.Name = "bcOneDay";
-            this.bcOneDay.CheckedChanged += new DevExpress.XtraBars.ItemClickEventHandler(this.OnCandleStickPeriodChanged);
-            // 
-            // bcThreeDays
-            // 
-            this.bcThreeDays.Caption = "3 Days";
-            this.bcThreeDays.GroupIndex = 22;
-            this.bcThreeDays.Id = 4;
-            this.bcThreeDays.Name = "bcThreeDays";
-            this.bcThreeDays.CheckedChanged += new DevExpress.XtraBars.ItemClickEventHandler(this.OnCandleStickPeriodChanged);
-            // 
-            // bcOneWeek
-            // 
-            this.bcOneWeek.Caption = "1 Week";
-            this.bcOneWeek.GroupIndex = 22;
-            this.bcOneWeek.Id = 5;
-            this.bcOneWeek.Name = "bcOneWeek";
-            this.bcOneWeek.CheckedChanged += new DevExpress.XtraBars.ItemClickEventHandler(this.OnCandleStickPeriodChanged);
-            // 
-            // bcOneMonth
-            // 
-            this.bcOneMonth.Caption = "1 Month";
-            this.bcOneMonth.GroupIndex = 22;
-            this.bcOneMonth.Id = 6;
-            this.bcOneMonth.Name = "bcOneMonth";
-            this.bcOneMonth.CheckedChanged += new DevExpress.XtraBars.ItemClickEventHandler(this.OnCandleStickPeriodChanged);
-            // 
-            // bcOneMinute
-            // 
-            this.bcOneMinute.Caption = "1 Minute";
-            this.bcOneMinute.GroupIndex = 22;
-            this.bcOneMinute.Id = 7;
-            this.bcOneMinute.Name = "bcOneMinute";
-            this.bcOneMinute.CheckedChanged += new DevExpress.XtraBars.ItemClickEventHandler(this.OnCandleStickPeriodChanged);
-            // 
-            // bcFiveMinutes
-            // 
-            this.bcFiveMinutes.BindableChecked = true;
-            this.bcFiveMinutes.Caption = "5 Minutes";
-            this.bcFiveMinutes.Checked = true;
-            this.bcFiveMinutes.GroupIndex = 22;
-            this.bcFiveMinutes.Id = 8;
-            this.bcFiveMinutes.Name = "bcFiveMinutes";
-            this.bcFiveMinutes.CheckedChanged += new DevExpress.XtraBars.ItemClickEventHandler(this.OnCandleStickPeriodChanged);
-            // 
-            // bcFifteenMinutes
-            // 
-            this.bcFifteenMinutes.Caption = "15 Minutes";
-            this.bcFifteenMinutes.GroupIndex = 22;
-            this.bcFifteenMinutes.Id = 9;
-            this.bcFifteenMinutes.Name = "bcFifteenMinutes";
-            this.bcFifteenMinutes.CheckedChanged += new DevExpress.XtraBars.ItemClickEventHandler(this.OnCandleStickPeriodChanged);
-            // 
-            // bcThirtyMinutes
-            // 
-            this.bcThirtyMinutes.Caption = "30 Minutes";
-            this.bcThirtyMinutes.GroupIndex = 22;
-            this.bcThirtyMinutes.Id = 10;
-            this.bcThirtyMinutes.Name = "bcThirtyMinutes";
-            this.bcThirtyMinutes.CheckedChanged += new DevExpress.XtraBars.ItemClickEventHandler(this.OnCandleStickPeriodChanged);
-            // 
-            // bcOneHour
-            // 
-            this.bcOneHour.Caption = "1 Hour";
-            this.bcOneHour.GroupIndex = 22;
-            this.bcOneHour.Id = 11;
-            this.bcOneHour.Name = "bcOneHour";
-            this.bcOneHour.CheckedChanged += new DevExpress.XtraBars.ItemClickEventHandler(this.OnCandleStickPeriodChanged);
             // 
             // bsChartType
             // 
             this.bsChartType.Caption = "Chart Type";
             this.bsChartType.Id = 12;
             this.bsChartType.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
-            new DevExpress.XtraBars.LinkPersistInfo(this.bcStock),
             new DevExpress.XtraBars.LinkPersistInfo(this.bcCandle),
             new DevExpress.XtraBars.LinkPersistInfo(this.bcLine)});
             this.bsChartType.Name = "bsChartType";
@@ -548,15 +444,6 @@ namespace CryptoMarketClient {
         private DevExpress.XtraEditors.Repository.RepositoryItemCheckedComboBoxEdit repositoryItemCheckedComboBoxEdit1;
         private BarSubItem bsCandleStickPeriod;
         private DevExpress.XtraEditors.Repository.RepositoryItemComboBox repositoryItemComboBox1;
-        private BarCheckItem bcOneDay;
-        private BarCheckItem bcThreeDays;
-        private BarCheckItem bcOneWeek;
-        private BarCheckItem bcOneMonth;
-        private BarCheckItem bcOneMinute;
-        private BarCheckItem bcFiveMinutes;
-        private BarCheckItem bcFifteenMinutes;
-        private BarCheckItem bcThirtyMinutes;
-        private BarCheckItem bcOneHour;
         private BarSubItem bsChartType;
         private BarCheckItem bcStock;
         private BarCheckItem bcColoredStock;

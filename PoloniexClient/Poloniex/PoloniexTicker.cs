@@ -67,16 +67,9 @@ namespace CryptoMarketClient {
         public override string HostName { get { return "Poloniex"; } }
         public override double Fee { get { return 0.25 * 0.01; } set { } }
         public override string Name { get { return CurrencyPair; } }
-        
+        public override string MarketName { get { return CurrencyPair; } set { } }
+
         public override string WebPageAddress { get { return "https://poloniex.com/exchange#" + Name.ToLower(); } }
-        public override string DownloadString(string address) {
-            try {
-                ApiRate.WaitToProceed();
-                return Exchange.GetWebClient().DownloadString(address);
-            }
-            catch { }
-            return string.Empty;
-        }
         public override bool Buy(double rate, double amount) {
             return PoloniexExchange.Default.BuyLimit(this, rate, amount);
         }

@@ -35,6 +35,17 @@ namespace CryptoMarketClient {
         }
 
         public override string Name => "Poloniex";
+        public override List<CandleStickIntervalInfo> GetAllowedCandleStickIntervals() {
+            List<CandleStickIntervalInfo> list = new List<CandleStickIntervalInfo>();
+            list.Add(new CandleStickIntervalInfo() { Text = "5 Minutes", Interval = TimeSpan.FromSeconds(300) });
+            list.Add(new CandleStickIntervalInfo() { Text = "15 Minutes", Interval = TimeSpan.FromSeconds(300) });
+            list.Add(new CandleStickIntervalInfo() { Text = "30 Minutes", Interval = TimeSpan.FromSeconds(1800) });
+            list.Add(new CandleStickIntervalInfo() { Text = "2 Hours", Interval = TimeSpan.FromSeconds(7200) });
+            list.Add(new CandleStickIntervalInfo() { Text = "4 Hours", Interval = TimeSpan.FromSeconds(14400) });
+            list.Add(new CandleStickIntervalInfo() { Text = "1 Day", Interval = TimeSpan.FromSeconds(86400) });
+
+            return list;
+        }
 
         public List<PoloniexCurrencyInfo> Currencies { get; } = new List<PoloniexCurrencyInfo>();
 
@@ -54,39 +65,165 @@ namespace CryptoMarketClient {
         public IDisposable ConnectOrderBook(PoloniexTicker ticker) {
             return null;
         }
-
+        string ByteArray2String(byte[] bytes, int index, int length) {
+            unsafe
+            {
+                fixed (byte* bytes2 = &bytes[0]) {
+                    if(bytes[index] == '"')
+                        return new string((sbyte*)bytes2, index + 1, length - 2);
+                    return new string((sbyte*)bytes2, index, length);
+                }
+            }
+        }
+        List<string[]> DeserializeArrayOfObjects(byte[] bytes, ref int startIndex, string[] str) {
+            return DeserializeArrayOfObjects(bytes, ref startIndex, str, null);
+        }
+        List<string[]> DeserializeArrayOfObjects(byte[] bytes, ref int startIndex, string[] str, IfDelegate2 shouldContinue) {
+            int index = startIndex;
+            if(!FindChar(bytes, '[', ref index))
+                return null;
+            List<string[]> items = new List<string[]>();
+            while(index != -1) {
+                if(!FindChar(bytes, '{', ref index))
+                    break;
+                string[] props = new string[str.Length];
+                for(int itemIndex = 0; itemIndex < str.Length; itemIndex++) {
+                    if(bytes[index + 1 + 2 + str[itemIndex].Length] == ':')
+                        index = index + 1 + 2 + str[itemIndex].Length + 1;
+                    else {
+                        if(!FindChar(bytes, ':', ref index)) {
+                            startIndex = index;
+                            return items;
+                        }
+                    }
+                    int length = index;
+                    if(bytes[index] == '"')
+                        ReadString(bytes, ref length);
+                    else
+                        FindChar(bytes, itemIndex == str.Length - 1 ? '}' : ',', ref length);
+                    length -= index;
+                    props[itemIndex] = ByteArray2String(bytes, index, length);
+                    index += length;
+                    if(shouldContinue != null && !shouldContinue(itemIndex, props[itemIndex]))
+                        return items;
+                }
+                items.Add(props);
+                if(index == -1)
+                    break;
+                index += 2; // skip ,
+            }
+            startIndex = index;
+            return items;
+        }
+        List<string[]> DeserializeArrayOfArrays(byte[] bytes, ref int startIndex, int subArrayItemsCount) {
+            int index = startIndex;
+            if(!FindChar(bytes, '[', ref index))
+                return null;
+            List<string[]> list = new List<string[]>();
+            index++;
+            while(index != -1) {
+                if(!FindChar(bytes, '[', ref index))
+                    break;
+                string[] items = new string[subArrayItemsCount];
+                list.Add(items);
+                for(int i = 0; i < subArrayItemsCount; i++) {
+                    index++;
+                    int length = index;
+                    char separator = i == subArrayItemsCount - 1 ? ']' : ',';
+                    FindChar(bytes, separator, ref length);
+                    length -= index;
+                    items[i] = ByteArray2String(bytes, index, length);
+                    index += length;
+                }
+                index += 2; // skip ],
+            }
+            startIndex = index;
+            return list; 
+        }
+        bool ReadString(byte[] bytes, ref int startIndex) {
+            startIndex++;
+            for(int i = startIndex; i < bytes.Length; i++) {
+                if(bytes[i] == '"') {
+                    startIndex = i + 1;
+                    return true;
+                }
+            }
+            startIndex = bytes.Length;
+            return false;
+        }
+        bool FindCharWithoutStop(byte[] bytes, char symbol, ref int startIndex) {
+            for(int i = startIndex; i < bytes.Length; i++) {
+                byte c = bytes[i];
+                if(c == symbol) {
+                    startIndex = i;
+                    return true;
+                }
+            }
+            startIndex = bytes.Length;
+            return false;
+        }
+        bool FindChar(byte[] bytes, char symbol, ref int startIndex) {
+            for(int i = startIndex; i < bytes.Length; i++) {
+                byte c = bytes[i];
+                if(c == symbol) {
+                    startIndex = i;
+                    return true;
+                }
+                if(c == ',' || c == ']' || c == '}' || c == ':') {
+                    startIndex = i;
+                    return false;
+                }
+            }
+            startIndex = bytes.Length;
+            return false;
+        }
         public override BindingList<CandleStickData> GetCandleStickData(TickerBase ticker, int candleStickPeriodMin, DateTime start, long periodInSeconds) {
             long startSec = (long)(start.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
             long end = startSec + periodInSeconds;
 
             string address = string.Format("https://poloniex.com/public?command=returnChartData&currencyPair={0}&period={1}&start={2}&end={3}",
                 Uri.EscapeDataString(ticker.CurrencyPair), candleStickPeriodMin * 60, startSec, end);
-            string text = string.Empty;
+            byte[] bytes = null;
             try {
-                text = GetDownloadString(address);
+                bytes = GetDownloadBytes(address);
             }
             catch(Exception) {
                 return null;
             }
-            if(string.IsNullOrEmpty(text))
+            if(bytes == null || bytes.Length == 0)
                 return null;
 
             DateTime startTime = new DateTime(1970, 1, 1);
 
             BindingList<CandleStickData> list = new BindingList<CandleStickData>();
-            JArray res = (JArray)JsonConvert.DeserializeObject(text);
-            foreach(JObject item in res.Children()) {
+            int startIndex = 0;
+            List<string[]> res = DeserializeArrayOfObjects(bytes, ref startIndex, new string[] { "date", "high", "low", "open", "close", "volume", "quoteVolume", "weightedAverage" }); 
+            foreach(string[] item in res) {
                 CandleStickData data = new CandleStickData();
-                data.Time = startTime.AddSeconds(item.Value<long>("date"));
-                data.Open = item.Value<double>("open");
-                data.Close = item.Value<double>("close");
-                data.High = item.Value<double>("high");
-                data.Low = item.Value<double>("low");
-                data.Volume = item.Value<double>("volume");
-                data.QuoteVolume = item.Value<double>("quoteVolume");
-                data.WeightedAverage = item.Value<double>("weightedAverage");
+                data.Time = startTime.AddSeconds(long.Parse(item[0]));
+                data.High = FastDoubleConverter.Convert(item[1]);
+                data.Low = FastDoubleConverter.Convert(item[2]);
+                data.Open = FastDoubleConverter.Convert(item[3]);
+                data.Close = FastDoubleConverter.Convert(item[4]);
+                data.Volume = FastDoubleConverter.Convert(item[5]);
+                data.QuoteVolume = FastDoubleConverter.Convert(item[6]);
+                data.WeightedAverage = FastDoubleConverter.Convert(item[7]);
                 list.Add(data);
             }
+
+            //JArray res = (JArray)JsonConvert.DeserializeObject(text);
+            //foreach(JObject item in res.Children()) {
+            //    CandleStickData data = new CandleStickData();
+            //    data.Time = startTime.AddSeconds(item.Value<long>("date"));
+            //    data.Open = item.Value<double>("open");
+            //    data.Close = item.Value<double>("close");
+            //    data.High = item.Value<double>("high");
+            //    data.Low = item.Value<double>("low");
+            //    data.Volume = item.Value<double>("volume");
+            //    data.QuoteVolume = item.Value<double>("quoteVolume");
+            //    data.WeightedAverage = item.Value<double>("weightedAverage");
+            //    list.Add(data);
+            //}
             return list;
         }
 
@@ -192,6 +329,49 @@ namespace CryptoMarketClient {
         public override bool UpdateTicker(TickerBase tickerBase) {
             return true;
         }
+        public bool OnUpdateOrderBook(TickerBase ticker, byte[] bytes) {
+            if(bytes == null)
+                return false;
+
+            int startIndex = 1; // skip {
+            if(!FindChar(bytes, ':', ref startIndex))
+                return false;
+            startIndex++;
+            List<string[]> asks = DeserializeArrayOfArrays(bytes, ref startIndex, 2);
+            if(!FindChar(bytes, ',', ref startIndex))
+                return false;
+            startIndex++;
+            if(!FindChar(bytes, ':', ref startIndex))
+                return false;
+            startIndex++;
+            List<string[]> bids = DeserializeArrayOfArrays(bytes, ref startIndex, 2);
+
+            ticker.OrderBook.GetNewBidAsks();
+            int index = 0;
+            OrderBookEntry[] list = ticker.OrderBook.Bids;
+            foreach(string[] item in bids) {
+                OrderBookEntry entry = list[index];
+                entry.ValueString = item[0];
+                entry.AmountString = item[1];
+                index++;
+                if(index >= list.Length)
+                    break;
+            }
+            index = 0;
+            list = ticker.OrderBook.Asks;
+            foreach(string[] item in asks) {
+                OrderBookEntry entry = list[index];
+                entry.ValueString = item[0];
+                entry.AmountString = item[1];
+                index++;
+                if(index >= list.Length)
+                    break;
+            }
+
+            ticker.OrderBook.UpdateEntries();
+            ticker.OrderBook.RaiseOnChanged(new OrderBookUpdateInfo() { Action = OrderBookUpdateType.RefreshAll });
+            return true;
+        }
         public bool OnUpdateArbitrageOrderBook(TickerBase ticker, string text) {
             if(string.IsNullOrEmpty(text))
                 return false;
@@ -251,10 +431,10 @@ namespace CryptoMarketClient {
         public bool GetOrderBook(TickerBase ticker, int depth) {
             string address = string.Format("https://poloniex.com/public?command=returnOrderBook&currencyPair={0}&depth={1}",
                 Uri.EscapeDataString(ticker.CurrencyPair), depth);
-            string text = ((TickerBase)ticker).DownloadString(address);
-            if(string.IsNullOrEmpty(text))
+            byte[] bytes = ((TickerBase)ticker).DownloadBytes(address);
+            if(bytes == null || bytes.Length == 0)
                 return false;
-            UpdateOrderBook(ticker, text);
+            OnUpdateOrderBook(ticker, bytes);
             return true;
         }
 
@@ -293,45 +473,105 @@ namespace CryptoMarketClient {
         }
 
         protected List<TradeHistoryItem> UpdateList { get; } = new List<TradeHistoryItem>(100);
+        //public override bool UpdateTrades(TickerBase ticker) {
+        //    string address = string.Format("https://poloniex.com/public?command=returnTradeHistory&currencyPair={0}", Uri.EscapeDataString(ticker.CurrencyPair));
+        //    string text = GetDownloadString(address);
+        //    if(string.IsNullOrEmpty(text))
+        //        return true;
+        //    JArray trades = (JArray)JsonConvert.DeserializeObject(text);
+        //    if(trades.Count == 0)
+        //        return true;
+
+        //    int lastTradeId = trades.First().Value<int>("tradeID");
+        //    long lastGotTradeId = ticker.TradeHistory.Count > 0 ? ticker.TradeHistory.First().Id : 0;
+        //    if(lastGotTradeId == lastTradeId) {
+        //        ticker.TradeStatistic.Add(new TradeStatisticsItem() { Time = DateTime.UtcNow });
+        //        if(ticker.TradeStatistic.Count > 5000) {
+        //            for(int i = 0; i < 100; i++)
+        //                ticker.TradeStatistic.RemoveAt(0);
+        //        }
+        //        return true;
+        //    }
+        //    TradeStatisticsItem st = new TradeStatisticsItem();
+        //    st.MinBuyPrice = double.MaxValue;
+        //    st.MinSellPrice = double.MaxValue;
+        //    st.Time = DateTime.UtcNow;
+
+        //    int index = 0;
+        //    foreach(JObject obj in trades) {
+        //        DateTime time = obj.Value<DateTime>("date");
+        //        int tradeId = obj.Value<int>("tradeID");
+        //        if(lastGotTradeId == tradeId)
+        //            break;
+
+        //        TradeHistoryItem item = new TradeHistoryItem();
+
+        //        bool isBuy = obj.Value<string>("type").Length == 3;
+        //        item.AmountString = obj.Value<string>("amount");
+        //        item.Time = time;
+        //        item.Type = isBuy ? TradeType.Buy : TradeType.Sell;
+        //        item.RateString = obj.Value<string>("rate");
+        //        item.Id = tradeId;
+        //        double price = item.Rate;
+        //        double amount = item.Amount;
+        //        item.Total = price * amount;
+        //        if(isBuy) {
+        //            st.BuyAmount += amount;
+        //            st.MinBuyPrice = Math.Min(st.MinBuyPrice, price);
+        //            st.MaxBuyPrice = Math.Max(st.MaxBuyPrice, price);
+        //            st.BuyVolume += amount * price;
+        //        }
+        //        else {
+        //            st.SellAmount += amount;
+        //            st.MinSellPrice = Math.Min(st.MinSellPrice, price);
+        //            st.MaxSellPrice = Math.Max(st.MaxSellPrice, price);
+        //            st.SellVolume += amount * price;
+        //        }
+        //        ticker.TradeHistory.Insert(index, item);
+        //        index++;
+        //    }
+        //    if(st.MinSellPrice == double.MaxValue)
+        //        st.MinSellPrice = 0;
+        //    if(st.MinBuyPrice == double.MaxValue)
+        //        st.MinBuyPrice = 0;
+        //    ticker.LastTradeStatisticTime = DateTime.UtcNow;
+        //    ticker.TradeStatistic.Add(st);
+        //    if(ticker.TradeStatistic.Count > 5000) {
+        //        for(int i = 0; i < 100; i++)
+        //            ticker.TradeStatistic.RemoveAt(0);
+        //    }
+        //    return true;
+        //}
+
         public override bool UpdateTrades(TickerBase ticker) {
             string address = string.Format("https://poloniex.com/public?command=returnTradeHistory&currencyPair={0}", Uri.EscapeDataString(ticker.CurrencyPair));
-            string text = GetDownloadString(address);
-            if(string.IsNullOrEmpty(text))
-                return true;
-            JArray trades = (JArray)JsonConvert.DeserializeObject(text);
-            if(trades.Count == 0)
+            byte[] bytes = GetDownloadBytes(address);
+            if(bytes == null)
                 return true;
 
-            int lastTradeId = trades.First().Value<int>("tradeID");
-            long lastGotTradeId = ticker.TradeHistory.Count > 0 ? ticker.TradeHistory.First().Id : 0;
-            if(lastGotTradeId == lastTradeId) {
-                ticker.TradeStatistic.Add(new TradeStatisticsItem() { Time = DateTime.UtcNow });
-                if(ticker.TradeStatistic.Count > 5000) {
-                    for(int i = 0; i < 100; i++)
-                        ticker.TradeStatistic.RemoveAt(0);
-                }
-                return true;
-            }
+            string lastGotTradeId = ticker.TradeHistory.Count > 0 ? ticker.TradeHistory.First().IdString : null;
+
+            int startIndex = 0;
+            List<string[]> trades = DeserializeArrayOfObjects(bytes, ref startIndex, 
+                new string[] { "globalTradeID", "tradeID", "date", "type", "rate", "amount" ,"total" }, 
+                (paramIndex, value) => { return paramIndex != 1 || value != lastGotTradeId; });
+
+            
             TradeStatisticsItem st = new TradeStatisticsItem();
             st.MinBuyPrice = double.MaxValue;
             st.MinSellPrice = double.MaxValue;
             st.Time = DateTime.UtcNow;
-            
+
             int index = 0;
-            foreach(JObject obj in trades) {
-                DateTime time = obj.Value<DateTime>("date");
-                int tradeId = obj.Value<int>("tradeID");
-                if(lastGotTradeId == tradeId)
-                    break;
-
+            foreach(string[] obj in trades) {
                 TradeHistoryItem item = new TradeHistoryItem();
+                item.IdString = obj[1];
+                item.TimeString = obj[2];
 
-                bool isBuy = obj.Value<string>("type").Length == 3;
-                item.AmountString = obj.Value<string>("amount");
-                item.Time = time;
+                bool isBuy = obj[3].Length == 3;
+                item.AmountString = obj[5];
                 item.Type = isBuy ? TradeType.Buy : TradeType.Sell;
-                item.RateString = obj.Value<string>("rate");
-                item.Id = tradeId;
+                item.RateString = obj[4];
                 double price = item.Rate;
                 double amount = item.Amount;
                 item.Total = price * amount;
@@ -339,13 +579,13 @@ namespace CryptoMarketClient {
                     st.BuyAmount += amount;
                     st.MinBuyPrice = Math.Min(st.MinBuyPrice, price);
                     st.MaxBuyPrice = Math.Max(st.MaxBuyPrice, price);
-                    st.BuyVolume += amount * price;
+                    st.BuyVolume += item.Total;
                 }
                 else {
                     st.SellAmount += amount;
                     st.MinSellPrice = Math.Min(st.MinSellPrice, price);
                     st.MaxSellPrice = Math.Max(st.MaxSellPrice, price);
-                    st.SellVolume += amount * price;
+                    st.SellVolume += item.Total;
                 }
                 ticker.TradeHistory.Insert(index, item);
                 index++;
@@ -356,19 +596,15 @@ namespace CryptoMarketClient {
                 st.MinBuyPrice = 0;
             ticker.LastTradeStatisticTime = DateTime.UtcNow;
             ticker.TradeStatistic.Add(st);
-            Debug.WriteLine(ticker.TradeHistory[0].Rate + " " + ticker.TradeHistory[0].Amount);
-            if(ticker.TradeStatistic.Count > 5000) {
-                for(int i = 0; i < 100; i++)
-                    ticker.TradeStatistic.RemoveAt(0);
-            }
             return true;
         }
+
         public override bool UpdateMyTrades(TickerBase ticker) {
             string address = string.Format("https://poloniex.com/tradingApi");
 
             NameValueCollection coll = new NameValueCollection();
+            coll.Add("nonce", GetNonce());
             coll.Add("command", "returnTradeHistory");
-            coll.Add("nonce", DateTime.Now.Ticks.ToString());
             coll.Add("currencyPair", ticker.MarketName);
 
             WebClient client = GetWebClient();
@@ -388,12 +624,16 @@ namespace CryptoMarketClient {
             string text = System.Text.Encoding.ASCII.GetString(data);
             if(string.IsNullOrEmpty(text))
                 return false;
+            if(text == "[]") {
+                ticker.MyTradeHistory.Clear();
+                return true;
+            }
             JObject res = (JObject)JsonConvert.DeserializeObject(text);
-            lock(ticker.OpenedOrders) {
-                ticker.OpenedOrders.Clear();
+            lock(ticker.MyTradeHistory) {
+                ticker.MyTradeHistory.Clear();
                 foreach(JProperty prop in res.Children()) {
                     if(prop.Name == "error") {
-                        Debug.WriteLine("OnGetOpenedOrders fails: " + prop.Value<string>());
+                        Debug.WriteLine("OnUpdateMyTrades fails: " + prop.Value<string>());
                         return false;
                     }
                     JArray array = (JArray)prop.Value;
@@ -435,7 +675,7 @@ namespace CryptoMarketClient {
 
             NameValueCollection coll = new NameValueCollection();
             coll.Add("command", "returnCompleteBalances");
-            coll.Add("nonce", DateTime.Now.Ticks.ToString());
+            coll.Add("nonce", GetNonce());
 
             WebClient client = GetWebClient();
             client.Headers.Clear();
@@ -453,7 +693,7 @@ namespace CryptoMarketClient {
 
             NameValueCollection coll = new NameValueCollection();
             coll.Add("command", "returnCompleteBalances");
-            coll.Add("nonce", DateTime.Now.Ticks.ToString());
+            coll.Add("nonce", GetNonce());
 
             WebClient client = GetWebClient();
             client.Headers.Clear();
@@ -499,7 +739,7 @@ namespace CryptoMarketClient {
 
             NameValueCollection coll = new NameValueCollection();
             coll.Add("command", "returnDepositAddresses");
-            coll.Add("nonce", DateTime.Now.Ticks.ToString());
+            coll.Add("nonce", GetNonce());
 
             WebClient client = GetWebClient();
             client.Headers.Clear();
@@ -532,12 +772,15 @@ namespace CryptoMarketClient {
             }
             return true;
         }
+        string GetNonce() {
+            return ((long)((DateTime.UtcNow - new DateTime(1, 1, 1)).TotalMilliseconds * 10000)).ToString();
+        }
         public override bool UpdateOpenedOrders(TickerBase ticker) {
             string address = string.Format("https://poloniex.com/tradingApi");
 
             NameValueCollection coll = new NameValueCollection();
+            coll.Add("nonce", GetNonce());
             coll.Add("command", "returnOpenOrders");
-            coll.Add("nonce", DateTime.Now.Ticks.ToString());
             coll.Add("currencyPair", ticker.MarketName);
 
             WebClient client = GetWebClient();
@@ -556,8 +799,8 @@ namespace CryptoMarketClient {
             string address = string.Format("https://poloniex.com/tradingApi");
 
             NameValueCollection coll = new NameValueCollection();
+            coll.Add("nonce", GetNonce());
             coll.Add("command", "returnOpenOrders");
-            coll.Add("nonce", DateTime.Now.Ticks.ToString());
             coll.Add("currencyPair", "all");
 
             WebClient client = GetWebClient();
@@ -571,6 +814,10 @@ namespace CryptoMarketClient {
             string text = System.Text.Encoding.ASCII.GetString(data);
             if(string.IsNullOrEmpty(text))
                 return false;
+            if(text == "[]") {
+                ticker.OpenedOrders.Clear();
+                return true;
+            }
             JObject res = (JObject)JsonConvert.DeserializeObject(text);
             lock(ticker.OpenedOrders) {
                 ticker.OpenedOrders.Clear();
@@ -628,7 +875,7 @@ namespace CryptoMarketClient {
 
             NameValueCollection coll = new NameValueCollection();
             coll.Add("command", "buy");
-            coll.Add("nonce", DateTime.Now.Ticks.ToString());
+            coll.Add("nonce", GetNonce());
             coll.Add("currencyPair", ticker.CurrencyPair);
             coll.Add("rate", rate.ToString("0.########"));
             coll.Add("amount", amount.ToString("0.########"));
@@ -652,7 +899,7 @@ namespace CryptoMarketClient {
 
             NameValueCollection coll = new NameValueCollection();
             coll.Add("command", "sell");
-            coll.Add("nonce", DateTime.Now.Ticks.ToString());
+            coll.Add("nonce", GetNonce());
             coll.Add("currencyPair", ticker.CurrencyPair);
             coll.Add("rate", rate.ToString("0.########"));
             coll.Add("amount", amount.ToString("0.########"));
@@ -722,7 +969,7 @@ namespace CryptoMarketClient {
 
             NameValueCollection coll = new NameValueCollection();
             coll.Add("command", "cancelOrder");
-            coll.Add("nonce", DateTime.Now.Ticks.ToString());
+            coll.Add("nonce", GetNonce());
             coll.Add("orderNumber", orderId.ToString());
 
             WebClient client = GetWebClient();
@@ -745,7 +992,7 @@ namespace CryptoMarketClient {
 
             NameValueCollection coll = new NameValueCollection();
             coll.Add("command", "withdraw");
-            coll.Add("nonce", DateTime.Now.Ticks.ToString());
+            coll.Add("nonce", GetNonce());
             coll.Add("currency", currency);
             coll.Add("amount", amount.ToString("0.########"));
             coll.Add("address", address);
@@ -764,7 +1011,7 @@ namespace CryptoMarketClient {
 
             NameValueCollection coll = new NameValueCollection();
             coll.Add("command", "withdraw");
-            coll.Add("nonce", DateTime.Now.Ticks.ToString());
+            coll.Add("nonce", GetNonce());
             coll.Add("currency", currency);
             coll.Add("amount", amount.ToString("0.########"));
             coll.Add("address", address);
@@ -799,7 +1046,7 @@ namespace CryptoMarketClient {
 
             NameValueCollection coll = new NameValueCollection();
             coll.Add("command", "generateNewAddress");
-            coll.Add("nonce", DateTime.Now.Ticks.ToString());
+            coll.Add("nonce", GetNonce());
             coll.Add("currency", currency);
 
             WebClient client = GetWebClient();
@@ -819,6 +1066,7 @@ namespace CryptoMarketClient {
     }
 
     public delegate void TickerUpdateEventHandler(object sender, TickerUpdateEventArgs e);
+    public delegate bool IfDelegate2(int paramIndex, string value);
     public class TickerUpdateEventArgs : EventArgs {
         public PoloniexTicker Ticker { get; set; }
     }

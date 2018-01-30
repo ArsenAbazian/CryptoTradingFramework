@@ -166,6 +166,7 @@ namespace CryptoMarketClient {
         }
         void RefreshBidGrid() {
             this.orderBookControl1.Bids = Ticker.OrderBook.Bids;
+            this.orderBookControl1.RefreshBids();
         }
         void RefreshAskGrid() {
             this.orderBookControl1.Asks = Ticker.OrderBook.Asks;

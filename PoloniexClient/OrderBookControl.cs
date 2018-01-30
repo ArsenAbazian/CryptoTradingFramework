@@ -96,14 +96,16 @@ namespace CryptoMarketClient {
         public void RefreshData() {
             if(LastAskTopRowIndex == -1)
                 LastAskTopRowIndex = Asks.Length;
-            //this.askGridView.TopRowIndex = LastAskTopRowIndex;
+            RefreshBids();
+            RefreshAsks();
         }
 
         public void RefreshAsks() {
-            //this.askGridView.TopRowIndex = LastAskTopRowIndex;
+            UpdateView(this.askGridView, Asks);
         }
 
         public void RefreshBids() {
+            UpdateView(this.bidGridView, Bids);
         }
 
         private void askGridControl_Resize(object sender, EventArgs e) {

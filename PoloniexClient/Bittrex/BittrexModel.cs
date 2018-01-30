@@ -24,6 +24,10 @@ namespace CryptoMarketClient.Bittrex {
 
         public override string Name => "Bittrex";
 
+        public override List<CandleStickIntervalInfo> GetAllowedCandleStickIntervals() {
+            return new List<CandleStickIntervalInfo>();
+        }
+
         public List<BittrexCurrencyInfo> Currencies { get; } = new List<BittrexCurrencyInfo>();
         protected List<TradeHistoryItem> UpdateList { get; } = new List<TradeHistoryItem>(100);
 

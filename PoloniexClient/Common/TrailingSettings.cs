@@ -54,7 +54,6 @@ namespace CryptoMarketClient.Common {
                 PropertyChangedCore.Invoke(this, new PropertyChangedEventArgs(propName));
         }
 
-        bool blockTotalSpend = false;
         double buyPrice;
         [XtraSerializableProperty]
         public double BuyPrice {
@@ -67,9 +66,7 @@ namespace CryptoMarketClient.Common {
             }
         }
         void OnBuyPriceChanged() {
-            blockTotalSpend = true;
             TotalSpendInBaseCurrency = Amount * BuyPrice;
-            blockTotalSpend = false;
             RaisePropertyChanged("BuyPrice");
         }
         double amount;
@@ -84,9 +81,7 @@ namespace CryptoMarketClient.Common {
             }
         }
         void OnAmountChanged() {
-            blockTotalSpend = true;
             TotalSpendInBaseCurrency = Amount * BuyPrice;
-            blockTotalSpend = false;
             RaisePropertyChanged("Amount");
         }
         double totalSpendInBaseCurrency;

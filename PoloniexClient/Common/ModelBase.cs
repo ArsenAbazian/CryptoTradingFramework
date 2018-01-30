@@ -16,6 +16,7 @@ using CryptoMarketClient.Bittrex;
 using System.ComponentModel;
 using System.Windows.Forms;
 using CryptoMarketClient.Yobit;
+using System.Globalization;
 
 namespace CryptoMarketClient {
     public abstract class Exchange : IXtraSerializable {
@@ -26,7 +27,7 @@ namespace CryptoMarketClient {
         static Exchange() {
             Registered.Add(new PoloniexExchange());
             Registered.Add(new BittrexExchange());
-            Registered.Add(new YobitExchange());
+            //Registered.Add(new YobitExchange());
 
             foreach(Exchange exchange in Registered)
                 exchange.Load();
@@ -95,19 +96,18 @@ namespace CryptoMarketClient {
             }
         }
         void OnApiSecretChanged() {
-            HmacSha.Key = Encoding.ASCII.GetBytes(ApiSecret);
+            HmacSha = new HMACSHA512(Encoding.UTF8.GetBytes(ApiSecret));
         }
         public bool IsApiKeyExists { get { return !string.IsNullOrEmpty(ApiKey) && !string.IsNullOrEmpty(ApiSecret); } }
         public abstract string Name { get; }
-        protected HMACSHA512 HmacSha { get; } = new HMACSHA512();
+        protected HMACSHA512 HmacSha { get; set; }
         readonly byte[] Buffer = new byte[8192];
         protected string GetSign(string text) {
-            for(int i = 0; i < text.Length; i++)
-                Buffer[i] = (byte)text[i];
-            byte[] hash = HmacSha.ComputeHash(Buffer, 0, text.Length);
+            byte[] data = Encoding.UTF8.GetBytes(text);
+            byte[] hash = HmacSha.ComputeHash(data, 0, data.Length);
             StringBuilder builder = new StringBuilder();
             for(int i = 0; i < hash.Length; i++)
-                builder.Append(hash[i].ToString("x2"));
+                builder.Append(hash[i].ToString("x2", CultureInfo.InvariantCulture));
             return builder.ToString();
         }
 
@@ -292,6 +292,15 @@ namespace CryptoMarketClient {
                 return null;
             }
         }
+        protected byte[] GetDownloadBytes(string address) {
+            try {
+                return GetWebClient().DownloadData(address);
+            }
+            catch(Exception e) {
+                Console.WriteLine("WebClient exception = " + e.ToString());
+                return null;
+            }
+        }
         public bool IsTickerPinned(TickerBase tickerBase) {
             return PinnedTickers.FirstOrDefault(p => p.BaseCurrency == tickerBase.BaseCurrency && p.MarketCurrency == tickerBase.MarketCurrency) != null;
         }
@@ -319,5 +328,11 @@ namespace CryptoMarketClient {
                 return jsonParser;
             }
         }
+        public abstract List<CandleStickIntervalInfo> GetAllowedCandleStickIntervals();
+    }
+
+    public class CandleStickIntervalInfo {
+        public string Text { get; set; }
+        public TimeSpan Interval { get; set; }
     }
 }

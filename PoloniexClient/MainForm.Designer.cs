@@ -46,6 +46,8 @@
             this.barButtonItem1 = new DevExpress.XtraBars.BarButtonItem();
             this.barButtonItem2 = new DevExpress.XtraBars.BarButtonItem();
             this.bbShowBittrex = new DevExpress.XtraBars.BarButtonItem();
+            this.barButtonItem3 = new DevExpress.XtraBars.BarButtonItem();
+            this.bcYobit = new DevExpress.XtraBars.BarCheckItem();
             this.ribbonPageCategory1 = new DevExpress.XtraBars.Ribbon.RibbonPageCategory();
             this.ribbonPage2 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPageGroup2 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
@@ -69,8 +71,6 @@
             this.defaultBarAndDockingController1 = new DevExpress.XtraBars.DefaultBarAndDockingController(this.components);
             this.ribbonPage4 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPage6 = new DevExpress.XtraBars.Ribbon.RibbonPage();
-            this.barButtonItem3 = new DevExpress.XtraBars.BarButtonItem();
-            this.bcYobit = new DevExpress.XtraBars.BarCheckItem();
             ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemSpinEdit1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemSpinEdit2)).BeginInit();
@@ -108,7 +108,7 @@
             this.barButtonItem3,
             this.bcYobit});
             this.ribbonControl1.Location = new System.Drawing.Point(0, 0);
-            this.ribbonControl1.Margin = new System.Windows.Forms.Padding(12, 12, 12, 12);
+            this.ribbonControl1.Margin = new System.Windows.Forms.Padding(12);
             this.ribbonControl1.MaxItemId = 28;
             this.ribbonControl1.MdiMergeStyle = DevExpress.XtraBars.Ribbon.RibbonMdiMergeStyle.Always;
             this.ribbonControl1.Name = "ribbonControl1";
@@ -126,7 +126,7 @@
             this.repositoryItemSpinEdit2});
             this.ribbonControl1.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonControlStyle.OfficeUniversal;
             this.ribbonControl1.ShowApplicationButton = DevExpress.Utils.DefaultBoolean.False;
-            this.ribbonControl1.Size = new System.Drawing.Size(1774, 126);
+            this.ribbonControl1.Size = new System.Drawing.Size(3548, 157);
             this.ribbonControl1.StatusBar = this.ribbonStatusBar1;
             this.ribbonControl1.Merge += new DevExpress.XtraBars.Ribbon.RibbonMergeEventHandler(this.ribbonControl1_Merge);
             this.ribbonControl1.UnMerge += new DevExpress.XtraBars.Ribbon.RibbonMergeEventHandler(this.ribbonControl1_UnMerge);
@@ -310,6 +310,20 @@
             this.bbShowBittrex.Name = "bbShowBittrex";
             this.bbShowBittrex.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bbShowBittrex_ItemClick);
             // 
+            // barButtonItem3
+            // 
+            this.barButtonItem3.Caption = "barButtonItem3";
+            this.barButtonItem3.Id = 26;
+            this.barButtonItem3.Name = "barButtonItem3";
+            // 
+            // bcYobit
+            // 
+            this.bcYobit.Caption = "Yobit";
+            this.bcYobit.Id = 27;
+            this.bcYobit.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bcYobit.ImageOptions.Image")));
+            this.bcYobit.Name = "bcYobit";
+            this.bcYobit.CheckedChanged += new DevExpress.XtraBars.ItemClickEventHandler(this.bcYobit_CheckedChanged);
+            // 
             // ribbonPageCategory1
             // 
             this.ribbonPageCategory1.Name = "ribbonPageCategory1";
@@ -360,7 +374,6 @@
             // 
             this.ribbonPageGroup3.ItemLinks.Add(this.bcPoloniex);
             this.ribbonPageGroup3.ItemLinks.Add(this.bcBittrex);
-            this.ribbonPageGroup3.ItemLinks.Add(this.bcYobit);
             this.ribbonPageGroup3.Name = "ribbonPageGroup3";
             this.ribbonPageGroup3.Text = "Connect";
             // 
@@ -432,11 +445,11 @@
             // ribbonStatusBar1
             // 
             this.ribbonStatusBar1.AutoHeight = true;
-            this.ribbonStatusBar1.Location = new System.Drawing.Point(0, 894);
+            this.ribbonStatusBar1.Location = new System.Drawing.Point(0, 1748);
             this.ribbonStatusBar1.Margin = new System.Windows.Forms.Padding(6);
             this.ribbonStatusBar1.Name = "ribbonStatusBar1";
             this.ribbonStatusBar1.Ribbon = this.ribbonControl1;
-            this.ribbonStatusBar1.Size = new System.Drawing.Size(1774, 47);
+            this.ribbonStatusBar1.Size = new System.Drawing.Size(3548, 62);
             // 
             // documentManager1
             // 
@@ -445,10 +458,6 @@
             this.documentManager1.View = this.tabbedView1;
             this.documentManager1.ViewCollection.AddRange(new DevExpress.XtraBars.Docking2010.Views.BaseView[] {
             this.tabbedView1});
-            // 
-            // tabbedView1
-            // 
-            this.tabbedView1.RootContainer.Element = null;
             // 
             // defaultBarAndDockingController1
             // 
@@ -468,20 +477,6 @@
             this.ribbonPage6.Name = "ribbonPage6";
             this.ribbonPage6.Text = "ribbonPage6";
             // 
-            // barButtonItem3
-            // 
-            this.barButtonItem3.Caption = "barButtonItem3";
-            this.barButtonItem3.Id = 26;
-            this.barButtonItem3.Name = "barButtonItem3";
-            // 
-            // bcYobit
-            // 
-            this.bcYobit.Caption = "Yobit";
-            this.bcYobit.Id = 27;
-            this.bcYobit.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bcYobit.ImageOptions.Image")));
-            this.bcYobit.Name = "bcYobit";
-            this.bcYobit.CheckedChanged += new DevExpress.XtraBars.ItemClickEventHandler(this.bcYobit_CheckedChanged);
-            // 
             // MainForm
             // 
             this.AllowFormGlass = DevExpress.Utils.DefaultBoolean.False;
@@ -491,7 +486,7 @@
             this.Controls.Add(this.ribbonStatusBar1);
             this.Controls.Add(this.ribbonControl1);
             this.IsMdiContainer = true;
-            this.Margin = new System.Windows.Forms.Padding(12, 12, 12, 12);
+            this.Margin = new System.Windows.Forms.Padding(12);
             this.Name = "MainForm";
             this.Ribbon = this.ribbonControl1;
             this.StatusBar = this.ribbonStatusBar1;

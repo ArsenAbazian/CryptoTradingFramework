@@ -74,15 +74,6 @@ namespace CryptoMarketClient.Yobit {
             throw new NotImplementedException();
         }
 
-        public override string DownloadString(string address) {
-            try {
-                ApiRate.WaitToProceed();
-                return Exchange.GetWebClient().DownloadString(address);
-            }
-            catch { }
-            return string.Empty;
-        }
-
         public override string GetDepositAddress(CurrencyType type) {
             throw new NotImplementedException();
         }
