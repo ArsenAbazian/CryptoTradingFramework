@@ -554,7 +554,12 @@ namespace CryptoMarketClient.Bittrex {
             WebClient client = GetWebClient();
             client.Headers.Clear();
             client.Headers.Add("apisign", GetSign(address));
-            string text = client.DownloadString(address);
+            string text = string.Empty;
+            try {
+                text = client.DownloadString(address);
+            } catch {
+                return false;
+            }
             return OnUpdateOrders(tickerBase, text);
         }
         protected string OnUuidResult(string result) {

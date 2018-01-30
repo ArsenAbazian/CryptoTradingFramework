@@ -50,11 +50,14 @@ namespace CryptoMarketClient {
             this.colUsdTicker = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colStopLossPricePercent = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colStopLossStartPrice = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colTakeProfitStartPercent = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colTakeProfitPercent = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colActualPrice = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colMaxPrice = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colPriceDelta = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colTakeProfitPrice = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colIgnoreStopLoss = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colIncrementalStopLoss = new DevExpress.XtraGrid.Columns.GridColumn();
             this.barManager1 = new DevExpress.XtraBars.BarManager(this.components);
             this.bar1 = new DevExpress.XtraBars.Bar();
             this.btAdd = new DevExpress.XtraBars.BarButtonItem();
@@ -65,7 +68,6 @@ namespace CryptoMarketClient {
             this.barDockControlBottom = new DevExpress.XtraBars.BarDockControl();
             this.barDockControlLeft = new DevExpress.XtraBars.BarDockControl();
             this.barDockControlRight = new DevExpress.XtraBars.BarDockControl();
-            this.gridColumn1 = new DevExpress.XtraGrid.Columns.GridColumn();
             ((System.ComponentModel.ISupportInitialize)(this.gcTrailings)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trailingSettingsBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gvTrailings)).BeginInit();
@@ -125,12 +127,14 @@ namespace CryptoMarketClient {
             this.colUsdTicker,
             this.colStopLossPricePercent,
             this.colStopLossStartPrice,
+            this.colTakeProfitStartPercent,
             this.colTakeProfitPercent,
             this.colActualPrice,
             this.colMaxPrice,
             this.colPriceDelta,
             this.colTakeProfitPrice,
-            this.gridColumn1});
+            this.colIgnoreStopLoss,
+            this.colIncrementalStopLoss});
             gridFormatRule1.Column = this.colActualProfit;
             gridFormatRule1.ColumnApplyTo = this.colActualProfit;
             gridFormatRule1.Name = "FormatRulesPositiveProfit";
@@ -236,10 +240,11 @@ namespace CryptoMarketClient {
             // 
             // colStopLossPricePercent
             // 
-            this.colStopLossPricePercent.FieldName = "StopLossStartPrice";
+            this.colStopLossPricePercent.Caption = "StopLossStartPrice";
+            this.colStopLossPricePercent.FieldName = "StopLossPricePercent";
             this.colStopLossPricePercent.Name = "colStopLossPricePercent";
             this.colStopLossPricePercent.Visible = true;
-            this.colStopLossPricePercent.VisibleIndex = 5;
+            this.colStopLossPricePercent.VisibleIndex = 7;
             this.colStopLossPricePercent.Width = 95;
             // 
             // colStopLossStartPrice
@@ -249,9 +254,18 @@ namespace CryptoMarketClient {
             this.colStopLossStartPrice.OptionsColumn.ReadOnly = true;
             this.colStopLossStartPrice.Width = 101;
             // 
+            // colTakeProfitStartPercent
+            // 
+            this.colTakeProfitStartPercent.Caption = "TakeProfitStartPercent";
+            this.colTakeProfitStartPercent.FieldName = "TakeProfitStartPercent";
+            this.colTakeProfitStartPercent.Name = "colTakeProfitStartPercent";
+            this.colTakeProfitStartPercent.Visible = true;
+            this.colTakeProfitStartPercent.VisibleIndex = 5;
+            // 
             // colTakeProfitPercent
             // 
-            this.colTakeProfitPercent.FieldName = "TakeProfitPrice";
+            this.colTakeProfitPercent.Caption = "TakeProfitPercent";
+            this.colTakeProfitPercent.FieldName = "TakeProfitPercent";
             this.colTakeProfitPercent.Name = "colTakeProfitPercent";
             this.colTakeProfitPercent.Visible = true;
             this.colTakeProfitPercent.VisibleIndex = 6;
@@ -284,6 +298,22 @@ namespace CryptoMarketClient {
             this.colTakeProfitPrice.Name = "colTakeProfitPrice";
             this.colTakeProfitPrice.OptionsColumn.ReadOnly = true;
             this.colTakeProfitPrice.Width = 172;
+            // 
+            // colIgnoreStopLoss
+            // 
+            this.colIgnoreStopLoss.Caption = "IgnoreStopLoss";
+            this.colIgnoreStopLoss.FieldName = "IgnoreStopLoss";
+            this.colIgnoreStopLoss.Name = "colIgnoreStopLoss";
+            this.colIgnoreStopLoss.Visible = true;
+            this.colIgnoreStopLoss.VisibleIndex = 8;
+            // 
+            // colIncrementalStopLoss
+            // 
+            this.colIncrementalStopLoss.Caption = "IncrementalStopLoss";
+            this.colIncrementalStopLoss.FieldName = "EnableIncrementalStopLoss";
+            this.colIncrementalStopLoss.Name = "colIncrementalStopLoss";
+            this.colIncrementalStopLoss.Visible = true;
+            this.colIncrementalStopLoss.VisibleIndex = 9;
             // 
             // barManager1
             // 
@@ -354,6 +384,7 @@ namespace CryptoMarketClient {
             this.btEdit.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("btEdit.ImageOptions.LargeImage")));
             this.btEdit.Name = "btEdit";
             this.btEdit.PaintStyle = DevExpress.XtraBars.BarItemPaintStyle.CaptionGlyph;
+            this.btEdit.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btEdit_ItemClick);
             // 
             // barDockControlTop
             // 
@@ -391,10 +422,6 @@ namespace CryptoMarketClient {
             this.barDockControlRight.Margin = new System.Windows.Forms.Padding(2);
             this.barDockControlRight.Size = new System.Drawing.Size(0, 428);
             // 
-            // gridColumn1
-            // 
-            this.gridColumn1.Name = "gridColumn1";
-            // 
             // TrailingCollectionControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -415,6 +442,10 @@ namespace CryptoMarketClient {
             this.ResumeLayout(false);
             this.PerformLayout();
 
+        }
+
+        private void BtEdit_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
+            throw new System.NotImplementedException();
         }
 
         #endregion
@@ -449,6 +480,8 @@ namespace CryptoMarketClient {
         private DevExpress.XtraEditors.Repository.RepositoryItemTextEdit repositoryItemTextEdit1;
         private DevExpress.XtraBars.BarButtonItem barButtonItem1;
         private DevExpress.XtraGrid.Columns.GridColumn colType;
-        private DevExpress.XtraGrid.Columns.GridColumn gridColumn1;
+        private DevExpress.XtraGrid.Columns.GridColumn colTakeProfitStartPercent;
+        private DevExpress.XtraGrid.Columns.GridColumn colIgnoreStopLoss;
+        private DevExpress.XtraGrid.Columns.GridColumn colIncrementalStopLoss;
     }
 }

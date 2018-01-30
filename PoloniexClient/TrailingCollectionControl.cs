@@ -59,9 +59,17 @@ namespace CryptoMarketClient {
             form.Settings = settings;
             form.Owner = FindForm();
             form.CollectionControl = this;
-            form.Mode = EditingMode.Add;
+            form.Mode = EditingMode.Edit;
 
             return form;
+        }
+        
+        private void btEdit_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
+            TrailingSettings settings = (TrailingSettings)this.gvTrailings.GetRow(this.gvTrailings.FocusedRowHandle);
+            TrailingSettinsForm form = CreateSettingsForm(settings);
+            form.Mode = EditingMode.Edit;
+            form.Accepted += OnTrailingSettingsFormAccepted;
+            form.Show();
         }
 
         private void btAdd_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
