@@ -213,16 +213,6 @@ namespace CryptoMarketClient {
             return null;
         }
 
-        private void OnCandleStickPeriodChanged(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
-            if(!((BarCheckItem)e.Item).Checked)
-                return;
-            this.bsCandleStickPeriod.Caption = e.Item.Caption;
-            if(Ticker.CandleStickPeriodMin == (int)e.Item.Tag)
-                return;
-            Ticker.CandleStickPeriodMin = (int)e.Item.Tag;
-            Ticker.CandleStickData.Clear();
-            UpdateDataFromServer();
-        }
         void SetCandleStickCheckItemValues() {
             if(Ticker == null)
                 return;
@@ -238,9 +228,10 @@ namespace CryptoMarketClient {
             BarCheckItem item = (BarCheckItem)sender;
             if(!item.Checked)
                 return;
-            if(((TimeSpan)item.Tag).Minutes == Ticker.CandleStickPeriodMin)
+            if(((TimeSpan)item.Tag).TotalMinutes == Ticker.CandleStickPeriodMin)
                 return;
-            Ticker.CandleStickPeriodMin = ((TimeSpan)item.Tag).Minutes;
+            this.bsCandleStickPeriod.Caption = e.Item.Caption;
+            Ticker.CandleStickPeriodMin = (int)((TimeSpan)item.Tag).TotalMinutes;
             UpdateDataFromServer();
         }
 
@@ -265,12 +256,20 @@ namespace CryptoMarketClient {
         }
 
         protected void UpdateDataFromServer() {
-            int hours = 100 * 24; // 100 days
-            DateTime start = DateTime.UtcNow.Subtract(TimeSpan.FromSeconds(hours * 60 * 60));
-            BindingList<CandleStickData> data = Ticker.GetCandleStickData(Ticker.CandleStickPeriodMin, start, hours * 60 * 60);
+            int totalWidth = this.chartControl1.ClientRectangle.Width;
+            int screenCount = 3;
+            int candleStickCount = (int)(totalWidth / (5 * DpiProvider.Default.DpiScaleFactor));
+            int interval = Ticker.CandleStickPeriodMin * 60;
+            int totalInterval = candleStickCount * screenCount * interval;
+
+            DateTime start = DateTime.UtcNow.Subtract(TimeSpan.FromSeconds(totalInterval));
+            BindingList<CandleStickData> data = Ticker.GetCandleStickData(Ticker.CandleStickPeriodMin, start, totalInterval);
             Ticker.CandleStickData = data;
             this.chartControl1.Series["Current"].DataSource = data;
             this.chartControl1.Series["Volume"].DataSource = data;
+            CandleStickSeriesView view = (CandleStickSeriesView)this.chartControl1.Series["Current"].View;
+            view.AxisX.VisualRange.MinValue = start;
+            view.AxisX.VisualRange.MaxValue = start.AddSeconds(candleStickCount * interval);
             UpdateChartProperties();
         }
 

@@ -169,8 +169,8 @@ namespace CryptoMarketClient.Common {
             }
         }
         public bool Calculate() {
-            if(!UpdateBalances())
-                return false;
+            //if(!UpdateBalances())
+            //    return false;
 
             if(AltUsdt.OrderBook.Asks[0].Value == 0 || 
                 BaseUsdt.OrderBook.Asks[0].Value == 0 || 
@@ -458,9 +458,12 @@ namespace CryptoMarketClient.Common {
             Debug.WriteLine("alt -> usdt succes.");
             return true;
         }
+        public bool OperationExecuted { get; set; }
         public bool MakeOperation() {
-            if(!AllowMakeOperation)
+            OperationExecuted = false;
+            if(!AllowMakeOperation) {
                 return true;
+            }
             Stopwatch timer = new Stopwatch();
             timer.Start();
             try {
@@ -546,6 +549,7 @@ namespace CryptoMarketClient.Common {
                 LastOperationTime = DateTime.UtcNow;
                 IsSelected = false;
 
+                OperationExecuted = true;
                 if(LastEarned < 0) {
                     LogManager.Default.AddError(ToString() + ": statistic arbitrage: fail make positive profit. " + LastEarned.ToString("0.########"));
                     Debug.WriteLine("statistic arbitrage: fail make positive profit. " + LastEarned.ToString("0.########"));

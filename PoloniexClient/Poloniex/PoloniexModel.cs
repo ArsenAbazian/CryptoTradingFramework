@@ -197,7 +197,8 @@ namespace CryptoMarketClient {
 
             BindingList<CandleStickData> list = new BindingList<CandleStickData>();
             int startIndex = 0;
-            List<string[]> res = DeserializeArrayOfObjects(bytes, ref startIndex, new string[] { "date", "high", "low", "open", "close", "volume", "quoteVolume", "weightedAverage" }); 
+            List<string[]> res = DeserializeArrayOfObjects(bytes, ref startIndex, new string[] { "date", "high", "low", "open", "close", "volume", "quoteVolume", "weightedAverage" });
+            if(res == null) return list;
             foreach(string[] item in res) {
                 CandleStickData data = new CandleStickData();
                 data.Time = startTime.AddSeconds(long.Parse(item[0]));
@@ -606,6 +607,8 @@ namespace CryptoMarketClient {
             coll.Add("nonce", GetNonce());
             coll.Add("command", "returnTradeHistory");
             coll.Add("currencyPair", ticker.MarketName);
+            coll.Add("start", ToUnixTimestamp(DateTime.Now.AddYears(-1)).ToString());
+            coll.Add("end", ToUnixTimestamp(DateTime.Now).ToString());
 
             WebClient client = GetWebClient();
             client.Headers.Clear();
@@ -621,35 +624,35 @@ namespace CryptoMarketClient {
             }
         }
         bool OnUpdateMyTrades(TickerBase ticker, byte[] data) {
-            string text = System.Text.Encoding.ASCII.GetString(data);
-            if(string.IsNullOrEmpty(text))
+            if(data == null)
                 return false;
-            if(text == "[]") {
+            if(data.Length == 2) {
                 ticker.MyTradeHistory.Clear();
                 return true;
             }
-            JObject res = (JObject)JsonConvert.DeserializeObject(text);
-            lock(ticker.MyTradeHistory) {
-                ticker.MyTradeHistory.Clear();
-                foreach(JProperty prop in res.Children()) {
-                    if(prop.Name == "error") {
-                        Debug.WriteLine("OnUpdateMyTrades fails: " + prop.Value<string>());
-                        return false;
-                    }
-                    JArray array = (JArray)prop.Value;
-                    ticker.MyTradeHistory.Clear();
-                    foreach(JObject obj in array) {
-                        TradeHistoryItem info = new TradeHistoryItem();
-                        info.OrderNumber = obj.Value<int>("orderNumber");
-                        info.Time = obj.Value<DateTime>("date");
-                        info.Type = obj.Value<string>("type") == "sell" ? TradeType.Sell : TradeType.Buy;
-                        info.RateString = obj.Value<string>("rate");
-                        info.AmountString = obj.Value<string>("amount");
-                        info.Total = obj.Value<double>("total");
-                        info.Fee = obj.Value<double>("fee");
-                        ticker.MyTradeHistory.Add(info);
-                    }
-                }
+
+            string lastGotTradeId = ticker.MyTradeHistory.Count > 0 ? ticker.MyTradeHistory.First().IdString : null;
+
+            int startIndex = 0;
+            List<string[]> trades = DeserializeArrayOfObjects(data, ref startIndex,
+                new string[] { "globalTradeID", "tradeID", "date", "rate", "amount", "total", "fee", "orderNumber", "type", "category" },
+                (paramIndex, value) => { return paramIndex != 1 || value != lastGotTradeId; });
+
+            int index = 0;
+            foreach(string[] obj in trades) {
+                TradeHistoryItem item = new TradeHistoryItem();
+                item.IdString = obj[1];
+                item.TimeString = obj[2];
+
+                bool isBuy = obj[8].Length == 3;
+                item.AmountString = obj[4];
+                item.Type = isBuy ? TradeType.Buy : TradeType.Sell;
+                item.RateString = obj[3];
+                double price = item.Rate;
+                double amount = item.Amount;
+                item.Total = price * amount;
+                ticker.MyTradeHistory.Insert(index, item);
+                index++;
             }
             return true;
         }

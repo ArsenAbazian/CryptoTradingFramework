@@ -20,8 +20,8 @@ namespace CryptoMarketClient {
             InitializeComponent();
             Items = StaticArbitrageHelper.Default.GetItems();
             this.staticArbitrageInfoBindingSource.DataSource = Items;
-            UpdateBalances();
-            GenerateBalanceItems();
+            //UpdateBalances();
+            //GenerateBalanceItems();
         }
 
         void UpdateBalances() {
@@ -124,7 +124,10 @@ namespace CryptoMarketClient {
                     info.IsErrorState = true;
                     XtraMessageBox.Show("Static Arbitrage Operation Failed. Resolve conflicts manually. " + info.Exchange + "-" + info.AltCoin + "-" + info.BaseCoin);
                 }
-                BeginInvoke(new MethodInvoker(UpdateBalanceItems));
+                if(info.OperationExecuted) {
+                    info.OperationExecuted = false;
+                    BeginInvoke(new MethodInvoker(UpdateBalanceItems));
+                }
                 ShouldProcessArbitrage = false;
             }
             this.BeginInvoke(new Action<StaticArbitrageInfo>(RefreshGridRow), info);

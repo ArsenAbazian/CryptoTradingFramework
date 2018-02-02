@@ -7,8 +7,26 @@ using System.Threading.Tasks;
 namespace CryptoMarketClient {
     public enum OrderBookEntryType { Bid, Ask }
     public class OrderBookEntry {
-        public string ValueString { get; set; }
-        public string AmountString { get; set; }
+        public string valueString;
+        public string ValueString {
+            get { return valueString; }
+            set {
+                if(ValueString == value)
+                    return;
+                this.valueString = value;
+                this.value = 0;
+            }
+        }
+        public string amountString;
+        public string AmountString {
+            get { return amountString; }
+            set {
+                if(AmountString == value)
+                    return;
+                amountString = value;
+                this.amount = 0;
+            }
+        }
         double value = 0, amount = 0;
         public double Value {
             get {
@@ -87,17 +105,17 @@ namespace CryptoMarketClient {
         public static double Convert(string str) {
             int value = 0;
             int fix = 0;
-            for(int i = 0; i < str.Length; i++) {
+            int length = str.Length;
+            for(int i = 0; i < length; i++) {
                 if(str[i] == '.') {
-                    int count = str.Length - i - 1;
-                    for(int j = i + 1; j < str.Length; j++) {
+                    for(int j = i + 1; j < length; j++) {
+                        if(str[j] == '-' || str[j] == 'e' || str[j] == 'E')
+                            return ParseExponent(str, value + fix * divider[j - i - 1], j + 1);
                         fix = (fix << 3) + (fix << 1) + str[j] - 0x30;
-                        if(str[i] == 'e' || str[i] == 'E')
-                            return ParseExponent(str, value + fix * divider[count], i + 1);
                     }
-                    return value + fix * divider[count];
+                    return value + fix * divider[length - i - 1];
                 }
-                if(str[i] == 'e' || str[i] == 'E')
+                if(str[i] == '-' || str[i] == 'e' || str[i] == 'E')
                     return ParseExponent(str, value, i + 1);
                 value = (value << 3) + (value << 1) + str[i] - 0x30;
             }

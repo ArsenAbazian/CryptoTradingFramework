@@ -292,6 +292,9 @@ namespace CryptoMarketClient {
                 return null;
             }
         }
+        public Int32 ToUnixTimestamp(DateTime time) {
+            return (Int32)(time.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
+        }
         protected byte[] GetDownloadBytes(string address) {
             try {
                 return GetWebClient().DownloadData(address);
