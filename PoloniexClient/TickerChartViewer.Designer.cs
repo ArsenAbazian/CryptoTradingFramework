@@ -47,20 +47,20 @@ namespace CryptoMarketClient {
             this.bar1 = new DevExpress.XtraBars.Bar();
             this.bsCandleStickPeriod = new DevExpress.XtraBars.BarSubItem();
             this.bsChartType = new DevExpress.XtraBars.BarSubItem();
-            this.bcStock = new DevExpress.XtraBars.BarCheckItem();
             this.bcCandle = new DevExpress.XtraBars.BarCheckItem();
             this.bcLine = new DevExpress.XtraBars.BarCheckItem();
-            this.barSubItem1 = new DevExpress.XtraBars.BarSubItem();
             this.barButtonItem3 = new DevExpress.XtraBars.BarButtonItem();
             this.barDockControlTop = new DevExpress.XtraBars.BarDockControl();
             this.barDockControlBottom = new DevExpress.XtraBars.BarDockControl();
             this.barDockControlLeft = new DevExpress.XtraBars.BarDockControl();
             this.barDockControlRight = new DevExpress.XtraBars.BarDockControl();
+            this.bcStock = new DevExpress.XtraBars.BarCheckItem();
             this.barButtonItem1 = new DevExpress.XtraBars.BarButtonItem();
             this.barButtonItem2 = new DevExpress.XtraBars.BarButtonItem();
             this.bcColoredStock = new DevExpress.XtraBars.BarCheckItem();
             this.bcColoredCandle = new DevExpress.XtraBars.BarCheckItem();
             this.bcArea = new DevExpress.XtraBars.BarCheckItem();
+            this.barSubItem1 = new DevExpress.XtraBars.BarSubItem();
             this.repositoryItemCheckedComboBoxEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemCheckedComboBoxEdit();
             this.repositoryItemComboBox1 = new DevExpress.XtraEditors.Repository.RepositoryItemComboBox();
             this.sidePanel1 = new DevExpress.XtraEditors.SidePanel();
@@ -96,8 +96,8 @@ namespace CryptoMarketClient {
             xyDiagram1.AxisX.VisibleInPanesSerializable = "-1;0";
             xyDiagram1.AxisX.VisualRange.Auto = false;
             xyDiagram1.AxisX.VisualRange.AutoSideMargins = false;
-            xyDiagram1.AxisX.VisualRange.MaxValueSerializable = "01/12/2018 16:59:00.000";
-            xyDiagram1.AxisX.VisualRange.MinValueSerializable = "01/12/2018 16:50:00.000";
+            xyDiagram1.AxisX.VisualRange.MaxValueSerializable = "02/02/2018 19:29:00.000";
+            xyDiagram1.AxisX.VisualRange.MinValueSerializable = "02/02/2018 19:20:00.000";
             xyDiagram1.AxisX.VisualRange.SideMarginsValue = 0D;
             xyDiagram1.AxisX.WholeRange.AutoSideMargins = false;
             xyDiagram1.AxisX.WholeRange.SideMarginsValue = 0D;
@@ -155,7 +155,6 @@ namespace CryptoMarketClient {
             this.chartControl1.Margin = new System.Windows.Forms.Padding(6);
             this.chartControl1.Name = "chartControl1";
             series1.Name = "Volume";
-            //series1.ToolTipEnabled = DevExpress.Utils.DefaultBoolean.True;
             sideBySideBarSeriesView1.AxisYName = "Secondary AxisY 2";
             sideBySideBarSeriesView1.BarWidth = 0.9D;
             sideBySideBarSeriesView1.Color = System.Drawing.Color.FromArgb(((int)(((byte)(150)))), ((int)(((byte)(181)))), ((int)(((byte)(200)))), ((int)(((byte)(201)))));
@@ -197,6 +196,7 @@ namespace CryptoMarketClient {
             this.chartControl1.SideBySideBarDistanceFixed = 0;
             this.chartControl1.Size = new System.Drawing.Size(1856, 1094);
             this.chartControl1.TabIndex = 4;
+            this.chartControl1.AxisVisualRangeChanged += new System.EventHandler<DevExpress.XtraCharts.AxisRangeChangedEventArgs>(this.chartControl1_AxisVisualRangeChanged);
             // 
             // barManager1
             // 
@@ -258,14 +258,6 @@ namespace CryptoMarketClient {
             new DevExpress.XtraBars.LinkPersistInfo(this.bcLine)});
             this.bsChartType.Name = "bsChartType";
             // 
-            // bcStock
-            // 
-            this.bcStock.Caption = "Stock";
-            this.bcStock.GroupIndex = 33;
-            this.bcStock.Id = 13;
-            this.bcStock.Name = "bcStock";
-            this.bcStock.CheckedChanged += new DevExpress.XtraBars.ItemClickEventHandler(this.OnChartTypeChanged);
-            // 
             // bcCandle
             // 
             this.bcCandle.Caption = "Candle";
@@ -281,12 +273,6 @@ namespace CryptoMarketClient {
             this.bcLine.Id = 19;
             this.bcLine.Name = "bcLine";
             this.bcLine.CheckedChanged += new DevExpress.XtraBars.ItemClickEventHandler(this.OnChartTypeChanged);
-            // 
-            // barSubItem1
-            // 
-            this.barSubItem1.Caption = "Indicators";
-            this.barSubItem1.Id = 21;
-            this.barSubItem1.Name = "barSubItem1";
             // 
             // barButtonItem3
             // 
@@ -333,6 +319,14 @@ namespace CryptoMarketClient {
             this.barDockControlRight.Margin = new System.Windows.Forms.Padding(6);
             this.barDockControlRight.Size = new System.Drawing.Size(0, 1094);
             // 
+            // bcStock
+            // 
+            this.bcStock.Caption = "Stock";
+            this.bcStock.GroupIndex = 33;
+            this.bcStock.Id = 13;
+            this.bcStock.Name = "bcStock";
+            this.bcStock.CheckedChanged += new DevExpress.XtraBars.ItemClickEventHandler(this.OnChartTypeChanged);
+            // 
             // barButtonItem1
             // 
             this.barButtonItem1.Caption = "Colored Bar";
@@ -370,6 +364,12 @@ namespace CryptoMarketClient {
             this.bcArea.Id = 20;
             this.bcArea.Name = "bcArea";
             this.bcArea.CheckedChanged += new DevExpress.XtraBars.ItemClickEventHandler(this.OnChartTypeChanged);
+            // 
+            // barSubItem1
+            // 
+            this.barSubItem1.Caption = "Indicators";
+            this.barSubItem1.Id = 21;
+            this.barSubItem1.Name = "barSubItem1";
             // 
             // repositoryItemCheckedComboBoxEdit1
             // 
