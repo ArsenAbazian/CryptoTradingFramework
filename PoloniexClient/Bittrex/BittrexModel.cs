@@ -246,65 +246,62 @@ namespace CryptoMarketClient.Bittrex {
         }
         public bool UpdateArbitrageOrderBook(TickerBase info, int depth) {
             string address = GetOrderBookString(info, depth);
-            string text = GetDownloadString(info, address);
-            if(string.IsNullOrEmpty(text))
+            byte[] data = GetDownloadBytes(address);
+            if(data == null)
                 return false;
-            return UpdateOrderBook(info, text, false, depth);
+            return UpdateOrderBook(info, data, false, depth);
         }
         public string GetOrderBookString(TickerBase info, int depth) {
             return string.Format("https://bittrex.com/api/v1.1/public/getorderbook?market={0}&type=both&depth={1}", Uri.EscapeDataString(info.MarketName), depth);
         }
-        public bool UpdateOrderBook(BittrexTicker info, string text, int depth) {
-            return UpdateOrderBook(info, text, true, depth);
+        public override bool ProcessOrderBook(TickerBase tickerBase, string text) {
+            throw new NotImplementedException();
+        }
+        public bool UpdateOrderBook(BittrexTicker info, byte[] data, int depth) {
+            return UpdateOrderBook(info, data, true, depth);
         }
         public override bool UpdateOrderBook(TickerBase tickerBase) {
             return UpdateArbitrageOrderBook(tickerBase, OrderBook.Depth);
         }
-        public override bool ProcessOrderBook(TickerBase tickerBase, string text) {
-            return UpdateOrderBook(tickerBase, text, false, OrderBook.Depth);
-        }
-        public bool UpdateOrderBook(TickerBase ticker, string text, bool raiseChanged, int depth) {
-            if(text == null)
-                return false;
-            Dictionary<string, object> res2 = null;
-            lock(JsonParser) {
-                res2 = JsonParser.Parse(text) as Dictionary<string, object>;
-                if(res2 == null)
-                    return false;
-            }
-
-            if(!(bool)res2["success"])
+        public bool UpdateOrderBook(TickerBase ticker, byte[] bytes, bool raiseChanged, int depth) {
+            if(bytes == null)
                 return false;
 
-            Dictionary<string, object> result = (Dictionary<string, object>)res2["result"];
+            int startIndex = 1; // skip {
+            if(!FindChar(bytes, ':', ref startIndex))
+                return false;
+            if(!FindChar(bytes, ':', ref startIndex))
+                return false;
+            if(!FindChar(bytes, ':', ref startIndex))
+                return false;
+            if(!FindChar(bytes, ':', ref startIndex))
+                return false;
 
-            List<object> bids = (List<object>)result["buy"];
-            List<object> asks = (List<object>)result["sell"];
+            List<string[]> bids = DeserializeArrayOfObjects(bytes, ref startIndex, new string[] { "Quantity", "Rate" }, (itemIndex, paramIndex, value) => { return itemIndex < OrderBook.Depth; });
+            if(!FindChar(bytes, ':', ref startIndex))
+                return false;
+            List<string[]> asks = DeserializeArrayOfObjects(bytes, ref startIndex, new string[] { "Quantity", "Rate" });
 
             ticker.OrderBook.GetNewBidAsks();
             int index = 0;
             OrderBookEntry[] list = ticker.OrderBook.Bids;
-            if(bids != null) {
-                foreach(Dictionary<string, object> item in bids) {
-                    OrderBookEntry entry = list[index];
-                    entry.AmountString = (string)item.Values.First();
-                    entry.ValueString = (string)item.Values.Last();
-                    index++;
-                    if(index >= list.Length)
-                        break;
-                }
+            foreach(string[] item in bids) {
+                OrderBookEntry entry = list[index];
+                entry.ValueString = item[0];
+                entry.AmountString = item[1];
+                index++;
+                if(index >= list.Length)
+                    break;
             }
             index = 0;
             list = ticker.OrderBook.Asks;
-            if(asks != null) {
-                foreach(Dictionary<string, object> item in asks) {
-                    OrderBookEntry entry = list[index];
-                    entry.AmountString = (string)item.Values.First();
-                    entry.ValueString = (string)item.Values.Last();
-                    index++;
-                    if(index >= list.Length)
-                        break;
-                }
+            foreach(string[] item in asks) {
+                OrderBookEntry entry = list[index];
+                entry.ValueString = item[0];
+                entry.AmountString = item[1];
+                index++;
+                if(index >= list.Length)
+                    break;
             }
             ticker.OrderBook.UpdateEntries();
             ticker.OrderBook.RaiseOnChanged(new OrderBookUpdateInfo() { Action = OrderBookUpdateType.RefreshAll });
@@ -312,10 +309,10 @@ namespace CryptoMarketClient.Bittrex {
         }
         public void GetOrderBook(BittrexTicker info, int depth) {
             string address = string.Format("https://bittrex.com/api/v1.1/public/getorderbook?market={0}&type=both&depth={1}", Uri.EscapeDataString(info.MarketName), depth);
-            string text = GetDownloadString(info, address);
-            if(string.IsNullOrEmpty(text))
+            byte[] data = GetDownloadBytes(address);
+            if(data == null)
                 return;
-            UpdateOrderBook(info, text, depth);
+            UpdateOrderBook(info, data, depth);
         }
         public bool GetTrades(BittrexTicker info) {
             string address = string.Format("https://bittrex.com/api/v1.1/public/getmarkethistory?market={0}", Uri.EscapeDataString(info.MarketName));

@@ -24,7 +24,10 @@ namespace CryptoMarketClient.Strategies {
         [XtraSerializableProperty]
         public double MarketCurrencyMaximum { get; set; }
 
-        public override object HistoryDataSource => throw new NotImplementedException();
+        public override object HistoryDataSource
+        {
+            get { throw new NotImplementedException(); }
+        } 
 
         protected virtual void GenerateLines() { }
 

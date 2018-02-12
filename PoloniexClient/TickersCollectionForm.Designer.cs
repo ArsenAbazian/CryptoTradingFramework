@@ -54,7 +54,7 @@
             this.colIsActual = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gcSecond = new DevExpress.XtraGrid.Columns.GridColumn();
             this.repositoryItemTextEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemTextEdit();
-            this.gridControl1 = new DevExpress.XtraGrid.GridControl();
+            this.gridControl1 = new MyGridControl();
             this.gridView1 = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.colIsSelected = new DevExpress.XtraGrid.Columns.GridColumn();
             this.repositoryItemCheckEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit();
@@ -648,7 +648,7 @@
 
         #endregion
 
-        private DevExpress.XtraGrid.GridControl gridControl1;
+        private MyGridControl gridControl1;
         private DevExpress.XtraGrid.Views.Grid.GridView gridView1;
         private DevExpress.XtraGrid.Columns.GridColumn gcCurrencyPair;
         private DevExpress.XtraGrid.Columns.GridColumn gcLast;

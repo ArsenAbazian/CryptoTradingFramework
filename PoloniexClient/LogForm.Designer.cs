@@ -33,7 +33,7 @@ namespace CryptoMarketClient {
             DevExpress.XtraGrid.GridFormatRule gridFormatRule3 = new DevExpress.XtraGrid.GridFormatRule();
             DevExpress.XtraEditors.FormatConditionRuleValue formatConditionRuleValue3 = new DevExpress.XtraEditors.FormatConditionRuleValue();
             this.colType = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.gridControl = new DevExpress.XtraGrid.GridControl();
+            this.gridControl = new MyGridControl();
             this.logMessageBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.gridView1 = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.colTime = new DevExpress.XtraGrid.Columns.GridColumn();
@@ -158,7 +158,7 @@ namespace CryptoMarketClient {
 
         #endregion
 
-        private DevExpress.XtraGrid.GridControl gridControl;
+        private MyGridControl gridControl;
         private DevExpress.XtraGrid.Views.Grid.GridView gridView1;
         private System.Windows.Forms.BindingSource logMessageBindingSource;
         private DevExpress.XtraGrid.Columns.GridColumn colType;

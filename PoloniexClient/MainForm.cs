@@ -8,16 +8,12 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using WampSharp.V2;
-using WampSharp.V2.PubSub;
-using WampSharp.V2.Realm;
 using System.Reactive.Subjects;
 using System.Diagnostics;
 using DevExpress.XtraWaitForm;
 using CryptoMarketClient.Bittrex;
 using DevExpress.XtraEditors;
 using CryptoMarketClient.Common;
-using Tesseract;
 using System.IO;
 using CryptoMarketClient.Yobit;
 
@@ -36,6 +32,8 @@ namespace CryptoMarketClient {
             Exchange.AllowTradeHistory = this.bcAllowTradeHistory.Checked;
             Exchange.OrderBookDepth = Convert.ToInt32(this.beOrderBookDepth.EditValue);
             TelegramBot.Default.SendNotification("hello!");
+            this.bciAllowDirectXCharts.Checked = SettingsStore.Default.UseDirectXForCharts;
+            this.bciAllowDirectXGrid.Checked = SettingsStore.Default.UseDirectXForGrid;
 
             //BittrexExchange.Default.IsConnected = true;
             //BittrextMarketsForm.Show();
@@ -251,18 +249,18 @@ namespace CryptoMarketClient {
         }
 
         private void barButtonItem2_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
-            OpenFileDialog dialog = new OpenFileDialog();
-            if(dialog.ShowDialog() == DialogResult.OK) {
-                string datapath = Path.GetDirectoryName(Application.ExecutablePath) + Path.DirectorySeparatorChar + "tessdata";
-                using(TesseractEngine en = new Tesseract.TesseractEngine(datapath, "eng", EngineMode.TesseractOnly)) {
-                    using(Pix pix = Pix.LoadFromFile(dialog.FileName)) {
-                        using(Page page = en.Process(pix)) {
-                            string text = page.GetText();
-                            XtraMessageBox.Show(text);
-                        }
-                    }
-                }
-            }
+            //OpenFileDialog dialog = new OpenFileDialog();
+            //if(dialog.ShowDialog() == DialogResult.OK) {
+            //    string datapath = Path.GetDirectoryName(Application.ExecutablePath) + Path.DirectorySeparatorChar + "tessdata";
+            //    using(TesseractEngine en = new Tesseract.TesseractEngine(datapath, "eng", EngineMode.TesseractOnly)) {
+            //        using(Pix pix = Pix.LoadFromFile(dialog.FileName)) {
+            //            using(Page page = en.Process(pix)) {
+            //                string text = page.GetText();
+            //                XtraMessageBox.Show(text);
+            //            }
+            //        }
+            //    }
+            //}
         }
 
         private void bbShowBittrex_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
@@ -280,6 +278,18 @@ namespace CryptoMarketClient {
                 YobitExchange.Default.IsConnected = false;
                 YobitTickersForm.Hide();
             }
+        }
+
+        private void bciAllowDirectXGrid_CheckedChanged(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            SettingsStore.Default.UseDirectXForGrid = this.bciAllowDirectXGrid.Checked;
+            SettingsStore.Default.SaveToXml();
+        }
+
+        private void bciAllowDirectXCharts_CheckedChanged(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            SettingsStore.Default.UseDirectXForCharts = this.bciAllowDirectXCharts.Checked;
+            SettingsStore.Default.SaveToXml();
         }
     }
 }

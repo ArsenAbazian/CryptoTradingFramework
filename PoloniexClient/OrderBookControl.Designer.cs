@@ -32,13 +32,13 @@
             this.gcVolumePercent = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gcVolume = new DevExpress.XtraGrid.Columns.GridColumn();
             this.bidPanel = new DevExpress.XtraEditors.SidePanel();
-            this.bidGridControl = new DevExpress.XtraGrid.GridControl();
+            this.bidGridControl = new MyGridControl();
             this.bidGridView = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.gcRate2 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gcAmount2 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.repositoryItemTextEdit2 = new DevExpress.XtraEditors.Repository.RepositoryItemTextEdit();
             this.askPanel = new DevExpress.XtraEditors.SidePanel();
-            this.askGridControl = new DevExpress.XtraGrid.GridControl();
+            this.askGridControl = new MyGridControl();
             this.askGridView = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.gcRate = new DevExpress.XtraGrid.Columns.GridColumn();
             this.repositoryItemTextEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemTextEdit();
@@ -299,12 +299,12 @@
         #endregion
 
         private DevExpress.XtraEditors.SidePanel bidPanel;
-        private DevExpress.XtraGrid.GridControl bidGridControl;
+        private MyGridControl bidGridControl;
         private DevExpress.XtraGrid.Views.Grid.GridView bidGridView;
         private DevExpress.XtraGrid.Columns.GridColumn gcRate2;
         private DevExpress.XtraGrid.Columns.GridColumn gcAmount2;
         private DevExpress.XtraEditors.SidePanel askPanel;
-        private DevExpress.XtraGrid.GridControl askGridControl;
+        private MyGridControl askGridControl;
         private DevExpress.XtraGrid.Views.Grid.GridView askGridView;
         private DevExpress.XtraGrid.Columns.GridColumn gcRate;
         private DevExpress.XtraGrid.Columns.GridColumn gcAmount;

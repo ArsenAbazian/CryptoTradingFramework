@@ -15,9 +15,6 @@ using System.Reactive.Subjects;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-using WampSharp.Binding;
-using WampSharp.V2;
-using WampSharp.V2.Rpc;
 
 namespace CryptoMarketClient {
     public class PoloniexExchange : Exchange {
@@ -65,118 +62,7 @@ namespace CryptoMarketClient {
         public IDisposable ConnectOrderBook(PoloniexTicker ticker) {
             return null;
         }
-        string ByteArray2String(byte[] bytes, int index, int length) {
-            unsafe
-            {
-                fixed (byte* bytes2 = &bytes[0]) {
-                    if(bytes[index] == '"')
-                        return new string((sbyte*)bytes2, index + 1, length - 2);
-                    return new string((sbyte*)bytes2, index, length);
-                }
-            }
-        }
-        List<string[]> DeserializeArrayOfObjects(byte[] bytes, ref int startIndex, string[] str) {
-            return DeserializeArrayOfObjects(bytes, ref startIndex, str, null);
-        }
-        List<string[]> DeserializeArrayOfObjects(byte[] bytes, ref int startIndex, string[] str, IfDelegate2 shouldContinue) {
-            int index = startIndex;
-            if(!FindChar(bytes, '[', ref index))
-                return null;
-            List<string[]> items = new List<string[]>();
-            while(index != -1) {
-                if(!FindChar(bytes, '{', ref index))
-                    break;
-                string[] props = new string[str.Length];
-                for(int itemIndex = 0; itemIndex < str.Length; itemIndex++) {
-                    if(bytes[index + 1 + 2 + str[itemIndex].Length] == ':')
-                        index = index + 1 + 2 + str[itemIndex].Length + 1;
-                    else {
-                        if(!FindChar(bytes, ':', ref index)) {
-                            startIndex = index;
-                            return items;
-                        }
-                    }
-                    int length = index;
-                    if(bytes[index] == '"')
-                        ReadString(bytes, ref length);
-                    else
-                        FindChar(bytes, itemIndex == str.Length - 1 ? '}' : ',', ref length);
-                    length -= index;
-                    props[itemIndex] = ByteArray2String(bytes, index, length);
-                    index += length;
-                    if(shouldContinue != null && !shouldContinue(itemIndex, props[itemIndex]))
-                        return items;
-                }
-                items.Add(props);
-                if(index == -1)
-                    break;
-                index += 2; // skip ,
-            }
-            startIndex = index;
-            return items;
-        }
-        List<string[]> DeserializeArrayOfArrays(byte[] bytes, ref int startIndex, int subArrayItemsCount) {
-            int index = startIndex;
-            if(!FindChar(bytes, '[', ref index))
-                return null;
-            List<string[]> list = new List<string[]>();
-            index++;
-            while(index != -1) {
-                if(!FindChar(bytes, '[', ref index))
-                    break;
-                string[] items = new string[subArrayItemsCount];
-                list.Add(items);
-                for(int i = 0; i < subArrayItemsCount; i++) {
-                    index++;
-                    int length = index;
-                    char separator = i == subArrayItemsCount - 1 ? ']' : ',';
-                    FindChar(bytes, separator, ref length);
-                    length -= index;
-                    items[i] = ByteArray2String(bytes, index, length);
-                    index += length;
-                }
-                index += 2; // skip ],
-            }
-            startIndex = index;
-            return list; 
-        }
-        bool ReadString(byte[] bytes, ref int startIndex) {
-            startIndex++;
-            for(int i = startIndex; i < bytes.Length; i++) {
-                if(bytes[i] == '"') {
-                    startIndex = i + 1;
-                    return true;
-                }
-            }
-            startIndex = bytes.Length;
-            return false;
-        }
-        bool FindCharWithoutStop(byte[] bytes, char symbol, ref int startIndex) {
-            for(int i = startIndex; i < bytes.Length; i++) {
-                byte c = bytes[i];
-                if(c == symbol) {
-                    startIndex = i;
-                    return true;
-                }
-            }
-            startIndex = bytes.Length;
-            return false;
-        }
-        bool FindChar(byte[] bytes, char symbol, ref int startIndex) {
-            for(int i = startIndex; i < bytes.Length; i++) {
-                byte c = bytes[i];
-                if(c == symbol) {
-                    startIndex = i;
-                    return true;
-                }
-                if(c == ',' || c == ']' || c == '}' || c == ':') {
-                    startIndex = i;
-                    return false;
-                }
-            }
-            startIndex = bytes.Length;
-            return false;
-        }
+        
         public override BindingList<CandleStickData> GetCandleStickData(TickerBase ticker, int candleStickPeriodMin, DateTime start, long periodInSeconds) {
             long startSec = (long)(start.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
             long end = startSec + periodInSeconds;
@@ -211,20 +97,6 @@ namespace CryptoMarketClient {
                 data.WeightedAverage = FastDoubleConverter.Convert(item[7]);
                 list.Add(data);
             }
-
-            //JArray res = (JArray)JsonConvert.DeserializeObject(text);
-            //foreach(JObject item in res.Children()) {
-            //    CandleStickData data = new CandleStickData();
-            //    data.Time = startTime.AddSeconds(item.Value<long>("date"));
-            //    data.Open = item.Value<double>("open");
-            //    data.Close = item.Value<double>("close");
-            //    data.High = item.Value<double>("high");
-            //    data.Low = item.Value<double>("low");
-            //    data.Volume = item.Value<double>("volume");
-            //    data.QuoteVolume = item.Value<double>("quoteVolume");
-            //    data.WeightedAverage = item.Value<double>("weightedAverage");
-            //    list.Add(data);
-            //}
             return list;
         }
 
@@ -555,7 +427,7 @@ namespace CryptoMarketClient {
             int startIndex = 0;
             List<string[]> trades = DeserializeArrayOfObjects(bytes, ref startIndex, 
                 new string[] { "globalTradeID", "tradeID", "date", "type", "rate", "amount" ,"total" }, 
-                (paramIndex, value) => { return paramIndex != 1 || value != lastGotTradeId; });
+                (itemIndex, paramIndex, value) => { return paramIndex != 1 || value != lastGotTradeId; });
 
             
             TradeStatisticsItem st = new TradeStatisticsItem();
@@ -636,7 +508,7 @@ namespace CryptoMarketClient {
             int startIndex = 0;
             List<string[]> trades = DeserializeArrayOfObjects(data, ref startIndex,
                 new string[] { "globalTradeID", "tradeID", "date", "rate", "amount", "total", "fee", "orderNumber", "type", "category" },
-                (paramIndex, value) => { return paramIndex != 1 || value != lastGotTradeId; });
+                (itemIndex, paramIndex, value) => { return paramIndex != 1 || value != lastGotTradeId; });
 
             int index = 0;
             foreach(string[] obj in trades) {
@@ -1069,7 +941,7 @@ namespace CryptoMarketClient {
     }
 
     public delegate void TickerUpdateEventHandler(object sender, TickerUpdateEventArgs e);
-    public delegate bool IfDelegate2(int paramIndex, string value);
+    public delegate bool IfDelegate2(int itemIndex, int paramIndex, string value);
     public class TickerUpdateEventArgs : EventArgs {
         public PoloniexTicker Ticker { get; set; }
     }

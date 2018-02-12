@@ -42,7 +42,7 @@ namespace CryptoMarketClient {
             DevExpress.XtraCharts.Series series5 = new DevExpress.XtraCharts.Series();
             DevExpress.XtraCharts.PointSeriesView pointSeriesView1 = new DevExpress.XtraCharts.PointSeriesView();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TickerChartViewer));
-            this.chartControl1 = new DevExpress.XtraCharts.ChartControl();
+            this.chartControl1 = new MyChartControl();
             this.barManager1 = new DevExpress.XtraBars.BarManager(this.components);
             this.bar1 = new DevExpress.XtraBars.Bar();
             this.bsCandleStickPeriod = new DevExpress.XtraBars.BarSubItem();
@@ -440,7 +440,7 @@ namespace CryptoMarketClient {
         private BarDockControl barDockControlBottom;
         private BarDockControl barDockControlLeft;
         private BarDockControl barDockControlRight;
-        private DevExpress.XtraCharts.ChartControl chartControl1;
+        private MyChartControl chartControl1;
         private DevExpress.XtraEditors.Repository.RepositoryItemCheckedComboBoxEdit repositoryItemCheckedComboBoxEdit1;
         private BarSubItem bsCandleStickPeriod;
         private DevExpress.XtraEditors.Repository.RepositoryItemComboBox repositoryItemComboBox1;

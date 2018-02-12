@@ -11,7 +11,6 @@ using System.Net;
 using System.Reactive.Subjects;
 using System.Text;
 using System.Threading.Tasks;
-using WampSharp.V2;
 
 namespace CryptoMarketClient {
     public class PoloniexTicker : TickerBase {

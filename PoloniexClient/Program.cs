@@ -22,6 +22,7 @@ namespace CryptoMarketClient {
             UserLookAndFeel.Default.SetSkinStyle("Office 2013");
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(true);
+
             WindowsFormsSettings.ForceDirectXPaint();
 
             CheckShowApiKeysForm();

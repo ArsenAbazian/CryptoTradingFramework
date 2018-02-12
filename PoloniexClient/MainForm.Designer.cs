@@ -48,6 +48,8 @@
             this.bbShowBittrex = new DevExpress.XtraBars.BarButtonItem();
             this.barButtonItem3 = new DevExpress.XtraBars.BarButtonItem();
             this.bcYobit = new DevExpress.XtraBars.BarCheckItem();
+            this.bciAllowDirectXGrid = new DevExpress.XtraBars.BarCheckItem();
+            this.bciAllowDirectXCharts = new DevExpress.XtraBars.BarCheckItem();
             this.ribbonPageCategory1 = new DevExpress.XtraBars.Ribbon.RibbonPageCategory();
             this.ribbonPage2 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPageGroup2 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
@@ -106,10 +108,12 @@
             this.barButtonItem2,
             this.bbShowBittrex,
             this.barButtonItem3,
-            this.bcYobit});
+            this.bcYobit,
+            this.bciAllowDirectXGrid,
+            this.bciAllowDirectXCharts});
             this.ribbonControl1.Location = new System.Drawing.Point(0, 0);
-            this.ribbonControl1.Margin = new System.Windows.Forms.Padding(12);
-            this.ribbonControl1.MaxItemId = 28;
+            this.ribbonControl1.Margin = new System.Windows.Forms.Padding(6);
+            this.ribbonControl1.MaxItemId = 30;
             this.ribbonControl1.MdiMergeStyle = DevExpress.XtraBars.Ribbon.RibbonMdiMergeStyle.Always;
             this.ribbonControl1.Name = "ribbonControl1";
             this.ribbonControl1.PageCategories.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageCategory[] {
@@ -124,9 +128,9 @@
             this.repositoryItemSpinEdit1,
             this.repositoryItemTrackBar1,
             this.repositoryItemSpinEdit2});
-            this.ribbonControl1.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonControlStyle.OfficeUniversal;
+            this.ribbonControl1.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonControlStyle.Office2013;
             this.ribbonControl1.ShowApplicationButton = DevExpress.Utils.DefaultBoolean.False;
-            this.ribbonControl1.Size = new System.Drawing.Size(3548, 157);
+            this.ribbonControl1.Size = new System.Drawing.Size(965, 222);
             this.ribbonControl1.StatusBar = this.ribbonStatusBar1;
             this.ribbonControl1.Merge += new DevExpress.XtraBars.Ribbon.RibbonMergeEventHandler(this.ribbonControl1_Merge);
             this.ribbonControl1.UnMerge += new DevExpress.XtraBars.Ribbon.RibbonMergeEventHandler(this.ribbonControl1_UnMerge);
@@ -324,6 +328,22 @@
             this.bcYobit.Name = "bcYobit";
             this.bcYobit.CheckedChanged += new DevExpress.XtraBars.ItemClickEventHandler(this.bcYobit_CheckedChanged);
             // 
+            // bciAllowDirectXGrid
+            // 
+            this.bciAllowDirectXGrid.Caption = "DirectX Table";
+            this.bciAllowDirectXGrid.CheckBoxVisibility = DevExpress.XtraBars.CheckBoxVisibility.BeforeText;
+            this.bciAllowDirectXGrid.Id = 28;
+            this.bciAllowDirectXGrid.Name = "bciAllowDirectXGrid";
+            this.bciAllowDirectXGrid.CheckedChanged += new DevExpress.XtraBars.ItemClickEventHandler(this.bciAllowDirectXGrid_CheckedChanged);
+            // 
+            // bciAllowDirectXCharts
+            // 
+            this.bciAllowDirectXCharts.Caption = "DirectX Charts";
+            this.bciAllowDirectXCharts.CheckBoxVisibility = DevExpress.XtraBars.CheckBoxVisibility.BeforeText;
+            this.bciAllowDirectXCharts.Id = 29;
+            this.bciAllowDirectXCharts.Name = "bciAllowDirectXCharts";
+            this.bciAllowDirectXCharts.CheckedChanged += new DevExpress.XtraBars.ItemClickEventHandler(this.bciAllowDirectXCharts_CheckedChanged);
+            // 
             // ribbonPageCategory1
             // 
             this.ribbonPageCategory1.Name = "ribbonPageCategory1";
@@ -349,8 +369,10 @@
             // ribbonPageGroup4
             // 
             this.ribbonPageGroup4.ItemLinks.Add(this.beOrderBookDepth);
-            this.ribbonPageGroup4.ItemLinks.Add(this.bcAllowTradeHistory);
             this.ribbonPageGroup4.ItemLinks.Add(this.beArbitrageDepth);
+            this.ribbonPageGroup4.ItemLinks.Add(this.bcAllowTradeHistory);
+            this.ribbonPageGroup4.ItemLinks.Add(this.bciAllowDirectXGrid);
+            this.ribbonPageGroup4.ItemLinks.Add(this.bciAllowDirectXCharts);
             this.ribbonPageGroup4.Name = "ribbonPageGroup4";
             this.ribbonPageGroup4.Text = "Settings";
             // 
@@ -445,11 +467,10 @@
             // ribbonStatusBar1
             // 
             this.ribbonStatusBar1.AutoHeight = true;
-            this.ribbonStatusBar1.Location = new System.Drawing.Point(0, 1748);
-            this.ribbonStatusBar1.Margin = new System.Windows.Forms.Padding(6);
+            this.ribbonStatusBar1.Location = new System.Drawing.Point(0, 524);
             this.ribbonStatusBar1.Name = "ribbonStatusBar1";
             this.ribbonStatusBar1.Ribbon = this.ribbonControl1;
-            this.ribbonStatusBar1.Size = new System.Drawing.Size(3548, 62);
+            this.ribbonStatusBar1.Size = new System.Drawing.Size(965, 47);
             // 
             // documentManager1
             // 
@@ -461,8 +482,6 @@
             // 
             // defaultBarAndDockingController1
             // 
-            this.defaultBarAndDockingController1.Controller.PropertiesBar.DefaultGlyphSize = new System.Drawing.Size(16, 16);
-            this.defaultBarAndDockingController1.Controller.PropertiesBar.DefaultLargeGlyphSize = new System.Drawing.Size(32, 32);
             this.defaultBarAndDockingController1.Controller.PropertiesRibbon.DefaultGlyphSize = 32;
             this.defaultBarAndDockingController1.Controller.PropertiesRibbon.DefaultLargeGlyphSize = 64;
             this.defaultBarAndDockingController1.Controller.PropertiesRibbon.ScaleIcons = false;
@@ -480,13 +499,13 @@
             // MainForm
             // 
             this.AllowFormGlass = DevExpress.Utils.DefaultBoolean.False;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(3548, 1810);
+            this.ClientSize = new System.Drawing.Size(965, 571);
             this.Controls.Add(this.ribbonStatusBar1);
             this.Controls.Add(this.ribbonControl1);
             this.IsMdiContainer = true;
-            this.Margin = new System.Windows.Forms.Padding(12);
+            this.Margin = new System.Windows.Forms.Padding(6);
             this.Name = "MainForm";
             this.Ribbon = this.ribbonControl1;
             this.StatusBar = this.ribbonStatusBar1;
@@ -553,6 +572,8 @@
         private DevExpress.XtraBars.Ribbon.RibbonPage ribbonPage6;
         private DevExpress.XtraBars.BarButtonItem barButtonItem3;
         private DevExpress.XtraBars.BarCheckItem bcYobit;
+        private DevExpress.XtraBars.BarCheckItem bciAllowDirectXGrid;
+        private DevExpress.XtraBars.BarCheckItem bciAllowDirectXCharts;
     }
 }
 

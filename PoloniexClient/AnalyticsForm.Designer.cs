@@ -25,7 +25,7 @@
         private void InitializeComponent() {
             DevExpress.XtraCharts.XYDiagram xyDiagram1 = new DevExpress.XtraCharts.XYDiagram();
             DevExpress.XtraCharts.Series series1 = new DevExpress.XtraCharts.Series();
-            this.bidChangeChart = new DevExpress.XtraCharts.ChartControl();
+            this.bidChangeChart = new MyChartControl();
             ((System.ComponentModel.ISupportInitialize)(this.bidChangeChart)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(xyDiagram1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(series1)).BeginInit();
@@ -72,6 +72,6 @@
 
         #endregion
 
-        private DevExpress.XtraCharts.ChartControl bidChangeChart;
+        private MyChartControl bidChangeChart;
     }
 }

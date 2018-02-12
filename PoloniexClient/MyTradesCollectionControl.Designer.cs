@@ -32,7 +32,7 @@ namespace CryptoMarketClient {
             DevExpress.XtraEditors.FormatConditionRuleValue formatConditionRuleValue2 = new DevExpress.XtraEditors.FormatConditionRuleValue();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MyTradesCollectionControl));
             this.colType = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.gcTrades = new DevExpress.XtraGrid.GridControl();
+            this.gcTrades = new MyGridControl();
             this.gvTrades = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.colTime = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colAmount = new DevExpress.XtraGrid.Columns.GridColumn();
@@ -260,7 +260,7 @@ namespace CryptoMarketClient {
 
         #endregion
 
-        private DevExpress.XtraGrid.GridControl gcTrades;
+        private MyGridControl gcTrades;
         private DevExpress.XtraGrid.Views.Grid.GridView gvTrades;
         private DevExpress.XtraGrid.Columns.GridColumn colTime;
         private DevExpress.XtraGrid.Columns.GridColumn colAmount;

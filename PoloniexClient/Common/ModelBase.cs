@@ -33,6 +33,119 @@ namespace CryptoMarketClient {
                 exchange.Load();
         }
 
+        protected string ByteArray2String(byte[] bytes, int index, int length) {
+            unsafe
+            {
+                fixed (byte* bytes2 = &bytes[0]) {
+                    if(bytes[index] == '"')
+                        return new string((sbyte*)bytes2, index + 1, length - 2);
+                    return new string((sbyte*)bytes2, index, length);
+                }
+            }
+        }
+        protected List<string[]> DeserializeArrayOfObjects(byte[] bytes, ref int startIndex, string[] str) {
+            return DeserializeArrayOfObjects(bytes, ref startIndex, str, null);
+        }
+        protected List<string[]> DeserializeArrayOfObjects(byte[] bytes, ref int startIndex, string[] str, IfDelegate2 shouldContinue) {
+            int index = startIndex;
+            if(!FindChar(bytes, '[', ref index))
+                return null;
+            List<string[]> items = new List<string[]>();
+            while(index != -1) {
+                if(!FindChar(bytes, '{', ref index))
+                    break;
+                string[] props = new string[str.Length];
+                for(int itemIndex = 0; itemIndex < str.Length; itemIndex++) {
+                    if(bytes[index + 1 + 2 + str[itemIndex].Length] == ':')
+                        index = index + 1 + 2 + str[itemIndex].Length + 1;
+                    else {
+                        if(!FindChar(bytes, ':', ref index)) {
+                            startIndex = index;
+                            return items;
+                        }
+                    }
+                    int length = index;
+                    if(bytes[index] == '"')
+                        ReadString(bytes, ref length);
+                    else
+                        FindChar(bytes, itemIndex == str.Length - 1 ? '}' : ',', ref length);
+                    length -= index;
+                    props[itemIndex] = ByteArray2String(bytes, index, length);
+                    index += length;
+                    if(shouldContinue != null && !shouldContinue(items.Count, itemIndex, props[itemIndex]))
+                        return items;
+                }
+                items.Add(props);
+                if(index == -1)
+                    break;
+                index += 2; // skip ,
+            }
+            startIndex = index;
+            return items;
+        }
+        protected List<string[]> DeserializeArrayOfArrays(byte[] bytes, ref int startIndex, int subArrayItemsCount) {
+            int index = startIndex;
+            if(!FindChar(bytes, '[', ref index))
+                return null;
+            List<string[]> list = new List<string[]>();
+            index++;
+            while(index != -1) {
+                if(!FindChar(bytes, '[', ref index))
+                    break;
+                string[] items = new string[subArrayItemsCount];
+                list.Add(items);
+                for(int i = 0; i < subArrayItemsCount; i++) {
+                    index++;
+                    int length = index;
+                    char separator = i == subArrayItemsCount - 1 ? ']' : ',';
+                    FindChar(bytes, separator, ref length);
+                    length -= index;
+                    items[i] = ByteArray2String(bytes, index, length);
+                    index += length;
+                }
+                index += 2; // skip ],
+            }
+            startIndex = index;
+            return list;
+        }
+        protected bool ReadString(byte[] bytes, ref int startIndex) {
+            startIndex++;
+            for(int i = startIndex; i < bytes.Length; i++) {
+                if(bytes[i] == '"') {
+                    startIndex = i + 1;
+                    return true;
+                }
+            }
+            startIndex = bytes.Length;
+            return false;
+        }
+        protected bool FindCharWithoutStop(byte[] bytes, char symbol, ref int startIndex) {
+            for(int i = startIndex; i < bytes.Length; i++) {
+                byte c = bytes[i];
+                if(c == symbol) {
+                    startIndex = i;
+                    return true;
+                }
+            }
+            startIndex = bytes.Length;
+            return false;
+        }
+        protected bool FindChar(byte[] bytes, char symbol, ref int startIndex) {
+            for(int i = startIndex; i < bytes.Length; i++) {
+                byte c = bytes[i];
+                if(c == symbol) {
+                    startIndex = i;
+                    return true;
+                }
+                if(c == ',' || c == ']' || c == '}' || c == ':') {
+                    startIndex = i;
+                    return false;
+                }
+            }
+            startIndex = bytes.Length;
+            return false;
+        }
+
         public static int OrderBookDepth { get; set; }
         public static bool AllowTradeHistory { get; set; }
         public bool IsConnected {

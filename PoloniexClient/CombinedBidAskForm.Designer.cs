@@ -23,7 +23,7 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
-            this.arbitrageHistoryChart = new DevExpress.XtraCharts.ChartControl();
+            this.arbitrageHistoryChart = new MyChartControl();
             ((System.ComponentModel.ISupportInitialize)(this.arbitrageHistoryChart)).BeginInit();
             this.SuspendLayout();
             // 
@@ -59,6 +59,6 @@
 
         #endregion
 
-        private DevExpress.XtraCharts.ChartControl arbitrageHistoryChart;
+        private MyChartControl arbitrageHistoryChart;
     }
 }

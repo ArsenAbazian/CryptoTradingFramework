@@ -42,7 +42,7 @@
             DevExpress.XtraEditors.FormatConditionIconSetIcon formatConditionIconSetIcon7 = new DevExpress.XtraEditors.FormatConditionIconSetIcon();
             DevExpress.XtraEditors.FormatConditionIconSetIcon formatConditionIconSetIcon8 = new DevExpress.XtraEditors.FormatConditionIconSetIcon();
             DevExpress.XtraEditors.FormatConditionIconSetIcon formatConditionIconSetIcon9 = new DevExpress.XtraEditors.FormatConditionIconSetIcon();
-            this.gridControl1 = new DevExpress.XtraGrid.GridControl();
+            this.gridControl1 = new MyGridControl();
             this.gridView1 = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.poloniexAccountBalanceInfoBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.colCurrency = new DevExpress.XtraGrid.Columns.GridColumn();
@@ -199,7 +199,7 @@
 
         #endregion
 
-        private DevExpress.XtraGrid.GridControl gridControl1;
+        private MyGridControl gridControl1;
         private DevExpress.XtraGrid.Views.Grid.GridView gridView1;
         private System.Windows.Forms.BindingSource poloniexAccountBalanceInfoBindingSource;
         private DevExpress.XtraGrid.Columns.GridColumn colCurrency;

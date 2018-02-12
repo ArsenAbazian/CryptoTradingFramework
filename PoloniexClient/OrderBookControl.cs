@@ -199,7 +199,10 @@ namespace CryptoMarketClient {
         
         public OrderBookEntry[] Data { get; set; }
 
-        OrderBookEntry IList<OrderBookEntry>.this[int index] { get => Data[index]; set => Data[index] = value; }
+        OrderBookEntry IList<OrderBookEntry>.this[int index] {
+            get { return Data[index]; }
+            set { Data[index] = value; }
+        }
         int ICollection<OrderBookEntry>.Count => Data == null ? 0 : Data.Length;
         bool ICollection<OrderBookEntry>.IsReadOnly => true;
 

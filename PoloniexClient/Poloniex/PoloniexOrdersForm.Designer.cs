@@ -24,7 +24,7 @@
         /// </summary>
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
-            this.gridControl1 = new DevExpress.XtraGrid.GridControl();
+            this.gridControl1 = new MyGridControl();
             this.gridView1 = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.poloniexOrderInfoBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.colMarket = new DevExpress.XtraGrid.Columns.GridColumn();
@@ -137,7 +137,7 @@
 
         #endregion
 
-        private DevExpress.XtraGrid.GridControl gridControl1;
+        private MyGridControl gridControl1;
         private DevExpress.XtraGrid.Views.Grid.GridView gridView1;
         private System.Windows.Forms.BindingSource poloniexOrderInfoBindingSource;
         private DevExpress.XtraGrid.Columns.GridColumn colMarket;

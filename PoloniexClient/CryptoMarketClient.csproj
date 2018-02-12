@@ -97,9 +97,6 @@
     <Reference Include="DevExpress.XtraVerticalGrid.v18.1, Version=18.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
       <Private>True</Private>
     </Reference>
-    <Reference Include="Fleck, Version=0.14.0.59, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Fleck.0.14.0.59\lib\net40\Fleck.dll</HintPath>
-    </Reference>
     <Reference Include="MsgPack, Version=0.6.0.0, Culture=neutral, PublicKeyToken=a2625990d5dc0167, processorArchitecture=MSIL">
       <HintPath>..\packages\MsgPack.Cli.0.6.2\lib\net45\MsgPack.dll</HintPath>
     </Reference>
@@ -171,31 +168,7 @@
     <Reference Include="Telegram.Bot, Version=13.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Telegram.Bot.13.1.0\lib\netstandard1.1\Telegram.Bot.dll</HintPath>
     </Reference>
-    <Reference Include="Tesseract, Version=3.0.2.0, Culture=neutral, PublicKeyToken=ebeb3d86bef60cbe, processorArchitecture=MSIL">
-      <HintPath>..\packages\Tesseract.3.0.2.0\lib\net451\Tesseract.dll</HintPath>
-    </Reference>
     <Reference Include="UIAutomationClient" />
-    <Reference Include="WampSharp, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\WampSharp.1.2.6.41-beta\lib\net45\WampSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="WampSharp.Default.Client, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\WampSharp.Default.Client.1.2.6.41-beta\lib\net45\WampSharp.Default.Client.dll</HintPath>
-    </Reference>
-    <Reference Include="WampSharp.Default.Router, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\WampSharp.Default.Router.1.2.6.41-beta\lib\net45\WampSharp.Default.Router.dll</HintPath>
-    </Reference>
-    <Reference Include="WampSharp.Fleck, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\WampSharp.Fleck.1.2.6.41-beta\lib\net45\WampSharp.Fleck.dll</HintPath>
-    </Reference>
-    <Reference Include="WampSharp.NewtonsoftJson, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\WampSharp.NewtonsoftJson.1.2.6.41-beta\lib\net45\WampSharp.NewtonsoftJson.dll</HintPath>
-    </Reference>
-    <Reference Include="WampSharp.NewtonsoftMsgpack, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\WampSharp.NewtonsoftMsgpack.1.2.6.41-beta\lib\net45\WampSharp.NewtonsoftMsgpack.dll</HintPath>
-    </Reference>
-    <Reference Include="WampSharp.WebSocket4Net, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\WampSharp.WebSocket4Net.1.2.6.41-beta\lib\net45\WampSharp.WebSocket4Net.dll</HintPath>
-    </Reference>
     <Reference Include="WebSocket4Net, Version=0.15.0.9, Culture=neutral, PublicKeyToken=eb4e154b696bf72a, processorArchitecture=MSIL">
       <HintPath>..\packages\WebSocket4Net.0.15.0-beta9\lib\net45\WebSocket4Net.dll</HintPath>
     </Reference>
@@ -203,6 +176,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\GrabDataSettings.cs" />
+    <Compile Include="Common\SettingsStore.cs" />
     <Compile Include="CurrencyMonitoringForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -214,6 +188,12 @@
     </Compile>
     <Compile Include="GrabDataSettingsForm.Designer.cs">
       <DependentUpon>GrabDataSettingsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MyChartControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="MyGridControl.cs">
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="MyTradesCollectionControl.cs">
       <SubType>UserControl</SubType>
@@ -403,7 +383,6 @@
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Common\OrderBook.cs" />
-    <Compile Include="Poloniex\PoloniexOrderBookUpdateInfoConverter.cs" />
     <Compile Include="Poloniex\PoloniexTicker.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -591,20 +570,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\chart.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="x64\liblept172.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="x64\libtesseract304.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="x86\liblept172.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="x86\libtesseract304.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="ShapesManager\" />

@@ -79,7 +79,7 @@
             this.tickerChartViewer1 = new CryptoMarketClient.TickerChartViewer();
             this.tickerInfoControl = new CryptoMarketClient.TickerInfo();
             this.orderBookControl1 = new CryptoMarketClient.OrderBookControl();
-            this.gcTrades = new DevExpress.XtraGrid.GridControl();
+            this.gcTrades = new MyGridControl();
             this.tradeHistoryItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.gvTrades = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.colTime = new DevExpress.XtraGrid.Columns.GridColumn();
@@ -98,7 +98,7 @@
             this.buySettingsControl = new CryptoMarketClient.BuySettingsControl();
             this.dpOpenedOrders = new DevExpress.XtraBars.Docking.DockPanel();
             this.controlContainer1 = new DevExpress.XtraBars.Docking.ControlContainer();
-            this.gcOpenedOrders = new DevExpress.XtraGrid.GridControl();
+            this.gcOpenedOrders = new MyGridControl();
             this.openedOrderInfoBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.gvOrders = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.colDate = new DevExpress.XtraGrid.Columns.GridColumn();
@@ -114,7 +114,7 @@
             this.dockPanel2_Container = new DevExpress.XtraBars.Docking.ControlContainer();
             this.dockPanel1 = new DevExpress.XtraBars.Docking.DockPanel();
             this.controlContainer3 = new DevExpress.XtraBars.Docking.ControlContainer();
-            this.gcOrderHistory = new DevExpress.XtraGrid.GridControl();
+            this.gcOrderHistory = new MyGridControl();
             this.tradingResultBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
             this.gvOderHistory = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.colOrderNumber1 = new DevExpress.XtraGrid.Columns.GridColumn();
@@ -887,7 +887,7 @@
         private DevExpress.XtraBars.Ribbon.RibbonControl ribbonControl1;
         private DevExpress.XtraBars.Ribbon.RibbonPage rpMain;
         private TickerInfo tickerInfoControl;
-        private DevExpress.XtraGrid.GridControl gcTrades;
+        private MyGridControl gcTrades;
         private DevExpress.XtraGrid.Views.Grid.GridView gvTrades;
         private System.Windows.Forms.BindingSource tradeHistoryItemBindingSource;
         private DevExpress.XtraGrid.Columns.GridColumn colTime;
@@ -912,7 +912,7 @@
         private DevExpress.XtraBars.Docking.ControlContainer dockPanel3_Container;
         private DevExpress.XtraBars.Docking.DockPanel dpOpenedOrders;
         private DevExpress.XtraBars.Docking.ControlContainer controlContainer1;
-        private DevExpress.XtraGrid.GridControl gcOpenedOrders;
+        private MyGridControl gcOpenedOrders;
         private DevExpress.XtraGrid.Views.Grid.GridView gvOrders;
         private System.Windows.Forms.BindingSource openedOrderInfoBindingSource;
         private DevExpress.XtraGrid.Columns.GridColumn colDate;
@@ -929,7 +929,7 @@
         private DevExpress.XtraBars.Docking.DockPanel panelContainer1;
         private DevExpress.XtraBars.Docking.DockPanel dockPanel1;
         private DevExpress.XtraBars.Docking.ControlContainer controlContainer3;
-        private DevExpress.XtraGrid.GridControl gcOrderHistory;
+        private MyGridControl gcOrderHistory;
         private DevExpress.XtraGrid.Views.Grid.GridView gvOderHistory;
         private System.Windows.Forms.BindingSource tradingResultBindingSource;
         private System.Windows.Forms.BindingSource tradingResultBindingSource1;
