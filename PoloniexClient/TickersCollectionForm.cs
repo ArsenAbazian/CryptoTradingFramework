@@ -261,7 +261,8 @@ namespace CryptoMarketClient {
 
         private void gridView1_GetThumbnailImage(object sender, DevExpress.XtraGrid.Views.Grid.GridViewThumbnailImageEventArgs e) {
             TickerBase t = (TickerBase)this.gridView1.GetRow(e.RowHandle);
-            e.ThumbnailImage = t.Logo;
+            if(t.Logo != null)
+                e.ThumbnailImage = new Bitmap(t.Logo, new Size(128, 128));
         }
     }
 }
