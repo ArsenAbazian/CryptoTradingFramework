@@ -46,6 +46,12 @@ namespace CryptoMarketClient {
 
         void IXtraSerializable.OnEndDeserializing(string restoredVersion) {
             SuppressSave = false;
+            foreach(TrailingSettings set in Trailings) {
+                if(set.StartDate < DateTime.Now.AddYears(-1))
+                    set.StartDate = DateTime.Now;
+                if(set.Date < DateTime.Now.AddYears(-1))
+                    set.Date = DateTime.Now;
+            }
         }
 
         void IXtraSerializable.OnEndSerializing() {

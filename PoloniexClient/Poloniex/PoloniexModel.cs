@@ -31,6 +31,8 @@ namespace CryptoMarketClient {
             }
         }
 
+        public override bool AllowCandleStickIncrementalUpdate => true;
+
         public override string Name => "Poloniex";
         public override List<CandleStickIntervalInfo> GetAllowedCandleStickIntervals() {
             List<CandleStickIntervalInfo> list = new List<CandleStickIntervalInfo>();

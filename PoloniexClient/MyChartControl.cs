@@ -10,7 +10,7 @@ namespace CryptoMarketClient {
     public class MyChartControl : ChartControl {
         public MyChartControl()
             : base() {
-                UseDirectXPaint = SettingsStore.Default.UseDirectXForGrid ? DevExpress.Utils.DefaultBoolean.True : DevExpress.Utils.DefaultBoolean.False;
+                UseDirectXPaint = SettingsStore.Default.UseDirectXForCharts ? DevExpress.Utils.DefaultBoolean.True : DevExpress.Utils.DefaultBoolean.False;
         }
     }
 }

@@ -194,6 +194,7 @@ namespace CryptoMarketClient.Common {
                 Time = Ticker.Time,
                 Current = Ticker.Last
             });
+            Ticker.Save();
         }
         public void Change() {
             Ticker.Events.Add(new TickerEvent() {

@@ -33,6 +33,8 @@ namespace CryptoMarketClient {
                 exchange.Load();
         }
 
+        public abstract bool AllowCandleStickIncrementalUpdate { get; }
+
         protected string ByteArray2String(byte[] bytes, int index, int length) {
             unsafe
             {
@@ -42,6 +44,17 @@ namespace CryptoMarketClient {
                     return new string((sbyte*)bytes2, index, length);
                 }
             }
+        }
+        protected bool SkipSymbol(byte[] bytes, char symbol, int count, ref int startIndex) {
+            if(bytes == null)
+                return false;
+
+            for(int i = 0; i < count; i++) {
+                if(!FindCharWithoutStop(bytes, symbol, ref startIndex))
+                    return false;
+                startIndex++;
+            }
+            return true;
         }
         protected List<string[]> DeserializeArrayOfObjects(byte[] bytes, ref int startIndex, string[] str) {
             return DeserializeArrayOfObjects(bytes, ref startIndex, str, null);
@@ -449,6 +462,7 @@ namespace CryptoMarketClient {
 
     public class CandleStickIntervalInfo {
         public string Text { get; set; }
+        public string Command { get; set; }
         public TimeSpan Interval { get; set; }
     }
 }

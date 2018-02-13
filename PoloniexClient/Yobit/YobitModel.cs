@@ -23,6 +23,8 @@ namespace CryptoMarketClient.Yobit {
             }
         }
 
+        public override bool AllowCandleStickIncrementalUpdate => false;
+
         public override string Name => "Yobit";
 
         public List<YobitCurrencyInfo> Currencies { get; } = new List<YobitCurrencyInfo>();

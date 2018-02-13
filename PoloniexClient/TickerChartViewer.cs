@@ -338,7 +338,7 @@ namespace CryptoMarketClient {
 
         Thread UpdateCandleStickThread { get; set; }
         private void chartControl1_AxisVisualRangeChanged(object sender, AxisRangeChangedEventArgs e) {
-            if(Ticker == null || SuppressUpdateCandlestickData)
+            if(Ticker == null || SuppressUpdateCandlestickData || !Ticker.Exchange.AllowCandleStickIncrementalUpdate)
                 return;
             if(!(e.Axis.VisualRange.MinValue is DateTime))
                 return;

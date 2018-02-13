@@ -14,7 +14,7 @@ namespace CryptoMarketClient {
                 if(ValueString == value)
                     return;
                 this.valueString = value;
-                this.value = 0;
+                this.valueCalculated = false;
             }
         }
         public string amountString;
@@ -24,16 +24,18 @@ namespace CryptoMarketClient {
                 if(AmountString == value)
                     return;
                 amountString = value;
-                this.amount = 0;
+                this.amountCalculated = false;
             }
         }
         double value = 0, amount = 0;
+        bool valueCalculated, amountCalculated;
         public double Value {
             get {
-                if(value == 0) {
+                if(!valueCalculated) {
                     if(string.IsNullOrEmpty(ValueString))
                         return value;
                     value = FastDoubleConverter.Convert(ValueString);
+                    valueCalculated = true;
                     ValueString = value.ToString("0.########");
                 }
                 return value;
@@ -41,9 +43,10 @@ namespace CryptoMarketClient {
         }
         public double Amount {
             get {
-                if(amount == 0) {
+                if(!amountCalculated) {
                     if(string.IsNullOrEmpty(AmountString))
                         return amount;
+                    amountCalculated = true;
                     amount = FastDoubleConverter.Convert(AmountString);
                 }
                 return amount;

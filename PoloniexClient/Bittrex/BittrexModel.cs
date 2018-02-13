@@ -3,9 +3,11 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
+using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -22,14 +24,75 @@ namespace CryptoMarketClient.Bittrex {
             }
         }
 
+        public override bool AllowCandleStickIncrementalUpdate => false;
+
         public override string Name => "Bittrex";
 
         public override List<CandleStickIntervalInfo> GetAllowedCandleStickIntervals() {
-            return new List<CandleStickIntervalInfo>();
+            List<CandleStickIntervalInfo> list = new List<CandleStickIntervalInfo>();
+            list.Add(new CandleStickIntervalInfo() { Interval = TimeSpan.FromMinutes(1), Text = "1 Minute", Command = "oneMin" });
+            list.Add(new CandleStickIntervalInfo() { Interval = TimeSpan.FromMinutes(5), Text = "5 Minutes", Command = "fiveMin" });
+            list.Add(new CandleStickIntervalInfo() { Interval = TimeSpan.FromMinutes(30), Text = "30 Minutes", Command = "thirtyMin" });
+            list.Add(new CandleStickIntervalInfo() { Interval = TimeSpan.FromMinutes(60), Text = "1 Hour", Command = "hour" });
+            list.Add(new CandleStickIntervalInfo() { Interval = TimeSpan.FromMinutes(60 * 24), Text = "1 Day", Command = "day" });
+            return list;
         }
 
         public List<BittrexCurrencyInfo> Currencies { get; } = new List<BittrexCurrencyInfo>();
         protected List<TradeHistoryItem> UpdateList { get; } = new List<TradeHistoryItem>(100);
+
+        string GetInvervalCommand(int minutes) {
+            if(minutes == 1)
+                return "oneMin";
+            if(minutes == 5)
+                return "fiveMin";
+            if(minutes == 30)
+                return "thirtyMin";
+            if(minutes == 60)
+                return "hour";
+            if(minutes == 60 * 24)
+                return "day";
+            return "fiveMin";
+        }
+        public override BindingList<CandleStickData> GetCandleStickData(TickerBase ticker, int candleStickPeriodMin, DateTime start, long periodInSeconds) {
+            long startSec = (long)(start.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
+            long end = startSec + periodInSeconds;
+            
+            string address = string.Format("https://bittrex.com/Api/v2.0/pub/market/GetTicks?marketName={0}&tickInterval={1}&_={2}",
+                Uri.EscapeDataString(ticker.CurrencyPair), GetInvervalCommand(candleStickPeriodMin), GetNonce());
+            byte[] bytes = null;
+            try {
+                bytes = GetDownloadBytes(address);
+            }
+            catch(Exception) {
+                return null;
+            }
+            if(bytes == null || bytes.Length == 0)
+                return null;
+
+            BindingList<CandleStickData> list = new BindingList<CandleStickData>();
+
+            int startIndex = 1;
+            if(!SkipSymbol(bytes, ':', 3, ref startIndex))
+                return list;
+
+            string text = (new UTF8Encoding()).GetString(bytes);
+            List<string[]> res = DeserializeArrayOfObjects(bytes, ref startIndex, new string[] { "O", "H", "L", "C", "V", "T", "BV" });
+            if(res == null) return list;
+            foreach(string[] item in res) {
+                CandleStickData data = new CandleStickData();
+                data.Time = Convert.ToDateTime(item[5]);
+                data.High = FastDoubleConverter.Convert(item[1]);
+                data.Low = FastDoubleConverter.Convert(item[2]);
+                data.Open = FastDoubleConverter.Convert(item[0]);
+                data.Close = FastDoubleConverter.Convert(item[3]);
+                data.Volume = FastDoubleConverter.Convert(item[4]);
+                data.QuoteVolume = FastDoubleConverter.Convert(item[6]);
+                data.WeightedAverage = 0;
+                list.Add(data);
+            }
+            return list;
+        }
 
         public override bool GetTickersInfo() {
             string address = "https://bittrex.com/api/v1.1/public/getmarkets";
@@ -252,7 +315,7 @@ namespace CryptoMarketClient.Bittrex {
             return UpdateOrderBook(info, data, false, depth);
         }
         public string GetOrderBookString(TickerBase info, int depth) {
-            return string.Format("https://bittrex.com/api/v1.1/public/getorderbook?market={0}&type=both&depth={1}", Uri.EscapeDataString(info.MarketName), depth);
+            return string.Format("https://bittrex.com/api/v1.1/public/getorderbook?market={0}&type=both&depth={1}", Uri.EscapeDataString(info.MarketName), depth * 2);
         }
         public override bool ProcessOrderBook(TickerBase tickerBase, string text) {
             throw new NotImplementedException();
@@ -268,19 +331,18 @@ namespace CryptoMarketClient.Bittrex {
                 return false;
 
             int startIndex = 1; // skip {
-            if(!FindChar(bytes, ':', ref startIndex))
-                return false;
-            if(!FindChar(bytes, ':', ref startIndex))
-                return false;
-            if(!FindChar(bytes, ':', ref startIndex))
-                return false;
-            if(!FindChar(bytes, ':', ref startIndex))
+            if(!SkipSymbol(bytes, ':', 4, ref startIndex))
                 return false;
 
             List<string[]> bids = DeserializeArrayOfObjects(bytes, ref startIndex, new string[] { "Quantity", "Rate" }, (itemIndex, paramIndex, value) => { return itemIndex < OrderBook.Depth; });
-            if(!FindChar(bytes, ':', ref startIndex))
+            if(!FindCharWithoutStop(bytes, ':', ref startIndex))
                 return false;
+            if(bids == null)
+                return true;
+            startIndex++;
             List<string[]> asks = DeserializeArrayOfObjects(bytes, ref startIndex, new string[] { "Quantity", "Rate" });
+            if(asks == null)
+                return true;
 
             ticker.OrderBook.GetNewBidAsks();
             int index = 0;
