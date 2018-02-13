@@ -535,7 +535,7 @@ namespace CryptoMarketClient {
         }
 
         private void repositoryItemCheckEdit1_EditValueChanged(object sender, EventArgs e) {
-            gridView1.PostEditor();
+            gridView1.CloseEditor();
         }
 
         private void bbShowHistory_ItemClick(object sender, ItemClickEventArgs e) {
@@ -569,7 +569,7 @@ namespace CryptoMarketClient {
         }
 
         private void repositoryItemCheckEdit4_EditValueChanged(object sender, EventArgs e) {
-            gridView1.PostEditor();
+            gridView1.CloseEditor();
         }
 
         private void bbMinimalProfitSpread_ItemClick(object sender, ItemClickEventArgs e) {

@@ -24,6 +24,9 @@ namespace CryptoMarketClient {
             Exchange = exchange;
             Text = Exchange.Name;
             this.gridView1.RowHeight = (int)(48 * DpiProvider.Default.DpiScaleFactor);
+            this.colIsSelected.MaxWidth = this.gridView1.RowHeight;
+            this.gcLogo.MaxWidth = this.gridView1.RowHeight + 10;
+            this.gcLogo.MinWidth = this.gridView1.RowHeight + 10;
         }
 
         public Exchange Exchange { get; set; }
@@ -161,7 +164,7 @@ namespace CryptoMarketClient {
             }
         }
         private void repositoryItemCheckEdit1_EditValueChanged(object sender, EventArgs e) {
-            this.gridView1.PostEditor();
+            this.gridView1.CloseEditor();
             TickerBase ticker = (TickerBase)this.gridView1.GetFocusedRow();
             UpdatePinnedItems();
         }
@@ -261,7 +264,7 @@ namespace CryptoMarketClient {
 
         private void gridView1_GetThumbnailImage(object sender, DevExpress.XtraGrid.Views.Grid.GridViewThumbnailImageEventArgs e) {
             TickerBase t = (TickerBase)this.gridView1.GetRow(e.RowHandle);
-            if(t.Logo != null)
+            if(t.Logo != null) 
                 e.ThumbnailImage = new Bitmap(t.Logo, new Size(128, 128));
         }
     }

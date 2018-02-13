@@ -111,6 +111,9 @@ namespace CryptoMarketClient {
                 }
                 return logo;
             }
+            set {
+                logo = value;
+            }
         }
         internal string LogoUrl { get; set; }
         Image LoadLogoImage() {

@@ -129,92 +129,69 @@ namespace CryptoMarketClient.Bittrex {
         }
         public override bool UpdateCurrencies() {
             string address = "https://bittrex.com/api/v1.1/public/getcurrencies";
-            string text = string.Empty;
+            byte[] bytes = null;
             try {
-                text = GetDownloadString(address);
+                bytes = GetDownloadBytes(address);
             }
             catch(Exception) {
                 return false;
             }
-            if(string.IsNullOrEmpty(text))
+            if(bytes == null)
                 return false;
-            JObject res = (JObject)JsonConvert.DeserializeObject(text);
-            if(!res.Value<bool>("success"))
+
+            int startIndex = 1;
+            if(!SkipSymbol(bytes, ':', 3, ref startIndex))
                 return false;
-            JArray markets = res.Value<JArray>("result");
-            foreach(JObject obj in markets) {
-                string currency = obj.Value<string>("Currency");
+
+            List<string[]> res = DeserializeArrayOfObjects(bytes, ref startIndex, new string[] { "Currency", "CurrencyLong", "MinConfirmation", "TxFee", "IsActive", "CoinType", "BaseAddress" });
+            foreach(string[] item in res) {
+                string currency = item[0];
                 BittrexCurrencyInfo c = Currencies.FirstOrDefault(curr => curr.Currency == currency);
                 if(c == null) {
                     c = new BittrexCurrencyInfo();
-                    c.Currency = currency;
-                    c.CurrencyLong = obj.Value<string>("CurrencyLong");
-                    c.MinConfirmation = obj.Value<int>("MinConfirmation");
-                    c.CoinType = obj.Value<string>("CoinType");
-                    c.BaseAddress = obj.Value<string>("BaseAddress");
-                    c.TxFree = obj.Value<double>("TxFee");
+                    c.Currency = item[0];
+                    c.CurrencyLong = item[1];
+                    c.MinConfirmation = int.Parse(item[2]);
+                    c.TxFree = FastDoubleConverter.Convert(item[3]);
+                    c.CoinType = item[5];
+                    c.BaseAddress = item[6];
+
                     Currencies.Add(c);
                 }
-                c.IsActive = obj.Value<bool>("IsActive");
+                c.IsActive = item[4].Length == 4;
             }
             return true;
         }
         public bool GetCurrenciesInfo() {
-            string address = "https://bittrex.com/api/v1.1/public/getcurrencies";
-            string text = string.Empty;
-            try {
-                text = GetDownloadString(address);
-            }
-            catch(Exception) {
-                return false;
-            }
-            if(string.IsNullOrEmpty(text))
-                return false;
             Currencies.Clear();
-            JObject res = (JObject)JsonConvert.DeserializeObject(text);
-            if(!res.Value<bool>("success"))
-                return false;
-            JArray markets = res.Value<JArray>("result");
-            foreach(JObject obj in markets) {
-                BittrexCurrencyInfo c = new BittrexCurrencyInfo();
-                c.Currency = obj.Value<string>("Currency");
-                c.CurrencyLong = obj.Value<string>("CurrencyLong");
-                c.MinConfirmation = obj.Value<int>("MinConfirmation");
-                c.TxFree = obj.Value<double>("TxFee");
-                c.IsActive = obj.Value<bool>("IsActive");
-                c.CoinType = obj.Value<string>("CoinType");
-                c.BaseAddress = obj.Value<string>("BaseAddress");
-                Currencies.Add(c);
-            }
-            return true;
+            return UpdateCurrencies();
         }
         public void GetTicker(BittrexTicker info) {
             string address = string.Format("https://bittrex.com/api/v1.1/public/getticker?market={0}", Uri.EscapeDataString(info.MarketName));
-            string text = GetDownloadString(info, address);
-            if(string.IsNullOrEmpty(text))
-                return;
-            JObject res = (JObject)JsonConvert.DeserializeObject(text);
-            foreach(JProperty prop in res.Children()) {
-                if(prop.Name == "success") {
-                    if(prop.Value.Value<bool>() == false)
-                        break;
-                }
-                if(prop.Name == "message")
-                    continue;
-                if(prop.Name == "result") {
-                    JObject obj = (JObject)prop.Value;
-                    info.HighestBid = obj.Value<double>("Bid");
-                    info.LowestAsk = obj.Value<double>("Ask");
-                    info.Last = obj.Value<double>("Last");
-                    info.Time = DateTime.UtcNow;
-                    info.UpdateHistoryItem();
-                }
+            byte[] bytes = null;
+            try {
+                bytes = GetDownloadBytes(address);
             }
+            catch(Exception) {
+                return;
+            }
+            if(bytes == null)
+                return;
+
+            int startIndex = 1;
+            if(!SkipSymbol(bytes, ':', 3, ref startIndex))
+                return;
+
+            string[] res = DeserializeObject(bytes, ref startIndex, new string[] { "Bid", "Ask", "Last" });
+            info.HighestBid = FastDoubleConverter.Convert(res[0]);
+            info.LowestAsk = FastDoubleConverter.Convert(res[1]);
+            info.Last = FastDoubleConverter.Convert(res[2]);
+            info.Time = DateTime.UtcNow;
+            info.UpdateHistoryItem();
         }
         public override bool UpdateTicker(TickerBase tickerBase) {
             string address = string.Format("https://bittrex.com/api/v1.1/public/getmarketsummary?market={0}", tickerBase.MarketName);
             byte[] bytes = null;
-            //string text = string.Empty;
             try {
                 bytes = GetDownloadBytes(address);
             }
@@ -360,30 +337,34 @@ namespace CryptoMarketClient.Bittrex {
         }
         public bool GetTrades(BittrexTicker info) {
             string address = string.Format("https://bittrex.com/api/v1.1/public/getmarkethistory?market={0}", Uri.EscapeDataString(info.MarketName));
-            string text = string.Empty;
+            byte[] bytes = null;
             try {
-                text = GetDownloadString(info, address);
+                bytes = GetDownloadBytes(address);
             }
             catch(Exception) {
                 return false;
             }
-            if(string.IsNullOrEmpty(text))
+            if(bytes == null)
                 return false;
-            JObject res = (JObject)JsonConvert.DeserializeObject(text);
-            if(!res.Value<bool>("success"))
+
+            int startIndex = 1;
+            if(!SkipSymbol(bytes, ':', 3, ref startIndex))
                 return false;
-            JArray trades = res.Value<JArray>("result");
+
+            List<string[]> res = DeserializeArrayOfObjects(bytes, ref startIndex, new string[] { "Id", "TimeStamp", "Quantity", "Price", "Total", "FillType", "OrderType" });
+            if(res == null)
+                return false;
             lock(info) {
                 info.TradeHistory.Clear();
-                foreach(JObject obj in trades) {
+                foreach(string[] obj in res) {
                     TradeHistoryItem item = new TradeHistoryItem();
-                    item.Id = obj.Value<int>("Id");
-                    item.Time = obj.Value<DateTime>("TimeStamp");
-                    item.AmountString = obj.Value<string>("Quantity");
-                    item.RateString = obj.Value<string>("Price");
-                    item.Total = obj.Value<double>("Total");
-                    item.Type = obj.Value<string>("OrderType") == "BUY" ? TradeType.Buy : TradeType.Sell;
-                    item.Fill = obj.Value<string>("FillType") == "FILL" ? TradeFillType.Fill : TradeFillType.PartialFill;
+                    item.Id = Convert.ToInt64(obj[0]);;
+                    item.Time = Convert.ToDateTime(obj[1]);
+                    item.AmountString = obj[2];
+                    item.RateString = obj[3];
+                    item.Total = FastDoubleConverter.Convert(obj[4]);
+                    item.Type = obj[6].Length == 3 ? TradeType.Buy : TradeType.Sell;
+                    item.Fill = obj[5].Length == 4 ? TradeFillType.Fill : TradeFillType.PartialFill;
                     info.TradeHistory.Add(item);
                 }
             }
@@ -391,93 +372,145 @@ namespace CryptoMarketClient.Bittrex {
             return true;
         }
         public override bool UpdateMyTrades(TickerBase ticker) {
-            string address = string.Format("https://bittrex.com/api/v1.1/market/getopenorders?apikey={0}&nonce={1}&market={2}",
+            string address = string.Format("https://bittrex.com/api/v1.1/account/getorderhistory?apikey={0}&nonce={1}&market={2}",
                 Uri.EscapeDataString(ApiKey),
                 GetNonce(),
                 ticker.MarketName);
             WebClient client = GetWebClient();
             client.Headers.Clear();
             client.Headers.Add("apisign", GetSign(address));
-            string text = client.DownloadString(address);
-            return OnGetMyTrades(ticker, text);
+            try {
+                byte[] bytes = client.DownloadData(address);
+                return OnGetMyTrades(ticker, bytes);
+            }
+            catch(Exception e) {
+                Debug.WriteLine("error getting my trades: " + e.ToString());
+                return false;
+            }
         }
-        bool OnGetMyTrades(TickerBase ticker, string text) {
+        bool OnGetMyTrades(TickerBase ticker, byte[] bytes) {
+            if(bytes == null)
+                return false;
+
+            int startIndex = 1;
+            if(!SkipSymbol(bytes, ':', 3, ref startIndex))
+                return false;
+
+            string tradeUuid = ticker.MyTradeHistory.Count == 0 ? null : ticker.MyTradeHistory.First().IdString;
+            List<string[]> res = DeserializeArrayOfObjects(bytes, ref startIndex, new string[] { 
+                "OrderUuid", // 0
+                "Exchange",  // 1
+                "TimeStamp",  // 2
+                "OrderType", // 3
+                "Limit",     // 4
+                "Quantity",  // 5
+                "QuantityRemaining", // 6
+                "Commission", // 7
+                "Price",  // 8
+                "PricePerUnit",  // 9
+                "IsConditional",
+                "Condition",
+                "ConditionTarget",
+                "ImmediateOrCancel",
+            },
+            (itemIndex, paramIndex, value) => {
+                    return paramIndex != 0 || value != tradeUuid;
+                });
+            if(res == null)
+                return false;
+            if(res.Count == 0)
+                return true;
+            int index = 0;
+            foreach(string[] obj in res) {
+                TradeHistoryItem item = new TradeHistoryItem();
+                item.IdString = obj[0];
+                item.Type = obj[3] == "LIMIT_BUY" ? TradeType.Buy : TradeType.Sell;
+                item.AmountString = obj[5];
+                item.RateString = obj[9];
+                item.Fee = FastDoubleConverter.Convert(obj[7]);
+                item.Total = FastDoubleConverter.Convert(obj[8]);
+                item.TimeString = obj[1];
+                ticker.MyTradeHistory.Insert(index, item);
+                index++;
+            }
+
             return true;
         }
         public override List<TradeHistoryItem> GetTrades(TickerBase info, DateTime starTime) {
             string address = string.Format("https://bittrex.com/api/v1.1/public/getmarkethistory?market={0}", Uri.EscapeDataString(info.MarketName));
-            string text = string.Empty;
+            byte[] bytes = null;
             try {
-                text = GetDownloadString(info, address);
+                bytes = GetDownloadBytes(address);
             }
             catch(Exception) {
                 return null;
             }
-            if(string.IsNullOrEmpty(text))
+            if(bytes == null)
                 return null;
-            JObject res = (JObject)JsonConvert.DeserializeObject(text);
-            if(!res.Value<bool>("success"))
+
+            int startIndex = 1;
+            if(!SkipSymbol(bytes, ':', 3, ref startIndex))
                 return null;
-            JArray trades = res.Value<JArray>("result");
-            int index = 0;
+
+            List<string[]> res = DeserializeArrayOfObjects(bytes, ref startIndex, new string[] { "Id", "TimeStamp", "Quantity", "Price", "Total", "FillType", "OrderType" }, 
+                (itemIndex, paramIndex, value) => {
+                    return paramIndex != 1 || Convert.ToDateTime(value) >= starTime;
+                });
+            if(res == null)
+                return null;
             List<TradeHistoryItem> list = new List<TradeHistoryItem>();
-            lock(info) {
-                if(trades == null)
-                    return list;
-                foreach(JObject obj in trades) {
-                    int id = obj.Value<int>("Id");
-                    TradeHistoryItem item = new TradeHistoryItem();
-                    item.Id = id;
-                    item.Time = obj.Value<DateTime>("TimeStamp");
-                    if(item.Time < starTime)
-                        break;
-                    item.AmountString = obj.Value<string>("Quantity");
-                    item.RateString = obj.Value<string>("Price");
-                    item.Total = obj.Value<double>("Total");
-                    item.Type = obj.Value<string>("OrderType") == "BUY" ? TradeType.Buy : TradeType.Sell;
-                    item.Fill = obj.Value<string>("FillType") == "FILL" ? TradeFillType.Fill : TradeFillType.PartialFill;
-                    list.Insert(index, item);
-                    index++;
-                }
+
+            int index = 0;
+            foreach(string[] obj in res) {
+                TradeHistoryItem item = new TradeHistoryItem();
+                item.Id = Convert.ToInt64(obj[0]);
+                item.Time = Convert.ToDateTime(obj[1]);
+                item.AmountString = obj[2];
+                item.RateString = obj[3];
+                item.Total = FastDoubleConverter.Convert(obj[4]);
+                item.Type = obj[6].Length == 3 ? TradeType.Buy : TradeType.Sell;
+                item.Fill = obj[5].Length == 4 ? TradeFillType.Fill : TradeFillType.PartialFill;
+                list.Insert(index, item);
+                index++;
             }
             return list;
         }
         public override bool UpdateTrades(TickerBase info) {
             string address = string.Format("https://bittrex.com/api/v1.1/public/getmarkethistory?market={0}", Uri.EscapeDataString(info.MarketName));
-            string text = string.Empty;
+            byte[] bytes = null;
             try {
-                text = GetDownloadString(info, address);
+                bytes = GetDownloadBytes(address);
             }
             catch(Exception) {
                 return false;
             }
-            if(string.IsNullOrEmpty(text))
+            if(bytes == null)
                 return false;
-            JObject res = (JObject)JsonConvert.DeserializeObject(text);
-            if(!res.Value<bool>("success"))
+
+            int startIndex = 1;
+            if(!SkipSymbol(bytes, ':', 3, ref startIndex))
                 return false;
-            JArray trades = res.Value<JArray>("result");
+
+            long lastId = info.TradeHistory.Count > 0 ? info.TradeHistory.First().Id : -1;
+            string lastIdString = lastId.ToString();
+            List<string[]> res = DeserializeArrayOfObjects(bytes, ref startIndex, new string[] { "Id", "TimeStamp", "Quantity", "Price", "Total", "FillType", "OrderType" },
+                (itemIndex, paramIndex, value) => {
+                    return paramIndex != 0 || lastIdString != value;
+                });
+            if(res == null || res.Count == 0)
+                return true;
+
             int index = 0;
             lock(info) {
-                info.TradeHistory.Clear();
-                if(trades == null)
-                    return true;
-                long lastId = info.TradeHistory.Count > 0 ? info.TradeHistory.First().Id : -1;
-                foreach(JObject obj in trades) {
-                    int id = obj.Value<int>("Id");
-                    if(id == lastId) {
-                        foreach(TradeHistoryItem th in UpdateList)
-                            info.TradeHistory.Insert(0, th);
-                        break;
-                    }
+                foreach(string[] obj in res) {
                     TradeHistoryItem item = new TradeHistoryItem();
-                    item.Id = id;
-                    item.Time = obj.Value<DateTime>("TimeStamp");
-                    item.AmountString = obj.Value<string>("Quantity");
-                    item.RateString = obj.Value<string>("Price");
-                    item.Total = obj.Value<double>("Total");
-                    item.Type = obj.Value<string>("OrderType") == "BUY" ? TradeType.Buy : TradeType.Sell;
-                    item.Fill = obj.Value<string>("FillType") == "FILL" ? TradeFillType.Fill : TradeFillType.PartialFill;
+                    item.Id = Convert.ToInt64(obj[0]);
+                    item.Time = Convert.ToDateTime(obj[1]);
+                    item.AmountString = obj[2];
+                    item.RateString = obj[3];
+                    item.Total = FastDoubleConverter.Convert(obj[4]);
+                    item.Type = obj[6].Length == 3 ? TradeType.Buy : TradeType.Sell;
+                    item.Fill = obj[5].Length == 4 ? TradeFillType.Fill : TradeFillType.PartialFill;
                     info.TradeHistory.Insert(index, item);
                     index++;
                 }
@@ -487,16 +520,29 @@ namespace CryptoMarketClient.Bittrex {
         }
         public bool UpdateTradesStatistic(BittrexTicker info, int depth) {
             string address = string.Format("https://bittrex.com/api/v1.1/public/getmarkethistory?market={0}", Uri.EscapeDataString(info.MarketName));
-            string text = GetDownloadString(info, address);
-            if(string.IsNullOrEmpty(text))
+            byte[] bytes = null;
+            try {
+                bytes = GetDownloadBytes(address);
+            }
+            catch(Exception) {
                 return false;
-            JObject res = (JObject)JsonConvert.DeserializeObject(text);
-            if(!res.Value<bool>("success"))
+            }
+            if(bytes == null)
                 return false;
-            JArray trades = res.Value<JArray>("result");
-            if(trades == null || trades.Count == 0)
-                return true;
-            int lastTradeId = trades.First().Value<int>("Id");
+
+            int startIndex = 1;
+            if(!SkipSymbol(bytes, ':', 3, ref startIndex))
+                return false;
+
+            string lastIdString = info.LastTradeId.ToString();
+            List<string[]> res = DeserializeArrayOfObjects(bytes, ref startIndex, new string[] { "Id", "TimeStamp", "Quantity", "Price", "Total", "FillType", "OrderType" },
+                (itemIndex, paramIndex, value) => {
+                    return paramIndex != 0 || lastIdString != value;
+                });
+            if(res == null)
+                return false;
+
+            int lastTradeId = Convert.ToInt32(res[0][0]);
             if(lastTradeId == info.LastTradeId) {
                 info.TradeStatistic.Add(new TradeStatisticsItem() { Time = DateTime.UtcNow });
                 if(info.TradeStatistic.Count > 5000) {
@@ -505,18 +551,15 @@ namespace CryptoMarketClient.Bittrex {
                 }
                 return true;
             }
+
             TradeStatisticsItem st = new TradeStatisticsItem();
             st.MinBuyPrice = double.MaxValue;
             st.MinSellPrice = double.MaxValue;
-            st.Time = trades.First().Value<DateTime>("TimeStamp");
             lock(info) {
-                foreach(JObject obj in trades) {
-                    int id = obj.Value<int>("Id");
-                    if(id == info.LastTradeId)
-                        break;
-                    bool isBuy = obj.Value<string>("OrderType").Length == 3;
-                    double price = obj.Value<double>("Price");
-                    double amount = obj.Value<double>("Quantity");
+                foreach(string[] obj in res) {
+                    bool isBuy = obj[6].Length == 3;
+                    double price = FastDoubleConverter.Convert(obj[3]);
+                    double amount = FastDoubleConverter.Convert(obj[2]);
                     if(isBuy) {
                         st.BuyAmount += amount;
                         st.MinBuyPrice = Math.Min(st.MinBuyPrice, price);
@@ -595,13 +638,13 @@ namespace CryptoMarketClient.Bittrex {
             WebClient client = GetWebClient();
             client.Headers.Clear();
             client.Headers.Add("apisign", GetSign(address));
-            string text = string.Empty;
+            byte[] bytes = null;
             try {
-                text = client.DownloadString(address);
+                bytes = client.DownloadData(address);
             } catch {
                 return false;
             }
-            return OnUpdateOrders(tickerBase, text);
+            return OnUpdateOrders(tickerBase, bytes);
         }
         protected string OnUuidResult(string result) {
             if(string.IsNullOrEmpty(result))
@@ -638,35 +681,55 @@ namespace CryptoMarketClient.Bittrex {
             }
             return false;
         }
-        public bool OnUpdateOrders(TickerBase ticker, string result) {
-            if(string.IsNullOrEmpty(result))
+        public bool OnUpdateOrders(TickerBase ticker, byte[] bytes) {
+            if(bytes == null)
                 return false;
-            JObject res = (JObject)JsonConvert.DeserializeObject(result);
-            if(!res.Value<bool>("success")) {
-                Debug.WriteLine("OnAppendOpenOrders fails: " + res.Value<string>("message"));
+
+            int startIndex = 1;
+            if(!SkipSymbol(bytes, ':', 3, ref startIndex))
                 return false;
-            }
+            startIndex++;
 
             ticker.OpenedOrders.Clear();
-            JArray orders = res.Value<JArray>("result");
-            foreach(JObject obj in orders) {
+            List<string[]> res = DeserializeArrayOfObjects(bytes, ref startIndex, new string[] {
+                "Uuid",
+			    "OrderUuid",
+			    "Exchange",
+			    "OrderType",
+			    "Quantity",
+			    "QuantityRemaining",
+			    "Limit",
+			    "CommissionPaid",
+			    "Price",
+			    "PricePerUnit",
+			    "Opened",
+			    "Closed",
+			    "CancelInitiated",
+			    "ImmediateOrCancel",
+			    "IsConditional",
+			    "Condition",
+			    "ConditionTarget"
+            });
+            if(res == null || res.Count == 0)
+                return true;
+            foreach(string[] obj in res) {
                 BittrexOrderInfo info = new BittrexOrderInfo();
 
-                info.OrderUuid = obj.Value<string>("OrderUuid");
-                info.Exchange = obj.Value<string>("Exchange");
-                info.OrderType = obj.Value<string>("OrderType") == "LIMIT_SELL" ? OrderType.Sell : OrderType.Buy;
-                info.Quantity = obj.Value<double>("Quantity");
-                info.QuantityRemaining = obj.Value<double>("QuantityRemaining");
-                info.Limit = obj.Value<double>("Limit");
-                info.CommissionPaid = obj.Value<double>("CommissionPaid");
-                info.Price = obj.Value<double>("Price");
-                info.Opened = obj.Value<DateTime>("Opened");
-                info.Closed = obj.Value<DateTime>("Closed");
-                info.CancelInitiated = obj.Value<bool>("CancelInitiated");
-                info.ImmediateOrCancel = obj.Value<bool>("ImmediateOrCancel");
-                info.IsConditional = obj.Value<bool>("IsConditional");
-                info.Condition = obj.Value<string>("Condition");
-                info.ConditionTarget = obj.Value<string>("ConditionTarget");
+                info.OrderUuid = obj[1];
+                info.Exchange = obj[2];
+                info.OrderType = obj[3] == "LIMIT_SELL" ? OrderType.Sell : OrderType.Buy;
+                info.Quantity = FastDoubleConverter.Convert(obj[4]);
+                info.QuantityRemaining = FastDoubleConverter.Convert(obj[5]);
+                info.Limit = FastDoubleConverter.Convert(obj[6]);
+                info.CommissionPaid = FastDoubleConverter.Convert(obj[7]);
+                info.Price = FastDoubleConverter.Convert(obj[8]);
+                info.Opened = Convert.ToDateTime(obj[10]);
+                info.Closed = Convert.ToDateTime(obj[11]);
+                info.CancelInitiated = obj[12].Length == 4 ? true : false;
+                info.ImmediateOrCancel = obj[13].Length == 4 ? true : false;
+                info.IsConditional = obj[14].Length == 4 ? true : false;
+                info.Condition = obj[15];
+                info.ConditionTarget = obj[16];
 
                 ticker.OpenedOrders.Add(info);
             }
