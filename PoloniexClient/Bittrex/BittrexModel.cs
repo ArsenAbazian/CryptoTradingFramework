@@ -76,7 +76,6 @@ namespace CryptoMarketClient.Bittrex {
             if(!SkipSymbol(bytes, ':', 3, ref startIndex))
                 return list;
 
-            string text = (new UTF8Encoding()).GetString(bytes);
             List<string[]> res = DeserializeArrayOfObjects(bytes, ref startIndex, new string[] { "O", "H", "L", "C", "V", "T", "BV" });
             if(res == null) return list;
             foreach(string[] item in res) {
@@ -86,8 +85,8 @@ namespace CryptoMarketClient.Bittrex {
                 data.Low = FastDoubleConverter.Convert(item[2]);
                 data.Open = FastDoubleConverter.Convert(item[0]);
                 data.Close = FastDoubleConverter.Convert(item[3]);
-                data.Volume = FastDoubleConverter.Convert(item[4]);
-                data.QuoteVolume = FastDoubleConverter.Convert(item[6]);
+                data.Volume = FastDoubleConverter.Convert(item[6]);
+                data.QuoteVolume = FastDoubleConverter.Convert(item[4]);
                 data.WeightedAverage = 0;
                 list.Add(data);
             }
@@ -96,41 +95,36 @@ namespace CryptoMarketClient.Bittrex {
 
         public override bool GetTickersInfo() {
             string address = "https://bittrex.com/api/v1.1/public/getmarkets";
-            string text = string.Empty;
+            byte[] bytes = null;
             try {
-                text = GetDownloadString(address);
+                bytes = GetDownloadBytes(address);
             }
             catch(Exception) {
                 return false;
             }
-            if(string.IsNullOrEmpty(text))
+            if(bytes == null)
                 return false;
-            Tickers.Clear();
-            JObject res = (JObject)JsonConvert.DeserializeObject(text);
-            foreach(JProperty prop in res.Children()) {
-                if(prop.Name == "success") {
-                    if(prop.Value.Value<bool>() == false)
-                        return false;
-                }
-                if(prop.Name == "message")
-                    continue;
-                if(prop.Name == "result") {
-                    JArray markets = (JArray)prop.Value;
-                    foreach(JObject obj in markets) {
-                        BittrexTicker m = new BittrexTicker(this);
-                        m.MarketCurrency = obj.Value<string>("MarketCurrency");
-                        m.BaseCurrency = obj.Value<string>("BaseCurrency");
-                        m.MarketCurrencyLong = obj.Value<string>("MarketCurrencyLong");
-                        m.BaseCurrencyLong = obj.Value<string>("BaseCurrencyLong");
-                        m.MinTradeSize = obj.Value<double>("MinTradeSize");
-                        m.MarketName = obj.Value<string>("MarketName");
-                        m.IsActive = obj.Value<bool>("IsActive");
-                        m.Created = obj.Value<DateTime>("Created");
-                        m.Index = Tickers.Count;
-                        Tickers.Add(m);
-                    }
-                }
+
+            int startIndex = 1;
+            if(!SkipSymbol(bytes, ':', 3, ref startIndex))
+                return false;
+
+            List<string[]> res = DeserializeArrayOfObjects(bytes, ref startIndex, new string[] { "MarketCurrency", "BaseCurrency", "MarketCurrencyLong", "BaseCurrencyLong", "MinTradeSize", "MarketName", "IsActive", "Created", "Notice", "IsSponsored", "LogoUrl"});
+            foreach(string[] item in res) {
+                BittrexTicker m = new BittrexTicker(this);
+                m.MarketCurrency = item[0];
+                m.BaseCurrency = item[1];
+                m.MarketCurrencyLong = item[2];
+                m.BaseCurrencyLong = item[3];
+                m.MinTradeSize = FastDoubleConverter.Convert(item[4]);
+                m.MarketName = item[5];
+                m.IsActive = item[6].Length == 4 ? true : false;
+                m.Created = Convert.ToDateTime(item[7]);
+                m.LogoUrl = item[10];
+                m.Index = Tickers.Count;
+                Tickers.Add(m);
             }
+
             return true;
         }
         public override bool UpdateCurrencies() {
@@ -219,92 +213,80 @@ namespace CryptoMarketClient.Bittrex {
         }
         public override bool UpdateTicker(TickerBase tickerBase) {
             string address = string.Format("https://bittrex.com/api/v1.1/public/getmarketsummary?market={0}", tickerBase.MarketName);
-            string text = string.Empty;
+            byte[] bytes = null;
+            //string text = string.Empty;
             try {
-                text = GetDownloadString(address);
+                bytes = GetDownloadBytes(address);
             }
             catch(Exception) {
                 return false;
             }
-            if(string.IsNullOrEmpty(text))
+            if(bytes == null)
                 return false;
-            JObject res = (JObject)JsonConvert.DeserializeObject(text);
-            foreach(JProperty prop in res.Children()) {
-                if(prop.Name == "success") {
-                    if(prop.Value.Value<bool>() == false)
-                        return false;
-                }
-                if(prop.Name == "message")
-                    continue;
-                if(prop.Name == "result") {
-                    JArray markets = (JArray)prop.Value;
-                    foreach(JObject obj in markets) {
-                        string marketName = obj.Value<string>("MarketName");
-                        BittrexTicker info = (BittrexTicker)Tickers.FirstOrDefault((m) => m.MarketName == marketName);
-                        if(info == null)
-                            continue;
-                        info.Hr24High = obj.Value<double>("High");
-                        info.Hr24Low = obj.Value<double>("Low");
-                        info.Volume = obj.Value<double>("Volume");
-                        info.Last = obj.Value<double>("Last");
-                        info.BaseVolume = obj.Value<double>("BaseVolume");
-                        info.Time = obj.Value<DateTime>("TimeStamp");
-                        info.HighestBid = obj.Value<double>("Bid");
-                        info.LowestAsk = obj.Value<double>("Ask");
-                        info.OpenBuyOrders = obj.Value<int>("OpenBuyOrders");
-                        info.OpenSellOrders = obj.Value<int>("OpenSellOrders");
-                        info.PrevDay = obj.Value<double>("PrevDay");
-                        info.Created = obj.Value<DateTime>("Created");
-                        info.DisplayMarketName = obj.Value<string>("DisplayMarketName");
-                        //info.UpdateHistoryItem();
-                    }
-                }
-            }
+
+            int startIndex = 1;
+            if(!SkipSymbol(bytes, ':', 3, ref startIndex))
+                return false;
+
+            string[] res = DeserializeObject(bytes, ref startIndex, new string[] { "MarketName", "High", "Low", "Volume", "Last", "BaseVolume", "TimeStamp", "Bid", "Ask", "OpenBuyOrders", "OpenSellOrders", "PrevDay", "Created" });
+
+            BittrexTicker info = (BittrexTicker)tickerBase;
+
+            info.Hr24High = FastDoubleConverter.Convert(res[1]);
+            info.Hr24Low = FastDoubleConverter.Convert(res[2]);
+            info.Volume = FastDoubleConverter.Convert(res[3]);
+            info.Last = FastDoubleConverter.Convert(res[4]);
+            info.BaseVolume = FastDoubleConverter.Convert(res[5]);
+            info.Time = Convert.ToDateTime(res[6]);
+            info.HighestBid = FastDoubleConverter.Convert(res[7]);
+            info.LowestAsk = FastDoubleConverter.Convert(res[8]);
+            info.OpenBuyOrders = Convert.ToInt32(res[9]);
+            info.OpenSellOrders = Convert.ToInt32(res[10]);
+            info.PrevDay = FastDoubleConverter.Convert(res[11]);
+            info.Created = Convert.ToDateTime(res[12]);
+            info.DisplayMarketName = res[0];
+            info.UpdateHistoryItem();
+
             return true;
         }
         public override bool UpdateTickersInfo() {
-            string address = string.Format("https://bittrex.com/api/v1.1/public/getmarketsummaries");
-            string text = string.Empty;
+            string address = "https://bittrex.com/api/v1.1/public/getmarketsummaries";
+            byte[] bytes = null;
             try {
-                text = GetDownloadString(address);
+                bytes = GetDownloadBytes(address);
             }
             catch(Exception) {
                 return false;
             }
-            if(string.IsNullOrEmpty(text))
+            if(bytes == null)
                 return false;
-            JObject res = (JObject)JsonConvert.DeserializeObject(text);
-            foreach(JProperty prop in res.Children()) {
-                if(prop.Name == "success") {
-                    if(prop.Value.Value<bool>() == false)
-                        return false;
-                }
-                if(prop.Name == "message")
+
+            int startIndex = 1;
+            if(!SkipSymbol(bytes, ':', 3, ref startIndex))
+                return false;
+
+            List<string[]> res = DeserializeArrayOfObjects(bytes, ref startIndex, new string[] { "MarketName", "High", "Low", "Volume", "Last", "BaseVolume", "TimeStamp", "Bid", "Ask", "OpenBuyOrders", "OpenSellOrders", "PrevDay", "Created" });
+            foreach(string[] item in res) {
+                string marketName = item[0];
+                BittrexTicker info = (BittrexTicker)Tickers.FirstOrDefault((m) => m.MarketName == marketName);
+                if(info == null)
                     continue;
-                if(prop.Name == "result") {
-                    JArray markets = (JArray)prop.Value;
-                    foreach(JObject obj in markets) {
-                        string marketName = obj.Value<string>("MarketName");
-                        BittrexTicker info = (BittrexTicker)Tickers.FirstOrDefault((m) => m.MarketName == marketName);
-                        if(info == null)
-                            continue;
-                        info.Hr24High = obj.Value<double>("High");
-                        info.Hr24Low = obj.Value<double>("Low");
-                        info.Volume = obj.Value<double>("Volume");
-                        info.Last = obj.Value<double>("Last");
-                        info.BaseVolume = obj.Value<double>("BaseVolume");
-                        info.Time = obj.Value<DateTime>("TimeStamp");
-                        info.HighestBid = obj.Value<double>("Bid");
-                        info.LowestAsk = obj.Value<double>("Ask");
-                        info.OpenBuyOrders = obj.Value<int>("OpenBuyOrders");
-                        info.OpenSellOrders = obj.Value<int>("OpenSellOrders");
-                        info.PrevDay = obj.Value<double>("PrevDay");
-                        info.Created = obj.Value<DateTime>("Created");
-                        info.DisplayMarketName = obj.Value<string>("DisplayMarketName");
-                        //info.UpdateHistoryItem();
-                    }
-                }
+
+                info.Hr24High = FastDoubleConverter.Convert(item[1]);
+                info.Hr24Low = FastDoubleConverter.Convert(item[2]);
+                info.Volume = FastDoubleConverter.Convert(item[3]);
+                info.Last = FastDoubleConverter.Convert(item[4]);
+                info.BaseVolume = FastDoubleConverter.Convert(item[5]);
+                info.Time = Convert.ToDateTime(item[6]);
+                info.HighestBid = FastDoubleConverter.Convert(item[7]);
+                info.LowestAsk = FastDoubleConverter.Convert(item[8]);
+                info.OpenBuyOrders = Convert.ToInt32(item[9]);
+                info.OpenSellOrders = Convert.ToInt32(item[10]);
+                info.PrevDay = FastDoubleConverter.Convert(item[11]);
+                info.Created = Convert.ToDateTime(item[12]);
+                info.DisplayMarketName = item[0];
             }
+
             return true;
         }
         public bool UpdateArbitrageOrderBook(TickerBase info, int depth) {

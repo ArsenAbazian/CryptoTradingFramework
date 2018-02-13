@@ -9,6 +9,7 @@ using System.Collections;
 using System.Security.Cryptography;
 using System.Net;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using CryptoMarketClient.Common;
 using System.Text.Json;
@@ -25,6 +26,10 @@ namespace CryptoMarketClient {
 
 
         static Exchange() {
+            string directoryName = Path.GetDirectoryName(Application.ExecutablePath) + "\\Icons";
+            if(!Directory.Exists(directoryName))
+                Directory.CreateDirectory(directoryName);
+
             Registered.Add(new PoloniexExchange());
             Registered.Add(new BittrexExchange());
             //Registered.Add(new YobitExchange());
@@ -58,6 +63,32 @@ namespace CryptoMarketClient {
         }
         protected List<string[]> DeserializeArrayOfObjects(byte[] bytes, ref int startIndex, string[] str) {
             return DeserializeArrayOfObjects(bytes, ref startIndex, str, null);
+        }
+        protected string[] DeserializeObject(byte[] bytes, ref int startIndex, string[] str) {
+            int index = startIndex;
+            string[] props = new string[str.Length];
+            if(!FindChar(bytes, '{', ref index))
+                return props;
+            for(int itemIndex = 0; itemIndex < str.Length; itemIndex++) {
+                if(bytes[index + 1 + 2 + str[itemIndex].Length] == ':')
+                    index = index + 1 + 2 + str[itemIndex].Length + 1;
+                else {
+                    if(!FindChar(bytes, ':', ref index)) {
+                        startIndex = index;
+                        return props;
+                    }
+                }
+                int length = index;
+                if(bytes[index] == '"')
+                    ReadString(bytes, ref length);
+                else
+                    FindChar(bytes, itemIndex == str.Length - 1 ? '}' : ',', ref length);
+                length -= index;
+                props[itemIndex] = ByteArray2String(bytes, index, length);
+                index += length;
+            }
+            startIndex = index;
+            return props;
         }
         protected List<string[]> DeserializeArrayOfObjects(byte[] bytes, ref int startIndex, string[] str, IfDelegate2 shouldContinue) {
             int index = startIndex;
@@ -458,6 +489,70 @@ namespace CryptoMarketClient {
             }
         }
         public abstract List<CandleStickIntervalInfo> GetAllowedCandleStickIntervals();
+        public static Dictionary<string, string> CurrencyLogo { get; } = new Dictionary<string, string>();
+        public static Dictionary<string, Image> CurrencyLogoImage { get; } = new Dictionary<string, Image>();
+        public static void BuildIconsDataBase(IEnumerable<string[]> list) {
+            CurrencyLogo.Clear();
+            foreach(string[] str in list) {
+                if(string.IsNullOrEmpty(str[0]) || string.IsNullOrEmpty(str[1]) || str[1] == "null")
+                    continue;
+                if(!CurrencyLogo.ContainsKey(str[0]))
+                    CurrencyLogo.Add(str[0], str[1]);
+                if(!CurrencyLogoImage.ContainsKey(str[0])) {
+                    Image res = LoadLogoImage(str[0]);
+                    if(res != null)
+                        CurrencyLogoImage.Add(str[0], res);
+                }
+            }
+        }
+        public static Image GetLogoImage(string currencyName) {
+            if(string.IsNullOrEmpty(currencyName))
+                return null;
+            Image res = null;
+            if(CurrencyLogoImage.TryGetValue(currencyName, out res))
+                return res;
+            try {
+                res = LoadLogoImage(currencyName);
+                if(CurrencyLogoImage.ContainsKey(currencyName))
+                    CurrencyLogoImage[currencyName] = res;
+                else
+                    CurrencyLogoImage.Add(currencyName, res);
+            }
+            catch(Exception) {
+                return null;
+            }
+            return res;
+        }
+        static string GetIconFileName(string currencyName) {
+            return Path.GetDirectoryName(Application.ExecutablePath) + "\\Icons\\" + currencyName + ".png";
+        }
+        static Image LoadLogoImage(string currencyName) {
+            Image res = null;
+            try {
+                if(string.IsNullOrEmpty(currencyName))
+                    return null;
+                Debug.Write("loading logo: " + currencyName);
+                string fileName = GetIconFileName(currencyName);
+                if(File.Exists(fileName)) {
+                    Debug.WriteLine(" - done");
+                    return Image.FromFile(fileName);
+                }
+                string logoUrl = null;
+                if(!CurrencyLogo.TryGetValue(currencyName, out logoUrl) || string.IsNullOrEmpty(logoUrl))
+                    return null;
+                byte[] imageData = new WebClient().DownloadData(logoUrl);
+                if(imageData == null)
+                    return null;
+                MemoryStream stream = new MemoryStream(imageData);
+                res = Image.FromStream(stream);
+                res.Save(fileName);
+            }
+            catch(Exception e) {
+                Debug.WriteLine(" - error: " + e.Message);
+                return null;
+            }
+            return res;
+        }
     }
 
     public class CandleStickIntervalInfo {

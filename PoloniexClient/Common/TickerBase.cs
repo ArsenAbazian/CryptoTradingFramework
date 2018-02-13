@@ -101,6 +101,21 @@ namespace CryptoMarketClient {
         public abstract string CurrencyPair { get; set; }
         public bool IsSelected { get; set; }
         public bool IsOpened { get; set; }
+        Image logo;
+        protected bool LogoLoaded { get; set; }
+        public Image Logo {
+            get {
+                if(!LogoLoaded) {
+                    LogoLoaded = true;
+                    logo = LoadLogoImage();
+                }
+                return logo;
+            }
+        }
+        internal string LogoUrl { get; set; }
+        Image LoadLogoImage() {
+            return Exchange.GetLogoImage(MarketCurrency);
+        }
 
         public TickerUpdateMode UpdateMode {
             get;

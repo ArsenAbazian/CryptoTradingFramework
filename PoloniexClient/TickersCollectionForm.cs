@@ -1,5 +1,6 @@
 ﻿using CryptoMarketClient.Common;
 using CryptoMarketClient.Poloniex;
+using DevExpress.Skins;
 using DevExpress.XtraBars;
 using DevExpress.XtraEditors;
 using DevExpress.XtraEditors.Repository;
@@ -22,6 +23,7 @@ namespace CryptoMarketClient {
             InitializeComponent();
             Exchange = exchange;
             Text = Exchange.Name;
+            this.gridView1.RowHeight = (int)(48 * DpiProvider.Default.DpiScaleFactor);
         }
 
         public Exchange Exchange { get; set; }
@@ -255,6 +257,11 @@ namespace CryptoMarketClient {
                 TickerBase t = Exchange.GetTicker((PinnedTickerInfo)e.Item.Tag);
                 ShowDetailsForSelectedItemCore(t);
             }
+        }
+
+        private void gridView1_GetThumbnailImage(object sender, DevExpress.XtraGrid.Views.Grid.GridViewThumbnailImageEventArgs e) {
+            TickerBase t = (TickerBase)this.gridView1.GetRow(e.RowHandle);
+            e.ThumbnailImage = t.Logo;
         }
     }
 }

@@ -54,10 +54,11 @@
             this.colIsActual = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gcSecond = new DevExpress.XtraGrid.Columns.GridColumn();
             this.repositoryItemTextEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemTextEdit();
-            this.gridControl1 = new MyGridControl();
+            this.gridControl1 = new CryptoMarketClient.MyGridControl();
             this.gridView1 = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.colIsSelected = new DevExpress.XtraGrid.Columns.GridColumn();
             this.repositoryItemCheckEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit();
+            this.gcLogo = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gcCurrencyPair = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gcBaseVolume = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gcQuoteVolume = new DevExpress.XtraGrid.Columns.GridColumn();
@@ -116,7 +117,7 @@
             this.gcLast.Name = "gcLast";
             this.gcLast.OptionsColumn.AllowEdit = false;
             this.gcLast.Visible = true;
-            this.gcLast.VisibleIndex = 5;
+            this.gcLast.VisibleIndex = 6;
             this.gcLast.Width = 86;
             // 
             // teValueWithChange
@@ -124,7 +125,6 @@
             this.teValueWithChange.AllowHtmlDraw = DevExpress.Utils.DefaultBoolean.True;
             this.teValueWithChange.AutoHeight = false;
             this.teValueWithChange.Name = "teValueWithChange";
-            this.teValueWithChange.Padding = new System.Windows.Forms.Padding(0, 0, 0, 0);
             // 
             // gcDeltaBid
             // 
@@ -140,7 +140,7 @@
             this.gcHighestBid.Name = "gcHighestBid";
             this.gcHighestBid.OptionsColumn.AllowEdit = false;
             this.gcHighestBid.Visible = true;
-            this.gcHighestBid.VisibleIndex = 3;
+            this.gcHighestBid.VisibleIndex = 4;
             this.gcHighestBid.Width = 86;
             // 
             // gcDeltaAsk
@@ -157,7 +157,7 @@
             this.gcLowestAsk.Name = "gcLowestAsk";
             this.gcLowestAsk.OptionsColumn.AllowEdit = false;
             this.gcLowestAsk.Visible = true;
-            this.gcLowestAsk.VisibleIndex = 4;
+            this.gcLowestAsk.VisibleIndex = 5;
             this.gcLowestAsk.Width = 86;
             // 
             // colIsActual
@@ -174,7 +174,7 @@
             this.gcSecond.Name = "gcSecond";
             this.gcSecond.OptionsColumn.AllowEdit = false;
             this.gcSecond.Visible = true;
-            this.gcSecond.VisibleIndex = 1;
+            this.gcSecond.VisibleIndex = 2;
             this.gcSecond.Width = 86;
             // 
             // repositoryItemTextEdit1
@@ -198,6 +198,7 @@
             this.teValueWithChange});
             this.gridControl1.Size = new System.Drawing.Size(1451, 721);
             this.gridControl1.TabIndex = 0;
+            this.gridControl1.UseDirectXPaint = DevExpress.Utils.DefaultBoolean.True;
             this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridView1});
             this.gridControl1.Click += new System.EventHandler(this.gridControl1_Click);
@@ -206,6 +207,7 @@
             // 
             this.gridView1.Columns.AddRange(new DevExpress.XtraGrid.Columns.GridColumn[] {
             this.colIsSelected,
+            this.gcLogo,
             this.gcCurrencyPair,
             this.gcLast,
             this.gcLowestAsk,
@@ -304,9 +306,13 @@
             this.gridView1.OptionsBehavior.AllowPixelScrolling = DevExpress.Utils.DefaultBoolean.True;
             this.gridView1.OptionsDetail.EnableMasterViewMode = false;
             this.gridView1.OptionsFind.AlwaysVisible = true;
+            this.gridView1.OptionsImageLoad.AnimationType = DevExpress.Utils.ImageContentAnimationType.SegmentedFade;
+            this.gridView1.OptionsImageLoad.AsyncLoad = true;
             this.gridView1.OptionsView.EnableAppearanceEvenRow = true;
+            this.gridView1.RowHeight = 48;
             this.gridView1.SortInfo.AddRange(new DevExpress.XtraGrid.Columns.GridColumnSortInfo[] {
             new DevExpress.XtraGrid.Columns.GridColumnSortInfo(this.gcFirst, DevExpress.Data.ColumnSortOrder.Ascending)});
+            this.gridView1.GetThumbnailImage += new DevExpress.XtraGrid.Views.Grid.GridViewThumbnailImageEventHandler(this.gridView1_GetThumbnailImage);
             this.gridView1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.gridView1_MouseDown);
             this.gridView1.DoubleClick += new System.EventHandler(this.gridView1_DoubleClick);
             // 
@@ -319,13 +325,21 @@
             this.colIsSelected.Name = "colIsSelected";
             this.colIsSelected.Visible = true;
             this.colIsSelected.VisibleIndex = 0;
-            this.colIsSelected.Width = 54;
+            this.colIsSelected.Width = 62;
             // 
             // repositoryItemCheckEdit1
             // 
             this.repositoryItemCheckEdit1.AutoHeight = false;
             this.repositoryItemCheckEdit1.Name = "repositoryItemCheckEdit1";
             this.repositoryItemCheckEdit1.EditValueChanged += new System.EventHandler(this.repositoryItemCheckEdit1_EditValueChanged);
+            // 
+            // gcLogo
+            // 
+            this.gcLogo.Caption = "Logo";
+            this.gcLogo.FieldName = "Logo";
+            this.gcLogo.Name = "gcLogo";
+            this.gcLogo.Visible = true;
+            this.gcLogo.VisibleIndex = 1;
             // 
             // gcCurrencyPair
             // 
@@ -334,7 +348,7 @@
             this.gcCurrencyPair.Name = "gcCurrencyPair";
             this.gcCurrencyPair.OptionsColumn.AllowEdit = false;
             this.gcCurrencyPair.Visible = true;
-            this.gcCurrencyPair.VisibleIndex = 2;
+            this.gcCurrencyPair.VisibleIndex = 3;
             this.gcCurrencyPair.Width = 86;
             // 
             // gcBaseVolume
@@ -344,7 +358,7 @@
             this.gcBaseVolume.Name = "gcBaseVolume";
             this.gcBaseVolume.OptionsColumn.AllowEdit = false;
             this.gcBaseVolume.Visible = true;
-            this.gcBaseVolume.VisibleIndex = 6;
+            this.gcBaseVolume.VisibleIndex = 7;
             this.gcBaseVolume.Width = 86;
             // 
             // gcQuoteVolume
@@ -354,7 +368,7 @@
             this.gcQuoteVolume.Name = "gcQuoteVolume";
             this.gcQuoteVolume.OptionsColumn.AllowEdit = false;
             this.gcQuoteVolume.Visible = true;
-            this.gcQuoteVolume.VisibleIndex = 9;
+            this.gcQuoteVolume.VisibleIndex = 10;
             this.gcQuoteVolume.Width = 81;
             // 
             // gcIsFrozen
@@ -370,7 +384,7 @@
             this.gcHr24High.Name = "gcHr24High";
             this.gcHr24High.OptionsColumn.AllowEdit = false;
             this.gcHr24High.Visible = true;
-            this.gcHr24High.VisibleIndex = 7;
+            this.gcHr24High.VisibleIndex = 8;
             this.gcHr24High.Width = 86;
             // 
             // gcHr24Low
@@ -380,7 +394,7 @@
             this.gcHr24Low.Name = "gcHr24Low";
             this.gcHr24Low.OptionsColumn.AllowEdit = false;
             this.gcHr24Low.Visible = true;
-            this.gcHr24Low.VisibleIndex = 8;
+            this.gcHr24Low.VisibleIndex = 9;
             this.gcHr24Low.Width = 86;
             // 
             // gcTime
@@ -413,6 +427,7 @@
             this.repositoryItemSparklineEdit1.Name = "repositoryItemSparklineEdit1";
             this.repositoryItemSparklineEdit1.PointValueMember = "Time";
             lineSparklineView1.Color = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
+            lineSparklineView1.ScaleFactor = 1F;
             this.repositoryItemSparklineEdit1.View = lineSparklineView1;
             // 
             // bbOpenedOrders
@@ -693,5 +708,6 @@
         private DevExpress.XtraBars.BarCheckItem bbMonitorOnlySelected;
         private DevExpress.XtraEditors.Repository.RepositoryItemTextEdit repositoryItemTextEdit1;
         private DevExpress.XtraEditors.Repository.RepositoryItemTextEdit teValueWithChange;
+        private DevExpress.XtraGrid.Columns.GridColumn gcLogo;
     }
 }

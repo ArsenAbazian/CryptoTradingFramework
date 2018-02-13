@@ -16,6 +16,7 @@ using DevExpress.XtraEditors;
 using CryptoMarketClient.Common;
 using System.IO;
 using CryptoMarketClient.Yobit;
+using DevExpress.XtraSplashScreen;
 
 namespace CryptoMarketClient {
     public partial class MainForm : DevExpress.XtraBars.Ribbon.RibbonForm {
@@ -35,24 +36,10 @@ namespace CryptoMarketClient {
             this.bciAllowDirectXCharts.Checked = SettingsStore.Default.UseDirectXForCharts;
             this.bciAllowDirectXGrid.Checked = SettingsStore.Default.UseDirectXForGrid;
 
-            //BittrexExchange.Default.IsConnected = true;
-            //BittrextMarketsForm.Show();
-
-            //PoloniexExchange.Default.IsConnected = true;
-            //PoloniexTickersForm.Show();
-
-            //ExmoExchange.Default.IsConnected = true;
-            //ExmoTickersForm.Show();
-
-            //HitBtcExchange.Default.IsConnected = true;
-            //HitBtcMarketsForm.Show();
-
-            //if(BittrexExchange.Default.IsConnected && 
-            //    PoloniexExchange.Default.IsConnected/* && 
-            //    HitBtcExchange.Default.IsConnected*/) {
-            //    ArbitrageForm.Show();
-            //    ArbitrageForm.Activate();
-            //}
+            SplashScreenManager.ShowDefaultWaitForm("Loading crypto icons...");
+            BittrexExchange.Default.GetTickersInfo(); // for icons
+            Exchange.BuildIconsDataBase(BittrexExchange.Default.Tickers.Select(t => new string[] { t.MarketCurrency, t.LogoUrl }));
+            SplashScreenManager.CloseDefaultWaitForm();
         }
 
         TickersCollectionForm yobitForm;
