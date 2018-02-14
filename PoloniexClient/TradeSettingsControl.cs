@@ -13,11 +13,41 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace CryptoMarketClient {
-    public partial class BuySettingsControl : XtraUserControl {
-        public BuySettingsControl() {
+    public partial class TradeSettingsControl : XtraUserControl {
+        public TradeSettingsControl() {
             InitializeComponent();
         }
 
+        bool showTrailingSettings = true;
+        public bool ShowTrailingSettings {
+            get { return showTrailingSettings; }
+            set {
+                if(ShowTrailingSettings == value)
+                    return;
+                this.showTrailingSettings = value;
+                OnShowTrailingSettingsChanged();
+            }
+        }
+        void OnShowTrailingSettingsChanged() {
+            this.layoutControlGroup3.Visibility = ShowTrailingSettings ? DevExpress.XtraLayout.Utils.LayoutVisibility.Always : DevExpress.XtraLayout.Utils.LayoutVisibility.Never;
+        }
+
+        OrderType tradeType = OrderType.Buy;
+        [DefaultValue(OrderType.Buy)]
+        public OrderType TradeType {
+            get { return tradeType; }
+            set {
+                if(TradeType == value)
+                    return;
+                tradeType = value;
+                OnTradeTypeChanged();
+            }
+        }
+        void OnTradeTypeChanged() {
+            this.btnTrade.Text = TradeType == OrderType.Buy ? "Buy" : "Sell";
+            this.ItemForBuyPrice.Text = TradeType == OrderType.Buy ? "Buy Price" : "Sell Price";
+            this.itemForSpendBTC.Text = TradeType == OrderType.Buy ? "Spend BTC" : "Earn BTC";
+        }
         public ITradingResultOperationsProvider OperationsProvider { get; set; }
 
         public TickerBase Ticker { get; set; }
@@ -36,21 +66,29 @@ namespace CryptoMarketClient {
         void OnSettingsChanged() {
             this.tralingSettingsBindingSource.DataSource = Settings;
             if(Settings.Ticker != null) {
-                layoutControlItem3.Text = "Total " + Settings.Ticker.BaseCurrency;
+                itemForSpendBTC.Text = "Total " + Settings.Ticker.BaseCurrency;
             }
         }
 
         protected bool ValidateChildrenCore() {
             return false;
         }
-        private void simpleButton1_Click(object sender, EventArgs e) {
+        private void tradeButton_Click(object sender, EventArgs e) {
             if(!ValidateChildrenCore()) {
                 XtraMessageBox.Show("Not all fields are filled!");
                 return;
             }
-            if(Ticker.Buy(Settings.BuyPrice, Settings.Amount)) {
-                XtraMessageBox.Show("Error buying. Please try later again.");
-                return;
+            if(TradeType == OrderType.Buy) {
+                if(Ticker.Buy(Settings.TradePrice, Settings.Amount)) {
+                    XtraMessageBox.Show("Error buying. Please try later again.");
+                    return;
+                }
+            }
+            else {
+                if(Ticker.Sell(Settings.TradePrice, Settings.Amount)) {
+                    XtraMessageBox.Show("Error selling. Please try later again.");
+                    return;
+                }
             }
             if(Settings.EnableIncrementalStopLoss) {
                 Settings.Date = DateTime.UtcNow;

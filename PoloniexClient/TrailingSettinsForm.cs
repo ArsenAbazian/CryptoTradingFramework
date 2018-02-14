@@ -56,11 +56,11 @@ namespace CryptoMarketClient {
         }
 
         private void OnSelectedBidRowChanged(object sender, SelectedOrderBookEntryChangedEventArgs e) {
-            Settings.BuyPrice = e.Entry.Value;
+            Settings.TradePrice = e.Entry.Value;
         }
 
         void OnSelectedAskRowChanged(object sender, SelectedOrderBookEntryChangedEventArgs e) {
-            Settings.BuyPrice = e.Entry.Value;
+            Settings.TradePrice = e.Entry.Value;
         }
 
         public EditingMode Mode { get; set; } = EditingMode.Add;

@@ -344,80 +344,12 @@ namespace CryptoMarketClient {
                 list.Insert(index, item);
                 index++;
             }
+            ticker.RaiseTradeHistoryAdd();
             return list;
         }
 
         protected List<TradeHistoryItem> UpdateList { get; } = new List<TradeHistoryItem>(100);
-        //public override bool UpdateTrades(TickerBase ticker) {
-        //    string address = string.Format("https://poloniex.com/public?command=returnTradeHistory&currencyPair={0}", Uri.EscapeDataString(ticker.CurrencyPair));
-        //    string text = GetDownloadString(address);
-        //    if(string.IsNullOrEmpty(text))
-        //        return true;
-        //    JArray trades = (JArray)JsonConvert.DeserializeObject(text);
-        //    if(trades.Count == 0)
-        //        return true;
-
-        //    int lastTradeId = trades.First().Value<int>("tradeID");
-        //    long lastGotTradeId = ticker.TradeHistory.Count > 0 ? ticker.TradeHistory.First().Id : 0;
-        //    if(lastGotTradeId == lastTradeId) {
-        //        ticker.TradeStatistic.Add(new TradeStatisticsItem() { Time = DateTime.UtcNow });
-        //        if(ticker.TradeStatistic.Count > 5000) {
-        //            for(int i = 0; i < 100; i++)
-        //                ticker.TradeStatistic.RemoveAt(0);
-        //        }
-        //        return true;
-        //    }
-        //    TradeStatisticsItem st = new TradeStatisticsItem();
-        //    st.MinBuyPrice = double.MaxValue;
-        //    st.MinSellPrice = double.MaxValue;
-        //    st.Time = DateTime.UtcNow;
-
-        //    int index = 0;
-        //    foreach(JObject obj in trades) {
-        //        DateTime time = obj.Value<DateTime>("date");
-        //        int tradeId = obj.Value<int>("tradeID");
-        //        if(lastGotTradeId == tradeId)
-        //            break;
-
-        //        TradeHistoryItem item = new TradeHistoryItem();
-
-        //        bool isBuy = obj.Value<string>("type").Length == 3;
-        //        item.AmountString = obj.Value<string>("amount");
-        //        item.Time = time;
-        //        item.Type = isBuy ? TradeType.Buy : TradeType.Sell;
-        //        item.RateString = obj.Value<string>("rate");
-        //        item.Id = tradeId;
-        //        double price = item.Rate;
-        //        double amount = item.Amount;
-        //        item.Total = price * amount;
-        //        if(isBuy) {
-        //            st.BuyAmount += amount;
-        //            st.MinBuyPrice = Math.Min(st.MinBuyPrice, price);
-        //            st.MaxBuyPrice = Math.Max(st.MaxBuyPrice, price);
-        //            st.BuyVolume += amount * price;
-        //        }
-        //        else {
-        //            st.SellAmount += amount;
-        //            st.MinSellPrice = Math.Min(st.MinSellPrice, price);
-        //            st.MaxSellPrice = Math.Max(st.MaxSellPrice, price);
-        //            st.SellVolume += amount * price;
-        //        }
-        //        ticker.TradeHistory.Insert(index, item);
-        //        index++;
-        //    }
-        //    if(st.MinSellPrice == double.MaxValue)
-        //        st.MinSellPrice = 0;
-        //    if(st.MinBuyPrice == double.MaxValue)
-        //        st.MinBuyPrice = 0;
-        //    ticker.LastTradeStatisticTime = DateTime.UtcNow;
-        //    ticker.TradeStatistic.Add(st);
-        //    if(ticker.TradeStatistic.Count > 5000) {
-        //        for(int i = 0; i < 100; i++)
-        //            ticker.TradeStatistic.RemoveAt(0);
-        //    }
-        //    return true;
-        //}
-
+        
         public override bool UpdateTrades(TickerBase ticker) {
             string address = string.Format("https://poloniex.com/public?command=returnTradeHistory&currencyPair={0}", Uri.EscapeDataString(ticker.CurrencyPair));
             byte[] bytes = GetDownloadBytes(address);
@@ -431,7 +363,6 @@ namespace CryptoMarketClient {
                 new string[] { "globalTradeID", "tradeID", "date", "type", "rate", "amount" ,"total" }, 
                 (itemIndex, paramIndex, value) => { return paramIndex != 1 || value != lastGotTradeId; });
 
-            
             TradeStatisticsItem st = new TradeStatisticsItem();
             st.MinBuyPrice = double.MaxValue;
             st.MinSellPrice = double.MaxValue;
@@ -471,6 +402,8 @@ namespace CryptoMarketClient {
                 st.MinBuyPrice = 0;
             ticker.LastTradeStatisticTime = DateTime.UtcNow;
             ticker.TradeStatistic.Add(st);
+            if(trades.Count > 0)
+                ticker.RaiseTradeHistoryAdd();
             return true;
         }
 
@@ -666,6 +599,8 @@ namespace CryptoMarketClient {
             client.Headers.Add("Key", ApiKey);
             try {
                 byte[] data = client.UploadValues(address, coll);
+                if(!ticker.IsOpenedOrdersChanged(data))
+                    return true;
                 return OnGetOpenedOrders(ticker, data);
             }
             catch(Exception) {
@@ -709,13 +644,14 @@ namespace CryptoMarketClient {
                         info.Market = prop.Name;
                         info.OrderNumber = obj.Value<int>("orderNumber");
                         info.Type = obj.Value<string>("type") == "sell" ? OrderType.Sell : OrderType.Buy;
-                        info.Value = obj.Value<double>("rate");
-                        info.Amount = obj.Value<double>("amount");
-                        info.Total = obj.Value<double>("total");
+                        info.ValueString = obj.Value<string>("rate");
+                        info.AmountString = obj.Value<string>("amount");
+                        info.TotalString = obj.Value<string>("total");
                         ticker.OpenedOrders.Add(info);
                     }
                 }
             }
+            ticker.RaiseOpenedOrdersChanged();
             return true;
         }
 
@@ -737,9 +673,9 @@ namespace CryptoMarketClient {
                         info.Market = prop.Name;
                         info.OrderNumber = obj.Value<int>("orderNumber");
                         info.Type = obj.Value<string>("type") == "sell" ? OrderType.Sell : OrderType.Buy;
-                        info.Value = obj.Value<double>("rate");
-                        info.Amount = obj.Value<double>("amount");
-                        info.Total = obj.Value<double>("total");
+                        info.ValueString = obj.Value<string>("rate");
+                        info.AmountString = obj.Value<string>("amount");
+                        info.TotalString = obj.Value<string>("total");
                         OpenedOrders.Add(info);
                     }
                 }

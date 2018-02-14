@@ -46,10 +46,11 @@ namespace CryptoMarketClient {
 
         void IXtraSerializable.OnEndDeserializing(string restoredVersion) {
             SuppressSave = false;
+            DateTime invalid = new DateTime(2018, 1, 1);
             foreach(TrailingSettings set in Trailings) {
-                if(set.StartDate < DateTime.Now.AddYears(-1))
+                if(set.StartDate < invalid)
                     set.StartDate = DateTime.Now;
-                if(set.Date < DateTime.Now.AddYears(-1))
+                if(set.Date < invalid)
                     set.Date = DateTime.Now;
             }
         }
@@ -88,6 +89,11 @@ namespace CryptoMarketClient {
         }
         //layout
         public virtual void SaveLayoutToXml(string xmlFile) {
+            DateTime invalid = new DateTime(2018, 1, 1);
+            foreach(TrailingSettings ts in Trailings) {
+                if(ts.StartDate < invalid)
+                    ts.StartDate = invalid;
+            }
             SaveLayoutCore(new XmlXtraSerializer(), xmlFile);
         }
         public virtual void RestoreLayoutFromXml(string xmlFile) {
@@ -393,6 +399,7 @@ namespace CryptoMarketClient {
             }
         }
         protected bool IsUpdatingOpenedOrders { get; set; }
+        protected internal byte[] OpenedOrdersData { get; set; }
         public bool UpdateOpenedOrders() {
             if(IsUpdatingOpenedOrders)
                 return true;
@@ -452,6 +459,11 @@ namespace CryptoMarketClient {
         public event EventHandler HistoryItemAdd;
         public event EventHandler TradeHistoryAdd;
         public event EventHandler Changed;
+        public event EventHandler OpenedOrdersChanged;
+        public void RaiseOpenedOrdersChanged() {
+            if(OpenedOrdersChanged != null)
+                OpenedOrdersChanged(this, EventArgs.Empty);
+        }
 
         public abstract bool UpdateBalance(CurrencyType type);
         public abstract string GetDepositAddress(CurrencyType type);
@@ -540,6 +552,19 @@ namespace CryptoMarketClient {
 
         private void OnEventsChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) {
             Save();
+        }
+        protected internal bool IsOpenedOrdersChanged(byte[] newBytes) {
+            if(newBytes == null)
+                return false;
+            if(OpenedOrdersData == null || OpenedOrdersData.Length != newBytes.Length) {
+                OpenedOrdersData = newBytes;
+                return true;
+            }
+            for(int i = 0; i < newBytes.Length; i++) {
+                if(OpenedOrdersData[i] != newBytes[i])
+                    return true;
+            }
+            return false;
         }
     }
 

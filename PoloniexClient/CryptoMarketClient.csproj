@@ -414,11 +414,11 @@
     <Compile Include="TimerUpdateForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="BuySettingsControl.cs">
+    <Compile Include="TradeSettingsControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="BuySettingsControl.Designer.cs">
-      <DependentUpon>BuySettingsControl.cs</DependentUpon>
+    <Compile Include="TradeSettingsControl.Designer.cs">
+      <DependentUpon>TradeSettingsControl.cs</DependentUpon>
     </Compile>
     <Compile Include="TradeResultControl.cs">
       <SubType>UserControl</SubType>
@@ -536,8 +536,8 @@
     <EmbeddedResource Include="TickerStrategyParametersForm.resx">
       <DependentUpon>TickerStrategyParametersForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="BuySettingsControl.resx">
-      <DependentUpon>BuySettingsControl.cs</DependentUpon>
+    <EmbeddedResource Include="TradeSettingsControl.resx">
+      <DependentUpon>TradeSettingsControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="TradeResultControl.resx">
       <DependentUpon>TradeResultControl.cs</DependentUpon>

@@ -128,28 +128,36 @@ namespace CryptoMarketClient {
             this.orderBookControl1.Asks = null;
             this.orderBookControl1.Bids = null;
             this.tradeHistoryItemBindingSource.DataSource = null;
+            this.gcOpenedOrders.DataSource = null;
         }
         void UnsubscribeEvents(TickerBase prev) {
             prev.OrderBook.OnChanged -= OnTickerOrderBookChanged;
             prev.Changed -= OnTickerChanged;
             prev.HistoryItemAdd -= OnTickerHistoryItemAdded;
             prev.TradeHistoryAdd -= OnTickerTradeHistoryAdd;
+            prev.OpenedOrdersChanged -= OnTickerOpenedOrdersChanged;
         }
+
+        private void OnTickerOpenedOrdersChanged(object sender, EventArgs e) {
+            BeginInvoke(new MethodInvoker(() => { this.gvOrders.RefreshData(); }));
+        }
+
         void UpdateGrid() {
             this.orderBookControl1.Bids = Ticker.OrderBook.Bids;
             this.orderBookControl1.Asks = Ticker.OrderBook.Asks;
             this.tradeHistoryItemBindingSource.DataSource = Ticker.TradeHistory;
+            this.gcOpenedOrders.DataSource = Ticker.OpenedOrders;
         }
         void SubscribeEvents() {
             Ticker.OrderBook.OnChanged += OnTickerOrderBookChanged;
             Ticker.Changed += OnTickerChanged;
             Ticker.HistoryItemAdd += OnTickerHistoryItemAdded;
             Ticker.TradeHistoryAdd += OnTickerTradeHistoryAdd;
+            Ticker.OpenedOrdersChanged += OnTickerOpenedOrdersChanged;
         }
 
         private void OnTickerTradeHistoryAdd(object sender, EventArgs e) {
-            //if(IsHandleCreated)
-            //    BeginInvoke(new MethodInvoker(this.tradeGridControl.RefreshDataSource));
+            
         }
         
         private void OnTickerHistoryItemAdded(object sender, EventArgs e) {
@@ -206,7 +214,7 @@ namespace CryptoMarketClient {
         }
 
         private void orderBookControl1_SelectedAskRowChanged(object sender, SelectedOrderBookEntryChangedEventArgs e) {
-            this.buySettingsControl.Settings.BuyPrice = e.Entry.Value;
+            this.buySettingsControl.Settings.TradePrice = e.Entry.Value;
             this.buySettingsControl.Settings.Amount = e.Entry.Amount;
         }
 

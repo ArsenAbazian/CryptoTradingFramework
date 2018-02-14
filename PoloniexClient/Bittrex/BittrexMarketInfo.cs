@@ -92,6 +92,7 @@ namespace CryptoMarketClient.Bittrex {
         }
         public override string HostName { get { return "Bittrex"; } }
         public override string WebPageAddress { get { return "https://bittrex.com/Market/Index?MarketName=" + Name; } }
+        public string TradeResult { get; set; }
     }
 
     public class BittrexCurrencyInfo {

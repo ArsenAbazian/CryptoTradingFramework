@@ -6,13 +6,9 @@ namespace CryptoMarketClient.Bittrex {
         public string MarketName { get; set; }
 		public string OrderUuid { get; set; }
 		public string Exchange { get; set; }
-        public OrderType OrderType { get; set; }
-        public double Quantity { get; set; }
-        public double QuantityRemaining { get; set; }
-        public double Limit { get; set; }
-        public double CommissionPaid { get; set; }
-        public double Price { get; set; }
-        public double PricePerUnit { get; set; }
+        public string QuantityRemainingString { get; set; }
+        public string LimitString { get; set; }
+        public string CommissionPaidString { get; set; }
         public DateTime Opened { get; set; }
         public DateTime Closed { get; set; }
         public bool CancelInitiated { get; set; }

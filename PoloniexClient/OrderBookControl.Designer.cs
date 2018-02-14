@@ -32,13 +32,13 @@
             this.gcVolumePercent = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gcVolume = new DevExpress.XtraGrid.Columns.GridColumn();
             this.bidPanel = new DevExpress.XtraEditors.SidePanel();
-            this.bidGridControl = new MyGridControl();
+            this.bidGridControl = new CryptoMarketClient.MyGridControl();
             this.bidGridView = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.gcRate2 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gcAmount2 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.repositoryItemTextEdit2 = new DevExpress.XtraEditors.Repository.RepositoryItemTextEdit();
             this.askPanel = new DevExpress.XtraEditors.SidePanel();
-            this.askGridControl = new MyGridControl();
+            this.askGridControl = new CryptoMarketClient.MyGridControl();
             this.askGridView = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.gcRate = new DevExpress.XtraGrid.Columns.GridColumn();
             this.repositoryItemTextEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemTextEdit();
@@ -58,7 +58,9 @@
             // 
             this.gcVolumePercent2.Caption = "VolumePercent";
             this.gcVolumePercent2.FieldName = "VolumePercent";
+            this.gcVolumePercent2.MinWidth = 40;
             this.gcVolumePercent2.Name = "gcVolumePercent2";
+            this.gcVolumePercent2.Width = 150;
             // 
             // gcVolume2
             // 
@@ -66,15 +68,19 @@
             this.gcVolume2.DisplayFormat.FormatString = "0.########";
             this.gcVolume2.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.gcVolume2.FieldName = "Volume";
+            this.gcVolume2.MinWidth = 40;
             this.gcVolume2.Name = "gcVolume2";
             this.gcVolume2.Visible = true;
             this.gcVolume2.VisibleIndex = 2;
+            this.gcVolume2.Width = 150;
             // 
             // gcVolumePercent
             // 
             this.gcVolumePercent.Caption = "VolumePercent";
             this.gcVolumePercent.FieldName = "VolumePercent";
+            this.gcVolumePercent.MinWidth = 40;
             this.gcVolumePercent.Name = "gcVolumePercent";
+            this.gcVolumePercent.Width = 150;
             // 
             // gcVolume
             // 
@@ -82,33 +88,36 @@
             this.gcVolume.DisplayFormat.FormatString = "0.########";
             this.gcVolume.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.gcVolume.FieldName = "Volume";
+            this.gcVolume.MinWidth = 40;
             this.gcVolume.Name = "gcVolume";
             this.gcVolume.Visible = true;
             this.gcVolume.VisibleIndex = 2;
+            this.gcVolume.Width = 150;
             // 
             // bidPanel
             // 
             this.bidPanel.Controls.Add(this.bidGridControl);
             this.bidPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.bidPanel.Location = new System.Drawing.Point(0, 491);
-            this.bidPanel.Margin = new System.Windows.Forms.Padding(6);
+            this.bidPanel.Location = new System.Drawing.Point(0, 927);
+            this.bidPanel.Margin = new System.Windows.Forms.Padding(12, 12, 12, 12);
             this.bidPanel.Name = "bidPanel";
-            this.bidPanel.Size = new System.Drawing.Size(458, 438);
+            this.bidPanel.Size = new System.Drawing.Size(916, 860);
             this.bidPanel.TabIndex = 2;
             this.bidPanel.Text = "sidePanel5";
             // 
             // bidGridControl
             // 
             this.bidGridControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.bidGridControl.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(6);
+            this.bidGridControl.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(12, 12, 12, 12);
             this.bidGridControl.Location = new System.Drawing.Point(0, 0);
             this.bidGridControl.MainView = this.bidGridView;
-            this.bidGridControl.Margin = new System.Windows.Forms.Padding(6);
+            this.bidGridControl.Margin = new System.Windows.Forms.Padding(12, 12, 12, 12);
             this.bidGridControl.Name = "bidGridControl";
             this.bidGridControl.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repositoryItemTextEdit2});
-            this.bidGridControl.Size = new System.Drawing.Size(458, 438);
+            this.bidGridControl.Size = new System.Drawing.Size(916, 860);
             this.bidGridControl.TabIndex = 1;
+            this.bidGridControl.UseDirectXPaint = DevExpress.Utils.DefaultBoolean.True;
             this.bidGridControl.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.bidGridView});
             // 
@@ -156,17 +165,21 @@
             // 
             this.gcRate2.Caption = "Rate";
             this.gcRate2.FieldName = "ValueString";
+            this.gcRate2.MinWidth = 40;
             this.gcRate2.Name = "gcRate2";
             this.gcRate2.Visible = true;
             this.gcRate2.VisibleIndex = 0;
+            this.gcRate2.Width = 150;
             // 
             // gcAmount2
             // 
             this.gcAmount2.Caption = "Amount";
             this.gcAmount2.FieldName = "AmountString";
+            this.gcAmount2.MinWidth = 40;
             this.gcAmount2.Name = "gcAmount2";
             this.gcAmount2.Visible = true;
             this.gcAmount2.VisibleIndex = 1;
+            this.gcAmount2.Width = 150;
             // 
             // repositoryItemTextEdit2
             // 
@@ -179,24 +192,25 @@
             this.askPanel.Controls.Add(this.askGridControl);
             this.askPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.askPanel.Location = new System.Drawing.Point(0, 0);
-            this.askPanel.Margin = new System.Windows.Forms.Padding(6);
+            this.askPanel.Margin = new System.Windows.Forms.Padding(12, 12, 12, 12);
             this.askPanel.Name = "askPanel";
-            this.askPanel.Size = new System.Drawing.Size(458, 481);
+            this.askPanel.Size = new System.Drawing.Size(916, 925);
             this.askPanel.TabIndex = 1;
             this.askPanel.Text = "sidePanel4";
             // 
             // askGridControl
             // 
             this.askGridControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.askGridControl.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(6);
+            this.askGridControl.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(12, 12, 12, 12);
             this.askGridControl.Location = new System.Drawing.Point(0, 0);
             this.askGridControl.MainView = this.askGridView;
-            this.askGridControl.Margin = new System.Windows.Forms.Padding(6);
+            this.askGridControl.Margin = new System.Windows.Forms.Padding(12, 12, 12, 12);
             this.askGridControl.Name = "askGridControl";
             this.askGridControl.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repositoryItemTextEdit1});
-            this.askGridControl.Size = new System.Drawing.Size(458, 480);
+            this.askGridControl.Size = new System.Drawing.Size(916, 923);
             this.askGridControl.TabIndex = 0;
+            this.askGridControl.UseDirectXPaint = DevExpress.Utils.DefaultBoolean.True;
             this.askGridControl.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.askGridView});
             this.askGridControl.Resize += new System.EventHandler(this.askGridControl_Resize);
@@ -246,10 +260,12 @@
             this.gcRate.Caption = "Rate";
             this.gcRate.ColumnEdit = this.repositoryItemTextEdit1;
             this.gcRate.FieldName = "ValueString";
+            this.gcRate.MinWidth = 40;
             this.gcRate.Name = "gcRate";
             this.gcRate.SortMode = DevExpress.XtraGrid.ColumnSortMode.Value;
             this.gcRate.Visible = true;
             this.gcRate.VisibleIndex = 0;
+            this.gcRate.Width = 150;
             // 
             // repositoryItemTextEdit1
             // 
@@ -261,28 +277,32 @@
             // 
             this.gcAmount.Caption = "Amount";
             this.gcAmount.FieldName = "AmountString";
+            this.gcAmount.MinWidth = 40;
             this.gcAmount.Name = "gcAmount";
             this.gcAmount.Visible = true;
             this.gcAmount.VisibleIndex = 1;
+            this.gcAmount.Width = 150;
             // 
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel1.Location = new System.Drawing.Point(0, 481);
+            this.panel1.Location = new System.Drawing.Point(0, 925);
+            this.panel1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(458, 10);
+            this.panel1.Size = new System.Drawing.Size(916, 2);
             this.panel1.TabIndex = 1;
             // 
             // OrderBookControl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.bidPanel);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.askPanel);
+            this.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.Name = "OrderBookControl";
-            this.Size = new System.Drawing.Size(458, 929);
+            this.Size = new System.Drawing.Size(916, 1787);
             this.Resize += new System.EventHandler(this.OrderBookControl_Resize);
             this.bidPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.bidGridControl)).EndInit();

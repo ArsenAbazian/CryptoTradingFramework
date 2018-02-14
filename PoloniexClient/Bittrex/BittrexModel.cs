@@ -596,7 +596,9 @@ namespace CryptoMarketClient.Bittrex {
             WebClient client = GetWebClient();
             client.Headers.Clear();
             client.Headers.Add("apisign", GetSign(address));
-            return OnBuyLimit(client.DownloadString(address));
+            string text = client.DownloadString(address);
+            info.TradeResult = text;
+            return OnBuyLimit(text);
         }
         public string SellLimit(BittrexTicker info, double rate, double amount) {
             string address = string.Format("https://bittrex.com/api/v1.1/market/selllimit?apikey={0}&nonce={1}&market={2}&quantity={3}&rate={4}",
@@ -608,7 +610,9 @@ namespace CryptoMarketClient.Bittrex {
             WebClient client = GetWebClient();
             client.Headers.Clear();
             client.Headers.Add("apisign", GetSign(address));
-            return OnSellLimit(client.DownloadString(address));
+            string text = client.DownloadString(address);
+            info.TradeResult = text;
+            return OnSellLimit(text);
         }
         public Task<string> CancelOrder(string uuid) {
             string address = string.Format("https://bittrex.com/api/v1.1/market/cancel?apikey={0}&nonce={1}&uuid={2}",
@@ -630,21 +634,23 @@ namespace CryptoMarketClient.Bittrex {
             client.Headers.Add("apisign", GetSign(address));
             return client.DownloadStringTaskAsync(address);
         }
-        public override bool UpdateOpenedOrders(TickerBase tickerBase) {
+        public override bool UpdateOpenedOrders(TickerBase ticker) {
             string address = string.Format("https://bittrex.com/api/v1.1/market/getopenorders?apikey={0}&nonce={1}&market={2}",
                 Uri.EscapeDataString(ApiKey),
                 GetNonce(),
-                tickerBase.MarketName);
+                ticker.MarketName);
             WebClient client = GetWebClient();
             client.Headers.Clear();
             client.Headers.Add("apisign", GetSign(address));
             byte[] bytes = null;
             try {
                 bytes = client.DownloadData(address);
+                if(!ticker.IsOpenedOrdersChanged(bytes))
+                    return true;
             } catch {
                 return false;
             }
-            return OnUpdateOrders(tickerBase, bytes);
+            return OnUpdateOrders(ticker, bytes);
         }
         protected string OnUuidResult(string result) {
             if(string.IsNullOrEmpty(result))
@@ -688,9 +694,7 @@ namespace CryptoMarketClient.Bittrex {
             int startIndex = 1;
             if(!SkipSymbol(bytes, ':', 3, ref startIndex))
                 return false;
-            startIndex++;
 
-            ticker.OpenedOrders.Clear();
             List<string[]> res = DeserializeArrayOfObjects(bytes, ref startIndex, new string[] {
                 "Uuid",
 			    "OrderUuid",
@@ -712,19 +716,22 @@ namespace CryptoMarketClient.Bittrex {
             });
             if(res == null || res.Count == 0)
                 return true;
+
+            ticker.OpenedOrders.Clear();
             foreach(string[] obj in res) {
                 BittrexOrderInfo info = new BittrexOrderInfo();
 
                 info.OrderUuid = obj[1];
                 info.Exchange = obj[2];
-                info.OrderType = obj[3] == "LIMIT_SELL" ? OrderType.Sell : OrderType.Buy;
-                info.Quantity = FastDoubleConverter.Convert(obj[4]);
-                info.QuantityRemaining = FastDoubleConverter.Convert(obj[5]);
-                info.Limit = FastDoubleConverter.Convert(obj[6]);
-                info.CommissionPaid = FastDoubleConverter.Convert(obj[7]);
-                info.Price = FastDoubleConverter.Convert(obj[8]);
+                info.Type = obj[3] == "LIMIT_SELL" ? OrderType.Sell : OrderType.Buy;
+                info.AmountString = obj[5]; //obj[4];
+                info.QuantityRemainingString = obj[5];
+                info.LimitString = obj[6];
+                info.CommissionPaidString = obj[7];
+                info.ValueString = obj[3][0] == 'L' ? obj[6] : obj[9];
+                info.TotalString = (info.Amount * info.Value).ToString("0.########");
                 info.Opened = Convert.ToDateTime(obj[10]);
-                info.Closed = Convert.ToDateTime(obj[11]);
+                info.Closed = obj[11] == "null"? DateTime.MinValue: Convert.ToDateTime(obj[11]);
                 info.CancelInitiated = obj[12].Length == 4 ? true : false;
                 info.ImmediateOrCancel = obj[13].Length == 4 ? true : false;
                 info.IsConditional = obj[14].Length == 4 ? true : false;
@@ -733,12 +740,11 @@ namespace CryptoMarketClient.Bittrex {
 
                 ticker.OpenedOrders.Add(info);
             }
-            RaiseOpenedOrdersChanged();
+
+            ticker.RaiseOpenedOrdersChanged();
             return true;
         }
-        void RaiseOpenedOrdersChanged() {
-
-        }
+        
         public bool GetBalance(string currency) {
             string address = string.Format("https://bittrex.com/api/v1.1/account/getbalance?apikey={0}&nonce={1}&currency={2}", Uri.EscapeDataString(ApiKey), GetNonce(), currency);
             WebClient client = GetWebClient();

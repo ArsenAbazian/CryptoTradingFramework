@@ -56,17 +56,17 @@ namespace CryptoMarketClient.Common {
 
         double buyPrice;
         [XtraSerializableProperty]
-        public double BuyPrice {
+        public double TradePrice {
             get { return buyPrice; }
             set {
-                if (BuyPrice == value)
+                if (TradePrice == value)
                     return;
                 buyPrice = value;
                 OnBuyPriceChanged();
             }
         }
         void OnBuyPriceChanged() {
-            TotalSpendInBaseCurrency = Amount * BuyPrice;
+            TotalSpendInBaseCurrency = Amount * TradePrice;
             RaisePropertyChanged("BuyPrice");
         }
         double amount;
@@ -81,7 +81,7 @@ namespace CryptoMarketClient.Common {
             }
         }
         void OnAmountChanged() {
-            TotalSpendInBaseCurrency = Amount * BuyPrice;
+            TotalSpendInBaseCurrency = Amount * TradePrice;
             RaisePropertyChanged("Amount");
         }
         double totalSpendInBaseCurrency;
@@ -96,7 +96,7 @@ namespace CryptoMarketClient.Common {
             }
         }
         void OnTotalSpendInBaseCurrencyChanged() {
-            Amount = TotalSpendInBaseCurrency / BuyPrice;
+            Amount = TotalSpendInBaseCurrency / TradePrice;
             RaisePropertyChanged("TotalSpendInBaseCurrency");
         }
 
@@ -108,14 +108,14 @@ namespace CryptoMarketClient.Common {
         [XtraSerializableProperty]
         public double TakeProfitPercent { get; set; } = 5;
 
-        public double ActualProfit { get { return ActualPrice - BuyPrice; } }
+        public double ActualProfit { get { return ActualPrice - TradePrice; } }
         public double ActualProfitUSD { get { return UsdTicker == null ? 0 : ActualProfit * UsdTicker.Last; } }
         [XtraSerializableProperty]
         public double ActualPrice { get; set; }
         [XtraSerializableProperty]
         public double MaxPrice { get; set; }
         public double SellPrice { get { return GetSellPrice(); } }
-        public double TakeProfitStartPrice { get { return BuyPrice * (100 + TakeProfitStartPercent) * 0.01; } }
+        public double TakeProfitStartPrice { get { return TradePrice * (100 + TakeProfitStartPercent) * 0.01; } }
         [XtraSerializableProperty]
         public bool IgnoreStopLoss { get; set; } = false;
 
@@ -161,7 +161,7 @@ namespace CryptoMarketClient.Common {
                 if (IgnoreStopLoss)
                     return -1;
 
-                double basePrice = EnableIncrementalStopLoss ? MaxPrice : BuyPrice;
+                double basePrice = EnableIncrementalStopLoss ? MaxPrice : TradePrice;
                 return basePrice * (100 - StopLossPricePercent) * 0.01;
             }
         }
@@ -188,9 +188,9 @@ namespace CryptoMarketClient.Common {
         }
 
         public void Start() {
-            StartDate = DateTime.UtcNow;
+            StartDate = DateTime.Now;
             Ticker.Events.Add(new TickerEvent() {
-                Text = string.Format("Trailing started! bought {0:0.########} at price {1:0.########}", Amount, BuyPrice),
+                Text = string.Format("Trailing started! bought {0:0.########} at price {1:0.########}", Amount, TradePrice),
                 Time = Ticker.Time,
                 Current = Ticker.Last
             });
