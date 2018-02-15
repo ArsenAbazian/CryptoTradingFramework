@@ -349,12 +349,14 @@ namespace CryptoMarketClient {
             UpdateCandleStickThread = new Thread(() => {
                 int seconds = CalculateTotalIntervalInSeconds();
                 BindingList<CandleStickData> data = Ticker.GetCandleStickData(Ticker.CandleStickPeriodMin, date.AddSeconds(-seconds), seconds);
-                foreach(CandleStickData prev in Ticker.CandleStickData) {
-                    data.Add(prev);
+                if(data != null) {
+                    foreach(CandleStickData prev in Ticker.CandleStickData) {
+                        data.Add(prev);
+                    }
+                    Ticker.CandleStickData = data;
+                    this.chartControl1.Series["Current"].DataSource = data;
+                    this.chartControl1.Series["Volume"].DataSource = data;
                 }
-                Ticker.CandleStickData = data;
-                this.chartControl1.Series["Current"].DataSource = data;
-                this.chartControl1.Series["Volume"].DataSource = data;
                 SplashScreenManager.CloseDefaultWaitForm();
             });
             SplashScreenManager.ShowDefaultWaitForm("Loading chart from server...");

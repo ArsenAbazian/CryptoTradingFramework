@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace CryptoMarketClient {
     public class MyChartControl : ChartControl {
@@ -15,6 +16,16 @@ namespace CryptoMarketClient {
             if(!DesignMode)
                 UseDirectXPaint = SettingsStore.Default.UseDirectXForCharts ? DevExpress.Utils.DefaultBoolean.True : DevExpress.Utils.DefaultBoolean.False;
             base.OnHandleCreated(e);
+        }
+        protected override void OnPaint(PaintEventArgs e) {
+            if(DataSource != null) {
+                lock(DataSource) {
+                    base.OnPaint(e);
+                }
+            }
+            else {
+                base.OnPaint(e);
+            }
         }
     }
 }
