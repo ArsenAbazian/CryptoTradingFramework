@@ -95,7 +95,7 @@
             // 
             // colBuyPrice
             // 
-            this.colBuyPrice.FieldName = "BuyPrice";
+            this.colBuyPrice.FieldName = "TradePrice";
             this.colBuyPrice.Name = "colBuyPrice";
             this.colBuyPrice.Visible = true;
             this.colBuyPrice.VisibleIndex = 1;

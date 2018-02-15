@@ -67,7 +67,7 @@ namespace CryptoMarketClient.Common {
         }
         void OnBuyPriceChanged() {
             TotalSpendInBaseCurrency = Amount * TradePrice;
-            RaisePropertyChanged("BuyPrice");
+            RaisePropertyChanged("TradePrice");
         }
         double amount;
         [XtraSerializableProperty]

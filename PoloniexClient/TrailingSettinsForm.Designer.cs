@@ -149,7 +149,7 @@
             // 
             // BuyPriceTextEdit
             // 
-            this.BuyPriceTextEdit.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.trailingSettingsBindingSource, "BuyPrice", true));
+            this.BuyPriceTextEdit.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.trailingSettingsBindingSource, "Trade Price", true));
             this.BuyPriceTextEdit.Location = new System.Drawing.Point(161, 12);
             this.BuyPriceTextEdit.Name = "BuyPriceTextEdit";
             this.BuyPriceTextEdit.Properties.Appearance.Options.UseTextOptions = true;

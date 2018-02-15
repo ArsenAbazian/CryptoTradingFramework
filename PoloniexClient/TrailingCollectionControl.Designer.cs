@@ -191,9 +191,9 @@ namespace CryptoMarketClient {
             // 
             // colBuyPrice
             // 
-            this.colBuyPrice.Caption = "Buy Price";
+            this.colBuyPrice.Caption = "Price";
             this.colBuyPrice.ColumnEdit = this.repositoryItemTextEdit1;
-            this.colBuyPrice.FieldName = "BuyPrice";
+            this.colBuyPrice.FieldName = "TradePrice";
             this.colBuyPrice.Name = "colBuyPrice";
             this.colBuyPrice.Visible = true;
             this.colBuyPrice.VisibleIndex = 1;

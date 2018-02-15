@@ -308,8 +308,8 @@ namespace CryptoMarketClient.Bittrex {
             OrderBookEntry[] list = ticker.OrderBook.Bids;
             foreach(string[] item in bids) {
                 OrderBookEntry entry = list[index];
-                entry.ValueString = item[0];
-                entry.AmountString = item[1];
+                entry.ValueString = item[1];
+                entry.AmountString = item[0];
                 index++;
                 if(index >= list.Length)
                     break;
@@ -318,8 +318,8 @@ namespace CryptoMarketClient.Bittrex {
             list = ticker.OrderBook.Asks;
             foreach(string[] item in asks) {
                 OrderBookEntry entry = list[index];
-                entry.ValueString = item[0];
-                entry.AmountString = item[1];
+                entry.ValueString = item[1];
+                entry.AmountString = item[0];
                 index++;
                 if(index >= list.Length)
                     break;
