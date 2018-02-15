@@ -35,11 +35,15 @@ namespace CryptoMarketClient {
         private void bbRefreshMyTrades_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
             UpdateTrades();
         }
-        public void UpdateTrades() {
+        public async void UpdateTrades() {
             if(Ticker == null)
                 return;
-            if(Ticker.UpdateMyTrades())
-                this.gvTrades.RefreshData();
+            Task t = Task.Factory.StartNew(() => {
+                if(Ticker.UpdateMyTrades() && this.gcTrades.IsHandleCreated) {
+                    BeginInvoke(new MethodInvoker(() => this.gvTrades.RefreshData()));
+                }
+            });
+            await t;
         }
     }
 }

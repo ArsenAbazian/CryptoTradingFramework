@@ -566,6 +566,9 @@ namespace CryptoMarketClient {
             }
             return false;
         }
+        public bool CancelOrder(OpenedOrderInfo info) {
+            return Exchange.CancelOrder(this, info);
+        }
     }
 
     public class SnapshotChartControl : ChartControl {

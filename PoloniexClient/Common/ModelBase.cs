@@ -553,6 +553,7 @@ namespace CryptoMarketClient {
             }
             return res;
         }
+        public abstract bool CancelOrder(TickerBase ticker, OpenedOrderInfo info);
     }
 
     public class CandleStickIntervalInfo {

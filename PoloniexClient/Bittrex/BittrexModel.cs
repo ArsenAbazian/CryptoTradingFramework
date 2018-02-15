@@ -614,6 +614,21 @@ namespace CryptoMarketClient.Bittrex {
             info.TradeResult = text;
             return OnSellLimit(text);
         }
+        public override bool CancelOrder(TickerBase ticker, OpenedOrderInfo info) {
+            string address = string.Format("https://bittrex.com/api/v1.1/market/cancel?apikey={0}&nonce={1}&uuid={2}",
+                Uri.EscapeDataString(ApiKey),
+                GetNonce(),
+                ((BittrexOrderInfo)info).OrderUuid);
+            WebClient client = GetWebClient();
+            client.Headers.Clear();
+            client.Headers.Add("apisign", GetSign(address));
+            try {
+                return OnCancel(client.DownloadString(address));
+            }
+            catch(Exception e) {
+                return false;
+            }
+        }
         public Task<string> CancelOrder(string uuid) {
             string address = string.Format("https://bittrex.com/api/v1.1/market/cancel?apikey={0}&nonce={1}&uuid={2}",
                 Uri.EscapeDataString(ApiKey),

@@ -777,6 +777,26 @@ namespace CryptoMarketClient {
             return res.Value<long>("orderNumber");
         }
 
+        public override bool CancelOrder(TickerBase ticker, OpenedOrderInfo info) {
+            string address = string.Format("https://poloniex.com/tradingApi");
+
+            NameValueCollection coll = new NameValueCollection();
+            coll.Add("command", "cancelOrder");
+            coll.Add("nonce", GetNonce());
+            coll.Add("orderNumber", info.OrderNumber.ToString());
+
+            WebClient client = GetWebClient();
+            client.Headers.Clear();
+            client.Headers.Add("Sign", GetSign(ToQueryString(coll)));
+            client.Headers.Add("Key", ApiKey);
+            try {
+                return OnCancel(client.UploadValues(address, coll));
+            }
+            catch(Exception) {
+                return false;
+            }
+        }
+
         public Task<byte[]> CancelOrder(ulong orderId) {
             string address = string.Format("https://poloniex.com/tradingApi");
 

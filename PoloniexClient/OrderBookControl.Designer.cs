@@ -99,7 +99,7 @@
             this.bidPanel.Controls.Add(this.bidGridControl);
             this.bidPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.bidPanel.Location = new System.Drawing.Point(0, 927);
-            this.bidPanel.Margin = new System.Windows.Forms.Padding(12, 12, 12, 12);
+            this.bidPanel.Margin = new System.Windows.Forms.Padding(12);
             this.bidPanel.Name = "bidPanel";
             this.bidPanel.Size = new System.Drawing.Size(916, 860);
             this.bidPanel.TabIndex = 2;
@@ -108,10 +108,10 @@
             // bidGridControl
             // 
             this.bidGridControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.bidGridControl.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(12, 12, 12, 12);
+            this.bidGridControl.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(12);
             this.bidGridControl.Location = new System.Drawing.Point(0, 0);
             this.bidGridControl.MainView = this.bidGridView;
-            this.bidGridControl.Margin = new System.Windows.Forms.Padding(12, 12, 12, 12);
+            this.bidGridControl.Margin = new System.Windows.Forms.Padding(12);
             this.bidGridControl.Name = "bidGridControl";
             this.bidGridControl.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repositoryItemTextEdit2});
@@ -158,6 +158,7 @@
             this.bidGridView.OptionsView.EnableAppearanceEvenRow = true;
             this.bidGridView.OptionsView.ShowColumnHeaders = false;
             this.bidGridView.OptionsView.ShowGroupPanel = false;
+            this.bidGridView.OptionsView.ShowHorizontalLines = DevExpress.Utils.DefaultBoolean.False;
             this.bidGridView.OptionsView.ShowIndicator = false;
             this.bidGridView.MouseDown += new System.Windows.Forms.MouseEventHandler(this.bidGridView_MouseDown);
             // 
@@ -192,7 +193,7 @@
             this.askPanel.Controls.Add(this.askGridControl);
             this.askPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.askPanel.Location = new System.Drawing.Point(0, 0);
-            this.askPanel.Margin = new System.Windows.Forms.Padding(12, 12, 12, 12);
+            this.askPanel.Margin = new System.Windows.Forms.Padding(12);
             this.askPanel.Name = "askPanel";
             this.askPanel.Size = new System.Drawing.Size(916, 925);
             this.askPanel.TabIndex = 1;
@@ -201,10 +202,10 @@
             // askGridControl
             // 
             this.askGridControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.askGridControl.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(12, 12, 12, 12);
+            this.askGridControl.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(12);
             this.askGridControl.Location = new System.Drawing.Point(0, 0);
             this.askGridControl.MainView = this.askGridView;
-            this.askGridControl.Margin = new System.Windows.Forms.Padding(12, 12, 12, 12);
+            this.askGridControl.Margin = new System.Windows.Forms.Padding(12);
             this.askGridControl.Name = "askGridControl";
             this.askGridControl.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repositoryItemTextEdit1});
@@ -250,6 +251,7 @@
             this.askGridView.OptionsDetail.EnableMasterViewMode = false;
             this.askGridView.OptionsView.EnableAppearanceEvenRow = true;
             this.askGridView.OptionsView.ShowGroupPanel = false;
+            this.askGridView.OptionsView.ShowHorizontalLines = DevExpress.Utils.DefaultBoolean.False;
             this.askGridView.OptionsView.ShowIndicator = false;
             this.askGridView.SortInfo.AddRange(new DevExpress.XtraGrid.Columns.GridColumnSortInfo[] {
             new DevExpress.XtraGrid.Columns.GridColumnSortInfo(this.gcRate, DevExpress.Data.ColumnSortOrder.Descending)});
@@ -288,7 +290,7 @@
             this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(0, 925);
-            this.panel1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.panel1.Margin = new System.Windows.Forms.Padding(6);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(916, 2);
             this.panel1.TabIndex = 1;
@@ -300,7 +302,7 @@
             this.Controls.Add(this.bidPanel);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.askPanel);
-            this.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.Margin = new System.Windows.Forms.Padding(6);
             this.Name = "OrderBookControl";
             this.Size = new System.Drawing.Size(916, 1787);
             this.Resize += new System.EventHandler(this.OrderBookControl_Resize);

@@ -37,7 +37,7 @@ namespace CryptoMarketClient {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TrailingCollectionControl));
             this.colActualProfit = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colType = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.gcTrailings = new MyGridControl();
+            this.gcTrailings = new CryptoMarketClient.MyGridControl();
             this.trailingSettingsBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.gvTrailings = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.colName = new DevExpress.XtraGrid.Columns.GridColumn();
@@ -78,31 +78,36 @@ namespace CryptoMarketClient {
             // colActualProfit
             // 
             this.colActualProfit.FieldName = "ActualProfit";
+            this.colActualProfit.MinWidth = 40;
             this.colActualProfit.Name = "colActualProfit";
             this.colActualProfit.OptionsColumn.ReadOnly = true;
             this.colActualProfit.Visible = true;
             this.colActualProfit.VisibleIndex = 4;
-            this.colActualProfit.Width = 67;
+            this.colActualProfit.Width = 134;
             // 
             // colType
             // 
             this.colType.FieldName = "Type";
+            this.colType.MinWidth = 40;
             this.colType.Name = "colType";
             this.colType.Visible = true;
             this.colType.VisibleIndex = 0;
-            this.colType.Width = 59;
+            this.colType.Width = 118;
             // 
             // gcTrailings
             // 
             this.gcTrailings.DataSource = this.trailingSettingsBindingSource;
             this.gcTrailings.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gcTrailings.Location = new System.Drawing.Point(0, 31);
+            this.gcTrailings.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.gcTrailings.Location = new System.Drawing.Point(0, 60);
             this.gcTrailings.MainView = this.gvTrailings;
+            this.gcTrailings.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.gcTrailings.Name = "gcTrailings";
             this.gcTrailings.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repositoryItemTextEdit1});
-            this.gcTrailings.Size = new System.Drawing.Size(618, 428);
+            this.gcTrailings.Size = new System.Drawing.Size(1236, 823);
             this.gcTrailings.TabIndex = 1;
+            this.gcTrailings.UseDirectXPaint = DevExpress.Utils.DefaultBoolean.True;
             this.gcTrailings.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gvTrailings});
             // 
@@ -180,24 +185,27 @@ namespace CryptoMarketClient {
             this.gvTrailings.OptionsDetail.EnableMasterViewMode = false;
             this.gvTrailings.OptionsView.EnableAppearanceEvenRow = true;
             this.gvTrailings.OptionsView.ShowGroupPanel = false;
+            this.gvTrailings.OptionsView.ShowHorizontalLines = DevExpress.Utils.DefaultBoolean.False;
             this.gvTrailings.OptionsView.ShowIndicator = false;
             // 
             // colName
             // 
             this.colName.FieldName = "Name";
+            this.colName.MinWidth = 40;
             this.colName.Name = "colName";
             this.colName.OptionsColumn.ReadOnly = true;
-            this.colName.Width = 217;
+            this.colName.Width = 434;
             // 
             // colBuyPrice
             // 
             this.colBuyPrice.Caption = "Price";
             this.colBuyPrice.ColumnEdit = this.repositoryItemTextEdit1;
             this.colBuyPrice.FieldName = "TradePrice";
+            this.colBuyPrice.MinWidth = 40;
             this.colBuyPrice.Name = "colBuyPrice";
             this.colBuyPrice.Visible = true;
             this.colBuyPrice.VisibleIndex = 1;
-            this.colBuyPrice.Width = 79;
+            this.colBuyPrice.Width = 158;
             // 
             // repositoryItemTextEdit1
             // 
@@ -208,112 +216,130 @@ namespace CryptoMarketClient {
             // colAmount
             // 
             this.colAmount.FieldName = "Amount";
+            this.colAmount.MinWidth = 40;
             this.colAmount.Name = "colAmount";
             this.colAmount.Visible = true;
             this.colAmount.VisibleIndex = 3;
-            this.colAmount.Width = 77;
+            this.colAmount.Width = 154;
             // 
             // colStopLossSellPrice
             // 
             this.colStopLossSellPrice.FieldName = "StopLossSellPrice";
+            this.colStopLossSellPrice.MinWidth = 40;
             this.colStopLossSellPrice.Name = "colStopLossSellPrice";
-            this.colStopLossSellPrice.Width = 287;
+            this.colStopLossSellPrice.Width = 574;
             // 
             // colTotalSpendInBaseCurrency
             // 
             this.colTotalSpendInBaseCurrency.FieldName = "TotalSpendInBaseCurrency";
+            this.colTotalSpendInBaseCurrency.MinWidth = 40;
             this.colTotalSpendInBaseCurrency.Name = "colTotalSpendInBaseCurrency";
-            this.colTotalSpendInBaseCurrency.Width = 316;
+            this.colTotalSpendInBaseCurrency.Width = 632;
             // 
             // colActualProfitUSD
             // 
             this.colActualProfitUSD.FieldName = "ActualProfitUSD";
+            this.colActualProfitUSD.MinWidth = 40;
             this.colActualProfitUSD.Name = "colActualProfitUSD";
             this.colActualProfitUSD.OptionsColumn.ReadOnly = true;
-            this.colActualProfitUSD.Width = 207;
+            this.colActualProfitUSD.Width = 414;
             // 
             // colUsdTicker
             // 
             this.colUsdTicker.FieldName = "UsdTicker";
+            this.colUsdTicker.MinWidth = 40;
             this.colUsdTicker.Name = "colUsdTicker";
-            this.colUsdTicker.Width = 151;
+            this.colUsdTicker.Width = 302;
             // 
             // colStopLossPricePercent
             // 
             this.colStopLossPricePercent.Caption = "StopLossStartPrice";
             this.colStopLossPricePercent.FieldName = "StopLossPricePercent";
+            this.colStopLossPricePercent.MinWidth = 40;
             this.colStopLossPricePercent.Name = "colStopLossPricePercent";
             this.colStopLossPricePercent.Visible = true;
             this.colStopLossPricePercent.VisibleIndex = 7;
-            this.colStopLossPricePercent.Width = 95;
+            this.colStopLossPricePercent.Width = 190;
             // 
             // colStopLossStartPrice
             // 
             this.colStopLossStartPrice.FieldName = "StopLossStartPrice";
+            this.colStopLossStartPrice.MinWidth = 40;
             this.colStopLossStartPrice.Name = "colStopLossStartPrice";
             this.colStopLossStartPrice.OptionsColumn.ReadOnly = true;
-            this.colStopLossStartPrice.Width = 101;
+            this.colStopLossStartPrice.Width = 202;
             // 
             // colTakeProfitStartPercent
             // 
             this.colTakeProfitStartPercent.Caption = "TakeProfitStartPercent";
             this.colTakeProfitStartPercent.FieldName = "TakeProfitStartPercent";
+            this.colTakeProfitStartPercent.MinWidth = 40;
             this.colTakeProfitStartPercent.Name = "colTakeProfitStartPercent";
             this.colTakeProfitStartPercent.Visible = true;
             this.colTakeProfitStartPercent.VisibleIndex = 5;
+            this.colTakeProfitStartPercent.Width = 150;
             // 
             // colTakeProfitPercent
             // 
             this.colTakeProfitPercent.Caption = "TakeProfitPercent";
             this.colTakeProfitPercent.FieldName = "TakeProfitPercent";
+            this.colTakeProfitPercent.MinWidth = 40;
             this.colTakeProfitPercent.Name = "colTakeProfitPercent";
             this.colTakeProfitPercent.Visible = true;
             this.colTakeProfitPercent.VisibleIndex = 6;
-            this.colTakeProfitPercent.Width = 73;
+            this.colTakeProfitPercent.Width = 146;
             // 
             // colActualPrice
             // 
             this.colActualPrice.FieldName = "ActualPrice";
+            this.colActualPrice.MinWidth = 40;
             this.colActualPrice.Name = "colActualPrice";
             this.colActualPrice.Visible = true;
             this.colActualPrice.VisibleIndex = 2;
-            this.colActualPrice.Width = 67;
+            this.colActualPrice.Width = 134;
             // 
             // colMaxPrice
             // 
             this.colMaxPrice.FieldName = "MaxPrice";
+            this.colMaxPrice.MinWidth = 40;
             this.colMaxPrice.Name = "colMaxPrice";
-            this.colMaxPrice.Width = 136;
+            this.colMaxPrice.Width = 272;
             // 
             // colPriceDelta
             // 
             this.colPriceDelta.FieldName = "PriceDelta";
+            this.colPriceDelta.MinWidth = 40;
             this.colPriceDelta.Name = "colPriceDelta";
             this.colPriceDelta.OptionsColumn.ReadOnly = true;
-            this.colPriceDelta.Width = 116;
+            this.colPriceDelta.Width = 232;
             // 
             // colTakeProfitPrice
             // 
             this.colTakeProfitPrice.FieldName = "TakeProfitPrice";
+            this.colTakeProfitPrice.MinWidth = 40;
             this.colTakeProfitPrice.Name = "colTakeProfitPrice";
             this.colTakeProfitPrice.OptionsColumn.ReadOnly = true;
-            this.colTakeProfitPrice.Width = 172;
+            this.colTakeProfitPrice.Width = 344;
             // 
             // colIgnoreStopLoss
             // 
             this.colIgnoreStopLoss.Caption = "IgnoreStopLoss";
             this.colIgnoreStopLoss.FieldName = "IgnoreStopLoss";
+            this.colIgnoreStopLoss.MinWidth = 40;
             this.colIgnoreStopLoss.Name = "colIgnoreStopLoss";
             this.colIgnoreStopLoss.Visible = true;
             this.colIgnoreStopLoss.VisibleIndex = 8;
+            this.colIgnoreStopLoss.Width = 150;
             // 
             // colIncrementalStopLoss
             // 
             this.colIncrementalStopLoss.Caption = "IncrementalStopLoss";
             this.colIncrementalStopLoss.FieldName = "EnableIncrementalStopLoss";
+            this.colIncrementalStopLoss.MinWidth = 40;
             this.colIncrementalStopLoss.Name = "colIncrementalStopLoss";
             this.colIncrementalStopLoss.Visible = true;
             this.colIncrementalStopLoss.VisibleIndex = 9;
+            this.colIncrementalStopLoss.Width = 150;
             // 
             // barManager1
             // 
@@ -392,48 +418,48 @@ namespace CryptoMarketClient {
             this.barDockControlTop.Dock = System.Windows.Forms.DockStyle.Top;
             this.barDockControlTop.Location = new System.Drawing.Point(0, 0);
             this.barDockControlTop.Manager = this.barManager1;
-            this.barDockControlTop.Margin = new System.Windows.Forms.Padding(2);
-            this.barDockControlTop.Size = new System.Drawing.Size(618, 31);
+            this.barDockControlTop.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.barDockControlTop.Size = new System.Drawing.Size(1236, 60);
             // 
             // barDockControlBottom
             // 
             this.barDockControlBottom.CausesValidation = false;
             this.barDockControlBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.barDockControlBottom.Location = new System.Drawing.Point(0, 459);
+            this.barDockControlBottom.Location = new System.Drawing.Point(0, 883);
             this.barDockControlBottom.Manager = this.barManager1;
-            this.barDockControlBottom.Margin = new System.Windows.Forms.Padding(2);
-            this.barDockControlBottom.Size = new System.Drawing.Size(618, 0);
+            this.barDockControlBottom.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.barDockControlBottom.Size = new System.Drawing.Size(1236, 0);
             // 
             // barDockControlLeft
             // 
             this.barDockControlLeft.CausesValidation = false;
             this.barDockControlLeft.Dock = System.Windows.Forms.DockStyle.Left;
-            this.barDockControlLeft.Location = new System.Drawing.Point(0, 31);
+            this.barDockControlLeft.Location = new System.Drawing.Point(0, 60);
             this.barDockControlLeft.Manager = this.barManager1;
-            this.barDockControlLeft.Margin = new System.Windows.Forms.Padding(2);
-            this.barDockControlLeft.Size = new System.Drawing.Size(0, 428);
+            this.barDockControlLeft.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.barDockControlLeft.Size = new System.Drawing.Size(0, 823);
             // 
             // barDockControlRight
             // 
             this.barDockControlRight.CausesValidation = false;
             this.barDockControlRight.Dock = System.Windows.Forms.DockStyle.Right;
-            this.barDockControlRight.Location = new System.Drawing.Point(618, 31);
+            this.barDockControlRight.Location = new System.Drawing.Point(1236, 60);
             this.barDockControlRight.Manager = this.barManager1;
-            this.barDockControlRight.Margin = new System.Windows.Forms.Padding(2);
-            this.barDockControlRight.Size = new System.Drawing.Size(0, 428);
+            this.barDockControlRight.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.barDockControlRight.Size = new System.Drawing.Size(0, 823);
             // 
             // TrailingCollectionControl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.gcTrailings);
             this.Controls.Add(this.barDockControlLeft);
             this.Controls.Add(this.barDockControlRight);
             this.Controls.Add(this.barDockControlBottom);
             this.Controls.Add(this.barDockControlTop);
-            this.Margin = new System.Windows.Forms.Padding(2);
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "TrailingCollectionControl";
-            this.Size = new System.Drawing.Size(618, 459);
+            this.Size = new System.Drawing.Size(1236, 883);
             ((System.ComponentModel.ISupportInitialize)(this.gcTrailings)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trailingSettingsBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gvTrailings)).EndInit();

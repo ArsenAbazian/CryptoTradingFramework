@@ -32,49 +32,56 @@ namespace CryptoMarketClient {
             DevExpress.XtraEditors.FormatConditionRuleValue formatConditionRuleValue2 = new DevExpress.XtraEditors.FormatConditionRuleValue();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MyTradesCollectionControl));
             this.colType = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.gcTrades = new MyGridControl();
+            this.gcTrades = new CryptoMarketClient.MyGridControl();
+            this.tradeHistoryItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.gvTrades = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.colTime = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colAmount = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colRate = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colTotal = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colFee = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colFill = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colId = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.tradeHistoryItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.colFee = new DevExpress.XtraGrid.Columns.GridColumn();
             this.barManager1 = new DevExpress.XtraBars.BarManager(this.components);
+            this.bar1 = new DevExpress.XtraBars.Bar();
+            this.bbRefreshMyTrades = new DevExpress.XtraBars.BarButtonItem();
             this.barDockControlTop = new DevExpress.XtraBars.BarDockControl();
             this.barDockControlBottom = new DevExpress.XtraBars.BarDockControl();
             this.barDockControlLeft = new DevExpress.XtraBars.BarDockControl();
             this.barDockControlRight = new DevExpress.XtraBars.BarDockControl();
-            this.bar1 = new DevExpress.XtraBars.Bar();
-            this.bbRefreshMyTrades = new DevExpress.XtraBars.BarButtonItem();
             ((System.ComponentModel.ISupportInitialize)(this.gcTrades)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gvTrades)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tradeHistoryItemBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gvTrades)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.barManager1)).BeginInit();
             this.SuspendLayout();
             // 
             // colType
             // 
             this.colType.FieldName = "Type";
+            this.colType.MinWidth = 40;
             this.colType.Name = "colType";
             this.colType.Visible = true;
             this.colType.VisibleIndex = 1;
+            this.colType.Width = 150;
             // 
             // gcTrades
             // 
             this.gcTrades.DataSource = this.tradeHistoryItemBindingSource;
             this.gcTrades.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gcTrades.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(6);
+            this.gcTrades.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(12, 12, 12, 12);
             this.gcTrades.Location = new System.Drawing.Point(0, 60);
             this.gcTrades.MainView = this.gvTrades;
-            this.gcTrades.Margin = new System.Windows.Forms.Padding(6);
+            this.gcTrades.Margin = new System.Windows.Forms.Padding(12, 12, 12, 12);
             this.gcTrades.Name = "gcTrades";
-            this.gcTrades.Size = new System.Drawing.Size(1714, 939);
+            this.gcTrades.Size = new System.Drawing.Size(3428, 1861);
             this.gcTrades.TabIndex = 1;
+            this.gcTrades.UseDirectXPaint = DevExpress.Utils.DefaultBoolean.True;
             this.gcTrades.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gvTrades});
+            // 
+            // tradeHistoryItemBindingSource
+            // 
+            this.tradeHistoryItemBindingSource.DataSource = typeof(CryptoMarketClient.TradeHistoryItem);
             // 
             // gvTrades
             // 
@@ -113,7 +120,9 @@ namespace CryptoMarketClient {
             this.gvTrades.OptionsBehavior.AllowPixelScrolling = DevExpress.Utils.DefaultBoolean.True;
             this.gvTrades.OptionsBehavior.Editable = false;
             this.gvTrades.OptionsDetail.EnableMasterViewMode = false;
+            this.gvTrades.OptionsView.EnableAppearanceEvenRow = true;
             this.gvTrades.OptionsView.ShowGroupPanel = false;
+            this.gvTrades.OptionsView.ShowHorizontalLines = DevExpress.Utils.DefaultBoolean.False;
             this.gvTrades.OptionsView.ShowIndicator = false;
             // 
             // colTime
@@ -121,55 +130,65 @@ namespace CryptoMarketClient {
             this.colTime.DisplayFormat.FormatString = "hh:mm:ss.fff";
             this.colTime.DisplayFormat.FormatType = DevExpress.Utils.FormatType.DateTime;
             this.colTime.FieldName = "Time";
+            this.colTime.MinWidth = 40;
             this.colTime.Name = "colTime";
             this.colTime.Visible = true;
             this.colTime.VisibleIndex = 0;
+            this.colTime.Width = 150;
             // 
             // colAmount
             // 
             this.colAmount.DisplayFormat.FormatString = "0.########";
             this.colAmount.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.colAmount.FieldName = "Amount";
+            this.colAmount.MinWidth = 40;
             this.colAmount.Name = "colAmount";
             this.colAmount.Visible = true;
             this.colAmount.VisibleIndex = 2;
+            this.colAmount.Width = 150;
             // 
             // colRate
             // 
             this.colRate.DisplayFormat.FormatString = "0.########";
             this.colRate.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.colRate.FieldName = "Rate";
+            this.colRate.MinWidth = 40;
             this.colRate.Name = "colRate";
             this.colRate.Visible = true;
             this.colRate.VisibleIndex = 3;
+            this.colRate.Width = 150;
             // 
             // colTotal
             // 
             this.colTotal.FieldName = "Total";
+            this.colTotal.MinWidth = 40;
             this.colTotal.Name = "colTotal";
             this.colTotal.Visible = true;
             this.colTotal.VisibleIndex = 4;
-            // 
-            // colFill
-            // 
-            this.colFill.FieldName = "Fill";
-            this.colFill.Name = "colFill";
-            // 
-            // colId
-            // 
-            this.colId.FieldName = "Id";
-            this.colId.Name = "colId";
-            // 
-            // tradeHistoryItemBindingSource
-            // 
-            this.tradeHistoryItemBindingSource.DataSource = typeof(CryptoMarketClient.TradeHistoryItem);
+            this.colTotal.Width = 150;
             // 
             // colFee
             // 
             this.colFee.FieldName = "Fee";
+            this.colFee.MinWidth = 40;
             this.colFee.Name = "colFee";
             this.colFee.Visible = true;
             this.colFee.VisibleIndex = 5;
+            this.colFee.Width = 150;
+            // 
+            // colFill
+            // 
+            this.colFill.FieldName = "Fill";
+            this.colFill.MinWidth = 40;
+            this.colFill.Name = "colFill";
+            this.colFill.Width = 150;
+            // 
+            // colId
+            // 
+            this.colId.FieldName = "Id";
+            this.colId.MinWidth = 40;
+            this.colId.Name = "colId";
+            this.colId.Width = 150;
             // 
             // barManager1
             // 
@@ -183,38 +202,6 @@ namespace CryptoMarketClient {
             this.barManager1.Items.AddRange(new DevExpress.XtraBars.BarItem[] {
             this.bbRefreshMyTrades});
             this.barManager1.MaxItemId = 1;
-            // 
-            // barDockControlTop
-            // 
-            this.barDockControlTop.CausesValidation = false;
-            this.barDockControlTop.Dock = System.Windows.Forms.DockStyle.Top;
-            this.barDockControlTop.Location = new System.Drawing.Point(0, 0);
-            this.barDockControlTop.Manager = this.barManager1;
-            this.barDockControlTop.Size = new System.Drawing.Size(1714, 60);
-            // 
-            // barDockControlBottom
-            // 
-            this.barDockControlBottom.CausesValidation = false;
-            this.barDockControlBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.barDockControlBottom.Location = new System.Drawing.Point(0, 999);
-            this.barDockControlBottom.Manager = this.barManager1;
-            this.barDockControlBottom.Size = new System.Drawing.Size(1714, 0);
-            // 
-            // barDockControlLeft
-            // 
-            this.barDockControlLeft.CausesValidation = false;
-            this.barDockControlLeft.Dock = System.Windows.Forms.DockStyle.Left;
-            this.barDockControlLeft.Location = new System.Drawing.Point(0, 60);
-            this.barDockControlLeft.Manager = this.barManager1;
-            this.barDockControlLeft.Size = new System.Drawing.Size(0, 939);
-            // 
-            // barDockControlRight
-            // 
-            this.barDockControlRight.CausesValidation = false;
-            this.barDockControlRight.Dock = System.Windows.Forms.DockStyle.Right;
-            this.barDockControlRight.Location = new System.Drawing.Point(1714, 60);
-            this.barDockControlRight.Manager = this.barManager1;
-            this.barDockControlRight.Size = new System.Drawing.Size(0, 939);
             // 
             // bar1
             // 
@@ -238,20 +225,57 @@ namespace CryptoMarketClient {
             this.bbRefreshMyTrades.PaintStyle = DevExpress.XtraBars.BarItemPaintStyle.CaptionGlyph;
             this.bbRefreshMyTrades.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bbRefreshMyTrades_ItemClick);
             // 
+            // barDockControlTop
+            // 
+            this.barDockControlTop.CausesValidation = false;
+            this.barDockControlTop.Dock = System.Windows.Forms.DockStyle.Top;
+            this.barDockControlTop.Location = new System.Drawing.Point(0, 0);
+            this.barDockControlTop.Manager = this.barManager1;
+            this.barDockControlTop.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.barDockControlTop.Size = new System.Drawing.Size(3428, 60);
+            // 
+            // barDockControlBottom
+            // 
+            this.barDockControlBottom.CausesValidation = false;
+            this.barDockControlBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.barDockControlBottom.Location = new System.Drawing.Point(0, 1921);
+            this.barDockControlBottom.Manager = this.barManager1;
+            this.barDockControlBottom.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.barDockControlBottom.Size = new System.Drawing.Size(3428, 0);
+            // 
+            // barDockControlLeft
+            // 
+            this.barDockControlLeft.CausesValidation = false;
+            this.barDockControlLeft.Dock = System.Windows.Forms.DockStyle.Left;
+            this.barDockControlLeft.Location = new System.Drawing.Point(0, 60);
+            this.barDockControlLeft.Manager = this.barManager1;
+            this.barDockControlLeft.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.barDockControlLeft.Size = new System.Drawing.Size(0, 1861);
+            // 
+            // barDockControlRight
+            // 
+            this.barDockControlRight.CausesValidation = false;
+            this.barDockControlRight.Dock = System.Windows.Forms.DockStyle.Right;
+            this.barDockControlRight.Location = new System.Drawing.Point(3428, 60);
+            this.barDockControlRight.Manager = this.barManager1;
+            this.barDockControlRight.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.barDockControlRight.Size = new System.Drawing.Size(0, 1861);
+            // 
             // MyTradesCollectionControl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.gcTrades);
             this.Controls.Add(this.barDockControlLeft);
             this.Controls.Add(this.barDockControlRight);
             this.Controls.Add(this.barDockControlBottom);
             this.Controls.Add(this.barDockControlTop);
+            this.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.Name = "MyTradesCollectionControl";
-            this.Size = new System.Drawing.Size(1714, 999);
+            this.Size = new System.Drawing.Size(3428, 1921);
             ((System.ComponentModel.ISupportInitialize)(this.gcTrades)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gvTrades)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tradeHistoryItemBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gvTrades)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.barManager1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

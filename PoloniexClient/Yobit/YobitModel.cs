@@ -9,6 +9,7 @@ using System.ComponentModel;
 using System.Net;
 using System.Collections.Specialized;
 using System.Diagnostics;
+using CryptoMarketClient.Common;
 
 namespace CryptoMarketClient.Yobit {
     public class YobitExchange : Exchange {
@@ -21,6 +22,10 @@ namespace CryptoMarketClient.Yobit {
                 }
                 return defaultExchange;
             }
+        }
+
+        public override bool CancelOrder(TickerBase ticker, OpenedOrderInfo info) {
+            throw new NotImplementedException();
         }
 
         public override bool AllowCandleStickIncrementalUpdate => false;

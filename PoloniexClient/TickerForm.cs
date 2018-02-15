@@ -3,6 +3,7 @@ using DevExpress.XtraBars.Docking;
 using DevExpress.XtraCharts;
 using DevExpress.XtraEditors;
 using DevExpress.XtraGrid;
+using DevExpress.XtraGrid.Views.Grid.ViewInfo;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -139,7 +140,7 @@ namespace CryptoMarketClient {
         }
 
         private void OnTickerOpenedOrdersChanged(object sender, EventArgs e) {
-            BeginInvoke(new MethodInvoker(() => { this.gvOrders.RefreshData(); }));
+            BeginInvoke(new MethodInvoker(() => { this.gvOpenedOrders.RefreshData(); }));
         }
 
         void UpdateGrid() {
@@ -232,6 +233,31 @@ namespace CryptoMarketClient {
             using(GrabDataSettingsForm form = new GrabDataSettingsForm()) {
                 form.Ticker = Ticker;
                 form.ShowDialog();
+            }
+        }
+
+        protected void MakeCancel() {
+            OpenedOrderInfo info = (OpenedOrderInfo)this.gvOpenedOrders.GetFocusedRow();
+            if(info == null)
+                return;
+            if(!Ticker.CancelOrder(info)) {
+                XtraMessageBox.Show("Error canceling order. Try again later.");
+            }
+            Ticker.UpdateOpenedOrders();
+            this.gvOpenedOrders.RefreshData();
+        }
+
+        private void bbCancel_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
+            MakeCancel();
+        }
+
+        private void gcOpenedOrders_MouseDown(object sender, MouseEventArgs e) {
+            if(e.Button != MouseButtons.Right)
+                return;
+            GridHitInfo hitInfo = this.gvOpenedOrders.CalcHitInfo(e.Location);
+            if(hitInfo.InDataRow) {
+                this.gvOpenedOrders.FocusedRowHandle = hitInfo.RowHandle;
+                this.popupMenu1.ShowPopup(this.gcOpenedOrders.PointToScreen(e.Location));
             }
         }
     }
