@@ -95,8 +95,13 @@ namespace CryptoMarketClient.Common {
                 OnTotalSpendInBaseCurrencyChanged();
             }
         }
+        bool InTotalSpendInBaseCurrencyChanged { get; set; }
         void OnTotalSpendInBaseCurrencyChanged() {
+            if(InTotalSpendInBaseCurrencyChanged)
+                return;
+            InTotalSpendInBaseCurrencyChanged = true;
             Amount = TotalSpendInBaseCurrency / TradePrice;
+            InTotalSpendInBaseCurrencyChanged = false;
             RaisePropertyChanged("TotalSpendInBaseCurrency");
         }
 

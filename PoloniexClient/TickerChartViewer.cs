@@ -280,10 +280,7 @@ namespace CryptoMarketClient {
             int totalInterval = candleStickCount * screenCount * interval;
 
             DateTime start = DateTime.UtcNow.Subtract(TimeSpan.FromSeconds(totalInterval));
-            BindingList<CandleStickData> data = Ticker.GetCandleStickData(Ticker.CandleStickPeriodMin, start, totalInterval);
-            Ticker.CandleStickData = data;
-            this.chartControl1.Series["Current"].DataSource = data;
-            this.chartControl1.Series["Volume"].DataSource = data;
+            BackgroundUpdateCandleSticks(start);
             CandleStickSeriesView view = (CandleStickSeriesView)this.chartControl1.Series["Current"].View;
             view.AxisX.VisualRange.MinValue = start;
             view.AxisX.VisualRange.MaxValue = start.AddSeconds(candleStickCount * interval);
@@ -345,21 +342,23 @@ namespace CryptoMarketClient {
             if(UpdateCandleStickThread != null && UpdateCandleStickThread.IsAlive)
                 return;
             if(object.Equals(e.Axis.VisualRange.MinValue, e.Axis.WholeRange.MinValue)) {
-                UpdateCandleStickThread = new Thread(() => {
-                    DateTime date = (DateTime)e.Axis.WholeRange.MinValue;
-                    int seconds = CalculateTotalIntervalInSeconds();
-                    BindingList<CandleStickData> data = Ticker.GetCandleStickData(Ticker.CandleStickPeriodMin, date.AddSeconds(-seconds), seconds);
-                    foreach(CandleStickData prev in Ticker.CandleStickData) {
-                        data.Add(prev);
-                    }
-                    Ticker.CandleStickData = data;
-                    this.chartControl1.Series["Current"].DataSource = data;
-                    this.chartControl1.Series["Volume"].DataSource = data;
-                    SplashScreenManager.CloseDefaultWaitForm();
-                });
-                SplashScreenManager.ShowDefaultWaitForm("Loading chart from server...");
-                UpdateCandleStickThread.Start();
+                BackgroundUpdateCandleSticks((DateTime)e.Axis.VisualRange.MinValue);
             }
+        }
+        void BackgroundUpdateCandleSticks(DateTime date) {
+            UpdateCandleStickThread = new Thread(() => {
+                int seconds = CalculateTotalIntervalInSeconds();
+                BindingList<CandleStickData> data = Ticker.GetCandleStickData(Ticker.CandleStickPeriodMin, date.AddSeconds(-seconds), seconds);
+                foreach(CandleStickData prev in Ticker.CandleStickData) {
+                    data.Add(prev);
+                }
+                Ticker.CandleStickData = data;
+                this.chartControl1.Series["Current"].DataSource = data;
+                this.chartControl1.Series["Volume"].DataSource = data;
+                SplashScreenManager.CloseDefaultWaitForm();
+            });
+            SplashScreenManager.ShowDefaultWaitForm("Loading chart from server...");
+            UpdateCandleStickThread.Start();
         }
     }
 }
