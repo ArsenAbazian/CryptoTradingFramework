@@ -2,6 +2,7 @@
 using DevExpress.XtraEditors;
 using DevExpress.XtraGrid.Views.Base;
 using DevExpress.XtraGrid.Views.Grid;
+using DevExpress.XtraLayout.Utils;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,6 +17,8 @@ namespace CryptoMarketClient {
     public partial class TradeSettingsControl : XtraUserControl {
         public TradeSettingsControl() {
             InitializeComponent();
+
+            this.comboBoxEdit1.Properties.Items.AddRange(typeof(TrailingType).GetEnumValues());
         }
 
         bool showTrailingSettings = true;
@@ -32,22 +35,6 @@ namespace CryptoMarketClient {
             this.layoutControlGroup3.Visibility = ShowTrailingSettings ? DevExpress.XtraLayout.Utils.LayoutVisibility.Always : DevExpress.XtraLayout.Utils.LayoutVisibility.Never;
         }
 
-        OrderType tradeType = OrderType.Buy;
-        [DefaultValue(OrderType.Buy)]
-        public OrderType TradeType {
-            get { return tradeType; }
-            set {
-                if(TradeType == value)
-                    return;
-                tradeType = value;
-                OnTradeTypeChanged();
-            }
-        }
-        void OnTradeTypeChanged() {
-            this.btnTrade.Text = TradeType == OrderType.Buy ? "Buy" : "Sell";
-            this.ItemForBuyPrice.Text = TradeType == OrderType.Buy ? "Buy Price" : "Sell Price";
-            this.itemForSpendBTC.Text = TradeType == OrderType.Buy ? "Spend BTC" : "Earn BTC";
-        }
         public ITradingResultOperationsProvider OperationsProvider { get; set; }
 
         public TickerBase Ticker { get; set; }
@@ -78,7 +65,7 @@ namespace CryptoMarketClient {
                 XtraMessageBox.Show("Not all fields are filled!");
                 return;
             }
-            if(TradeType == OrderType.Buy) {
+            if((TrailingType)this.comboBoxEdit1.EditValue == TrailingType.Buy) {
                 if(Ticker.Buy(Settings.TradePrice, Settings.Amount)) {
                     XtraMessageBox.Show("Error buying. Please try later again.");
                     return;
@@ -111,6 +98,20 @@ namespace CryptoMarketClient {
 
         private void ceIgnoreStopLoss_CheckedChanged(object sender, EventArgs e) {
             ItemForIncrementalStopLoss.Enabled = ItemForStopLossPricePercent.Enabled = !this.ceIgnoreStopLoss.Checked && this.checkEdit1.Checked;
+        }
+
+        private void OnComboBoxEditValueChanged(object sender, System.EventArgs e) {
+            if (!(this.comboBoxEdit1.EditValue is TrailingType))
+                return;
+
+            bool isBuy = (TrailingType)this.comboBoxEdit1.EditValue == TrailingType.Buy;
+            this.btnTrade.Text = isBuy ? "Buy" : "Sell";
+            this.ItemForBuyPrice.Text = isBuy ? "Buy Price" : "Sell Price";
+            this.itemForSpendBTC.Text = isBuy ? "Spend BTC" : "Earn BTC";
+            LayoutVisibility visibility = isBuy ? LayoutVisibility.Never : LayoutVisibility.Always;
+            this.ItemForStopLossPricePercent.Visibility = visibility;
+            this.ItemForIngoreStopLoss.Visibility = visibility;
+            this.ItemForIncrementalStopLoss.Visibility = visibility;
         }
     }
 
