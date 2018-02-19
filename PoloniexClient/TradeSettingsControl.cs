@@ -58,33 +58,35 @@ namespace CryptoMarketClient {
         }
 
         protected bool ValidateChildrenCore() {
-            return false;
+            return true;
         }
         private void tradeButton_Click(object sender, EventArgs e) {
             if(!ValidateChildrenCore()) {
                 XtraMessageBox.Show("Not all fields are filled!");
                 return;
             }
-            if((TrailingType)this.comboBoxEdit1.EditValue == TrailingType.Buy) {
-                if(Ticker.Buy(Settings.TradePrice, Settings.Amount)) {
-                    XtraMessageBox.Show("Error buying. Please try later again.");
-                    return;
+            if (!this.checkEdit1.Checked) {
+                if ((TrailingType)this.comboBoxEdit1.EditValue == TrailingType.Buy) {
+                    if (Ticker.Buy(Settings.TradePrice, Settings.Amount)) {
+                        XtraMessageBox.Show("Error buying. Please try later again.");
+                        return;
+                    }
+                } else {
+                    if (Ticker.Sell(Settings.TradePrice, Settings.Amount)) {
+                        XtraMessageBox.Show("Error selling. Please try later again.");
+                        return;
+                    }
                 }
-            }
-            else {
-                if(Ticker.Sell(Settings.TradePrice, Settings.Amount)) {
-                    XtraMessageBox.Show("Error selling. Please try later again.");
-                    return;
-                }
-            }
-            if(Settings.EnableIncrementalStopLoss) {
+            } else {
                 Settings.Date = DateTime.UtcNow;
                 Ticker.Trailings.Add(Settings);
                 Settings.Start();
+                if (OperationsProvider != null)
+                    OperationsProvider.ShowTradingResult(Ticker);
+                Ticker.Save();
+
+                XtraMessageBox.Show("Trailing added!");
             }
-            if(OperationsProvider != null)
-                OperationsProvider.ShowTradingResult(Ticker);
-            Ticker.Save();
         }
         public void SelectedAskChanged(object sender, FocusedRowChangedEventArgs e) {
             OrderBookEntry entry = (OrderBookEntry)((GridView)sender).GetRow(e.FocusedRowHandle);
