@@ -40,7 +40,7 @@ namespace CryptoMarketClient.Common {
         [XtraSerializableProperty]
         public bool Enabled { get; set; }
         [XtraSerializableProperty]
-        public ActionMode Mode { get; set; } = ActionMode.Execute;
+        public ActionMode Mode { get; set; } = ActionMode.Notify;
         [XtraSerializableProperty]
         public DateTime Date { get; set; }
 
@@ -154,7 +154,7 @@ namespace CryptoMarketClient.Common {
                 if (ActualPrice < OrderPrice) {
                     OnExecuteOrder();
                     return;
-                } else if (ActualPrice >= TakeProfitStartPrice) {
+                } else if (ActualPrice >= TakeProfitStartPrice && State == TrailingState.Analyze) {
                     OnStartTakeProfit();
                     return;
                 }
@@ -162,7 +162,7 @@ namespace CryptoMarketClient.Common {
                 ActualPrice = Ticker.LowestAsk;
                 MinPrice = Math.Min(MinPrice, ActualPrice);
 
-                if (ActualPrice <= TakeProfitStartPrice && State != TrailingState.TakeProfit) {
+                if (ActualPrice <= TakeProfitStartPrice && State == TrailingState.Analyze) {
                     OnStartTakeProfit();
                     return;
                 }

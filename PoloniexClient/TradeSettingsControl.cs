@@ -61,23 +61,22 @@ namespace CryptoMarketClient {
             return true;
         }
         private void tradeButton_Click(object sender, EventArgs e) {
-            if(!ValidateChildrenCore()) {
+            if (!ValidateChildrenCore()) {
                 XtraMessageBox.Show("Not all fields are filled!");
                 return;
             }
-            if (!this.checkEdit1.Checked) {
-                if ((TrailingType)this.comboBoxEdit1.EditValue == TrailingType.Buy) {
-                    if (Ticker.Buy(Settings.TradePrice, Settings.Amount)) {
-                        XtraMessageBox.Show("Error buying. Please try later again.");
-                        return;
-                    }
-                } else {
-                    if (Ticker.Sell(Settings.TradePrice, Settings.Amount)) {
-                        XtraMessageBox.Show("Error selling. Please try later again.");
-                        return;
-                    }
+            if ((TrailingType)this.comboBoxEdit1.EditValue == TrailingType.Buy) {
+                if (Ticker.Buy(Settings.TradePrice, Settings.Amount)) {
+                    XtraMessageBox.Show("Error buying. Please try later again.");
+                    return;
                 }
             } else {
+                if (Ticker.Sell(Settings.TradePrice, Settings.Amount)) {
+                    XtraMessageBox.Show("Error selling. Please try later again.");
+                    return;
+                }
+            }
+            if (this.checkEdit1.Checked) {
                 Settings.Date = DateTime.UtcNow;
                 Ticker.Trailings.Add(Settings);
                 Settings.Start();
@@ -110,7 +109,7 @@ namespace CryptoMarketClient {
             this.btnTrade.Text = isBuy ? "Buy" : "Sell";
             this.ItemForBuyPrice.Text = isBuy ? "Buy Price" : "Sell Price";
             this.itemForSpendBTC.Text = isBuy ? "Spend BTC" : "Earn BTC";
-            LayoutVisibility visibility = isBuy ? LayoutVisibility.Never : LayoutVisibility.Always;
+            LayoutVisibility visibility = isBuy ? LayoutVisibility.Always : LayoutVisibility.Never;
             this.ItemForStopLossPricePercent.Visibility = visibility;
             this.ItemForIngoreStopLoss.Visibility = visibility;
             this.ItemForIncrementalStopLoss.Visibility = visibility;
