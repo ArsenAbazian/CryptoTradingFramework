@@ -73,6 +73,7 @@ namespace CryptoMarketClient {
             result.Add(new XtraObjectInfo("Ticker", this));
             return (XtraObjectInfo[])result.ToArray(typeof(XtraObjectInfo));
         }
+        protected bool RestoringLayout { get; set; }
         protected virtual bool SaveLayoutCore(XtraSerializer serializer, object path) {
             System.IO.Stream stream = path as System.IO.Stream;
             if(stream != null)
@@ -81,11 +82,17 @@ namespace CryptoMarketClient {
                 return serializer.SerializeObjects(GetXtraObjectInfo(), path.ToString(), this.GetType().Name);
         }
         protected virtual void RestoreLayoutCore(XtraSerializer serializer, object path) {
-            System.IO.Stream stream = path as System.IO.Stream;
-            if(stream != null)
-                serializer.DeserializeObjects(GetXtraObjectInfo(), stream, this.GetType().Name);
-            else
-                serializer.DeserializeObjects(GetXtraObjectInfo(), path.ToString(), this.GetType().Name);
+            RestoringLayout = true;
+            try {
+                System.IO.Stream stream = path as System.IO.Stream;
+                if(stream != null)
+                    serializer.DeserializeObjects(GetXtraObjectInfo(), stream, this.GetType().Name);
+                else
+                    serializer.DeserializeObjects(GetXtraObjectInfo(), path.ToString(), this.GetType().Name);
+            }
+            finally {
+                RestoringLayout = false;
+            }
         }
         //layout
         public virtual void SaveLayoutToXml(string xmlFile) {
@@ -552,6 +559,8 @@ namespace CryptoMarketClient {
         }
 
         private void OnEventsChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) {
+            if(RestoringLayout)
+                return;
             Save();
         }
         protected internal bool IsOpenedOrdersChanged(byte[] newBytes) {

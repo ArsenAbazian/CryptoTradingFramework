@@ -572,6 +572,7 @@
     <None Include="Resources\chart.png" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Binance\" />
     <Folder Include="ShapesManager\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

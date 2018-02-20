@@ -293,5 +293,13 @@ namespace CryptoMarketClient {
             SplashScreenManager.CloseDefaultWaitForm();
             XtraMessageBox.Show("Please restart application. :)");
         }
+
+        private void barButtonItem5_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
+
+        }
+
+        private void bcBinance_CheckedChanged(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
+
+        }
     }
 }

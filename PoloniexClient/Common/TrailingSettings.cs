@@ -203,6 +203,8 @@ namespace CryptoMarketClient.Common {
 
         }
         void OnStartTakeProfit() {
+            if(State == TrailingState.TakeProfit)
+                return;
             State = TrailingState.TakeProfit;
             if (Mode == ActionMode.Notify)
                 TelegramBot.Default.SendNotification(Ticker.Exchange + " - " + Ticker.Name + " - Start TAKEPROFIT!!");

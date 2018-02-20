@@ -241,6 +241,7 @@ namespace CryptoMarketClient {
                 return;
             this.bsCandleStickPeriod.Caption = e.Item.Caption;
             Ticker.CandleStickPeriodMin = (int)((TimeSpan)item.Tag).TotalMinutes;
+            Ticker.CandleStickData.Clear();
             UpdateDataFromServer();
         }
 
@@ -318,8 +319,9 @@ namespace CryptoMarketClient {
             Series s = this.chartControl1.Series["Events"];
             if(e == null || e.Action != System.Collections.Specialized.NotifyCollectionChangedAction.Add) {
                 s.Points.Clear();
-                foreach(TickerEvent ev in Ticker.Events)
+                foreach(TickerEvent ev in Ticker.Events) {
                     s.Points.Add(CreateEventPoint(ev));
+                }
             }
             else {
                 foreach(TickerEvent ev in e.NewItems)

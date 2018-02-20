@@ -94,6 +94,8 @@ namespace CryptoMarketClient.Bittrex {
         }
 
         public override bool GetTickersInfo() {
+            if(Tickers.Count > 0)
+                return true;
             string address = "https://bittrex.com/api/v1.1/public/getmarkets";
             byte[] bytes = null;
             try {
@@ -112,6 +114,7 @@ namespace CryptoMarketClient.Bittrex {
             List<string[]> res = DeserializeArrayOfObjects(bytes, ref startIndex, new string[] { "MarketCurrency", "BaseCurrency", "MarketCurrencyLong", "BaseCurrencyLong", "MinTradeSize", "MarketName", "IsActive", "Created", "Notice", "IsSponsored", "LogoUrl"});
             foreach(string[] item in res) {
                 BittrexTicker m = new BittrexTicker(this);
+
                 m.MarketCurrency = item[0];
                 m.BaseCurrency = item[1];
                 m.MarketCurrencyLong = item[2];
