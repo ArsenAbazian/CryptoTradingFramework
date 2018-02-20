@@ -70,6 +70,9 @@ namespace CryptoMarketClient.Bittrex {
         public override bool MarketSell(double amount) {
             return BittrexExchange.Default.SellLimit(this, Hr24Low / 2, amount) != null;
         }
+        public override bool MarketBuy(double amount) {
+            return BittrexExchange.Default.BuyLimit(this, Hr24High * 2, amount) != null;
+        }
         public override string GetDepositAddress(CurrencyType type) {
             if(type == CurrencyType.BaseCurrency) {
                 if(BaseBalanceInfo == null)

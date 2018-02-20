@@ -73,6 +73,9 @@ namespace CryptoMarketClient.Yobit {
         public override bool MarketSell(double amount) {
             throw new NotImplementedException();
         }
+        public override bool MarketBuy(double amount) {
+            throw new NotImplementedException();
+        }
 
         public override string GetDepositAddress(CurrencyType type) {
             throw new NotImplementedException();

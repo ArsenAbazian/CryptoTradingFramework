@@ -78,6 +78,9 @@ namespace CryptoMarketClient {
         public override bool MarketSell(double amount) {
             return PoloniexExchange.Default.SellLimit(this, Hr24Low / 2, amount) != -1;
         }
+        public override bool MarketBuy(double amount) {
+            return PoloniexExchange.Default.BuyLimit(this, Hr24High * 2, amount);
+        }
         public override bool UpdateBalance(CurrencyType type) {
             return PoloniexExchange.Default.GetBalance(type == CurrencyType.BaseCurrency? BaseCurrency: MarketCurrency);
         }

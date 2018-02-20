@@ -119,8 +119,10 @@ namespace CryptoMarketClient.Common {
         public double ActualPrice { get; set; }
         [XtraSerializableProperty]
         public double MaxPrice { get; set; }
-        public double SellPrice { get { return GetSellPrice(); } }
-        public double TakeProfitStartPrice { get { return TradePrice * (100 + TakeProfitStartPercent) * 0.01; } }
+        [XtraSerializableProperty]
+        public double MinPrice { get; set; }
+        public double OrderPrice { get { return GetOrderPrice(); } }
+        public double TakeProfitStartPrice { get { return TradePrice * (Type == TrailingType.Sell ? 100 + TakeProfitStartPercent : 100 - TakeProfitStartPercent) * 0.01; } }
         [XtraSerializableProperty]
         public bool IgnoreStopLoss { get; set; } = false;
 
@@ -149,17 +151,32 @@ namespace CryptoMarketClient.Common {
                 ActualPrice = Ticker.HighestBid;
                 MaxPrice = Math.Max(MaxPrice, ActualPrice);
 
-                if (ActualPrice < SellPrice) {
-                    OnExecuteSell();
+                if (ActualPrice < OrderPrice) {
+                    OnExecuteOrder();
                     return;
                 } else if (ActualPrice >= TakeProfitStartPrice) {
-                    OnStartTakeProdit();
+                    OnStartTakeProfit();
+                    return;
+                }
+            } else {
+                ActualPrice = Ticker.LowestAsk;
+                MinPrice = Math.Min(MinPrice, ActualPrice);
+
+                if (ActualPrice <= TakeProfitStartPrice && State != TrailingState.TakeProfit) {
+                    OnStartTakeProfit();
+                    return;
+                }
+                if (State == TrailingState.TakeProfit && ActualPrice > OrderPrice) {
+                    OnExecuteOrder();
                     return;
                 }
             }
         }
 
-        double GetSellPrice() {
+        double GetOrderPrice() {
+            if (Type == TrailingType.Buy)
+                return State == TrailingState.TakeProfit ? MinPrice * (100 + TakeProfitPercent) * 0.01 : double.NaN;
+
             if (State == TrailingState.TakeProfit)
                 return MaxPrice * (100 - TakeProfitPercent) * 0.01;
             else {
@@ -171,12 +188,12 @@ namespace CryptoMarketClient.Common {
             }
         }
 
-        void OnExecuteSell() {
+        void OnExecuteOrder() {
             if (Mode == ActionMode.Notify) {
-                TelegramBot.Default.SendNotification(Ticker.Exchange + " - " + Ticker.Name + " - Sell!!");
+                TelegramBot.Default.SendNotification(Ticker.Exchange + " - " + Ticker.Name + " - Order done!!");
                 State = TrailingState.Done;
             } else if (Mode == ActionMode.Execute) {
-                if (Ticker.MarketSell(Amount))
+                if (Type == TrailingType.Sell ? Ticker.MarketSell(Amount) : Ticker.MarketBuy(Amount))
                     State = TrailingState.Done;
                 else
                     TelegramBot.Default.SendNotification($"{Ticker.Exchange}. Error!! Can't sell {Ticker.Name}");
@@ -185,7 +202,7 @@ namespace CryptoMarketClient.Common {
             Ticker.Events.Add(new TickerEvent() { Time = DateTime.UtcNow, Text = "Stoploss!" });
 
         }
-        void OnStartTakeProdit() {
+        void OnStartTakeProfit() {
             State = TrailingState.TakeProfit;
             if (Mode == ActionMode.Notify)
                 TelegramBot.Default.SendNotification(Ticker.Exchange + " - " + Ticker.Name + " - Start TAKEPROFIT!!");

@@ -89,6 +89,7 @@ namespace CryptoMarketClient {
             this.tickerInfoControl.Ticker = Ticker;
             this.myTradesCollectionControl1.Ticker = Ticker;
             this.activeTrailingCollectionControl1.Ticker = Ticker;
+            this.buySettingsControl.Ticker = Ticker;
             if(Ticker == null)
                 return;
             this.rpMain.Text = Ticker.Name;
