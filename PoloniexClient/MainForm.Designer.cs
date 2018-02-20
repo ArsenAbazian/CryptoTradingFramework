@@ -50,11 +50,13 @@
             this.bcYobit = new DevExpress.XtraBars.BarCheckItem();
             this.bciAllowDirectXGrid = new DevExpress.XtraBars.BarCheckItem();
             this.bciAllowDirectXCharts = new DevExpress.XtraBars.BarCheckItem();
+            this.bbRegister = new DevExpress.XtraBars.BarButtonItem();
             this.ribbonPageCategory1 = new DevExpress.XtraBars.Ribbon.RibbonPageCategory();
             this.ribbonPage2 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPageGroup2 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.ribbonPageGroup4 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.ribbonPageGroup5 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
+            this.ribbonPageGroup9 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.rpPoloniex = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPageGroup3 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.ribbonPageGroup1 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
@@ -64,8 +66,6 @@
             this.ribbonPageGroup10 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.ribbonPage1 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPageGroup6 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
-            this.ribbonPage3 = new DevExpress.XtraBars.Ribbon.RibbonPage();
-            this.ribbonPageGroup9 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.repositoryItemTrackBar1 = new DevExpress.XtraEditors.Repository.RepositoryItemTrackBar();
             this.ribbonStatusBar1 = new DevExpress.XtraBars.Ribbon.RibbonStatusBar();
             this.documentManager1 = new DevExpress.XtraBars.Docking2010.DocumentManager(this.components);
@@ -73,6 +73,7 @@
             this.defaultBarAndDockingController1 = new DevExpress.XtraBars.DefaultBarAndDockingController(this.components);
             this.ribbonPage4 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPage6 = new DevExpress.XtraBars.Ribbon.RibbonPage();
+            this.barButtonItem4 = new DevExpress.XtraBars.BarButtonItem();
             ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemSpinEdit1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemSpinEdit2)).BeginInit();
@@ -110,10 +111,12 @@
             this.barButtonItem3,
             this.bcYobit,
             this.bciAllowDirectXGrid,
-            this.bciAllowDirectXCharts});
+            this.bciAllowDirectXCharts,
+            this.bbRegister,
+            this.barButtonItem4});
             this.ribbonControl1.Location = new System.Drawing.Point(0, 0);
-            this.ribbonControl1.Margin = new System.Windows.Forms.Padding(6);
-            this.ribbonControl1.MaxItemId = 30;
+            this.ribbonControl1.Margin = new System.Windows.Forms.Padding(12);
+            this.ribbonControl1.MaxItemId = 32;
             this.ribbonControl1.MdiMergeStyle = DevExpress.XtraBars.Ribbon.RibbonMdiMergeStyle.Always;
             this.ribbonControl1.Name = "ribbonControl1";
             this.ribbonControl1.PageCategories.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageCategory[] {
@@ -122,15 +125,14 @@
             this.ribbonControl1.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
             this.rpPoloniex,
             this.ribbonPage5,
-            this.ribbonPage1,
-            this.ribbonPage3});
+            this.ribbonPage1});
             this.ribbonControl1.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repositoryItemSpinEdit1,
             this.repositoryItemTrackBar1,
             this.repositoryItemSpinEdit2});
             this.ribbonControl1.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonControlStyle.Office2013;
             this.ribbonControl1.ShowApplicationButton = DevExpress.Utils.DefaultBoolean.False;
-            this.ribbonControl1.Size = new System.Drawing.Size(965, 222);
+            this.ribbonControl1.Size = new System.Drawing.Size(1930, 282);
             this.ribbonControl1.StatusBar = this.ribbonStatusBar1;
             this.ribbonControl1.Merge += new DevExpress.XtraBars.Ribbon.RibbonMergeEventHandler(this.ribbonControl1_Merge);
             this.ribbonControl1.UnMerge += new DevExpress.XtraBars.Ribbon.RibbonMergeEventHandler(this.ribbonControl1_UnMerge);
@@ -344,6 +346,15 @@
             this.bciAllowDirectXCharts.Name = "bciAllowDirectXCharts";
             this.bciAllowDirectXCharts.CheckedChanged += new DevExpress.XtraBars.ItemClickEventHandler(this.bciAllowDirectXCharts_CheckedChanged);
             // 
+            // bbRegister
+            // 
+            this.bbRegister.Caption = "Register";
+            this.bbRegister.Id = 30;
+            this.bbRegister.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bbRegister.ImageOptions.Image")));
+            this.bbRegister.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("bbRegister.ImageOptions.LargeImage")));
+            this.bbRegister.Name = "bbRegister";
+            this.bbRegister.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bbRegister_ItemClick);
+            // 
             // ribbonPageCategory1
             // 
             this.ribbonPageCategory1.Name = "ribbonPageCategory1";
@@ -356,7 +367,8 @@
             this.ribbonPage2.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] {
             this.ribbonPageGroup2,
             this.ribbonPageGroup4,
-            this.ribbonPageGroup5});
+            this.ribbonPageGroup5,
+            this.ribbonPageGroup9});
             this.ribbonPage2.Name = "ribbonPage2";
             this.ribbonPage2.Text = "Options";
             // 
@@ -373,6 +385,7 @@
             this.ribbonPageGroup4.ItemLinks.Add(this.bcAllowTradeHistory);
             this.ribbonPageGroup4.ItemLinks.Add(this.bciAllowDirectXGrid);
             this.ribbonPageGroup4.ItemLinks.Add(this.bciAllowDirectXCharts);
+            this.ribbonPageGroup4.ItemLinks.Add(this.barButtonItem4);
             this.ribbonPageGroup4.Name = "ribbonPageGroup4";
             this.ribbonPageGroup4.Text = "Settings";
             // 
@@ -381,6 +394,12 @@
             this.ribbonPageGroup5.ItemLinks.Add(this.btShowApiKeys);
             this.ribbonPageGroup5.Name = "ribbonPageGroup5";
             this.ribbonPageGroup5.Text = "Api Keys";
+            // 
+            // ribbonPageGroup9
+            // 
+            this.ribbonPageGroup9.ItemLinks.Add(this.bbRegister);
+            this.ribbonPageGroup9.Name = "ribbonPageGroup9";
+            this.ribbonPageGroup9.Text = "Telegram";
             // 
             // rpPoloniex
             // 
@@ -405,6 +424,7 @@
             this.ribbonPageGroup1.ItemLinks.Add(this.bbShowHistory);
             this.ribbonPageGroup1.Name = "ribbonPageGroup1";
             this.ribbonPageGroup1.Text = "ClassicArbitrage";
+            this.ribbonPageGroup1.Visible = false;
             // 
             // ribbonPageGroup8
             // 
@@ -412,12 +432,14 @@
             this.ribbonPageGroup8.ItemLinks.Add(this.bbShowStaticArbitrage);
             this.ribbonPageGroup8.Name = "ribbonPageGroup8";
             this.ribbonPageGroup8.Text = "Static Arbitrage";
+            this.ribbonPageGroup8.Visible = false;
             // 
             // ribbonPageGroup7
             // 
             this.ribbonPageGroup7.ItemLinks.Add(this.bbSaveAllHistory);
             this.ribbonPageGroup7.Name = "ribbonPageGroup7";
             this.ribbonPageGroup7.Text = "History";
+            this.ribbonPageGroup7.Visible = false;
             // 
             // ribbonPage5
             // 
@@ -425,6 +447,7 @@
             this.ribbonPageGroup10});
             this.ribbonPage5.Name = "ribbonPage5";
             this.ribbonPage5.Text = "Currency Monitoring";
+            this.ribbonPage5.Visible = false;
             // 
             // ribbonPageGroup10
             // 
@@ -438,25 +461,13 @@
             this.ribbonPageGroup6});
             this.ribbonPage1.Name = "ribbonPage1";
             this.ribbonPage1.Text = "Statistics";
+            this.ribbonPage1.Visible = false;
             // 
             // ribbonPageGroup6
             // 
             this.ribbonPageGroup6.ItemLinks.Add(this.bbShowYourTotalDeposit);
             this.ribbonPageGroup6.Name = "ribbonPageGroup6";
             this.ribbonPageGroup6.Text = "Statistics";
-            // 
-            // ribbonPage3
-            // 
-            this.ribbonPage3.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] {
-            this.ribbonPageGroup9});
-            this.ribbonPage3.Name = "ribbonPage3";
-            this.ribbonPage3.Text = "Crypto Telegram channels";
-            // 
-            // ribbonPageGroup9
-            // 
-            this.ribbonPageGroup9.ItemLinks.Add(this.barButtonItem2);
-            this.ribbonPageGroup9.Name = "ribbonPageGroup9";
-            this.ribbonPageGroup9.Text = "ribbonPageGroup9";
             // 
             // repositoryItemTrackBar1
             // 
@@ -467,10 +478,11 @@
             // ribbonStatusBar1
             // 
             this.ribbonStatusBar1.AutoHeight = true;
-            this.ribbonStatusBar1.Location = new System.Drawing.Point(0, 524);
+            this.ribbonStatusBar1.Location = new System.Drawing.Point(0, 1036);
+            this.ribbonStatusBar1.Margin = new System.Windows.Forms.Padding(6);
             this.ribbonStatusBar1.Name = "ribbonStatusBar1";
             this.ribbonStatusBar1.Ribbon = this.ribbonControl1;
-            this.ribbonStatusBar1.Size = new System.Drawing.Size(965, 47);
+            this.ribbonStatusBar1.Size = new System.Drawing.Size(1930, 62);
             // 
             // documentManager1
             // 
@@ -496,16 +508,25 @@
             this.ribbonPage6.Name = "ribbonPage6";
             this.ribbonPage6.Text = "ribbonPage6";
             // 
+            // barButtonItem4
+            // 
+            this.barButtonItem4.Caption = "Download Crypto Icons";
+            this.barButtonItem4.Id = 31;
+            this.barButtonItem4.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("barButtonItem4.ImageOptions.Image")));
+            this.barButtonItem4.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("barButtonItem4.ImageOptions.LargeImage")));
+            this.barButtonItem4.Name = "barButtonItem4";
+            this.barButtonItem4.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItem4_ItemClick);
+            // 
             // MainForm
             // 
             this.AllowFormGlass = DevExpress.Utils.DefaultBoolean.False;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(965, 571);
+            this.ClientSize = new System.Drawing.Size(1930, 1098);
             this.Controls.Add(this.ribbonStatusBar1);
             this.Controls.Add(this.ribbonControl1);
             this.IsMdiContainer = true;
-            this.Margin = new System.Windows.Forms.Padding(6);
+            this.Margin = new System.Windows.Forms.Padding(12);
             this.Name = "MainForm";
             this.Ribbon = this.ribbonControl1;
             this.StatusBar = this.ribbonStatusBar1;
@@ -563,8 +584,6 @@
         private DevExpress.XtraBars.BarButtonItem barButtonItem1;
         private DevExpress.XtraBars.DefaultBarAndDockingController defaultBarAndDockingController1;
         private DevExpress.XtraBars.BarButtonItem barButtonItem2;
-        private DevExpress.XtraBars.Ribbon.RibbonPage ribbonPage3;
-        private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup9;
         private DevExpress.XtraBars.Ribbon.RibbonPage ribbonPage4;
         private DevExpress.XtraBars.BarButtonItem bbShowBittrex;
         private DevExpress.XtraBars.Ribbon.RibbonPage ribbonPage5;
@@ -574,6 +593,9 @@
         private DevExpress.XtraBars.BarCheckItem bcYobit;
         private DevExpress.XtraBars.BarCheckItem bciAllowDirectXGrid;
         private DevExpress.XtraBars.BarCheckItem bciAllowDirectXCharts;
+        private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup9;
+        private DevExpress.XtraBars.BarButtonItem bbRegister;
+        private DevExpress.XtraBars.BarButtonItem barButtonItem4;
     }
 }
 

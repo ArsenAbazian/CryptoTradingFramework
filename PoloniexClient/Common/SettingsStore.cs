@@ -21,6 +21,22 @@ namespace CryptoMarketClient.Common {
             }
             set { defaultSettings = value; }
         }
+
+        public string TelegramBotRegistrationCode { get; set; }
+        private static string GenerateNewRandom() {
+            Random generator = new Random();
+            String r = generator.Next(0, 1000000).ToString("D6");
+            if(r.Distinct().Count() == 1) {
+                r = GenerateNewRandom();
+            }
+            return r;
+        }
+
+        public string GetTelegramBotRegistrationCode() {
+            TelegramBotRegistrationCode = GenerateNewRandom();
+            return TelegramBotRegistrationCode;
+        }
+
         public static string SettingsFileName { get { return "settings.xml"; } }
         public static string ApplicationName { get { return "CryptoMarketClient"; } }
         static string SettingsSectionName { get { return "Settings"; } }
@@ -99,6 +115,11 @@ namespace CryptoMarketClient.Common {
         public bool UseDirectXForCharts {
             get; set;
         }
+        [XtraSerializableProperty]
+        public long TelegramBotBroadcastId { get; set; }
+
+        [XtraSerializableProperty]
+        public bool TelegramBotActive { get; set; }
     }
 }
 

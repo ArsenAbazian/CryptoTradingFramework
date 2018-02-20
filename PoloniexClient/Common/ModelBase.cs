@@ -491,7 +491,7 @@ namespace CryptoMarketClient {
         public abstract List<CandleStickIntervalInfo> GetAllowedCandleStickIntervals();
         public static Dictionary<string, string> CurrencyLogo { get; } = new Dictionary<string, string>();
         public static Dictionary<string, Image> CurrencyLogoImage { get; } = new Dictionary<string, Image>();
-        public static void BuildIconsDataBase(IEnumerable<string[]> list) {
+        public static void BuildIconsDataBase(IEnumerable<string[]> list, bool allowDownload) {
             CurrencyLogo.Clear();
             foreach(string[] str in list) {
                 if(string.IsNullOrEmpty(str[0]) || string.IsNullOrEmpty(str[1]) || str[1] == "null")
@@ -499,8 +499,8 @@ namespace CryptoMarketClient {
                 if(!CurrencyLogo.ContainsKey(str[0]))
                     CurrencyLogo.Add(str[0], str[1]);
                 if(!CurrencyLogoImage.ContainsKey(str[0])) {
-                    Image res = LoadLogoImage(str[0]);
-                    if(res != null)
+                    Image res = LoadLogoImage(str[0], allowDownload);
+                    if(res != null && !CurrencyLogoImage.ContainsKey(str[0]))
                         CurrencyLogoImage.Add(str[0], res);
                 }
             }
@@ -512,7 +512,7 @@ namespace CryptoMarketClient {
             if(CurrencyLogoImage.TryGetValue(currencyName, out res))
                 return res;
             try {
-                res = LoadLogoImage(currencyName);
+                res = LoadLogoImage(currencyName, false);
                 if(CurrencyLogoImage.ContainsKey(currencyName))
                     CurrencyLogoImage[currencyName] = res;
                 else
@@ -526,7 +526,7 @@ namespace CryptoMarketClient {
         static string GetIconFileName(string currencyName) {
             return Path.GetDirectoryName(Application.ExecutablePath) + "\\Icons\\" + currencyName + ".png";
         }
-        static Image LoadLogoImage(string currencyName) {
+        static Image LoadLogoImage(string currencyName, bool allowDownload) {
             Image res = null;
             try {
                 if(string.IsNullOrEmpty(currencyName))
@@ -537,6 +537,8 @@ namespace CryptoMarketClient {
                     Debug.WriteLine(" - done");
                     return Image.FromFile(fileName);
                 }
+                if(!allowDownload)
+                    return null;
                 string logoUrl = null;
                 if(!CurrencyLogo.TryGetValue(currencyName, out logoUrl) || string.IsNullOrEmpty(logoUrl))
                     return null;

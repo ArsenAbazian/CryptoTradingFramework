@@ -20,7 +20,6 @@ using DevExpress.XtraSplashScreen;
 
 namespace CryptoMarketClient {
     public partial class MainForm : DevExpress.XtraBars.Ribbon.RibbonForm {
-        
 
         public MainForm() {
             InitializeComponent();
@@ -38,7 +37,7 @@ namespace CryptoMarketClient {
 
             SplashScreenManager.ShowDefaultWaitForm("Loading crypto icons...");
             BittrexExchange.Default.GetTickersInfo(); // for icons
-            Exchange.BuildIconsDataBase(BittrexExchange.Default.Tickers.Select(t => new string[] { t.MarketCurrency, t.LogoUrl }));
+            Exchange.BuildIconsDataBase(BittrexExchange.Default.Tickers.Select(t => new string[] { t.MarketCurrency, t.LogoUrl }), false);
             SplashScreenManager.CloseDefaultWaitForm();
         }
 
@@ -277,6 +276,22 @@ namespace CryptoMarketClient {
         {
             SettingsStore.Default.UseDirectXForCharts = this.bciAllowDirectXCharts.Checked;
             SettingsStore.Default.SaveToXml();
+        }
+
+        private void bbRegister_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
+            SettingsStore.Default.GetTelegramBotRegistrationCode();
+            XtraMessageBox.Show("Please find '@ultra_crypto_bot' and send command '/regme " + SettingsStore.Default.TelegramBotRegistrationCode + "' then press OK button.");
+            TelegramBot.Default.RegistrationCode = SettingsStore.Default.TelegramBotRegistrationCode;
+            TelegramBot.Default.Update();
+            SettingsStore.Default.TelegramBotRegistrationCode = string.Empty;
+            SettingsStore.Default.SaveToXml();
+        }
+
+        private void barButtonItem4_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
+            SplashScreenManager.ShowDefaultWaitForm("Loading crypto icons...");
+            Exchange.BuildIconsDataBase(BittrexExchange.Default.Tickers.Select(t => new string[] { t.MarketCurrency, t.LogoUrl }), true);
+            SplashScreenManager.CloseDefaultWaitForm();
+            XtraMessageBox.Show("Please restart application. :)");
         }
     }
 }
