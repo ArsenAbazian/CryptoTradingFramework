@@ -70,7 +70,9 @@ namespace CryptoMarketClient {
         }
 
         private void Ticker_HistoryItemAdd(object sender, EventArgs e) {
-            CandleStickChartHelper.AddCandleStickData(Ticker.CandleStickData, Ticker.History[Ticker.History.Count - 1], Ticker.CandleStickPeriodMin * 60);
+            lock(Ticker.CandleStickData) {
+                CandleStickChartHelper.AddCandleStickData(Ticker.CandleStickData, Ticker.History[Ticker.History.Count - 1], Ticker.CandleStickPeriodMin * 60);
+            }
         }
 
         private void OrderBook_OnChanged(object sender, OrderBookEventArgs e) {

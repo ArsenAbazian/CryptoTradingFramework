@@ -175,6 +175,8 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Binance\BinanceModel.cs" />
+    <Compile Include="Binance\BinanceTicker.cs" />
     <Compile Include="Common\GrabDataSettings.cs" />
     <Compile Include="Common\SettingsStore.cs" />
     <Compile Include="CurrencyMonitoringForm.cs">
@@ -572,7 +574,6 @@
     <None Include="Resources\chart.png" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Binance\" />
     <Folder Include="ShapesManager\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

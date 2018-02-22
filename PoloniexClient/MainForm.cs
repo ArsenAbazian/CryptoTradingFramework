@@ -17,6 +17,7 @@ using CryptoMarketClient.Common;
 using System.IO;
 using CryptoMarketClient.Yobit;
 using DevExpress.XtraSplashScreen;
+using CryptoMarketClient.Binance;
 
 namespace CryptoMarketClient {
     public partial class MainForm : DevExpress.XtraBars.Ribbon.RibbonForm {
@@ -294,12 +295,25 @@ namespace CryptoMarketClient {
             XtraMessageBox.Show("Please restart application. :)");
         }
 
-        private void barButtonItem5_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
-
+        TickersCollectionForm binanceTickersForm;
+        public TickersCollectionForm BinanceTickersForm {
+            get {
+                if(binanceTickersForm == null || binanceTickersForm.IsDisposed) {
+                    binanceTickersForm = new TickersCollectionForm(BinanceExchange.Default);
+                    binanceTickersForm.MdiParent = this;
+                }
+                return binanceTickersForm;
+            }
         }
-
         private void bcBinance_CheckedChanged(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
-
+            if(this.bcBinance.Checked) {
+                BinanceExchange.Default.IsConnected = true;
+                BinanceTickersForm.Show();
+            }
+            else {
+                BinanceExchange.Default.IsConnected = false;
+                BinanceTickersForm.Hide();
+            }
         }
     }
 }

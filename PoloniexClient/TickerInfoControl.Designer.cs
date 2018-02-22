@@ -37,8 +37,9 @@
             DevExpress.XtraEditors.FormatConditionIconSetIcon formatConditionIconSetIcon5 = new DevExpress.XtraEditors.FormatConditionIconSetIcon();
             DevExpress.XtraEditors.FormatConditionIconSetIcon formatConditionIconSetIcon6 = new DevExpress.XtraEditors.FormatConditionIconSetIcon();
             this.colHighestBid = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.repositoryItemTextEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemTextEdit();
             this.colLowestAsk = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.gridControl1 = new MyGridControl();
+            this.gridControl1 = new CryptoMarketClient.MyGridControl();
             this.bindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.gridView1 = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.colName = new DevExpress.XtraGrid.Columns.GridColumn();
@@ -52,11 +53,11 @@
             this.colBidChange = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colAskChange = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colLastUpdateTime = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.repositoryItemTextEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemTextEdit();
+            this.colMarketCurrencyBalance = new DevExpress.XtraGrid.Columns.GridColumn();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemTextEdit1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemTextEdit1)).BeginInit();
             this.SuspendLayout();
             // 
             // colHighestBid
@@ -64,36 +65,45 @@
             this.colHighestBid.Caption = "Bid";
             this.colHighestBid.ColumnEdit = this.repositoryItemTextEdit1;
             this.colHighestBid.FieldName = "HighestBidString";
+            this.colHighestBid.MinWidth = 40;
             this.colHighestBid.Name = "colHighestBid";
             this.colHighestBid.OptionsColumn.ReadOnly = true;
             this.colHighestBid.Visible = true;
-            this.colHighestBid.VisibleIndex = 2;
-            this.colHighestBid.Width = 245;
+            this.colHighestBid.VisibleIndex = 3;
+            this.colHighestBid.Width = 165;
+            // 
+            // repositoryItemTextEdit1
+            // 
+            this.repositoryItemTextEdit1.AllowHtmlDraw = DevExpress.Utils.DefaultBoolean.True;
+            this.repositoryItemTextEdit1.AutoHeight = false;
+            this.repositoryItemTextEdit1.Name = "repositoryItemTextEdit1";
             // 
             // colLowestAsk
             // 
             this.colLowestAsk.Caption = "Ask";
             this.colLowestAsk.ColumnEdit = this.repositoryItemTextEdit1;
             this.colLowestAsk.FieldName = "LowestAskString";
+            this.colLowestAsk.MinWidth = 40;
             this.colLowestAsk.Name = "colLowestAsk";
             this.colLowestAsk.OptionsColumn.ReadOnly = true;
             this.colLowestAsk.Visible = true;
-            this.colLowestAsk.VisibleIndex = 3;
-            this.colLowestAsk.Width = 249;
+            this.colLowestAsk.VisibleIndex = 4;
+            this.colLowestAsk.Width = 167;
             // 
             // gridControl1
             // 
             this.gridControl1.DataSource = this.bindingSource;
             this.gridControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gridControl1.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
+            this.gridControl1.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.gridControl1.Location = new System.Drawing.Point(0, 0);
             this.gridControl1.MainView = this.gridView1;
-            this.gridControl1.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
+            this.gridControl1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.gridControl1.Name = "gridControl1";
             this.gridControl1.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repositoryItemTextEdit1});
-            this.gridControl1.Size = new System.Drawing.Size(924, 308);
+            this.gridControl1.Size = new System.Drawing.Size(1848, 592);
             this.gridControl1.TabIndex = 0;
+            this.gridControl1.UseDirectXPaint = DevExpress.Utils.DefaultBoolean.True;
             this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridView1});
             this.gridControl1.PaintEx += new DevExpress.XtraGrid.PaintExEventHandler(this.gridControl1_PaintEx);
@@ -121,6 +131,7 @@
             this.gridView1.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
             this.gridView1.Columns.AddRange(new DevExpress.XtraGrid.Columns.GridColumn[] {
             this.colName,
+            this.colMarketCurrencyBalance,
             this.colHighestBid,
             this.colLowestAsk,
             this.colLast,
@@ -133,6 +144,8 @@
             this.colBidChange,
             this.colAskChange,
             this.colLastUpdateTime});
+            this.gridView1.DetailHeight = 673;
+            this.gridView1.FixedLineWidth = 4;
             gridFormatRule1.Column = this.colHighestBid;
             gridFormatRule1.ColumnApplyTo = this.colHighestBid;
             gridFormatRule1.Name = "HighestBidRule";
@@ -188,74 +201,82 @@
             // colName
             // 
             this.colName.FieldName = "Name";
+            this.colName.MinWidth = 40;
             this.colName.Name = "colName";
             this.colName.OptionsColumn.ReadOnly = true;
             this.colName.Visible = true;
             this.colName.VisibleIndex = 0;
-            this.colName.Width = 207;
+            this.colName.Width = 165;
             // 
             // colLast
             // 
             this.colLast.Caption = "Last";
             this.colLast.ColumnEdit = this.repositoryItemTextEdit1;
             this.colLast.FieldName = "LastString";
+            this.colLast.MinWidth = 40;
             this.colLast.Name = "colLast";
             this.colLast.OptionsColumn.ReadOnly = true;
             this.colLast.Visible = true;
-            this.colLast.VisibleIndex = 1;
-            this.colLast.Width = 214;
+            this.colLast.VisibleIndex = 2;
+            this.colLast.Width = 145;
             // 
             // colBaseVolume
             // 
             this.colBaseVolume.FieldName = "BaseVolume";
+            this.colBaseVolume.MinWidth = 40;
             this.colBaseVolume.Name = "colBaseVolume";
             this.colBaseVolume.OptionsColumn.ReadOnly = true;
             this.colBaseVolume.Visible = true;
-            this.colBaseVolume.VisibleIndex = 6;
-            this.colBaseVolume.Width = 279;
+            this.colBaseVolume.VisibleIndex = 7;
+            this.colBaseVolume.Width = 188;
             // 
             // colVolume
             // 
             this.colVolume.FieldName = "Volume";
+            this.colVolume.MinWidth = 40;
             this.colVolume.Name = "colVolume";
             this.colVolume.OptionsColumn.ReadOnly = true;
             this.colVolume.Visible = true;
-            this.colVolume.VisibleIndex = 7;
-            this.colVolume.Width = 383;
+            this.colVolume.VisibleIndex = 8;
+            this.colVolume.Width = 261;
             // 
             // colHr24High
             // 
             this.colHr24High.FieldName = "Hr24High";
+            this.colHr24High.MinWidth = 40;
             this.colHr24High.Name = "colHr24High";
             this.colHr24High.OptionsColumn.ReadOnly = true;
             this.colHr24High.Visible = true;
-            this.colHr24High.VisibleIndex = 4;
-            this.colHr24High.Width = 302;
+            this.colHr24High.VisibleIndex = 5;
+            this.colHr24High.Width = 205;
             // 
             // colHr24Low
             // 
             this.colHr24Low.FieldName = "Hr24Low";
+            this.colHr24Low.MinWidth = 40;
             this.colHr24Low.Name = "colHr24Low";
             this.colHr24Low.OptionsColumn.ReadOnly = true;
             this.colHr24Low.Visible = true;
-            this.colHr24Low.VisibleIndex = 5;
-            this.colHr24Low.Width = 284;
+            this.colHr24Low.VisibleIndex = 6;
+            this.colHr24Low.Width = 192;
             // 
             // colChange
             // 
             this.colChange.DisplayFormat.FormatString = "F3";
             this.colChange.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.colChange.FieldName = "Change";
+            this.colChange.MinWidth = 40;
             this.colChange.Name = "colChange";
             this.colChange.OptionsColumn.ReadOnly = true;
-            this.colChange.Width = 119;
+            this.colChange.Width = 238;
             // 
             // colSpread
             // 
             this.colSpread.Caption = "Spread";
             this.colSpread.FieldName = "Spread";
+            this.colSpread.MinWidth = 40;
             this.colSpread.Name = "colSpread";
-            this.colSpread.Width = 124;
+            this.colSpread.Width = 248;
             // 
             // colBidChange
             // 
@@ -263,8 +284,9 @@
             this.colBidChange.DisplayFormat.FormatString = "F3";
             this.colBidChange.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.colBidChange.FieldName = "BidChange";
+            this.colBidChange.MinWidth = 40;
             this.colBidChange.Name = "colBidChange";
-            this.colBidChange.Width = 119;
+            this.colBidChange.Width = 238;
             // 
             // colAskChange
             // 
@@ -272,34 +294,39 @@
             this.colAskChange.DisplayFormat.FormatString = "F3";
             this.colAskChange.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.colAskChange.FieldName = "AskChange";
+            this.colAskChange.MinWidth = 40;
             this.colAskChange.Name = "colAskChange";
-            this.colAskChange.Width = 119;
+            this.colAskChange.Width = 238;
             // 
             // colLastUpdateTime
             // 
             this.colLastUpdateTime.FieldName = "LastUpdateTime";
+            this.colLastUpdateTime.MinWidth = 40;
             this.colLastUpdateTime.Name = "colLastUpdateTime";
             this.colLastUpdateTime.Visible = true;
-            this.colLastUpdateTime.VisibleIndex = 8;
+            this.colLastUpdateTime.VisibleIndex = 9;
             // 
-            // repositoryItemTextEdit1
+            // colMarketCurrencyBalance
             // 
-            this.repositoryItemTextEdit1.AllowHtmlDraw = DevExpress.Utils.DefaultBoolean.True;
-            this.repositoryItemTextEdit1.AutoHeight = false;
-            this.repositoryItemTextEdit1.Name = "repositoryItemTextEdit1";
-            this.repositoryItemTextEdit1.Padding = new System.Windows.Forms.Padding(0, 0, 0, 0);
+            this.colMarketCurrencyBalance.Caption = "Balance";
+            this.colMarketCurrencyBalance.FieldName = "MarketCurrencyBalance";
+            this.colMarketCurrencyBalance.Name = "colMarketCurrencyBalance";
+            this.colMarketCurrencyBalance.Visible = true;
+            this.colMarketCurrencyBalance.VisibleIndex = 1;
+            this.colMarketCurrencyBalance.Width = 285;
             // 
             // TickerInfo
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.gridControl1);
+            this.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.Name = "TickerInfo";
-            this.Size = new System.Drawing.Size(924, 308);
+            this.Size = new System.Drawing.Size(1848, 592);
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemTextEdit1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemTextEdit1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -323,5 +350,6 @@
         private DevExpress.XtraGrid.Columns.GridColumn colAskChange;
         private DevExpress.XtraGrid.Columns.GridColumn colLastUpdateTime;
         private DevExpress.XtraEditors.Repository.RepositoryItemTextEdit repositoryItemTextEdit1;
+        private DevExpress.XtraGrid.Columns.GridColumn colMarketCurrencyBalance;
     }
 }
