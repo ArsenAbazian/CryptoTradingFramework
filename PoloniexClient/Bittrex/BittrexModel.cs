@@ -24,6 +24,14 @@ namespace CryptoMarketClient.Bittrex {
             }
         }
 
+        public override bool UseWebSocket => false;
+
+        public override void ObtainExchangeSettings() { }
+
+        public override void StartListenTickersStream() { }
+
+        public override void StopListenTickersStream() { }
+
         public override bool AllowCandleStickIncrementalUpdate => false;
 
         public override string Name => "Bittrex";
@@ -127,7 +135,7 @@ namespace CryptoMarketClient.Bittrex {
                 m.Index = Tickers.Count;
                 Tickers.Add(m);
             }
-
+            IsInitialized = true;
             return true;
         }
         public override bool UpdateCurrencies() {

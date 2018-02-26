@@ -24,6 +24,16 @@ namespace CryptoMarketClient.Yobit {
             }
         }
 
+        public override bool UseWebSocket => false;
+
+        public override void ObtainExchangeSettings() {
+            
+        }
+
+        public override void StartListenTickersStream() { }
+
+        public override void StopListenTickersStream() { }
+
         public override bool CancelOrder(TickerBase ticker, OpenedOrderInfo info) {
             throw new NotImplementedException();
         }
@@ -100,7 +110,7 @@ namespace CryptoMarketClient.Yobit {
                 Tickers.Add(t);
                 index++;
             }
-        
+            IsInitialized = true;
             return true;
         }
 

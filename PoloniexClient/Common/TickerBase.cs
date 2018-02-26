@@ -108,6 +108,9 @@ namespace CryptoMarketClient {
         }
         #endregion
 
+        public TickerFilter PriceFilter { get; set; }
+        public TickerFilter QuantityFilter { get; set; }
+
         public Exchange Exchange { get; private set; }
         public int Index { get; set; }
         public virtual string MarketName { get; set; }
@@ -593,5 +596,18 @@ namespace CryptoMarketClient {
     public enum TickerUpdateMode {
         Self,
         Arbitrage
+    }
+
+    public class TickerFilter {
+        public double MinValue { get; set; }
+        public double MaxValue { get; set; }
+        public double TickSize { get; set; }
+
+        public double ConstrainValue(double value) {
+            if(value < MinValue) value = MinValue;
+            if(value > MaxValue) value = MaxValue;
+            value = ((int)(value / TickSize + 0.01)) * TickSize;
+            return value;
+        }
     }
 }

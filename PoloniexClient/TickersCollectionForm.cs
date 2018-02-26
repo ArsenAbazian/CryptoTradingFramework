@@ -42,20 +42,28 @@ namespace CryptoMarketClient {
             }
         }
 
+        void SubscribeWebSocket() {
+            Exchange.StartListenTickersStream();    
+        }
+
         protected override void OnShown(EventArgs e) {
             base.OnShown(e);
+            Exchange.ObtainExchangeSettings();
             Exchange.LoadTickers();
             this.gridControl1.DataSource = Exchange.Tickers;
             HasShown = true;
             UpdateSelectedTickersFromExchange();
-            Timer.InitializeLifetimeService();
+            if(!Exchange.UseWebSocket)
+                Timer.InitializeLifetimeService();
+            else
+                SubscribeWebSocket();
         }
         void UpdateSelectedTickersFromExchange() {
             UpdatePinnedItems();
         }
         protected bool IsUpdating { get; set; }
         void OnThreadUpdate(object state) {
-            if(IsUpdating)
+            if(IsUpdating || !Exchange.IsInitialized)
                 return;
             IsUpdating = true;
             try {
@@ -66,7 +74,8 @@ namespace CryptoMarketClient {
             finally {
                 IsUpdating = false;
             }
-            BeginInvoke(new Action(UpdateGridAll));
+            if(IsHandleCreated)
+                BeginInvoke(new Action(UpdateGridAll));
         }
         void UpdateRow(TickerBase t) {
             int index = Exchange.Tickers.IndexOf(t);

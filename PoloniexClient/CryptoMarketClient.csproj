@@ -178,6 +178,7 @@
     <Compile Include="Binance\BinanceModel.cs" />
     <Compile Include="Binance\BinanceTicker.cs" />
     <Compile Include="Common\GrabDataSettings.cs" />
+    <Compile Include="Common\RateLimit.cs" />
     <Compile Include="Common\SettingsStore.cs" />
     <Compile Include="CurrencyMonitoringForm.cs">
       <SubType>Form</SubType>

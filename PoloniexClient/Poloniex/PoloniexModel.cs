@@ -31,6 +31,16 @@ namespace CryptoMarketClient {
             }
         }
 
+        public override bool UseWebSocket => false;
+
+        public override void StartListenTickersStream() { }
+
+        public override void StopListenTickersStream() { }
+
+        public override void ObtainExchangeSettings() {
+            
+        }
+
         public override bool AllowCandleStickIncrementalUpdate => true;
 
         public override string Name => "Poloniex";
@@ -163,6 +173,7 @@ namespace CryptoMarketClient {
                 Tickers.Add(t);
                 index++;
             }
+            IsInitialized = true;
             return true;
         }
         public override bool UpdateTickersInfo() {

@@ -18,6 +18,9 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using CryptoMarketClient.Yobit;
 using System.Globalization;
+using System.Threading;
+using CryptoMarketClient.Binance;
+using DevExpress.XtraEditors;
 
 namespace CryptoMarketClient {
     public abstract class Exchange : IXtraSerializable {
@@ -38,7 +41,9 @@ namespace CryptoMarketClient {
                 exchange.Load();
         }
 
+        public abstract bool UseWebSocket { get; }
         public abstract bool AllowCandleStickIncrementalUpdate { get; }
+        public abstract void ObtainExchangeSettings();
 
         protected string ByteArray2String(byte[] bytes, int index, int length) {
             unsafe
@@ -428,9 +433,9 @@ namespace CryptoMarketClient {
         protected MyWebClient[] WebClientBuffer { get; } = new MyWebClient[32];
         protected int CurrentClientIndex { get; set; }
         public MyWebClient GetWebClient() {
-            //for(int i = 0; i < WebClientBuffer.Length; i++) { 
+            //for(int i = 0; i < WebClientBuffer.Length; i++) {
             //    if(WebClientBuffer[CurrentClientIndex] == null)
-            //        WebClientBuffer[CurrentClientIndex] = new WebClient();
+            //        WebClientBuffer[CurrentClientIndex] = new MyWebClient();
             //    if(!WebClientBuffer[CurrentClientIndex].IsBusy)
             //        return WebClientBuffer[CurrentClientIndex];
             //    CurrentClientIndex++;
@@ -440,11 +445,32 @@ namespace CryptoMarketClient {
             return new MyWebClient();
         }
         protected Stopwatch Timer { get; } = new Stopwatch();
+        protected List<RateLimit> RequestRate { get; set; }
+        protected List<RateLimit> OrderRate { get; set; }
+        public bool IsInitialized { get; set; }
+        protected void CheckRequestRateLimits() {
+            if(RequestRate == null)
+                return;
+            foreach(RateLimit limit in RequestRate)
+                limit.CheckAllow();
+        }
+        protected void CheckOrderRateLimits() {
+            if(OrderRate == null)
+                return;
+            foreach(RateLimit limit in OrderRate)
+                limit.CheckAllow();
+        }
         protected string GetDownloadString(string address) {
             try {
+                CheckRequestRateLimits();
                 return GetWebClient().DownloadString(address);
             }
             catch(Exception e) {
+                WebException we = e as WebException;
+                if(we != null && we.Message.Contains("418") || we.Message.Contains("429")) {
+                    IsInitialized = false;
+                    XtraMessageBox.Show("Exception: " + we.ToString());
+                }
                 Console.WriteLine("WebClient exception = " + e.ToString());
                 return null;
             }
@@ -454,9 +480,15 @@ namespace CryptoMarketClient {
         }
         protected byte[] GetDownloadBytes(string address) {
             try {
+                CheckRequestRateLimits();
                 return GetWebClient().DownloadData(address);
             }
             catch(Exception e) {
+                WebException we = e as WebException;
+                if(we != null && we.Message.Contains("418") || we.Message.Contains("429")) {
+                    IsInitialized = false;
+                    XtraMessageBox.Show("Exception: " + we.ToString());
+                }
                 Console.WriteLine("WebClient exception = " + e.ToString());
                 return null;
             }
@@ -556,6 +588,8 @@ namespace CryptoMarketClient {
             return res;
         }
         public abstract bool CancelOrder(TickerBase ticker, OpenedOrderInfo info);
+        public abstract void StartListenTickersStream();
+        public abstract void StopListenTickersStream();
     }
 
     public class CandleStickIntervalInfo {
