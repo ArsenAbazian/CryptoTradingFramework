@@ -47,6 +47,8 @@ namespace CryptoMarketClient {
             if(Ticker != null)
                 Ticker.UpdateTicker();
             if(Ticker != null)
+                Ticker.UpdateBalance(CurrencyType.MarketCurrency);
+            if(Ticker != null)
                 Ticker.UpdateOrderBook();
             if(Ticker != null)
                 Ticker.UpdateTrades();

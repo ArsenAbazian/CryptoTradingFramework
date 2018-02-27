@@ -70,7 +70,9 @@ namespace CryptoMarketClient {
         }
 
         private void Ticker_HistoryItemAdd(object sender, EventArgs e) {
-            CandleStickChartHelper.AddCandleStickData(Ticker.CandleStickData, Ticker.History[Ticker.History.Count - 1], Ticker.CandleStickPeriodMin * 60);
+            lock(Ticker.CandleStickData) {
+                CandleStickChartHelper.AddCandleStickData(Ticker.CandleStickData, Ticker.History[Ticker.History.Count - 1], Ticker.CandleStickPeriodMin * 60);
+            }
         }
 
         private void OrderBook_OnChanged(object sender, OrderBookEventArgs e) {
@@ -241,6 +243,7 @@ namespace CryptoMarketClient {
                 return;
             this.bsCandleStickPeriod.Caption = e.Item.Caption;
             Ticker.CandleStickPeriodMin = (int)((TimeSpan)item.Tag).TotalMinutes;
+            Ticker.CandleStickData.Clear();
             UpdateDataFromServer();
         }
 
@@ -318,8 +321,9 @@ namespace CryptoMarketClient {
             Series s = this.chartControl1.Series["Events"];
             if(e == null || e.Action != System.Collections.Specialized.NotifyCollectionChangedAction.Add) {
                 s.Points.Clear();
-                foreach(TickerEvent ev in Ticker.Events)
+                foreach(TickerEvent ev in Ticker.Events) {
                     s.Points.Add(CreateEventPoint(ev));
+                }
             }
             else {
                 foreach(TickerEvent ev in e.NewItems)

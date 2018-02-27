@@ -51,6 +51,7 @@
             this.bciAllowDirectXGrid = new DevExpress.XtraBars.BarCheckItem();
             this.bciAllowDirectXCharts = new DevExpress.XtraBars.BarCheckItem();
             this.bbRegister = new DevExpress.XtraBars.BarButtonItem();
+            this.barButtonItem4 = new DevExpress.XtraBars.BarButtonItem();
             this.ribbonPageCategory1 = new DevExpress.XtraBars.Ribbon.RibbonPageCategory();
             this.ribbonPage2 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPageGroup2 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
@@ -73,7 +74,7 @@
             this.defaultBarAndDockingController1 = new DevExpress.XtraBars.DefaultBarAndDockingController(this.components);
             this.ribbonPage4 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPage6 = new DevExpress.XtraBars.Ribbon.RibbonPage();
-            this.barButtonItem4 = new DevExpress.XtraBars.BarButtonItem();
+            this.bcBinance = new DevExpress.XtraBars.BarCheckItem();
             ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemSpinEdit1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemSpinEdit2)).BeginInit();
@@ -113,10 +114,11 @@
             this.bciAllowDirectXGrid,
             this.bciAllowDirectXCharts,
             this.bbRegister,
-            this.barButtonItem4});
+            this.barButtonItem4,
+            this.bcBinance});
             this.ribbonControl1.Location = new System.Drawing.Point(0, 0);
             this.ribbonControl1.Margin = new System.Windows.Forms.Padding(12);
-            this.ribbonControl1.MaxItemId = 32;
+            this.ribbonControl1.MaxItemId = 34;
             this.ribbonControl1.MdiMergeStyle = DevExpress.XtraBars.Ribbon.RibbonMdiMergeStyle.Always;
             this.ribbonControl1.Name = "ribbonControl1";
             this.ribbonControl1.PageCategories.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageCategory[] {
@@ -355,6 +357,15 @@
             this.bbRegister.Name = "bbRegister";
             this.bbRegister.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bbRegister_ItemClick);
             // 
+            // barButtonItem4
+            // 
+            this.barButtonItem4.Caption = "Download Crypto Icons";
+            this.barButtonItem4.Id = 31;
+            this.barButtonItem4.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("barButtonItem4.ImageOptions.Image")));
+            this.barButtonItem4.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("barButtonItem4.ImageOptions.LargeImage")));
+            this.barButtonItem4.Name = "barButtonItem4";
+            this.barButtonItem4.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItem4_ItemClick);
+            // 
             // ribbonPageCategory1
             // 
             this.ribbonPageCategory1.Name = "ribbonPageCategory1";
@@ -415,6 +426,7 @@
             // 
             this.ribbonPageGroup3.ItemLinks.Add(this.bcPoloniex);
             this.ribbonPageGroup3.ItemLinks.Add(this.bcBittrex);
+            this.ribbonPageGroup3.ItemLinks.Add(this.bcBinance);
             this.ribbonPageGroup3.Name = "ribbonPageGroup3";
             this.ribbonPageGroup3.Text = "Connect";
             // 
@@ -508,14 +520,14 @@
             this.ribbonPage6.Name = "ribbonPage6";
             this.ribbonPage6.Text = "ribbonPage6";
             // 
-            // barButtonItem4
+            // bcBinance
             // 
-            this.barButtonItem4.Caption = "Download Crypto Icons";
-            this.barButtonItem4.Id = 31;
-            this.barButtonItem4.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("barButtonItem4.ImageOptions.Image")));
-            this.barButtonItem4.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("barButtonItem4.ImageOptions.LargeImage")));
-            this.barButtonItem4.Name = "barButtonItem4";
-            this.barButtonItem4.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItem4_ItemClick);
+            this.bcBinance.Caption = "Binance";
+            this.bcBinance.Id = 33;
+            this.bcBinance.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bcBinance.ImageOptions.Image")));
+            this.bcBinance.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("bcBinance.ImageOptions.LargeImage")));
+            this.bcBinance.Name = "bcBinance";
+            this.bcBinance.CheckedChanged += new DevExpress.XtraBars.ItemClickEventHandler(this.bcBinance_CheckedChanged);
             // 
             // MainForm
             // 
@@ -596,6 +608,7 @@
         private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup9;
         private DevExpress.XtraBars.BarButtonItem bbRegister;
         private DevExpress.XtraBars.BarButtonItem barButtonItem4;
+        private DevExpress.XtraBars.BarCheckItem bcBinance;
     }
 }
 
