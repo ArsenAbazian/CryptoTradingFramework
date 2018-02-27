@@ -27,6 +27,7 @@
             this.components = new System.ComponentModel.Container();
             this.dataLayoutControl1 = new DevExpress.XtraDataLayout.DataLayoutControl();
             this.ceIncrimentalStopLoss = new DevExpress.XtraEditors.CheckEdit();
+            this.trailingSettingsBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.ceIgnoreStopLoss = new DevExpress.XtraEditors.CheckEdit();
             this.teTakeProfitStartPercent = new DevExpress.XtraEditors.TextEdit();
             this.BuyPriceTextEdit = new DevExpress.XtraEditors.TextEdit();
@@ -54,10 +55,12 @@
             this.layoutControlItem5 = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItem6 = new DevExpress.XtraLayout.LayoutControlItem();
             this.itemForTakeProfitStartPercent = new DevExpress.XtraLayout.LayoutControlItem();
-            this.trailingSettingsBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.cbType = new DevExpress.XtraEditors.ComboBoxEdit();
+            this.lcType = new DevExpress.XtraLayout.LayoutControlItem();
             ((System.ComponentModel.ISupportInitialize)(this.dataLayoutControl1)).BeginInit();
             this.dataLayoutControl1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ceIncrimentalStopLoss.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trailingSettingsBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ceIgnoreStopLoss.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.teTakeProfitStartPercent.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.BuyPriceTextEdit.Properties)).BeginInit();
@@ -83,13 +86,15 @@
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem5)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem6)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.itemForTakeProfitStartPercent)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trailingSettingsBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cbType.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.lcType)).BeginInit();
             this.SuspendLayout();
             // 
             // dataLayoutControl1
             // 
             this.dataLayoutControl1.Appearance.Control.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.dataLayoutControl1.Appearance.Control.Options.UseFont = true;
+            this.dataLayoutControl1.Controls.Add(this.cbType);
             this.dataLayoutControl1.Controls.Add(this.ceIncrimentalStopLoss);
             this.dataLayoutControl1.Controls.Add(this.ceIgnoreStopLoss);
             this.dataLayoutControl1.Controls.Add(this.teTakeProfitStartPercent);
@@ -115,17 +120,21 @@
             // ceIncrimentalStopLoss
             // 
             this.ceIncrimentalStopLoss.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.trailingSettingsBindingSource, "EnableIncrementalStopLoss", true));
-            this.ceIncrimentalStopLoss.Location = new System.Drawing.Point(12, 137);
+            this.ceIncrimentalStopLoss.Location = new System.Drawing.Point(12, 169);
             this.ceIncrimentalStopLoss.Name = "ceIncrimentalStopLoss";
             this.ceIncrimentalStopLoss.Properties.Caption = "Incrimental Stop Loss";
             this.ceIncrimentalStopLoss.Size = new System.Drawing.Size(698, 25);
             this.ceIncrimentalStopLoss.StyleController = this.dataLayoutControl1;
             this.ceIncrimentalStopLoss.TabIndex = 14;
             // 
+            // trailingSettingsBindingSource
+            // 
+            this.trailingSettingsBindingSource.DataSource = typeof(CryptoMarketClient.Common.TrailingSettings);
+            // 
             // ceIgnoreStopLoss
             // 
             this.ceIgnoreStopLoss.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.trailingSettingsBindingSource, "IgnoreStopLoss", true));
-            this.ceIgnoreStopLoss.Location = new System.Drawing.Point(12, 108);
+            this.ceIgnoreStopLoss.Location = new System.Drawing.Point(12, 140);
             this.ceIgnoreStopLoss.Name = "ceIgnoreStopLoss";
             this.ceIgnoreStopLoss.Properties.Caption = "Ignore Stop Loss";
             this.ceIgnoreStopLoss.Size = new System.Drawing.Size(698, 25);
@@ -136,7 +145,7 @@
             // teTakeProfitStartPercent
             // 
             this.teTakeProfitStartPercent.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.trailingSettingsBindingSource, "TakeProfitStartPercent", true));
-            this.teTakeProfitStartPercent.Location = new System.Drawing.Point(161, 198);
+            this.teTakeProfitStartPercent.Location = new System.Drawing.Point(161, 230);
             this.teTakeProfitStartPercent.Name = "teTakeProfitStartPercent";
             this.teTakeProfitStartPercent.Properties.Appearance.Options.UseTextOptions = true;
             this.teTakeProfitStartPercent.Properties.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Far;
@@ -150,7 +159,7 @@
             // BuyPriceTextEdit
             // 
             this.BuyPriceTextEdit.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.trailingSettingsBindingSource, "TradePrice", true));
-            this.BuyPriceTextEdit.Location = new System.Drawing.Point(161, 12);
+            this.BuyPriceTextEdit.Location = new System.Drawing.Point(161, 44);
             this.BuyPriceTextEdit.Name = "BuyPriceTextEdit";
             this.BuyPriceTextEdit.Properties.Appearance.Options.UseTextOptions = true;
             this.BuyPriceTextEdit.Properties.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Far;
@@ -164,7 +173,7 @@
             // AmountTextEdit
             // 
             this.AmountTextEdit.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.trailingSettingsBindingSource, "Amount", true));
-            this.AmountTextEdit.Location = new System.Drawing.Point(161, 44);
+            this.AmountTextEdit.Location = new System.Drawing.Point(161, 76);
             this.AmountTextEdit.Name = "AmountTextEdit";
             this.AmountTextEdit.Properties.Appearance.Options.UseTextOptions = true;
             this.AmountTextEdit.Properties.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Far;
@@ -178,7 +187,7 @@
             // TotalSpendInBaseCurrencyTextEdit
             // 
             this.TotalSpendInBaseCurrencyTextEdit.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.trailingSettingsBindingSource, "TotalSpendInBaseCurrency", true));
-            this.TotalSpendInBaseCurrencyTextEdit.Location = new System.Drawing.Point(161, 76);
+            this.TotalSpendInBaseCurrencyTextEdit.Location = new System.Drawing.Point(161, 108);
             this.TotalSpendInBaseCurrencyTextEdit.Name = "TotalSpendInBaseCurrencyTextEdit";
             this.TotalSpendInBaseCurrencyTextEdit.Properties.Appearance.Options.UseTextOptions = true;
             this.TotalSpendInBaseCurrencyTextEdit.Properties.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Far;
@@ -192,7 +201,7 @@
             // StopLossPricePercentTextEdit
             // 
             this.StopLossPricePercentTextEdit.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.trailingSettingsBindingSource, "StopLossPricePercent", true));
-            this.StopLossPricePercentTextEdit.Location = new System.Drawing.Point(161, 166);
+            this.StopLossPricePercentTextEdit.Location = new System.Drawing.Point(161, 198);
             this.StopLossPricePercentTextEdit.Name = "StopLossPricePercentTextEdit";
             this.StopLossPricePercentTextEdit.Properties.Appearance.Options.UseTextOptions = true;
             this.StopLossPricePercentTextEdit.Properties.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Far;
@@ -206,7 +215,7 @@
             // TakeProfitPercentTextEdit
             // 
             this.TakeProfitPercentTextEdit.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.trailingSettingsBindingSource, "TakeProfitPercent", true));
-            this.TakeProfitPercentTextEdit.Location = new System.Drawing.Point(161, 230);
+            this.TakeProfitPercentTextEdit.Location = new System.Drawing.Point(161, 262);
             this.TakeProfitPercentTextEdit.Name = "TakeProfitPercentTextEdit";
             this.TakeProfitPercentTextEdit.Properties.Appearance.Options.UseTextOptions = true;
             this.TakeProfitPercentTextEdit.Properties.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Far;
@@ -244,7 +253,7 @@
             // imageComboBoxEdit1
             // 
             this.imageComboBoxEdit1.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.trailingSettingsBindingSource, "Mode", true));
-            this.imageComboBoxEdit1.Location = new System.Drawing.Point(161, 262);
+            this.imageComboBoxEdit1.Location = new System.Drawing.Point(161, 294);
             this.imageComboBoxEdit1.Name = "imageComboBoxEdit1";
             this.imageComboBoxEdit1.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
@@ -255,7 +264,7 @@
             // checkEdit1
             // 
             this.checkEdit1.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.trailingSettingsBindingSource, "ShowOnChart", true));
-            this.checkEdit1.Location = new System.Drawing.Point(12, 294);
+            this.checkEdit1.Location = new System.Drawing.Point(12, 326);
             this.checkEdit1.Name = "checkEdit1";
             this.checkEdit1.Properties.Caption = "Show On Chart";
             this.checkEdit1.Properties.GlyphAlignment = DevExpress.Utils.HorzAlignment.Far;
@@ -292,7 +301,8 @@
             this.layoutControlItem4,
             this.layoutControlItem5,
             this.layoutControlItem6,
-            this.itemForTakeProfitStartPercent});
+            this.itemForTakeProfitStartPercent,
+            this.lcType});
             this.layoutControlGroup2.Location = new System.Drawing.Point(0, 0);
             this.layoutControlGroup2.Name = "autoGeneratedGroup0";
             this.layoutControlGroup2.OptionsItemText.TextToControlDistance = 6;
@@ -301,7 +311,7 @@
             // ItemForBuyPrice
             // 
             this.ItemForBuyPrice.Control = this.BuyPriceTextEdit;
-            this.ItemForBuyPrice.Location = new System.Drawing.Point(0, 0);
+            this.ItemForBuyPrice.Location = new System.Drawing.Point(0, 32);
             this.ItemForBuyPrice.Name = "ItemForBuyPrice";
             this.ItemForBuyPrice.Size = new System.Drawing.Size(702, 32);
             this.ItemForBuyPrice.Text = "Buy Price";
@@ -310,7 +320,7 @@
             // ItemForAmount
             // 
             this.ItemForAmount.Control = this.AmountTextEdit;
-            this.ItemForAmount.Location = new System.Drawing.Point(0, 32);
+            this.ItemForAmount.Location = new System.Drawing.Point(0, 64);
             this.ItemForAmount.Name = "ItemForAmount";
             this.ItemForAmount.Size = new System.Drawing.Size(702, 32);
             this.ItemForAmount.Text = "Amount";
@@ -319,7 +329,7 @@
             // ItemForTotalSpendInBaseCurrency
             // 
             this.ItemForTotalSpendInBaseCurrency.Control = this.TotalSpendInBaseCurrencyTextEdit;
-            this.ItemForTotalSpendInBaseCurrency.Location = new System.Drawing.Point(0, 64);
+            this.ItemForTotalSpendInBaseCurrency.Location = new System.Drawing.Point(0, 96);
             this.ItemForTotalSpendInBaseCurrency.Name = "ItemForTotalSpendInBaseCurrency";
             this.ItemForTotalSpendInBaseCurrency.Size = new System.Drawing.Size(702, 32);
             this.ItemForTotalSpendInBaseCurrency.Text = "Total Spend In Base Currency";
@@ -328,7 +338,7 @@
             // ItemForStopLossPricePercent
             // 
             this.ItemForStopLossPricePercent.Control = this.StopLossPricePercentTextEdit;
-            this.ItemForStopLossPricePercent.Location = new System.Drawing.Point(0, 154);
+            this.ItemForStopLossPricePercent.Location = new System.Drawing.Point(0, 186);
             this.ItemForStopLossPricePercent.Name = "ItemForStopLossPricePercent";
             this.ItemForStopLossPricePercent.Size = new System.Drawing.Size(702, 32);
             this.ItemForStopLossPricePercent.Text = "Stop Loss Price Percent";
@@ -337,7 +347,7 @@
             // ItemForTakeProfitPercent
             // 
             this.ItemForTakeProfitPercent.Control = this.TakeProfitPercentTextEdit;
-            this.ItemForTakeProfitPercent.Location = new System.Drawing.Point(0, 218);
+            this.ItemForTakeProfitPercent.Location = new System.Drawing.Point(0, 250);
             this.ItemForTakeProfitPercent.Name = "ItemForTakeProfitPercent";
             this.ItemForTakeProfitPercent.Size = new System.Drawing.Size(702, 32);
             this.ItemForTakeProfitPercent.Text = "Take Profit Percent";
@@ -366,23 +376,23 @@
             // emptySpaceItem1
             // 
             this.emptySpaceItem1.AllowHotTrack = false;
-            this.emptySpaceItem1.Location = new System.Drawing.Point(0, 311);
+            this.emptySpaceItem1.Location = new System.Drawing.Point(0, 343);
             this.emptySpaceItem1.Name = "emptySpaceItem1";
-            this.emptySpaceItem1.Size = new System.Drawing.Size(469, 206);
+            this.emptySpaceItem1.Size = new System.Drawing.Size(469, 174);
             this.emptySpaceItem1.TextSize = new System.Drawing.Size(0, 0);
             // 
             // emptySpaceItem2
             // 
             this.emptySpaceItem2.AllowHotTrack = false;
-            this.emptySpaceItem2.Location = new System.Drawing.Point(469, 311);
+            this.emptySpaceItem2.Location = new System.Drawing.Point(469, 343);
             this.emptySpaceItem2.Name = "emptySpaceItem2";
-            this.emptySpaceItem2.Size = new System.Drawing.Size(233, 158);
+            this.emptySpaceItem2.Size = new System.Drawing.Size(233, 126);
             this.emptySpaceItem2.TextSize = new System.Drawing.Size(0, 0);
             // 
             // layoutControlItem3
             // 
             this.layoutControlItem3.Control = this.imageComboBoxEdit1;
-            this.layoutControlItem3.Location = new System.Drawing.Point(0, 250);
+            this.layoutControlItem3.Location = new System.Drawing.Point(0, 282);
             this.layoutControlItem3.Name = "layoutControlItem3";
             this.layoutControlItem3.Size = new System.Drawing.Size(702, 32);
             this.layoutControlItem3.Text = "Mode";
@@ -391,7 +401,7 @@
             // layoutControlItem4
             // 
             this.layoutControlItem4.Control = this.checkEdit1;
-            this.layoutControlItem4.Location = new System.Drawing.Point(0, 282);
+            this.layoutControlItem4.Location = new System.Drawing.Point(0, 314);
             this.layoutControlItem4.Name = "layoutControlItem4";
             this.layoutControlItem4.Size = new System.Drawing.Size(702, 29);
             this.layoutControlItem4.Text = "Take Profit Start Percent";
@@ -401,7 +411,7 @@
             // layoutControlItem5
             // 
             this.layoutControlItem5.Control = this.ceIgnoreStopLoss;
-            this.layoutControlItem5.Location = new System.Drawing.Point(0, 96);
+            this.layoutControlItem5.Location = new System.Drawing.Point(0, 128);
             this.layoutControlItem5.Name = "layoutControlItem5";
             this.layoutControlItem5.Size = new System.Drawing.Size(702, 29);
             this.layoutControlItem5.TextSize = new System.Drawing.Size(0, 0);
@@ -410,7 +420,7 @@
             // layoutControlItem6
             // 
             this.layoutControlItem6.Control = this.ceIncrimentalStopLoss;
-            this.layoutControlItem6.Location = new System.Drawing.Point(0, 125);
+            this.layoutControlItem6.Location = new System.Drawing.Point(0, 157);
             this.layoutControlItem6.Name = "layoutControlItem6";
             this.layoutControlItem6.Size = new System.Drawing.Size(702, 29);
             this.layoutControlItem6.TextSize = new System.Drawing.Size(0, 0);
@@ -419,15 +429,31 @@
             // itemForTakeProfitStartPercent
             // 
             this.itemForTakeProfitStartPercent.Control = this.teTakeProfitStartPercent;
-            this.itemForTakeProfitStartPercent.Location = new System.Drawing.Point(0, 186);
+            this.itemForTakeProfitStartPercent.Location = new System.Drawing.Point(0, 218);
             this.itemForTakeProfitStartPercent.Name = "itemForTakeProfitStartPercent";
             this.itemForTakeProfitStartPercent.Size = new System.Drawing.Size(702, 32);
             this.itemForTakeProfitStartPercent.Text = "Take Profit Start Percent";
             this.itemForTakeProfitStartPercent.TextSize = new System.Drawing.Size(143, 13);
             // 
-            // trailingSettingsBindingSource
+            // cbType
             // 
-            this.trailingSettingsBindingSource.DataSource = typeof(CryptoMarketClient.Common.TrailingSettings);
+            this.cbType.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.trailingSettingsBindingSource, "Type", true));
+            this.cbType.Location = new System.Drawing.Point(161, 12);
+            this.cbType.Name = "cbType";
+            this.cbType.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.cbType.Size = new System.Drawing.Size(549, 28);
+            this.cbType.StyleController = this.dataLayoutControl1;
+            this.cbType.TabIndex = 15;
+            // 
+            // lcType
+            // 
+            this.lcType.Control = this.cbType;
+            this.lcType.Location = new System.Drawing.Point(0, 0);
+            this.lcType.Name = "lcType";
+            this.lcType.Size = new System.Drawing.Size(702, 32);
+            this.lcType.Text = "Type";
+            this.lcType.TextSize = new System.Drawing.Size(143, 13);
             // 
             // TrailingSettinsForm
             // 
@@ -442,6 +468,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataLayoutControl1)).EndInit();
             this.dataLayoutControl1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.ceIncrimentalStopLoss.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trailingSettingsBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ceIgnoreStopLoss.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.teTakeProfitStartPercent.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.BuyPriceTextEdit.Properties)).EndInit();
@@ -467,7 +494,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem5)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem6)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.itemForTakeProfitStartPercent)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trailingSettingsBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cbType.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.lcType)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -504,5 +532,7 @@
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItem6;
         private DevExpress.XtraEditors.TextEdit teTakeProfitStartPercent;
         private DevExpress.XtraLayout.LayoutControlItem itemForTakeProfitStartPercent;
+        private DevExpress.XtraEditors.ComboBoxEdit cbType;
+        private DevExpress.XtraLayout.LayoutControlItem lcType;
     }
 }
