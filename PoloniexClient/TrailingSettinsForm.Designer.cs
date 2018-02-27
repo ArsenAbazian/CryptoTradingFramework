@@ -445,6 +445,7 @@
             this.cbType.Size = new System.Drawing.Size(549, 28);
             this.cbType.StyleController = this.dataLayoutControl1;
             this.cbType.TabIndex = 15;
+            this.cbType.EditValueChanged += cbType_EditValueChanged;
             // 
             // lcType
             // 
