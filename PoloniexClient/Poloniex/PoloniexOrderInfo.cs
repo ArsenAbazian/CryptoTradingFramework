@@ -79,5 +79,13 @@ namespace CryptoMarketClient.Common {
                 return total;
             }
         }
+
+        public DateTime OrderDate {
+            get { return GetOrderDate(); }
+        }
+
+        protected virtual DateTime GetOrderDate() {
+            return Date;
+        }
     }
 }

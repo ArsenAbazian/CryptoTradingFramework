@@ -711,7 +711,8 @@ namespace CryptoMarketClient {
             // 
             this.colDate.DisplayFormat.FormatString = "yyyy.MM.dd hh:mm:ss.fff";
             this.colDate.DisplayFormat.FormatType = DevExpress.Utils.FormatType.DateTime;
-            this.colDate.FieldName = "Date";
+            this.colDate.FieldName = "OrderDate";
+            this.colDate.Caption = "Date";
             this.colDate.MinWidth = 10;
             this.colDate.Name = "colDate";
             this.colDate.Visible = true;

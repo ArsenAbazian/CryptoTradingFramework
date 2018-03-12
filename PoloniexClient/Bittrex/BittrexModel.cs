@@ -432,7 +432,7 @@ namespace CryptoMarketClient.Bittrex {
                 item.RateString = obj[9];
                 item.Fee = FastDoubleConverter.Convert(obj[7]);
                 item.Total = FastDoubleConverter.Convert(obj[8]);
-                item.TimeString = obj[1];
+                item.TimeString = obj[2];
                 ticker.MyTradeHistory.Insert(index, item);
                 index++;
             }
