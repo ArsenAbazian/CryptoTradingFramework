@@ -62,10 +62,14 @@ namespace CryptoMarketClient.Bittrex {
             return BittrexExchange.Default.GetBalance(type == CurrencyType.MarketCurrency? MarketCurrency: BaseCurrency);
         }
         public override bool Buy(double rate, double amount) {
-            return BittrexExchange.Default.BuyLimit(this, rate, amount) != null;
+            string str = BittrexExchange.Default.BuyLimit(this, rate, amount);
+            bool res = str != null;
+            return res;
         }
         public override bool Sell(double rate, double amount) {
-            return BittrexExchange.Default.SellLimit(this, rate, amount) != null;
+            string str = BittrexExchange.Default.SellLimit(this, rate, amount);
+            bool res = str != null;
+            return res;
         }
         public override bool MarketSell(double amount) {
             return BittrexExchange.Default.SellLimit(this, Hr24Low / 2, amount) != null;
