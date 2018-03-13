@@ -744,7 +744,7 @@ namespace CryptoMarketClient.Bittrex {
 			    "Condition",
 			    "ConditionTarget"
             });
-            if(res == null || res.Count == 0)
+            if(res == null || (res.Count == 0 && ticker.OpenedOrders.Count() == 0))
                 return true;
 
             ticker.OpenedOrders.Clear();
