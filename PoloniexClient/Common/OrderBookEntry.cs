@@ -127,7 +127,7 @@ namespace CryptoMarketClient {
                             return ParseExponent(str, value + fix * divider[j - i - 1], j + 1);
                         fix = (fix << 3) + (fix << 1) + str[j] - 0x30;
                     }
-                    return value + fix * divider[length - i - 1];
+                    return value + fix * divider[divider.Length - i - 1];
                 }
                 if(str[i] == '-' || str[i] == 'e' || str[i] == 'E')
                     return ParseExponent(str, value, i + 1);

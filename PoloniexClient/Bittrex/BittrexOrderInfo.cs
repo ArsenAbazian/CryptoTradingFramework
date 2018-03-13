@@ -16,5 +16,9 @@ namespace CryptoMarketClient.Bittrex {
         public bool IsConditional { get; set; }
         public string Condition { get; set; }
         public string ConditionTarget { get; set; }
+
+        protected override DateTime GetOrderDate() {
+            return Opened;
+        }
     }
 }
