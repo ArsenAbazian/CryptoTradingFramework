@@ -1,4 +1,5 @@
 ﻿using CryptoMarketClient.Common;
+using DevExpress.Utils.DirectXPaint;
 using DevExpress.XtraCharts;
 using System;
 using System.Collections.Generic;
@@ -13,8 +14,9 @@ namespace CryptoMarketClient {
             : base() {
         }
         protected override void OnHandleCreated(EventArgs e) {
-            if(!DesignMode)
-                UseDirectXPaint = SettingsStore.Default.UseDirectXForCharts ? DevExpress.Utils.DefaultBoolean.True : DevExpress.Utils.DefaultBoolean.False;
+            if(!DesignMode) {
+                ((IDirectXClient)this).UseDirectXPaint = SettingsStore.Default.UseDirectXForCharts;
+            }
             base.OnHandleCreated(e);
         }
         protected override void OnPaint(PaintEventArgs e) {
@@ -27,5 +29,6 @@ namespace CryptoMarketClient {
                 base.OnPaint(e);
             }
         }
+        protected override bool DisableCustomDrawEventsOptimization => false;
     }
 }

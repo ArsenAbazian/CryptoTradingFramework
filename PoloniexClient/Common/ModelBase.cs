@@ -73,7 +73,7 @@ namespace CryptoMarketClient {
             int index = startIndex;
             string[] props = new string[str.Length];
             if(!FindChar(bytes, '{', ref index))
-                return props;
+                return null;
             for(int itemIndex = 0; itemIndex < str.Length; itemIndex++) {
                 if(bytes[index + 1 + 2 + str[itemIndex].Length] == ':')
                     index = index + 1 + 2 + str[itemIndex].Length + 1;

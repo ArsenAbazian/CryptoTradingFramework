@@ -447,6 +447,7 @@
     <EmbeddedResource Include="MyTradesCollectionControl.resx">
       <DependentUpon>MyTradesCollectionControl.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Properties\licenses.licx" />
     <EmbeddedResource Include="TrailingCollectionControl.resx">
       <DependentUpon>TrailingCollectionControl.cs</DependentUpon>
     </EmbeddedResource>
@@ -495,7 +496,6 @@
     <EmbeddedResource Include="ProfitTickersForm.resx">
       <DependentUpon>ProfitTickersForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Properties\licenses.licx" />
     <EmbeddedResource Include="StaticArbitrageForm.resx">
       <DependentUpon>StaticArbitrageForm.cs</DependentUpon>
     </EmbeddedResource>

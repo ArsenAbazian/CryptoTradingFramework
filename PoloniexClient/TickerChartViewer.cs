@@ -293,7 +293,9 @@ namespace CryptoMarketClient {
         protected void UpdateChartProperties() {
             ((BarSeriesView)this.chartControl1.Series["Volume"].View).BarWidth = 0.6 * Ticker.CandleStickPeriodMin;
             ((BarSeriesView)this.chartControl1.Series["Volume"].View).Border.Visibility = DevExpress.Utils.DefaultBoolean.False;
-            ((FinancialSeriesViewBase)this.chartControl1.Series["Current"].View).LevelLineLength = 0.6 / 2 * Ticker.CandleStickPeriodMin;
+            FinancialSeriesViewBase f = this.chartControl1.Series["Current"].View as FinancialSeriesViewBase;
+            if(f != null)
+                f.LevelLineLength = 0.6 / 2 * Ticker.CandleStickPeriodMin;
         }
 
         private void barButtonItem3_ItemClick(object sender, ItemClickEventArgs e) {

@@ -194,6 +194,8 @@ namespace CryptoMarketClient.Bittrex {
                 return;
 
             string[] res = DeserializeObject(bytes, ref startIndex, new string[] { "Bid", "Ask", "Last" });
+            if(res == null)
+                return;
             info.HighestBid = FastDoubleConverter.Convert(res[0]);
             info.LowestAsk = FastDoubleConverter.Convert(res[1]);
             info.Last = FastDoubleConverter.Convert(res[2]);
@@ -217,6 +219,8 @@ namespace CryptoMarketClient.Bittrex {
                 return false;
 
             string[] res = DeserializeObject(bytes, ref startIndex, new string[] { "MarketName", "High", "Low", "Volume", "Last", "BaseVolume", "TimeStamp", "Bid", "Ask", "OpenBuyOrders", "OpenSellOrders", "PrevDay", "Created" });
+            if(res == null)
+                return true;
 
             BittrexTicker info = (BittrexTicker)tickerBase;
 

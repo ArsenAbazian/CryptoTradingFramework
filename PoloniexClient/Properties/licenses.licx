@@ -1,14 +1,2 @@
-DevExpress.XtraBars.Ribbon.RibbonControl, DevExpress.XtraBars.v18.1, Version=18.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4
-DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit, DevExpress.XtraEditors.v18.1, Version=18.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4
-DevExpress.XtraDataLayout.DataLayoutControl, DevExpress.XtraLayout.v18.1, Version=18.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4
-DevExpress.XtraEditors.TextEdit, DevExpress.XtraEditors.v18.1, Version=18.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4
-DevExpress.XtraEditors.CheckEdit, DevExpress.XtraEditors.v18.1, Version=18.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4
-DevExpress.XtraBars.Docking.DockManager, DevExpress.XtraBars.v18.1, Version=18.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4
 DevExpress.XtraBars.Docking2010.DocumentManager, DevExpress.XtraBars.v18.1, Version=18.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4
-DevExpress.XtraCharts.ChartControl, DevExpress.XtraCharts.v18.1.UI, Version=18.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4
-DevExpress.XtraBars.BarManager, DevExpress.XtraBars.v18.1, Version=18.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4
-DevExpress.XtraEditors.Repository.RepositoryItemTextEdit, DevExpress.XtraEditors.v18.1, Version=18.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4
-DevExpress.XtraGrid.GridControl, DevExpress.XtraGrid.v18.1, Version=18.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4
-DevExpress.XtraEditors.Repository.RepositoryItemComboBox, DevExpress.XtraEditors.v18.1, Version=18.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4
-DevExpress.XtraEditors.Repository.RepositoryItemProgressBar, DevExpress.XtraEditors.v18.1, Version=18.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4
-DevExpress.XtraEditors.Repository.RepositoryItemButtonEdit, DevExpress.XtraEditors.v18.1, Version=18.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4
+DevExpress.XtraBars.Ribbon.RibbonControl, DevExpress.XtraBars.v18.1, Version=18.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4
