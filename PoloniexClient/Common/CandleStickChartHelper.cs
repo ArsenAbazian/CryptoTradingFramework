@@ -101,8 +101,11 @@ namespace CryptoMarketClient {
         }
 
         protected void RaisePropertyChanged(string propName) {
-            if(this.propertyChanged != null)
-                this.propertyChanged.Invoke(this, new PropertyChangedEventArgs(propName));
+            if (this.propertyChanged != null) {
+                try {
+                    this.propertyChanged.Invoke(this, new PropertyChangedEventArgs(propName));
+                } catch { }
+            }
         }
     }
 

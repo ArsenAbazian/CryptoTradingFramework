@@ -19,6 +19,8 @@ using DevExpress.XtraSplashScreen;
 
 namespace CryptoMarketClient {
     public partial class TickerChartViewer : XtraUserControl {
+        bool isCandleSticksUpdate = false;
+
         public TickerChartViewer() {
             InitializeComponent();
             InitializeCheckItems();
@@ -352,6 +354,9 @@ namespace CryptoMarketClient {
             }
         }
         void BackgroundUpdateCandleSticks(DateTime date) {
+            if (this.isCandleSticksUpdate)
+                return;
+
             UpdateCandleStickThread = new Thread(() => {
                 int seconds = CalculateTotalIntervalInSeconds();
                 BindingList<CandleStickData> data = Ticker.GetCandleStickData(Ticker.CandleStickPeriodMin, date.AddSeconds(-seconds), seconds);
@@ -364,8 +369,10 @@ namespace CryptoMarketClient {
                     this.chartControl1.Series["Volume"].DataSource = data;
                 }
                 SplashScreenManager.CloseDefaultWaitForm();
+                this.isCandleSticksUpdate = false;
             });
             SplashScreenManager.ShowDefaultWaitForm("Loading chart from server...");
+            this.isCandleSticksUpdate = true;
             UpdateCandleStickThread.Start();
         }
     }
