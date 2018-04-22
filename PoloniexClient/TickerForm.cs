@@ -54,20 +54,25 @@ namespace CryptoMarketClient {
             }
         }
         protected void OnThreadUpdate(object state) {
-            if(Ticker != null)
-                Ticker.UpdateTicker();
-            if(Ticker != null)
-                Ticker.UpdateBalance(CurrencyType.MarketCurrency);
-            if(Ticker != null)
-                Ticker.UpdateOrderBook();
-            if(Ticker != null)
-                Ticker.UpdateTrades();
-            if(Ticker != null)
-                Ticker.UpdateOpenedOrders();
-            if(Ticker != null)
-                Ticker.UpdateTrailings();
-            if(Ticker != null)
-                Ticker.Time = DateTime.UtcNow;
+            try {
+                if(Ticker != null)
+                    Ticker.UpdateTicker();
+                if(Ticker != null)
+                    Ticker.UpdateBalance(CurrencyType.MarketCurrency);
+                if(Ticker != null)
+                    Ticker.UpdateOrderBook();
+                if(Ticker != null)
+                    Ticker.UpdateTrades();
+                if(Ticker != null)
+                    Ticker.UpdateOpenedOrders();
+                if(Ticker != null)
+                    Ticker.UpdateTrailings();
+                if(Ticker != null)
+                    Ticker.Time = DateTime.UtcNow;
+            }
+            catch(Exception e) {
+                Telemetry.Default.TrackException(e);
+            }
         }
 
         TickerBase ticker;
@@ -80,7 +85,12 @@ namespace CryptoMarketClient {
                     return;
                 TickerBase prev = Ticker;
                 ticker = value;
-                OnTickerChanged(prev);
+                try {
+                    OnTickerChanged(prev);
+                }
+                catch(Exception e) {
+                    Telemetry.Default.TrackException(e);
+                }
             }
         }
 

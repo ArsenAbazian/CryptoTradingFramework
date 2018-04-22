@@ -362,18 +362,23 @@ namespace CryptoMarketClient {
                 return;
 
             UpdateCandleStickThread = new Thread(() => {
-                int seconds = CalculateTotalIntervalInSeconds();
-                BindingList<CandleStickData> data = Ticker.GetCandleStickData(Ticker.CandleStickPeriodMin, date.AddSeconds(-seconds), seconds);
-                if(data != null) {
-                    foreach(CandleStickData prev in Ticker.CandleStickData) {
-                        data.Add(prev);
+                try {
+                    int seconds = CalculateTotalIntervalInSeconds();
+                    BindingList<CandleStickData> data = Ticker.GetCandleStickData(Ticker.CandleStickPeriodMin, date.AddSeconds(-seconds), seconds);
+                    if(data != null) {
+                        foreach(CandleStickData prev in Ticker.CandleStickData) {
+                            data.Add(prev);
+                        }
+                        Ticker.CandleStickData = data;
+                        this.chartControl1.Series["Current"].DataSource = data;
+                        this.chartControl1.Series["Volume"].DataSource = data;
                     }
-                    Ticker.CandleStickData = data;
-                    this.chartControl1.Series["Current"].DataSource = data;
-                    this.chartControl1.Series["Volume"].DataSource = data;
+                    SplashScreenManager.CloseDefaultWaitForm();
+                    this.isCandleSticksUpdate = false;
                 }
-                SplashScreenManager.CloseDefaultWaitForm();
-                this.isCandleSticksUpdate = false;
+                catch(Exception e) {
+                    Telemetry.Default.TrackException(e, new string[,] { { "method", "update candlestick data from server" } });
+                }
             });
             SplashScreenManager.ShowDefaultWaitForm("Loading chart from server...");
             this.isCandleSticksUpdate = true;
