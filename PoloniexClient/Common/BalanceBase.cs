@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace CryptoMarketClient.Common {
     public abstract class BalanceBase {
+        public bool NonZero { get { return Available != 0; } }
         public abstract string Exchange { get; }
         public string Currency { get; set; }
         public double Available { get; set; }

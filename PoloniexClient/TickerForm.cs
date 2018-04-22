@@ -27,10 +27,20 @@ namespace CryptoMarketClient {
             Ticker = null;
         }
 
+        protected override void OnClosing(CancelEventArgs e) {
+            base.OnClosing(e);
+            Ticker = null;
+            this.workspaceManager1.SaveWorkspace("TickerFormDefault", "TickerFormWorkspaceDefault.xml", true);
+        }
+
         public string MarketName { get; set; }
         //protected override bool AllowUpdateInactive => true;
         protected override void OnShown(EventArgs e) {
             base.OnShown(e);
+            if(System.IO.File.Exists("TickerFormWorkspaceDefault.xml")) {
+                if(this.workspaceManager1.LoadWorkspace("TickerFormDefault", "TickerFormWorkspaceDefault.xml"))
+                    this.workspaceManager1.ApplyWorkspace("TickerFormDefault");
+            }
             Timer.InitializeLifetimeService();
         }
         System.Threading.Timer timer;

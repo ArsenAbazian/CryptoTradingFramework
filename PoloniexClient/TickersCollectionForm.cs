@@ -122,10 +122,24 @@ namespace CryptoMarketClient {
         //    }
         //}
 
+        Form accountForm;
+        protected Form AccountForm {
+            get {
+                if(accountForm == null || accountForm.IsDisposed) {
+                    accountForm = Exchange.CreateAccountForm();
+                }
+                return accountForm;
+            }
+        }
+
         private void bbShowBalances_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
-            //AccountForm.MdiParent = MdiParent;
-            //AccountForm.Show();
-            //AccountForm.Activate();
+            if(AccountForm == null) {
+                XtraMessageBox.Show("AccountForm not realized for Exchanged - " + Exchange.Name);
+                return;
+            }
+            AccountForm.MdiParent = MdiParent;
+            AccountForm.Show();
+            AccountForm.Activate();
         }
 
         //PoloniexOrdersForm ordersForm;

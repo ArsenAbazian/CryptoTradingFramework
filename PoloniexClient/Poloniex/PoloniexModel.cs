@@ -15,6 +15,8 @@ using System.Reactive.Subjects;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Windows.Forms;
+using CryptoMarketClient.Common;
 
 namespace CryptoMarketClient {
     public class PoloniexExchange : Exchange {
@@ -29,6 +31,10 @@ namespace CryptoMarketClient {
                 }
                 return defaultExchange;
             }
+        }
+
+        public override Form CreateAccountForm() {
+            return new AccountBalancesForm(this);
         }
 
         public override bool UseWebSocket => false;
@@ -550,7 +556,7 @@ namespace CryptoMarketClient {
             return true;
         }
 
-        public bool GetDeposites() {
+        public override bool GetDeposites() {
             Task<byte[]> task = GetDepositesAsync();
             task.Wait();
             return OnGetDeposites(task.Result);

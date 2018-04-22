@@ -1,4 +1,5 @@
 ﻿using CryptoMarketClient.Bittrex;
+using CryptoMarketClient.Common;
 using DevExpress.LookAndFeel;
 using DevExpress.Utils.DirectXPaint;
 using DevExpress.XtraEditors;
@@ -20,7 +21,7 @@ namespace CryptoMarketClient {
             DevExpress.Data.CurrencyDataController.DisableThreadingProblemsDetection = true;
             WindowsFormsSettings.DefaultFont = new System.Drawing.Font("Segoe UI", 9);
             WindowsFormsSettings.ScrollUIMode = ScrollUIMode.Desktop;
-            UserLookAndFeel.Default.SetSkinStyle("Office 2013");
+            UserLookAndFeel.Default.SetSkinStyle(SettingsStore.Default.SelectedThemeName);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(true);
 

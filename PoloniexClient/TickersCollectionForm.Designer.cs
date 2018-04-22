@@ -187,7 +187,7 @@
             // 
             this.gridControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gridControl1.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(24, 23, 24, 23);
-            this.gridControl1.Location = new System.Drawing.Point(0, 141);
+            this.gridControl1.Location = new System.Drawing.Point(0, 315);
             this.gridControl1.MainView = this.gridView1;
             this.gridControl1.Margin = new System.Windows.Forms.Padding(24, 23, 24, 23);
             this.gridControl1.Name = "gridControl1";
@@ -196,7 +196,7 @@
             this.repositoryItemCheckEdit1,
             this.repositoryItemTextEdit1,
             this.teValueWithChange});
-            this.gridControl1.Size = new System.Drawing.Size(1451, 721);
+            this.gridControl1.Size = new System.Drawing.Size(1451, 547);
             this.gridControl1.TabIndex = 0;
             this.gridControl1.UseDirectXPaint = DevExpress.Utils.DefaultBoolean.True;
             this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
@@ -454,8 +454,8 @@
             this.bbOpenedOrders.Name = "bbOpenedOrders";
             this.bbOpenedOrders.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
             this.ribbonPage1});
-            this.bbOpenedOrders.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonControlStyle.OfficeUniversal;
-            this.bbOpenedOrders.Size = new System.Drawing.Size(1451, 103);
+            this.bbOpenedOrders.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonControlStyle.Office2013;
+            this.bbOpenedOrders.Size = new System.Drawing.Size(1451, 277);
             // 
             // barCheckItem1
             // 
@@ -584,7 +584,7 @@
             this.standaloneBarDockControl1.AutoSize = true;
             this.standaloneBarDockControl1.CausesValidation = false;
             this.standaloneBarDockControl1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.standaloneBarDockControl1.Location = new System.Drawing.Point(0, 103);
+            this.standaloneBarDockControl1.Location = new System.Drawing.Point(0, 277);
             this.standaloneBarDockControl1.Manager = this.barManager1;
             this.standaloneBarDockControl1.Margin = new System.Windows.Forms.Padding(16, 15, 16, 15);
             this.standaloneBarDockControl1.Name = "standaloneBarDockControl1";

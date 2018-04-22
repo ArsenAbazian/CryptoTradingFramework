@@ -317,11 +317,11 @@
       <DependentUpon>OrderBookVolumeHistoryForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Poloniex\PoloniexAccountBalanceInfo.cs" />
-    <Compile Include="Poloniex\PoloniexAccountBalancesForm.cs">
+    <Compile Include="Common\AccountBalancesForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Poloniex\PoloniexAccountBalancesForm.Designer.cs">
-      <DependentUpon>PoloniexAccountBalancesForm.cs</DependentUpon>
+    <Compile Include="Common\AccountBalancesForm.Designer.cs">
+      <DependentUpon>AccountBalancesForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Poloniex\PoloniexCurrencyInfo.cs" />
     <Compile Include="Poloniex\PoloniexOrderInfo.cs" />
@@ -484,8 +484,8 @@
     <EmbeddedResource Include="OrderBookVolumeHistoryForm.resx">
       <DependentUpon>OrderBookVolumeHistoryForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Poloniex\PoloniexAccountBalancesForm.resx">
-      <DependentUpon>PoloniexAccountBalancesForm.cs</DependentUpon>
+    <EmbeddedResource Include="Common\AccountBalancesForm.resx">
+      <DependentUpon>AccountBalancesForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Poloniex\PoloniexOrdersForm.resx">
       <DependentUpon>PoloniexOrdersForm.cs</DependentUpon>

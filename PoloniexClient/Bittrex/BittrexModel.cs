@@ -9,7 +9,9 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace CryptoMarketClient.Bittrex {
     public class BittrexExchange : Exchange {
@@ -22,6 +24,14 @@ namespace CryptoMarketClient.Bittrex {
                 }
                 return defaultExchange;
             }
+        }
+
+        public override bool GetDeposites() {
+            return true;
+        }
+
+        public override Form CreateAccountForm() {
+            return new AccountBalancesForm(this);    
         }
 
         public override bool UseWebSocket => false;
@@ -154,7 +164,7 @@ namespace CryptoMarketClient.Bittrex {
             if(!SkipSymbol(bytes, ':', 3, ref startIndex))
                 return false;
 
-            List<string[]> res = DeserializeArrayOfObjects(bytes, ref startIndex, new string[] { "Currency", "CurrencyLong", "MinConfirmation", "TxFee", "IsActive", "CoinType", "BaseAddress" });
+            List<string[]> res = DeserializeArrayOfObjects(bytes, ref startIndex, new string[] { "Currency", "CurrencyLong", "MinConfirmation", "TxFee", "IsActive", "CoinType", "BaseAddress", "Notice" });
             foreach(string[] item in res) {
                 string currency = item[0];
                 BittrexCurrencyInfo c = Currencies.FirstOrDefault(curr => curr.Currency == currency);
@@ -819,24 +829,44 @@ namespace CryptoMarketClient.Bittrex {
                 if(!GetCurrenciesInfo())
                     return false;
             }
+            string address = string.Format("https://bittrex.com/api/v1.1/account/getbalances?apikey={0}&nonce={1}", Uri.EscapeDataString(ApiKey), GetNonce());
             WebClient client = GetWebClient();
-            foreach(BittrexCurrencyInfo info in Currencies) {
-                string address = string.Format("https://bittrex.com/api/v1.1/account/getbalance?apikey={0}&nonce={1}&currency={2}", Uri.EscapeDataString(ApiKey), GetNonce(), info.Currency);
-                client.Headers.Clear();
-                client.Headers.Add("apisign", GetSign(address));
-                int tryIndex = 0;
-                for(tryIndex = 0; tryIndex < 3; tryIndex++) {
-                    try {
-                        string text = client.DownloadString(address);
-                        if(!OnGetBalance(text))
-                            return false;
+            client.Headers.Clear();
+            client.Headers.Add("apisign", GetSign(address));
+            try {
+                byte[] bytes = client.DownloadData(address);
+
+
+                if(bytes == null)
+                    return false;
+
+                int startIndex = 1;
+                if(!SkipSymbol(bytes, ':', 3, ref startIndex))
+                    return false;
+
+                List<string[]> res = DeserializeArrayOfObjects(bytes, ref startIndex, new string[] {
+                "Currency",
+                "Balance",
+                "Available",
+                "Pending",
+                "CryptoAddress"
+            });
+
+                foreach(string[] item in res) {
+                    BittrexAccountBalanceInfo info = (BittrexAccountBalanceInfo)Balances.FirstOrDefault(b => b.Currency == item[0]);
+                    if(info == null) {
+                        info = new BittrexAccountBalanceInfo();
+                        info.Currency = item[0];
+                        Balances.Add(info);
                     }
-                    catch(Exception) {
-                        continue;
-                    }
-                    if(tryIndex == 3)
-                        return false;
+                    info.Balance = FastDoubleConverter.Convert(item[1]);
+                    info.Available = FastDoubleConverter.Convert(item[2]);
+                    info.Pending = FastDoubleConverter.Convert(item[3]);
+                    info.DepositAddress = item[4];
                 }
+            }
+            catch(Exception) {
+                return false;
             }
             return true;
         }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using CryptoMarketClient.Common;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -19,6 +20,14 @@ namespace CryptoMarketClient.Binance {
                 }
                 return defaultExchange;
             }
+        }
+
+        public override bool GetDeposites() {
+            return true;
+        }
+
+        public override Form CreateAccountForm() {
+            return null;
         }
 
         public override bool UseWebSocket => true;

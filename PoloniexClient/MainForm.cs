@@ -18,6 +18,7 @@ using System.IO;
 using CryptoMarketClient.Yobit;
 using DevExpress.XtraSplashScreen;
 using CryptoMarketClient.Binance;
+using DevExpress.LookAndFeel;
 
 namespace CryptoMarketClient {
     public partial class MainForm : DevExpress.XtraBars.Ribbon.RibbonForm {
@@ -40,6 +41,12 @@ namespace CryptoMarketClient {
             BittrexExchange.Default.GetTickersInfo(); // for icons
             Exchange.BuildIconsDataBase(BittrexExchange.Default.Tickers.Select(t => new string[] { t.MarketCurrency, t.LogoUrl }), false);
             SplashScreenManager.CloseDefaultWaitForm();
+        }
+
+        protected override void OnClosed(EventArgs e) {
+            base.OnClosed(e);
+            SettingsStore.Default.SelectedThemeName = UserLookAndFeel.Default.ActiveSkinName;
+            SettingsStore.Default.SaveToXml();
         }
 
         TickersCollectionForm yobitForm;

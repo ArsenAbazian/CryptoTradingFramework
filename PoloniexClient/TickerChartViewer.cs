@@ -58,6 +58,10 @@ namespace CryptoMarketClient {
                 UpdateCandleStickMenu();
                 UpdateChart();
             }
+            else {
+                foreach(Series s in this.chartControl1.Series)
+                    s.DataSource = null;
+            }
         }
         void UpdateCandleStickMenu() {
             if(Ticker == null)
@@ -284,7 +288,7 @@ namespace CryptoMarketClient {
             int interval = Ticker.CandleStickPeriodMin * 60;
             int totalInterval = candleStickCount * screenCount * interval;
 
-            DateTime start = DateTime.UtcNow.Subtract(TimeSpan.FromSeconds(totalInterval));
+            DateTime start = DateTime.UtcNow; //.Subtract(TimeSpan.FromSeconds(totalInterval));
             BackgroundUpdateCandleSticks(start);
             CandleStickSeriesView view = (CandleStickSeriesView)this.chartControl1.Series["Current"].View;
             view.AxisX.VisualRange.MinValue = start;

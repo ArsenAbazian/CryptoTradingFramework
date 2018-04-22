@@ -10,6 +10,7 @@ using System.Net;
 using System.Collections.Specialized;
 using System.Diagnostics;
 using CryptoMarketClient.Common;
+using System.Windows.Forms;
 
 namespace CryptoMarketClient.Yobit {
     public class YobitExchange : Exchange {
@@ -22,6 +23,14 @@ namespace CryptoMarketClient.Yobit {
                 }
                 return defaultExchange;
             }
+        }
+
+        public override bool GetDeposites() {
+            return true;
+        }
+
+        public override Form CreateAccountForm() {
+            return new AccountBalancesForm(this);
         }
 
         public override bool UseWebSocket => false;
