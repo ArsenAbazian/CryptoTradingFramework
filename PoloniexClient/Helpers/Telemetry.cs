@@ -30,8 +30,6 @@ namespace CryptoMarketClient {
             tc.Context.Device.OperatingSystem = Environment.OSVersion.ToString();
             tc.Context.Component.Version = Assembly.GetEntryAssembly().GetName().Version.ToString();
 
-            tc.TrackEvent("I am started!");
-            tc.Flush();
             InnerClient = tc;
         }
 

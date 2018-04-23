@@ -650,7 +650,7 @@ namespace CryptoMarketClient.Bittrex {
             try {
                 return OnCancel(client.DownloadString(address));
             }
-            catch(Exception e) {
+            catch(Exception) {
                 return false;
             }
         }

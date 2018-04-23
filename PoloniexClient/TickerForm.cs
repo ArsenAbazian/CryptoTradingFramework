@@ -37,9 +37,14 @@ namespace CryptoMarketClient {
         //protected override bool AllowUpdateInactive => true;
         protected override void OnShown(EventArgs e) {
             base.OnShown(e);
-            if(System.IO.File.Exists("TickerFormWorkspaceDefault.xml")) {
-                if(this.workspaceManager1.LoadWorkspace("TickerFormDefault", "TickerFormWorkspaceDefault.xml"))
-                    this.workspaceManager1.ApplyWorkspace("TickerFormDefault");
+            try {
+                if(System.IO.File.Exists("TickerFormWorkspaceDefault.xml")) {
+                    if(this.workspaceManager1.LoadWorkspace("TickerFormDefault", "TickerFormWorkspaceDefault.xml"))
+                        this.workspaceManager1.ApplyWorkspace("TickerFormDefault");
+                }
+            }
+            catch(Exception ee) {
+                Telemetry.Default.TrackException(ee);
             }
             Timer.InitializeLifetimeService();
         }

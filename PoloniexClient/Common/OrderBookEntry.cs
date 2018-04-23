@@ -117,23 +117,34 @@ namespace CryptoMarketClient {
             return value * multiplier[exponent];
         }
         public static double Convert(string str) {
-            int value = 0;
-            int fix = 0;
-            int length = str.Length;
-            for(int i = 0; i < length; i++) {
-                if(str[i] == '.') {
-                    for(int j = i + 1; j < length; j++) {
-                        if(str[j] == '-' || str[j] == 'e' || str[j] == 'E')
-                            return ParseExponent(str, value + fix * divider[j - i - 1], j + 1);
-                        fix = (fix << 3) + (fix << 1) + str[j] - 0x30;
+            try {
+                int value = 0;
+                int fix = 0;
+                int length = str.Length;
+                for(int i = 0; i < length; i++) {
+                    char c = str[i];
+                    if(c == '.' || c == ',') {
+                        for(int j = i + 1; j < length; j++) {
+                            if(str[j] == '-' || str[j] == 'e' || str[j] == 'E')
+                                return ParseExponent(str, value + fix * divider[j - i - 1], j + 1);
+                            fix = (fix << 3) + (fix << 1) + str[j] - 0x30;
+                        }
+                        return value + fix * divider[length - i - 1];
                     }
-                    return value + fix * divider[length - i - 1];
+                    if(str[i] == '-' || str[i] == 'e' || str[i] == 'E')
+                        return ParseExponent(str, value, i + 1);
+                    value = (value << 3) + (value << 1) + str[i] - 0x30;
                 }
-                if(str[i] == '-' || str[i] == 'e' || str[i] == 'E')
-                    return ParseExponent(str, value, i + 1);
-                value = (value << 3) + (value << 1) + str[i] - 0x30;
+                if(value < 0) {
+                    Telemetry.Default.TrackEvent("convert double exception", new string[] { "value", str, "converted", value.ToString() }, true);
+                }
+                return value;
             }
-            return value;
+            catch(Exception e) {
+                Telemetry.Default.TrackEvent("convert double exception", new string[] { "value", str }, true);
+                Telemetry.Default.TrackException(e, new string[,] { { "value", str } });
+                return System.Convert.ToDouble(str);
+            }
         }
     }
 }

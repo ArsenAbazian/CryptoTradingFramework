@@ -16,7 +16,6 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using CryptoMarketClient.Common;
 
 namespace CryptoMarketClient {
     public class PoloniexExchange : Exchange {

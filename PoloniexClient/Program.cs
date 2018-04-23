@@ -28,7 +28,6 @@ namespace CryptoMarketClient {
             WindowsFormsSettings.ForceDirectXPaint();
 
             CheckShowApiKeysForm();
-            Telemetry.Default.TrackEvent("program started");
             Application.Run(new MainForm());
         }
         static void CheckShowApiKeysForm() {
