@@ -19,6 +19,7 @@ using CryptoMarketClient.Yobit;
 using DevExpress.XtraSplashScreen;
 using CryptoMarketClient.Binance;
 using DevExpress.LookAndFeel;
+using CryptoMarketClient.BitFinex;
 
 namespace CryptoMarketClient {
     public partial class MainForm : DevExpress.XtraBars.Ribbon.RibbonForm {
@@ -151,7 +152,7 @@ namespace CryptoMarketClient {
         }
 
         private void btShowApiKeys_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
-            using(EnterApiKeyForm form = new EnterApiKeyForm()) {
+            using(AccountInfoCollectionForm form = new AccountInfoCollectionForm()) {
                 form.ShowDialog();
             }
         }
@@ -320,6 +321,28 @@ namespace CryptoMarketClient {
             else {
                 BinanceExchange.Default.IsConnected = false;
                 BinanceTickersForm.Hide();
+            }
+        }
+
+        TickersCollectionForm bitFinexTickersForm;
+        public TickersCollectionForm BitFinexTickersForm {
+            get {
+                if(bitFinexTickersForm == null || bitFinexTickersForm.IsDisposed) {
+                    bitFinexTickersForm = new TickersCollectionForm(BitFinexExchange.Default);
+                    bitFinexTickersForm.MdiParent = this;
+                }
+                return bitFinexTickersForm;
+            }
+        }
+
+        private void biBitFinex_CheckedChanged(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
+            if(this.biBitFinex.Checked) {
+                BitFinexExchange.Default.IsConnected = true;
+                BitFinexTickersForm.Show();
+            }
+            else {
+                BitFinexExchange.Default.IsConnected = false;
+                BitFinexTickersForm.Hide();
             }
         }
     }

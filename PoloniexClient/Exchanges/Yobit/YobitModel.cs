@@ -25,6 +25,16 @@ namespace CryptoMarketClient.Yobit {
             }
         }
 
+        public override void OnAccountRemoved(ExchangeAccountInfo info) {
+            
+        }
+
+        public override ExchangeType Type => ExchangeType.Yobit;
+
+        public override bool SupportWebSocket(WebSocketType type) {
+            return false;
+        }
+
         public override bool GetDeposites() {
             return true;
         }
@@ -48,8 +58,6 @@ namespace CryptoMarketClient.Yobit {
         }
 
         public override bool AllowCandleStickIncrementalUpdate => false;
-
-        public override string Name => "Yobit";
 
         public List<YobitCurrencyInfo> Currencies { get; } = new List<YobitCurrencyInfo>();
 

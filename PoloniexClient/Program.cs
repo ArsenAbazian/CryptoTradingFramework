@@ -35,7 +35,7 @@ namespace CryptoMarketClient {
                 if (exchange.IsApiKeyExists)
                     continue;
                 else {
-                    Application.Run(new EnterApiKeyForm());
+                    Application.Run(new AccountInfoCollectionForm());
                     break;
                 }
             }

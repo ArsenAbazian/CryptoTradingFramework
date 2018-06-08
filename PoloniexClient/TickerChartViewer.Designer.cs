@@ -42,7 +42,7 @@ namespace CryptoMarketClient {
             DevExpress.XtraCharts.Series series5 = new DevExpress.XtraCharts.Series();
             DevExpress.XtraCharts.PointSeriesView pointSeriesView1 = new DevExpress.XtraCharts.PointSeriesView();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TickerChartViewer));
-            this.chartControl1 = new MyChartControl();
+            this.chartControl1 = new CryptoMarketClient.MyChartControl();
             this.barManager1 = new DevExpress.XtraBars.BarManager(this.components);
             this.bar1 = new DevExpress.XtraBars.Bar();
             this.bsCandleStickPeriod = new DevExpress.XtraBars.BarSubItem();
@@ -96,8 +96,8 @@ namespace CryptoMarketClient {
             xyDiagram1.AxisX.VisibleInPanesSerializable = "-1;0";
             xyDiagram1.AxisX.VisualRange.Auto = false;
             xyDiagram1.AxisX.VisualRange.AutoSideMargins = false;
-            xyDiagram1.AxisX.VisualRange.MaxValueSerializable = "02/02/2018 19:29:00.000";
-            xyDiagram1.AxisX.VisualRange.MinValueSerializable = "02/02/2018 19:20:00.000";
+            xyDiagram1.AxisX.VisualRange.MaxValueSerializable = "05/25/2018 16:14:00.000";
+            xyDiagram1.AxisX.VisualRange.MinValueSerializable = "05/25/2018 16:05:00.000";
             xyDiagram1.AxisX.VisualRange.SideMarginsValue = 0D;
             xyDiagram1.AxisX.WholeRange.AutoSideMargins = false;
             xyDiagram1.AxisX.WholeRange.SideMarginsValue = 0D;
@@ -106,11 +106,13 @@ namespace CryptoMarketClient {
             xyDiagram1.AxisY.Label.TextPattern = "{V:f8}";
             xyDiagram1.AxisY.VisibleInPanesSerializable = "-1";
             xyDiagram1.AxisY.WholeRange.AlwaysShowZeroLevel = false;
+            xyDiagram1.DefaultPane.ScrollBarOptions.BarThickness = 16;
             xyDiagram1.DependentAxesYRange = DevExpress.Utils.DefaultBoolean.True;
             xyDiagram1.EnableAxisXScrolling = true;
             xyDiagram1.EnableAxisXZooming = true;
             xyDiagramPane1.Name = "Volume Pane";
             xyDiagramPane1.PaneID = 0;
+            xyDiagramPane1.ScrollBarOptions.BarThickness = 16;
             xyDiagramPane1.Weight = 0.3D;
             xyDiagram1.Panes.AddRange(new DevExpress.XtraCharts.XYDiagramPane[] {
             xyDiagramPane1});

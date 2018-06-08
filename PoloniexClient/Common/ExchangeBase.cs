@@ -21,6 +21,8 @@ using System.Globalization;
 using System.Threading;
 using CryptoMarketClient.Binance;
 using DevExpress.XtraEditors;
+using CryptoMarketClient.BitFinex;
+using System.Reactive.Subjects;
 
 namespace CryptoMarketClient {
     public abstract class Exchange : IXtraSerializable {
@@ -35,12 +37,20 @@ namespace CryptoMarketClient {
 
             Registered.Add(new PoloniexExchange());
             Registered.Add(new BittrexExchange());
+            Registered.Add(new BitFinexExchange());
             //Registered.Add(new YobitExchange());
 
             foreach(Exchange exchange in Registered)
                 exchange.Load();
         }
 
+        public List<TickerBase> LastUpdatedTickers { get; } = new List<TickerBase>();
+
+        protected virtual void OnHearthBeat() {
+            LastHearthBeat = DateTime.Now;
+        }
+
+        public DateTime LastHearthBeat { get; set; }
         public abstract bool UseWebSocket { get; }
         public abstract bool AllowCandleStickIncrementalUpdate { get; }
         public abstract void ObtainExchangeSettings();
@@ -132,6 +142,22 @@ namespace CryptoMarketClient {
             startIndex = index;
             return items;
         }
+        public string[] DeserializeArray(byte[] bytes, ref int startIndex, int subArrayItemsCount) {
+            string[] items = new string[subArrayItemsCount];
+            int index = 0;
+            if(!FindChar(bytes, '[', ref index))
+                return null;
+            for(int i = 0; i < subArrayItemsCount; i++) {
+                index++;
+                int length = index;
+                char separator = i == subArrayItemsCount - 1 ? ']' : ',';
+                FindChar(bytes, separator, ref length);
+                length -= index;
+                items[i] = ByteArray2String(bytes, index, length);
+                index += length;
+            }
+            return items;
+        }
         protected List<string[]> DeserializeArrayOfArrays(byte[] bytes, ref int startIndex, int subArrayItemsCount) {
             int index = startIndex;
             if(!FindChar(bytes, '[', ref index))
@@ -200,6 +226,8 @@ namespace CryptoMarketClient {
         public bool IsConnected {
             get { return Connected.Contains(this); }
             set {
+                if(IsConnected == value)
+                    return;
                 if(value) {
                     if(IsConnected)
                         return;
@@ -209,8 +237,14 @@ namespace CryptoMarketClient {
                     if(!IsConnected)
                     Connected.Remove(this);
                 }
+                OnIsConnectedChanged();
             }
         }
+        protected virtual void OnIsConnectedChanged() {
+        }
+
+        public abstract bool SupportWebSocket(WebSocketType type);
+        
         static string Text { get { return "Yes, man is mortal, but that would be only half the trouble. The worst of it is that he's sometimes unexpectedly mortal—there's the trick!"; } }
 
         public bool LoadTickers() {
@@ -229,6 +263,14 @@ namespace CryptoMarketClient {
         public List<OpenedOrderInfo> OpenedOrders { get; } = new List<OpenedOrderInfo>();
         public BindingList<BalanceBase> Balances { get; } = new BindingList<BalanceBase>();
 
+        public event TickerUpdateEventHandler TickerUpdate;
+        protected void RaiseTickerUpdate(PoloniexTicker t) {
+            TickerUpdateEventArgs e = new TickerUpdateEventArgs() { Ticker = t };
+            if(TickerUpdate != null)
+                TickerUpdate(this, e);
+            t.RaiseChanged();
+        }
+
         [XtraSerializableProperty(XtraSerializationVisibility.Collection, true, false, true)]
         public List<PinnedTickerInfo> PinnedTickers { get; set; } = new List<PinnedTickerInfo>();
         PinnedTickerInfo XtraCreatePinnedTickersItem(XtraItemEventArgs e) {
@@ -240,6 +282,21 @@ namespace CryptoMarketClient {
                 return;
             }
             PinnedTickers.Insert(e.NewIndex, (PinnedTickerInfo)e.Item.Value);
+        }
+
+        protected byte[] OpenedOrdersData { get; set; }
+        protected internal bool IsOpenedOrdersChanged(byte[] newBytes) {
+            if(newBytes == null)
+                return false;
+            if(OpenedOrdersData == null || OpenedOrdersData.Length != newBytes.Length) {
+                OpenedOrdersData = newBytes;
+                return true;
+            }
+            for(int i = 0; i < newBytes.Length; i++) {
+                if(OpenedOrdersData[i] != newBytes[i])
+                    return true;
+            }
+            return false;
         }
 
         [XtraSerializableProperty]
@@ -261,7 +318,8 @@ namespace CryptoMarketClient {
             HmacSha = new HMACSHA512(Encoding.UTF8.GetBytes(ApiSecret));
         }
         public bool IsApiKeyExists { get { return !string.IsNullOrEmpty(ApiKey) && !string.IsNullOrEmpty(ApiSecret); } }
-        public abstract string Name { get; }
+        public abstract ExchangeType Type { get; }
+        public string Name { get { return Type.ToString(); } }
         protected HMACSHA512 HmacSha { get; set; }
         readonly byte[] Buffer = new byte[8192];
         protected string GetSign(string text) {
@@ -505,6 +563,7 @@ namespace CryptoMarketClient {
         public abstract bool UpdateTrades(TickerBase tickerBase);
         public abstract List<TradeHistoryItem> GetTrades(TickerBase ticker, DateTime starTime);
         public abstract bool UpdateOpenedOrders(TickerBase tickerBase);
+        public bool UpdateOpenedOrders() { return UpdateOpenedOrders(null); }
         public abstract bool UpdateCurrencies();
         public abstract bool UpdateBalances();
         public abstract bool GetDeposites();
@@ -592,11 +651,17 @@ namespace CryptoMarketClient {
         public abstract void StartListenTickersStream();
         public abstract void StopListenTickersStream();
         public abstract Form CreateAccountForm();
+        public abstract void OnAccountRemoved(ExchangeAccountInfo info);
     }
 
     public class CandleStickIntervalInfo {
         public string Text { get; set; }
         public string Command { get; set; }
         public TimeSpan Interval { get; set; }
+    }
+
+    public enum WebSocketType {
+        Ticker,
+        OrderBook
     }
 }

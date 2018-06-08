@@ -36,7 +36,7 @@ namespace CryptoMarketClient {
             get {
                 if(timer == null) {
                     timer = new System.Threading.Timer(OnThreadUpdate);
-                    timer.Change(0, 2000);
+                    timer.Change(0, 6000);
                 }
                 return timer;
             }
@@ -53,11 +53,35 @@ namespace CryptoMarketClient {
             this.gridControl1.DataSource = Exchange.Tickers;
             HasShown = true;
             UpdateSelectedTickersFromExchange();
-            if(!Exchange.UseWebSocket)
+            if(!Exchange.SupportWebSocket(WebSocketType.Ticker))
                 Timer.InitializeLifetimeService();
-            else
+            else {
+                Exchange.TickerUpdate += OnWebSocketTickerUpdate;
                 SubscribeWebSocket();
+            }
         }
+
+        private void OnWebSocketTickerUpdate(object sender, TickerUpdateEventArgs e) {
+            UpdateRow(e.Ticker);
+            BeginInvoke(new MethodInvoker(UpdateStatusBar));
+        }
+
+        void UpdateStatusBar() {
+            this.siUpdate.Caption = "Updated: " + Exchange.LastHearthBeat.ToLongTimeString();
+            lock(Exchange.LastUpdatedTickers) {
+                if(Exchange.LastUpdatedTickers.Count > 0)
+                    this.barStaticItem1.ImageOptions.Image = Exchange.LastUpdatedTickers[0].Logo;
+                if(Exchange.LastUpdatedTickers.Count > 1)
+                    this.barStaticItem2.ImageOptions.Image = Exchange.LastUpdatedTickers[1].Logo;
+                if(Exchange.LastUpdatedTickers.Count > 2)
+                    this.barStaticItem3.ImageOptions.Image = Exchange.LastUpdatedTickers[2].Logo;
+                if(Exchange.LastUpdatedTickers.Count > 3)
+                    this.barStaticItem4.ImageOptions.Image = Exchange.LastUpdatedTickers[3].Logo;
+                if(Exchange.LastUpdatedTickers.Count > 4)
+                    this.barStaticItem5.ImageOptions.Image = Exchange.LastUpdatedTickers[4].Logo;
+            }
+        }
+
         void UpdateSelectedTickersFromExchange() {
             UpdatePinnedItems();
         }
@@ -142,18 +166,18 @@ namespace CryptoMarketClient {
             AccountForm.Activate();
         }
 
-        //PoloniexOrdersForm ordersForm;
-        //protected PoloniexOrdersForm OrdersForm {
-        //    get {
-        //        if(ordersForm == null || ordersForm.IsDisposed)
-        //            ordersForm = new PoloniexOrdersForm();
-        //        return ordersForm;
-        //    }
-        //}
+        OpenedOrdersForm ordersForm;
+        protected OpenedOrdersForm OrdersForm {
+            get {
+                if(ordersForm == null || ordersForm.IsDisposed)
+                    ordersForm = new OpenedOrdersForm(Exchange);
+                return ordersForm;
+            }
+        }
         private void barButtonItem1_ItemClick_1(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
-            //OrdersForm.MdiParent = MdiParent;
-            //OrdersForm.Show();
-            //OrdersForm.Activate();
+            OrdersForm.MdiParent = MdiParent;
+            OrdersForm.Show();
+            OrdersForm.Activate();
         }
         protected void UpdatePinnedItems() {
             List<BarItem> addItems = new List<BarItem>();
@@ -286,7 +310,7 @@ namespace CryptoMarketClient {
         }
 
         private void gridView1_GetThumbnailImage(object sender, DevExpress.XtraGrid.Views.Grid.GridViewThumbnailImageEventArgs e) {
-            TickerBase t = (TickerBase)this.gridView1.GetRow(e.RowHandle);
+            TickerBase t = (TickerBase)Exchange.Tickers[e.DataSourceIndex];
             if(t.Logo != null) 
                 e.ThumbnailImage = new Bitmap(t.Logo, new Size(128, 128));
         }

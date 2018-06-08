@@ -69,7 +69,7 @@
             this.gcFirst = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colUpdateTimeMs = new DevExpress.XtraGrid.Columns.GridColumn();
             this.repositoryItemSparklineEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemSparklineEdit();
-            this.bbOpenedOrders = new DevExpress.XtraBars.Ribbon.RibbonControl();
+            this.ribbonControl1 = new DevExpress.XtraBars.Ribbon.RibbonControl();
             this.barCheckItem1 = new DevExpress.XtraBars.BarCheckItem();
             this.barCheckItem2 = new DevExpress.XtraBars.BarCheckItem();
             this.ShowDetailsForSelectedItem = new DevExpress.XtraBars.BarButtonItem();
@@ -80,8 +80,14 @@
             this.barButtonItem2 = new DevExpress.XtraBars.BarButtonItem();
             this.bbRemoveByRightClick = new DevExpress.XtraBars.BarButtonItem();
             this.bbMonitorOnlySelected = new DevExpress.XtraBars.BarCheckItem();
+            this.barStaticItem1 = new DevExpress.XtraBars.BarStaticItem();
+            this.barStaticItem2 = new DevExpress.XtraBars.BarStaticItem();
+            this.barStaticItem3 = new DevExpress.XtraBars.BarStaticItem();
+            this.barStaticItem4 = new DevExpress.XtraBars.BarStaticItem();
+            this.barStaticItem5 = new DevExpress.XtraBars.BarStaticItem();
             this.ribbonPage1 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPageGroup1 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
+            this.ribbonStatusBar1 = new DevExpress.XtraBars.Ribbon.RibbonStatusBar();
             this.barManager1 = new DevExpress.XtraBars.BarManager(this.components);
             this.bar1 = new DevExpress.XtraBars.Bar();
             this.standaloneBarDockControl1 = new DevExpress.XtraBars.StandaloneBarDockControl();
@@ -90,13 +96,14 @@
             this.barDockControlLeft = new DevExpress.XtraBars.BarDockControl();
             this.barDockControlRight = new DevExpress.XtraBars.BarDockControl();
             this.popupMenu1 = new DevExpress.XtraBars.PopupMenu(this.components);
+            this.siUpdate = new DevExpress.XtraBars.BarStaticItem();
             ((System.ComponentModel.ISupportInitialize)(this.teValueWithChange)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemTextEdit1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemSparklineEdit1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.bbOpenedOrders)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.barManager1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.popupMenu1)).BeginInit();
             this.SuspendLayout();
@@ -205,6 +212,8 @@
             // 
             // gridView1
             // 
+            this.gridView1.Appearance.Row.FontSizeDelta = 3;
+            this.gridView1.Appearance.Row.Options.UseFont = true;
             this.gridView1.Columns.AddRange(new DevExpress.XtraGrid.Columns.GridColumn[] {
             this.colIsSelected,
             this.gcLogo,
@@ -311,9 +320,11 @@
             this.gridView1.OptionsView.EnableAppearanceEvenRow = true;
             this.gridView1.OptionsView.ShowHorizontalLines = DevExpress.Utils.DefaultBoolean.False;
             this.gridView1.OptionsView.ShowIndicator = false;
+            this.gridView1.OptionsView.ShowVerticalLines = DevExpress.Utils.DefaultBoolean.False;
             this.gridView1.RowHeight = 48;
             this.gridView1.SortInfo.AddRange(new DevExpress.XtraGrid.Columns.GridColumnSortInfo[] {
             new DevExpress.XtraGrid.Columns.GridColumnSortInfo(this.gcFirst, DevExpress.Data.ColumnSortOrder.Ascending)});
+            this.gridView1.VertScrollVisibility = DevExpress.XtraGrid.Views.Base.ScrollVisibility.Always;
             this.gridView1.GetThumbnailImage += new DevExpress.XtraGrid.Views.Grid.GridViewThumbnailImageEventHandler(this.gridView1_GetThumbnailImage);
             this.gridView1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.gridView1_MouseDown);
             this.gridView1.DoubleClick += new System.EventHandler(this.gridView1_DoubleClick);
@@ -432,12 +443,12 @@
             lineSparklineView1.ScaleFactor = 1F;
             this.repositoryItemSparklineEdit1.View = lineSparklineView1;
             // 
-            // bbOpenedOrders
+            // ribbonControl1
             // 
-            this.bbOpenedOrders.AllowGlyphSkinning = true;
-            this.bbOpenedOrders.ExpandCollapseItem.Id = 0;
-            this.bbOpenedOrders.Items.AddRange(new DevExpress.XtraBars.BarItem[] {
-            this.bbOpenedOrders.ExpandCollapseItem,
+            this.ribbonControl1.AllowGlyphSkinning = true;
+            this.ribbonControl1.ExpandCollapseItem.Id = 0;
+            this.ribbonControl1.Items.AddRange(new DevExpress.XtraBars.BarItem[] {
+            this.ribbonControl1.ExpandCollapseItem,
             this.barCheckItem1,
             this.barCheckItem2,
             this.ShowDetailsForSelectedItem,
@@ -447,15 +458,22 @@
             this.bbRemoveQuickPanel,
             this.barButtonItem2,
             this.bbRemoveByRightClick,
-            this.bbMonitorOnlySelected});
-            this.bbOpenedOrders.Location = new System.Drawing.Point(0, 0);
-            this.bbOpenedOrders.Margin = new System.Windows.Forms.Padding(24, 23, 24, 23);
-            this.bbOpenedOrders.MaxItemId = 14;
-            this.bbOpenedOrders.Name = "bbOpenedOrders";
-            this.bbOpenedOrders.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
+            this.bbMonitorOnlySelected,
+            this.barStaticItem1,
+            this.barStaticItem2,
+            this.barStaticItem3,
+            this.barStaticItem4,
+            this.barStaticItem5,
+            this.siUpdate});
+            this.ribbonControl1.Location = new System.Drawing.Point(0, 0);
+            this.ribbonControl1.Margin = new System.Windows.Forms.Padding(24, 23, 24, 23);
+            this.ribbonControl1.MaxItemId = 20;
+            this.ribbonControl1.Name = "ribbonControl1";
+            this.ribbonControl1.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
             this.ribbonPage1});
-            this.bbOpenedOrders.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonControlStyle.Office2013;
-            this.bbOpenedOrders.Size = new System.Drawing.Size(1451, 277);
+            this.ribbonControl1.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonControlStyle.Office2013;
+            this.ribbonControl1.Size = new System.Drawing.Size(1451, 277);
+            this.ribbonControl1.StatusBar = this.ribbonStatusBar1;
             // 
             // barCheckItem1
             // 
@@ -530,6 +548,36 @@
             this.bbMonitorOnlySelected.Name = "bbMonitorOnlySelected";
             this.bbMonitorOnlySelected.CheckedChanged += new DevExpress.XtraBars.ItemClickEventHandler(this.bbMonitorOnlySelected_CheckedChanged);
             // 
+            // barStaticItem1
+            // 
+            this.barStaticItem1.Id = 14;
+            this.barStaticItem1.ImageOptions.AllowGlyphSkinning = DevExpress.Utils.DefaultBoolean.False;
+            this.barStaticItem1.Name = "barStaticItem1";
+            // 
+            // barStaticItem2
+            // 
+            this.barStaticItem2.Id = 15;
+            this.barStaticItem2.ImageOptions.AllowGlyphSkinning = DevExpress.Utils.DefaultBoolean.False;
+            this.barStaticItem2.Name = "barStaticItem2";
+            // 
+            // barStaticItem3
+            // 
+            this.barStaticItem3.Id = 16;
+            this.barStaticItem3.ImageOptions.AllowGlyphSkinning = DevExpress.Utils.DefaultBoolean.False;
+            this.barStaticItem3.Name = "barStaticItem3";
+            // 
+            // barStaticItem4
+            // 
+            this.barStaticItem4.Id = 17;
+            this.barStaticItem4.ImageOptions.AllowGlyphSkinning = DevExpress.Utils.DefaultBoolean.False;
+            this.barStaticItem4.Name = "barStaticItem4";
+            // 
+            // barStaticItem5
+            // 
+            this.barStaticItem5.Id = 18;
+            this.barStaticItem5.ImageOptions.AllowGlyphSkinning = DevExpress.Utils.DefaultBoolean.False;
+            this.barStaticItem5.Name = "barStaticItem5";
+            // 
             // ribbonPage1
             // 
             this.ribbonPage1.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] {
@@ -545,6 +593,21 @@
             this.ribbonPageGroup1.ItemLinks.Add(this.bbMonitorOnlySelected);
             this.ribbonPageGroup1.Name = "ribbonPageGroup1";
             this.ribbonPageGroup1.Text = "Market";
+            // 
+            // ribbonStatusBar1
+            // 
+            this.ribbonStatusBar1.AutoHeight = true;
+            this.ribbonStatusBar1.ItemLinks.Add(this.siUpdate);
+            this.ribbonStatusBar1.ItemLinks.Add(this.barStaticItem1);
+            this.ribbonStatusBar1.ItemLinks.Add(this.barStaticItem2);
+            this.ribbonStatusBar1.ItemLinks.Add(this.barStaticItem3);
+            this.ribbonStatusBar1.ItemLinks.Add(this.barStaticItem4);
+            this.ribbonStatusBar1.ItemLinks.Add(this.barStaticItem5);
+            this.ribbonStatusBar1.Location = new System.Drawing.Point(0, 808);
+            this.ribbonStatusBar1.Margin = new System.Windows.Forms.Padding(6);
+            this.ribbonStatusBar1.Name = "ribbonStatusBar1";
+            this.ribbonStatusBar1.Ribbon = this.ribbonControl1;
+            this.ribbonStatusBar1.Size = new System.Drawing.Size(1451, 54);
             // 
             // barManager1
             // 
@@ -632,16 +695,23 @@
             this.popupMenu1.ItemLinks.Add(this.bbAddQuickPanel);
             this.popupMenu1.ItemLinks.Add(this.bbRemoveQuickPanel);
             this.popupMenu1.Name = "popupMenu1";
-            this.popupMenu1.Ribbon = this.bbOpenedOrders;
+            this.popupMenu1.Ribbon = this.ribbonControl1;
+            // 
+            // siUpdate
+            // 
+            this.siUpdate.Caption = "Updated: ";
+            this.siUpdate.Id = 19;
+            this.siUpdate.Name = "siUpdate";
             // 
             // TickersCollectionForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1451, 862);
+            this.Controls.Add(this.ribbonStatusBar1);
             this.Controls.Add(this.gridControl1);
             this.Controls.Add(this.standaloneBarDockControl1);
-            this.Controls.Add(this.bbOpenedOrders);
+            this.Controls.Add(this.ribbonControl1);
             this.Controls.Add(this.barDockControlLeft);
             this.Controls.Add(this.barDockControlRight);
             this.Controls.Add(this.barDockControlBottom);
@@ -655,7 +725,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemSparklineEdit1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.bbOpenedOrders)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.barManager1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.popupMenu1)).EndInit();
             this.ResumeLayout(false);
@@ -680,7 +750,7 @@
         private DevExpress.XtraGrid.Columns.GridColumn gcTime;
         private DevExpress.XtraGrid.Columns.GridColumn gcFirst;
         private DevExpress.XtraGrid.Columns.GridColumn gcSecond;
-        private DevExpress.XtraBars.Ribbon.RibbonControl bbOpenedOrders;
+        private DevExpress.XtraBars.Ribbon.RibbonControl ribbonControl1;
         private DevExpress.XtraBars.Ribbon.RibbonPage ribbonPage1;
         private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup1;
         private DevExpress.XtraBars.BarCheckItem barCheckItem1;
@@ -711,5 +781,12 @@
         private DevExpress.XtraEditors.Repository.RepositoryItemTextEdit repositoryItemTextEdit1;
         private DevExpress.XtraEditors.Repository.RepositoryItemTextEdit teValueWithChange;
         private DevExpress.XtraGrid.Columns.GridColumn gcLogo;
+        private DevExpress.XtraBars.Ribbon.RibbonStatusBar ribbonStatusBar1;
+        private DevExpress.XtraBars.BarStaticItem barStaticItem1;
+        private DevExpress.XtraBars.BarStaticItem barStaticItem2;
+        private DevExpress.XtraBars.BarStaticItem barStaticItem3;
+        private DevExpress.XtraBars.BarStaticItem barStaticItem4;
+        private DevExpress.XtraBars.BarStaticItem barStaticItem5;
+        private DevExpress.XtraBars.BarStaticItem siUpdate;
     }
 }

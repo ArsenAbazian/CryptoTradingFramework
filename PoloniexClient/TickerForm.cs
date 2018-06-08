@@ -39,8 +39,10 @@ namespace CryptoMarketClient {
             base.OnShown(e);
             try {
                 if(System.IO.File.Exists("TickerFormWorkspaceDefault.xml")) {
-                    if(this.workspaceManager1.LoadWorkspace("TickerFormDefault", "TickerFormWorkspaceDefault.xml"))
+                    if(this.workspaceManager1.LoadWorkspace("TickerFormDefault", "TickerFormWorkspaceDefault.xml")) {
                         this.workspaceManager1.ApplyWorkspace("TickerFormDefault");
+                        UpdateDockPanels();
+                    }
                 }
             }
             catch(Exception ee) {
@@ -53,7 +55,7 @@ namespace CryptoMarketClient {
             get {
                 if(timer == null) {
                     timer = new System.Threading.Timer(OnThreadUpdate);
-                    timer.Change(0, 500);
+                    timer.Change(0, 2000);
                 }
                 return timer;
             }
@@ -66,10 +68,10 @@ namespace CryptoMarketClient {
                     Ticker.UpdateBalance(CurrencyType.MarketCurrency);
                 if(Ticker != null)
                     Ticker.UpdateOrderBook();
-                if(Ticker != null)
-                    Ticker.UpdateTrades();
-                if(Ticker != null)
-                    Ticker.UpdateOpenedOrders();
+                //if(Ticker != null)
+                //    Ticker.UpdateTrades();
+                //if(Ticker != null)
+                //    Ticker.UpdateOpenedOrders();
                 if(Ticker != null)
                     Ticker.UpdateTrailings();
                 if(Ticker != null)
@@ -132,8 +134,11 @@ namespace CryptoMarketClient {
         void UpdateDockPanels() {
             if(Ticker == null)
                 return;
-            foreach(DockPanel panel in this.dockManager1.RootPanels)
+            foreach(DockPanel panel in this.dockManager1.RootPanels) {
+                string[] parts = panel.Text.Split('-');
+                if(parts.Length == 2) panel.Text = parts[1];
                 panel.Text = Ticker.Name + " - " + panel.Text;
+            }
         }
         void UpdateTickerInfoControlHeight() {
             this.tickerInfoControl.UpdateBestHeight();
@@ -193,6 +198,14 @@ namespace CryptoMarketClient {
         }
 
         private void OnTickerChanged(object sender, EventArgs e) {
+            if(IsHandleCreated) {
+                BeginInvoke(new Action(() => {
+                    if(!IsDisposed) {
+                        this.siBalance.Caption = "Balance: " + Ticker.MarketCurrencyBalance.ToString("0.########");
+                        this.siUpdated.Caption = "Updated: " + Ticker.LastUpdateTime;
+                    }
+                }));
+            }
         }
 
         private void OnTickerOrderBookChanged(object sender, OrderBookEventArgs e) {
@@ -248,7 +261,8 @@ namespace CryptoMarketClient {
         }
 
         private void orderBookControl1_SelectedBidRowChanged(object sender, SelectedOrderBookEntryChangedEventArgs e) {
-
+            this.buySettingsControl.Settings.TradePrice = e.Entry.Value;
+            this.buySettingsControl.Settings.Amount = e.Entry.Amount;
         }
 
         private void dockManager1_ActivePanelChanged(object sender, ActivePanelChangedEventArgs e) {

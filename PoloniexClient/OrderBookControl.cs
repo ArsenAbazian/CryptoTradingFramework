@@ -238,7 +238,11 @@ namespace CryptoMarketClient {
 
         int IList<OrderBookEntry>.IndexOf(OrderBookEntry item) {
             if(Data == null) return -1;
-            return Data.FindIndex(i => i == item);
+            for(int i = 0; i < Data.Length; i++) {
+                if(Data[i] == item)
+                    return i;
+            }
+            return -1;
         }
 
         void IList<OrderBookEntry>.Insert(int index, OrderBookEntry item) {

@@ -41,6 +41,17 @@ namespace CryptoMarketClient.Common {
         public static string ApplicationName { get { return "CryptoMarketClient"; } }
         static string SettingsSectionName { get { return "Settings"; } }
 
+        [XtraSerializableProperty(XtraSerializationVisibility.Collection, true, false, true)]
+        public List<ExchangeAccountInfo> Accounts { get; } = new List<ExchangeAccountInfo>();
+
+        protected object XtraCreateAccountsItem(XtraItemEventArgs e) {
+            return new ExchangeAccountInfo();
+        }
+
+        protected void XtraSetIndexAccountsItem(XtraSetItemIndexEventArgs e) {
+            Accounts.Add((ExchangeAccountInfo)e.Item.Value);
+        }
+
         public SettingsStore() {
             SelectedThemeName = "Office 2016 Dark";
             UseDirectXForGrid = true;
@@ -70,6 +81,9 @@ namespace CryptoMarketClient.Common {
             if(!File.Exists(SettingsFileName))
                 return;
             RestoreLayoutCore(new XmlXtraSerializer(), SettingsFileName);
+            foreach(ExchangeAccountInfo info in Accounts) {
+                info.Exchange = Exchange.Registered.FirstOrDefault(e => e.Type == info.Type);
+            }
         }
 
         public void SaveToXml() {

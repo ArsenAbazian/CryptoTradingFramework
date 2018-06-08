@@ -51,6 +51,10 @@ namespace CryptoMarketClient {
                 }
                 return amount;
             }
+            set {
+                amount = value;
+                AmountString = amount.ToString("0.########");
+            }
         }
         public double Volume { get; set; }
         public double VolumePercent { get; set; }
@@ -110,39 +114,103 @@ namespace CryptoMarketClient {
                 exponent = (exponent << 3) + (exponent << 1) + str[i] - 0x30;
             return exponent;
         }
+
+        static int GetExponent(char[] str, int startIndex, int endIndex) {
+            int exponent = 0;
+            if(str[startIndex] == '-') {
+                startIndex++;
+                for(int i = startIndex; i < endIndex; i++)
+                    exponent = (exponent << 3) + (exponent << 1) + str[i] - 0x30;
+                return -exponent;
+            }
+            for(int i = startIndex; i < str.Length; i++)
+                exponent = (exponent << 3) + (exponent << 1) + str[i] - 0x30;
+            return exponent;
+        }
+
         static double ParseExponent(string str, double value, int startIndex) {
             int exponent = GetExponent(str, startIndex);
             if(exponent < 0)
                 return value * divider[-exponent];
             return value * multiplier[exponent];
         }
+
+        static double ParseExponent(char[] str, double value, int startIndex, int end) {
+            int exponent = GetExponent(str, startIndex, end);
+            if(exponent < 0)
+                return value * divider[-exponent];
+            return value * multiplier[exponent];
+        }
+
         public static double Convert(string str) {
             try {
                 int value = 0;
                 int fix = 0;
                 int length = str.Length;
-                for(int i = 0; i < length; i++) {
+                int startIndex = 0;
+                int sign = 1;
+                if(str[0] == '-') {
+                    startIndex = 1;
+                    sign = -1;
+                }
+                for(int i = startIndex; i < length; i++) {
                     char c = str[i];
                     if(c == '.' || c == ',') {
                         for(int j = i + 1; j < length; j++) {
                             if(str[j] == '-' || str[j] == 'e' || str[j] == 'E')
-                                return ParseExponent(str, value + fix * divider[j - i - 1], j + 1);
+                                return ParseExponent(str, sign * value + fix * divider[j - i - 1], j + 1);
                             fix = (fix << 3) + (fix << 1) + str[j] - 0x30;
                         }
-                        return value + fix * divider[length - i - 1];
+                        return sign * value + fix * divider[length - i - 1];
                     }
                     if(str[i] == '-' || str[i] == 'e' || str[i] == 'E')
-                        return ParseExponent(str, value, i + 1);
+                        return sign * ParseExponent(str, value, i + 1);
                     value = (value << 3) + (value << 1) + str[i] - 0x30;
                 }
                 if(value < 0) {
                     Telemetry.Default.TrackEvent("convert double exception", new string[] { "value", str, "converted", value.ToString() }, true);
                 }
-                return value;
+                return sign * value;
             }
             catch(Exception e) {
                 Telemetry.Default.TrackEvent("convert double exception", new string[] { "value", str }, true);
                 Telemetry.Default.TrackException(e, new string[,] { { "value", str } });
+                return System.Convert.ToDouble(str);
+            }
+        }
+        public static double Convert(char[] str, int start, int end) {
+            try {
+                int value = 0;
+                int fix = 0;
+                int length = end;
+                int startIndex = start;
+                int sign = 1;
+                if(str[start] == '-') {
+                    startIndex = start + 1;
+                    sign = -1;
+                }
+                for(int i = startIndex; i < length; i++) {
+                    char c = str[i];
+                    if(c == '.' || c == ',') {
+                        for(int j = i + 1; j < length; j++) {
+                            if(str[j] == '-' || str[j] == 'e' || str[j] == 'E')
+                                return ParseExponent(str, sign * value + fix * divider[j - i - 1], j + 1, end);
+                            fix = (fix << 3) + (fix << 1) + str[j] - 0x30;
+                        }
+                        return sign * value + fix * divider[length - i - 1];
+                    }
+                    if(str[i] == '-' || str[i] == 'e' || str[i] == 'E')
+                        return sign * ParseExponent(str, value, i + 1, end);
+                    value = (value << 3) + (value << 1) + str[i] - 0x30;
+                }
+                if(value < 0) {
+                    Telemetry.Default.TrackEvent("convert double exception", new string[] { "value", str.ToString(), "converted", value.ToString() }, true);
+                }
+                return sign * value;
+            }
+            catch(Exception e) {
+                Telemetry.Default.TrackEvent("convert double exception", new string[] { "value", str.ToString() }, true);
+                Telemetry.Default.TrackException(e, new string[,] { { "value", str.ToString() } });
                 return System.Convert.ToDouble(str);
             }
         }

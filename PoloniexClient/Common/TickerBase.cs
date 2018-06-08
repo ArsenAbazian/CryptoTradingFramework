@@ -28,6 +28,8 @@ namespace CryptoMarketClient {
             IsActual = true;
         }
 
+        public int Code { get; set; }
+
         protected string FileName {
             get {
                 return Exchange.TickersDirectory + "\\" + Name.ToLower() + ".xml";
@@ -328,7 +330,9 @@ namespace CryptoMarketClient {
             }
         }
         protected virtual string GetStringWithChangePercent(double value, double change) {
-            return string.Format("<b>{0:0.########}</b> <size=-2>{1:0.##}%</size>", value, change / value * 100);
+            if(change >= 0) 
+                return string.Format("<b>{0:0.########}</b> <color=green><size=-2>{1:0.##}%</size></color>", value, change / value * 100);
+            return string.Format("<b>{0:0.########}</b> <color=red><size=-2>{1:0.##}%</size></color>", value, change / value * 100);
         }
         public double BaseVolume { get; set; }
         public double Volume { get; set; }

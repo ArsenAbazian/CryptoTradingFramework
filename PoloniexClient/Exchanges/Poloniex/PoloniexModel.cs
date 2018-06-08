@@ -1,4 +1,5 @@
 ﻿using CryptoMarketClient.Common;
+using CryptoMarketClient.Exchanges.Poloniex;
 using CryptoMarketClient.Poloniex;
 using DevExpress.XtraEditors;
 using Newtonsoft.Json;
@@ -16,6 +17,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using WebSocket4Net;
 
 namespace CryptoMarketClient {
     public class PoloniexExchange : Exchange {
@@ -32,23 +34,144 @@ namespace CryptoMarketClient {
             }
         }
 
+        public override void OnAccountRemoved(ExchangeAccountInfo info) {
+            
+        }
+
+        public override ExchangeType Type => ExchangeType.Poloniex;
+
+        public override bool SupportWebSocket(WebSocketType type) {
+            return type == WebSocketType.Ticker;
+        }
+
+        public WebSocket WebSocket { get; private set; }
+
+        private void OnGetTickerItem(PoloniexTicker item) {
+            lock(item) {
+                item.UpdateHistoryItem();
+                RaiseTickerUpdate(item);
+            }
+        }
+
         public override Form CreateAccountForm() {
             return new AccountBalancesForm(this);
         }
 
         public override bool UseWebSocket => false;
 
-        public override void StartListenTickersStream() { }
+        public class WebSocketSubscribeInfo {
+            public string command { get; set; }
+            public string channel { get; set; }
+            public string userID { get; set; }
+        }
 
-        public override void StopListenTickersStream() { }
+        public override void StartListenTickersStream() {
+            WebSocket = new WebSocket("wss://api2.poloniex.com", "");
+            WebSocket.Error += OnSocketError;
+            WebSocket.Opened += OnSocketOpened;
+            WebSocket.Closed += OnSocketClosed;
+            WebSocket.MessageReceived += OnTickersSocketMessageReceived;
+            WebSocket.DataReceived += OnTickersSocketDataReceived;
+            WebSocket.Open();
+        }
 
+        public override void StopListenTickersStream() {
+            if(WebSocket != null) {
+                WebSocket.Dispose();
+                WebSocket = null;
+            }
+        }
+
+        private void OnTickersSocketDataReceived(object sender, WebSocket4Net.DataReceivedEventArgs e) {
+            
+        }
+
+        private void OnTickersSocketMessageReceived(object sender, MessageReceivedEventArgs e) {
+            LastHearthBeat = DateTime.Now;
+            if(e.Message[1] == '1' && e.Message[2] == '0' && e.Message[3] == '1' && e.Message[4] == '0')
+                OnHearthBeat();
+            else if(e.Message[1] == '1' && e.Message[2] == '0' && e.Message[3] == '0' && e.Message[4] == '2')
+                OnTickerInfoRecv(e.Message);
+        }
+
+        int DeserializePositiveInt(char[] value, ref int current, int end) {
+            int sum = 0;
+            for(; current < end; current++) {
+                if(value[current] == ',') {
+                    current++;
+                    break;
+                }
+                sum = ((sum << 3) + (sum << 1)) + (value[current] - 0x30);
+            }
+            return sum;
+        }
+
+        double DeserializeDoubleInQuotes(char[] value, ref int current, int end) {
+            if(value[current] != '"')
+                throw new ArgumentException(value.ToString());
+            current++;
+            int start = current;
+            for(; current < end; current++) {
+                if(value[current] == '"') {
+                    double res = FastDoubleConverter.Convert(value, start, current);
+                    current += 2;
+                    return res;
+                }
+            }
+            throw new ArgumentException(value.ToString());
+        }
+
+        void OnTickerInfoRecv(string message) {
+            int start = message.IndexOf('[', 5);
+            if(start == -1)
+                return;
+            int end = message.IndexOf(']', start);
+
+            char[] bytes = message.ToCharArray();
+            int current = start + 1;
+
+            int code = DeserializePositiveInt(bytes, ref current, end);
+            PoloniexTicker ticker = (PoloniexTicker)Tickers.FirstOrDefault(t => t.Code == code );
+            if(ticker == null)
+                return;
+            ticker.Last = DeserializeDoubleInQuotes(bytes, ref current, end);
+            ticker.LowestAsk = DeserializeDoubleInQuotes(bytes, ref current, end);
+            ticker.HighestBid = DeserializeDoubleInQuotes(bytes, ref current, end);
+            ticker.Change = DeserializeDoubleInQuotes(bytes, ref current, end);
+            ticker.BaseVolume = DeserializeDoubleInQuotes(bytes, ref current, end);
+            ticker.Volume = DeserializeDoubleInQuotes(bytes, ref current, end);
+            ticker.IsFrozen = DeserializePositiveInt(bytes, ref current, end) == 1;
+            ticker.Hr24High = DeserializeDoubleInQuotes(bytes, ref current, end);
+            ticker.Hr24Low = DeserializeDoubleInQuotes(bytes, ref current, end);
+
+            ticker.UpdateTrailings();
+
+            if(LastUpdatedTickers.Count > 5)
+                LastUpdatedTickers.RemoveAt(0);
+            LastUpdatedTickers.Add(ticker);
+            lock(ticker) {
+                RaiseTickerUpdate(ticker);
+            }
+        }
+
+        private void OnSocketClosed(object sender, EventArgs e) {
+        }
+
+        private void OnSocketOpened(object sender, EventArgs e) {
+            //((WebSocket)sender).Send(JsonConvert.SerializeObject(new WebSocketSubscribeInfo() { channel = "1000", command = "subscribe" }));
+            ((WebSocket)sender).Send(JsonConvert.SerializeObject(new WebSocketSubscribeInfo() { channel = "1002", command = "subscribe" }));
+        }
+
+        private void OnSocketError(object sender, SuperSocket.ClientEngine.ErrorEventArgs e) {
+            
+        }
+        
         public override void ObtainExchangeSettings() {
             
         }
 
         public override bool AllowCandleStickIncrementalUpdate => true;
 
-        public override string Name => "Poloniex";
         public override List<CandleStickIntervalInfo> GetAllowedCandleStickIntervals() {
             List<CandleStickIntervalInfo> list = new List<CandleStickIntervalInfo>();
             list.Add(new CandleStickIntervalInfo() { Text = "5 Minutes", Interval = TimeSpan.FromSeconds(300) });
@@ -68,14 +191,7 @@ namespace CryptoMarketClient {
             if(TickersSubscriber != null)
                 return;
         }
-
-        public event TickerUpdateEventHandler TickerUpdate;
-        protected void RaiseTickerUpdate(PoloniexTicker t) {
-            TickerUpdateEventArgs e = new TickerUpdateEventArgs() { Ticker = t };
-            if(TickerUpdate != null)
-                TickerUpdate(this, e);
-            t.RaiseChanged();
-        }
+        
         public IDisposable ConnectOrderBook(PoloniexTicker ticker) {
             return null;
         }
@@ -164,6 +280,7 @@ namespace CryptoMarketClient {
                 PoloniexTicker t = new PoloniexTicker(this);
                 t.Index = index;
                 t.CurrencyPair = prop.Name;
+                t.Code = PoloniexTickerCodesProvider.Codes[t.CurrencyPair];
                 JObject obj = (JObject)prop.Value;
                 t.Id = obj.Value<int>("id");
                 t.Last = obj.Value<double>("last");
@@ -607,7 +724,7 @@ namespace CryptoMarketClient {
             NameValueCollection coll = new NameValueCollection();
             coll.Add("nonce", GetNonce());
             coll.Add("command", "returnOpenOrders");
-            coll.Add("currencyPair", ticker.MarketName);
+            coll.Add("currencyPair", ticker == null? "all": ticker.MarketName);
 
             WebClient client = GetWebClient();
             client.Headers.Clear();
@@ -615,11 +732,18 @@ namespace CryptoMarketClient {
             client.Headers.Add("Key", ApiKey);
             try {
                 byte[] data = client.UploadValues(address, coll);
-                if(!ticker.IsOpenedOrdersChanged(data))
-                    return true;
+                if(ticker != null) {
+                    if(!ticker.IsOpenedOrdersChanged(data))
+                        return true;
+                }
+                else {
+                    if(IsOpenedOrdersChanged(data))
+                        return true;
+                }
                 return OnGetOpenedOrders(ticker, data);
             }
-            catch(Exception) {
+            catch(Exception e) {
+                Telemetry.Default.TrackException(e);
                 return false;
             }
         }
@@ -643,14 +767,19 @@ namespace CryptoMarketClient {
             if(string.IsNullOrEmpty(text))
                 return false;
             if(text == "[]") {
-                ticker.OpenedOrders.Clear();
+                if(ticker != null)
+                    ticker.OpenedOrders.Clear();
+                else
+                    OpenedOrders.Clear();
                 return true;
             }
             JObject res = (JObject)JsonConvert.DeserializeObject(text);
-            lock(ticker.OpenedOrders) {
-                ticker.OpenedOrders.Clear();
+            List<OpenedOrderInfo> openedOrders = ticker == null ? OpenedOrders : ticker.OpenedOrders;
+            lock(openedOrders) {
+                openedOrders.Clear();
                 foreach(JProperty prop in res.Children()) {
                     if(prop.Name == "error") {
+                        Telemetry.Default.TrackEvent("poloniex.ongetopenedorders", new string[] { "error", prop.Value<string>() }, true);
                         Debug.WriteLine("OnGetOpenedOrders fails: " + prop.Value<string>());
                         return false;
                     }
@@ -663,11 +792,12 @@ namespace CryptoMarketClient {
                         info.ValueString = obj.Value<string>("rate");
                         info.AmountString = obj.Value<string>("amount");
                         info.TotalString = obj.Value<string>("total");
-                        ticker.OpenedOrders.Add(info);
+                        openedOrders.Add(info);
                     }
                 }
             }
-            ticker.RaiseOpenedOrdersChanged();
+            if(ticker != null)
+                ticker.RaiseOpenedOrdersChanged();
             return true;
         }
 

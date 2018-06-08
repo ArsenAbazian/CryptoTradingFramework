@@ -52,6 +52,8 @@
             this.bciAllowDirectXCharts = new DevExpress.XtraBars.BarCheckItem();
             this.bbRegister = new DevExpress.XtraBars.BarButtonItem();
             this.barButtonItem4 = new DevExpress.XtraBars.BarButtonItem();
+            this.bcBinance = new DevExpress.XtraBars.BarCheckItem();
+            this.biBitFinex = new DevExpress.XtraBars.BarCheckItem();
             this.ribbonPageCategory1 = new DevExpress.XtraBars.Ribbon.RibbonPageCategory();
             this.ribbonPage2 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPageGroup2 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
@@ -74,7 +76,6 @@
             this.defaultBarAndDockingController1 = new DevExpress.XtraBars.DefaultBarAndDockingController(this.components);
             this.ribbonPage4 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPage6 = new DevExpress.XtraBars.Ribbon.RibbonPage();
-            this.bcBinance = new DevExpress.XtraBars.BarCheckItem();
             ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemSpinEdit1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemSpinEdit2)).BeginInit();
@@ -115,10 +116,11 @@
             this.bciAllowDirectXCharts,
             this.bbRegister,
             this.barButtonItem4,
-            this.bcBinance});
+            this.bcBinance,
+            this.biBitFinex});
             this.ribbonControl1.Location = new System.Drawing.Point(0, 0);
             this.ribbonControl1.Margin = new System.Windows.Forms.Padding(12);
-            this.ribbonControl1.MaxItemId = 34;
+            this.ribbonControl1.MaxItemId = 35;
             this.ribbonControl1.MdiMergeStyle = DevExpress.XtraBars.Ribbon.RibbonMdiMergeStyle.Always;
             this.ribbonControl1.Name = "ribbonControl1";
             this.ribbonControl1.PageCategories.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageCategory[] {
@@ -134,7 +136,7 @@
             this.repositoryItemSpinEdit2});
             this.ribbonControl1.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonControlStyle.Office2013;
             this.ribbonControl1.ShowApplicationButton = DevExpress.Utils.DefaultBoolean.False;
-            this.ribbonControl1.Size = new System.Drawing.Size(1930, 282);
+            this.ribbonControl1.Size = new System.Drawing.Size(1930, 281);
             this.ribbonControl1.StatusBar = this.ribbonStatusBar1;
             this.ribbonControl1.Merge += new DevExpress.XtraBars.Ribbon.RibbonMergeEventHandler(this.ribbonControl1_Merge);
             this.ribbonControl1.UnMerge += new DevExpress.XtraBars.Ribbon.RibbonMergeEventHandler(this.ribbonControl1_UnMerge);
@@ -366,6 +368,24 @@
             this.barButtonItem4.Name = "barButtonItem4";
             this.barButtonItem4.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItem4_ItemClick);
             // 
+            // bcBinance
+            // 
+            this.bcBinance.Caption = "Binance";
+            this.bcBinance.Id = 33;
+            this.bcBinance.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bcBinance.ImageOptions.Image")));
+            this.bcBinance.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("bcBinance.ImageOptions.LargeImage")));
+            this.bcBinance.Name = "bcBinance";
+            this.bcBinance.CheckedChanged += new DevExpress.XtraBars.ItemClickEventHandler(this.bcBinance_CheckedChanged);
+            // 
+            // biBitFinex
+            // 
+            this.biBitFinex.Caption = "BitFinex";
+            this.biBitFinex.Id = 34;
+            this.biBitFinex.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("biBitFinex.ImageOptions.Image")));
+            this.biBitFinex.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("biBitFinex.ImageOptions.LargeImage")));
+            this.biBitFinex.Name = "biBitFinex";
+            this.biBitFinex.CheckedChanged += new DevExpress.XtraBars.ItemClickEventHandler(this.biBitFinex_CheckedChanged);
+            // 
             // ribbonPageCategory1
             // 
             this.ribbonPageCategory1.Name = "ribbonPageCategory1";
@@ -427,6 +447,7 @@
             this.ribbonPageGroup3.ItemLinks.Add(this.bcPoloniex);
             this.ribbonPageGroup3.ItemLinks.Add(this.bcBittrex);
             this.ribbonPageGroup3.ItemLinks.Add(this.bcBinance);
+            this.ribbonPageGroup3.ItemLinks.Add(this.biBitFinex);
             this.ribbonPageGroup3.Name = "ribbonPageGroup3";
             this.ribbonPageGroup3.Text = "Connect";
             // 
@@ -506,6 +527,7 @@
             // 
             // defaultBarAndDockingController1
             // 
+            this.defaultBarAndDockingController1.Controller.PropertiesDocking.ViewStyle = DevExpress.XtraBars.Docking2010.Views.DockingViewStyle.Classic;
             this.defaultBarAndDockingController1.Controller.PropertiesRibbon.DefaultGlyphSize = 32;
             this.defaultBarAndDockingController1.Controller.PropertiesRibbon.DefaultLargeGlyphSize = 64;
             this.defaultBarAndDockingController1.Controller.PropertiesRibbon.ScaleIcons = false;
@@ -519,15 +541,6 @@
             // 
             this.ribbonPage6.Name = "ribbonPage6";
             this.ribbonPage6.Text = "ribbonPage6";
-            // 
-            // bcBinance
-            // 
-            this.bcBinance.Caption = "Binance";
-            this.bcBinance.Id = 33;
-            this.bcBinance.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bcBinance.ImageOptions.Image")));
-            this.bcBinance.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("bcBinance.ImageOptions.LargeImage")));
-            this.bcBinance.Name = "bcBinance";
-            this.bcBinance.CheckedChanged += new DevExpress.XtraBars.ItemClickEventHandler(this.bcBinance_CheckedChanged);
             // 
             // MainForm
             // 
@@ -609,6 +622,7 @@
         private DevExpress.XtraBars.BarButtonItem bbRegister;
         private DevExpress.XtraBars.BarButtonItem barButtonItem4;
         private DevExpress.XtraBars.BarCheckItem bcBinance;
+        private DevExpress.XtraBars.BarCheckItem biBitFinex;
     }
 }
 

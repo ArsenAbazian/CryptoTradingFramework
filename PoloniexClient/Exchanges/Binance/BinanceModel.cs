@@ -22,6 +22,16 @@ namespace CryptoMarketClient.Binance {
             }
         }
 
+        public override void OnAccountRemoved(ExchangeAccountInfo info) {
+            
+        }
+
+        public override ExchangeType Type => ExchangeType.Binance;
+
+        public override bool SupportWebSocket(WebSocketType type) {
+            return false;
+        }
+
         public override bool GetDeposites() {
             return true;
         }
@@ -93,8 +103,6 @@ namespace CryptoMarketClient.Binance {
         }
 
         public override bool AllowCandleStickIncrementalUpdate => false;
-
-        public override string Name => "Binance";
 
         public override bool CancelOrder(TickerBase ticker, OpenedOrderInfo info) {
             throw new NotImplementedException();
