@@ -6,8 +6,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using CryptoMarketClient.Common;
+using CryptoMarketClient.Helpers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using WebSocket4Net;
 
 namespace CryptoMarketClient.Binance {
     public class BinanceExchange : Exchange {
@@ -26,10 +28,79 @@ namespace CryptoMarketClient.Binance {
             
         }
 
+        public override string TickersWebSocketAddress => "wss://stream.binance.com:9443/ws/!ticker@arr";
+
         public override ExchangeType Type => ExchangeType.Binance;
 
         public override bool SupportWebSocket(WebSocketType type) {
+            if(type == WebSocketType.Tickers)
+                return true;
             return false;
+        }
+
+        string[] webSocketTickersInfo;
+        protected string[] WebSocketTickersInfo {
+            get {
+                if(webSocketTickersInfo == null) {
+                    webSocketTickersInfo = new string[] {
+                        "e",
+                        "E",
+                        "s",
+                        "p",
+                        "P",
+                        "w",
+                        "x",
+                        "c",
+                        "Q",
+                        "b",
+                        "B",
+                        "a",
+                        "A",
+                        "o",
+                        "h",
+                        "l",
+                        "v",
+                        "q",
+                        "O",
+                        "C",
+                        "F",
+                        "L",
+                        "n"
+                    };
+                }
+                return webSocketTickersInfo;
+            }
+        }
+        protected override void OnTickersSocketMessageReceived(object sender, MessageReceivedEventArgs e) {
+            base.OnTickersSocketMessageReceived(sender, e);
+            byte[] data = Encoding.Default.GetBytes(e.Message);
+            int startIndex = 0;
+            List<string[]> items = JSonHelper.Default.DeserializeArrayOfObjects(data, ref startIndex, WebSocketTickersInfo);
+            foreach(string[] item in items) {
+                string eventType = item[0];
+                if(eventType == "24hrTicker")
+                    On24HourTickerRecv(item);
+            }
+        }
+
+        protected void On24HourTickerRecv(string[] item) {
+            string symbolName = item[2];
+            BinanceTicker t = (BinanceTicker)Tickers.FirstOrDefault(tt => tt.Name == symbolName);
+            if(t == null)
+                throw new DllNotFoundException("binance symbol not found " + symbolName);
+            t.Change = FastDoubleConverter.Convert(item[4]);
+            t.HighestBid = FastDoubleConverter.Convert(item[9]);
+            t.LowestAsk = FastDoubleConverter.Convert(item[11]);
+            t.Hr24High = FastDoubleConverter.Convert(item[14]);
+            t.Hr24Low = FastDoubleConverter.Convert(item[15]);
+            t.BaseVolume = FastDoubleConverter.Convert(item[16]);
+            t.Volume = FastDoubleConverter.Convert(item[17]);
+
+            t.UpdateTrailings();
+
+            lock(t) {
+                RaiseTickerUpdate(t);
+            }
         }
 
         public override bool GetDeposites() {
@@ -39,17 +110,7 @@ namespace CryptoMarketClient.Binance {
         public override Form CreateAccountForm() {
             return null;
         }
-
-        public override bool UseWebSocket => true;
-
-        public override void StartListenTickersStream() {
-            throw new NotImplementedException();
-        }
-
-        public override void StopListenTickersStream() {
-            throw new NotImplementedException();
-        }
-
+        
         public override void ObtainExchangeSettings() {
             string address = "https://api.binance.com/api/v1/exchangeInfo";
             string text = string.Empty;

@@ -80,11 +80,9 @@
             this.barButtonItem2 = new DevExpress.XtraBars.BarButtonItem();
             this.bbRemoveByRightClick = new DevExpress.XtraBars.BarButtonItem();
             this.bbMonitorOnlySelected = new DevExpress.XtraBars.BarCheckItem();
-            this.barStaticItem1 = new DevExpress.XtraBars.BarStaticItem();
-            this.barStaticItem2 = new DevExpress.XtraBars.BarStaticItem();
-            this.barStaticItem3 = new DevExpress.XtraBars.BarStaticItem();
-            this.barStaticItem4 = new DevExpress.XtraBars.BarStaticItem();
-            this.barStaticItem5 = new DevExpress.XtraBars.BarStaticItem();
+            this.biConnected = new DevExpress.XtraBars.BarStaticItem();
+            this.biDisconnected = new DevExpress.XtraBars.BarStaticItem();
+            this.biConnectionStatus = new DevExpress.XtraBars.BarStaticItem();
             this.ribbonPage1 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPageGroup1 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.ribbonStatusBar1 = new DevExpress.XtraBars.Ribbon.RibbonStatusBar();
@@ -96,7 +94,6 @@
             this.barDockControlLeft = new DevExpress.XtraBars.BarDockControl();
             this.barDockControlRight = new DevExpress.XtraBars.BarDockControl();
             this.popupMenu1 = new DevExpress.XtraBars.PopupMenu(this.components);
-            this.siUpdate = new DevExpress.XtraBars.BarStaticItem();
             ((System.ComponentModel.ISupportInitialize)(this.teValueWithChange)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemTextEdit1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).BeginInit();
@@ -212,8 +209,18 @@
             // 
             // gridView1
             // 
+            this.gridView1.Appearance.FocusedRow.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.gridView1.Appearance.FocusedRow.Options.UseBackColor = true;
+            this.gridView1.Appearance.GroupPanel.FontSizeDelta = 3;
+            this.gridView1.Appearance.GroupPanel.Options.UseFont = true;
+            this.gridView1.Appearance.GroupRow.FontSizeDelta = 3;
+            this.gridView1.Appearance.GroupRow.Options.UseFont = true;
+            this.gridView1.Appearance.HeaderPanel.FontSizeDelta = 3;
+            this.gridView1.Appearance.HeaderPanel.Options.UseFont = true;
             this.gridView1.Appearance.Row.FontSizeDelta = 3;
             this.gridView1.Appearance.Row.Options.UseFont = true;
+            this.gridView1.Appearance.SelectedRow.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.gridView1.Appearance.SelectedRow.Options.UseBackColor = true;
             this.gridView1.Columns.AddRange(new DevExpress.XtraGrid.Columns.GridColumn[] {
             this.colIsSelected,
             this.gcLogo,
@@ -234,6 +241,7 @@
             this.gcDeltaAsk,
             this.colUpdateTimeMs,
             this.colIsActual});
+            this.gridView1.FocusRectStyle = DevExpress.XtraGrid.Views.Grid.DrawFocusRectStyle.None;
             gridFormatRule1.Column = this.gcPercentChange;
             gridFormatRule1.ColumnApplyTo = this.gcLast;
             gridFormatRule1.Name = "FormatRulePercentChangeNegative";
@@ -317,6 +325,7 @@
             this.gridView1.OptionsFind.AlwaysVisible = true;
             this.gridView1.OptionsImageLoad.AnimationType = DevExpress.Utils.ImageContentAnimationType.SegmentedFade;
             this.gridView1.OptionsImageLoad.AsyncLoad = true;
+            this.gridView1.OptionsSelection.EnableAppearanceFocusedCell = false;
             this.gridView1.OptionsView.EnableAppearanceEvenRow = true;
             this.gridView1.OptionsView.ShowHorizontalLines = DevExpress.Utils.DefaultBoolean.False;
             this.gridView1.OptionsView.ShowIndicator = false;
@@ -459,15 +468,12 @@
             this.barButtonItem2,
             this.bbRemoveByRightClick,
             this.bbMonitorOnlySelected,
-            this.barStaticItem1,
-            this.barStaticItem2,
-            this.barStaticItem3,
-            this.barStaticItem4,
-            this.barStaticItem5,
-            this.siUpdate});
+            this.biConnected,
+            this.biDisconnected,
+            this.biConnectionStatus});
             this.ribbonControl1.Location = new System.Drawing.Point(0, 0);
             this.ribbonControl1.Margin = new System.Windows.Forms.Padding(24, 23, 24, 23);
-            this.ribbonControl1.MaxItemId = 20;
+            this.ribbonControl1.MaxItemId = 24;
             this.ribbonControl1.Name = "ribbonControl1";
             this.ribbonControl1.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
             this.ribbonPage1});
@@ -548,35 +554,29 @@
             this.bbMonitorOnlySelected.Name = "bbMonitorOnlySelected";
             this.bbMonitorOnlySelected.CheckedChanged += new DevExpress.XtraBars.ItemClickEventHandler(this.bbMonitorOnlySelected_CheckedChanged);
             // 
-            // barStaticItem1
+            // biConnected
             // 
-            this.barStaticItem1.Id = 14;
-            this.barStaticItem1.ImageOptions.AllowGlyphSkinning = DevExpress.Utils.DefaultBoolean.False;
-            this.barStaticItem1.Name = "barStaticItem1";
+            this.biConnected.Caption = "Connected";
+            this.biConnected.Id = 21;
+            this.biConnected.ImageOptions.AllowGlyphSkinning = DevExpress.Utils.DefaultBoolean.False;
+            this.biConnected.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("biConnected.ImageOptions.SvgImage")));
+            this.biConnected.Name = "biConnected";
             // 
-            // barStaticItem2
+            // biDisconnected
             // 
-            this.barStaticItem2.Id = 15;
-            this.barStaticItem2.ImageOptions.AllowGlyphSkinning = DevExpress.Utils.DefaultBoolean.False;
-            this.barStaticItem2.Name = "barStaticItem2";
+            this.biDisconnected.Caption = "Disconnected";
+            this.biDisconnected.Id = 22;
+            this.biDisconnected.ImageOptions.AllowGlyphSkinning = DevExpress.Utils.DefaultBoolean.False;
+            this.biDisconnected.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("biDisconnected.ImageOptions.SvgImage")));
+            this.biDisconnected.Name = "biDisconnected";
             // 
-            // barStaticItem3
+            // biConnectionStatus
             // 
-            this.barStaticItem3.Id = 16;
-            this.barStaticItem3.ImageOptions.AllowGlyphSkinning = DevExpress.Utils.DefaultBoolean.False;
-            this.barStaticItem3.Name = "barStaticItem3";
-            // 
-            // barStaticItem4
-            // 
-            this.barStaticItem4.Id = 17;
-            this.barStaticItem4.ImageOptions.AllowGlyphSkinning = DevExpress.Utils.DefaultBoolean.False;
-            this.barStaticItem4.Name = "barStaticItem4";
-            // 
-            // barStaticItem5
-            // 
-            this.barStaticItem5.Id = 18;
-            this.barStaticItem5.ImageOptions.AllowGlyphSkinning = DevExpress.Utils.DefaultBoolean.False;
-            this.barStaticItem5.Name = "barStaticItem5";
+            this.biConnectionStatus.Caption = "Connecting...";
+            this.biConnectionStatus.Id = 23;
+            this.biConnectionStatus.ImageOptions.AllowGlyphSkinning = DevExpress.Utils.DefaultBoolean.False;
+            this.biConnectionStatus.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("biConnectionStatus.ImageOptions.SvgImage")));
+            this.biConnectionStatus.Name = "biConnectionStatus";
             // 
             // ribbonPage1
             // 
@@ -597,12 +597,7 @@
             // ribbonStatusBar1
             // 
             this.ribbonStatusBar1.AutoHeight = true;
-            this.ribbonStatusBar1.ItemLinks.Add(this.siUpdate);
-            this.ribbonStatusBar1.ItemLinks.Add(this.barStaticItem1);
-            this.ribbonStatusBar1.ItemLinks.Add(this.barStaticItem2);
-            this.ribbonStatusBar1.ItemLinks.Add(this.barStaticItem3);
-            this.ribbonStatusBar1.ItemLinks.Add(this.barStaticItem4);
-            this.ribbonStatusBar1.ItemLinks.Add(this.barStaticItem5);
+            this.ribbonStatusBar1.ItemLinks.Add(this.biConnectionStatus);
             this.ribbonStatusBar1.Location = new System.Drawing.Point(0, 808);
             this.ribbonStatusBar1.Margin = new System.Windows.Forms.Padding(6);
             this.ribbonStatusBar1.Name = "ribbonStatusBar1";
@@ -697,12 +692,6 @@
             this.popupMenu1.Name = "popupMenu1";
             this.popupMenu1.Ribbon = this.ribbonControl1;
             // 
-            // siUpdate
-            // 
-            this.siUpdate.Caption = "Updated: ";
-            this.siUpdate.Id = 19;
-            this.siUpdate.Name = "siUpdate";
-            // 
             // TickersCollectionForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
@@ -782,11 +771,8 @@
         private DevExpress.XtraEditors.Repository.RepositoryItemTextEdit teValueWithChange;
         private DevExpress.XtraGrid.Columns.GridColumn gcLogo;
         private DevExpress.XtraBars.Ribbon.RibbonStatusBar ribbonStatusBar1;
-        private DevExpress.XtraBars.BarStaticItem barStaticItem1;
-        private DevExpress.XtraBars.BarStaticItem barStaticItem2;
-        private DevExpress.XtraBars.BarStaticItem barStaticItem3;
-        private DevExpress.XtraBars.BarStaticItem barStaticItem4;
-        private DevExpress.XtraBars.BarStaticItem barStaticItem5;
-        private DevExpress.XtraBars.BarStaticItem siUpdate;
+        private DevExpress.XtraBars.BarStaticItem biConnected;
+        private DevExpress.XtraBars.BarStaticItem biDisconnected;
+        private DevExpress.XtraBars.BarStaticItem biConnectionStatus;
     }
 }

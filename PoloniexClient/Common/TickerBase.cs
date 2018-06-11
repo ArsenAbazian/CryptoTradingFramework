@@ -133,6 +133,14 @@ namespace CryptoMarketClient {
                 logo = value;
             }
         }
+        Image logo32;
+        public Image Logo32 {
+            get {
+                if(logo32 == null && Logo != null)
+                    logo32 = new Bitmap(Logo, new Size(32, 32));
+                return logo32;
+            }
+        }
         internal string LogoUrl { get; set; }
         Image LoadLogoImage() {
             return Exchange.GetLogoImage(MarketCurrency);

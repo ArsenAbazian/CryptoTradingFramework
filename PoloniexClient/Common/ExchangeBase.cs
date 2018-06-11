@@ -16,13 +16,13 @@ using System.Text.Json;
 using CryptoMarketClient.Bittrex;
 using System.ComponentModel;
 using System.Windows.Forms;
-using CryptoMarketClient.Yobit;
 using System.Globalization;
 using System.Threading;
 using CryptoMarketClient.Binance;
 using DevExpress.XtraEditors;
 using CryptoMarketClient.BitFinex;
 using System.Reactive.Subjects;
+using WebSocket4Net;
 
 namespace CryptoMarketClient {
     public abstract class Exchange : IXtraSerializable {
@@ -38,188 +38,16 @@ namespace CryptoMarketClient {
             Registered.Add(new PoloniexExchange());
             Registered.Add(new BittrexExchange());
             Registered.Add(new BitFinexExchange());
+            Registered.Add(new BinanceExchange());
             //Registered.Add(new YobitExchange());
 
             foreach(Exchange exchange in Registered)
                 exchange.Load();
         }
 
-        public List<TickerBase> LastUpdatedTickers { get; } = new List<TickerBase>();
-
-        protected virtual void OnHearthBeat() {
-            LastHearthBeat = DateTime.Now;
-        }
-
-        public DateTime LastHearthBeat { get; set; }
-        public abstract bool UseWebSocket { get; }
+        public DateTime LastWebSocketRecvTime { get; set; }
         public abstract bool AllowCandleStickIncrementalUpdate { get; }
         public abstract void ObtainExchangeSettings();
-
-        protected string ByteArray2String(byte[] bytes, int index, int length) {
-            unsafe
-            {
-                fixed (byte* bytes2 = &bytes[0]) {
-                    if(bytes[index] == '"')
-                        return new string((sbyte*)bytes2, index + 1, length - 2);
-                    return new string((sbyte*)bytes2, index, length);
-                }
-            }
-        }
-        protected bool SkipSymbol(byte[] bytes, char symbol, int count, ref int startIndex) {
-            if(bytes == null)
-                return false;
-
-            for(int i = 0; i < count; i++) {
-                if(!FindCharWithoutStop(bytes, symbol, ref startIndex))
-                    return false;
-                startIndex++;
-            }
-            return true;
-        }
-        protected List<string[]> DeserializeArrayOfObjects(byte[] bytes, ref int startIndex, string[] str) {
-            return DeserializeArrayOfObjects(bytes, ref startIndex, str, null);
-        }
-        protected string[] DeserializeObject(byte[] bytes, ref int startIndex, string[] str) {
-            int index = startIndex;
-            string[] props = new string[str.Length];
-            if(!FindChar(bytes, '{', ref index))
-                return null;
-            for(int itemIndex = 0; itemIndex < str.Length; itemIndex++) {
-                if(bytes[index + 1 + 2 + str[itemIndex].Length] == ':')
-                    index = index + 1 + 2 + str[itemIndex].Length + 1;
-                else {
-                    if(!FindChar(bytes, ':', ref index)) {
-                        startIndex = index;
-                        return props;
-                    }
-                }
-                int length = index;
-                if(bytes[index] == '"')
-                    ReadString(bytes, ref length);
-                else
-                    FindChar(bytes, itemIndex == str.Length - 1 ? '}' : ',', ref length);
-                length -= index;
-                props[itemIndex] = ByteArray2String(bytes, index, length);
-                index += length;
-            }
-            startIndex = index;
-            return props;
-        }
-        protected List<string[]> DeserializeArrayOfObjects(byte[] bytes, ref int startIndex, string[] str, IfDelegate2 shouldContinue) {
-            int index = startIndex;
-            if(!FindChar(bytes, '[', ref index))
-                return null;
-            List<string[]> items = new List<string[]>();
-            while(index != -1) {
-                if(!FindChar(bytes, '{', ref index))
-                    break;
-                string[] props = new string[str.Length];
-                for(int itemIndex = 0; itemIndex < str.Length; itemIndex++) {
-                    if(bytes[index + 1 + 2 + str[itemIndex].Length] == ':')
-                        index = index + 1 + 2 + str[itemIndex].Length + 1;
-                    else {
-                        if(!FindChar(bytes, ':', ref index)) {
-                            startIndex = index;
-                            return items;
-                        }
-                    }
-                    int length = index;
-                    if(bytes[index] == '"')
-                        ReadString(bytes, ref length);
-                    else
-                        FindChar(bytes, itemIndex == str.Length - 1 ? '}' : ',', ref length);
-                    length -= index;
-                    props[itemIndex] = ByteArray2String(bytes, index, length);
-                    index += length;
-                    if(shouldContinue != null && !shouldContinue(items.Count, itemIndex, props[itemIndex]))
-                        return items;
-                }
-                items.Add(props);
-                if(index == -1)
-                    break;
-                index += 2; // skip ,
-            }
-            startIndex = index;
-            return items;
-        }
-        public string[] DeserializeArray(byte[] bytes, ref int startIndex, int subArrayItemsCount) {
-            string[] items = new string[subArrayItemsCount];
-            int index = 0;
-            if(!FindChar(bytes, '[', ref index))
-                return null;
-            for(int i = 0; i < subArrayItemsCount; i++) {
-                index++;
-                int length = index;
-                char separator = i == subArrayItemsCount - 1 ? ']' : ',';
-                FindChar(bytes, separator, ref length);
-                length -= index;
-                items[i] = ByteArray2String(bytes, index, length);
-                index += length;
-            }
-            return items;
-        }
-        protected List<string[]> DeserializeArrayOfArrays(byte[] bytes, ref int startIndex, int subArrayItemsCount) {
-            int index = startIndex;
-            if(!FindChar(bytes, '[', ref index))
-                return null;
-            List<string[]> list = new List<string[]>();
-            index++;
-            while(index != -1) {
-                if(!FindChar(bytes, '[', ref index))
-                    break;
-                string[] items = new string[subArrayItemsCount];
-                list.Add(items);
-                for(int i = 0; i < subArrayItemsCount; i++) {
-                    index++;
-                    int length = index;
-                    char separator = i == subArrayItemsCount - 1 ? ']' : ',';
-                    FindChar(bytes, separator, ref length);
-                    length -= index;
-                    items[i] = ByteArray2String(bytes, index, length);
-                    index += length;
-                }
-                index += 2; // skip ],
-            }
-            startIndex = index;
-            return list;
-        }
-        protected bool ReadString(byte[] bytes, ref int startIndex) {
-            startIndex++;
-            for(int i = startIndex; i < bytes.Length; i++) {
-                if(bytes[i] == '"') {
-                    startIndex = i + 1;
-                    return true;
-                }
-            }
-            startIndex = bytes.Length;
-            return false;
-        }
-        protected bool FindCharWithoutStop(byte[] bytes, char symbol, ref int startIndex) {
-            for(int i = startIndex; i < bytes.Length; i++) {
-                byte c = bytes[i];
-                if(c == symbol) {
-                    startIndex = i;
-                    return true;
-                }
-            }
-            startIndex = bytes.Length;
-            return false;
-        }
-        protected bool FindChar(byte[] bytes, char symbol, ref int startIndex) {
-            for(int i = startIndex; i < bytes.Length; i++) {
-                byte c = bytes[i];
-                if(c == symbol) {
-                    startIndex = i;
-                    return true;
-                }
-                if(c == ',' || c == ']' || c == '}' || c == ':') {
-                    startIndex = i;
-                    return false;
-                }
-            }
-            startIndex = bytes.Length;
-            return false;
-        }
 
         public static int OrderBookDepth { get; set; }
         public static bool AllowTradeHistory { get; set; }
@@ -264,7 +92,7 @@ namespace CryptoMarketClient {
         public BindingList<BalanceBase> Balances { get; } = new BindingList<BalanceBase>();
 
         public event TickerUpdateEventHandler TickerUpdate;
-        protected void RaiseTickerUpdate(PoloniexTicker t) {
+        protected void RaiseTickerUpdate(TickerBase t) {
             TickerUpdateEventArgs e = new TickerUpdateEventArgs() { Ticker = t };
             if(TickerUpdate != null)
                 TickerUpdate(this, e);
@@ -648,8 +476,46 @@ namespace CryptoMarketClient {
             return res;
         }
         public abstract bool CancelOrder(TickerBase ticker, OpenedOrderInfo info);
-        public abstract void StartListenTickersStream();
-        public abstract void StopListenTickersStream();
+
+
+        public WebSocket WebSocket { get; private set; }
+        public abstract string TickersWebSocketAddress { get; }
+        public virtual void StartListenTickersStream() {
+            WebSocket = new WebSocket(TickersWebSocketAddress, "");
+            WebSocket.Error += OnSocketError;
+            WebSocket.Opened += OnSocketOpened;
+            WebSocket.Closed += OnSocketClosed;
+            WebSocket.MessageReceived += OnTickersSocketMessageReceived;
+            WebSocket.DataReceived += OnTickersSocketDataReceived;
+            WebSocket.Open();
+        }
+
+        public virtual void StopListenTickersStream() {
+            if(WebSocket != null) {
+                WebSocket.Dispose();
+                WebSocket = null;
+            }
+        }
+
+        protected virtual void OnTickersSocketDataReceived(object sender, WebSocket4Net.DataReceivedEventArgs e) {
+
+        }
+
+        protected virtual void OnTickersSocketMessageReceived(object sender, MessageReceivedEventArgs e) {
+            LastWebSocketRecvTime = DateTime.Now;
+        }
+
+        protected virtual void OnSocketClosed(object sender, EventArgs e) {
+        }
+
+        protected virtual void OnSocketOpened(object sender, EventArgs e) {
+            
+        }
+
+        protected virtual void OnSocketError(object sender, SuperSocket.ClientEngine.ErrorEventArgs e) {
+            XtraMessageBox.Show("Socket error. Please contact developers. -> " + e.Exception.ToString());
+        }
+
         public abstract Form CreateAccountForm();
         public abstract void OnAccountRemoved(ExchangeAccountInfo info);
     }
@@ -661,7 +527,7 @@ namespace CryptoMarketClient {
     }
 
     public enum WebSocketType {
-        Ticker,
+        Tickers,
         OrderBook
     }
 }

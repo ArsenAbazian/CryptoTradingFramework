@@ -2,11 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace CryptoMarketClient.Common {
     public class MyWebClient : WebClient {
+        static MyWebClient() {
+            ServicePointManager.ServerCertificateValidationCallback = delegate (object s, X509Certificate certificate,
+             X509Chain chain, SslPolicyErrors sslPolicyErrors)
+            { return true; };
+        }
         public MyWebClient() : base() {
             
         }

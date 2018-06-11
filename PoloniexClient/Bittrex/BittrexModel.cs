@@ -1,4 +1,5 @@
 ﻿using CryptoMarketClient.Common;
+using CryptoMarketClient.Helpers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -30,6 +31,8 @@ namespace CryptoMarketClient.Bittrex {
             
         }
 
+        public override string TickersWebSocketAddress => throw new NotImplementedException();
+
         public override ExchangeType Type => ExchangeType.Bittrex;
 
         public override bool SupportWebSocket(WebSocketType type) {
@@ -43,8 +46,6 @@ namespace CryptoMarketClient.Bittrex {
         public override Form CreateAccountForm() {
             return new AccountBalancesForm(this);
         }
-
-        public override bool UseWebSocket => false;
 
         public override void ObtainExchangeSettings() { }
 
@@ -99,10 +100,10 @@ namespace CryptoMarketClient.Bittrex {
             BindingList<CandleStickData> list = new BindingList<CandleStickData>();
 
             int startIndex = 1;
-            if(!SkipSymbol(bytes, ':', 3, ref startIndex))
+            if(!JSonHelper.Default.SkipSymbol(bytes, ':', 3, ref startIndex))
                 return list;
 
-            List<string[]> res = DeserializeArrayOfObjects(bytes, ref startIndex, new string[] { "O", "H", "L", "C", "V", "T", "BV" });
+            List<string[]> res = JSonHelper.Default.DeserializeArrayOfObjects(bytes, ref startIndex, new string[] { "O", "H", "L", "C", "V", "T", "BV" });
             if(res == null) return list;
             foreach(string[] item in res) {
                 CandleStickData data = new CandleStickData();
@@ -134,10 +135,10 @@ namespace CryptoMarketClient.Bittrex {
                 return false;
 
             int startIndex = 1;
-            if(!SkipSymbol(bytes, ':', 3, ref startIndex))
+            if(!JSonHelper.Default.SkipSymbol(bytes, ':', 3, ref startIndex))
                 return false;
 
-            List<string[]> res = DeserializeArrayOfObjects(bytes, ref startIndex, new string[] { "MarketCurrency", "BaseCurrency", "MarketCurrencyLong", "BaseCurrencyLong", "MinTradeSize", "MarketName", "IsActive", "Created", "Notice", "IsSponsored", "LogoUrl" });
+            List<string[]> res = JSonHelper.Default.DeserializeArrayOfObjects(bytes, ref startIndex, new string[] { "MarketCurrency", "BaseCurrency", "MarketCurrencyLong", "BaseCurrencyLong", "MinTradeSize", "MarketName", "IsActive", "Created", "Notice", "IsSponsored", "LogoUrl" });
             foreach(string[] item in res) {
                 BittrexTicker m = new BittrexTicker(this);
 
@@ -169,10 +170,10 @@ namespace CryptoMarketClient.Bittrex {
                 return false;
 
             int startIndex = 1;
-            if(!SkipSymbol(bytes, ':', 3, ref startIndex))
+            if(!JSonHelper.Default.SkipSymbol(bytes, ':', 3, ref startIndex))
                 return false;
 
-            List<string[]> res = DeserializeArrayOfObjects(bytes, ref startIndex, new string[] { "Currency", "CurrencyLong", "MinConfirmation", "TxFee", "IsActive", "CoinType", "BaseAddress", "Notice" });
+            List<string[]> res = JSonHelper.Default.DeserializeArrayOfObjects(bytes, ref startIndex, new string[] { "Currency", "CurrencyLong", "MinConfirmation", "TxFee", "IsActive", "CoinType", "BaseAddress", "Notice" });
             foreach(string[] item in res) {
                 string currency = item[0];
                 BittrexCurrencyInfo c = Currencies.FirstOrDefault(curr => curr.Currency == currency);
@@ -208,10 +209,10 @@ namespace CryptoMarketClient.Bittrex {
                 return;
 
             int startIndex = 1;
-            if(!SkipSymbol(bytes, ':', 3, ref startIndex))
+            if(!JSonHelper.Default.SkipSymbol(bytes, ':', 3, ref startIndex))
                 return;
 
-            string[] res = DeserializeObject(bytes, ref startIndex, new string[] { "Bid", "Ask", "Last" });
+            string[] res = JSonHelper.Default.DeserializeObject(bytes, ref startIndex, new string[] { "Bid", "Ask", "Last" });
             if(res == null)
                 return;
             info.HighestBid = FastDoubleConverter.Convert(res[0]);
@@ -233,10 +234,10 @@ namespace CryptoMarketClient.Bittrex {
                 return false;
 
             int startIndex = 1;
-            if(!SkipSymbol(bytes, ':', 3, ref startIndex))
+            if(!JSonHelper.Default.SkipSymbol(bytes, ':', 3, ref startIndex))
                 return false;
 
-            string[] res = DeserializeObject(bytes, ref startIndex, new string[] { "MarketName", "High", "Low", "Volume", "Last", "BaseVolume", "TimeStamp", "Bid", "Ask", "OpenBuyOrders", "OpenSellOrders", "PrevDay", "Created" });
+            string[] res = JSonHelper.Default.DeserializeObject(bytes, ref startIndex, new string[] { "MarketName", "High", "Low", "Volume", "Last", "BaseVolume", "TimeStamp", "Bid", "Ask", "OpenBuyOrders", "OpenSellOrders", "PrevDay", "Created" });
             if(res == null)
                 return true;
 
@@ -272,10 +273,10 @@ namespace CryptoMarketClient.Bittrex {
                 return false;
 
             int startIndex = 1;
-            if(!SkipSymbol(bytes, ':', 3, ref startIndex))
+            if(!JSonHelper.Default.SkipSymbol(bytes, ':', 3, ref startIndex))
                 return false;
 
-            List<string[]> res = DeserializeArrayOfObjects(bytes, ref startIndex, new string[] { "MarketName", "High", "Low", "Volume", "Last", "BaseVolume", "TimeStamp", "Bid", "Ask", "OpenBuyOrders", "OpenSellOrders", "PrevDay", "Created" });
+            List<string[]> res = JSonHelper.Default.DeserializeArrayOfObjects(bytes, ref startIndex, new string[] { "MarketName", "High", "Low", "Volume", "Last", "BaseVolume", "TimeStamp", "Bid", "Ask", "OpenBuyOrders", "OpenSellOrders", "PrevDay", "Created" });
             foreach(string[] item in res) {
                 string marketName = item[0];
                 BittrexTicker info = (BittrexTicker)Tickers.FirstOrDefault((m) => m.MarketName == marketName);
@@ -323,16 +324,16 @@ namespace CryptoMarketClient.Bittrex {
                 return false;
 
             int startIndex = 1; // skip {
-            if(!SkipSymbol(bytes, ':', 4, ref startIndex))
+            if(!JSonHelper.Default.SkipSymbol(bytes, ':', 4, ref startIndex))
                 return false;
 
-            List<string[]> bids = DeserializeArrayOfObjects(bytes, ref startIndex, new string[] { "Quantity", "Rate" }, (itemIndex, paramIndex, value) => { return itemIndex < OrderBook.Depth; });
-            if(!FindCharWithoutStop(bytes, ':', ref startIndex))
+            List<string[]> bids = JSonHelper.Default.DeserializeArrayOfObjects(bytes, ref startIndex, new string[] { "Quantity", "Rate" }, (itemIndex, paramIndex, value) => { return itemIndex < OrderBook.Depth; });
+            if(!JSonHelper.Default.FindCharWithoutStop(bytes, ':', ref startIndex))
                 return false;
             if(bids == null)
                 return true;
             startIndex++;
-            List<string[]> asks = DeserializeArrayOfObjects(bytes, ref startIndex, new string[] { "Quantity", "Rate" });
+            List<string[]> asks = JSonHelper.Default.DeserializeArrayOfObjects(bytes, ref startIndex, new string[] { "Quantity", "Rate" });
             if(asks == null)
                 return true;
 
@@ -381,10 +382,10 @@ namespace CryptoMarketClient.Bittrex {
                 return false;
 
             int startIndex = 1;
-            if(!SkipSymbol(bytes, ':', 3, ref startIndex))
+            if(!JSonHelper.Default.SkipSymbol(bytes, ':', 3, ref startIndex))
                 return false;
 
-            List<string[]> res = DeserializeArrayOfObjects(bytes, ref startIndex, new string[] { "Id", "TimeStamp", "Quantity", "Price", "Total", "FillType", "OrderType" });
+            List<string[]> res = JSonHelper.Default.DeserializeArrayOfObjects(bytes, ref startIndex, new string[] { "Id", "TimeStamp", "Quantity", "Price", "Total", "FillType", "OrderType" });
             if(res == null)
                 return false;
             lock(info) {
@@ -426,11 +427,11 @@ namespace CryptoMarketClient.Bittrex {
                 return false;
 
             int startIndex = 1;
-            if(!SkipSymbol(bytes, ':', 3, ref startIndex))
+            if(!JSonHelper.Default.SkipSymbol(bytes, ':', 3, ref startIndex))
                 return false;
 
             string tradeUuid = ticker.MyTradeHistory.Count == 0 ? null : ticker.MyTradeHistory.First().IdString;
-            List<string[]> res = DeserializeArrayOfObjects(bytes, ref startIndex, new string[] {
+            List<string[]> res = JSonHelper.Default.DeserializeArrayOfObjects(bytes, ref startIndex, new string[] {
                 "OrderUuid", // 0
                 "Exchange",  // 1
                 "TimeStamp",  // 2
@@ -482,10 +483,10 @@ namespace CryptoMarketClient.Bittrex {
                 return null;
 
             int startIndex = 1;
-            if(!SkipSymbol(bytes, ':', 3, ref startIndex))
+            if(!JSonHelper.Default.SkipSymbol(bytes, ':', 3, ref startIndex))
                 return null;
 
-            List<string[]> res = DeserializeArrayOfObjects(bytes, ref startIndex, new string[] { "Id", "TimeStamp", "Quantity", "Price", "Total", "FillType", "OrderType" },
+            List<string[]> res = JSonHelper.Default.DeserializeArrayOfObjects(bytes, ref startIndex, new string[] { "Id", "TimeStamp", "Quantity", "Price", "Total", "FillType", "OrderType" },
                 (itemIndex, paramIndex, value) => {
                     return paramIndex != 1 || Convert.ToDateTime(value) >= starTime;
                 });
@@ -521,12 +522,12 @@ namespace CryptoMarketClient.Bittrex {
                 return false;
 
             int startIndex = 1;
-            if(!SkipSymbol(bytes, ':', 3, ref startIndex))
+            if(!JSonHelper.Default.SkipSymbol(bytes, ':', 3, ref startIndex))
                 return false;
 
             long lastId = info.TradeHistory.Count > 0 ? info.TradeHistory.First().Id : -1;
             string lastIdString = lastId.ToString();
-            List<string[]> res = DeserializeArrayOfObjects(bytes, ref startIndex, new string[] { "Id", "TimeStamp", "Quantity", "Price", "Total", "FillType", "OrderType" },
+            List<string[]> res = JSonHelper.Default.DeserializeArrayOfObjects(bytes, ref startIndex, new string[] { "Id", "TimeStamp", "Quantity", "Price", "Total", "FillType", "OrderType" },
                 (itemIndex, paramIndex, value) => {
                     return paramIndex != 0 || lastIdString != value;
                 });
@@ -564,11 +565,11 @@ namespace CryptoMarketClient.Bittrex {
                 return false;
 
             int startIndex = 1;
-            if(!SkipSymbol(bytes, ':', 3, ref startIndex))
+            if(!JSonHelper.Default.SkipSymbol(bytes, ':', 3, ref startIndex))
                 return false;
 
             string lastIdString = info.LastTradeId.ToString();
-            List<string[]> res = DeserializeArrayOfObjects(bytes, ref startIndex, new string[] { "Id", "TimeStamp", "Quantity", "Price", "Total", "FillType", "OrderType" },
+            List<string[]> res = JSonHelper.Default.DeserializeArrayOfObjects(bytes, ref startIndex, new string[] { "Id", "TimeStamp", "Quantity", "Price", "Total", "FillType", "OrderType" },
                 (itemIndex, paramIndex, value) => {
                     return paramIndex != 0 || lastIdString != value;
                 });
@@ -755,12 +756,12 @@ namespace CryptoMarketClient.Bittrex {
                 return false;
 
             int startIndex = 1;
-            if(!SkipSymbol(bytes, ':', 3, ref startIndex)) {
+            if(!JSonHelper.Default.SkipSymbol(bytes, ':', 3, ref startIndex)) {
                 Telemetry.Default.TrackEvent("bittrex.onupdateorders", new string[] { "data", UTF8Encoding.Default.GetString(bytes) }, true);
                 return false;
             }
 
-            List<string[]> res = DeserializeArrayOfObjects(bytes, ref startIndex, new string[] {
+            List<string[]> res = JSonHelper.Default.DeserializeArrayOfObjects(bytes, ref startIndex, new string[] {
                 "Uuid",
                 "OrderUuid",
                 "Exchange",
@@ -873,10 +874,10 @@ namespace CryptoMarketClient.Bittrex {
                     return false;
 
                 int startIndex = 1;
-                if(!SkipSymbol(bytes, ':', 3, ref startIndex))
+                if(!JSonHelper.Default.SkipSymbol(bytes, ':', 3, ref startIndex))
                     return false;
 
-                List<string[]> res = DeserializeArrayOfObjects(bytes, ref startIndex, new string[] {
+                List<string[]> res = JSonHelper.Default.DeserializeArrayOfObjects(bytes, ref startIndex, new string[] {
                 "Currency",
                 "Balance",
                 "Available",

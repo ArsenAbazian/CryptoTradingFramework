@@ -133,6 +133,7 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.Linq" />
     <Reference Include="System.Diagnostics.DiagnosticSource, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Diagnostics.DiagnosticSource.4.4.0\lib\net46\System.Diagnostics.DiagnosticSource.dll</HintPath>
     </Reference>
@@ -219,6 +220,12 @@
     <Compile Include="AccountInfoEditingForm.Designer.cs">
       <DependentUpon>AccountInfoEditingForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="ConnectionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ConnectionForm.Designer.cs">
+      <DependentUpon>ConnectionForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Exchanges\Binance\BinanceModel.cs" />
     <Compile Include="Exchanges\Binance\BinanceTicker.cs" />
     <Compile Include="Exchanges\BitFinex\BitFinexAccountBalanceInfo.cs" />
@@ -248,6 +255,7 @@
     <Compile Include="GrabDataSettingsForm.Designer.cs">
       <DependentUpon>GrabDataSettingsForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\JSonHelper.cs" />
     <Compile Include="Helpers\SlackBot.cs" />
     <Compile Include="Helpers\Telemetry.cs" />
     <Compile Include="MyChartControl.cs">
@@ -287,7 +295,7 @@
     <Compile Include="Exchanges\Bittrex\BittrexAccountBalanceInfo.cs" />
     <Compile Include="Bittrex\BittrexMarketInfo.cs" />
     <Compile Include="Bittrex\BittrexModel.cs" />
-    <Compile Include="Bittrex\BittrexOrderInfo.cs" />
+    <Compile Include="Exchanges\Bittrex\BittrexOrderInfo.cs" />
     <Compile Include="CombinedBidAskForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -487,14 +495,14 @@
     <Compile Include="TrailingSettinsForm.Designer.cs">
       <DependentUpon>TrailingSettinsForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Exchanges\Yobit\YobitCurrencyInfo.cs" />
-    <Compile Include="Exchanges\Yobit\YobitModel.cs" />
-    <Compile Include="Exchanges\Yobit\YobitTicker.cs" />
     <EmbeddedResource Include="AccountInfoEditingForm.resx">
       <DependentUpon>AccountInfoEditingForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Common\OpenedOrdersForm.resx">
       <DependentUpon>OpenedOrdersForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ConnectionForm.resx">
+      <DependentUpon>ConnectionForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CurrencyMonitoringForm.resx">
       <DependentUpon>CurrencyMonitoringForm.cs</DependentUpon>
@@ -605,6 +613,7 @@
     </EmbeddedResource>
     <None Include="app.manifest" />
     <None Include="packages.config" />
+    <None Include="Properties\DataSources\Exchange.datasource" />
     <None Include="Properties\DataSources\TickerBase.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

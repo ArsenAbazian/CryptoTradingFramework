@@ -31,19 +31,48 @@ namespace CryptoMarketClient {
 
         public Exchange Exchange { get; set; }
 
-        System.Threading.Timer timer;
-        public System.Threading.Timer Timer {
+        System.Threading.Timer threadTimer;
+        public System.Threading.Timer ThreadTimer {
             get {
-                if(timer == null) {
-                    timer = new System.Threading.Timer(OnThreadUpdate);
-                    timer.Change(0, 6000);
+                if(threadTimer == null) {
+                    threadTimer = new System.Threading.Timer(OnThreadUpdate);
+                    threadTimer.Change(0, 9000);
                 }
-                return timer;
+                return threadTimer;
             }
         }
 
+        System.Windows.Forms.Timer connectionCheckTimer;
+        public System.Windows.Forms.Timer ConnectionCheckTimer {
+            get {
+                if(connectionCheckTimer == null) {
+                    connectionCheckTimer = new System.Windows.Forms.Timer();
+                    connectionCheckTimer.Interval = 3000;
+                    connectionCheckTimer.Tick += OnConnectionTimerTick;
+                }
+                return connectionCheckTimer;
+            }
+        }
+
+        private void OnConnectionTimerTick(object sender, EventArgs e) {
+            if((DateTime.Now - Exchange.LastWebSocketRecvTime).TotalSeconds > 5) {
+                this.biConnectionStatus.ImageOptions.SvgImage = this.biDisconnected.ImageOptions.SvgImage;
+                this.biConnectionStatus.Caption = "Disconnected";
+            }
+            else {
+                SetInfoConnected();
+            }
+        }
+
+        private void SetInfoConnected() {
+            this.biConnectionStatus.ImageOptions.SvgImage = this.biConnected.ImageOptions.SvgImage;
+            this.biConnectionStatus.Caption = "Connected";
+        }
+
         void SubscribeWebSocket() {
-            Exchange.StartListenTickersStream();    
+            Exchange.StartListenTickersStream();
+            ConnectionCheckTimer.Start();
+            this.gridView1.OptionsBehavior.AllowSortAnimation = DevExpress.Utils.DefaultBoolean.True;
         }
 
         protected override void OnShown(EventArgs e) {
@@ -53,8 +82,10 @@ namespace CryptoMarketClient {
             this.gridControl1.DataSource = Exchange.Tickers;
             HasShown = true;
             UpdateSelectedTickersFromExchange();
-            if(!Exchange.SupportWebSocket(WebSocketType.Ticker))
-                Timer.InitializeLifetimeService();
+            if(!Exchange.SupportWebSocket(WebSocketType.Tickers)) {
+                ThreadTimer.InitializeLifetimeService();
+                SetInfoConnected();
+            }
             else {
                 Exchange.TickerUpdate += OnWebSocketTickerUpdate;
                 SubscribeWebSocket();
@@ -63,23 +94,6 @@ namespace CryptoMarketClient {
 
         private void OnWebSocketTickerUpdate(object sender, TickerUpdateEventArgs e) {
             UpdateRow(e.Ticker);
-            BeginInvoke(new MethodInvoker(UpdateStatusBar));
-        }
-
-        void UpdateStatusBar() {
-            this.siUpdate.Caption = "Updated: " + Exchange.LastHearthBeat.ToLongTimeString();
-            lock(Exchange.LastUpdatedTickers) {
-                if(Exchange.LastUpdatedTickers.Count > 0)
-                    this.barStaticItem1.ImageOptions.Image = Exchange.LastUpdatedTickers[0].Logo;
-                if(Exchange.LastUpdatedTickers.Count > 1)
-                    this.barStaticItem2.ImageOptions.Image = Exchange.LastUpdatedTickers[1].Logo;
-                if(Exchange.LastUpdatedTickers.Count > 2)
-                    this.barStaticItem3.ImageOptions.Image = Exchange.LastUpdatedTickers[2].Logo;
-                if(Exchange.LastUpdatedTickers.Count > 3)
-                    this.barStaticItem4.ImageOptions.Image = Exchange.LastUpdatedTickers[3].Logo;
-                if(Exchange.LastUpdatedTickers.Count > 4)
-                    this.barStaticItem5.ImageOptions.Image = Exchange.LastUpdatedTickers[4].Logo;
-            }
         }
 
         void UpdateSelectedTickersFromExchange() {
@@ -185,7 +199,9 @@ namespace CryptoMarketClient {
             foreach(PinnedTickerInfo info in Exchange.PinnedTickers) {
                 BarItemLink link = this.bar1.ItemLinks.FirstOrDefault(l => l.Item.Tag == info);
                 if(link == null) {
-                    BarButtonItem item = new BarButtonItem(this.barManager1, info.ToString());
+                    BarLargeButtonItem item = new BarLargeButtonItem(this.barManager1, info.ToString());
+                    item.PaintStyle = BarItemPaintStyle.CaptionGlyph;
+                    item.ImageOptions.Image = Exchange.GetTicker(info).Logo32;
                     item.Tag = info;
                     addItems.Add(item);
                 }

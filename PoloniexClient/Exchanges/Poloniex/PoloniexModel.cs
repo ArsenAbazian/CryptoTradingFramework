@@ -1,5 +1,6 @@
 ﻿using CryptoMarketClient.Common;
 using CryptoMarketClient.Exchanges.Poloniex;
+using CryptoMarketClient.Helpers;
 using CryptoMarketClient.Poloniex;
 using DevExpress.XtraEditors;
 using Newtonsoft.Json;
@@ -41,10 +42,10 @@ namespace CryptoMarketClient {
         public override ExchangeType Type => ExchangeType.Poloniex;
 
         public override bool SupportWebSocket(WebSocketType type) {
-            return type == WebSocketType.Ticker;
+            return type == WebSocketType.Tickers;
         }
 
-        public WebSocket WebSocket { get; private set; }
+        
 
         private void OnGetTickerItem(PoloniexTicker item) {
             lock(item) {
@@ -57,40 +58,17 @@ namespace CryptoMarketClient {
             return new AccountBalancesForm(this);
         }
 
-        public override bool UseWebSocket => false;
-
         public class WebSocketSubscribeInfo {
             public string command { get; set; }
             public string channel { get; set; }
             public string userID { get; set; }
         }
 
-        public override void StartListenTickersStream() {
-            WebSocket = new WebSocket("wss://api2.poloniex.com", "");
-            WebSocket.Error += OnSocketError;
-            WebSocket.Opened += OnSocketOpened;
-            WebSocket.Closed += OnSocketClosed;
-            WebSocket.MessageReceived += OnTickersSocketMessageReceived;
-            WebSocket.DataReceived += OnTickersSocketDataReceived;
-            WebSocket.Open();
-        }
+        public override string TickersWebSocketAddress { get { return "wss://api2.poloniex.com"; } }
 
-        public override void StopListenTickersStream() {
-            if(WebSocket != null) {
-                WebSocket.Dispose();
-                WebSocket = null;
-            }
-        }
-
-        private void OnTickersSocketDataReceived(object sender, WebSocket4Net.DataReceivedEventArgs e) {
-            
-        }
-
-        private void OnTickersSocketMessageReceived(object sender, MessageReceivedEventArgs e) {
-            LastHearthBeat = DateTime.Now;
-            if(e.Message[1] == '1' && e.Message[2] == '0' && e.Message[3] == '1' && e.Message[4] == '0')
-                OnHearthBeat();
-            else if(e.Message[1] == '1' && e.Message[2] == '0' && e.Message[3] == '0' && e.Message[4] == '2')
+        protected override void OnTickersSocketMessageReceived(object sender, MessageReceivedEventArgs e) {
+            base.OnTickersSocketMessageReceived(sender, e);
+            if(e.Message[1] == '1' && e.Message[2] == '0' && e.Message[3] == '0' && e.Message[4] == '2')
                 OnTickerInfoRecv(e.Message);
         }
 
@@ -146,24 +124,13 @@ namespace CryptoMarketClient {
 
             ticker.UpdateTrailings();
 
-            if(LastUpdatedTickers.Count > 5)
-                LastUpdatedTickers.RemoveAt(0);
-            LastUpdatedTickers.Add(ticker);
             lock(ticker) {
                 RaiseTickerUpdate(ticker);
             }
         }
 
-        private void OnSocketClosed(object sender, EventArgs e) {
-        }
-
-        private void OnSocketOpened(object sender, EventArgs e) {
-            //((WebSocket)sender).Send(JsonConvert.SerializeObject(new WebSocketSubscribeInfo() { channel = "1000", command = "subscribe" }));
+        protected override void OnSocketOpened(object sender, EventArgs e) {
             ((WebSocket)sender).Send(JsonConvert.SerializeObject(new WebSocketSubscribeInfo() { channel = "1002", command = "subscribe" }));
-        }
-
-        private void OnSocketError(object sender, SuperSocket.ClientEngine.ErrorEventArgs e) {
-            
         }
         
         public override void ObtainExchangeSettings() {
@@ -216,7 +183,7 @@ namespace CryptoMarketClient {
 
             BindingList<CandleStickData> list = new BindingList<CandleStickData>();
             int startIndex = 0;
-            List<string[]> res = DeserializeArrayOfObjects(bytes, ref startIndex, new string[] { "date", "high", "low", "open", "close", "volume", "quoteVolume", "weightedAverage" });
+            List<string[]> res = JSonHelper.Default.DeserializeArrayOfObjects(bytes, ref startIndex, new string[] { "date", "high", "low", "open", "close", "volume", "quoteVolume", "weightedAverage" });
             if(res == null) return list;
             foreach(string[] item in res) {
                 CandleStickData data = new CandleStickData();
@@ -342,17 +309,17 @@ namespace CryptoMarketClient {
                 return false;
 
             int startIndex = 1; // skip {
-            if(!FindChar(bytes, ':', ref startIndex))
+            if(!JSonHelper.Default.FindChar(bytes, ':', ref startIndex))
                 return false;
             startIndex++;
-            List<string[]> asks = DeserializeArrayOfArrays(bytes, ref startIndex, 2);
-            if(!FindChar(bytes, ',', ref startIndex))
+            List<string[]> asks = JSonHelper.Default.DeserializeArrayOfArrays(bytes, ref startIndex, 2);
+            if(!JSonHelper.Default.FindChar(bytes, ',', ref startIndex))
                 return false;
             startIndex++;
-            if(!FindChar(bytes, ':', ref startIndex))
+            if(!JSonHelper.Default.FindChar(bytes, ':', ref startIndex))
                 return false;
             startIndex++;
-            List<string[]> bids = DeserializeArrayOfArrays(bytes, ref startIndex, 2);
+            List<string[]> bids = JSonHelper.Default.DeserializeArrayOfArrays(bytes, ref startIndex, 2);
 
             ticker.OrderBook.GetNewBidAsks();
             int index = 0;
@@ -492,7 +459,7 @@ namespace CryptoMarketClient {
             string lastGotTradeId = ticker.TradeHistory.Count > 0 ? ticker.TradeHistory.First().IdString : null;
 
             int startIndex = 0;
-            List<string[]> trades = DeserializeArrayOfObjects(bytes, ref startIndex, 
+            List<string[]> trades = JSonHelper.Default.DeserializeArrayOfObjects(bytes, ref startIndex, 
                 new string[] { "globalTradeID", "tradeID", "date", "type", "rate", "amount" ,"total" }, 
                 (itemIndex, paramIndex, value) => { return paramIndex != 1 || value != lastGotTradeId; });
 
@@ -574,7 +541,7 @@ namespace CryptoMarketClient {
             string lastGotTradeId = ticker.MyTradeHistory.Count > 0 ? ticker.MyTradeHistory.First().IdString : null;
 
             int startIndex = 0;
-            List<string[]> trades = DeserializeArrayOfObjects(data, ref startIndex,
+            List<string[]> trades = JSonHelper.Default.DeserializeArrayOfObjects(data, ref startIndex,
                 new string[] { "globalTradeID", "tradeID", "date", "rate", "amount", "total", "fee", "orderNumber", "type", "category" },
                 (itemIndex, paramIndex, value) => { return paramIndex != 1 || value != lastGotTradeId; });
 
@@ -1047,6 +1014,6 @@ namespace CryptoMarketClient {
     public delegate void TickerUpdateEventHandler(object sender, TickerUpdateEventArgs e);
     public delegate bool IfDelegate2(int itemIndex, int paramIndex, string value);
     public class TickerUpdateEventArgs : EventArgs {
-        public PoloniexTicker Ticker { get; set; }
+        public TickerBase Ticker { get; set; }
     }
  }

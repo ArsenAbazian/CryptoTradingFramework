@@ -43,8 +43,6 @@ namespace CryptoMarketClient.Yobit {
             return new AccountBalancesForm(this);
         }
 
-        public override bool UseWebSocket => false;
-
         public override void ObtainExchangeSettings() {
             
         }

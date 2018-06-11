@@ -15,7 +15,6 @@ using CryptoMarketClient.Bittrex;
 using DevExpress.XtraEditors;
 using CryptoMarketClient.Common;
 using System.IO;
-using CryptoMarketClient.Yobit;
 using DevExpress.XtraSplashScreen;
 using CryptoMarketClient.Binance;
 using DevExpress.LookAndFeel;
@@ -50,16 +49,16 @@ namespace CryptoMarketClient {
             SettingsStore.Default.SaveToXml();
         }
 
-        TickersCollectionForm yobitForm;
-        public TickersCollectionForm YobitTickersForm {
-            get {
-                if(yobitForm == null || yobitForm.IsDisposed) {
-                    yobitForm = new TickersCollectionForm(YobitExchange.Default);
-                    yobitForm.MdiParent = this;
-                }
-                return yobitForm;
-            }
-        }
+        //TickersCollectionForm yobitForm;
+        //public TickersCollectionForm YobitTickersForm {
+        //    get {
+        //        if(yobitForm == null || yobitForm.IsDisposed) {
+        //            yobitForm = new TickersCollectionForm(YobitExchange.Default);
+        //            yobitForm.MdiParent = this;
+        //        }
+        //        return yobitForm;
+        //    }
+        //}
 
         TickersCollectionForm tickersForm;
         public TickersCollectionForm PoloniexTickersForm {
@@ -265,14 +264,14 @@ namespace CryptoMarketClient {
         }
 
         private void bcYobit_CheckedChanged(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
-            if(this.bcYobit.Checked) {
-                YobitExchange.Default.IsConnected = true;
-                YobitTickersForm.Show();
-            }
-            else {
-                YobitExchange.Default.IsConnected = false;
-                YobitTickersForm.Hide();
-            }
+            //if(this.bcYobit.Checked) {
+            //    YobitExchange.Default.IsConnected = true;
+            //    YobitTickersForm.Show();
+            //}
+            //else {
+            //    YobitExchange.Default.IsConnected = false;
+            //    YobitTickersForm.Hide();
+            //}
         }
 
         private void bciAllowDirectXGrid_CheckedChanged(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
