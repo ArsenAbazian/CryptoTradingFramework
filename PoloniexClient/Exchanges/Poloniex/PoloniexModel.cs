@@ -64,7 +64,7 @@ namespace CryptoMarketClient {
             public string userID { get; set; }
         }
 
-        public override string TickersWebSocketAddress { get { return "wss://api2.poloniex.com"; } }
+        public override string BaseWebSocketAddress { get { return "wss://api2.poloniex.com"; } }
 
         protected override void OnTickersSocketMessageReceived(object sender, MessageReceivedEventArgs e) {
             base.OnTickersSocketMessageReceived(sender, e);
@@ -130,6 +130,7 @@ namespace CryptoMarketClient {
         }
 
         protected override void OnSocketOpened(object sender, EventArgs e) {
+            base.OnSocketOpened(sender, e);
             ((WebSocket)sender).Send(JsonConvert.SerializeObject(new WebSocketSubscribeInfo() { channel = "1002", command = "subscribe" }));
         }
         

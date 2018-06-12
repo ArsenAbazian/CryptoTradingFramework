@@ -55,9 +55,39 @@ namespace CryptoMarketClient {
         }
 
         private void OnConnectionTimerTick(object sender, EventArgs e) {
-            if((DateTime.Now - Exchange.LastWebSocketRecvTime).TotalSeconds > 5) {
-                this.biConnectionStatus.ImageOptions.SvgImage = this.biDisconnected.ImageOptions.SvgImage;
-                this.biConnectionStatus.Caption = "Disconnected";
+            if(Exchange.SocketState == SocketConnectionState.None) {
+                this.biConnectionStatus.ImageOptions.SvgImage = this.svgImageCollection1["information"];
+                this.biConnectionStatus.Caption = "Initializing...";
+            }
+            else if(Exchange.SocketState == SocketConnectionState.Connecting) {
+                this.biConnectionStatus.ImageOptions.SvgImage = this.svgImageCollection1["connecting"];
+                this.biConnectionStatus.Caption = "Connecting...";
+            }
+            else if(Exchange.SocketState == SocketConnectionState.DelayRecv) {
+                this.biConnectionStatus.ImageOptions.SvgImage = this.svgImageCollection1["datadelay"];
+                this.biConnectionStatus.Caption = "No Data...";
+                this.biReconnect.Visibility = BarItemVisibility.Always;
+            }
+            else if(Exchange.SocketState == SocketConnectionState.Disconnected) {
+                this.biConnectionStatus.ImageOptions.SvgImage = this.svgImageCollection1["disconnected"];
+                this.biConnectionStatus.Caption = "Disconnected.";
+                this.biReconnect.Visibility = BarItemVisibility.Always;
+            }
+            else if(Exchange.SocketState == SocketConnectionState.Error) {
+                this.biConnectionStatus.ImageOptions.SvgImage = this.svgImageCollection1["disconnected"];
+                this.biConnectionStatus.Caption = "Socket Error.";
+                this.biReconnect.Visibility = BarItemVisibility.Always;
+            }
+            else if((DateTime.Now - Exchange.LastWebSocketRecvTime).TotalSeconds > 5) {
+                if((DateTime.Now - Exchange.LastWebSocketRecvTime).TotalSeconds > 20) {
+                    this.biConnectionStatus.ImageOptions.SvgImage = this.svgImageCollection1["disconnected"];
+                    this.biConnectionStatus.Caption = "Connection Interrupted.";
+                    this.biReconnect.Visibility = BarItemVisibility.Always;
+                }
+                else {
+                    this.biConnectionStatus.ImageOptions.SvgImage = this.svgImageCollection1["datadelay"];
+                    this.biConnectionStatus.Caption = "Waiting...";
+                }
             }
             else {
                 SetInfoConnected();
@@ -66,7 +96,8 @@ namespace CryptoMarketClient {
 
         private void SetInfoConnected() {
             this.biConnectionStatus.ImageOptions.SvgImage = this.biConnected.ImageOptions.SvgImage;
-            this.biConnectionStatus.Caption = "Connected";
+            this.biConnectionStatus.Caption = "Connected.";
+            this.biReconnect.Visibility = BarItemVisibility.Never;
         }
 
         void SubscribeWebSocket() {
@@ -88,8 +119,13 @@ namespace CryptoMarketClient {
             }
             else {
                 Exchange.TickerUpdate += OnWebSocketTickerUpdate;
+                Exchange.TickersUpdate += OnWebSocketTickersUpdate;
                 SubscribeWebSocket();
             }
+        }
+
+        private void OnWebSocketTickersUpdate(object sender, EventArgs e) {
+            BeginInvoke(new MethodInvoker(() => this.gridView1.RefreshData()));
         }
 
         private void OnWebSocketTickerUpdate(object sender, TickerUpdateEventArgs e) {
@@ -329,6 +365,14 @@ namespace CryptoMarketClient {
             TickerBase t = (TickerBase)Exchange.Tickers[e.DataSourceIndex];
             if(t.Logo != null) 
                 e.ThumbnailImage = new Bitmap(t.Logo, new Size(128, 128));
+        }
+
+        private void biReconnect_ItemClick(object sender, ItemClickEventArgs e) {
+            BeginInvoke(new MethodInvoker(() => {
+                this.biReconnect.Visibility = BarItemVisibility.Never;
+                Exchange.StopListenTickersStream();
+                Exchange.StartListenTickersStream();
+            }));
         }
     }
 }

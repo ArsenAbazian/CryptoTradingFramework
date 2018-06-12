@@ -92,11 +92,16 @@ namespace CryptoMarketClient {
         public BindingList<BalanceBase> Balances { get; } = new BindingList<BalanceBase>();
 
         public event TickerUpdateEventHandler TickerUpdate;
+        public event EventHandler TickersUpdate;
         protected void RaiseTickerUpdate(TickerBase t) {
             TickerUpdateEventArgs e = new TickerUpdateEventArgs() { Ticker = t };
             if(TickerUpdate != null)
                 TickerUpdate(this, e);
             t.RaiseChanged();
+        }
+        protected void RaiseTickersUpdate() {
+            if(TickersUpdate != null)
+                TickersUpdate(this, EventArgs.Empty);
         }
 
         [XtraSerializableProperty(XtraSerializationVisibility.Collection, true, false, true)]
@@ -478,15 +483,18 @@ namespace CryptoMarketClient {
         public abstract bool CancelOrder(TickerBase ticker, OpenedOrderInfo info);
 
 
+        public SocketConnectionState SocketState { get; set; } = SocketConnectionState.None;
         public WebSocket WebSocket { get; private set; }
-        public abstract string TickersWebSocketAddress { get; }
+        public abstract string BaseWebSocketAddress { get; }
+
         public virtual void StartListenTickersStream() {
-            WebSocket = new WebSocket(TickersWebSocketAddress, "");
+            WebSocket = new WebSocket(BaseWebSocketAddress, "");
             WebSocket.Error += OnSocketError;
             WebSocket.Opened += OnSocketOpened;
             WebSocket.Closed += OnSocketClosed;
             WebSocket.MessageReceived += OnTickersSocketMessageReceived;
             WebSocket.DataReceived += OnTickersSocketDataReceived;
+            SocketState = SocketConnectionState.Connecting;
             WebSocket.Open();
         }
 
@@ -503,16 +511,19 @@ namespace CryptoMarketClient {
 
         protected virtual void OnTickersSocketMessageReceived(object sender, MessageReceivedEventArgs e) {
             LastWebSocketRecvTime = DateTime.Now;
+            SocketState = SocketConnectionState.Connected;
         }
 
         protected virtual void OnSocketClosed(object sender, EventArgs e) {
+            SocketState = SocketConnectionState.Disconnected;
         }
 
         protected virtual void OnSocketOpened(object sender, EventArgs e) {
-            
+            SocketState = SocketConnectionState.Connected;
         }
 
         protected virtual void OnSocketError(object sender, SuperSocket.ClientEngine.ErrorEventArgs e) {
+            SocketState = SocketConnectionState.Error;
             XtraMessageBox.Show("Socket error. Please contact developers. -> " + e.Exception.ToString());
         }
 
@@ -529,5 +540,14 @@ namespace CryptoMarketClient {
     public enum WebSocketType {
         Tickers,
         OrderBook
+    }
+
+    public enum SocketConnectionState {
+        None,
+        Connecting,
+        Connected,
+        Disconnected,
+        DelayRecv,
+        Error
     }
 }

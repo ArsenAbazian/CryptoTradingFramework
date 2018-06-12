@@ -298,10 +298,11 @@ namespace CryptoMarketClient {
         public double LowestAsk {
             get { return lowestAsk; }
             set {
-                if(value != LowestAsk && LowestAsk != 0) {
+                if(value == LowestAsk)
+                    return;
+                if(LowestAsk != 0)
                     AskChange = value - LowestAsk;
-                    lowestAskString = null;
-                }
+                lowestAskString = null;
                 lowestAsk = value;
             }
         }
@@ -309,10 +310,11 @@ namespace CryptoMarketClient {
         public double HighestBid {
             get { return highestBid; }
             set {
-                if(value != HighestBid && HighestBid != 0) {
+                if(value == HighestBid)
+                    return;
+                if(HighestBid != 0)
                     BidChange = value - HighestBid;
-                    highestBidString = null;
-                }
+                highestBidString = null;
                 highestBid = value;
             }
         }

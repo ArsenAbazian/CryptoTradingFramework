@@ -1,5 +1,8 @@
 ﻿using CryptoMarketClient.Common;
+using CryptoMarketClient.Exchanges.Bittrex;
 using CryptoMarketClient.Helpers;
+using DevExpress.XtraEditors;
+using Microsoft.AspNet.SignalR.Client;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -28,14 +31,16 @@ namespace CryptoMarketClient.Bittrex {
         }
 
         public override void OnAccountRemoved(ExchangeAccountInfo info) {
-            
+
         }
 
-        public override string TickersWebSocketAddress => throw new NotImplementedException();
+        public override string BaseWebSocketAddress => "https://socket.bittrex.com/signalr";
 
         public override ExchangeType Type => ExchangeType.Bittrex;
 
         public override bool SupportWebSocket(WebSocketType type) {
+            if(type == WebSocketType.Tickers)
+                return true;
             return false;
         }
 
@@ -49,10 +54,107 @@ namespace CryptoMarketClient.Bittrex {
 
         public override void ObtainExchangeSettings() { }
 
-        public override void StartListenTickersStream() { }
+        protected BittrexWebsocket SignalSocket { get; private set; }
+        public override void StartListenTickersStream() {
+            SignalSocket = new BittrexWebsocket(BaseWebSocketAddress);
+            SignalSocket.UpdateSummaryState = UpdateMarketsState;
+            SignalSocket.Error += OnError;
+            SignalSocket.Closed += OnConnectionClosed;
+            SignalSocket.StateChanged += OnStateChanged;
+            SignalSocket.Received += OnReceived;
+            SocketState = SocketConnectionState.Connecting;
+            SignalSocket.Connect();
+            SignalSocket.SubscribeToMarketsState().ContinueWith(x => {
+                Debug.WriteLine(x);
+            });
+        }
 
-        public override void StopListenTickersStream() { }
+        public override void StopListenTickersStream() {
+            SocketState = SocketConnectionState.Disconnected;
+            SignalSocket.Shutdown();
+            SignalSocket.Error -= OnError;
+            SignalSocket.Closed -= OnConnectionClosed;
+            SignalSocket.StateChanged -= OnStateChanged;
+            SignalSocket.Received -= OnReceived;
+            SignalSocket = null;
+        }
 
+        protected virtual void OnStateChanged(StateChange e) {
+            if(e.NewState == ConnectionState.Connected)
+                SocketState = SocketConnectionState.Connected;
+            else if(e.NewState == ConnectionState.Connecting)
+                SocketState = SocketConnectionState.Connecting;
+            else if(e.NewState == ConnectionState.Disconnected)
+                SocketState = SocketConnectionState.Disconnected;
+            else if(e.NewState == ConnectionState.Reconnecting)
+                SocketState = SocketConnectionState.Connecting;
+        }
+
+        protected virtual void OnReceived(string s) {
+
+        }
+
+        string[] marketSummaryStateInfo;
+        protected string[] SocketMarketSummaryStateInfo{
+            get {
+                if(marketSummaryStateInfo == null) {
+                    marketSummaryStateInfo = new string[] {
+                        "M","H","L","V","l","m","T","B","A","G","g","PD","x"
+                    };
+                }
+                return marketSummaryStateInfo;
+            }    
+        }
+        protected virtual void UpdateMarketsState(string s) {
+            LastWebSocketRecvTime = DateTime.Now;
+            SocketState = SocketConnectionState.Connected;
+            byte[] data = BittrexWebsocket.DecodeBytes(s);
+
+            int startIndex = 0;
+            if(!JSonHelper.Default.SkipSymbol(data, ':', 2, ref startIndex))
+                return;
+            List<string[]> items = JSonHelper.Default.DeserializeArrayOfObjects(data, ref startIndex, SocketMarketSummaryStateInfo);
+            foreach(string[] item in items) {
+                BittrexTicker t = (BittrexTicker)Tickers.FirstOrDefault(tt => tt.Name == item[0]);
+                if(t == null)
+                    continue;
+                t.Hr24High = FastDoubleConverter.Convert(item[1]);
+                t.Hr24Low = FastDoubleConverter.Convert(item[2]);
+                t.Volume = FastDoubleConverter.Convert(item[3]);
+                t.Last = FastDoubleConverter.Convert(item[4]);
+                t.BaseVolume = FastDoubleConverter.Convert(item[5]);
+                t.HighestBid = FastDoubleConverter.Convert(item[7]);
+                t.LowestAsk = FastDoubleConverter.Convert(item[8]);
+
+                t.UpdateTrailings();
+            }
+            RaiseTickersUpdate();
+        }
+
+        protected virtual void UpdateExchangeState(string s) {
+            LastWebSocketRecvTime = DateTime.Now;
+            SocketState = SocketConnectionState.Connected;
+        }
+
+        protected virtual void UpdateOrderState(string s) {
+            LastWebSocketRecvTime = DateTime.Now;
+            SocketState = SocketConnectionState.Connected;
+        }
+
+        protected virtual void UpdateBalancesState(string s) {
+            LastWebSocketRecvTime = DateTime.Now;
+            SocketState = SocketConnectionState.Connected;
+        }
+
+        protected virtual void OnError(Exception e) {
+            SocketState = SocketConnectionState.Error;
+            XtraMessageBox.Show("Socket error. Please contact developers. ->" + e.ToString());
+        }
+
+        protected virtual void OnConnectionClosed() {
+            SocketState = SocketConnectionState.Disconnected;
+        }
+        
         public override bool AllowCandleStickIncrementalUpdate => false;
 
         public override List<CandleStickIntervalInfo> GetAllowedCandleStickIntervals() {

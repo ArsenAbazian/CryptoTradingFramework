@@ -28,7 +28,7 @@ namespace CryptoMarketClient.Binance {
             
         }
 
-        public override string TickersWebSocketAddress => "wss://stream.binance.com:9443/ws/!ticker@arr";
+        public override string BaseWebSocketAddress => "wss://stream.binance.com:9443/ws/!ticker@arr";
 
         public override ExchangeType Type => ExchangeType.Binance;
 

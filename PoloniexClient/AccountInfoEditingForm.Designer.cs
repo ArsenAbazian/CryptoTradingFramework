@@ -259,11 +259,11 @@
             // 
             this.Appearance.FontSizeDelta = 5;
             this.Appearance.Options.UseFont = true;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(282F, 620F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(297F, 653F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(886, 448);
             this.Controls.Add(this.dataLayoutControl1);
-            this.Font = new System.Drawing.Font("Tahoma", 192.875F);
+            this.Font = new System.Drawing.Font("Tahoma", 202.875F);
             this.Margin = new System.Windows.Forms.Padding(5);
             this.Name = "AccountInfoEditingForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;

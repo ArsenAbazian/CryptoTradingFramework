@@ -103,6 +103,9 @@
     <Reference Include="Microsoft.ApplicationInsights, Version=2.5.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.ApplicationInsights.2.5.1\lib\net46\Microsoft.ApplicationInsights.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.Client, Version=2.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.Client.2.2.3\lib\net45\Microsoft.AspNet.SignalR.Client.dll</HintPath>
+    </Reference>
     <Reference Include="MsgPack, Version=0.6.0.0, Culture=neutral, PublicKeyToken=a2625990d5dc0167, processorArchitecture=MSIL">
       <HintPath>..\packages\MsgPack.Cli.0.6.2\lib\net45\MsgPack.dll</HintPath>
     </Reference>
@@ -248,6 +251,9 @@
     <Compile Include="CurrencyMonitoringForm.Designer.cs">
       <DependentUpon>CurrencyMonitoringForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Exchanges\Bittrex\BittrexTicker.cs" />
+    <Compile Include="Exchanges\Bittrex\BittrexModel.cs" />
+    <Compile Include="Exchanges\Bittrex\BittrexWebSocket.cs" />
     <Compile Include="Exchanges\Poloniex\PoloniexTickerCodesProvider.cs" />
     <Compile Include="GrabDataSettingsForm.cs">
       <SubType>Form</SubType>
@@ -293,8 +299,6 @@
     <Compile Include="Analytics\TickerAnalyserBase.cs" />
     <Compile Include="Analytics\TickerCollectionAnalyserBase.cs" />
     <Compile Include="Exchanges\Bittrex\BittrexAccountBalanceInfo.cs" />
-    <Compile Include="Bittrex\BittrexMarketInfo.cs" />
-    <Compile Include="Bittrex\BittrexModel.cs" />
     <Compile Include="Exchanges\Bittrex\BittrexOrderInfo.cs" />
     <Compile Include="CombinedBidAskForm.cs">
       <SubType>Form</SubType>

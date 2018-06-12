@@ -33,7 +33,7 @@ namespace CryptoMarketClient.BitFinex {
             
         }
 
-        public override string TickersWebSocketAddress => "wss://api.bitfinex.com/ws/2";
+        public override string BaseWebSocketAddress => "wss://api.bitfinex.com/ws/2";
 
         public override ExchangeType Type => ExchangeType.BitFinex;
 
