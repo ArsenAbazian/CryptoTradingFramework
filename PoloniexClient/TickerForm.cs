@@ -62,14 +62,14 @@ namespace CryptoMarketClient {
         }
         protected void OnThreadUpdate(object state) {
             try {
-                if(Ticker != null)
+                if(Ticker != null && !Ticker.Exchange.SupportWebSocket(WebSocketType.Tickers))
                     Ticker.UpdateTicker();
+                if(Ticker != null && !Ticker.Exchange.SupportWebSocket(WebSocketType.Ticker))
+                    Ticker.UpdateOrderBook();
                 if(Ticker != null)
                     Ticker.UpdateBalance(CurrencyType.MarketCurrency);
-                if(Ticker != null)
-                    Ticker.UpdateOrderBook();
-                //if(Ticker != null)
-                //    Ticker.UpdateTrades();
+                if(Ticker != null && !Ticker.Exchange.SupportWebSocket(WebSocketType.Ticker))
+                    Ticker.UpdateTrades();
                 //if(Ticker != null)
                 //    Ticker.UpdateOpenedOrders();
                 if(Ticker != null)
@@ -82,15 +82,15 @@ namespace CryptoMarketClient {
             }
         }
 
-        TickerBase ticker;
-        public TickerBase Ticker {
+        Ticker ticker;
+        public Ticker Ticker {
             get {
                 return ticker;
             }
             set {
                 if(Ticker == value)
                     return;
-                TickerBase prev = Ticker;
+                Ticker prev = Ticker;
                 ticker = value;
                 try {
                     OnTickerChanged(prev);
@@ -107,7 +107,7 @@ namespace CryptoMarketClient {
             TrailingSettings s = new TrailingSettings(Ticker);
             this.buySettingsControl.Settings = s;
         }
-        void OnTickerChanged(TickerBase prev) {
+        void OnTickerChanged(Ticker prev) {
             if(prev != null) {
                 prev.IsOpened = false;
                 ClearText();
@@ -164,7 +164,9 @@ namespace CryptoMarketClient {
             this.tradeHistoryItemBindingSource.DataSource = null;
             this.gcOpenedOrders.DataSource = null;
         }
-        void UnsubscribeEvents(TickerBase prev) {
+        void UnsubscribeEvents(Ticker prev) {
+            if(prev.Exchange.SupportWebSocket(WebSocketType.Ticker))
+                prev.StopListenTickerStream();
             prev.OrderBook.OnChanged -= OnTickerOrderBookChanged;
             prev.Changed -= OnTickerChanged;
             prev.HistoryItemAdd -= OnTickerHistoryItemAdded;
@@ -178,11 +180,16 @@ namespace CryptoMarketClient {
 
         void UpdateGrid() {
             this.orderBookControl1.Bids = Ticker.OrderBook.Bids;
-            this.orderBookControl1.Asks = Ticker.OrderBook.Asks;
+            this.orderBookControl1.Asks = Ticker.OrderBook.AsksInverted;
             this.tradeHistoryItemBindingSource.DataSource = Ticker.TradeHistory;
             this.gcOpenedOrders.DataSource = Ticker.OpenedOrders;
         }
         void SubscribeEvents() {
+            if(Ticker.Exchange.SupportWebSocket(WebSocketType.Ticker)) {
+                Ticker.TradeHistory.Clear();
+                Ticker.Exchange.UpdateTrades(Ticker);
+                Ticker.StartListenTickerStream();
+            }
             Ticker.OrderBook.OnChanged += OnTickerOrderBookChanged;
             Ticker.Changed += OnTickerChanged;
             Ticker.HistoryItemAdd += OnTickerHistoryItemAdded;
@@ -219,7 +226,7 @@ namespace CryptoMarketClient {
             this.orderBookControl1.RefreshBids();
         }
         void RefreshAskGrid() {
-            this.orderBookControl1.Asks = Ticker.OrderBook.Asks;
+            this.orderBookControl1.Asks = Ticker.OrderBook.AsksInverted;
             this.orderBookControl1.RefreshAsks();
         }
 

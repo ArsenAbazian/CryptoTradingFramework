@@ -35,6 +35,10 @@ namespace CryptoMarketClient {
             }
         }
 
+        protected internal override IIncrementalUpdateDataProvider CreateIncrementalUpdateDataProvider() {
+            return new PoloniexIncrementalUpdateDataProvider();
+        }
+
         public override void OnAccountRemoved(ExchangeAccountInfo info) {
             
         }
@@ -42,10 +46,9 @@ namespace CryptoMarketClient {
         public override ExchangeType Type => ExchangeType.Poloniex;
 
         public override bool SupportWebSocket(WebSocketType type) {
-            return type == WebSocketType.Tickers;
+            return type == WebSocketType.Tickers || 
+                type == WebSocketType.Ticker;
         }
-
-        
 
         private void OnGetTickerItem(PoloniexTicker item) {
             lock(item) {
@@ -70,6 +73,50 @@ namespace CryptoMarketClient {
             base.OnTickersSocketMessageReceived(sender, e);
             if(e.Message[1] == '1' && e.Message[2] == '0' && e.Message[3] == '0' && e.Message[4] == '2')
                 OnTickerInfoRecv(e.Message);
+            else {
+                int startIndex = 1;
+                int value = FastValueConverter.ConvertPositiveInteger(e.Message, ref startIndex); startIndex++;
+
+                Ticker t = Tickers.FirstOrDefault(tt => tt.Code == value);
+                if(t != null)
+                    OnTickerOrderBookAndTradesRecv(t, e.Message, startIndex);
+            }
+        }
+
+        bool StartsWith(string message, int startIndex, string header) {
+            for(int i = 0, j = startIndex; i < header.Length; i++, j++) {
+                if(message[j] != header[i])
+                    return false;
+            }
+            return true;
+        }
+
+        void OnSnapshotRecv(Ticker tickerBase, string message, int startIndex) {
+            List<object> array = JsonParser.Parse<List<object>>(message);
+            List<object> obj = (List<object>)((List<object>)array[2])[0];
+            if(((string)obj[0]) == "i")
+                OnFirstInitializeOrderBook(tickerBase, (Dictionary<string, object>)obj[1]);
+        }
+
+        void OnFirstInitializeOrderBook(Ticker ticker, Dictionary<string, object> jObject) {
+            IIncrementalUpdateDataProvider provider = CreateIncrementalUpdateDataProvider();
+
+            provider.ApplySnapshot(jObject, ticker);
+        }
+
+        protected void OnTickerOrderBookAndTradesRecv(Ticker ticker, string message, int startIndex) {
+            long seqNumber = FastValueConverter.ConvertPositiveLong(message, ref startIndex); startIndex++;
+
+            const string header = "[[\"i\",{\"currencyPair\"";
+            if(StartsWith(message, startIndex, header)) {
+                Updates.Clear(seqNumber + 1);
+                OnSnapshotRecv(ticker, message, startIndex + header.Length);
+                return;
+            }
+
+            List<string[]> items = JSonHelper.Default.DeserializeArrayOfArrays(Encoding.Default.GetBytes(message), ref startIndex, 6);
+            Updates.Push(seqNumber, ticker, items);
+            OnIncrementalUpdateRecv(Updates);
         }
 
         int DeserializePositiveInt(char[] value, ref int current, int end) {
@@ -91,7 +138,7 @@ namespace CryptoMarketClient {
             int start = current;
             for(; current < end; current++) {
                 if(value[current] == '"') {
-                    double res = FastDoubleConverter.Convert(value, start, current);
+                    double res = FastValueConverter.Convert(value, start, current);
                     current += 2;
                     return res;
                 }
@@ -131,9 +178,19 @@ namespace CryptoMarketClient {
 
         protected override void OnSocketOpened(object sender, EventArgs e) {
             base.OnSocketOpened(sender, e);
-            ((WebSocket)sender).Send(JsonConvert.SerializeObject(new WebSocketSubscribeInfo() { channel = "1002", command = "subscribe" }));
+            WebSocket.Send(JsonConvert.SerializeObject(new WebSocketSubscribeInfo() { channel = "1002", command = "subscribe" }));
         }
-        
+
+        public override void StartListenTickerStream(Ticker ticker) {
+            base.StartListenTickerStream(ticker);
+            WebSocket.Send(JsonConvert.SerializeObject(new WebSocketSubscribeInfo() { channel = ticker.CurrencyPair, command = "subscribe" }));
+        }
+
+        public override void StopListenTickerStream(Ticker ticker) {
+            base.StopListenTickerStream(ticker);
+            WebSocket.Send(JsonConvert.SerializeObject(new WebSocketSubscribeInfo() { channel = ticker.CurrencyPair, command = "unsubscribe" }));
+        }
+
         public override void ObtainExchangeSettings() {
             
         }
@@ -164,7 +221,7 @@ namespace CryptoMarketClient {
             return null;
         }
         
-        public override BindingList<CandleStickData> GetCandleStickData(TickerBase ticker, int candleStickPeriodMin, DateTime start, long periodInSeconds) {
+        public override BindingList<CandleStickData> GetCandleStickData(Ticker ticker, int candleStickPeriodMin, DateTime start, long periodInSeconds) {
             long startSec = (long)(start.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
             long end = startSec + periodInSeconds;
 
@@ -189,13 +246,13 @@ namespace CryptoMarketClient {
             foreach(string[] item in res) {
                 CandleStickData data = new CandleStickData();
                 data.Time = startTime.AddSeconds(long.Parse(item[0]));
-                data.High = FastDoubleConverter.Convert(item[1]);
-                data.Low = FastDoubleConverter.Convert(item[2]);
-                data.Open = FastDoubleConverter.Convert(item[3]);
-                data.Close = FastDoubleConverter.Convert(item[4]);
-                data.Volume = FastDoubleConverter.Convert(item[5]);
-                data.QuoteVolume = FastDoubleConverter.Convert(item[6]);
-                data.WeightedAverage = FastDoubleConverter.Convert(item[7]);
+                data.High = FastValueConverter.Convert(item[1]);
+                data.Low = FastValueConverter.Convert(item[2]);
+                data.Open = FastValueConverter.Convert(item[3]);
+                data.Close = FastValueConverter.Convert(item[4]);
+                data.Volume = FastValueConverter.Convert(item[5]);
+                data.QuoteVolume = FastValueConverter.Convert(item[6]);
+                data.WeightedAverage = FastValueConverter.Convert(item[7]);
                 list.Add(data);
             }
             return list;
@@ -212,7 +269,7 @@ namespace CryptoMarketClient {
             }
             if(string.IsNullOrEmpty(text))
                 return false;
-            JObject res = (JObject)JsonConvert.DeserializeObject(text);
+            JObject res = JsonConvert.DeserializeObject<JObject>(text);
             foreach(JProperty prop in res.Children()) {
                 string currency = prop.Name;
                 JObject obj = (JObject)prop.Value;
@@ -242,7 +299,7 @@ namespace CryptoMarketClient {
             if(string.IsNullOrEmpty(text))
                 return false;
             Tickers.Clear();
-            JObject res = (JObject)JsonConvert.DeserializeObject(text);
+            JObject res = JsonConvert.DeserializeObject<JObject>(text);
             int index = 0;
             foreach(JProperty prop in res.Children()) {
                 PoloniexTicker t = new PoloniexTicker(this);
@@ -279,7 +336,7 @@ namespace CryptoMarketClient {
             }
             if(string.IsNullOrEmpty(text))
                 return false;
-            JObject res = (JObject)JsonConvert.DeserializeObject(text);
+            JObject res = JsonConvert.DeserializeObject<JObject>(text);
             foreach(JProperty prop in res.Children()) {
                 PoloniexTicker t = (PoloniexTicker)Tickers.FirstOrDefault((i) => i.CurrencyPair == prop.Name);
                 if(t == null)
@@ -299,13 +356,13 @@ namespace CryptoMarketClient {
         }
         public bool UpdateArbitrageOrderBook(PoloniexTicker ticker, int depth) {
             string address = GetOrderBookString(ticker, depth);
-            string text = ((TickerBase)ticker).DownloadString(address);
+            string text = ((Ticker)ticker).DownloadString(address);
             return OnUpdateArbitrageOrderBook(ticker, text);
         }
-        public override bool UpdateTicker(TickerBase tickerBase) {
+        public override bool UpdateTicker(Ticker tickerBase) {
             return true;
         }
-        public bool OnUpdateOrderBook(TickerBase ticker, byte[] bytes) {
+        public bool OnUpdateOrderBook(Ticker ticker, byte[] bytes) {
             if(bytes == null)
                 return false;
 
@@ -324,13 +381,13 @@ namespace CryptoMarketClient {
 
             ticker.OrderBook.GetNewBidAsks();
             int index = 0;
-            OrderBookEntry[] list = ticker.OrderBook.Bids;
+            List<OrderBookEntry> list = ticker.OrderBook.Bids;
             foreach(string[] item in bids) {
                 OrderBookEntry entry = list[index];
                 entry.ValueString = item[0];
                 entry.AmountString = item[1];
                 index++;
-                if(index >= list.Length)
+                if(index >= list.Count)
                     break;
             }
             index = 0;
@@ -340,15 +397,14 @@ namespace CryptoMarketClient {
                 entry.ValueString = item[0];
                 entry.AmountString = item[1];
                 index++;
-                if(index >= list.Length)
+                if(index >= list.Count)
                     break;
             }
 
             ticker.OrderBook.UpdateEntries();
-            ticker.OrderBook.RaiseOnChanged(new OrderBookUpdateInfo() { Action = OrderBookUpdateType.RefreshAll });
             return true;
         }
-        public bool OnUpdateArbitrageOrderBook(TickerBase ticker, string text) {
+        public bool OnUpdateArbitrageOrderBook(Ticker ticker, string text) {
             if(string.IsNullOrEmpty(text))
                 return false;
 
@@ -364,13 +420,13 @@ namespace CryptoMarketClient {
 
             ticker.OrderBook.GetNewBidAsks();
             int index = 0;
-            OrderBookEntry[] list = ticker.OrderBook.Bids;
+            List<OrderBookEntry> list = ticker.OrderBook.Bids;
             foreach(List<object> item in bids) {
                 OrderBookEntry entry = list[index];
                 entry.ValueString = (string)item.First();
                 entry.AmountString = (string)item.Last();
                 index++;
-                if(index >= list.Length)
+                if(index >= list.Count)
                     break;
             }
             index = 0;
@@ -380,46 +436,44 @@ namespace CryptoMarketClient {
                 entry.ValueString = (string)item.First();
                 entry.AmountString = (string)item.Last();
                 index++;
-                if(index >= list.Length)
+                if(index >= list.Count)
                     break;
             }
 
             ticker.OrderBook.UpdateEntries();
-            ticker.OrderBook.RaiseOnChanged(new OrderBookUpdateInfo() { Action = OrderBookUpdateType.RefreshAll });
             return true;
         }
 
-        public string GetOrderBookString(TickerBase ticker, int depth) {
+        public string GetOrderBookString(Ticker ticker, int depth) {
             return string.Format("https://poloniex.com/public?command=returnOrderBook&currencyPair={0}&depth={1}",
                 Uri.EscapeDataString(ticker.CurrencyPair), depth);
         }
-        public override bool UpdateOrderBook(TickerBase ticker) {
+        public override bool UpdateOrderBook(Ticker ticker) {
             return GetOrderBook(ticker, OrderBook.Depth);
         }
-        public override bool ProcessOrderBook(TickerBase tickerBase, string text) {
+        public override bool ProcessOrderBook(Ticker tickerBase, string text) {
             UpdateOrderBook(tickerBase, text);
             return true;
         }
-        public void UpdateOrderBook(TickerBase ticker, string text) {
+        public void UpdateOrderBook(Ticker ticker, string text) {
             OnUpdateArbitrageOrderBook(ticker, text);
-            ticker.OrderBook.RaiseOnChanged(new OrderBookUpdateInfo() { Action = OrderBookUpdateType.RefreshAll });
         }
-        public bool GetOrderBook(TickerBase ticker, int depth) {
+        public bool GetOrderBook(Ticker ticker, int depth) {
             string address = string.Format("https://poloniex.com/public?command=returnOrderBook&currencyPair={0}&depth={1}",
                 Uri.EscapeDataString(ticker.CurrencyPair), depth);
-            byte[] bytes = ((TickerBase)ticker).DownloadBytes(address);
+            byte[] bytes = ((Ticker)ticker).DownloadBytes(address);
             if(bytes == null || bytes.Length == 0)
                 return false;
             OnUpdateOrderBook(ticker, bytes);
             return true;
         }
 
-        public override List<TradeHistoryItem> GetTrades(TickerBase ticker, DateTime starTime) {
+        public override List<TradeHistoryItem> GetTrades(Ticker ticker, DateTime starTime) {
             string address = string.Format("https://poloniex.com/public?command=returnTradeHistory&currencyPair={0}", Uri.EscapeDataString(ticker.CurrencyPair));
             string text = GetDownloadString(address);
             if(string.IsNullOrEmpty(text))
                 return null;
-            JArray trades = (JArray)JsonConvert.DeserializeObject(text);
+            JArray trades = JsonConvert.DeserializeObject<JArray>(text);
             if(trades.Count == 0)
                 return null;
 
@@ -451,7 +505,7 @@ namespace CryptoMarketClient {
 
         protected List<TradeHistoryItem> UpdateList { get; } = new List<TradeHistoryItem>(100);
         
-        public override bool UpdateTrades(TickerBase ticker) {
+        public override bool UpdateTrades(Ticker ticker) {
             string address = string.Format("https://poloniex.com/public?command=returnTradeHistory&currencyPair={0}", Uri.EscapeDataString(ticker.CurrencyPair));
             byte[] bytes = GetDownloadBytes(address);
             if(bytes == null)
@@ -508,7 +562,7 @@ namespace CryptoMarketClient {
             return true;
         }
 
-        public override bool UpdateMyTrades(TickerBase ticker) {
+        public override bool UpdateMyTrades(Ticker ticker) {
             string address = string.Format("https://poloniex.com/tradingApi");
 
             NameValueCollection coll = new NameValueCollection();
@@ -531,7 +585,7 @@ namespace CryptoMarketClient {
                 return false;
             }
         }
-        bool OnUpdateMyTrades(TickerBase ticker, byte[] data) {
+        bool OnUpdateMyTrades(Ticker ticker, byte[] data) {
             if(data == null)
                 return false;
             if(data.Length == 2) {
@@ -616,7 +670,7 @@ namespace CryptoMarketClient {
             string text = System.Text.Encoding.ASCII.GetString(data);
             if(string.IsNullOrEmpty(text))
                 return false;
-            JObject res = (JObject)JsonConvert.DeserializeObject(text);
+            JObject res = JsonConvert.DeserializeObject<JObject>(text);
             lock(Balances) {
                 foreach(JProperty prop in res.Children()) {
                     if(prop.Name == "error") {
@@ -668,7 +722,7 @@ namespace CryptoMarketClient {
             string text = System.Text.Encoding.ASCII.GetString(data);
             if(string.IsNullOrEmpty(text) || text == "[]")
                 return false;
-            JObject res = (JObject)JsonConvert.DeserializeObject(text);
+            JObject res = JsonConvert.DeserializeObject<JObject>(text);
             lock(Balances) {
                 foreach(JProperty prop in res.Children()) {
                     if(prop.Name == "error") {
@@ -686,7 +740,7 @@ namespace CryptoMarketClient {
         string GetNonce() {
             return ((long)((DateTime.UtcNow - new DateTime(1, 1, 1)).TotalMilliseconds * 10000)).ToString();
         }
-        public override bool UpdateOpenedOrders(TickerBase ticker) {
+        public override bool UpdateOpenedOrders(Ticker ticker) {
             string address = string.Format("https://poloniex.com/tradingApi");
 
             NameValueCollection coll = new NameValueCollection();
@@ -730,7 +784,7 @@ namespace CryptoMarketClient {
             return client.UploadValuesTaskAsync(address, coll);
         }
 
-        public bool OnGetOpenedOrders(TickerBase ticker, byte[] data) {
+        public bool OnGetOpenedOrders(Ticker ticker, byte[] data) {
             string text = System.Text.Encoding.ASCII.GetString(data);
             if(string.IsNullOrEmpty(text))
                 return false;
@@ -741,7 +795,7 @@ namespace CryptoMarketClient {
                     OpenedOrders.Clear();
                 return true;
             }
-            JObject res = (JObject)JsonConvert.DeserializeObject(text);
+            JObject res = JsonConvert.DeserializeObject<JObject>(text);
             List<OpenedOrderInfo> openedOrders = ticker == null ? OpenedOrders : ticker.OpenedOrders;
             lock(openedOrders) {
                 openedOrders.Clear();
@@ -773,7 +827,7 @@ namespace CryptoMarketClient {
             string text = System.Text.Encoding.ASCII.GetString(data);
             if(string.IsNullOrEmpty(text))
                 return false;
-            JObject res = (JObject)JsonConvert.DeserializeObject(text);
+            JObject res = JsonConvert.DeserializeObject<JObject>(text);
             lock(OpenedOrders) {
                 OpenedOrders.Clear();
                 foreach(JProperty prop in res.Children()) {
@@ -846,11 +900,11 @@ namespace CryptoMarketClient {
             
         }
 
-        public bool OnBuyLimit(TickerBase ticker, byte[] data) {
+        public bool OnBuyLimit(Ticker ticker, byte[] data) {
             string text = System.Text.Encoding.ASCII.GetString(data);
             if(string.IsNullOrEmpty(text))
                 return false;
-            JObject res = (JObject)JsonConvert.DeserializeObject(text);
+            JObject res = JsonConvert.DeserializeObject<JObject>(text);
             TradingResult tr = new TradingResult();
             tr.OrderNumber = res.Value<long>("orderNumber");
             tr.Type = OrderType.Buy;
@@ -874,7 +928,7 @@ namespace CryptoMarketClient {
             string text = System.Text.Encoding.ASCII.GetString(data);
             if(string.IsNullOrEmpty(text))
                 return null;
-            JObject res = (JObject)JsonConvert.DeserializeObject(text);
+            JObject res = JsonConvert.DeserializeObject<JObject>(text);
             if(res.Value<int>("success") != 1)
                 return null;
             string deposit = res.Value<string>("response");
@@ -887,11 +941,11 @@ namespace CryptoMarketClient {
             string text = System.Text.Encoding.ASCII.GetString(data);
             if(string.IsNullOrEmpty(text))
                 return -1;
-            JObject res = (JObject)JsonConvert.DeserializeObject(text);
+            JObject res = JsonConvert.DeserializeObject<JObject>(text);
             return res.Value<long>("orderNumber");
         }
 
-        public override bool CancelOrder(TickerBase ticker, OpenedOrderInfo info) {
+        public override bool CancelOrder(Ticker ticker, OpenedOrderInfo info) {
             string address = string.Format("https://poloniex.com/tradingApi");
 
             NameValueCollection coll = new NameValueCollection();
@@ -930,7 +984,7 @@ namespace CryptoMarketClient {
             string text = System.Text.Encoding.ASCII.GetString(data);
             if(string.IsNullOrEmpty(text))
                 return false;
-            JObject res = (JObject)JsonConvert.DeserializeObject(text);
+            JObject res = JsonConvert.DeserializeObject<JObject>(text);
             return res.Value<int>("success") == 1;
         }
 
@@ -982,7 +1036,7 @@ namespace CryptoMarketClient {
             string text = System.Text.Encoding.ASCII.GetString(data);
             if(string.IsNullOrEmpty(text))
                 return false;
-            JObject res = (JObject)JsonConvert.DeserializeObject(text);
+            JObject res = JsonConvert.DeserializeObject<JObject>(text);
             return !string.IsNullOrEmpty(res.Value<string>("responce"));
         }
         public bool GetBalance(string str) {
@@ -1015,6 +1069,6 @@ namespace CryptoMarketClient {
     public delegate void TickerUpdateEventHandler(object sender, TickerUpdateEventArgs e);
     public delegate bool IfDelegate2(int itemIndex, int paramIndex, string value);
     public class TickerUpdateEventArgs : EventArgs {
-        public TickerBase Ticker { get; set; }
+        public Ticker Ticker { get; set; }
     }
  }

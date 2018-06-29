@@ -30,18 +30,18 @@ namespace CryptoMarketClient {
         protected Form MdiParentForm { get; set; }
         protected Form ParentFormCore { get; set; }
 
-        TickerBase ticker;
-        public TickerBase Ticker {
+        Ticker ticker;
+        public Ticker Ticker {
             get { return ticker; }
             set {
                 if(Ticker == value)
                     return;
-                TickerBase prev = ticker;
+                Ticker prev = ticker;
                 this.ticker = value;
                 OnTickerChanged(prev);
             }
         }
-        void OnTickerChanged(TickerBase prev) {
+        void OnTickerChanged(Ticker prev) {
             if(prev != null) {
                 prev.OrderBook.OnChanged -= OrderBook_OnChanged;
                 prev.HistoryItemAdd -= Ticker_HistoryItemAdd;

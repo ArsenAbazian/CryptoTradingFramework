@@ -242,7 +242,7 @@ namespace CryptoMarketClient {
                 if(checkMaxProfits && info.MaxProfitUSD - prevProfits > 20)
                     ShowNotification(collection, prevProfits);
                 for(int i = 0; i < collection.Count; i++) {
-                    TickerBase ticker = collection.Tickers[i];
+                    Ticker ticker = collection.Tickers[i];
                     if(ticker.OrderBook.BidHipeStarted || ticker.OrderBook.AskHipeStarted)
                         SendBoostNotification(ticker);
                     else if(ticker.OrderBook.BidHipeStopped || ticker.OrderBook.AskHipeStopped)
@@ -275,7 +275,7 @@ namespace CryptoMarketClient {
             SendTelegramNotification(info, prev);
             ShowDesktopNotification(info, prev);
         }
-        void SendBoostNotification(TickerBase info) {
+        void SendBoostNotification(Ticker info) {
             string text = string.Empty;
 
             text += "<b>boost detected</b> " + info.HostName + " - " + info.Name;
@@ -285,7 +285,7 @@ namespace CryptoMarketClient {
             text += "<pre> ask:               " + info.LowestAsk.ToString("0.########") + "</pre>";
             TelegramBot.Default.SendNotification(text);
         }
-        void SendBoostStopNotification(TickerBase info) {
+        void SendBoostStopNotification(Ticker info) {
             string text = string.Empty;
 
             text += "<b>boost stopped</b> " + info.HostName + " - " + info.Name;
@@ -388,7 +388,7 @@ namespace CryptoMarketClient {
                 return;
 
             ArbitrageInfo info = SelectedCollection.Arbitrage;
-            TickerBase lowest = info.LowestAskTicker;
+            Ticker lowest = info.LowestAskTicker;
 
             if(!lowest.UpdateBalance(CurrencyType.BaseCurrency)) {
                 LogManager.Default.AddError("Cant update balance.", lowest.HostName + "-" + lowest.BaseCurrency);
@@ -416,7 +416,7 @@ namespace CryptoMarketClient {
                 return;
             ArbitrageInfo info = SelectedCollection.Arbitrage;
 
-            TickerBase highest = info.HighestBidTicker;
+            Ticker highest = info.HighestBidTicker;
             if(!highest.UpdateBalance(CurrencyType.MarketCurrency)) {
                 LogManager.Default.AddError("Cant update balance.", highest.HostName + "-" + highest.MarketCurrency);
                 SelectedCollection = null;
@@ -438,8 +438,8 @@ namespace CryptoMarketClient {
             if(info == null)
                 return false;
 
-            TickerBase lowest = info.Arbitrage.LowestAskTicker;
-            TickerBase highest = info.Arbitrage.HighestBidTicker;
+            Ticker lowest = info.Arbitrage.LowestAskTicker;
+            Ticker highest = info.Arbitrage.HighestBidTicker;
 
             if(forceUpdateBalance || lowest.MarketCurrencyBalance == 0) {
                 if(!lowest.UpdateBalance(CurrencyType.MarketCurrency)) {
@@ -490,8 +490,8 @@ namespace CryptoMarketClient {
             SelectedCollection = (TickerCollection)this.bbTryArbitrage.Tag;
             if(SelectedCollection == null)
                 return;
-            TickerBase lowest = SelectedCollection.Arbitrage.LowestAskTicker;
-            TickerBase highest = SelectedCollection.Arbitrage.HighestBidTicker;
+            Ticker lowest = SelectedCollection.Arbitrage.LowestAskTicker;
+            Ticker highest = SelectedCollection.Arbitrage.HighestBidTicker;
 
             if(!lowest.UpdateBalance(CurrencyType.BaseCurrency)) {
                 LogManager.Default.AddError("Cant update balance.", lowest.HostName + "-" + lowest.BaseCurrency);
@@ -602,7 +602,7 @@ namespace CryptoMarketClient {
         }
         void AddEnterMarketMenuItems() {
             int index = 0;
-            foreach(TickerBase ticker in ArbitrageList[0].Tickers) {
+            foreach(Ticker ticker in ArbitrageList[0].Tickers) {
                 if(ticker == null)
                     break;
                 BarButtonItem item = new BarButtonItem(this.ribbonControl1.Manager, ticker.HostName);
@@ -637,7 +637,7 @@ namespace CryptoMarketClient {
                 return;
             TickerForm form;
             if(e.Item.Tag == null) {
-                foreach(TickerBase ticker in collection.Tickers) {
+                foreach(Ticker ticker in collection.Tickers) {
                     if(ticker == null)
                         return;
                     form = new TickerForm();
@@ -657,10 +657,10 @@ namespace CryptoMarketClient {
         private void OnStrategyTickerClick(object sender, ItemClickEventArgs e) {
             if(e.Item.Tag == null)
                 return;
-            TickerBase ticker = (TickerBase)e.Item.Tag;
+            Ticker ticker = (Ticker)e.Item.Tag;
             if(StrategyType == null)
                 return;
-            TickerStrategyBase strategy = (TickerStrategyBase)StrategyType.GetConstructor(new Type[] { typeof(TickerBase) }).Invoke(new object[] { ticker });
+            TickerStrategyBase strategy = (TickerStrategyBase)StrategyType.GetConstructor(new Type[] { typeof(Ticker) }).Invoke(new object[] { ticker });
 
             using(TickerStrategyParametersForm form = new TickerStrategyParametersForm()) {
                 form.Strategy = strategy;

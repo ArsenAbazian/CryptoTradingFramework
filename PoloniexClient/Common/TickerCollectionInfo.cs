@@ -22,9 +22,9 @@ namespace CryptoMarketClient {
 
         public Task UpdateTask { get; set; }
 
-        public TickerBase[] Tickers { get; private set; } = new TickerBase[16];
-        TickerBase usdTicker;
-        public TickerBase UsdTicker {
+        public Ticker[] Tickers { get; private set; } = new Ticker[16];
+        Ticker usdTicker;
+        public Ticker UsdTicker {
             get { return usdTicker; }
             set {
                 usdTicker = value;
@@ -45,7 +45,7 @@ namespace CryptoMarketClient {
         public int ObtainDataCount { get; set; }
         public int ObtainDataSuccessCount { get; set; }
 
-        public void Add(TickerBase ticker) {
+        public void Add(Ticker ticker) {
             Tickers[Count] = ticker;
             Count++;
         }
@@ -58,8 +58,8 @@ namespace CryptoMarketClient {
 
         public ArbitrageInfo Arbitrage { get; private set; }
 
-        public TickerBase LowestAskTicker { get { return Arbitrage.LowestAskTicker; } }
-        public TickerBase HighestBidTicker { get { return Arbitrage.HighestBidTicker; } }
+        public Ticker LowestAskTicker { get { return Arbitrage.LowestAskTicker; } }
+        public Ticker HighestBidTicker { get { return Arbitrage.HighestBidTicker; } }
         public double Amount { get { return Arbitrage.Amount; } }
         public string LowestAskHost { get { return Arbitrage.LowestAskHost; } }
         public string HighestBidHost { get { return Arbitrage.HighestBidHost; } }
@@ -96,8 +96,8 @@ namespace CryptoMarketClient {
     }
     
     public class SyncronizationItemInfo {
-        public TickerBase Source { get; set; }
-        public TickerBase Destination { get; set; }
+        public Ticker Source { get; set; }
+        public Ticker Destination { get; set; }
 
         public string DestinationAddress { get; set; }
         public double Amount { get; set; }

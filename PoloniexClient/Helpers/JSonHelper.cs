@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
@@ -36,6 +38,12 @@ namespace CryptoMarketClient.Helpers {
             return DeserializeArrayOfObjects(bytes, ref startIndex, str, null);
         }
         public string[] DeserializeObject(byte[] bytes, ref int startIndex, string[] str) {
+            return DeserializeObject(bytes, ref startIndex, str, false);
+        }
+        public string[] StartDeserializeObject(byte[] bytes, ref int startIndex, string[] str) {
+            return DeserializeObject(bytes, ref startIndex, str, true);
+        }
+        string[] DeserializeObject(byte[] bytes, ref int startIndex, string[] str, bool start) {
             int index = startIndex;
             string[] props = new string[str.Length];
             if(!FindChar(bytes, '{', ref index))
@@ -52,8 +60,10 @@ namespace CryptoMarketClient.Helpers {
                 int length = index;
                 if(bytes[index] == '"')
                     ReadString(bytes, ref length);
-                else
-                    FindChar(bytes, itemIndex == str.Length - 1 ? '}' : ',', ref length);
+                else {
+                    char symbol = itemIndex == (str.Length - 1) && !start ? '}' : ',';
+                    FindChar(bytes, symbol, ref length);
+                }
                 length -= index;
                 props[itemIndex] = ByteArray2String(bytes, index, length);
                 index += length;
@@ -65,7 +75,12 @@ namespace CryptoMarketClient.Helpers {
             int index = startIndex;
             if(!FindChar(bytes, '[', ref index))
                 return null;
+            index++;
             List<string[]> items = new List<string[]>();
+            if(bytes[index] == ']') {
+                startIndex = index + 1;
+                return items;
+            }
             while(index != -1) {
                 if(!FindChar(bytes, '{', ref index))
                     break;
@@ -128,11 +143,13 @@ namespace CryptoMarketClient.Helpers {
                 for(int i = 0; i < subArrayItemsCount; i++) {
                     index++;
                     int length = index;
-                    char separator = i == subArrayItemsCount - 1 ? ']' : ',';
-                    FindChar(bytes, separator, ref length);
+                    FindChar(bytes, ',', ']', ref length);
+                    bool isEnd = bytes[length] == ']';
                     length -= index;
                     items[i] = ByteArray2String(bytes, index, length);
                     index += length;
+                    if(isEnd)
+                        break;
                 }
                 index += 2; // skip ],
             }
@@ -150,12 +167,35 @@ namespace CryptoMarketClient.Helpers {
             startIndex = bytes.Length;
             return false;
         }
+
         public bool FindCharWithoutStop(byte[] bytes, char symbol, ref int startIndex) {
             for(int i = startIndex; i < bytes.Length; i++) {
                 byte c = bytes[i];
                 if(c == symbol) {
                     startIndex = i;
                     return true;
+                }
+            }
+            startIndex = bytes.Length;
+            return false;
+        }
+        public bool FindChar(byte[] bytes, char symbol, char symbol2, ref int startIndex) {
+            int count = 0;
+            for(int i = startIndex; i < bytes.Length; i++) {
+                byte c = bytes[i];
+                if(c == '[')
+                    count++;
+                if(c == ']' && count > 0) {
+                    count--;
+                    continue;
+                }
+                if(c == symbol || c == symbol2) {
+                    startIndex = i;
+                    return true;
+                }
+                if(c == ',' || c == ']' || c == '}' || c == ':') {
+                    startIndex = i;
+                    return false;
                 }
             }
             startIndex = bytes.Length;
@@ -180,7 +220,7 @@ namespace CryptoMarketClient.Helpers {
         public string Serialize(string[] pairs) {
             StringBuilder b = new StringBuilder();
             b.Append('{');
-            for(int i = 0; i < pairs.Length; i+=2) {
+            for(int i = 0; i < pairs.Length; i += 2) {
                 if(i != 0)
                     b.Append(',');
                 b.Append('"');
@@ -188,7 +228,7 @@ namespace CryptoMarketClient.Helpers {
                 b.Append('"');
                 b.Append(':');
                 b.Append('"');
-                b.Append(pairs[i+1]);
+                b.Append(pairs[i + 1]);
                 b.Append('"');
             }
             b.Append('}');

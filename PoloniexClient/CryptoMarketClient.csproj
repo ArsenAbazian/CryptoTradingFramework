@@ -115,6 +115,9 @@
     <Reference Include="Newtonsoft.Msgpack, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Msgpack.0.1.10\lib\net45\Newtonsoft.Msgpack.dll</HintPath>
     </Reference>
+    <Reference Include="nunit.framework">
+      <HintPath>..\..\..\..\Work\2018.1\Bin\NUnit341\nunit.framework.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="RestSharp, Version=105.2.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\RestSharp.105.2.3\lib\net452\RestSharp.dll</HintPath>
@@ -223,16 +226,19 @@
     <Compile Include="AccountInfoEditingForm.Designer.cs">
       <DependentUpon>AccountInfoEditingForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Common\SocketConnectionInfo.cs" />
     <Compile Include="ConnectionForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="ConnectionForm.Designer.cs">
       <DependentUpon>ConnectionForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Exchanges\Binance\BinanceIncUpdateDataProvider.cs.cs" />
     <Compile Include="Exchanges\Binance\BinanceModel.cs" />
     <Compile Include="Exchanges\Binance\BinanceTicker.cs" />
     <Compile Include="Exchanges\BitFinex\BitFinexAccountBalanceInfo.cs" />
     <Compile Include="Exchanges\BitFinex\BitFinexCurrencyInfo.cs" />
+    <Compile Include="Exchanges\BitFinex\BitFinexIncUpdateDataProvider.cs.cs" />
     <Compile Include="Exchanges\BitFinex\BitFinexOrderInfo.cs" />
     <Compile Include="Exchanges\BitFinex\BitFinexTicker.cs" />
     <Compile Include="Exchanges\BitFinex\BitFinexModel.cs" />
@@ -251,9 +257,11 @@
     <Compile Include="CurrencyMonitoringForm.Designer.cs">
       <DependentUpon>CurrencyMonitoringForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Exchanges\Bittrex\BittrexIncUpdateDataProvider.cs.cs" />
     <Compile Include="Exchanges\Bittrex\BittrexTicker.cs" />
     <Compile Include="Exchanges\Bittrex\BittrexModel.cs" />
     <Compile Include="Exchanges\Bittrex\BittrexWebSocket.cs" />
+    <Compile Include="Exchanges\Poloniex\PoloniexIncUpdateDataProvider.cs" />
     <Compile Include="Exchanges\Poloniex\PoloniexTickerCodesProvider.cs" />
     <Compile Include="GrabDataSettingsForm.cs">
       <SubType>Form</SubType>
@@ -276,6 +284,7 @@
     <Compile Include="MyTradesCollectionControl.Designer.cs">
       <DependentUpon>MyTradesCollectionControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="Tests\IncrementalUpdateQueueTests.cs" />
     <Compile Include="TrailingCollectionControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -324,8 +333,8 @@
     <Compile Include="Common\MyWebClient.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Common\OrderBookEntry.cs" />
-    <Compile Include="Common\OrderBookUpdateInfo.cs" />
+    <Compile Include="Common\OrderBook\OrderBookEntry.cs" />
+    <Compile Include="Common\OrderBook\OrderBookUpdateInfo.cs" />
     <Compile Include="Common\OrderType.cs" />
     <Compile Include="Common\RateGate.cs" />
     <Compile Include="Common\TelegramBot.cs" />
@@ -449,7 +458,7 @@
     <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Common\OrderBook.cs" />
+    <Compile Include="Common\OrderBook\OrderBook.cs" />
     <Compile Include="Exchanges\Poloniex\PoloniexTicker.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -78,6 +78,11 @@ namespace CryptoMarketClient {
                 this.biConnectionStatus.Caption = "Socket Error.";
                 this.biReconnect.Visibility = BarItemVisibility.Always;
             }
+            else if(Exchange.SocketState == SocketConnectionState.TooLongQue) {
+                this.biConnectionStatus.ImageOptions.SvgImage = this.svgImageCollection1["disconnected"];
+                this.biConnectionStatus.Caption = "Missing incremental update.";
+                this.biReconnect.Visibility = BarItemVisibility.Always;
+            }
             else if((DateTime.Now - Exchange.LastWebSocketRecvTime).TotalSeconds > 5) {
                 if((DateTime.Now - Exchange.LastWebSocketRecvTime).TotalSeconds > 20) {
                     this.biConnectionStatus.ImageOptions.SvgImage = this.svgImageCollection1["disconnected"];
@@ -142,7 +147,7 @@ namespace CryptoMarketClient {
             IsUpdating = true;
             try {
                 Exchange.UpdateTickersInfo();
-                foreach(TickerBase ticker in Exchange.Tickers)
+                foreach(Ticker ticker in Exchange.Tickers)
                     ticker.UpdateTrailings();
             }
             finally {
@@ -151,12 +156,12 @@ namespace CryptoMarketClient {
             if(IsHandleCreated)
                 BeginInvoke(new Action(UpdateGridAll));
         }
-        void UpdateRow(TickerBase t) {
+        void UpdateRow(Ticker t) {
             int index = Exchange.Tickers.IndexOf(t);
             int rowHandle = this.gridView1.GetRowHandle(index);
             this.gridView1.RefreshRow(rowHandle);
         }
-        void UpdateGrid(TickerBase info) {
+        void UpdateGrid(Ticker info) {
             int rowHandle = this.gridView1.GetRowHandle(info.Index);
             this.gridView1.RefreshRow(rowHandle);
         }
@@ -171,9 +176,9 @@ namespace CryptoMarketClient {
         }
 
         void ShowDetailsForSelectedItemCore() {
-            ShowDetailsForSelectedItemCore((TickerBase)this.gridView1.GetRow(this.gridView1.FocusedRowHandle));
+            ShowDetailsForSelectedItemCore((Ticker)this.gridView1.GetRow(this.gridView1.FocusedRowHandle));
         }
-        void ShowDetailsForSelectedItemCore(TickerBase t) {
+        void ShowDetailsForSelectedItemCore(Ticker t) {
             if(this.gridView1.FocusedRowHandle == GridControl.InvalidRowHandle)
                 return;
             TickerForm form = new TickerForm();
@@ -264,13 +269,13 @@ namespace CryptoMarketClient {
         }
         private void repositoryItemCheckEdit1_EditValueChanged(object sender, EventArgs e) {
             this.gridView1.CloseEditor();
-            TickerBase ticker = (TickerBase)this.gridView1.GetFocusedRow();
+            Ticker ticker = (Ticker)this.gridView1.GetFocusedRow();
             UpdatePinnedItems();
         }
 
         private void barManager1_ItemClick(object sender, ItemClickEventArgs e) {
             if(e.Item.Tag is PinnedTickerInfo) {
-                TickerBase t = Exchange.GetTicker((PinnedTickerInfo)e.Item.Tag);
+                Ticker t = Exchange.GetTicker((PinnedTickerInfo)e.Item.Tag);
                 this.gridView1.FocusedRowHandle = this.gridView1.GetRowHandle(Exchange.Tickers.IndexOf(t));
                 //ShowDetailsForSelectedItemCore(t);
             }
@@ -279,7 +284,7 @@ namespace CryptoMarketClient {
         private void gridView1_MouseDown(object sender, MouseEventArgs e) {
             if(e.Button != MouseButtons.Right)
                 return;
-            TickerBase ticker = (TickerBase)this.gridView1.GetFocusedRow();
+            Ticker ticker = (Ticker)this.gridView1.GetFocusedRow();
             if(IsTickerPinned(ticker)) {
                 this.bbAddQuickPanel.Visibility = BarItemVisibility.Never;
                 this.bbRemoveQuickPanel.Visibility = BarItemVisibility.Always;
@@ -290,19 +295,19 @@ namespace CryptoMarketClient {
             }
             this.popupMenu1.ShowPopup(this.barManager1, this.gridControl1.PointToScreen(e.Location));
         }
-        bool IsTickerPinned(TickerBase t) {
+        bool IsTickerPinned(Ticker t) {
             return Exchange.PinnedTickers.FirstOrDefault(i => i.BaseCurrency == t.BaseCurrency && i.MarketCurrency == t.MarketCurrency) != null;
         }
 
         private void bbAddQuickPanel_ItemClick(object sender, ItemClickEventArgs e) {
-            TickerBase ticker = (TickerBase)this.gridView1.GetFocusedRow();
+            Ticker ticker = (Ticker)this.gridView1.GetFocusedRow();
             Exchange.PinnedTickers.Add(new Common.PinnedTickerInfo() { BaseCurrency = ticker.BaseCurrency, MarketCurrency = ticker.MarketCurrency });
             UpdatePinnedItems();
             Exchange.Save();
         }
 
         private void bbRemoveQuickPanel_ItemClick(object sender, ItemClickEventArgs e) {
-            TickerBase t = (TickerBase)this.gridView1.GetFocusedRow();
+            Ticker t = (Ticker)this.gridView1.GetFocusedRow();
             PinnedTickerInfo info = Exchange.PinnedTickers.FirstOrDefault(i => i.BaseCurrency == t.BaseCurrency && i.MarketCurrency == t.MarketCurrency);
             Exchange.PinnedTickers.Remove(info);
             UpdatePinnedItems();
@@ -356,13 +361,13 @@ namespace CryptoMarketClient {
 
         private void barManager1_ItemDoubleClick(object sender, ItemClickEventArgs e) {
             if(e.Item.Tag is PinnedTickerInfo) {
-                TickerBase t = Exchange.GetTicker((PinnedTickerInfo)e.Item.Tag);
+                Ticker t = Exchange.GetTicker((PinnedTickerInfo)e.Item.Tag);
                 ShowDetailsForSelectedItemCore(t);
             }
         }
 
         private void gridView1_GetThumbnailImage(object sender, DevExpress.XtraGrid.Views.Grid.GridViewThumbnailImageEventArgs e) {
-            TickerBase t = (TickerBase)Exchange.Tickers[e.DataSourceIndex];
+            Ticker t = (Ticker)Exchange.Tickers[e.DataSourceIndex];
             if(t.Logo != null) 
                 e.ThumbnailImage = new Bitmap(t.Logo, new Size(128, 128));
         }

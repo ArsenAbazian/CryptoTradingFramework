@@ -50,7 +50,7 @@ namespace CryptoMarketClient.Common {
                 if(!valueCalculated) {
                     if(string.IsNullOrEmpty(ValueString))
                         return value;
-                    value = FastDoubleConverter.Convert(ValueString);
+                    value = FastValueConverter.Convert(ValueString);
                     valueCalculated = true;
                     ValueString = value.ToString("0.########");
                 }
@@ -63,7 +63,7 @@ namespace CryptoMarketClient.Common {
                     if(string.IsNullOrEmpty(AmountString))
                         return amount;
                     amountCalculated = true;
-                    amount = FastDoubleConverter.Convert(AmountString);
+                    amount = FastValueConverter.Convert(AmountString);
                 }
                 return amount;
             }
@@ -74,7 +74,7 @@ namespace CryptoMarketClient.Common {
                     if(string.IsNullOrEmpty(TotalString))
                         return total;
                     totalCalculated = true;
-                    total = FastDoubleConverter.Convert(TotalString);
+                    total = FastValueConverter.Convert(TotalString);
                 }
                 return total;
             }

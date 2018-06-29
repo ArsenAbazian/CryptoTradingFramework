@@ -20,8 +20,8 @@ namespace CryptoMarketClient {
             base.OnShown(e);
         }
 
-        protected List<TickerBase> MonitoringTickers { get; } = new List<TickerBase>();
-        public void AddTicker(TickerBase ticker) {
+        protected List<Ticker> MonitoringTickers { get; } = new List<Ticker>();
+        public void AddTicker(Ticker ticker) {
             this.arbitrageHistoryChart.Series.Add(CreateLineSeries(ticker, "Bid"));
             this.arbitrageHistoryChart.Series.Add(CreateLineSeries(ticker, "Ask"));
             this.arbitrageHistoryChart.Series.Add(CreateLineSeries(ticker, "Current"));
@@ -36,7 +36,7 @@ namespace CryptoMarketClient {
 
         protected override void OnClosed(EventArgs e) {
             base.OnClosed(e);
-            foreach(TickerBase ticker in MonitoringTickers) {
+            foreach(Ticker ticker in MonitoringTickers) {
                 ticker.HistoryItemAdd -= Ticker_HistoryItemAdd;
             }
         }
@@ -45,7 +45,7 @@ namespace CryptoMarketClient {
             this.arbitrageHistoryChart.RefreshData();
         }
 
-        Series CreateLineSeries(TickerBase ticker, string valueName) {
+        Series CreateLineSeries(Ticker ticker, string valueName) {
             Series s = new Series();
             s.Name = ticker.HostName + "-" + ticker.Name + "-" + valueName;
             s.DataSource = ticker.History;

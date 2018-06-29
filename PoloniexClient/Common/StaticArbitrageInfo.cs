@@ -51,9 +51,9 @@ namespace CryptoMarketClient.Common {
     public class StaticArbitrageInfo {
         public List<StaticArbitrageInfoHistoryItem> History { get; } = new List<StaticArbitrageInfoHistoryItem>();
 
-        public TickerBase AltBase { get; set; }
-        public TickerBase BaseUsdt { get; set; }
-        public TickerBase AltUsdt { get; set; }
+        public Ticker AltBase { get; set; }
+        public Ticker BaseUsdt { get; set; }
+        public Ticker AltUsdt { get; set; }
 
         public double Disbalance { get; private set; }
         public OperationDirection Direction { get; private set; }
@@ -243,10 +243,15 @@ namespace CryptoMarketClient.Common {
 
             return true;
         }
-        public double CalcAmount(OrderBookEntry[] entries, int indexIncluded) {
+        public double CalcAmount(List<OrderBookEntry> entries, int indexIncluded) {
             double amount = 0;
-            for(int i = 0; i <= indexIncluded; i++)
-                amount += entries[i].Amount;
+            int index = 0;
+            foreach(var e in entries) {
+                amount += e.Amount;
+                index++;
+                if(index > indexIncluded)
+                    break;
+            }
             return amount;
         }
         protected bool UpdateAltBalance() {

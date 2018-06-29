@@ -18,13 +18,13 @@ namespace CryptoMarketClient.Common {
             string[] baseCurr = new string[] { "XMR", "ETH", "BTC" };
             if(PoloniexExchange.Default.IsConnected) {
                 foreach(string curr in baseCurr) {
-                    TickerBase btcUsdtTicker = PoloniexExchange.Default.Tickers.FirstOrDefault(t => t.BaseCurrency == "USDT" && t.MarketCurrency == curr);
+                    Ticker btcUsdtTicker = PoloniexExchange.Default.Tickers.FirstOrDefault(t => t.BaseCurrency == "USDT" && t.MarketCurrency == curr);
                     if(btcUsdtTicker == null)
                         throw new Exception("Static Arbitrage BtcUsdtTicker == null");
-                    foreach(TickerBase altUsdtTicker in PoloniexExchange.Default.Tickers) {
+                    foreach(Ticker altUsdtTicker in PoloniexExchange.Default.Tickers) {
                         if(altUsdtTicker.BaseCurrency != "USDT")
                             continue;
-                        TickerBase altBtcTicker = PoloniexExchange.Default.Tickers.FirstOrDefault(t => t.BaseCurrency == curr && t.MarketCurrency == altUsdtTicker.MarketCurrency);
+                        Ticker altBtcTicker = PoloniexExchange.Default.Tickers.FirstOrDefault(t => t.BaseCurrency == curr && t.MarketCurrency == altUsdtTicker.MarketCurrency);
                         if(altBtcTicker == null)
                             continue;
                         items.Add(new StaticArbitrageInfo { AltBase = altBtcTicker, AltUsdt = altUsdtTicker, BaseUsdt = btcUsdtTicker });
@@ -33,13 +33,13 @@ namespace CryptoMarketClient.Common {
             }
             if(BittrexExchange.Default.IsConnected) {
                 foreach(string curr in baseCurr) {
-                    TickerBase btcUsdtTicker = BittrexExchange.Default.Tickers.FirstOrDefault(t => t.BaseCurrency == "USDT" && t.MarketCurrency == curr);
+                    Ticker btcUsdtTicker = BittrexExchange.Default.Tickers.FirstOrDefault(t => t.BaseCurrency == "USDT" && t.MarketCurrency == curr);
                     if(btcUsdtTicker == null)
                         throw new Exception("Static Arbitrage BtcUsdtTicker == null");
-                    foreach(TickerBase altUsdtTicker in BittrexExchange.Default.Tickers) {
+                    foreach(Ticker altUsdtTicker in BittrexExchange.Default.Tickers) {
                         if(altUsdtTicker.BaseCurrency != "USDT")
                             continue;
-                        TickerBase altBtcTicker = BittrexExchange.Default.Tickers.FirstOrDefault(t => t.BaseCurrency == curr && t.MarketCurrency == altUsdtTicker.MarketCurrency);
+                        Ticker altBtcTicker = BittrexExchange.Default.Tickers.FirstOrDefault(t => t.BaseCurrency == curr && t.MarketCurrency == altUsdtTicker.MarketCurrency);
                         if(altBtcTicker == null)
                             continue;
                         items.Add(new StaticArbitrageInfo { AltBase = altBtcTicker, AltUsdt = altUsdtTicker, BaseUsdt = btcUsdtTicker });

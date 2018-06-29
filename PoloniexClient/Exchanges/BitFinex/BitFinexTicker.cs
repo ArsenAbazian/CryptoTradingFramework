@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using CryptoMarketClient.Common;
 
 namespace CryptoMarketClient.BitFinex {
-    public class BitFinexTicker : TickerBase {
+    public class BitFinexTicker : Ticker {
         public BitFinexTicker(BitFinexExchange exchange) : base(exchange) { }
 
         public override string CurrencyPair { get; set; }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using CryptoMarketClient.Common;
 
 namespace CryptoMarketClient.Binance {
-    public class BinanceTicker : TickerBase {
+    public class BinanceTicker : Ticker {
         public BinanceTicker(BinanceExchange exchange) : base(exchange) { }
 
         string currensyPair;
@@ -73,7 +73,7 @@ namespace CryptoMarketClient.Binance {
         }
 
         public override bool UpdateBalance(CurrencyType type) {
-            throw new NotImplementedException();
+            return true;
         }
 
         public override bool Withdraw(string currency, string address, double amount) {

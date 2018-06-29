@@ -90,6 +90,7 @@
             this.gcVolume.FieldName = "Volume";
             this.gcVolume.MinWidth = 40;
             this.gcVolume.Name = "gcVolume";
+            this.gcVolume.OptionsFilter.AllowFilter = false;
             this.gcVolume.Visible = true;
             this.gcVolume.VisibleIndex = 2;
             this.gcVolume.Width = 150;
@@ -253,8 +254,7 @@
             this.askGridView.OptionsView.ShowGroupPanel = false;
             this.askGridView.OptionsView.ShowHorizontalLines = DevExpress.Utils.DefaultBoolean.False;
             this.askGridView.OptionsView.ShowIndicator = false;
-            this.askGridView.SortInfo.AddRange(new DevExpress.XtraGrid.Columns.GridColumnSortInfo[] {
-            new DevExpress.XtraGrid.Columns.GridColumnSortInfo(this.gcRate, DevExpress.Data.ColumnSortOrder.Descending)});
+            this.askGridView.TopRowChanged += new System.EventHandler(this.askGridView_TopRowChanged);
             this.askGridView.MouseDown += new System.Windows.Forms.MouseEventHandler(this.askGridView_MouseDown);
             // 
             // gcRate
@@ -264,7 +264,7 @@
             this.gcRate.FieldName = "ValueString";
             this.gcRate.MinWidth = 40;
             this.gcRate.Name = "gcRate";
-            this.gcRate.SortMode = DevExpress.XtraGrid.ColumnSortMode.Value;
+            this.gcRate.OptionsFilter.AllowFilter = false;
             this.gcRate.Visible = true;
             this.gcRate.VisibleIndex = 0;
             this.gcRate.Width = 150;
@@ -281,6 +281,7 @@
             this.gcAmount.FieldName = "AmountString";
             this.gcAmount.MinWidth = 40;
             this.gcAmount.Name = "gcAmount";
+            this.gcAmount.OptionsFilter.AllowFilter = false;
             this.gcAmount.Visible = true;
             this.gcAmount.VisibleIndex = 1;
             this.gcAmount.Width = 150;

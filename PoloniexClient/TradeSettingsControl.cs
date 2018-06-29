@@ -37,7 +37,7 @@ namespace CryptoMarketClient {
 
         public ITradingResultOperationsProvider OperationsProvider { get; set; }
 
-        public TickerBase Ticker { get; set; }
+        public Ticker Ticker { get; set; }
         TrailingSettings settings;
         public TrailingSettings Settings {
             get {
@@ -117,6 +117,6 @@ namespace CryptoMarketClient {
     }
 
     public interface ITradingResultOperationsProvider {
-        void ShowTradingResult(TickerBase ticker);
+        void ShowTradingResult(Ticker ticker);
     }
 }

@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace CryptoMarketClient.Analytics {
     public class TickerAnalyserBase {
-        public TickerAnalyserBase(TickerBase ticker) {
+        public TickerAnalyserBase(Ticker ticker) {
             Ticker = ticker;
         }
 
-        public TickerBase Ticker { get; private set; }
+        public Ticker Ticker { get; private set; }
     }
 }

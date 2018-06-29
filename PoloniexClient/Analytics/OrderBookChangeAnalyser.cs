@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CryptoMarketClient.Analytics {
     public class OrderBookChangeAnalyser : TickerAnalyserBase {
-        public OrderBookChangeAnalyser(TickerBase ticker, int depth) : base(ticker) {
+        public OrderBookChangeAnalyser(Ticker ticker, int depth) : base(ticker) {
             OrderBookDepth = depth;    
         }
 

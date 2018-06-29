@@ -20,8 +20,8 @@ namespace CryptoMarketClient {
         [DefaultValue(null)]
         public TickerChartViewer ChartControl { get; set; }
 
-        TickerBase ticker;
-        public TickerBase Ticker {
+        Ticker ticker;
+        public Ticker Ticker {
             get { return ticker; }
             set {
                 if(Ticker == value)

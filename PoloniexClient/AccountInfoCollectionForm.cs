@@ -20,10 +20,9 @@ namespace CryptoMarketClient {
         protected override void OnShown(EventArgs e) {
             base.OnShown(e);
             List<ExchangeAccountInfo> list = SettingsStore.Default.Accounts;
-            //foreach(Exchange exchange in Exchange.Registered)
-            //    list.Add(new ExchangeAccountInfo() { Exchange = exchange, Type = exchange.Type, ApiKey = exchange.ApiKey, Secret = exchange.ApiSecret });
             this.apiKeyInfoBindingSource.DataSource = list;
             Keys = list;
+            this.gridView1.ExpandAllGroups();
         }
 
         protected List<ExchangeAccountInfo> Keys { get; set; }

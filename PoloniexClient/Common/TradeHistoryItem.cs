@@ -28,7 +28,7 @@ namespace CryptoMarketClient {
                 if(rate == 0) {
                     if(string.IsNullOrEmpty(RateString))
                         return amount;
-                    rate = FastDoubleConverter.Convert(RateString);
+                    rate = FastValueConverter.Convert(RateString);
                     RateString = rate.ToString("0.########");
                 }
                 return rate;
@@ -40,7 +40,7 @@ namespace CryptoMarketClient {
                 if(amount == 0) {
                     if(string.IsNullOrEmpty(AmountString))
                         return amount;
-                    amount = FastDoubleConverter.Convert(AmountString);
+                    amount = FastValueConverter.Convert(AmountString);
                 }
                 return amount;
             }

@@ -12,7 +12,7 @@ namespace CryptoMarketClient.Common {
         public bool GrabTradeHistory { get; set; }
         public bool GrabChart { get; set; }
         public string DirectoryName { get; set; }
-        public TickerBase Ticker { get; set; }
+        public Ticker Ticker { get; set; }
         public string FileName { get { return DirectoryName + "\\" + Ticker.Name.ToLower() + ".xml"; } }
         [XmlArray("CandleStickData"), XmlArrayItem(typeof(CandleStickData), ElementName = "CandleStickData")]
         public BindingList<CandleStickData> CandleStickData { get; set; }

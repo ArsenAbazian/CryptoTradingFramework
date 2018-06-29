@@ -77,7 +77,7 @@ namespace CryptoMarketClient {
 
         public bool LoadTickers() {
             if(GetTickersInfo()) {
-                foreach(TickerBase ticker in Tickers) {
+                foreach(Ticker ticker in Tickers) {
                     ticker.Load();
                 }
                 return true;
@@ -87,13 +87,13 @@ namespace CryptoMarketClient {
         public abstract bool GetTickersInfo();
         public abstract bool UpdateTickersInfo();
 
-        public List<TickerBase> Tickers { get; } = new List<TickerBase>();
+        public List<Ticker> Tickers { get; } = new List<Ticker>();
         public List<OpenedOrderInfo> OpenedOrders { get; } = new List<OpenedOrderInfo>();
         public BindingList<BalanceBase> Balances { get; } = new BindingList<BalanceBase>();
 
         public event TickerUpdateEventHandler TickerUpdate;
         public event EventHandler TickersUpdate;
-        protected void RaiseTickerUpdate(TickerBase t) {
+        protected void RaiseTickerUpdate(Ticker t) {
             TickerUpdateEventArgs e = new TickerUpdateEventArgs() { Ticker = t };
             if(TickerUpdate != null)
                 TickerUpdate(this, e);
@@ -227,6 +227,9 @@ namespace CryptoMarketClient {
 
         #region Encryption
         private string Encrypt(string toEncrypt, bool useHashing) {
+            if(toEncrypt == null)
+                return null;
+
             byte[] keyArray;
             byte[] toEncryptArray = UTF8Encoding.UTF8.GetBytes(toEncrypt);
 
@@ -311,7 +314,7 @@ namespace CryptoMarketClient {
         }
         #endregion
 
-        protected string GetDownloadString(TickerBase ticker, string address) {
+        protected string GetDownloadString(Ticker ticker, string address) {
             try {
                 return ticker.DownloadString(address);
             }
@@ -384,26 +387,26 @@ namespace CryptoMarketClient {
                 return null;
             }
         }
-        public bool IsTickerPinned(TickerBase tickerBase) {
+        public bool IsTickerPinned(Ticker tickerBase) {
             return PinnedTickers.FirstOrDefault(p => p.BaseCurrency == tickerBase.BaseCurrency && p.MarketCurrency == tickerBase.MarketCurrency) != null;
         }
-        public TickerBase GetTicker(PinnedTickerInfo info) {
+        public Ticker GetTicker(PinnedTickerInfo info) {
             return Tickers.FirstOrDefault(t => t.BaseCurrency == info.BaseCurrency && t.MarketCurrency == info.MarketCurrency);
         }
-        public abstract bool UpdateOrderBook(TickerBase tickerBase);
-        public abstract bool ProcessOrderBook(TickerBase tickerBase, string text);
-        public abstract bool UpdateTicker(TickerBase tickerBase);
-        public abstract bool UpdateTrades(TickerBase tickerBase);
-        public abstract List<TradeHistoryItem> GetTrades(TickerBase ticker, DateTime starTime);
-        public abstract bool UpdateOpenedOrders(TickerBase tickerBase);
+        public abstract bool UpdateOrderBook(Ticker tickerBase);
+        public abstract bool ProcessOrderBook(Ticker tickerBase, string text);
+        public abstract bool UpdateTicker(Ticker tickerBase);
+        public abstract bool UpdateTrades(Ticker tickerBase);
+        public abstract List<TradeHistoryItem> GetTrades(Ticker ticker, DateTime starTime);
+        public abstract bool UpdateOpenedOrders(Ticker tickerBase);
         public bool UpdateOpenedOrders() { return UpdateOpenedOrders(null); }
         public abstract bool UpdateCurrencies();
         public abstract bool UpdateBalances();
         public abstract bool GetDeposites();
-        public virtual BindingList<CandleStickData> GetCandleStickData(TickerBase ticker, int candleStickPeriodMin, DateTime start, long periodInSeconds) {
+        public virtual BindingList<CandleStickData> GetCandleStickData(Ticker ticker, int candleStickPeriodMin, DateTime start, long periodInSeconds) {
             return new BindingList<CandleStickData>();
         }
-        public abstract bool UpdateMyTrades(TickerBase ticker);
+        public abstract bool UpdateMyTrades(Ticker ticker);
 
         JsonParser jsonParser;
         protected JsonParser JsonParser {
@@ -480,7 +483,7 @@ namespace CryptoMarketClient {
             }
             return res;
         }
-        public abstract bool CancelOrder(TickerBase ticker, OpenedOrderInfo info);
+        public abstract bool CancelOrder(Ticker ticker, OpenedOrderInfo info);
 
 
         public SocketConnectionState SocketState { get; set; } = SocketConnectionState.None;
@@ -520,6 +523,8 @@ namespace CryptoMarketClient {
 
         protected virtual void OnSocketOpened(object sender, EventArgs e) {
             SocketState = SocketConnectionState.Connected;
+            foreach(Ticker ticker in SubscribedTickers)
+                StartListenTickerStream(ticker);
         }
 
         protected virtual void OnSocketError(object sender, SuperSocket.ClientEngine.ErrorEventArgs e) {
@@ -529,6 +534,37 @@ namespace CryptoMarketClient {
 
         public abstract Form CreateAccountForm();
         public abstract void OnAccountRemoved(ExchangeAccountInfo info);
+        public virtual void StartListenTickerStream(Ticker ticker) {
+            if(!SubscribedTickers.Contains(ticker))
+                SubscribedTickers.Add(ticker);
+        }
+        public virtual void StopListenTickerStream(Ticker ticker) {
+            SubscribedTickers.Remove(ticker);
+        }
+
+        IncrementalUpdateQueue updates;
+        public IncrementalUpdateQueue Updates {
+            get {
+                if(updates == null)
+                    updates = new IncrementalUpdateQueue(CreateIncrementalUpdateDataProvider());
+                return updates;
+            }
+        }
+        protected internal abstract IIncrementalUpdateDataProvider CreateIncrementalUpdateDataProvider();
+        protected List<Ticker> SubscribedTickers { get; } = new List<Ticker>();
+
+
+        protected void OnIncrementalUpdateRecv(IncrementalUpdateQueue updates) {
+            if(updates.CanApply) {
+                updates.Apply();
+                SocketState = SocketConnectionState.Connected;
+                 // apply
+            }
+            if(updates.TooLongQueue) {
+                SocketState = SocketConnectionState.TooLongQue;
+                // call snapshot
+            }
+        }
     }
 
     public class CandleStickIntervalInfo {
@@ -539,7 +575,7 @@ namespace CryptoMarketClient {
 
     public enum WebSocketType {
         Tickers,
-        OrderBook
+        Ticker
     }
 
     public enum SocketConnectionState {
@@ -548,6 +584,7 @@ namespace CryptoMarketClient {
         Connected,
         Disconnected,
         DelayRecv,
-        Error
+        Error,
+        TooLongQue
     }
 }

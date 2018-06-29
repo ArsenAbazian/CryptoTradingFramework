@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CryptoMarketClient.Strategies {
     public abstract class TickerStrategyBase  {
-        public TickerStrategyBase(TickerBase ticker) {
+        public TickerStrategyBase(Ticker ticker) {
             Ticker = ticker;
             ticker.Strategies.Add(this);
             Enabled = false;
@@ -18,7 +18,7 @@ namespace CryptoMarketClient.Strategies {
         public bool Enabled { get; set; }
         public bool DemoMode { get; set; }
 
-        public TickerBase Ticker { get; private set; }
+        public Ticker Ticker { get; private set; }
         public abstract object HistoryDataSource { get; }
         public void OnTick() {
             if(!Enabled)

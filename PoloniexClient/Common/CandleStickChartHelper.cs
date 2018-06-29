@@ -147,7 +147,7 @@ namespace CryptoMarketClient {
             candleItem.High = Math.Max(candleItem.High, item.Current);
             return;
         }
-        public static IList<CandleStickData> CreateCandleStickData(TickerBase ticker) {
+        public static IList<CandleStickData> CreateCandleStickData(Ticker ticker) {
             ticker.CandleStickData.Clear();
             return CreateCandleStickData(ticker.History, ticker.CandleStickPeriodMin * 60);
         }

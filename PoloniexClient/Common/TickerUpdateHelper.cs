@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace CryptoMarketClient {
     public class TickerUpdateHelper {
-        public TickerUpdateHelper(TickerBase ticker) {
+        public TickerUpdateHelper(Ticker ticker) {
             Ticker = ticker;
         } 
-        public TickerBase Ticker { get; private set; }
+        public Ticker Ticker { get; private set; }
         Thread UpdateThread { get; set; }
         public void SubscribeOrderBookUpdates() {
             if(AllowUpdateOrderBook)
@@ -58,7 +58,7 @@ namespace CryptoMarketClient {
                     Ticker.UpdateTrades();
             }
         }
-        public static void UpdateHistoryItem(TickerBase item) {
+        public static void UpdateHistoryItem(Ticker item) {
             TickerHistoryItem last = item.History.Count == 0 ? null : item.History.Last();
             if(item.History.Count > 36000)
                 item.History.RemoveAt(0);

@@ -20,8 +20,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace CryptoMarketClient {
-    public abstract class TickerBase : IXtraSerializable {
-        public TickerBase(Exchange exchange) {
+    public abstract class Ticker : IXtraSerializable {
+        public Ticker(Exchange exchange) {
             Exchange = exchange;
             OrderBook = new OrderBook(this);
             UpdateMode = TickerUpdateMode.Self;
@@ -354,7 +354,7 @@ namespace CryptoMarketClient {
         public double AskChange { get; set; }
         public abstract double Fee { get; set; }
 
-        public TickerBase UsdTicker { get; set; }
+        public Ticker UsdTicker { get; set; }
 
         public abstract double BaseCurrencyBalance { get; }
         public abstract double MarketCurrencyBalance { get; }
@@ -378,17 +378,20 @@ namespace CryptoMarketClient {
                 IsUpdatingOrderBook = true;
                 bool res = Exchange.UpdateOrderBook(this);
                 if(res) {
-                    HighestBid = OrderBook.Bids[0].Value;
-                    LowestAsk = OrderBook.Asks[0].Value;
-                    Time = DateTime.UtcNow;
-                    UpdateHistoryItem();
-                    CandleStickChartHelper.AddCandleStickData(CandleStickData, History.Last(), CandleStickPeriodMin * 60);
+                    OnApplyIncrementalUpdate();
                 }
                 return res;
             }
             finally {
                 IsUpdatingOrderBook = false;
             }
+        }
+        public void OnApplyIncrementalUpdate() {
+            HighestBid = OrderBook.Bids[0].Value;
+            LowestAsk = OrderBook.Asks[0].Value;
+            Time = DateTime.UtcNow;
+            UpdateHistoryItem();
+            CandleStickChartHelper.AddCandleStickData(CandleStickData, History.Last(), CandleStickPeriodMin * 60);
         }
         public bool ProcessOrderBook(string text) { return Exchange.ProcessOrderBook(this, text); }
         protected bool IsUpdatingTicker { get; set; }
@@ -595,6 +598,12 @@ namespace CryptoMarketClient {
         }
         public bool CancelOrder(OpenedOrderInfo info) {
             return Exchange.CancelOrder(this, info);
+        }
+        public void StopListenTickerStream() {
+            Exchange.StopListenTickerStream(this);
+        }
+        public void StartListenTickerStream() {
+            Exchange.StartListenTickerStream(this);
         }
     }
 

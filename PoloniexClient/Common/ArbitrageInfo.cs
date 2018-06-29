@@ -10,16 +10,16 @@ namespace CryptoMarketClient.Common {
         public static int Depth { get; set; } = 7;
         public static double InvalidValue = -10000000;
 
-        TickerBase lowestAskTicker;
-        TickerBase highestBidTicker;
+        Ticker lowestAskTicker;
+        Ticker highestBidTicker;
 
         public ArbitrageInfo(TickerCollection collection) {
             Owner = collection;
             Tickers = Owner.Tickers;
         }
 
-        public TickerBase UsdTicker { get; set; }
-        public TickerBase LowestAskTicker {
+        public Ticker UsdTicker { get; set; }
+        public Ticker LowestAskTicker {
             get { return lowestAskTicker; }
             set {
                 if(lowestAskTicker == value)
@@ -28,8 +28,8 @@ namespace CryptoMarketClient.Common {
                 OnLowestAskTickerChanged();
             }
         }
-        protected TickerBase[] Tickers { get; private set; }
-        public TickerBase HighestBidTicker {
+        protected Ticker[] Tickers { get; private set; }
+        public Ticker HighestBidTicker {
             get { return highestBidTicker; }
             set {
                 if(highestBidTicker == value)
@@ -115,13 +115,13 @@ namespace CryptoMarketClient.Common {
 
             MaxProfit = InvalidValue;
 
-            OrderBookEntry[] bids = HighestBidTicker.OrderBook.Bids;
-            OrderBookEntry[] asks = LowestAskTicker.OrderBook.Asks;
+            List<OrderBookEntry> bids = HighestBidTicker.OrderBook.Bids;
+            List<OrderBookEntry> asks = LowestAskTicker.OrderBook.Asks;
 
             double bidAmount = 0;
-            for(int bidIndex = 0; bidIndex < Depth; bidIndex++) {
-                bidAmount += bids[bidIndex].Amount;
-                double bid = bids[bidIndex].Value;
+            foreach(OrderBookEntry e in bids) { 
+                bidAmount += e.Amount;
+                double bid = e.Value;
                 double askAmount = 0;
                 for(int askIndex = 0; askIndex < Depth; askIndex++) {
                     double ask = asks[askIndex].Value;
@@ -172,12 +172,12 @@ namespace CryptoMarketClient.Common {
             }
             UpdateHistory(prev);
         }
-        TickerBase GetLowestAskTicker() {
+        Ticker GetLowestAskTicker() {
             if(Owner.Count == 2)
                 return Tickers[0].LowestAsk > Tickers[1].LowestAsk? Tickers[1] : Tickers[0];
 
             double lowAsk = Tickers[0].LowestAsk;
-            TickerBase lowTicker = Tickers[0];
+            Ticker lowTicker = Tickers[0];
             for(int i = 1; i < Owner.Count; i++) {
                 double ask = Tickers[i].LowestAsk;
                 if(lowAsk > ask) {
@@ -187,12 +187,12 @@ namespace CryptoMarketClient.Common {
             }
             return lowTicker;
         }
-        TickerBase GetHighestBidTicker() {
+        Ticker GetHighestBidTicker() {
             if(Owner.Count == 2)
                 return Tickers[0].HighestBid < Tickers[1].HighestBid ? Tickers[1] : Tickers[0];
 
             double highBid = Tickers[0].HighestBid;
-            TickerBase highTicker = Tickers[0];
+            Ticker highTicker = Tickers[0];
             for(int i = 1; i < Owner.Count; i++) {
                 double bid = Tickers[i].HighestBid;
                 if(highBid < bid) {

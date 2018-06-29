@@ -31,7 +31,7 @@ namespace CryptoMarketClient {
             }
         }
 
-        public TickerBase Ticker {
+        public Ticker Ticker {
             get; set;
         }
 

@@ -1,5 +1,6 @@
 ﻿using CryptoMarketClient.BitFinex;
 using CryptoMarketClient.Common;
+using CryptoMarketClient.Exchanges.BitFinex;
 using CryptoMarketClient.Helpers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -27,6 +28,10 @@ namespace CryptoMarketClient.BitFinex {
                 }
                 return defaultExchange;
             }
+        }
+
+        protected internal override IIncrementalUpdateDataProvider CreateIncrementalUpdateDataProvider() {
+            return new BitFinexIncrementalUpdateDataProvider();
         }
 
         public override void OnAccountRemoved(ExchangeAccountInfo info) {
@@ -85,7 +90,7 @@ namespace CryptoMarketClient.BitFinex {
                 return "day";
             return "fiveMin";
         }
-        public override BindingList<CandleStickData> GetCandleStickData(TickerBase ticker, int candleStickPeriodMin, DateTime start, long periodInSeconds) {
+        public override BindingList<CandleStickData> GetCandleStickData(Ticker ticker, int candleStickPeriodMin, DateTime start, long periodInSeconds) {
             long startSec = (long)(start.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
             long end = startSec + periodInSeconds;
 
@@ -112,12 +117,12 @@ namespace CryptoMarketClient.BitFinex {
             foreach(string[] item in res) {
                 CandleStickData data = new CandleStickData();
                 data.Time = Convert.ToDateTime(item[5]);
-                data.High = FastDoubleConverter.Convert(item[1]);
-                data.Low = FastDoubleConverter.Convert(item[2]);
-                data.Open = FastDoubleConverter.Convert(item[0]);
-                data.Close = FastDoubleConverter.Convert(item[3]);
-                data.Volume = FastDoubleConverter.Convert(item[6]);
-                data.QuoteVolume = FastDoubleConverter.Convert(item[4]);
+                data.High = FastValueConverter.Convert(item[1]);
+                data.Low = FastValueConverter.Convert(item[2]);
+                data.Open = FastValueConverter.Convert(item[0]);
+                data.Close = FastValueConverter.Convert(item[3]);
+                data.Volume = FastValueConverter.Convert(item[6]);
+                data.QuoteVolume = FastValueConverter.Convert(item[4]);
                 data.WeightedAverage = 0;
                 list.Add(data);
             }
@@ -194,7 +199,7 @@ namespace CryptoMarketClient.BitFinex {
                     c.Currency = item[0];
                     c.CurrencyLong = item[1];
                     c.MinConfirmation = int.Parse(item[2]);
-                    c.TxFree = FastDoubleConverter.Convert(item[3]);
+                    c.TxFree = FastValueConverter.Convert(item[3]);
                     c.CoinType = item[5];
                     c.BaseAddress = item[6];
 
@@ -227,13 +232,13 @@ namespace CryptoMarketClient.BitFinex {
             string[] res = JSonHelper.Default.DeserializeObject(bytes, ref startIndex, new string[] { "Bid", "Ask", "Last" });
             if(res == null)
                 return;
-            info.HighestBid = FastDoubleConverter.Convert(res[0]);
-            info.LowestAsk = FastDoubleConverter.Convert(res[1]);
-            info.Last = FastDoubleConverter.Convert(res[2]);
+            info.HighestBid = FastValueConverter.Convert(res[0]);
+            info.LowestAsk = FastValueConverter.Convert(res[1]);
+            info.Last = FastValueConverter.Convert(res[2]);
             info.Time = DateTime.UtcNow;
             info.UpdateHistoryItem();
         }
-        public override bool UpdateTicker(TickerBase tickerBase) {
+        public override bool UpdateTicker(Ticker tickerBase) {
             byte[] bytes = null;
             try {
                 bytes = GetDownloadBytes(string.Format("https://api.bitfinex.com/v2/ticker/{0}", ((BitFinexTicker)tickerBase).MarketName));
@@ -249,13 +254,13 @@ namespace CryptoMarketClient.BitFinex {
             string[] item = JSonHelper.Default.DeserializeArray(bytes, ref startIndex, 9);
 
             BitFinexTicker ticker = (BitFinexTicker)tickerBase;
-            ticker.HighestBid = FastDoubleConverter.Convert(item[0]);
-            ticker.LowestAsk = FastDoubleConverter.Convert(item[2]);
-            ticker.Change = FastDoubleConverter.Convert(item[4]);
-            ticker.Last = FastDoubleConverter.Convert(item[5]);
-            ticker.Volume = FastDoubleConverter.Convert(item[6]);
-            ticker.Hr24High = FastDoubleConverter.Convert(item[7]);
-            ticker.Hr24Low = FastDoubleConverter.Convert(item[8]);
+            ticker.HighestBid = FastValueConverter.Convert(item[0]);
+            ticker.LowestAsk = FastValueConverter.Convert(item[2]);
+            ticker.Change = FastValueConverter.Convert(item[4]);
+            ticker.Last = FastValueConverter.Convert(item[5]);
+            ticker.Volume = FastValueConverter.Convert(item[6]);
+            ticker.Hr24High = FastValueConverter.Convert(item[7]);
+            ticker.Hr24Low = FastValueConverter.Convert(item[8]);
             ticker.Time = DateTime.Now;
             ticker.UpdateHistoryItem();
 
@@ -277,37 +282,37 @@ namespace CryptoMarketClient.BitFinex {
             List<string[]> list = JSonHelper.Default.DeserializeArrayOfArrays(bytes, ref startIndex, 11);
             foreach(string[] item in list) {
                 BitFinexTicker ticker = (BitFinexTicker)Tickers.FirstOrDefault(t => t.CurrencyPair == item[0]);
-                ticker.HighestBid = FastDoubleConverter.Convert(item[1]);
-                ticker.LowestAsk = FastDoubleConverter.Convert(item[3]);
-                ticker.Change = FastDoubleConverter.Convert(item[6]);
-                ticker.Last = FastDoubleConverter.Convert(item[7]);
-                ticker.Volume = FastDoubleConverter.Convert(item[8]);
-                ticker.Hr24High = FastDoubleConverter.Convert(item[9]);
-                ticker.Hr24Low = FastDoubleConverter.Convert(item[10]);
+                ticker.HighestBid = FastValueConverter.Convert(item[1]);
+                ticker.LowestAsk = FastValueConverter.Convert(item[3]);
+                ticker.Change = FastValueConverter.Convert(item[6]);
+                ticker.Last = FastValueConverter.Convert(item[7]);
+                ticker.Volume = FastValueConverter.Convert(item[8]);
+                ticker.Hr24High = FastValueConverter.Convert(item[9]);
+                ticker.Hr24Low = FastValueConverter.Convert(item[10]);
             }
 
             return true;
         }
-        public bool UpdateArbitrageOrderBook(TickerBase info, int depth) {
+        public bool UpdateArbitrageOrderBook(Ticker info, int depth) {
             string address = GetOrderBookString(info, depth);
             byte[] data = GetDownloadBytes(address);
             if(data == null)
                 return false;
             return UpdateOrderBook(info, data, false, depth);
         }
-        public string GetOrderBookString(TickerBase info, int depth) {
+        public string GetOrderBookString(Ticker info, int depth) {
             return string.Format("https://api.bitfinex.com/v2/book/{0}/P0", Uri.EscapeDataString(info.MarketName));
         }
-        public override bool ProcessOrderBook(TickerBase tickerBase, string text) {
+        public override bool ProcessOrderBook(Ticker tickerBase, string text) {
             throw new NotImplementedException();
         }
         public bool UpdateOrderBook(BitFinexTicker info, byte[] data, int depth) {
             return UpdateOrderBook(info, data, true, depth);
         }
-        public override bool UpdateOrderBook(TickerBase tickerBase) {
+        public override bool UpdateOrderBook(Ticker tickerBase) {
             return UpdateArbitrageOrderBook(tickerBase, OrderBook.Depth);
         }
-        public bool UpdateOrderBook(TickerBase ticker, byte[] bytes, bool raiseChanged, int depth) {
+        public bool UpdateOrderBook(Ticker ticker, byte[] bytes, bool raiseChanged, int depth) {
             if(bytes == null)
                 return false;
 
@@ -317,13 +322,13 @@ namespace CryptoMarketClient.BitFinex {
 
             ticker.OrderBook.GetNewBidAsks();
             int bidIndex = 0, askIndex = 0;
-            OrderBookEntry[] bids = ticker.OrderBook.Bids;
-            OrderBookEntry[] asks = ticker.OrderBook.Asks;
+            List<OrderBookEntry> bids = ticker.OrderBook.Bids;
+            List<OrderBookEntry> asks = ticker.OrderBook.Asks;
             foreach(string[] item in items) {
                 OrderBookEntry entry = null;
                 if(item[2][0] == '-') {
                     entry = asks[askIndex];
-                    entry.Amount = -FastDoubleConverter.Convert(item[2]);
+                    entry.Amount = -FastValueConverter.Convert(item[2]);
                     askIndex++;
                 }
                 else {
@@ -333,11 +338,10 @@ namespace CryptoMarketClient.BitFinex {
                 }
                 entry.ValueString = item[0];
                 
-                if(bidIndex >= bids.Length || askIndex >= asks.Length)
+                if(bidIndex >= bids.Count || askIndex >= asks.Count)
                     break;
             }
             ticker.OrderBook.UpdateEntries();
-            ticker.OrderBook.RaiseOnChanged(new OrderBookUpdateInfo() { Action = OrderBookUpdateType.RefreshAll });
             return true;
         }
         public void GetOrderBook(BitFinexTicker info, int depth) {
@@ -374,7 +378,7 @@ namespace CryptoMarketClient.BitFinex {
                     item.Time = Convert.ToDateTime(obj[1]);
                     item.AmountString = obj[2];
                     item.RateString = obj[3];
-                    item.Total = FastDoubleConverter.Convert(obj[4]);
+                    item.Total = FastValueConverter.Convert(obj[4]);
                     item.Type = obj[6].Length == 3 ? TradeType.Buy : TradeType.Sell;
                     item.Fill = obj[5].Length == 4 ? TradeFillType.Fill : TradeFillType.PartialFill;
                     info.TradeHistory.Add(item);
@@ -383,7 +387,7 @@ namespace CryptoMarketClient.BitFinex {
             info.RaiseTradeHistoryAdd();
             return true;
         }
-        public override bool UpdateMyTrades(TickerBase ticker) {
+        public override bool UpdateMyTrades(Ticker ticker) {
             string address = string.Format("https://bittrex.com/api/v1.1/account/getorderhistory?apikey={0}&nonce={1}&market={2}",
                 Uri.EscapeDataString(ApiKey),
                 GetNonce(),
@@ -400,7 +404,7 @@ namespace CryptoMarketClient.BitFinex {
                 return false;
             }
         }
-        bool OnGetMyTrades(TickerBase ticker, byte[] bytes) {
+        bool OnGetMyTrades(Ticker ticker, byte[] bytes) {
             if(bytes == null)
                 return false;
 
@@ -439,8 +443,8 @@ namespace CryptoMarketClient.BitFinex {
                 item.Type = obj[3] == "LIMIT_BUY" ? TradeType.Buy : TradeType.Sell;
                 item.AmountString = obj[5];
                 item.RateString = obj[9];
-                item.Fee = FastDoubleConverter.Convert(obj[7]);
-                item.Total = FastDoubleConverter.Convert(obj[8]);
+                item.Fee = FastValueConverter.Convert(obj[7]);
+                item.Total = FastValueConverter.Convert(obj[8]);
                 item.TimeString = obj[2];
                 ticker.MyTradeHistory.Insert(index, item);
                 index++;
@@ -448,7 +452,7 @@ namespace CryptoMarketClient.BitFinex {
 
             return true;
         }
-        public override List<TradeHistoryItem> GetTrades(TickerBase info, DateTime starTime) {
+        public override List<TradeHistoryItem> GetTrades(Ticker info, DateTime starTime) {
             string address = string.Format("https://bittrex.com/api/v1.1/public/getmarkethistory?market={0}", Uri.EscapeDataString(info.MarketName));
             byte[] bytes = null;
             try {
@@ -479,7 +483,7 @@ namespace CryptoMarketClient.BitFinex {
                 item.Time = Convert.ToDateTime(obj[1]);
                 item.AmountString = obj[2];
                 item.RateString = obj[3];
-                item.Total = FastDoubleConverter.Convert(obj[4]);
+                item.Total = FastValueConverter.Convert(obj[4]);
                 item.Type = obj[6].Length == 3 ? TradeType.Buy : TradeType.Sell;
                 item.Fill = obj[5].Length == 4 ? TradeFillType.Fill : TradeFillType.PartialFill;
                 list.Insert(index, item);
@@ -487,7 +491,7 @@ namespace CryptoMarketClient.BitFinex {
             }
             return list;
         }
-        public override bool UpdateTrades(TickerBase info) {
+        public override bool UpdateTrades(Ticker info) {
             string address = string.Format("https://bittrex.com/api/v1.1/public/getmarkethistory?market={0}", Uri.EscapeDataString(info.MarketName));
             byte[] bytes = null;
             try {
@@ -520,7 +524,7 @@ namespace CryptoMarketClient.BitFinex {
                     item.Time = Convert.ToDateTime(obj[1]);
                     item.AmountString = obj[2];
                     item.RateString = obj[3];
-                    item.Total = FastDoubleConverter.Convert(obj[4]);
+                    item.Total = FastValueConverter.Convert(obj[4]);
                     item.Type = obj[6].Length == 3 ? TradeType.Buy : TradeType.Sell;
                     item.Fill = obj[5].Length == 4 ? TradeFillType.Fill : TradeFillType.PartialFill;
                     info.TradeHistory.Insert(index, item);
@@ -570,8 +574,8 @@ namespace CryptoMarketClient.BitFinex {
             lock(info) {
                 foreach(string[] obj in res) {
                     bool isBuy = obj[6].Length == 3;
-                    double price = FastDoubleConverter.Convert(obj[3]);
-                    double amount = FastDoubleConverter.Convert(obj[2]);
+                    double price = FastValueConverter.Convert(obj[3]);
+                    double amount = FastValueConverter.Convert(obj[2]);
                     if(isBuy) {
                         st.BuyAmount += amount;
                         st.MinBuyPrice = Math.Min(st.MinBuyPrice, price);
@@ -626,7 +630,7 @@ namespace CryptoMarketClient.BitFinex {
             //info.TradeResult = text;
             return OnSellLimit(text);
         }
-        public override bool CancelOrder(TickerBase ticker, OpenedOrderInfo info) {
+        public override bool CancelOrder(Ticker ticker, OpenedOrderInfo info) {
             throw new NotImplementedException();
             //string address = string.Format("https://bittrex.com/api/v1.1/market/cancel?apikey={0}&nonce={1}&uuid={2}",
             //    Uri.EscapeDataString(ApiKey),
@@ -662,7 +666,7 @@ namespace CryptoMarketClient.BitFinex {
             client.Headers.Add("apisign", GetSign(address));
             return client.DownloadStringTaskAsync(address);
         }
-        public override bool UpdateOpenedOrders(TickerBase ticker) {
+        public override bool UpdateOpenedOrders(Ticker ticker) {
             string address = string.Empty;
             if(ticker != null) {
                 address = string.Format("https://bittrex.com/api/v1.1/market/getopenorders?apikey={0}&nonce={1}&market={2}",
@@ -698,7 +702,7 @@ namespace CryptoMarketClient.BitFinex {
         protected string OnUuidResult(string result) {
             if(string.IsNullOrEmpty(result))
                 return null;
-            JObject res = (JObject)JsonConvert.DeserializeObject(result);
+            JObject res = JsonConvert.DeserializeObject<JObject>(result);
             foreach(JProperty prop in res.Children()) {
                 if(prop.Name == "success") {
                     if(prop.Value.Value<bool>() == false)
@@ -722,7 +726,7 @@ namespace CryptoMarketClient.BitFinex {
         public bool OnCancel(string result) {
             if(string.IsNullOrEmpty(result))
                 return false;
-            JObject res = (JObject)JsonConvert.DeserializeObject(result);
+            JObject res = JsonConvert.DeserializeObject<JObject>(result);
             foreach(JProperty prop in res.Children()) {
                 if(prop.Name == "success") {
                     return prop.Value.Value<bool>();
@@ -730,7 +734,7 @@ namespace CryptoMarketClient.BitFinex {
             }
             return false;
         }
-        public bool OnUpdateOrders(TickerBase ticker, byte[] bytes) {
+        public bool OnUpdateOrders(Ticker ticker, byte[] bytes) {
             if(bytes == null)
                 return false;
 
@@ -812,7 +816,7 @@ namespace CryptoMarketClient.BitFinex {
         public bool OnGetBalance(string text) {
             if(string.IsNullOrEmpty(text))
                 return false;
-            JObject res = (JObject)JsonConvert.DeserializeObject(text);
+            JObject res = JsonConvert.DeserializeObject<JObject>(text);
             if(res.Value<bool>("success") == false) {
                 Debug.WriteLine("OnGetBalance fails: " + res.Value<string>("message"));
                 return false;
@@ -872,7 +876,7 @@ namespace CryptoMarketClient.BitFinex {
                         Balances.Add(info);
                     }
                     //info.Balance = FastDoubleConverter.Convert(item[1]);
-                    info.Available = FastDoubleConverter.Convert(item[2]);
+                    info.Available = FastValueConverter.Convert(item[2]);
                     //info.Pending = FastDoubleConverter.Convert(item[3]);
                     info.DepositAddress = item[4];
                 }
@@ -892,7 +896,7 @@ namespace CryptoMarketClient.BitFinex {
         public bool OnGetBalances(string text) {
             if(string.IsNullOrEmpty(text))
                 return false;
-            JObject res = (JObject)JsonConvert.DeserializeObject(text);
+            JObject res = JsonConvert.DeserializeObject<JObject>(text);
             if(res.Value<bool>("success") == false) {
                 Debug.WriteLine("OnGetBalances fails: " + res.Value<string>("message"));
                 return false;
@@ -984,7 +988,7 @@ namespace CryptoMarketClient.BitFinex {
         string OnGetDeposit(string currency, string text) {
             if(string.IsNullOrEmpty(text))
                 return null;
-            JObject res = (JObject)JsonConvert.DeserializeObject(text);
+            JObject res = JsonConvert.DeserializeObject<JObject>(text);
             if(res.Value<bool>("success") == false) {
                 string error = res.Value<string>("message");
                 if(error == "ADDRESS_GENERATING")

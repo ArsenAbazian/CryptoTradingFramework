@@ -9,7 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 namespace CryptoMarketClient.Bittrex {
-    public class BittrexTicker : TickerBase {
+    public class BittrexTicker : Ticker {
         public BittrexTicker(Exchange exchange) : base(exchange) { }
 
         public string MarketCurrencyLong { get; set; }

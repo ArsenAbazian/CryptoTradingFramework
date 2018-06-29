@@ -13,7 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace CryptoMarketClient {
-    public class PoloniexTicker : TickerBase {
+    public class PoloniexTicker : Ticker {
         public PoloniexTicker(PoloniexExchange exchange) : base(exchange) {
             CandleStickPeriodMin = 5;
         }

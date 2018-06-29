@@ -9,8 +9,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace CryptoMarketClient.Exchanges.Bittrex {
-    public sealed class BittrexWebsocket {
-        public delegate void BittrexCallback(string info);
+    public sealed class BittrexWebSocket {
+        public delegate void BittrexCallback(BittrexSocketCommand command, string marketName, string info);
 
         private HubConnection _hubConnection { get; }
         private IHubProxy _hubProxy { get; }
@@ -20,7 +20,7 @@ namespace CryptoMarketClient.Exchanges.Bittrex {
         public BittrexCallback UpdateBalanceState { get; set; }
         public BittrexCallback UpdateSummaryState { get; set; }
 
-        public BittrexWebsocket(string connectionUrl) {
+        public BittrexWebSocket(string connectionUrl) {
             // Set delegates
 
             // Create connection to c2 SignalR hub
@@ -32,22 +32,22 @@ namespace CryptoMarketClient.Exchanges.Bittrex {
         public void Connect() {
             if(UpdateExchangeState != null) {
                 // Register callback for uE (exchange state delta) events
-                _hubProxy.On( "uE", exchangeStateDelta => UpdateExchangeState?.Invoke(exchangeStateDelta) );
+                _hubProxy.On("uE", exchangeStateDelta => UpdateExchangeState?.Invoke(BittrexSocketCommand.IncrementalUpdate, null, exchangeStateDelta));
             }
 
             if(UpdateOrderState != null) {
                 // Register callback for uO (order status change) events
-                _hubProxy.On( "uO", orderStateDelta => UpdateOrderState?.Invoke(orderStateDelta) );
+                _hubProxy.On("uO", orderStateDelta => UpdateOrderState?.Invoke(BittrexSocketCommand.IncrementalUpdate, null, orderStateDelta));
             }
 
             if(UpdateBalanceState != null) {
                 // Register callback for uB (balance status change) events
-                _hubProxy.On( "uB", balanceStateDelta => UpdateBalanceState?.Invoke(balanceStateDelta) );
+                _hubProxy.On("uB", balanceStateDelta => UpdateBalanceState?.Invoke(BittrexSocketCommand.IncrementalUpdate, null, balanceStateDelta));
             }
-            
+
             if(UpdateSummaryState != null) {
                 // Register callback for uB (balance status change) events
-                _hubProxy.On("uS", summaryDelta => UpdateSummaryState?.Invoke(summaryDelta));
+                _hubProxy.On("uS", summaryDelta => UpdateSummaryState?.Invoke(BittrexSocketCommand.IncrementalUpdate, null, summaryDelta));
             }
             _hubConnection.Start().Wait();
         }
@@ -71,6 +71,10 @@ namespace CryptoMarketClient.Exchanges.Bittrex {
 
         // marketName example: "BTC-LTC"
         public async Task<bool> SubscribeToExchangeDeltas(string marketName) => await _hubProxy.Invoke<bool>("SubscribeToExchangeDeltas", marketName);
+        public void QueryExchangeState(string marketName) {
+            _hubProxy.Invoke<string>("QueryExchangeState", marketName).ContinueWith(s => UpdateExchangeState(BittrexSocketCommand.QueryExchangeState, marketName, s.Result));
+        }
+
         public async Task<bool> SubscribeToMarketsState() => await _hubProxy.Invoke<bool>("SubscribeToSummaryDeltas");
 
         // The return of GetAuthContext is a challenge string. Call CreateSignature(apiSecret, challenge)
@@ -118,5 +122,11 @@ namespace CryptoMarketClient.Exchanges.Bittrex {
             var hash = hmacSha512.ComputeHash(Encoding.ASCII.GetBytes(challenge));
             return BitConverter.ToString(hash).Replace("-", string.Empty);
         }
+    }
+
+    public enum BittrexSocketCommand {
+        Undefined,
+        IncrementalUpdate,
+        QueryExchangeState
     }
 }
