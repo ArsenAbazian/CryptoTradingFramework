@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -70,6 +71,10 @@ namespace CryptoMarketClient {
                     item.BidChange = (item.HighestBid - last.Bid) * 100;
                 if(last.Ask != item.LowestAsk)
                     item.AskChange = item.LowestAsk - last.Ask;
+                bool error = Math.Abs(item.BidChange) > 100 || Math.Abs(item.AskChange) > 100 || Math.Abs(item.Change) > 100;
+                if(error) {
+                    Debug.WriteLine("error");
+                }
             }
             item.History.Add(new TickerHistoryItem() { Time = item.Time, Ask = item.LowestAsk, Bid = item.HighestBid, Current = item.Last });
             item.RaiseHistoryItemAdded();

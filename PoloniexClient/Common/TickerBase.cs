@@ -326,7 +326,7 @@ namespace CryptoMarketClient {
                 if(value == Last)
                     return;
                 if(Last != 0)
-                    Change = value - Last;
+                    Change = (value - Last) / Last;
                 lastString = null;
                 last = value;
             }
@@ -341,8 +341,8 @@ namespace CryptoMarketClient {
         }
         protected virtual string GetStringWithChangePercent(double value, double change) {
             if(change >= 0) 
-                return string.Format("<b>{0:0.########}</b> <color=green><size=-2>{1:0.##}%</size></color>", value, change / value * 100);
-            return string.Format("<b>{0:0.########}</b> <color=red><size=-2>{1:0.##}%</size></color>", value, change / value * 100);
+                return string.Format("<b>{0:0.########}</b> <color=green><size=-2>{1:0.##}%</size></color>", value, change);
+            return string.Format("<b>{0:0.########}</b> <color=red><size=-2>{1:0.##}%</size></color>", value, change);
         }
         public double BaseVolume { get; set; }
         public double Volume { get; set; }
@@ -522,7 +522,7 @@ namespace CryptoMarketClient {
                 if(last.Bid != HighestBid)
                     BidChange = (HighestBid - last.Bid) * 100;
                 if(last.Ask != LowestAsk)
-                    AskChange = LowestAsk - last.Ask;
+                    AskChange = (LowestAsk - last.Ask) * 100;
             }
             History.Add(new TickerHistoryItem() { Time = Time, Ask = LowestAsk, Bid = HighestBid, Current = Last });
             RaiseHistoryItemAdded();

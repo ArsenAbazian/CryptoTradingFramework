@@ -198,7 +198,13 @@ namespace CryptoMarketClient {
         }
 
         private void OnTickerTradeHistoryAdd(object sender, EventArgs e) {
-            
+            if(IsHandleCreated) {
+                BeginInvoke(new Action(() => {
+                    if(!IsDisposed) {
+                        this.gvTrades.RefreshData();
+                    }
+                }));
+            }
         }
         
         private void OnTickerHistoryItemAdded(object sender, EventArgs e) {

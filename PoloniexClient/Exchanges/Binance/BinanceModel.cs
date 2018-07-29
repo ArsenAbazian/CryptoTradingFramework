@@ -47,17 +47,20 @@ namespace CryptoMarketClient.Binance {
         }
 
         Dictionary<WebSocket, SocketConnectionInfo> OrderBookSockets { get; } = new Dictionary<WebSocket, SocketConnectionInfo>();
+        Dictionary<WebSocket, SocketConnectionInfo> TradeHistorySockets { get; } = new Dictionary<WebSocket, SocketConnectionInfo>();
 
         public override void StartListenTickerStream(Ticker ticker) {
             base.StartListenTickerStream(ticker);
             StopListenTickerStream(ticker);
             SocketConnectionInfo info = CreateOrderBookWebSocket(ticker);
             OrderBookSockets.Add(info.Socket, info);
+            SocketConnectionInfo tradeInfo = CreateTradesWebSocket(ticker);
+            TradeHistorySockets.Add(tradeInfo.Socket, tradeInfo);
         }
 
         SocketConnectionInfo CreateOrderBookWebSocket(Ticker ticker) {
             SocketConnectionInfo info = new SocketConnectionInfo();
-            string adress = BaseWebSocketAddress + "/" + ticker.Name.ToLower() + "@depth5";
+            string adress = "wss://stream.binance.com:9443/ws/" + ticker.Name.ToLower() + "@depth5";
             info.Ticker = ticker;
             info.Adress = adress;
             info.Socket = new WebSocket(adress, "");
@@ -65,6 +68,21 @@ namespace CryptoMarketClient.Binance {
             info.Socket.Opened += OnOrderBookSocketOpened;
             info.Socket.Closed += OnOrderBookSocketClosed;
             info.Socket.MessageReceived += OnOrderBookSocketMessageReceived;
+            info.Open();
+
+            return info;
+        }
+
+        SocketConnectionInfo CreateTradesWebSocket(Ticker ticker) {
+            SocketConnectionInfo info = new SocketConnectionInfo();
+            string adress = "wss://stream.binance.com:9443/ws/" + ticker.Name.ToLower() + "@trade";
+            info.Ticker = ticker;
+            info.Adress = adress;
+            info.Socket = new WebSocket(adress, "");
+            info.Socket.Error += OnTradeHistorySocketError;
+            info.Socket.Opened += OnTradeHistorySocketOpened;
+            info.Socket.Closed += OnTradeHistorySocketClosed;
+            info.Socket.MessageReceived += OnTradeHistorySocketMessageReceived;
             info.Open();
 
             return info;
@@ -148,6 +166,66 @@ namespace CryptoMarketClient.Binance {
             info.Close();
             info.Dispose();
             OrderBookSockets.Remove(info.Socket);
+
+            info = GetConnectionInfo(ticker, TradeHistorySockets);
+            info.Socket.Error -= OnTradeHistorySocketError;
+            info.Socket.Opened -= OnTradeHistorySocketOpened;
+            info.Socket.Closed -= OnTradeHistorySocketClosed;
+            info.Socket.MessageReceived -= OnTradeHistorySocketMessageReceived;
+            info.Close();
+            info.Dispose();
+            TradeHistorySockets.Remove(info.Socket);
+        }
+
+        string[] tradeItems;
+        protected string[] TradeItems {
+            get {
+                if(tradeItems == null)
+                    tradeItems = new string[] { "e", "E", "s", "t", "p", "q", "b", "a", "T", "m", "M" };
+                return tradeItems;
+            }
+        }
+
+        private void OnTradeHistorySocketMessageReceived(object sender, MessageReceivedEventArgs e) {
+            byte[] bytes = Encoding.Default.GetBytes(e.Message);
+            int startIndex = 0;
+            string[] trades = JSonHelper.Default.DeserializeObject(bytes, ref startIndex, TradeItems);
+            SocketConnectionInfo info = TradeHistorySockets[(WebSocket)sender];
+            OnTradeHistoryItemRecv(info.Ticker, trades);
+        }
+
+        public static DateTime FromUnixTime(long unixTime) {
+            return epoch.AddMilliseconds(unixTime).ToLocalTime();
+        }
+        private static readonly DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+
+        void OnTradeHistoryItemRecv(Ticker ticker, string[] str) {
+            TradeHistoryItem item = new TradeHistoryItem();
+            item.Id = FastValueConverter.ConvertPositiveInteger(str[3]);
+            item.RateString = str[4];
+            item.AmountString = str[5];
+            item.Time = FromUnixTime(FastValueConverter.ConvertPositiveLong(str[8]));
+            item.Type = str[9][0] == 't' ? TradeType.Sell : TradeType.Buy;
+
+            ticker.TradeHistory.Insert(0, item);
+            ticker.RaiseTradeHistoryAdd();
+        }
+
+        private void OnTradeHistorySocketOpened(object sender, EventArgs e) {
+            SocketConnectionInfo info = TradeHistorySockets[(WebSocket)sender];
+            info.State = SocketConnectionState.Connected;
+            info.Ticker.TradeHistory.Clear();
+        }
+
+        private void OnTradeHistorySocketClosed(object sender, EventArgs e) {
+            SocketConnectionInfo info = TradeHistorySockets[(WebSocket)sender];
+            info.State = SocketConnectionState.Disconnected;
+        }
+
+        private void OnTradeHistorySocketError(object sender, ErrorEventArgs e) {
+            SocketConnectionInfo info = TradeHistorySockets[(WebSocket)sender];
+            info.State = SocketConnectionState.Error;
+            info.LastError = e.Exception.ToString();
         }
 
         string[] webSocketTickersInfo;
