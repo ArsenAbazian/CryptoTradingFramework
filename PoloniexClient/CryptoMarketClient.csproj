@@ -220,11 +220,17 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AccountInfoEditingForm.cs">
+    <Compile Include="AccountEditingForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="AccountInfoEditingForm.Designer.cs">
-      <DependentUpon>AccountInfoEditingForm.cs</DependentUpon>
+    <Compile Include="AccountEditingForm.Designer.cs">
+      <DependentUpon>AccountEditingForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="AccounTradesCollectionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AccounTradesCollectionForm.Designer.cs">
+      <DependentUpon>AccounTradesCollectionForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Common\SocketConnectionInfo.cs" />
     <Compile Include="ConnectionForm.cs">
@@ -233,6 +239,13 @@
     <Compile Include="ConnectionForm.Designer.cs">
       <DependentUpon>ConnectionForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="ExchangeCollectionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ExchangeCollectionForm.Designer.cs">
+      <DependentUpon>ExchangeCollectionForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Exchanges\Base\CurrencyInfoBase.cs" />
     <Compile Include="Exchanges\Binance\BinanceIncUpdateDataProvider.cs.cs" />
     <Compile Include="Exchanges\Binance\BinanceModel.cs" />
     <Compile Include="Exchanges\Binance\BinanceTicker.cs" />
@@ -243,10 +256,10 @@
     <Compile Include="Exchanges\BitFinex\BitFinexTicker.cs" />
     <Compile Include="Exchanges\BitFinex\BitFinexModel.cs" />
     <Compile Include="Common\GrabDataSettings.cs" />
-    <Compile Include="Common\OpenedOrdersForm.cs">
+    <Compile Include="OpenedOrdersForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Common\OpenedOrdersForm.Designer.cs">
+    <Compile Include="OpenedOrdersForm.Designer.cs">
       <DependentUpon>OpenedOrdersForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Common\RateLimit.cs" />
@@ -284,6 +297,12 @@
     <Compile Include="MyTradesCollectionControl.Designer.cs">
       <DependentUpon>MyTradesCollectionControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="ExchangeCollectionControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ExchangeCollectionControl.Designer.cs">
+      <DependentUpon>ExchangeCollectionControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Tests\IncrementalUpdateQueueTests.cs" />
     <Compile Include="TrailingCollectionControl.cs">
       <SubType>UserControl</SubType>
@@ -315,7 +334,7 @@
     <Compile Include="CombinedBidAskForm.Designer.cs">
       <DependentUpon>CombinedBidAskForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Common\ExchangeAccountInfo.cs" />
+    <Compile Include="Exchanges\Base\ExchangeAccountInfo.cs" />
     <Compile Include="Common\ArbitrageHistoryHelper.cs" />
     <Compile Include="Common\BalanceBase.cs" />
     <Compile Include="Common\CandleStickChartHelper.cs" />
@@ -323,13 +342,11 @@
     <Compile Include="Common\StaticArbitrageHelper.cs" />
     <Compile Include="Common\StaticArbitrageInfo.cs" />
     <Compile Include="Common\CurrencyStatusHistoryItem.cs" />
-    <Compile Include="Common\CurrencyType.cs" />
-    <Compile Include="Common\DepositInfo.cs" />
     <Compile Include="Common\SimpleJsonParser.cs" />
-    <Compile Include="Common\TickerBase.cs" />
+    <Compile Include="Exchanges\Base\TickerBase.cs" />
     <Compile Include="Common\LogManager.cs" />
     <Compile Include="Common\LogMessage.cs" />
-    <Compile Include="Common\ExchangeBase.cs" />
+    <Compile Include="Exchanges\Base\ExchangeBase.cs" />
     <Compile Include="Common\MyWebClient.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -343,21 +360,15 @@
     <Compile Include="Common\TickerCollectionUpdateHelper.cs" />
     <Compile Include="Common\TickerHistoryItem.cs" />
     <Compile Include="Common\TickerUpdateHelper.cs" />
-    <Compile Include="Common\TradeHistoryItem.cs" />
+    <Compile Include="Common\TradeInfoItem.cs" />
     <Compile Include="Common\TradingResult.cs" />
     <Compile Include="Common\TrailingManager.cs" />
     <Compile Include="Common\TrailingSettings.cs" />
-    <Compile Include="DepositsTotal.cs">
+    <Compile Include="AccountCollectionForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DepositsTotal.Designer.cs">
-      <DependentUpon>DepositsTotal.cs</DependentUpon>
-    </Compile>
-    <Compile Include="AccountInfoCollectionForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="AccountInfoCollectionForm.Designer.cs">
-      <DependentUpon>AccountInfoCollectionForm.cs</DependentUpon>
+    <Compile Include="AccountCollectionForm.Designer.cs">
+      <DependentUpon>AccountCollectionForm.cs</DependentUpon>
     </Compile>
     <Compile Include="ArbitrageHistoryForm.cs">
       <SubType>Form</SubType>
@@ -396,14 +407,14 @@
       <DependentUpon>OrderBookVolumeHistoryForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Exchanges\Poloniex\PoloniexAccountBalanceInfo.cs" />
-    <Compile Include="Common\AccountBalancesForm.cs">
+    <Compile Include="AccountBalancesForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Common\AccountBalancesForm.Designer.cs">
+    <Compile Include="AccountBalancesForm.Designer.cs">
       <DependentUpon>AccountBalancesForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Exchanges\Poloniex\PoloniexCurrencyInfo.cs" />
-    <Compile Include="Exchanges\Poloniex\PoloniexOrderInfo.cs" />
+    <Compile Include="Exchanges\Base\OrderInfo.cs" />
     <Compile Include="ProfitTickersControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -508,10 +519,13 @@
     <Compile Include="TrailingSettinsForm.Designer.cs">
       <DependentUpon>TrailingSettinsForm.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="AccountInfoEditingForm.resx">
-      <DependentUpon>AccountInfoEditingForm.cs</DependentUpon>
+    <EmbeddedResource Include="AccountEditingForm.resx">
+      <DependentUpon>AccountEditingForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Common\OpenedOrdersForm.resx">
+    <EmbeddedResource Include="AccounTradesCollectionForm.resx">
+      <DependentUpon>AccounTradesCollectionForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OpenedOrdersForm.resx">
       <DependentUpon>OpenedOrdersForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ConnectionForm.resx">
@@ -520,6 +534,9 @@
     <EmbeddedResource Include="CurrencyMonitoringForm.resx">
       <DependentUpon>CurrencyMonitoringForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="ExchangeCollectionForm.resx">
+      <DependentUpon>ExchangeCollectionForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GrabDataSettingsForm.resx">
       <DependentUpon>GrabDataSettingsForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -527,6 +544,9 @@
       <DependentUpon>MyTradesCollectionControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\licenses.licx" />
+    <EmbeddedResource Include="ExchangeCollectionControl.resx">
+      <DependentUpon>ExchangeCollectionControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="TrailingCollectionControl.resx">
       <DependentUpon>TrailingCollectionControl.cs</DependentUpon>
     </EmbeddedResource>
@@ -539,11 +559,8 @@
     <EmbeddedResource Include="CombinedBidAskForm.resx">
       <DependentUpon>CombinedBidAskForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="DepositsTotal.resx">
-      <DependentUpon>DepositsTotal.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="AccountInfoCollectionForm.resx">
-      <DependentUpon>AccountInfoCollectionForm.cs</DependentUpon>
+    <EmbeddedResource Include="AccountCollectionForm.resx">
+      <DependentUpon>AccountCollectionForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ArbitrageHistoryForm.resx">
       <DependentUpon>ArbitrageHistoryForm.cs</DependentUpon>
@@ -563,7 +580,7 @@
     <EmbeddedResource Include="OrderBookVolumeHistoryForm.resx">
       <DependentUpon>OrderBookVolumeHistoryForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Common\AccountBalancesForm.resx">
+    <EmbeddedResource Include="AccountBalancesForm.resx">
       <DependentUpon>AccountBalancesForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ProfitTickersControl.resx">
@@ -653,6 +670,22 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="ShapesManager\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Images\ExchangeImages\Binance.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ExchangeImages\Poloniex.png" />
+    <None Include="Images\ExchangeImages\BinanceIcon.png" />
+    <Content Include="Images\ExchangeImages\BitFinex.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="Images\ExchangeImages\BitFinexIcon.png" />
+    <Content Include="Images\ExchangeImages\Bittrex.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="Images\ExchangeImages\BittrexIcon.png" />
+    <None Include="Images\ExchangeImages\PoloniexIcon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

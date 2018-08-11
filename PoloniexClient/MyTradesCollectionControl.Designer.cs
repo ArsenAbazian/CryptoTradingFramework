@@ -32,12 +32,12 @@ namespace CryptoMarketClient {
             DevExpress.XtraEditors.FormatConditionRuleValue formatConditionRuleValue2 = new DevExpress.XtraEditors.FormatConditionRuleValue();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MyTradesCollectionControl));
             this.colType = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colRate = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gcTrades = new CryptoMarketClient.MyGridControl();
             this.tradeHistoryItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.gvTrades = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.colTime = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colAmount = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.colRate = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colTotal = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colFee = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colFill = new DevExpress.XtraGrid.Columns.GridColumn();
@@ -60,20 +60,29 @@ namespace CryptoMarketClient {
             this.colType.FieldName = "Type";
             this.colType.MinWidth = 40;
             this.colType.Name = "colType";
-            this.colType.Visible = true;
-            this.colType.VisibleIndex = 1;
             this.colType.Width = 150;
+            // 
+            // colRate
+            // 
+            this.colRate.DisplayFormat.FormatString = "0.########";
+            this.colRate.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+            this.colRate.FieldName = "Rate";
+            this.colRate.MinWidth = 40;
+            this.colRate.Name = "colRate";
+            this.colRate.Visible = true;
+            this.colRate.VisibleIndex = 0;
+            this.colRate.Width = 685;
             // 
             // gcTrades
             // 
             this.gcTrades.DataSource = this.tradeHistoryItemBindingSource;
             this.gcTrades.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gcTrades.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(12, 12, 12, 12);
+            this.gcTrades.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(12);
             this.gcTrades.Location = new System.Drawing.Point(0, 60);
             this.gcTrades.MainView = this.gvTrades;
-            this.gcTrades.Margin = new System.Windows.Forms.Padding(12, 12, 12, 12);
+            this.gcTrades.Margin = new System.Windows.Forms.Padding(12);
             this.gcTrades.Name = "gcTrades";
-            this.gcTrades.Size = new System.Drawing.Size(3428, 1861);
+            this.gcTrades.Size = new System.Drawing.Size(2261, 876);
             this.gcTrades.TabIndex = 1;
             this.gcTrades.UseDirectXPaint = DevExpress.Utils.DefaultBoolean.True;
             this.gcTrades.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
@@ -81,7 +90,7 @@ namespace CryptoMarketClient {
             // 
             // tradeHistoryItemBindingSource
             // 
-            this.tradeHistoryItemBindingSource.DataSource = typeof(CryptoMarketClient.TradeHistoryItem);
+            this.tradeHistoryItemBindingSource.DataSource = typeof(CryptoMarketClient.TradeInfoItem);
             // 
             // gvTrades
             // 
@@ -98,7 +107,7 @@ namespace CryptoMarketClient {
             this.colFill,
             this.colId});
             gridFormatRule1.Column = this.colType;
-            gridFormatRule1.ColumnApplyTo = this.colType;
+            gridFormatRule1.ColumnApplyTo = this.colRate;
             gridFormatRule1.Name = "FormatRulesTradeBuy";
             formatConditionRuleValue1.Appearance.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
             formatConditionRuleValue1.Appearance.Options.UseForeColor = true;
@@ -106,7 +115,7 @@ namespace CryptoMarketClient {
             formatConditionRuleValue1.Value1 = CryptoMarketClient.TradeType.Buy;
             gridFormatRule1.Rule = formatConditionRuleValue1;
             gridFormatRule2.Column = this.colType;
-            gridFormatRule2.ColumnApplyTo = this.colType;
+            gridFormatRule2.ColumnApplyTo = this.colRate;
             gridFormatRule2.Name = "FormatRulesTradeSell";
             formatConditionRuleValue2.Appearance.ForeColor = System.Drawing.Color.Red;
             formatConditionRuleValue2.Appearance.Options.UseForeColor = true;
@@ -133,8 +142,8 @@ namespace CryptoMarketClient {
             this.colTime.MinWidth = 40;
             this.colTime.Name = "colTime";
             this.colTime.Visible = true;
-            this.colTime.VisibleIndex = 0;
-            this.colTime.Width = 150;
+            this.colTime.VisibleIndex = 4;
+            this.colTime.Width = 1343;
             // 
             // colAmount
             // 
@@ -144,19 +153,8 @@ namespace CryptoMarketClient {
             this.colAmount.MinWidth = 40;
             this.colAmount.Name = "colAmount";
             this.colAmount.Visible = true;
-            this.colAmount.VisibleIndex = 2;
-            this.colAmount.Width = 150;
-            // 
-            // colRate
-            // 
-            this.colRate.DisplayFormat.FormatString = "0.########";
-            this.colRate.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
-            this.colRate.FieldName = "Rate";
-            this.colRate.MinWidth = 40;
-            this.colRate.Name = "colRate";
-            this.colRate.Visible = true;
-            this.colRate.VisibleIndex = 3;
-            this.colRate.Width = 150;
+            this.colAmount.VisibleIndex = 1;
+            this.colAmount.Width = 685;
             // 
             // colTotal
             // 
@@ -164,8 +162,8 @@ namespace CryptoMarketClient {
             this.colTotal.MinWidth = 40;
             this.colTotal.Name = "colTotal";
             this.colTotal.Visible = true;
-            this.colTotal.VisibleIndex = 4;
-            this.colTotal.Width = 150;
+            this.colTotal.VisibleIndex = 2;
+            this.colTotal.Width = 238;
             // 
             // colFee
             // 
@@ -173,8 +171,8 @@ namespace CryptoMarketClient {
             this.colFee.MinWidth = 40;
             this.colFee.Name = "colFee";
             this.colFee.Visible = true;
-            this.colFee.VisibleIndex = 5;
-            this.colFee.Width = 150;
+            this.colFee.VisibleIndex = 3;
+            this.colFee.Width = 477;
             // 
             // colFill
             // 
@@ -231,17 +229,17 @@ namespace CryptoMarketClient {
             this.barDockControlTop.Dock = System.Windows.Forms.DockStyle.Top;
             this.barDockControlTop.Location = new System.Drawing.Point(0, 0);
             this.barDockControlTop.Manager = this.barManager1;
-            this.barDockControlTop.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
-            this.barDockControlTop.Size = new System.Drawing.Size(3428, 60);
+            this.barDockControlTop.Margin = new System.Windows.Forms.Padding(6);
+            this.barDockControlTop.Size = new System.Drawing.Size(2261, 60);
             // 
             // barDockControlBottom
             // 
             this.barDockControlBottom.CausesValidation = false;
             this.barDockControlBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.barDockControlBottom.Location = new System.Drawing.Point(0, 1921);
+            this.barDockControlBottom.Location = new System.Drawing.Point(0, 936);
             this.barDockControlBottom.Manager = this.barManager1;
-            this.barDockControlBottom.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
-            this.barDockControlBottom.Size = new System.Drawing.Size(3428, 0);
+            this.barDockControlBottom.Margin = new System.Windows.Forms.Padding(6);
+            this.barDockControlBottom.Size = new System.Drawing.Size(2261, 0);
             // 
             // barDockControlLeft
             // 
@@ -249,17 +247,17 @@ namespace CryptoMarketClient {
             this.barDockControlLeft.Dock = System.Windows.Forms.DockStyle.Left;
             this.barDockControlLeft.Location = new System.Drawing.Point(0, 60);
             this.barDockControlLeft.Manager = this.barManager1;
-            this.barDockControlLeft.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
-            this.barDockControlLeft.Size = new System.Drawing.Size(0, 1861);
+            this.barDockControlLeft.Margin = new System.Windows.Forms.Padding(6);
+            this.barDockControlLeft.Size = new System.Drawing.Size(0, 876);
             // 
             // barDockControlRight
             // 
             this.barDockControlRight.CausesValidation = false;
             this.barDockControlRight.Dock = System.Windows.Forms.DockStyle.Right;
-            this.barDockControlRight.Location = new System.Drawing.Point(3428, 60);
+            this.barDockControlRight.Location = new System.Drawing.Point(2261, 60);
             this.barDockControlRight.Manager = this.barManager1;
-            this.barDockControlRight.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
-            this.barDockControlRight.Size = new System.Drawing.Size(0, 1861);
+            this.barDockControlRight.Margin = new System.Windows.Forms.Padding(6);
+            this.barDockControlRight.Size = new System.Drawing.Size(0, 876);
             // 
             // MyTradesCollectionControl
             // 
@@ -270,9 +268,9 @@ namespace CryptoMarketClient {
             this.Controls.Add(this.barDockControlRight);
             this.Controls.Add(this.barDockControlBottom);
             this.Controls.Add(this.barDockControlTop);
-            this.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.Margin = new System.Windows.Forms.Padding(6);
             this.Name = "MyTradesCollectionControl";
-            this.Size = new System.Drawing.Size(3428, 1921);
+            this.Size = new System.Drawing.Size(2261, 936);
             ((System.ComponentModel.ISupportInitialize)(this.gcTrades)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tradeHistoryItemBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gvTrades)).EndInit();

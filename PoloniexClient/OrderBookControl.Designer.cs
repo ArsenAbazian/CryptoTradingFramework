@@ -23,10 +23,6 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
-            DevExpress.XtraGrid.GridFormatRule gridFormatRule1 = new DevExpress.XtraGrid.GridFormatRule();
-            DevExpress.XtraEditors.FormatConditionRuleDataBar formatConditionRuleDataBar1 = new DevExpress.XtraEditors.FormatConditionRuleDataBar();
-            DevExpress.XtraGrid.GridFormatRule gridFormatRule2 = new DevExpress.XtraGrid.GridFormatRule();
-            DevExpress.XtraEditors.FormatConditionRuleDataBar formatConditionRuleDataBar2 = new DevExpress.XtraEditors.FormatConditionRuleDataBar();
             this.gcVolumePercent2 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gcVolume2 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gcVolumePercent = new DevExpress.XtraGrid.Columns.GridColumn();
@@ -132,39 +128,25 @@
             this.gcAmount2,
             this.gcVolume2,
             this.gcVolumePercent2});
-            gridFormatRule1.Column = this.gcVolumePercent2;
-            gridFormatRule1.ColumnApplyTo = this.gcVolume2;
-            gridFormatRule1.Name = "fmtRuleVolume";
-            formatConditionRuleDataBar1.AllowNegativeAxis = false;
-            formatConditionRuleDataBar1.Appearance.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            formatConditionRuleDataBar1.Appearance.Options.UseBackColor = true;
-            formatConditionRuleDataBar1.AutomaticType = DevExpress.XtraEditors.FormatConditionAutomaticType.ZeroBased;
-            formatConditionRuleDataBar1.DrawAxis = false;
-            formatConditionRuleDataBar1.Maximum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            formatConditionRuleDataBar1.MaximumType = DevExpress.XtraEditors.FormatConditionValueType.Number;
-            formatConditionRuleDataBar1.MinimumType = DevExpress.XtraEditors.FormatConditionValueType.Number;
-            formatConditionRuleDataBar1.PredefinedName = null;
-            gridFormatRule1.Rule = formatConditionRuleDataBar1;
-            this.bidGridView.FormatRules.Add(gridFormatRule1);
             this.bidGridView.GridControl = this.bidGridControl;
             this.bidGridView.Name = "bidGridView";
             this.bidGridView.OptionsBehavior.AllowPixelScrolling = DevExpress.Utils.DefaultBoolean.True;
             this.bidGridView.OptionsBehavior.AllowSortAnimation = DevExpress.Utils.DefaultBoolean.True;
             this.bidGridView.OptionsBehavior.Editable = false;
             this.bidGridView.OptionsDetail.EnableMasterViewMode = false;
-            this.bidGridView.OptionsView.EnableAppearanceEvenRow = true;
+            this.bidGridView.OptionsSelection.EnableAppearanceFocusedCell = false;
             this.bidGridView.OptionsView.ShowColumnHeaders = false;
             this.bidGridView.OptionsView.ShowGroupPanel = false;
             this.bidGridView.OptionsView.ShowHorizontalLines = DevExpress.Utils.DefaultBoolean.False;
             this.bidGridView.OptionsView.ShowIndicator = false;
+            this.bidGridView.OptionsView.ShowVerticalLines = DevExpress.Utils.DefaultBoolean.False;
+            this.bidGridView.CustomDrawCell += new DevExpress.XtraGrid.Views.Base.RowCellCustomDrawEventHandler(this.bidGridView_CustomDrawCell);
             this.bidGridView.MouseDown += new System.Windows.Forms.MouseEventHandler(this.bidGridView_MouseDown);
             // 
             // gcRate2
             // 
+            this.gcRate2.AppearanceCell.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
+            this.gcRate2.AppearanceCell.Options.UseForeColor = true;
             this.gcRate2.Caption = "Rate";
             this.gcRate2.FieldName = "ValueString";
             this.gcRate2.MinWidth = 40;
@@ -227,38 +209,25 @@
             this.gcAmount,
             this.gcVolume,
             this.gcVolumePercent});
-            gridFormatRule2.Column = this.gcVolumePercent;
-            gridFormatRule2.ColumnApplyTo = this.gcVolume;
-            gridFormatRule2.Name = "fmtRuleVolume";
-            formatConditionRuleDataBar2.Appearance.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-            formatConditionRuleDataBar2.Appearance.Options.UseBackColor = true;
-            formatConditionRuleDataBar2.AutomaticType = DevExpress.XtraEditors.FormatConditionAutomaticType.ZeroBased;
-            formatConditionRuleDataBar2.DrawAxis = false;
-            formatConditionRuleDataBar2.Maximum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            formatConditionRuleDataBar2.MaximumType = DevExpress.XtraEditors.FormatConditionValueType.Number;
-            formatConditionRuleDataBar2.MinimumType = DevExpress.XtraEditors.FormatConditionValueType.Number;
-            formatConditionRuleDataBar2.PredefinedName = null;
-            gridFormatRule2.Rule = formatConditionRuleDataBar2;
-            this.askGridView.FormatRules.Add(gridFormatRule2);
             this.askGridView.GridControl = this.askGridControl;
             this.askGridView.Name = "askGridView";
             this.askGridView.OptionsBehavior.AllowPixelScrolling = DevExpress.Utils.DefaultBoolean.True;
             this.askGridView.OptionsBehavior.AllowSortAnimation = DevExpress.Utils.DefaultBoolean.True;
             this.askGridView.OptionsBehavior.Editable = false;
             this.askGridView.OptionsDetail.EnableMasterViewMode = false;
-            this.askGridView.OptionsView.EnableAppearanceEvenRow = true;
+            this.askGridView.OptionsSelection.EnableAppearanceFocusedCell = false;
             this.askGridView.OptionsView.ShowGroupPanel = false;
             this.askGridView.OptionsView.ShowHorizontalLines = DevExpress.Utils.DefaultBoolean.False;
             this.askGridView.OptionsView.ShowIndicator = false;
+            this.askGridView.OptionsView.ShowVerticalLines = DevExpress.Utils.DefaultBoolean.False;
+            this.askGridView.CustomDrawCell += new DevExpress.XtraGrid.Views.Base.RowCellCustomDrawEventHandler(this.askGridView_CustomDrawCell);
             this.askGridView.TopRowChanged += new System.EventHandler(this.askGridView_TopRowChanged);
             this.askGridView.MouseDown += new System.Windows.Forms.MouseEventHandler(this.askGridView_MouseDown);
             // 
             // gcRate
             // 
+            this.gcRate.AppearanceCell.ForeColor = System.Drawing.Color.Red;
+            this.gcRate.AppearanceCell.Options.UseForeColor = true;
             this.gcRate.Caption = "Rate";
             this.gcRate.ColumnEdit = this.repositoryItemTextEdit1;
             this.gcRate.FieldName = "ValueString";

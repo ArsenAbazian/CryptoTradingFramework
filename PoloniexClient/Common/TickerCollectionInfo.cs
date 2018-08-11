@@ -105,14 +105,14 @@ namespace CryptoMarketClient {
         public bool HasDestinationAddress { get { return !string.IsNullOrEmpty(DestinationAddress); } }
         public bool ObtainDestinationAddress() {
             for(int i = 0; i < 3; i++) {
-                DestinationAddress = Destination.GetDepositAddress(Common.CurrencyType.MarketCurrency);
+                DestinationAddress = Destination.GetDepositAddress(Destination.MarketCurrency);
                 if(HasDestinationAddress)
                     return true;
             }
             return false;
         }
         public bool MakeWithdraw() {
-            return Source.Withdraw(Source.MarketCurrency, DestinationAddress, Amount);
+            return Source.Withdraw(Source.MarketCurrency, DestinationAddress, "", Amount);
         }
     }
 }

@@ -193,7 +193,8 @@ namespace CryptoMarketClient.Common {
                 TelegramBot.Default.SendNotification(Ticker.Exchange + " - " + Ticker.Name + " - Order done!!");
                 State = TrailingState.Done;
             } else if (Mode == ActionMode.Execute) {
-                if (Type == TrailingType.Sell ? Ticker.MarketSell(Amount) : Ticker.MarketBuy(Amount))
+                TradingResult res = Type == TrailingType.Sell ? Ticker.MarketSell(Amount) : Ticker.MarketBuy(Amount);
+                if (res != null)
                     State = TrailingState.Done;
                 else
                     TelegramBot.Default.SendNotification($"{Ticker.Exchange}. Error!! Can't sell {Ticker.Name}");

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -30,8 +32,28 @@ namespace CryptoMarketClient.Binance {
             return new BinanceIncrementalUpdateDataProvider();
         }
 
-        public override void OnAccountRemoved(ExchangeAccountInfo info) {
+        public override void OnAccountRemoved(AccountInfo info) {
             
+        }
+
+        public override string CreateDeposit(AccountInfo account, string currency) {
+            throw new NotImplementedException();
+        }
+         
+        public override bool GetBalance(AccountInfo info, string currency) {
+            return true;
+        }
+
+        public override bool Withdraw(AccountInfo account, string currency, string adress, string paymentId, double amount) {
+            throw new NotImplementedException();
+        }
+
+        public override TradingResult Buy(AccountInfo account, Ticker ticker, double rate, double amount) {
+            throw new NotImplementedException();
+        }
+
+        public override TradingResult Sell(AccountInfo account, Ticker ticker, double rate, double amount) {
+            throw new NotImplementedException();
         }
 
         public override string BaseWebSocketAddress => "wss://stream.binance.com:9443/ws/!ticker@arr";
@@ -48,6 +70,136 @@ namespace CryptoMarketClient.Binance {
 
         Dictionary<WebSocket, SocketConnectionInfo> OrderBookSockets { get; } = new Dictionary<WebSocket, SocketConnectionInfo>();
         Dictionary<WebSocket, SocketConnectionInfo> TradeHistorySockets { get; } = new Dictionary<WebSocket, SocketConnectionInfo>();
+        Dictionary<WebSocket, SocketConnectionInfo> KlineSockets { get; } = new Dictionary<WebSocket, SocketConnectionInfo>();
+
+        public override void StartListenKlineStream(Ticker ticker, CandleStickIntervalInfo klineInfo) {
+            SocketConnectionInfo info = CreateKlineWebSocket(ticker, klineInfo);
+            KlineSockets.Add(info.Socket, info);
+        }
+
+        protected virtual SocketConnectionInfo CreateKlineWebSocket(Ticker ticker, CandleStickIntervalInfo klineInfo) {
+            SocketConnectionInfo info = new SocketConnectionInfo();
+            string adress = "wss://stream.binance.com:9443/ws/" + ticker.Name.ToLower() + "@kline_" + klineInfo.Command;
+            info.Ticker = ticker;
+            info.KlineInfo = klineInfo;
+            info.Adress = adress;
+            info.Socket = new WebSocket(adress, "");
+            info.Socket.Error += OnKlineSocketError;
+            info.Socket.Opened += OnKlineSocketOpened;
+            info.Socket.Closed += OnKlineSocketClosed;
+            info.Socket.MessageReceived += OnKlineSocketMessageReceived;
+            info.Open();
+
+            return info;
+        }
+
+        public override void StopListenKlineStream(Ticker ticker, CandleStickIntervalInfo klineInfo) {
+            SocketConnectionInfo info = GetConnectionInfo(ticker, klineInfo, KlineSockets);
+            if(info == null)
+                return;
+
+            info.Socket.Error -= OnKlineSocketError;
+            info.Socket.Opened -= OnKlineSocketOpened;
+            info.Socket.Closed -= OnKlineSocketClosed;
+            info.Socket.MessageReceived -= OnKlineSocketMessageReceived;
+            info.Close();
+            info.Dispose();
+            KlineSockets.Remove(info.Socket);
+        }
+
+        string[] klineStartItems;
+        protected string[] KlineStartItems {
+            get {
+                if(klineStartItems == null) {
+                    klineStartItems = new string[] {
+                        "e",
+                        "E",
+                        "s",
+                    };
+                }
+                return klineStartItems;
+            }
+        }
+
+
+        string[] klineItems;
+        protected string[] KlineItems {
+            get {
+                if(klineItems == null) {
+                    klineItems = new string[] {
+                        "t", // Kline start time
+                        "T", // Kline close time
+                        "s", // Symbol
+                        "i", // Interval
+                        "f", // First trade ID
+                        "L", // Last trade ID
+                        "o", // Open price
+                        "c", // Close price
+                        "h", // High price
+                        "l", // Low price
+                        "v", // Base asset volume
+                        "n", // Number of trades
+                        "x", // Is this kline closed?
+                        "q", // Quote asset volume
+                        "V", // Taker buy base asset volume
+                        "Q", // Taker buy quote asset volume
+                        "B"  // Ignore 
+                    };
+                }
+                return klineItems;
+            }
+        }
+
+        private void OnKlineSocketMessageReceived(object sender, MessageReceivedEventArgs e) {
+            Debug.WriteLine(e.Message);
+            byte[] bytes = Encoding.Default.GetBytes(e.Message);
+            int startIndex = 0;
+            string[] startItems = JSonHelper.Default.StartDeserializeObject(bytes, ref startIndex, KlineStartItems);
+            startIndex++; // skip,
+            if(!JSonHelper.Default.FindChar(bytes, ':', ref startIndex))
+                return;
+            startIndex++; // skip :
+            if(!JSonHelper.Default.FindChar(bytes, '{', ref startIndex))
+                return;
+
+            string[] kline = JSonHelper.Default.DeserializeObject(bytes, ref startIndex, KlineItems);
+            SocketConnectionInfo info = KlineSockets[(WebSocket)sender];
+            OnKlineItemRecv(info.Ticker, kline);
+        }
+        protected virtual void OnKlineItemRecv(Ticker ticker, string[] item) {
+            long dt = FastValueConverter.ConvertPositiveLong(item[0]);
+            DateTime time = FromUnixTime(dt);
+            CandleStickIntervalInfo info = AllowedCandleStickIntervals.FirstOrDefault(i => i.Command == item[3]);
+            if(ticker.CandleStickPeriodMin != info.Interval.TotalMinutes)
+                return;
+            Debug.WriteLine(item[6] + " " + item[7] + " " + item[8] + " " + item[9]);
+            lock(ticker.CandleStickData) {
+                CandleStickData data = ticker.GetOrCreateCandleStickData(time);
+                data.Open = FastValueConverter.Convert(item[6]);
+                data.Close = FastValueConverter.Convert(item[7]);
+                data.High = FastValueConverter.Convert(item[8]);
+                data.Low = FastValueConverter.Convert(item[9]);
+                data.Volume = FastValueConverter.Convert(item[10]);
+                data.QuoteVolume = FastValueConverter.Convert(item[13]);
+                ticker.RaiseCandleStickChanged();
+            }
+        }
+
+        private void OnKlineSocketClosed(object sender, EventArgs e) {
+            SocketConnectionInfo info = KlineSockets[(WebSocket)sender];
+            info.State = SocketConnectionState.Disconnected;
+        }
+
+        private void OnKlineSocketOpened(object sender, EventArgs e) {
+            SocketConnectionInfo info = KlineSockets[(WebSocket)sender];
+            info.State = SocketConnectionState.Connected;
+        }
+
+        private void OnKlineSocketError(object sender, ErrorEventArgs e) {
+            SocketConnectionInfo info = KlineSockets[(WebSocket)sender];
+            info.State = SocketConnectionState.Error;
+            info.LastError = e.Exception.ToString();
+        }
 
         public override void StartListenTickerStream(Ticker ticker) {
             base.StartListenTickerStream(ticker);
@@ -144,6 +296,15 @@ namespace CryptoMarketClient.Binance {
             info.LastError = e.Exception.ToString();
         }
 
+        protected SocketConnectionInfo GetConnectionInfo(Ticker ticker, CandleStickIntervalInfo info, Dictionary<WebSocket, SocketConnectionInfo> dictionary) {
+            foreach(SocketConnectionInfo i in dictionary.Values) {
+                if(i.Ticker == ticker && i.KlineInfo.Interval == info.Interval) {
+                    return i;
+                }
+            }
+            return null;
+        }
+
         protected SocketConnectionInfo GetConnectionInfo(Ticker ticker, Dictionary<WebSocket, SocketConnectionInfo> dictionary) {
             foreach(SocketConnectionInfo info in dictionary.Values) {
                 if(info.Ticker == ticker) {
@@ -193,14 +354,9 @@ namespace CryptoMarketClient.Binance {
             SocketConnectionInfo info = TradeHistorySockets[(WebSocket)sender];
             OnTradeHistoryItemRecv(info.Ticker, trades);
         }
-
-        public static DateTime FromUnixTime(long unixTime) {
-            return epoch.AddMilliseconds(unixTime).ToLocalTime();
-        }
-        private static readonly DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-
+        
         void OnTradeHistoryItemRecv(Ticker ticker, string[] str) {
-            TradeHistoryItem item = new TradeHistoryItem();
+            TradeInfoItem item = new TradeInfoItem(null, ticker);
             item.Id = FastValueConverter.ConvertPositiveInteger(str[3]);
             item.RateString = str[4];
             item.AmountString = str[5];
@@ -293,8 +449,8 @@ namespace CryptoMarketClient.Binance {
             }
         }
 
-        public override bool GetDeposites() {
-            return true;
+        public override bool GetDeposites(AccountInfo account) {
+            throw new NotImplementedException();
         }
 
         public override Form CreateAccountForm() {
@@ -353,31 +509,106 @@ namespace CryptoMarketClient.Binance {
             return new RateLimit(); 
         }
 
-        public override bool AllowCandleStickIncrementalUpdate => false;
+        public override bool AllowCandleStickIncrementalUpdate => true;
 
-        public override bool CancelOrder(Ticker ticker, OpenedOrderInfo info) {
+        public override bool Cancel(AccountInfo account, string orderId) {
             throw new NotImplementedException();
         }
 
         public override List<CandleStickIntervalInfo> GetAllowedCandleStickIntervals() {
             List<CandleStickIntervalInfo> list = new List<CandleStickIntervalInfo>();
 
-            list.Add(new CandleStickIntervalInfo() { Text = "1 Minute", Interval = TimeSpan.FromSeconds(60) });
-            list.Add(new CandleStickIntervalInfo() { Text = "3 Minutes", Interval = TimeSpan.FromSeconds(180) });
-            list.Add(new CandleStickIntervalInfo() { Text = "5 Minutes", Interval = TimeSpan.FromSeconds(300) });
-            list.Add(new CandleStickIntervalInfo() { Text = "15 Minutes", Interval = TimeSpan.FromSeconds(900) });
-            list.Add(new CandleStickIntervalInfo() { Text = "30 Minutes", Interval = TimeSpan.FromSeconds(1800) });
-            list.Add(new CandleStickIntervalInfo() { Text = "1 Hour", Interval = TimeSpan.FromSeconds(3600) });
-            list.Add(new CandleStickIntervalInfo() { Text = "2 Hours", Interval = TimeSpan.FromSeconds(7200) });
-            list.Add(new CandleStickIntervalInfo() { Text = "4 Hours", Interval = TimeSpan.FromSeconds(14400) });
-            list.Add(new CandleStickIntervalInfo() { Text = "6 Hour", Interval = TimeSpan.FromSeconds(21600) });
-            list.Add(new CandleStickIntervalInfo() { Text = "8 Hours", Interval = TimeSpan.FromSeconds(28800) });
-            list.Add(new CandleStickIntervalInfo() { Text = "12 Hours", Interval = TimeSpan.FromSeconds(43200) });
-            list.Add(new CandleStickIntervalInfo() { Text = "1 Day", Interval = TimeSpan.FromSeconds(86400) });
-            list.Add(new CandleStickIntervalInfo() { Text = "3 Days", Interval = TimeSpan.FromSeconds(259200) });
-            list.Add(new CandleStickIntervalInfo() { Text = "1 Week", Interval = TimeSpan.FromSeconds(604800) });
+            list.Add(new CandleStickIntervalInfo() { Text = "1 Minute", Command="1m", Interval = TimeSpan.FromSeconds(60) });
+            list.Add(new CandleStickIntervalInfo() { Text = "3 Minutes", Command="3m", Interval = TimeSpan.FromSeconds(180) });
+            list.Add(new CandleStickIntervalInfo() { Text = "5 Minutes", Command="5m", Interval = TimeSpan.FromSeconds(300) });
+            list.Add(new CandleStickIntervalInfo() { Text = "15 Minutes", Command="15m", Interval = TimeSpan.FromSeconds(900) });
+            list.Add(new CandleStickIntervalInfo() { Text = "30 Minutes", Command="30m", Interval = TimeSpan.FromSeconds(1800) });
+            list.Add(new CandleStickIntervalInfo() { Text = "1 Hour", Command="1h", Interval = TimeSpan.FromSeconds(3600) });
+            list.Add(new CandleStickIntervalInfo() { Text = "2 Hours", Command = "2h", Interval = TimeSpan.FromSeconds(7200) });
+            list.Add(new CandleStickIntervalInfo() { Text = "4 Hours", Command = "4h", Interval = TimeSpan.FromSeconds(14400) });
+            list.Add(new CandleStickIntervalInfo() { Text = "6 Hour", Command = "6h", Interval = TimeSpan.FromSeconds(21600) });
+            list.Add(new CandleStickIntervalInfo() { Text = "8 Hours", Command = "8h", Interval = TimeSpan.FromSeconds(28800) });
+            list.Add(new CandleStickIntervalInfo() { Text = "12 Hours", Command = "12h", Interval = TimeSpan.FromSeconds(43200) });
+            list.Add(new CandleStickIntervalInfo() { Text = "1 Day", Command = "1d", Interval = TimeSpan.FromSeconds(86400) });
+            list.Add(new CandleStickIntervalInfo() { Text = "3 Days", Command = "3d", Interval = TimeSpan.FromSeconds(259200) });
+            list.Add(new CandleStickIntervalInfo() { Text = "1 Week", Command = "1w", Interval = TimeSpan.FromSeconds(604800) });
 
             return list;
+        }
+
+        public override BindingList<CandleStickData> GetCandleStickData(Ticker ticker, int candleStickPeriodMin, DateTime startUtc, long periodInSeconds) {
+            long startSec = (long)(startUtc.Subtract(epoch)).TotalSeconds;
+            long end = startSec + periodInSeconds;
+            CandleStickIntervalInfo info = AllowedCandleStickIntervals.FirstOrDefault(i => i.Interval.TotalMinutes == candleStickPeriodMin);
+
+            string address = string.Format("https://api.binance.com/api/v1/klines?symbol={0}&interval={1}&startTime={2}&endTime={3}&limit=10000",
+                Uri.EscapeDataString(ticker.CurrencyPair), info.Command, startSec * 1000, end * 1000);
+            byte[] bytes = null;
+            try {
+                bytes = GetDownloadBytes(address);
+            }
+            catch(Exception) {
+                return null;
+            }
+            if(bytes == null || bytes.Length == 0)
+                return null;
+
+            DateTime startTime = epoch;
+
+            BindingList<CandleStickData> list = new BindingList<CandleStickData>();
+            int startIndex = 0;
+            List<string[]> res = JSonHelper.Default.DeserializeArrayOfArrays(bytes, ref startIndex, 12);
+            if(res == null) return list;
+            foreach(string[] item in res) {
+                CandleStickData data = new CandleStickData();
+                data.Time = startTime.AddMilliseconds(FastValueConverter.ConvertPositiveLong(item[0])).ToLocalTime();
+                data.Open = FastValueConverter.Convert(item[1]);
+                data.High = FastValueConverter.Convert(item[2]);
+                data.Low = FastValueConverter.Convert(item[3]);
+                data.Close = FastValueConverter.Convert(item[4]);
+                data.Volume = FastValueConverter.Convert(item[5]);
+                data.QuoteVolume = FastValueConverter.Convert(item[7]);
+                list.Add(data);
+            }
+
+            List<TradeInfoItem> trades = GetTradeVolumesForCandleStick(ticker, startSec * 1000, end * 1000);
+            CandleStickChartHelper.InitializeVolumes(list, trades, ticker.CandleStickPeriodMin);
+            return list;
+        }
+
+        protected string[] AggTradesItem { get; } = new string[] {
+            "a",         // Aggregate tradeId
+            "p",        // Price
+            "q",        // Quantity
+            "f",         // First tradeId
+            "l",         // Last tradeId
+            "T", // Timestamp
+            "m",          // Was the buyer the maker?
+            "M"           // Was the trade the best price match?
+        };
+
+        public List<TradeInfoItem> GetTradeVolumesForCandleStick(Ticker ticker, long start, long end) {
+            List<TradeInfoItem> trades = new List<TradeInfoItem>();
+            string address = string.Format("https://api.binance.com/api/v1/aggTrades?symbol={0}&limit={1}&startTime={2}&endTime={3}", Uri.EscapeDataString(ticker.CurrencyPair), 1000, start, end);
+            byte[] data = ((Ticker)ticker).DownloadBytes(address);
+            if(data == null || data.Length == 0)
+                return trades;
+
+            int parseIndex = 0;
+            List<string[]> items = JSonHelper.Default.DeserializeArrayOfObjects(data, ref parseIndex, AggTradesItem);
+
+            for(int i = items.Count - 1; i >= 0; i--) {
+                string[] item = items[i];
+                DateTime time = FromUnixTime(FastValueConverter.ConvertPositiveLong(item[5]));
+
+                TradeInfoItem t = new TradeInfoItem(null, ticker);
+                bool isBuy = item[6][0] != 't';
+                t.AmountString = item[2];
+                t.Time = time;
+                t.Type = isBuy ? TradeType.Buy : TradeType.Sell;
+                trades.Add(t);
+            }
+            return trades;
         }
 
         public override bool GetTickersInfo() {
@@ -386,9 +617,40 @@ namespace CryptoMarketClient.Binance {
             return result;
         }
 
-        public override List<TradeHistoryItem> GetTrades(Ticker ticker, DateTime starTime) {
-            return new List<TradeHistoryItem>();
-            //throw new NotImplementedException();
+        public override List<TradeInfoItem> GetTrades(Ticker ticker, DateTime starTime) {
+            string address = string.Format("https://api.binance.com/api/v1/depth?symbol={0}&limit={1}",
+                Uri.EscapeDataString(ticker.CurrencyPair), 1000);
+            string text = ((Ticker)ticker).DownloadString(address);
+            if(string.IsNullOrEmpty(text))
+                return null;
+
+            JArray trades = JsonConvert.DeserializeObject<JArray>(text);
+            if(trades.Count == 0)
+                return null;
+
+            List<TradeInfoItem> list = new List<TradeInfoItem>();
+            int index = 0;
+            foreach(JObject obj in trades) {
+                DateTime time = new DateTime(obj.Value<Int64>("time"));
+                int tradeId = obj.Value<int>("id");
+                if(time < starTime)
+                    break;
+
+                TradeInfoItem item = new TradeInfoItem(null, ticker);
+                bool isBuy = obj.Value<string>("type").Length == 3;
+                item.AmountString = obj.Value<string>("qty");
+                item.Time = time;
+                item.Type = isBuy ? TradeType.Buy : TradeType.Sell;
+                item.RateString = obj.Value<string>("price");
+                item.Id = tradeId;
+                double price = item.Rate;
+                double amount = item.Amount;
+                item.Total = price * amount;
+                list.Add(item);
+                index++;
+            }
+            ticker.RaiseTradeHistoryAdd();
+            return list;
         }
 
         public override bool ProcessOrderBook(Ticker tickerBase, string text) {
@@ -396,7 +658,7 @@ namespace CryptoMarketClient.Binance {
             //throw new NotImplementedException();
         }
 
-        public override bool UpdateBalances() {
+        public override bool UpdateBalances(AccountInfo info) {
             return true;
             //throw new NotImplementedException();
         }
@@ -406,12 +668,12 @@ namespace CryptoMarketClient.Binance {
             //throw new NotImplementedException();
         }
 
-        public override bool UpdateMyTrades(Ticker ticker) {
+        public override bool UpdateAccountTrades(AccountInfo account, Ticker ticker) {
             return true;
             //throw new NotImplementedException();
         }
 
-        public override bool UpdateOpenedOrders(Ticker tickerBase) {
+        public override bool UpdateOpenedOrders(AccountInfo account, Ticker ticker) {
             return true;
             //throw new NotImplementedException();
         }
@@ -495,9 +757,48 @@ namespace CryptoMarketClient.Binance {
             return true;
         }
 
-        public override bool UpdateTrades(Ticker tickerBase) {
+        string[] tradeItemString;
+        protected string[] TradeItemString {
+            get {
+                if(tradeItemString == null)
+                    tradeItemString = new string[] { "id", "price", "qty", "time", "isBuyerMaker", "isBestMatch" };
+                return tradeItemString;
+            }
+        }
+
+        public override bool UpdateTrades(Ticker ticker) {
+            string address = string.Format("https://api.binance.com/api/v1/trades?symbol={0}&limit={1}",
+                Uri.EscapeDataString(ticker.CurrencyPair), 1000);
+            byte[] data = ((Ticker)ticker).DownloadBytes(address);
+            if(data == null || data.Length == 0)
+                return false;
+
+            ticker.TradeHistory.Clear();
+            ticker.TradeStatistic.Clear();
+            
+            int index = 0, parseIndex = 0;
+            List<string[]> items = JSonHelper.Default.DeserializeArrayOfObjects(data, ref parseIndex, TradeItemString);
+
+            for(int i = items.Count - 1; i >= 0; i--) {
+                string[] item = items[i];
+                DateTime time = FromUnixTime(FastValueConverter.ConvertPositiveLong(item[3]));
+                int tradeId = FastValueConverter.ConvertPositiveInteger(item[0]);
+
+                TradeInfoItem t = new TradeInfoItem(null, ticker);
+                bool isBuy = item[4][0] != 't';
+                t.AmountString = item[2];
+                t.Time = time;
+                t.Type = isBuy ? TradeType.Buy : TradeType.Sell;
+                t.RateString = item[1];
+                t.Id = tradeId;
+                double price = t.Rate;
+                double amount = t.Amount;
+                t.Total = price * amount;
+                ticker.TradeHistory.Add(t);
+                index++;
+            }
+            ticker.RaiseTradeHistoryAdd();
             return true;
-            //throw new NotImplementedException();
         }
     }
 }

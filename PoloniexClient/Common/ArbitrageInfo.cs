@@ -267,10 +267,10 @@ namespace CryptoMarketClient.Common {
             }
         }
         public bool Buy() {
-            return LowestAskTicker.Buy(LowestAsk, AvailableAmount);
+            return LowestAskTicker.Buy(LowestAsk, AvailableAmount) != null;
         }
         public bool Sell() {
-            return HighestBidTicker.Sell(HighestBid, AvailableAmount);
+            return HighestBidTicker.Sell(HighestBid, AvailableAmount) != null;
         }
         public void SaveExpectedProfitUSD() {
             ExpectedProfitUSD = MaxProfitUSD;

@@ -35,18 +35,22 @@ namespace CryptoMarketClient {
             }
         }
 
+        public PoloniexExchange() : base() {
+
+        }
+
         protected internal override IIncrementalUpdateDataProvider CreateIncrementalUpdateDataProvider() {
             return new PoloniexIncrementalUpdateDataProvider();
         }
 
-        public override void OnAccountRemoved(ExchangeAccountInfo info) {
-            
+        public override void OnAccountRemoved(AccountInfo info) {
+
         }
 
         public override ExchangeType Type => ExchangeType.Poloniex;
 
         public override bool SupportWebSocket(WebSocketType type) {
-            return type == WebSocketType.Tickers || 
+            return type == WebSocketType.Tickers ||
                 type == WebSocketType.Ticker;
         }
 
@@ -156,7 +160,7 @@ namespace CryptoMarketClient {
             int current = start + 1;
 
             int code = DeserializePositiveInt(bytes, ref current, end);
-            PoloniexTicker ticker = (PoloniexTicker)Tickers.FirstOrDefault(t => t.Code == code );
+            PoloniexTicker ticker = (PoloniexTicker)Tickers.FirstOrDefault(t => t.Code == code);
             if(ticker == null)
                 return;
             ticker.Last = DeserializeDoubleInQuotes(bytes, ref current, end);
@@ -192,7 +196,7 @@ namespace CryptoMarketClient {
         }
 
         public override void ObtainExchangeSettings() {
-            
+
         }
 
         public override bool AllowCandleStickIncrementalUpdate => true;
@@ -209,20 +213,18 @@ namespace CryptoMarketClient {
             return list;
         }
 
-        public List<PoloniexCurrencyInfo> Currencies { get; } = new List<PoloniexCurrencyInfo>();
-
         protected IDisposable TickersSubscriber { get; set; }
         public void Connect() {
             if(TickersSubscriber != null)
                 return;
         }
-        
+
         public IDisposable ConnectOrderBook(PoloniexTicker ticker) {
             return null;
         }
-        
+
         public override BindingList<CandleStickData> GetCandleStickData(Ticker ticker, int candleStickPeriodMin, DateTime start, long periodInSeconds) {
-            long startSec = (long)(start.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
+            long startSec = (long)(start.Subtract(epoch)).TotalSeconds;
             long end = startSec + periodInSeconds;
 
             string address = string.Format("https://poloniex.com/public?command=returnChartData&currencyPair={0}&period={1}&start={2}&end={3}",
@@ -245,7 +247,7 @@ namespace CryptoMarketClient {
             if(res == null) return list;
             foreach(string[] item in res) {
                 CandleStickData data = new CandleStickData();
-                data.Time = startTime.AddSeconds(long.Parse(item[0]));
+                data.Time = startTime.AddSeconds(FastValueConverter.ConvertPositiveLong(item[0]));
                 data.High = FastValueConverter.Convert(item[1]);
                 data.Low = FastValueConverter.Convert(item[2]);
                 data.Open = FastValueConverter.Convert(item[3]);
@@ -255,6 +257,9 @@ namespace CryptoMarketClient {
                 data.WeightedAverage = FastValueConverter.Convert(item[7]);
                 list.Add(data);
             }
+
+            List<TradeInfoItem> trades = GetTradeVolumesForCandleStick(ticker, startSec, end);
+            CandleStickChartHelper.InitializeVolumes(list, trades, ticker.CandleStickPeriodMin);
             return list;
         }
 
@@ -273,7 +278,7 @@ namespace CryptoMarketClient {
             foreach(JProperty prop in res.Children()) {
                 string currency = prop.Name;
                 JObject obj = (JObject)prop.Value;
-                PoloniexCurrencyInfo c = Currencies.FirstOrDefault(curr => curr.Currency == currency);
+                PoloniexCurrencyInfo c = (PoloniexCurrencyInfo)Currencies.FirstOrDefault(curr => curr.Currency == currency);
                 if(c == null) {
                     c = new PoloniexCurrencyInfo();
                     c.Currency = currency;
@@ -305,7 +310,8 @@ namespace CryptoMarketClient {
                 PoloniexTicker t = new PoloniexTicker(this);
                 t.Index = index;
                 t.CurrencyPair = prop.Name;
-                t.Code = PoloniexTickerCodesProvider.Codes[t.CurrencyPair];
+                if(PoloniexTickerCodesProvider.Codes.ContainsKey(t.CurrencyPair))
+                    t.Code = PoloniexTickerCodesProvider.Codes[t.CurrencyPair];
                 JObject obj = (JObject)prop.Value;
                 t.Id = obj.Value<int>("id");
                 t.Last = obj.Value<double>("last");
@@ -468,7 +474,7 @@ namespace CryptoMarketClient {
             return true;
         }
 
-        public override List<TradeHistoryItem> GetTrades(Ticker ticker, DateTime starTime) {
+        public override List<TradeInfoItem> GetTrades(Ticker ticker, DateTime starTime) {
             string address = string.Format("https://poloniex.com/public?command=returnTradeHistory&currencyPair={0}", Uri.EscapeDataString(ticker.CurrencyPair));
             string text = GetDownloadString(address);
             if(string.IsNullOrEmpty(text))
@@ -477,7 +483,7 @@ namespace CryptoMarketClient {
             if(trades.Count == 0)
                 return null;
 
-            List<TradeHistoryItem> list = new List<TradeHistoryItem>();
+            List<TradeInfoItem> list = new List<TradeInfoItem>();
 
             int index = 0;
             foreach(JObject obj in trades) {
@@ -486,7 +492,7 @@ namespace CryptoMarketClient {
                 if(time < starTime)
                     break;
 
-                TradeHistoryItem item = new TradeHistoryItem();
+                TradeInfoItem item = new TradeInfoItem(null, ticker);
                 bool isBuy = obj.Value<string>("type").Length == 3;
                 item.AmountString = obj.Value<string>("amount");
                 item.Time = time;
@@ -503,8 +509,28 @@ namespace CryptoMarketClient {
             return list;
         }
 
-        protected List<TradeHistoryItem> UpdateList { get; } = new List<TradeHistoryItem>(100);
-        
+        protected List<TradeInfoItem> UpdateList { get; } = new List<TradeInfoItem>(100);
+
+        protected List<TradeInfoItem> GetTradeVolumesForCandleStick(Ticker ticker, long start, long end) {
+            string address = string.Format("https://poloniex.com/public?command=returnTradeHistory&currencyPair={0}&start={1}&end={2}", Uri.EscapeDataString(ticker.CurrencyPair), start, end);
+            byte[] bytes = GetDownloadBytes(address);
+            if(bytes == null)
+                return null;
+
+            int startIndex = 0;
+            List<string[]> trades = JSonHelper.Default.DeserializeArrayOfObjects(bytes, ref startIndex, new string[] { "globalTradeID", "tradeID", "date", "type", "rate", "amount", "total" });
+
+            List<TradeInfoItem> newTrades = new List<TradeInfoItem>();
+            foreach(string[] obj in trades) {
+                TradeInfoItem item = new TradeInfoItem(null, ticker);
+                item.TimeString = obj[2];
+                item.AmountString = obj[5];
+                item.Type = obj[3].Length == 3 ? TradeType.Buy : TradeType.Sell;
+                newTrades.Add(item);
+            }
+            return newTrades;
+        }
+
         public override bool UpdateTrades(Ticker ticker) {
             string address = string.Format("https://poloniex.com/public?command=returnTradeHistory&currencyPair={0}", Uri.EscapeDataString(ticker.CurrencyPair));
             byte[] bytes = GetDownloadBytes(address);
@@ -514,8 +540,8 @@ namespace CryptoMarketClient {
             string lastGotTradeId = ticker.TradeHistory.Count > 0 ? ticker.TradeHistory.First().IdString : null;
 
             int startIndex = 0;
-            List<string[]> trades = JSonHelper.Default.DeserializeArrayOfObjects(bytes, ref startIndex, 
-                new string[] { "globalTradeID", "tradeID", "date", "type", "rate", "amount" ,"total" }, 
+            List<string[]> trades = JSonHelper.Default.DeserializeArrayOfObjects(bytes, ref startIndex,
+                new string[] { "globalTradeID", "tradeID", "date", "type", "rate", "amount", "total" },
                 (itemIndex, paramIndex, value) => { return paramIndex != 1 || value != lastGotTradeId; });
 
             TradeStatisticsItem st = new TradeStatisticsItem();
@@ -524,8 +550,9 @@ namespace CryptoMarketClient {
             st.Time = DateTime.UtcNow;
 
             int index = 0;
+            List<TradeInfoItem> newTrades = new List<TradeInfoItem>();
             foreach(string[] obj in trades) {
-                TradeHistoryItem item = new TradeHistoryItem();
+                TradeInfoItem item = new TradeInfoItem(null, ticker);
                 item.IdString = obj[1];
                 item.TimeString = obj[2];
 
@@ -548,9 +575,11 @@ namespace CryptoMarketClient {
                     st.MaxSellPrice = Math.Max(st.MaxSellPrice, price);
                     st.SellVolume += item.Total;
                 }
+                newTrades.Add(item);
                 ticker.TradeHistory.Insert(index, item);
                 index++;
             }
+            CandleStickChartHelper.UpdateVolumes(ticker.CandleStickData, newTrades, ticker.CandleStickPeriodMin);
             if(st.MinSellPrice == double.MaxValue)
                 st.MinSellPrice = 0;
             if(st.MinBuyPrice == double.MaxValue)
@@ -562,61 +591,95 @@ namespace CryptoMarketClient {
             return true;
         }
 
-        public override bool UpdateMyTrades(Ticker ticker) {
+        public override bool UpdateAccountTrades(AccountInfo account, Ticker ticker) {
             string address = string.Format("https://poloniex.com/tradingApi");
 
             NameValueCollection coll = new NameValueCollection();
             coll.Add("nonce", GetNonce());
             coll.Add("command", "returnTradeHistory");
-            coll.Add("currencyPair", ticker.MarketName);
+            if(ticker == null)
+                coll.Add("currencyPair", "all");
+            else
+                coll.Add("currencyPair", ticker.MarketName);
             coll.Add("start", ToUnixTimestamp(DateTime.Now.AddYears(-1)).ToString());
             coll.Add("end", ToUnixTimestamp(DateTime.Now).ToString());
 
             WebClient client = GetWebClient();
             client.Headers.Clear();
-            client.Headers.Add("Sign", GetSign(ToQueryString(coll)));
-            client.Headers.Add("Key", ApiKey);
+            client.Headers.Add("Sign", account.GetSign(ToQueryString(coll)));
+            client.Headers.Add("Key", account.ApiKey);
             try {
                 byte[] data = client.UploadValues(address, coll);
-                return OnUpdateMyTrades(ticker, data);
+                return OnUpdateAccountTrades(account, ticker, data);
             }
             catch(Exception e) {
                 Debug.WriteLine("get my trade history exception: " + e.ToString());
                 return false;
             }
         }
-        bool OnUpdateMyTrades(Ticker ticker, byte[] data) {
+
+        string[] accountTradeItems;
+        protected string[] AccountTradeItems {
+            get {
+                if(accountTradeItems == null)
+                    accountTradeItems = new string[] { "globalTradeID", "tradeID", "date", "rate", "amount", "total", "fee", "orderNumber", "type", "category" };
+                return accountTradeItems;
+            }
+        }
+
+        bool OnUpdateAccountTrades(AccountInfo account, Ticker ticker, byte[] data) {
             if(data == null)
                 return false;
+
+            List<TradeInfoItem> myTrades = ticker != null ? ticker.MyTradeHistory : account.MyTrades;
             if(data.Length == 2) {
-                ticker.MyTradeHistory.Clear();
+                myTrades.Clear();
                 return true;
             }
 
-            string lastGotTradeId = ticker.MyTradeHistory.Count > 0 ? ticker.MyTradeHistory.First().IdString : null;
+            string lastGotTradeId = null;
+            if(ticker != null)
+                lastGotTradeId = ticker.MyTradeHistory.Count > 0 ? ticker.MyTradeHistory.First().IdString : null;
+            else
+                lastGotTradeId = account.MyTrades.Count > 0 ? account.MyTrades.First().IdString : null;
 
             int startIndex = 0;
-            List<string[]> trades = JSonHelper.Default.DeserializeArrayOfObjects(data, ref startIndex,
-                new string[] { "globalTradeID", "tradeID", "date", "rate", "amount", "total", "fee", "orderNumber", "type", "category" },
-                (itemIndex, paramIndex, value) => { return paramIndex != 1 || value != lastGotTradeId; });
+            if(ticker == null) {
+                myTrades.Clear();
+                var tickers = JSonHelper.Default.DeserializeInfiniteObjectWithArrayProperty(data, ref startIndex, AccountTradeItems);
+                foreach(var t in tickers) {
+                    Ticker tc = Tickers.FirstOrDefault(tt => tt.CurrencyPair == t.Property);
+                    foreach(string[] item in t.Items) {
+                        myTrades.Add(CreateTradeInfo(account, tc, item));
+                    }
+                }
+            }
+            else {
+                List<string[]> trades = JSonHelper.Default.DeserializeArrayOfObjects(data, ref startIndex, AccountTradeItems,
+                    (itemIndex, paramIndex, value) => { return paramIndex != 1 || value != lastGotTradeId; });
 
-            int index = 0;
-            foreach(string[] obj in trades) {
-                TradeHistoryItem item = new TradeHistoryItem();
-                item.IdString = obj[1];
-                item.TimeString = obj[2];
-
-                bool isBuy = obj[8].Length == 3;
-                item.AmountString = obj[4];
-                item.Type = isBuy ? TradeType.Buy : TradeType.Sell;
-                item.RateString = obj[3];
-                double price = item.Rate;
-                double amount = item.Amount;
-                item.Total = price * amount;
-                ticker.MyTradeHistory.Insert(index, item);
-                index++;
+                int index = 0;
+                foreach(string[] obj in trades) {
+                    myTrades.Insert(index, CreateTradeInfo(account, ticker, obj));
+                    index++;
+                }
             }
             return true;
+        }
+        protected TradeInfoItem CreateTradeInfo(AccountInfo account, Ticker ticker, string[] obj) {
+            TradeInfoItem item = new TradeInfoItem(account, ticker);
+            item.IdString = obj[1];
+            item.TimeString = obj[2];
+            item.GlobalId = obj[0];
+            item.OrderNumber = obj[7];
+
+            bool isBuy = obj[8].Length == 3;
+            item.AmountString = obj[4];
+            item.Type = isBuy ? TradeType.Buy : TradeType.Sell;
+            item.RateString = obj[3];
+            item.Total = FastValueConverter.Convert(obj[5]);
+            item.Fee = FastValueConverter.Convert(obj[6]);
+            return item;
         }
         public string ToQueryString(NameValueCollection nvc) {
             StringBuilder sb = new StringBuilder();
@@ -635,7 +698,7 @@ namespace CryptoMarketClient {
 
             return sb.ToString();
         }
-        public override bool UpdateBalances() {
+        public override bool UpdateBalances(AccountInfo account) {
             string address = string.Format("https://poloniex.com/tradingApi");
 
             NameValueCollection coll = new NameValueCollection();
@@ -644,16 +707,16 @@ namespace CryptoMarketClient {
 
             WebClient client = GetWebClient();
             client.Headers.Clear();
-            client.Headers.Add("Sign", GetSign(ToQueryString(coll)));
-            client.Headers.Add("Key", ApiKey);
+            client.Headers.Add("Sign", account.GetSign(ToQueryString(coll)));
+            client.Headers.Add("Key", account.ApiKey);
             try {
-                return OnGetBalances(client.UploadValues(address, coll));
+                return OnGetBalances(account, client.UploadValues(address, coll));
             }
             catch(Exception) {
                 return false;
             }
         }
-        public Task<byte[]> GetBalancesAsync() {
+        public Task<byte[]> GetBalancesAsync(AccountInfo account) {
             string address = string.Format("https://poloniex.com/tradingApi");
 
             NameValueCollection coll = new NameValueCollection();
@@ -662,44 +725,44 @@ namespace CryptoMarketClient {
 
             WebClient client = GetWebClient();
             client.Headers.Clear();
-            client.Headers.Add("Sign", GetSign(ToQueryString(coll)));
-            client.Headers.Add("Key", ApiKey);
+            client.Headers.Add("Sign", account.GetSign(ToQueryString(coll)));
+            client.Headers.Add("Key", account.ApiKey);
             return client.UploadValuesTaskAsync(address, coll);
         }
-        public bool OnGetBalances(byte[] data) {
+        public bool OnGetBalances(AccountInfo account, byte[] data) {
             string text = System.Text.Encoding.ASCII.GetString(data);
             if(string.IsNullOrEmpty(text))
                 return false;
             JObject res = JsonConvert.DeserializeObject<JObject>(text);
-            lock(Balances) {
+            lock(account.Balances) {
                 foreach(JProperty prop in res.Children()) {
                     if(prop.Name == "error") {
                         Debug.WriteLine("OnGetBalances fails: " + prop.Value<string>());
                         return false;
                     }
                     JObject obj = (JObject)prop.Value;
-                    PoloniexAccountBalanceInfo info = (PoloniexAccountBalanceInfo)Balances.FirstOrDefault(b => b.Currency == prop.Name);
-                    if(info == null) {
-                        info = new PoloniexAccountBalanceInfo();
-                        info.Currency = prop.Name;
-                        Balances.Add(info);
+                    PoloniexAccountBalanceInfo binfo = (PoloniexAccountBalanceInfo)account.Balances.FirstOrDefault(b => b.Currency == prop.Name);
+                    if(binfo == null) {
+                        binfo = new PoloniexAccountBalanceInfo(account);
+                        binfo.Currency = prop.Name;
+                        account.Balances.Add(binfo);
                     }
-                    info.Currency = prop.Name;
-                    info.LastAvailable = info.Available;
-                    info.Available = obj.Value<double>("available");
-                    info.OnOrders = obj.Value<double>("onOrders");
-                    info.BtcValue = obj.Value<double>("btcValue");
+                    binfo.Currency = prop.Name;
+                    binfo.LastAvailable = binfo.Available;
+                    binfo.Available = obj.Value<double>("available");
+                    binfo.OnOrders = obj.Value<double>("onOrders");
+                    binfo.BtcValue = obj.Value<double>("btcValue");
                 }
             }
             return true;
         }
 
-        public override bool GetDeposites() {
-            Task<byte[]> task = GetDepositesAsync();
+        public override bool GetDeposites(AccountInfo account) {
+            Task<byte[]> task = GetDepositesAsync(account);
             task.Wait();
-            return OnGetDeposites(task.Result);
+            return OnGetDeposites(account, task.Result);
         }
-        public Task<byte[]> GetDepositesAsync() {
+        public Task<byte[]> GetDepositesAsync(AccountInfo account) {
             string address = string.Format("https://poloniex.com/tradingApi");
 
             NameValueCollection coll = new NameValueCollection();
@@ -708,8 +771,8 @@ namespace CryptoMarketClient {
 
             WebClient client = GetWebClient();
             client.Headers.Clear();
-            client.Headers.Add("Sign", GetSign(ToQueryString(coll)));
-            client.Headers.Add("Key", ApiKey);
+            client.Headers.Add("Sign", account.GetSign(ToQueryString(coll)));
+            client.Headers.Add("Key", account.ApiKey);
             try {
                 return client.UploadValuesTaskAsync(address, coll);
             }
@@ -718,18 +781,18 @@ namespace CryptoMarketClient {
                 return null;
             }
         }
-        public bool OnGetDeposites(byte[] data) {
+        public bool OnGetDeposites(AccountInfo account, byte[] data) {
             string text = System.Text.Encoding.ASCII.GetString(data);
             if(string.IsNullOrEmpty(text) || text == "[]")
                 return false;
             JObject res = JsonConvert.DeserializeObject<JObject>(text);
-            lock(Balances) {
+            lock(account.Balances) {
                 foreach(JProperty prop in res.Children()) {
                     if(prop.Name == "error") {
                         Debug.WriteLine("OnGetDeposites fails: " + prop.Value<string>());
                         return false;
                     }
-                    PoloniexAccountBalanceInfo info = (PoloniexAccountBalanceInfo)Balances.FirstOrDefault((a) => a.Currency == prop.Name);
+                    PoloniexAccountBalanceInfo info = (PoloniexAccountBalanceInfo)account.Balances.FirstOrDefault((a) => a.Currency == prop.Name);
                     if(info == null)
                         continue;
                     info.DepositAddress = (string)prop.Value;
@@ -740,18 +803,18 @@ namespace CryptoMarketClient {
         string GetNonce() {
             return ((long)((DateTime.UtcNow - new DateTime(1, 1, 1)).TotalMilliseconds * 10000)).ToString();
         }
-        public override bool UpdateOpenedOrders(Ticker ticker) {
+        public override bool UpdateOpenedOrders(AccountInfo account, Ticker ticker) {
             string address = string.Format("https://poloniex.com/tradingApi");
 
             NameValueCollection coll = new NameValueCollection();
             coll.Add("nonce", GetNonce());
             coll.Add("command", "returnOpenOrders");
-            coll.Add("currencyPair", ticker == null? "all": ticker.MarketName);
+            coll.Add("currencyPair", ticker == null ? "all" : ticker.MarketName);
 
             WebClient client = GetWebClient();
             client.Headers.Clear();
-            client.Headers.Add("Sign", GetSign(ToQueryString(coll)));
-            client.Headers.Add("Key", ApiKey);
+            client.Headers.Add("Sign", account.GetSign(ToQueryString(coll)));
+            client.Headers.Add("Key", account.ApiKey);
             try {
                 byte[] data = client.UploadValues(address, coll);
                 if(ticker != null) {
@@ -762,14 +825,14 @@ namespace CryptoMarketClient {
                     if(IsOpenedOrdersChanged(data))
                         return true;
                 }
-                return OnGetOpenedOrders(ticker, data);
+                return OnGetOpenedOrders(account, ticker, data);
             }
             catch(Exception e) {
                 Telemetry.Default.TrackException(e);
                 return false;
             }
         }
-        public Task<byte[]> GetOpenedOrders() {
+        public Task<byte[]> GetOpenedOrders(AccountInfo account) {
             string address = string.Format("https://poloniex.com/tradingApi");
 
             NameValueCollection coll = new NameValueCollection();
@@ -779,79 +842,94 @@ namespace CryptoMarketClient {
 
             WebClient client = GetWebClient();
             client.Headers.Clear();
-            client.Headers.Add("Sign", GetSign(ToQueryString(coll)));
-            client.Headers.Add("Key", ApiKey);
+            client.Headers.Add("Sign", account.GetSign(ToQueryString(coll)));
+            client.Headers.Add("Key", account.ApiKey);
             return client.UploadValuesTaskAsync(address, coll);
         }
 
-        public bool OnGetOpenedOrders(Ticker ticker, byte[] data) {
-            string text = System.Text.Encoding.ASCII.GetString(data);
-            if(string.IsNullOrEmpty(text))
-                return false;
-            if(text == "[]") {
-                if(ticker != null)
-                    ticker.OpenedOrders.Clear();
-                else
-                    OpenedOrders.Clear();
+        public bool OnGetOpenedOrders(AccountInfo account, Ticker ticker, byte[] data) {
+            List<OpenedOrderInfo> openedOrders = ticker == null ? account.OpenedOrders : ticker.OpenedOrders;
+            if(data.Length == 2) {
+                lock(openedOrders) {
+                    openedOrders.Clear();
+                }
                 return true;
             }
-            JObject res = JsonConvert.DeserializeObject<JObject>(text);
-            List<OpenedOrderInfo> openedOrders = ticker == null ? OpenedOrders : ticker.OpenedOrders;
-            lock(openedOrders) {
-                openedOrders.Clear();
-                foreach(JProperty prop in res.Children()) {
-                    if(prop.Name == "error") {
-                        Telemetry.Default.TrackEvent("poloniex.ongetopenedorders", new string[] { "error", prop.Value<string>() }, true);
-                        Debug.WriteLine("OnGetOpenedOrders fails: " + prop.Value<string>());
-                        return false;
-                    }
-                    JArray array = (JArray)prop.Value;
-                    foreach(JObject obj in array) {
-                        OpenedOrderInfo info = new OpenedOrderInfo();
-                        info.Market = prop.Name;
-                        info.OrderNumber = obj.Value<int>("orderNumber");
-                        info.Type = obj.Value<string>("type") == "sell" ? OrderType.Sell : OrderType.Buy;
-                        info.ValueString = obj.Value<string>("rate");
-                        info.AmountString = obj.Value<string>("amount");
-                        info.TotalString = obj.Value<string>("total");
-                        openedOrders.Add(info);
-                    }
-                }
-            }
-            if(ticker != null)
-                ticker.RaiseOpenedOrdersChanged();
-            return true;
-        }
-
-        public bool OnGetOpenedOrders(byte[] data) {
             string text = System.Text.Encoding.ASCII.GetString(data);
             if(string.IsNullOrEmpty(text))
                 return false;
-            JObject res = JsonConvert.DeserializeObject<JObject>(text);
-            lock(OpenedOrders) {
-                OpenedOrders.Clear();
-                foreach(JProperty prop in res.Children()) {
-                    if(prop.Name == "error") {
-                        Debug.WriteLine("OnGetOpenedOrders fails: " + prop.Value<string>());
-                        return false;
+
+            lock(openedOrders) {
+                openedOrders.Clear();
+                if(ticker == null) {
+                    JObject res = JsonConvert.DeserializeObject<JObject>(text);
+                    foreach(JProperty prop in res.Children()) {
+                        if(prop.Name == "error") {
+                            Telemetry.Default.TrackEvent("poloniex.ongetopenedorders", new string[] { "error", prop.Value<string>() }, true);
+                            Debug.WriteLine("OnGetOpenedOrders fails: " + prop.Value<string>());
+                            return false;
+                        }
+                        ticker = Tickers.FirstOrDefault(tt => tt.CurrencyPair == prop.Name);
+                        JArray array = (JArray)prop.Value;
+                        foreach(JObject obj in array) {
+                            OpenedOrderInfo info = CreateOrderInfo(account, ticker, obj);
+                            openedOrders.Add(info);
+                        }
                     }
-                    JArray array = (JArray)prop.Value;
+                }
+                else {
+                    JArray array = JsonConvert.DeserializeObject<JArray>(text);
                     foreach(JObject obj in array) {
-                        OpenedOrderInfo info = new OpenedOrderInfo();
-                        info.Market = prop.Name;
-                        info.OrderNumber = obj.Value<int>("orderNumber");
-                        info.Type = obj.Value<string>("type") == "sell" ? OrderType.Sell : OrderType.Buy;
-                        info.ValueString = obj.Value<string>("rate");
-                        info.AmountString = obj.Value<string>("amount");
-                        info.TotalString = obj.Value<string>("total");
-                        OpenedOrders.Add(info);
+                        OpenedOrderInfo info = CreateOrderInfo(account, ticker, obj);
+                        openedOrders.Add(info);
                     }
+                    if(ticker != null)
+                        ticker.RaiseOpenedOrdersChanged();
                 }
             }
             return true;
         }
 
-        public bool BuyLimit(PoloniexTicker ticker, double rate, double amount) {
+        protected OpenedOrderInfo CreateOrderInfo(AccountInfo account, Ticker ticker, JObject obj) {
+            OpenedOrderInfo info = new OpenedOrderInfo(account, ticker);
+            info.OrderId = obj.Value<string>("orderNumber");
+            info.DateString = obj.Value<string>("date");
+            info.Type = obj.Value<string>("type").Length == 4 ? OrderType.Sell : OrderType.Buy;
+            info.ValueString = obj.Value<string>("rate");
+            info.AmountString = obj.Value<string>("amount");
+            info.TotalString = obj.Value<string>("total");
+            return info;
+        }
+
+        //public bool OnGetOpenedOrders(AccountInfo account, Ticker ticker, byte[] data) {
+        //    string text = System.Text.Encoding.ASCII.GetString(data);
+        //    if(string.IsNullOrEmpty(text))
+        //        return false;
+        //    JObject res = JsonConvert.DeserializeObject<JObject>(text);
+        //    lock(account.OpenedOrders) {
+        //        account.OpenedOrders.Clear();
+        //        foreach(JProperty prop in res.Children()) {
+        //            if(prop.Name == "error") {
+        //                Debug.WriteLine("OnGetOpenedOrders fails: " + prop.Value<string>());
+        //                return false;
+        //            }
+        //            JArray array = (JArray)prop.Value;
+        //            foreach(JObject obj in array) {
+        //                OpenedOrderInfo info = new OpenedOrderInfo(account, ticker);
+        //                info.Market = prop.Name;
+        //                info.OrderId = obj.Value<string>("orderNumber");
+        //                info.Type = obj.Value<string>("type") == "sell" ? OrderType.Sell : OrderType.Buy;
+        //                info.ValueString = obj.Value<string>("rate");
+        //                info.AmountString = obj.Value<string>("amount");
+        //                info.TotalString = obj.Value<string>("total");
+        //                account.OpenedOrders.Add(info);
+        //            }
+        //        }
+        //    }
+        //    return true;
+        //}
+
+        public override TradingResult Buy(AccountInfo account, Ticker ticker, double rate, double amount) {
             string address = string.Format("https://poloniex.com/tradingApi");
 
             NameValueCollection coll = new NameValueCollection();
@@ -863,19 +941,19 @@ namespace CryptoMarketClient {
 
             WebClient client = GetWebClient();
             client.Headers.Clear();
-            client.Headers.Add("Sign", GetSign(ToQueryString(coll)));
-            client.Headers.Add("Key", ApiKey);
+            client.Headers.Add("Sign", account.GetSign(ToQueryString(coll)));
+            client.Headers.Add("Key", account.ApiKey);
             try {
                 byte[] data = client.UploadValues(address, coll);
-                return OnBuyLimit(ticker, data);
+                return OnBuy(account, ticker, data);
             }
             catch(Exception e) {
                 Debug.WriteLine(e.ToString());
-                return false;
+                return null;
             }
         }
 
-        public long SellLimit(PoloniexTicker ticker, double rate, double amount) {
+        public override TradingResult Sell(AccountInfo account, Ticker ticker, double rate, double amount) {
             string address = string.Format("https://poloniex.com/tradingApi");
 
             NameValueCollection coll = new NameValueCollection();
@@ -887,44 +965,45 @@ namespace CryptoMarketClient {
 
             WebClient client = GetWebClient();
             client.Headers.Clear();
-            client.Headers.Add("Sign", GetSign(ToQueryString(coll)));
-            client.Headers.Add("Key", ApiKey);
+            client.Headers.Add("Sign", account.GetSign(ToQueryString(coll)));
+            client.Headers.Add("Key", account.ApiKey);
             try {
                 byte[] data = client.UploadValues(address, coll);
-                return OnSellLimit(data);
+                return OnSell(account, ticker, data);
             }
             catch(Exception e) {
                 Debug.WriteLine(e.ToString());
-                return -1;
+                return null;
             }
             
         }
 
-        public bool OnBuyLimit(Ticker ticker, byte[] data) {
+        public TradingResult OnBuy(AccountInfo account, Ticker ticker, byte[] data) {
             string text = System.Text.Encoding.ASCII.GetString(data);
             if(string.IsNullOrEmpty(text))
-                return false;
+                return null;
             JObject res = JsonConvert.DeserializeObject<JObject>(text);
             TradingResult tr = new TradingResult();
             tr.OrderNumber = res.Value<long>("orderNumber");
             tr.Type = OrderType.Buy;
             JArray array = res.Value<JArray>("resultingTrades");
+            string tradeId = string.Empty;
             foreach(JObject trade in array) {
                 TradeEntry e = new TradeEntry();
                 e.Amount = trade.Value<double>("amount");
                 e.Date = trade.Value<DateTime>("date");
                 e.Rate = trade.Value<double>("rate");
                 e.Total = trade.Value<double>("total");
-                e.Id = trade.Value<long>("tradeID");
+                e.Id = trade.Value<string>("tradeID");
                 e.Type = trade.Value<string>("type").Length == 3 ? OrderType.Buy : OrderType.Sell;
                 tr.Trades.Add(e);
             }
             tr.Calculate();
             ticker.Trades.Add(tr);
-            return true;
+            return tr;
         }
 
-        public string OnCreateDeposit(string currency, byte[] data) {
+        public string OnCreateDeposit(AccountInfo account, string currency, byte[] data) {
             string text = System.Text.Encoding.ASCII.GetString(data);
             if(string.IsNullOrEmpty(text))
                 return null;
@@ -932,31 +1011,33 @@ namespace CryptoMarketClient {
             if(res.Value<int>("success") != 1)
                 return null;
             string deposit = res.Value<string>("response");
-            PoloniexAccountBalanceInfo info = (PoloniexAccountBalanceInfo)Balances.FirstOrDefault(b => b.Currency == currency);
+            PoloniexAccountBalanceInfo info = (PoloniexAccountBalanceInfo)account.Balances.FirstOrDefault(b => b.Currency == currency);
             info.DepositAddress = deposit;
             return deposit;
         }
 
-        public long OnSellLimit(byte[] data) {
+        public TradingResult OnSell(AccountInfo account, Ticker ticker, byte[] data) {
             string text = System.Text.Encoding.ASCII.GetString(data);
             if(string.IsNullOrEmpty(text))
-                return -1;
+                return null;
             JObject res = JsonConvert.DeserializeObject<JObject>(text);
-            return res.Value<long>("orderNumber");
+            TradingResult t = new TradingResult();
+            t.Trades.Add(new TradeEntry() { Id = res.Value<string>("orderNumber") });
+            return t;
         }
 
-        public override bool CancelOrder(Ticker ticker, OpenedOrderInfo info) {
+        public override bool Cancel(AccountInfo account, string orderId) {
             string address = string.Format("https://poloniex.com/tradingApi");
 
             NameValueCollection coll = new NameValueCollection();
             coll.Add("command", "cancelOrder");
             coll.Add("nonce", GetNonce());
-            coll.Add("orderNumber", info.OrderNumber.ToString());
+            coll.Add("orderNumber", orderId);
 
             WebClient client = GetWebClient();
             client.Headers.Clear();
-            client.Headers.Add("Sign", GetSign(ToQueryString(coll)));
-            client.Headers.Add("Key", ApiKey);
+            client.Headers.Add("Sign", account.GetSign(ToQueryString(coll)));
+            client.Headers.Add("Key", account.ApiKey);
             try {
                 return OnCancel(client.UploadValues(address, coll));
             }
@@ -965,18 +1046,18 @@ namespace CryptoMarketClient {
             }
         }
 
-        public Task<byte[]> CancelOrder(ulong orderId) {
+        public Task<byte[]> CancelOrder(AccountInfo account, string orderId) {
             string address = string.Format("https://poloniex.com/tradingApi");
 
             NameValueCollection coll = new NameValueCollection();
             coll.Add("command", "cancelOrder");
             coll.Add("nonce", GetNonce());
-            coll.Add("orderNumber", orderId.ToString());
+            coll.Add("orderNumber", orderId);
 
             WebClient client = GetWebClient();
             client.Headers.Clear();
-            client.Headers.Add("Sign", GetSign(ToQueryString(coll)));
-            client.Headers.Add("Key", ApiKey);
+            client.Headers.Add("Sign", account.GetSign(ToQueryString(coll)));
+            client.Headers.Add("Key", account.ApiKey);
             return client.UploadValuesTaskAsync(address, coll);
         }
 
@@ -988,7 +1069,7 @@ namespace CryptoMarketClient {
             return res.Value<int>("success") == 1;
         }
 
-        public Task<byte[]> WithdrawAsync(string currency, double amount, string addr, string paymentId) {
+        public Task<byte[]> WithdrawAsync(AccountInfo account, string currency, double amount, string addr, string paymentId) {
             string address = string.Format("https://poloniex.com/tradingApi");
 
             NameValueCollection coll = new NameValueCollection();
@@ -1002,12 +1083,12 @@ namespace CryptoMarketClient {
 
             WebClient client = GetWebClient();
             client.Headers.Clear();
-            client.Headers.Add("Sign", GetSign(ToQueryString(coll)));
-            client.Headers.Add("Key", ApiKey);
+            client.Headers.Add("Sign", account.GetSign(ToQueryString(coll)));
+            client.Headers.Add("Key", account.ApiKey);
             return client.UploadValuesTaskAsync(address, coll);
         }
 
-        public bool Withdraw(string currency, double amount, string addr, string paymentId) {
+        public override bool Withdraw(AccountInfo account, string currency, string addr, string paymentId, double amount) {
             string address = string.Format("https://poloniex.com/tradingApi");
 
             NameValueCollection coll = new NameValueCollection();
@@ -1021,8 +1102,8 @@ namespace CryptoMarketClient {
 
             WebClient client = GetWebClient();
             client.Headers.Clear();
-            client.Headers.Add("Sign", GetSign(ToQueryString(coll)));
-            client.Headers.Add("Key", ApiKey);
+            client.Headers.Add("Sign", account.GetSign(ToQueryString(coll)));
+            client.Headers.Add("Key", account.ApiKey);
             try {
                 byte[] data = client.UploadValues(address, coll);
                 return OnWithdraw(data);
@@ -1039,10 +1120,10 @@ namespace CryptoMarketClient {
             JObject res = JsonConvert.DeserializeObject<JObject>(text);
             return !string.IsNullOrEmpty(res.Value<string>("responce"));
         }
-        public bool GetBalance(string str) {
-            return UpdateBalances();
+        public override bool GetBalance(AccountInfo info, string str) {
+            return UpdateDefaultAccountBalances();
         }
-        public string CreateDeposit(string currency) {
+        public override string CreateDeposit(AccountInfo account, string currency) {
             string address = string.Format("https://poloniex.com/tradingApi");
 
             NameValueCollection coll = new NameValueCollection();
@@ -1052,11 +1133,11 @@ namespace CryptoMarketClient {
 
             WebClient client = GetWebClient();
             client.Headers.Clear();
-            client.Headers.Add("Sign", GetSign(ToQueryString(coll)));
-            client.Headers.Add("Key", ApiKey);
+            client.Headers.Add("Sign", account.GetSign(ToQueryString(coll)));
+            client.Headers.Add("Key", account.ApiKey);
             try {
                 byte[] data = client.UploadValues(address, coll);
-                return OnCreateDeposit(currency, data);
+                return OnCreateDeposit(account, currency, data);
             }
             catch(Exception e) {
                 Debug.WriteLine(e.ToString());

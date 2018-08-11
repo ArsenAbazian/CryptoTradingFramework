@@ -34,7 +34,7 @@ namespace CryptoMarketClient.Strategies {
             return amount.ToString("0.########") + " by " + rate.ToString("0.########");
         }
         protected virtual bool Buy(double rate, double amount) {
-            if(!DemoMode && !Ticker.Buy(rate, amount)) {
+            if(!DemoMode && Ticker.Buy(rate, amount) == null) {
                 Log(LogType.Error, "Buy " + GetRateAmountString(rate, amount) + " failed.");
                 return false;
             }
@@ -42,7 +42,7 @@ namespace CryptoMarketClient.Strategies {
             return true;
         }
         protected virtual bool Sell(double rate, double amount) {
-            if(!DemoMode && !Ticker.Sell(rate, amount)) {
+            if(!DemoMode && Ticker.Sell(rate, amount) == null) {
                 Log(LogType.Error, "Sell " + GetRateAmountString(rate, amount) + " failed.");
                 return false;
             }
@@ -50,7 +50,7 @@ namespace CryptoMarketClient.Strategies {
             return true;
         }
         protected virtual bool PlaceBid(double rate, double amount) {
-            if(!DemoMode && !Ticker.Buy(rate, amount)) {
+            if(!DemoMode && Ticker.Buy(rate, amount) == null) {
                 Log(LogType.Error, "Place Bid " + GetRateAmountString(rate, amount) + " failed.");
                 return false;
             }
@@ -58,7 +58,7 @@ namespace CryptoMarketClient.Strategies {
             return true;
         }
         protected virtual bool PlaceAsk(double rate, double amount) {
-            if(!DemoMode && !Ticker.Sell(rate, amount)) {
+            if(!DemoMode && Ticker.Sell(rate, amount) == null) {
                 Log(LogType.Error, "Place Ask " + GetRateAmountString(rate, amount) + " failed.");
                 return false;
             }

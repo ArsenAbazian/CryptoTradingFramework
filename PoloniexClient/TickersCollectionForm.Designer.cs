@@ -84,6 +84,7 @@
             this.biDisconnected = new DevExpress.XtraBars.BarStaticItem();
             this.biConnectionStatus = new DevExpress.XtraBars.BarStaticItem();
             this.biReconnect = new DevExpress.XtraBars.BarButtonItem();
+            this.biTradeHistory = new DevExpress.XtraBars.BarButtonItem();
             this.ribbonPage1 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPageGroup1 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.ribbonStatusBar1 = new DevExpress.XtraBars.Ribbon.RibbonStatusBar();
@@ -123,7 +124,7 @@
             this.gcLast.Name = "gcLast";
             this.gcLast.OptionsColumn.AllowEdit = false;
             this.gcLast.Visible = true;
-            this.gcLast.VisibleIndex = 6;
+            this.gcLast.VisibleIndex = 2;
             this.gcLast.Width = 86;
             // 
             // teValueWithChange
@@ -146,7 +147,7 @@
             this.gcHighestBid.Name = "gcHighestBid";
             this.gcHighestBid.OptionsColumn.AllowEdit = false;
             this.gcHighestBid.Visible = true;
-            this.gcHighestBid.VisibleIndex = 4;
+            this.gcHighestBid.VisibleIndex = 3;
             this.gcHighestBid.Width = 86;
             // 
             // gcDeltaAsk
@@ -163,7 +164,7 @@
             this.gcLowestAsk.Name = "gcLowestAsk";
             this.gcLowestAsk.OptionsColumn.AllowEdit = false;
             this.gcLowestAsk.Visible = true;
-            this.gcLowestAsk.VisibleIndex = 5;
+            this.gcLowestAsk.VisibleIndex = 4;
             this.gcLowestAsk.Width = 86;
             // 
             // colIsActual
@@ -180,7 +181,7 @@
             this.gcSecond.Name = "gcSecond";
             this.gcSecond.OptionsColumn.AllowEdit = false;
             this.gcSecond.Visible = true;
-            this.gcSecond.VisibleIndex = 2;
+            this.gcSecond.VisibleIndex = 1;
             this.gcSecond.Width = 86;
             // 
             // repositoryItemTextEdit1
@@ -362,8 +363,6 @@
             this.gcLogo.Caption = "Logo";
             this.gcLogo.FieldName = "Logo";
             this.gcLogo.Name = "gcLogo";
-            this.gcLogo.Visible = true;
-            this.gcLogo.VisibleIndex = 1;
             // 
             // gcCurrencyPair
             // 
@@ -371,8 +370,6 @@
             this.gcCurrencyPair.FieldName = "CurrencyPair";
             this.gcCurrencyPair.Name = "gcCurrencyPair";
             this.gcCurrencyPair.OptionsColumn.AllowEdit = false;
-            this.gcCurrencyPair.Visible = true;
-            this.gcCurrencyPair.VisibleIndex = 3;
             this.gcCurrencyPair.Width = 86;
             // 
             // gcBaseVolume
@@ -382,7 +379,7 @@
             this.gcBaseVolume.Name = "gcBaseVolume";
             this.gcBaseVolume.OptionsColumn.AllowEdit = false;
             this.gcBaseVolume.Visible = true;
-            this.gcBaseVolume.VisibleIndex = 7;
+            this.gcBaseVolume.VisibleIndex = 5;
             this.gcBaseVolume.Width = 86;
             // 
             // gcQuoteVolume
@@ -392,7 +389,7 @@
             this.gcQuoteVolume.Name = "gcQuoteVolume";
             this.gcQuoteVolume.OptionsColumn.AllowEdit = false;
             this.gcQuoteVolume.Visible = true;
-            this.gcQuoteVolume.VisibleIndex = 10;
+            this.gcQuoteVolume.VisibleIndex = 8;
             this.gcQuoteVolume.Width = 81;
             // 
             // gcIsFrozen
@@ -408,7 +405,7 @@
             this.gcHr24High.Name = "gcHr24High";
             this.gcHr24High.OptionsColumn.AllowEdit = false;
             this.gcHr24High.Visible = true;
-            this.gcHr24High.VisibleIndex = 8;
+            this.gcHr24High.VisibleIndex = 6;
             this.gcHr24High.Width = 86;
             // 
             // gcHr24Low
@@ -418,7 +415,7 @@
             this.gcHr24Low.Name = "gcHr24Low";
             this.gcHr24Low.OptionsColumn.AllowEdit = false;
             this.gcHr24Low.Visible = true;
-            this.gcHr24Low.VisibleIndex = 9;
+            this.gcHr24Low.VisibleIndex = 7;
             this.gcHr24Low.Width = 86;
             // 
             // gcTime
@@ -456,7 +453,6 @@
             // 
             // ribbonControl1
             // 
-            this.ribbonControl1.AllowGlyphSkinning = true;
             this.ribbonControl1.ExpandCollapseItem.Id = 0;
             this.ribbonControl1.Images = this.svgImageCollection1;
             this.ribbonControl1.Items.AddRange(new DevExpress.XtraBars.BarItem[] {
@@ -473,10 +469,11 @@
             this.biConnected,
             this.biDisconnected,
             this.biConnectionStatus,
-            this.biReconnect});
+            this.biReconnect,
+            this.biTradeHistory});
             this.ribbonControl1.Location = new System.Drawing.Point(0, 0);
             this.ribbonControl1.Margin = new System.Windows.Forms.Padding(24, 23, 24, 23);
-            this.ribbonControl1.MaxItemId = 25;
+            this.ribbonControl1.MaxItemId = 26;
             this.ribbonControl1.Name = "ribbonControl1";
             this.ribbonControl1.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
             this.ribbonPage1});
@@ -509,6 +506,7 @@
             this.ShowDetailsForSelectedItem.Id = 3;
             this.ShowDetailsForSelectedItem.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("ShowDetailsForSelectedItem.ImageOptions.Image")));
             this.ShowDetailsForSelectedItem.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("ShowDetailsForSelectedItem.ImageOptions.LargeImage")));
+            this.ShowDetailsForSelectedItem.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("ShowDetailsForSelectedItem.ImageOptions.SvgImage")));
             this.ShowDetailsForSelectedItem.Name = "ShowDetailsForSelectedItem";
             this.ShowDetailsForSelectedItem.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItem1_ItemClick);
             // 
@@ -518,6 +516,7 @@
             this.bbShowBalances.Id = 7;
             this.bbShowBalances.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("bbShowBalances.ImageOptions.Image")));
             this.bbShowBalances.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("bbShowBalances.ImageOptions.LargeImage")));
+            this.bbShowBalances.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("bbShowBalances.ImageOptions.SvgImage")));
             this.bbShowBalances.Name = "bbShowBalances";
             this.bbShowBalances.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bbShowBalances_ItemClick);
             // 
@@ -527,6 +526,7 @@
             this.barButtonItem1.Id = 8;
             this.barButtonItem1.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("barButtonItem1.ImageOptions.Image")));
             this.barButtonItem1.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("barButtonItem1.ImageOptions.LargeImage")));
+            this.barButtonItem1.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("barButtonItem1.ImageOptions.SvgImage")));
             this.barButtonItem1.Name = "barButtonItem1";
             this.barButtonItem1.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItem1_ItemClick_1);
             // 
@@ -591,6 +591,14 @@
             this.biReconnect.Visibility = DevExpress.XtraBars.BarItemVisibility.Never;
             this.biReconnect.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.biReconnect_ItemClick);
             // 
+            // biTradeHistory
+            // 
+            this.biTradeHistory.Caption = "Trade History";
+            this.biTradeHistory.Id = 25;
+            this.biTradeHistory.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("biTradeHistory.ImageOptions.SvgImage")));
+            this.biTradeHistory.Name = "biTradeHistory";
+            this.biTradeHistory.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItem3_ItemClick);
+            // 
             // ribbonPage1
             // 
             this.ribbonPage1.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] {
@@ -603,6 +611,7 @@
             this.ribbonPageGroup1.ItemLinks.Add(this.ShowDetailsForSelectedItem);
             this.ribbonPageGroup1.ItemLinks.Add(this.bbShowBalances);
             this.ribbonPageGroup1.ItemLinks.Add(this.barButtonItem1);
+            this.ribbonPageGroup1.ItemLinks.Add(this.biTradeHistory);
             this.ribbonPageGroup1.Name = "ribbonPageGroup1";
             this.ribbonPageGroup1.Text = "Market";
             // 
@@ -628,6 +637,10 @@
             this.barManager1.DockControls.Add(this.standaloneBarDockControl1);
             this.barManager1.Form = this;
             this.barManager1.MaxItemId = 0;
+            this.barManager1.OptionsStubGlyphs.AllowStubGlyphs = DevExpress.Utils.DefaultBoolean.True;
+            this.barManager1.OptionsStubGlyphs.CaseMode = DevExpress.Utils.Drawing.GlyphTextCaseMode.UpperCase;
+            this.barManager1.OptionsStubGlyphs.CornerRadius = 3;
+            this.barManager1.OptionsStubGlyphs.LetterCount = DevExpress.Utils.Drawing.GlyphTextSymbolCount.Two;
             this.barManager1.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barManager1_ItemClick);
             this.barManager1.ItemDoubleClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barManager1_ItemDoubleClick);
             this.barManager1.ItemPress += new DevExpress.XtraBars.ItemClickEventHandler(this.barManager1_ItemPress);
@@ -789,5 +802,6 @@
         private DevExpress.XtraBars.BarStaticItem biConnectionStatus;
         private DevExpress.Utils.SvgImageCollection svgImageCollection1;
         private DevExpress.XtraBars.BarButtonItem biReconnect;
+        private DevExpress.XtraBars.BarButtonItem biTradeHistory;
     }
 }

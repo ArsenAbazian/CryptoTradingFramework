@@ -41,11 +41,26 @@ namespace CryptoMarketClient {
             BittrexExchange.Default.GetTickersInfo(); // for icons
             Exchange.BuildIconsDataBase(BittrexExchange.Default.Tickers.Select(t => new string[] { t.MarketCurrency, t.LogoUrl }), false);
             SplashScreenManager.CloseDefaultWaitForm();
+
+            //ExchangesForm.Show();
+            //ExchangesForm.Activate();
+        }
+
+        ExchangeCollectionForm exchangesForm;
+        public ExchangeCollectionForm ExchangesForm {
+            get {
+                if(exchangesForm == null || exchangesForm.IsDisposed) {
+                    exchangesForm = new ExchangeCollectionForm();
+                    exchangesForm.MdiParent = this;
+                }
+                return exchangesForm;
+            }
         }
 
         protected override void OnClosed(EventArgs e) {
             base.OnClosed(e);
             SettingsStore.Default.SelectedThemeName = UserLookAndFeel.Default.ActiveSkinName;
+            SettingsStore.Default.SelectedPaletteName = UserLookAndFeel.Default.ActiveSvgPaletteName;
             SettingsStore.Default.SaveToXml();
         }
 
@@ -107,23 +122,62 @@ namespace CryptoMarketClient {
         private void bcPoloniex_CheckedChanged(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
             if(this.bcPoloniex.Checked) {
                 PoloniexExchange.Default.IsConnected = true;
+                this.bcPoloniex.Caption = "Poloniex\n<color=lime>Connected</color>";
                 PoloniexTickersForm.Show();
             }
             else {
                 PoloniexExchange.Default.IsConnected = false;
+                this.bcPoloniex.Caption = "Poloniex";
                 PoloniexTickersForm.Hide();
             }
+            SettingsStore.Default.Poloniex = this.bcPoloniex.Checked;
+            SettingsStore.Default.SaveToXml();
         }
 
         private void bcBittrex_CheckedChanged(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
             if(this.bcBittrex.Checked) {
                 BittrexExchange.Default.IsConnected = true;
+                this.bcBittrex.Caption = "Bittrex\n<color=lime>Connected</color>";
                 BittrextMarketsForm.Show();
             }
             else {
                 BittrexExchange.Default.IsConnected = false;
+                this.bcBittrex.Caption = "Bittrex";
                 BittrextMarketsForm.Hide();
             }
+            SettingsStore.Default.Bittrex = this.bcBittrex.Checked;
+            SettingsStore.Default.SaveToXml();
+        }
+
+        private void bcBinance_CheckedChanged(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
+            if(this.bcBinance.Checked) {
+                BinanceExchange.Default.IsConnected = true;
+                this.bcBinance.Caption = "Binance\n<color=lime>Connected</color>";
+                BinanceTickersForm.Show();
+            }
+            else {
+                BinanceExchange.Default.IsConnected = false;
+                this.bcBinance.Caption = "Binance";
+                BinanceTickersForm.Hide();
+            }
+
+            SettingsStore.Default.Binance = this.bcBinance.Checked;
+            SettingsStore.Default.SaveToXml();
+        }
+
+        private void biBitFinex_CheckedChanged(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
+            if(this.biBitFinex.Checked) {
+                BitFinexExchange.Default.IsConnected = true;
+                this.biBitFinex.Caption = "BitFinex\n<color=lime>Connected</color>";
+                BitFinexTickersForm.Show();
+            }
+            else {
+                BitFinexExchange.Default.IsConnected = false;
+                this.biBitFinex.Caption = "BitFinex";
+                BitFinexTickersForm.Hide();
+            }
+            SettingsStore.Default.BitFinex = this.biBitFinex.Checked;
+            SettingsStore.Default.SaveToXml();
         }
 
         TickerArbitrageForm arbitrageForm;
@@ -151,14 +205,14 @@ namespace CryptoMarketClient {
         }
 
         private void btShowApiKeys_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
-            using(AccountInfoCollectionForm form = new AccountInfoCollectionForm()) {
+            using(AccountCollectionForm form = new AccountCollectionForm()) {
                 form.ShowDialog();
             }
         }
 
         private void bbShowYourTotalDeposit_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
-            DepositsTotal form = new DepositsTotal();
-            form.Show();
+            //DepositsTotal form = new DepositsTotal();
+            //form.Show();
         }
 
         private void bbShowHistory_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
@@ -312,17 +366,7 @@ namespace CryptoMarketClient {
                 return binanceTickersForm;
             }
         }
-        private void bcBinance_CheckedChanged(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
-            if(this.bcBinance.Checked) {
-                BinanceExchange.Default.IsConnected = true;
-                BinanceTickersForm.Show();
-            }
-            else {
-                BinanceExchange.Default.IsConnected = false;
-                BinanceTickersForm.Hide();
-            }
-        }
-
+        
         TickersCollectionForm bitFinexTickersForm;
         public TickersCollectionForm BitFinexTickersForm {
             get {
@@ -333,15 +377,31 @@ namespace CryptoMarketClient {
                 return bitFinexTickersForm;
             }
         }
-
-        private void biBitFinex_CheckedChanged(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
-            if(this.biBitFinex.Checked) {
-                BitFinexExchange.Default.IsConnected = true;
-                BitFinexTickersForm.Show();
+        
+        public void ShowExchange(Exchange exchange) {
+            switch(exchange.Type) {
+                case ExchangeType.Poloniex:
+                    PoloniexTickersForm.Show();
+                    PoloniexTickersForm.Activate();
+                    break;
+                case ExchangeType.Bittrex:
+                    BittrextMarketsForm.Show();
+                    BittrextMarketsForm.Activate();
+                    break;
+                case ExchangeType.Binance:
+                    BinanceTickersForm.Show();
+                    BinanceTickersForm.Activate();
+                    break;
+                case ExchangeType.BitFinex:
+                    BitFinexTickersForm.Show();
+                    BitFinexTickersForm.Activate();
+                    break;
             }
-            else {
-                BitFinexExchange.Default.IsConnected = false;
-                BitFinexTickersForm.Hide();
+        }
+
+        private void biCalculator_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
+            using(CalculatorForm form = new CalculatorForm()) {
+                form.ShowDialog();
             }
         }
     }

@@ -256,7 +256,7 @@ namespace CryptoMarketClient.Common {
         }
         protected bool UpdateAltBalance() {
             for(int i = 0; i < 3; i++) {
-                if(AltUsdt.UpdateBalance(CurrencyType.MarketCurrency)) {
+                if(AltUsdt.UpdateBalance(AltUsdt.MarketCurrency)) {
                     if(IsSelected) Debug.WriteLine("update alt balance succes. " + AltBalanceInfo.Available.ToString("0.########"));
                     return true;
                 }
@@ -269,7 +269,7 @@ namespace CryptoMarketClient.Common {
         }
         protected bool UpdateBaseBalance() {
             for(int i = 0; i < 3; i++) {
-                if(BaseUsdt.UpdateBalance(CurrencyType.MarketCurrency)) {
+                if(BaseUsdt.UpdateBalance(BaseUsdt.MarketCurrency)) {
                     if(IsSelected) Debug.WriteLine("update base balance succes. " + BaseBalanceInfo.Available.ToString("0.########"));
                     return true;
                 }
@@ -384,7 +384,7 @@ namespace CryptoMarketClient.Common {
         }
         protected bool UpdateUsdtBalance() {
             for(int i = 0; i < 3; i++) {
-                if(AltUsdt.UpdateBalance(CurrencyType.BaseCurrency)) {
+                if(AltUsdt.UpdateBalance(AltUsdt.BaseCurrency)) {
                     if(IsSelected) Debug.WriteLine("update usdt balance succes. " + UsdtBalanceInfo.Available.ToString("0.########"));
                     return true;
                 }
@@ -437,7 +437,7 @@ namespace CryptoMarketClient.Common {
             return Math.Min(allowedAmount, (BaseBalanceInfo.Available / AltBasePrice) * 0.9970);
         }
         protected bool BuyBaseByUsdt(double price, double amount) {
-            if(!BaseUsdt.Buy(price, amount)) {
+            if(BaseUsdt.Buy(price, amount) == null) {
                 LogManager.Default.AddError("usdt -> base fail. " + ToString());
                 Debug.WriteLine("usdt -> base fail.");
                 return false;
@@ -446,7 +446,7 @@ namespace CryptoMarketClient.Common {
             return true;
         }
         protected bool BuyAltByBase(double price, double amount) {
-            if(!AltBase.Buy(price, amount)) {
+            if(AltBase.Buy(price, amount) == null) {
                 LogManager.Default.AddError("base -> alt fail. " + ToString());
                 Debug.WriteLine("base -> alt fail.");
                 return false;
@@ -455,7 +455,7 @@ namespace CryptoMarketClient.Common {
             return true;
         }
         protected bool SellAltByUsdt(double price, double amount) {
-            if(!AltUsdt.Sell(price, amount)) {
+            if(AltUsdt.Sell(price, amount) == null) {
                 LogManager.Default.AddError("alt -> usdt fail. " + ToString());
                 Debug.WriteLine("alt -> usdt fail.");
                 return false;

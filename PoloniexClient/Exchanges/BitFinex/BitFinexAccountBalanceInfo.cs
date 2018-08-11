@@ -7,6 +7,6 @@ using System.Threading.Tasks;
 
 namespace CryptoMarketClient.BitFinex {
     public class BitFinexAccountBalanceInfo : BalanceBase {
-        public override string Exchange => "BitFinex";
+        public BitFinexAccountBalanceInfo(AccountInfo info) : base(info) { }
     }
 }

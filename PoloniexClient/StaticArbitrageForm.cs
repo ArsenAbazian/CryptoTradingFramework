@@ -27,22 +27,22 @@ namespace CryptoMarketClient {
         void UpdateBalances() {
             if(PoloniexExchange.Default.IsConnected) {
                 for(int i = 0; i < 3; i++)
-                    if(PoloniexExchange.Default.GetBalance("USDT"))
+                    if(PoloniexExchange.Default.GetBalance(PoloniexExchange.Default.DefaultAccount, "USDT"))
                         break;
             }
             if(BittrexExchange.Default.IsConnected)
                 for(int i = 0; i < 3; i++)
-                    if(BittrexExchange.Default.GetBalance("USDT"))
+                    if(BittrexExchange.Default.GetBalance(BittrexExchange.Default.DefaultAccount, "USDT"))
                         break;
             foreach(StaticArbitrageInfo info in Items) {
                 for(int i = 0; i < 3; i++) {
-                    if(info.AltBase.UpdateBalance(CurrencyType.MarketCurrency)) {
+                    if(info.AltBase.UpdateBalance(info.AltBase.MarketCurrency)) {
                         info.AltBalanceInfo = info.AltBase.MarketBalanceInfo;
                         break;
                     }
                 }
                 for(int i = 0; i < 3; i++) {
-                    if(info.BaseUsdt.UpdateBalance(CurrencyType.MarketCurrency)) {
+                    if(info.BaseUsdt.UpdateBalance(info.BaseUsdt.MarketCurrency)) {
                         info.BaseBalanceInfo = info.BaseUsdt.MarketBalanceInfo;
                         break;
                     }

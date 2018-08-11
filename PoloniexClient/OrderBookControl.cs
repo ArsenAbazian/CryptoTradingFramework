@@ -14,6 +14,7 @@ using DevExpress.XtraGrid;
 using DevExpress.XtraGrid.Views.Grid;
 using System.Collections;
 using DevExpress.Utils.DirectXPaint;
+using DevExpress.Utils;
 
 namespace CryptoMarketClient {
     public partial class OrderBookControl : XtraUserControl {
@@ -23,8 +24,8 @@ namespace CryptoMarketClient {
         public OrderBookControl() {
             InitializeComponent();
             this.askGridView.ViewCaptionHeight = 32;
-            //this.bidGridControl.DataSource = BidsSource;
-            //this.askGridControl.DataSource = AsksSource;
+            this.gcRate.AppearanceCell.ForeColor = Exchange.AskColor;
+            this.gcRate2.AppearanceCell.ForeColor = Exchange.BidColor;
         }
 
         protected int LastAskTopRowIndex { get; set; } = -1;
@@ -131,6 +132,32 @@ namespace CryptoMarketClient {
 
         private void askGridView_TopRowChanged(object sender, EventArgs e) {
             LastAskTopRowIndex = this.askGridView.TopRowIndex;
+        }
+
+        private void askGridView_CustomDrawCell(object sender, RowCellCustomDrawEventArgs e) {
+            if(e.Column == this.gcAmount) {
+                GridViewInfo gvi = (GridViewInfo)this.askGridView.GetViewInfo();
+                GridRowInfo gri = gvi.GetGridRowInfo(e.RowHandle);
+                OrderBookEntry ee = (OrderBookEntry)this.askGridView.GetRow(e.RowHandle);
+                if(ee == null)
+                    return;
+
+                int height = ScaleUtils.ScaleValue(3);
+                int width = (int)(gri.Bounds.Width * ee.VolumePercent + 0.5f);
+                e.Cache.FillRectangle(Exchange.AskColor, new Rectangle(gri.Bounds.Right - width, gri.Bounds.Bottom - height, width, height));
+            }
+        }
+
+        private void bidGridView_CustomDrawCell(object sender, RowCellCustomDrawEventArgs e) {
+            if(e.Column == this.gcAmount2) {
+                GridViewInfo gvi = (GridViewInfo)this.bidGridView.GetViewInfo();
+                GridRowInfo gri = gvi.GetGridRowInfo(e.RowHandle);
+                OrderBookEntry ee = (OrderBookEntry)this.bidGridView.GetRow(e.RowHandle);
+
+                int height = ScaleUtils.ScaleValue(3);
+                int width = (int)(gri.Bounds.Width * ee.VolumePercent + 0.5f);
+                e.Cache.FillRectangle(Exchange.BidColor, new Rectangle(gri.Bounds.Right - width, gri.Bounds.Bottom - height, width, height));
+            }
         }
     }
 

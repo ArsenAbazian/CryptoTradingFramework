@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 
 namespace CryptoMarketClient.Bittrex {
     public class BittrexAccountBalanceInfo : BalanceBase {
-        public override string Exchange => "Bittrex";
+        public BittrexAccountBalanceInfo(AccountInfo info) : base(info) { }
+
         public double Balance { get; set; }
         public double Pending { get; set; }
         public bool Requested { get; set; }

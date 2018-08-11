@@ -16,7 +16,7 @@ namespace CryptoMarketClient.Common {
         public string FileName { get { return DirectoryName + "\\" + Ticker.Name.ToLower() + ".xml"; } }
         [XmlArray("CandleStickData"), XmlArrayItem(typeof(CandleStickData), ElementName = "CandleStickData")]
         public BindingList<CandleStickData> CandleStickData { get; set; }
-        [XmlArray("TradeData"), XmlArrayItem(typeof(TradeHistoryItem), ElementName = "TradeHistoryItem")]
-        public List<TradeHistoryItem> TradeData { get; set; }
+        [XmlArray("TradeData"), XmlArrayItem(typeof(TradeInfoItem), ElementName = "TradeHistoryItem")]
+        public List<TradeInfoItem> TradeData { get; set; }
     }
 }

@@ -23,10 +23,12 @@ namespace CryptoMarketClient {
             InitializeComponent();
             Exchange = exchange;
             Text = Exchange.Name;
-            this.gridView1.RowHeight = (int)(48 * DpiProvider.Default.DpiScaleFactor);
+            this.ribbonPage1.Text = "Exchanges";
+            this.ribbonPageGroup1.Text = exchange.Name;
+            //this.gridView1.RowHeight = (int)(48 * DpiProvider.Default.DpiScaleFactor);
             this.colIsSelected.MaxWidth = this.gridView1.RowHeight;
-            this.gcLogo.MaxWidth = this.gridView1.RowHeight + 10;
-            this.gcLogo.MinWidth = this.gridView1.RowHeight + 10;
+            //this.gcLogo.MaxWidth = this.gridView1.RowHeight + 10;
+            //this.gcLogo.MinWidth = this.gridView1.RowHeight + 10;
         }
 
         public Exchange Exchange { get; set; }
@@ -115,7 +117,10 @@ namespace CryptoMarketClient {
             base.OnShown(e);
             Exchange.ObtainExchangeSettings();
             Exchange.LoadTickers();
+            Exchange.UpdateTickersInfo();
             this.gridControl1.DataSource = Exchange.Tickers;
+            this.gridView1.ExpandAllGroups();
+            this.gridView1.BestFitColumns();
             HasShown = true;
             UpdateSelectedTickersFromExchange();
             if(!Exchange.SupportWebSocket(WebSocketType.Tickers)) {
@@ -204,18 +209,13 @@ namespace CryptoMarketClient {
         Form accountForm;
         protected Form AccountForm {
             get {
-                if(accountForm == null || accountForm.IsDisposed) {
-                    accountForm = Exchange.CreateAccountForm();
-                }
+                if(accountForm == null || accountForm.IsDisposed)
+                    accountForm = new AccountBalancesForm(Exchange);
                 return accountForm;
             }
         }
 
         private void bbShowBalances_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
-            if(AccountForm == null) {
-                XtraMessageBox.Show("AccountForm not realized for Exchanged - " + Exchange.Name);
-                return;
-            }
             AccountForm.MdiParent = MdiParent;
             AccountForm.Show();
             AccountForm.Activate();
@@ -378,6 +378,26 @@ namespace CryptoMarketClient {
                 Exchange.StopListenTickersStream();
                 Exchange.StartListenTickersStream();
             }));
+        }
+
+        AccounTradesCollectionForm tradesForm;
+        protected AccounTradesCollectionForm TradesForm {
+            get {
+                if(tradesForm == null || tradesForm.IsDisposed)
+                    tradesForm = new AccounTradesCollectionForm(Exchange);
+                return tradesForm;
+            }
+        }
+        private void barButtonItem2_ItemClick_1(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
+            OrdersForm.MdiParent = MdiParent;
+            OrdersForm.Show();
+            OrdersForm.Activate();
+        }
+
+        private void barButtonItem3_ItemClick(object sender, ItemClickEventArgs e) {
+            TradesForm.MdiParent = MdiParent;
+            TradesForm.Show();
+            TradesForm.Activate();
         }
     }
 }

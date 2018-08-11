@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 
 namespace CryptoMarketClient.Poloniex {
     public class PoloniexAccountBalanceInfo : BalanceBase {
-        public override string Exchange => "Poloniex";
-
+        public PoloniexAccountBalanceInfo(AccountInfo info): base(info) { } 
     }
 }

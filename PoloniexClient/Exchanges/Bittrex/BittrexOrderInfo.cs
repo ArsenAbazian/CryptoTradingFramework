@@ -3,7 +3,9 @@ using System;
 
 namespace CryptoMarketClient.Bittrex {
     public class BittrexOrderInfo : OpenedOrderInfo {
-		public string OrderUuid { get; set; }
+        public BittrexOrderInfo(AccountInfo account, Ticker ticker) : base(account, ticker) { }
+
+        public string OrderUuid { get; set; }
         public string QuantityRemainingString { get; set; }
         public string LimitString { get; set; }
         public string CommissionPaidString { get; set; }

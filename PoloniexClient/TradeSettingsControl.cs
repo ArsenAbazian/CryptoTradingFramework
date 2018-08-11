@@ -66,12 +66,12 @@ namespace CryptoMarketClient {
                 return;
             }
             if ((TrailingType)this.comboBoxEdit1.EditValue == TrailingType.Buy) {
-                if (!Ticker.Buy(Settings.TradePrice, Settings.Amount)) {
+                if (Ticker.Buy(Settings.TradePrice, Settings.Amount) == null) {
                     XtraMessageBox.Show("Error buying. Please try later again.");
                     return;
                 }
             } else {
-                if (!Ticker.Sell(Settings.TradePrice, Settings.Amount)) {
+                if (Ticker.Sell(Settings.TradePrice, Settings.Amount) == null) {
                     XtraMessageBox.Show("Error selling. Please try later again.");
                     return;
                 }

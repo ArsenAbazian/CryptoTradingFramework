@@ -23,6 +23,14 @@ namespace CryptoMarketClient.Helpers {
                 }
             }
         }
+        public bool CheckSkipSymbol(byte[] bytes, char symbol, ref int startIndex) {
+            if(startIndex >= bytes.Length)
+                return false;
+            if(bytes[startIndex] != symbol)
+                return false;
+            startIndex++;
+            return true;
+        }
         public bool SkipSymbol(byte[] bytes, char symbol, int count, ref int startIndex) {
             if(bytes == null)
                 return false;
@@ -59,7 +67,7 @@ namespace CryptoMarketClient.Helpers {
                 }
                 int length = index;
                 if(bytes[index] == '"')
-                    ReadString(bytes, ref length);
+                    SkipString(bytes, ref length);
                 else {
                     char symbol = itemIndex == (str.Length - 1) && !start ? '}' : ',';
                     FindChar(bytes, symbol, ref length);
@@ -96,7 +104,7 @@ namespace CryptoMarketClient.Helpers {
                     }
                     int length = index;
                     if(bytes[index] == '"')
-                        ReadString(bytes, ref length);
+                        SkipString(bytes, ref length);
                     else
                         FindChar(bytes, itemIndex == str.Length - 1 ? '}' : ',', ref length);
                     length -= index;
@@ -156,7 +164,19 @@ namespace CryptoMarketClient.Helpers {
             startIndex = index;
             return list;
         }
-        public bool ReadString(byte[] bytes, ref int startIndex) {
+        public string ReadString(byte[] bytes, ref int startIndex) {
+            startIndex++;
+            for(int i = startIndex; i < bytes.Length; i++) {
+                if(bytes[i] == '"') {
+                    string res = ByteArray2String(bytes, startIndex, i - startIndex);
+                    startIndex = i + 1;
+                    return res;
+                }
+            }
+            startIndex = bytes.Length;
+            return null;
+        }
+        public bool SkipString(byte[] bytes, ref int startIndex) {
             startIndex++;
             for(int i = startIndex; i < bytes.Length; i++) {
                 if(bytes[i] == '"') {
@@ -233,6 +253,29 @@ namespace CryptoMarketClient.Helpers {
             }
             b.Append('}');
             return b.ToString();
+        }
+
+        public List<JsonPropertyArrayOfObjects> DeserializeInfiniteObjectWithArrayProperty(byte[] data, ref int startIndex, string[] childItems) {
+            List<JsonPropertyArrayOfObjects> res = new List<JsonPropertyArrayOfObjects>();
+            if(!CheckSkipSymbol(data, '{', ref startIndex))
+                return res;
+            while(true) {
+                string propertyName = ReadString(data, ref startIndex);
+                if(propertyName == null)
+                    throw new ArgumentException("string not read");
+                if(!CheckSkipSymbol(data, ':', ref startIndex))
+                    throw new ArgumentException(": not found");
+                List<string[]> items = DeserializeArrayOfObjects(data, ref startIndex, childItems);
+                res.Add(new JsonPropertyArrayOfObjects() { Property = propertyName, Items = items });
+                if(!CheckSkipSymbol(data, ',', ref startIndex))
+                    break;
+            }
+            return res;
+        }
+
+        public class JsonPropertyArrayOfObjects {
+            public string Property { get; set; }
+            public List<string[]> Items { get; set; }
         }
     }
 }

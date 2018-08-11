@@ -31,7 +31,7 @@ namespace CryptoMarketClient.Common {
         public DateTime Date { get; set; }
         public double Rate { get; set; }
         public double Total { get; set; }
-        public long Id { get; set; }
+        public string Id { get; set; }
         public OrderType Type { get; set; }
     }
 }

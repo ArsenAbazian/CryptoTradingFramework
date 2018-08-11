@@ -1,6 +1,7 @@
 ﻿using DevExpress.XtraEditors;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -51,7 +52,10 @@ namespace CryptoMarketClient {
         }
 
         void ThreadWork() {
+            Stopwatch w = new Stopwatch();
+            w.Start();
             while(AllowWorkThread) {
+                Thread.Sleep(UpdateInervalMs);
                 OnThreadUpdate();
             }
         }
