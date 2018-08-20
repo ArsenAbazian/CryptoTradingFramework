@@ -112,20 +112,22 @@
             // 
             this.gcPercentChange.Caption = "Percent Change";
             this.gcPercentChange.FieldName = "PercentChange";
+            this.gcPercentChange.MinWidth = 10;
             this.gcPercentChange.Name = "gcPercentChange";
             this.gcPercentChange.OptionsColumn.AllowEdit = false;
-            this.gcPercentChange.Width = 86;
+            this.gcPercentChange.Width = 43;
             // 
             // gcLast
             // 
             this.gcLast.Caption = "Last";
             this.gcLast.ColumnEdit = this.teValueWithChange;
             this.gcLast.FieldName = "LastString";
+            this.gcLast.MinWidth = 10;
             this.gcLast.Name = "gcLast";
             this.gcLast.OptionsColumn.AllowEdit = false;
             this.gcLast.Visible = true;
-            this.gcLast.VisibleIndex = 2;
-            this.gcLast.Width = 86;
+            this.gcLast.VisibleIndex = 3;
+            this.gcLast.Width = 59;
             // 
             // teValueWithChange
             // 
@@ -137,52 +139,61 @@
             // 
             this.gcDeltaBid.Caption = "Bid Change";
             this.gcDeltaBid.FieldName = "DeltaBid";
+            this.gcDeltaBid.MinWidth = 10;
             this.gcDeltaBid.Name = "gcDeltaBid";
+            this.gcDeltaBid.Width = 37;
             // 
             // gcHighestBid
             // 
             this.gcHighestBid.Caption = "Highest Bid";
             this.gcHighestBid.ColumnEdit = this.teValueWithChange;
             this.gcHighestBid.FieldName = "HighestBidString";
+            this.gcHighestBid.MinWidth = 10;
             this.gcHighestBid.Name = "gcHighestBid";
             this.gcHighestBid.OptionsColumn.AllowEdit = false;
             this.gcHighestBid.Visible = true;
-            this.gcHighestBid.VisibleIndex = 3;
-            this.gcHighestBid.Width = 86;
+            this.gcHighestBid.VisibleIndex = 4;
+            this.gcHighestBid.Width = 59;
             // 
             // gcDeltaAsk
             // 
             this.gcDeltaAsk.Caption = "Ask Change";
             this.gcDeltaAsk.FieldName = "DeltaAsk";
+            this.gcDeltaAsk.MinWidth = 10;
             this.gcDeltaAsk.Name = "gcDeltaAsk";
+            this.gcDeltaAsk.Width = 37;
             // 
             // gcLowestAsk
             // 
             this.gcLowestAsk.Caption = "Lowest Ask";
             this.gcLowestAsk.ColumnEdit = this.teValueWithChange;
             this.gcLowestAsk.FieldName = "LowestAskString";
+            this.gcLowestAsk.MinWidth = 10;
             this.gcLowestAsk.Name = "gcLowestAsk";
             this.gcLowestAsk.OptionsColumn.AllowEdit = false;
             this.gcLowestAsk.Visible = true;
-            this.gcLowestAsk.VisibleIndex = 4;
-            this.gcLowestAsk.Width = 86;
+            this.gcLowestAsk.VisibleIndex = 5;
+            this.gcLowestAsk.Width = 59;
             // 
             // colIsActual
             // 
             this.colIsActual.Caption = "IsActual";
             this.colIsActual.FieldName = "IsActual";
+            this.colIsActual.MinWidth = 10;
             this.colIsActual.Name = "colIsActual";
+            this.colIsActual.Width = 37;
             // 
             // gcSecond
             // 
             this.gcSecond.Caption = "Market Currency";
             this.gcSecond.ColumnEdit = this.repositoryItemTextEdit1;
             this.gcSecond.FieldName = "MarketCurrency";
+            this.gcSecond.MinWidth = 10;
             this.gcSecond.Name = "gcSecond";
             this.gcSecond.OptionsColumn.AllowEdit = false;
             this.gcSecond.Visible = true;
-            this.gcSecond.VisibleIndex = 1;
-            this.gcSecond.Width = 86;
+            this.gcSecond.VisibleIndex = 2;
+            this.gcSecond.Width = 121;
             // 
             // repositoryItemTextEdit1
             // 
@@ -193,17 +204,17 @@
             // gridControl1
             // 
             this.gridControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gridControl1.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(24, 23, 24, 23);
-            this.gridControl1.Location = new System.Drawing.Point(0, 315);
+            this.gridControl1.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(12, 12, 12, 12);
+            this.gridControl1.Location = new System.Drawing.Point(0, 170);
             this.gridControl1.MainView = this.gridView1;
-            this.gridControl1.Margin = new System.Windows.Forms.Padding(24, 23, 24, 23);
+            this.gridControl1.Margin = new System.Windows.Forms.Padding(12, 12, 12, 12);
             this.gridControl1.Name = "gridControl1";
             this.gridControl1.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repositoryItemSparklineEdit1,
             this.repositoryItemCheckEdit1,
             this.repositoryItemTextEdit1,
             this.teValueWithChange});
-            this.gridControl1.Size = new System.Drawing.Size(1451, 547);
+            this.gridControl1.Size = new System.Drawing.Size(726, 278);
             this.gridControl1.TabIndex = 0;
             this.gridControl1.UseDirectXPaint = DevExpress.Utils.DefaultBoolean.True;
             this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
@@ -244,6 +255,8 @@
             this.gcDeltaAsk,
             this.colUpdateTimeMs,
             this.colIsActual});
+            this.gridView1.DetailHeight = 182;
+            this.gridView1.FixedLineWidth = 1;
             this.gridView1.FocusRectStyle = DevExpress.XtraGrid.Views.Grid.DrawFocusRectStyle.None;
             gridFormatRule1.Column = this.gcPercentChange;
             gridFormatRule1.ColumnApplyTo = this.gcLast;
@@ -322,6 +335,7 @@
             this.gridView1.FormatRules.Add(gridFormatRule5);
             this.gridView1.GridControl = this.gridControl1;
             this.gridView1.GroupCount = 1;
+            this.gridView1.LevelIndent = 0;
             this.gridView1.Name = "gridView1";
             this.gridView1.OptionsBehavior.AllowPixelScrolling = DevExpress.Utils.DefaultBoolean.True;
             this.gridView1.OptionsDetail.EnableMasterViewMode = false;
@@ -333,7 +347,8 @@
             this.gridView1.OptionsView.ShowHorizontalLines = DevExpress.Utils.DefaultBoolean.False;
             this.gridView1.OptionsView.ShowIndicator = false;
             this.gridView1.OptionsView.ShowVerticalLines = DevExpress.Utils.DefaultBoolean.False;
-            this.gridView1.RowHeight = 48;
+            this.gridView1.PreviewIndent = 0;
+            this.gridView1.RowHeight = 25;
             this.gridView1.SortInfo.AddRange(new DevExpress.XtraGrid.Columns.GridColumnSortInfo[] {
             new DevExpress.XtraGrid.Columns.GridColumnSortInfo(this.gcFirst, DevExpress.Data.ColumnSortOrder.Ascending)});
             this.gridView1.VertScrollVisibility = DevExpress.XtraGrid.Views.Base.ScrollVisibility.Always;
@@ -347,10 +362,11 @@
             this.colIsSelected.ColumnEdit = this.repositoryItemCheckEdit1;
             this.colIsSelected.CustomizationCaption = " ";
             this.colIsSelected.FieldName = "IsSelected";
+            this.colIsSelected.MinWidth = 10;
             this.colIsSelected.Name = "colIsSelected";
             this.colIsSelected.Visible = true;
             this.colIsSelected.VisibleIndex = 0;
-            this.colIsSelected.Width = 62;
+            this.colIsSelected.Width = 52;
             // 
             // repositoryItemCheckEdit1
             // 
@@ -362,61 +378,72 @@
             // 
             this.gcLogo.Caption = "Logo";
             this.gcLogo.FieldName = "Logo";
+            this.gcLogo.MinWidth = 10;
             this.gcLogo.Name = "gcLogo";
+            this.gcLogo.Width = 37;
             // 
             // gcCurrencyPair
             // 
             this.gcCurrencyPair.Caption = "Market Name";
             this.gcCurrencyPair.FieldName = "CurrencyPair";
+            this.gcCurrencyPair.MinWidth = 10;
             this.gcCurrencyPair.Name = "gcCurrencyPair";
             this.gcCurrencyPair.OptionsColumn.AllowEdit = false;
-            this.gcCurrencyPair.Width = 86;
+            this.gcCurrencyPair.Visible = true;
+            this.gcCurrencyPair.VisibleIndex = 1;
+            this.gcCurrencyPair.Width = 103;
             // 
             // gcBaseVolume
             // 
             this.gcBaseVolume.Caption = "Base Volume";
             this.gcBaseVolume.FieldName = "BaseVolume";
+            this.gcBaseVolume.MinWidth = 10;
             this.gcBaseVolume.Name = "gcBaseVolume";
             this.gcBaseVolume.OptionsColumn.AllowEdit = false;
             this.gcBaseVolume.Visible = true;
-            this.gcBaseVolume.VisibleIndex = 5;
-            this.gcBaseVolume.Width = 86;
+            this.gcBaseVolume.VisibleIndex = 6;
+            this.gcBaseVolume.Width = 59;
             // 
             // gcQuoteVolume
             // 
             this.gcQuoteVolume.Caption = "Quote Volume";
             this.gcQuoteVolume.FieldName = "QuoteVolume";
+            this.gcQuoteVolume.MinWidth = 10;
             this.gcQuoteVolume.Name = "gcQuoteVolume";
             this.gcQuoteVolume.OptionsColumn.AllowEdit = false;
             this.gcQuoteVolume.Visible = true;
-            this.gcQuoteVolume.VisibleIndex = 8;
-            this.gcQuoteVolume.Width = 81;
+            this.gcQuoteVolume.VisibleIndex = 9;
+            this.gcQuoteVolume.Width = 77;
             // 
             // gcIsFrozen
             // 
             this.gcIsFrozen.Caption = "Is Frozen";
             this.gcIsFrozen.FieldName = "IsFrozen";
+            this.gcIsFrozen.MinWidth = 10;
             this.gcIsFrozen.Name = "gcIsFrozen";
+            this.gcIsFrozen.Width = 37;
             // 
             // gcHr24High
             // 
             this.gcHr24High.Caption = "24 Hour High";
             this.gcHr24High.FieldName = "Hr24High";
+            this.gcHr24High.MinWidth = 10;
             this.gcHr24High.Name = "gcHr24High";
             this.gcHr24High.OptionsColumn.AllowEdit = false;
             this.gcHr24High.Visible = true;
-            this.gcHr24High.VisibleIndex = 6;
-            this.gcHr24High.Width = 86;
+            this.gcHr24High.VisibleIndex = 7;
+            this.gcHr24High.Width = 59;
             // 
             // gcHr24Low
             // 
             this.gcHr24Low.Caption = "24 Hour Low";
             this.gcHr24Low.FieldName = "Hr24Low";
+            this.gcHr24Low.MinWidth = 10;
             this.gcHr24Low.Name = "gcHr24Low";
             this.gcHr24Low.OptionsColumn.AllowEdit = false;
             this.gcHr24Low.Visible = true;
-            this.gcHr24Low.VisibleIndex = 7;
-            this.gcHr24Low.Width = 86;
+            this.gcHr24Low.VisibleIndex = 8;
+            this.gcHr24Low.Width = 59;
             // 
             // gcTime
             // 
@@ -424,23 +451,28 @@
             this.gcTime.DisplayFormat.FormatString = "G";
             this.gcTime.DisplayFormat.FormatType = DevExpress.Utils.FormatType.DateTime;
             this.gcTime.FieldName = "Time";
+            this.gcTime.MinWidth = 10;
             this.gcTime.Name = "gcTime";
+            this.gcTime.Width = 37;
             // 
             // gcFirst
             // 
             this.gcFirst.Caption = "Base Currency";
             this.gcFirst.FieldName = "BaseCurrency";
+            this.gcFirst.MinWidth = 10;
             this.gcFirst.Name = "gcFirst";
             this.gcFirst.Visible = true;
             this.gcFirst.VisibleIndex = 11;
+            this.gcFirst.Width = 37;
             // 
             // colUpdateTimeMs
             // 
             this.colUpdateTimeMs.Caption = "UpdateTimeMs";
             this.colUpdateTimeMs.FieldName = "UpdateTimeMs";
+            this.colUpdateTimeMs.MinWidth = 10;
             this.colUpdateTimeMs.Name = "colUpdateTimeMs";
             this.colUpdateTimeMs.OptionsColumn.AllowEdit = false;
-            this.colUpdateTimeMs.Width = 44;
+            this.colUpdateTimeMs.Width = 22;
             // 
             // repositoryItemSparklineEdit1
             // 
@@ -472,13 +504,13 @@
             this.biReconnect,
             this.biTradeHistory});
             this.ribbonControl1.Location = new System.Drawing.Point(0, 0);
-            this.ribbonControl1.Margin = new System.Windows.Forms.Padding(24, 23, 24, 23);
+            this.ribbonControl1.Margin = new System.Windows.Forms.Padding(12, 12, 12, 12);
             this.ribbonControl1.MaxItemId = 26;
             this.ribbonControl1.Name = "ribbonControl1";
             this.ribbonControl1.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
             this.ribbonPage1});
             this.ribbonControl1.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonControlStyle.Office2013;
-            this.ribbonControl1.Size = new System.Drawing.Size(1451, 277);
+            this.ribbonControl1.Size = new System.Drawing.Size(726, 141);
             this.ribbonControl1.StatusBar = this.ribbonStatusBar1;
             // 
             // svgImageCollection1
@@ -620,11 +652,10 @@
             this.ribbonStatusBar1.AutoHeight = true;
             this.ribbonStatusBar1.ItemLinks.Add(this.biConnectionStatus);
             this.ribbonStatusBar1.ItemLinks.Add(this.biReconnect);
-            this.ribbonStatusBar1.Location = new System.Drawing.Point(0, 808);
-            this.ribbonStatusBar1.Margin = new System.Windows.Forms.Padding(6);
+            this.ribbonStatusBar1.Location = new System.Drawing.Point(0, 421);
             this.ribbonStatusBar1.Name = "ribbonStatusBar1";
             this.ribbonStatusBar1.Ribbon = this.ribbonControl1;
-            this.ribbonStatusBar1.Size = new System.Drawing.Size(1451, 54);
+            this.ribbonStatusBar1.Size = new System.Drawing.Size(726, 27);
             // 
             // barManager1
             // 
@@ -668,11 +699,11 @@
             this.standaloneBarDockControl1.AutoSize = true;
             this.standaloneBarDockControl1.CausesValidation = false;
             this.standaloneBarDockControl1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.standaloneBarDockControl1.Location = new System.Drawing.Point(0, 277);
+            this.standaloneBarDockControl1.Location = new System.Drawing.Point(0, 141);
             this.standaloneBarDockControl1.Manager = this.barManager1;
-            this.standaloneBarDockControl1.Margin = new System.Windows.Forms.Padding(16, 15, 16, 15);
+            this.standaloneBarDockControl1.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
             this.standaloneBarDockControl1.Name = "standaloneBarDockControl1";
-            this.standaloneBarDockControl1.Size = new System.Drawing.Size(1451, 38);
+            this.standaloneBarDockControl1.Size = new System.Drawing.Size(726, 29);
             this.standaloneBarDockControl1.Text = "standaloneBarDockControl1";
             // 
             // barDockControlTop
@@ -681,17 +712,17 @@
             this.barDockControlTop.Dock = System.Windows.Forms.DockStyle.Top;
             this.barDockControlTop.Location = new System.Drawing.Point(0, 0);
             this.barDockControlTop.Manager = this.barManager1;
-            this.barDockControlTop.Margin = new System.Windows.Forms.Padding(16, 15, 16, 15);
-            this.barDockControlTop.Size = new System.Drawing.Size(1451, 0);
+            this.barDockControlTop.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
+            this.barDockControlTop.Size = new System.Drawing.Size(726, 0);
             // 
             // barDockControlBottom
             // 
             this.barDockControlBottom.CausesValidation = false;
             this.barDockControlBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.barDockControlBottom.Location = new System.Drawing.Point(0, 862);
+            this.barDockControlBottom.Location = new System.Drawing.Point(0, 448);
             this.barDockControlBottom.Manager = this.barManager1;
-            this.barDockControlBottom.Margin = new System.Windows.Forms.Padding(16, 15, 16, 15);
-            this.barDockControlBottom.Size = new System.Drawing.Size(1451, 0);
+            this.barDockControlBottom.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
+            this.barDockControlBottom.Size = new System.Drawing.Size(726, 0);
             // 
             // barDockControlLeft
             // 
@@ -699,17 +730,17 @@
             this.barDockControlLeft.Dock = System.Windows.Forms.DockStyle.Left;
             this.barDockControlLeft.Location = new System.Drawing.Point(0, 0);
             this.barDockControlLeft.Manager = this.barManager1;
-            this.barDockControlLeft.Margin = new System.Windows.Forms.Padding(16, 15, 16, 15);
-            this.barDockControlLeft.Size = new System.Drawing.Size(0, 862);
+            this.barDockControlLeft.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
+            this.barDockControlLeft.Size = new System.Drawing.Size(0, 448);
             // 
             // barDockControlRight
             // 
             this.barDockControlRight.CausesValidation = false;
             this.barDockControlRight.Dock = System.Windows.Forms.DockStyle.Right;
-            this.barDockControlRight.Location = new System.Drawing.Point(1451, 0);
+            this.barDockControlRight.Location = new System.Drawing.Point(726, 0);
             this.barDockControlRight.Manager = this.barManager1;
-            this.barDockControlRight.Margin = new System.Windows.Forms.Padding(16, 15, 16, 15);
-            this.barDockControlRight.Size = new System.Drawing.Size(0, 862);
+            this.barDockControlRight.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
+            this.barDockControlRight.Size = new System.Drawing.Size(0, 448);
             // 
             // popupMenu1
             // 
@@ -720,9 +751,9 @@
             // 
             // TickersCollectionForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1451, 862);
+            this.ClientSize = new System.Drawing.Size(726, 448);
             this.Controls.Add(this.ribbonStatusBar1);
             this.Controls.Add(this.gridControl1);
             this.Controls.Add(this.standaloneBarDockControl1);
@@ -731,7 +762,7 @@
             this.Controls.Add(this.barDockControlRight);
             this.Controls.Add(this.barDockControlBottom);
             this.Controls.Add(this.barDockControlTop);
-            this.Margin = new System.Windows.Forms.Padding(24, 23, 24, 23);
+            this.Margin = new System.Windows.Forms.Padding(12, 12, 12, 12);
             this.Name = "TickersCollectionForm";
             this.Text = "Poloniex Markets";
             ((System.ComponentModel.ISupportInitialize)(this.teValueWithChange)).EndInit();

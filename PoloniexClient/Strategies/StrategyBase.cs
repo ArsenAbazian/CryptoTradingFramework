@@ -1,5 +1,4 @@
-﻿using CryptoMarketClient.Common;
-using DevExpress.XtraCharts;
+﻿using DevExpress.XtraCharts;
 using System;
 using System.Collections.Generic;
 using System.Linq;

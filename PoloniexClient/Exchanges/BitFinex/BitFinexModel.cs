@@ -1,7 +1,6 @@
 ﻿using CryptoMarketClient.BitFinex;
 using CryptoMarketClient.Common;
 using CryptoMarketClient.Exchanges.BitFinex;
-using CryptoMarketClient.Helpers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -38,7 +37,7 @@ namespace CryptoMarketClient.BitFinex {
             
         }
 
-        public override string BaseWebSocketAddress => "wss://api.bitfinex.com/ws/2";
+        public override string BaseWebSocketAdress => "wss://api.bitfinex.com/ws/2";
 
         public override ExchangeType Type => ExchangeType.BitFinex;
 
@@ -58,7 +57,7 @@ namespace CryptoMarketClient.BitFinex {
 
         public override void ObtainExchangeSettings() { }
 
-        protected override void OnSocketOpened(object sender, EventArgs e) {
+        protected override void OnTickersSocketOpened(object sender, EventArgs e) {
             ((WebSocket)sender).Send(JSonHelper.Default.Serialize(new string[] { "event", "subscribe", "channel", "ticker" }));
         }
 
@@ -292,7 +291,7 @@ namespace CryptoMarketClient.BitFinex {
 
             return true;
         }
-        public bool UpdateArbitrageOrderBook(Ticker info, int depth) {
+        public override bool UpdateArbitrageOrderBook(Ticker info, int depth) {
             string address = GetOrderBookString(info, depth);
             byte[] data = GetDownloadBytes(address);
             if(data == null)

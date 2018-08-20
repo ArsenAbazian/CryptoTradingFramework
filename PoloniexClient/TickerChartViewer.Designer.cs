@@ -135,8 +135,8 @@ namespace CryptoMarketClient {
             xyDiagram1.AxisX.VisibleInPanesSerializable = "-1;0";
             xyDiagram1.AxisX.VisualRange.Auto = false;
             xyDiagram1.AxisX.VisualRange.AutoSideMargins = false;
-            xyDiagram1.AxisX.VisualRange.MaxValueSerializable = "08/11/2018 14:28:00.000";
-            xyDiagram1.AxisX.VisualRange.MinValueSerializable = "08/11/2018 14:19:00.000";
+            xyDiagram1.AxisX.VisualRange.MaxValueSerializable = "08/13/2018 21:05:00.000";
+            xyDiagram1.AxisX.VisualRange.MinValueSerializable = "08/13/2018 20:56:00.000";
             xyDiagram1.AxisX.VisualRange.SideMarginsValue = 0D;
             xyDiagram1.AxisX.WholeRange.AutoSideMargins = false;
             xyDiagram1.AxisX.WholeRange.SideMarginsValue = 0D;
@@ -187,7 +187,6 @@ namespace CryptoMarketClient {
             this.chartControl1.Legends.AddRange(new DevExpress.XtraCharts.Legend[] {
             legend1});
             this.chartControl1.Location = new System.Drawing.Point(0, 0);
-            this.chartControl1.Margin = new System.Windows.Forms.Padding(6);
             this.chartControl1.Name = "chartControl1";
             series1.Name = "Volume";
             sideBySideBarSeriesView1.AxisYName = "Secondary AxisY 2";
@@ -221,7 +220,7 @@ namespace CryptoMarketClient {
         series3,
         series4};
             this.chartControl1.SideBySideBarDistanceFixed = 0;
-            this.chartControl1.Size = new System.Drawing.Size(1424, 1039);
+            this.chartControl1.Size = new System.Drawing.Size(922, 541);
             this.chartControl1.TabIndex = 4;
             this.chartControl1.CustomDrawSeriesPoint += new DevExpress.XtraCharts.CustomDrawSeriesPointEventHandler(this.chartControl1_CustomDrawSeriesPoint);
             this.chartControl1.AxisVisualRangeChanged += new System.EventHandler<DevExpress.XtraCharts.AxisRangeChangedEventArgs>(this.chartControl1_AxisVisualRangeChanged);
@@ -321,9 +320,7 @@ namespace CryptoMarketClient {
             // ciShowWalls
             // 
             this.ciShowWalls.Alignment = DevExpress.XtraBars.BarItemLinkAlignment.Right;
-            this.ciShowWalls.BindableChecked = true;
             this.ciShowWalls.Caption = "Show Walls";
-            this.ciShowWalls.Checked = true;
             this.ciShowWalls.Id = 24;
             this.ciShowWalls.Name = "ciShowWalls";
             this.ciShowWalls.CheckedChanged += new DevExpress.XtraBars.ItemClickEventHandler(this.ciShowWalls_CheckedChanged);
@@ -335,8 +332,9 @@ namespace CryptoMarketClient {
             this.standaloneBarDockControl1.Dock = System.Windows.Forms.DockStyle.Top;
             this.standaloneBarDockControl1.Location = new System.Drawing.Point(0, 0);
             this.standaloneBarDockControl1.Manager = this.barManager1;
+            this.standaloneBarDockControl1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.standaloneBarDockControl1.Name = "standaloneBarDockControl1";
-            this.standaloneBarDockControl1.Size = new System.Drawing.Size(1844, 60);
+            this.standaloneBarDockControl1.Size = new System.Drawing.Size(922, 31);
             this.standaloneBarDockControl1.Text = "standaloneBarDockControl1";
             // 
             // barDockControlTop
@@ -345,17 +343,15 @@ namespace CryptoMarketClient {
             this.barDockControlTop.Dock = System.Windows.Forms.DockStyle.Top;
             this.barDockControlTop.Location = new System.Drawing.Point(0, 0);
             this.barDockControlTop.Manager = this.barManager1;
-            this.barDockControlTop.Margin = new System.Windows.Forms.Padding(6);
-            this.barDockControlTop.Size = new System.Drawing.Size(1856, 0);
+            this.barDockControlTop.Size = new System.Drawing.Size(928, 0);
             // 
             // barDockControlBottom
             // 
             this.barDockControlBottom.CausesValidation = false;
             this.barDockControlBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.barDockControlBottom.Location = new System.Drawing.Point(0, 1154);
+            this.barDockControlBottom.Location = new System.Drawing.Point(0, 600);
             this.barDockControlBottom.Manager = this.barManager1;
-            this.barDockControlBottom.Margin = new System.Windows.Forms.Padding(6);
-            this.barDockControlBottom.Size = new System.Drawing.Size(1856, 0);
+            this.barDockControlBottom.Size = new System.Drawing.Size(928, 0);
             // 
             // barDockControlLeft
             // 
@@ -363,17 +359,15 @@ namespace CryptoMarketClient {
             this.barDockControlLeft.Dock = System.Windows.Forms.DockStyle.Left;
             this.barDockControlLeft.Location = new System.Drawing.Point(0, 0);
             this.barDockControlLeft.Manager = this.barManager1;
-            this.barDockControlLeft.Margin = new System.Windows.Forms.Padding(6);
-            this.barDockControlLeft.Size = new System.Drawing.Size(0, 1154);
+            this.barDockControlLeft.Size = new System.Drawing.Size(0, 600);
             // 
             // barDockControlRight
             // 
             this.barDockControlRight.CausesValidation = false;
             this.barDockControlRight.Dock = System.Windows.Forms.DockStyle.Right;
-            this.barDockControlRight.Location = new System.Drawing.Point(1856, 0);
+            this.barDockControlRight.Location = new System.Drawing.Point(928, 0);
             this.barDockControlRight.Manager = this.barManager1;
-            this.barDockControlRight.Margin = new System.Windows.Forms.Padding(6);
-            this.barDockControlRight.Size = new System.Drawing.Size(0, 1154);
+            this.barDockControlRight.Size = new System.Drawing.Size(0, 600);
             // 
             // bcStock
             // 
@@ -446,9 +440,9 @@ namespace CryptoMarketClient {
             this.sidePanel1.Controls.Add(this.xtraTabControl1);
             this.sidePanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.sidePanel1.Location = new System.Drawing.Point(0, 0);
-            this.sidePanel1.Margin = new System.Windows.Forms.Padding(4);
+            this.sidePanel1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.sidePanel1.Name = "sidePanel1";
-            this.sidePanel1.Size = new System.Drawing.Size(1856, 1154);
+            this.sidePanel1.Size = new System.Drawing.Size(928, 600);
             this.sidePanel1.TabIndex = 9;
             this.sidePanel1.Text = "sidePanel1";
             // 
@@ -456,9 +450,10 @@ namespace CryptoMarketClient {
             // 
             this.xtraTabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.xtraTabControl1.Location = new System.Drawing.Point(0, 0);
+            this.xtraTabControl1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.xtraTabControl1.Name = "xtraTabControl1";
             this.xtraTabControl1.SelectedTabPage = this.xtraTabPage1;
-            this.xtraTabControl1.Size = new System.Drawing.Size(1856, 1154);
+            this.xtraTabControl1.Size = new System.Drawing.Size(928, 600);
             this.xtraTabControl1.TabIndex = 5;
             this.xtraTabControl1.TabPages.AddRange(new DevExpress.XtraTab.XtraTabPage[] {
             this.xtraTabPage1,
@@ -468,22 +463,25 @@ namespace CryptoMarketClient {
             // 
             this.xtraTabPage1.Controls.Add(this.splitContainerControl1);
             this.xtraTabPage1.Controls.Add(this.standaloneBarDockControl1);
+            this.xtraTabPage1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.xtraTabPage1.Name = "xtraTabPage1";
-            this.xtraTabPage1.Size = new System.Drawing.Size(1844, 1099);
+            this.xtraTabPage1.Size = new System.Drawing.Size(922, 572);
             this.xtraTabPage1.Text = "CandleSticks";
             // 
             // splitContainerControl1
             // 
             this.splitContainerControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainerControl1.FixedPanel = DevExpress.XtraEditors.SplitFixedPanel.Panel2;
-            this.splitContainerControl1.Location = new System.Drawing.Point(0, 60);
+            this.splitContainerControl1.Location = new System.Drawing.Point(0, 31);
+            this.splitContainerControl1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.splitContainerControl1.Name = "splitContainerControl1";
             this.splitContainerControl1.Panel1.Controls.Add(this.chartControl1);
             this.splitContainerControl1.Panel1.Text = "Panel1";
             this.splitContainerControl1.Panel2.Controls.Add(this.chartWalls);
             this.splitContainerControl1.Panel2.Text = "Panel2";
-            this.splitContainerControl1.Size = new System.Drawing.Size(1844, 1039);
-            this.splitContainerControl1.SplitterPosition = 410;
+            this.splitContainerControl1.PanelVisibility = DevExpress.XtraEditors.SplitPanelVisibility.Panel1;
+            this.splitContainerControl1.Size = new System.Drawing.Size(922, 541);
+            this.splitContainerControl1.SplitterPosition = 205;
             this.splitContainerControl1.TabIndex = 6;
             this.splitContainerControl1.Text = "splitContainerControl1";
             // 
@@ -531,7 +529,6 @@ namespace CryptoMarketClient {
             this.chartWalls.Legend.Name = "Default Legend";
             this.chartWalls.Legend.Visibility = DevExpress.Utils.DefaultBoolean.False;
             this.chartWalls.Location = new System.Drawing.Point(0, 0);
-            this.chartWalls.Margin = new System.Windows.Forms.Padding(6);
             this.chartWalls.Name = "chartWalls";
             series5.ArgumentScaleType = DevExpress.XtraCharts.ScaleType.Numerical;
             series5.LegendName = "Default Legend";
@@ -550,14 +547,15 @@ namespace CryptoMarketClient {
         series6};
             this.chartWalls.SeriesTemplate.View = stepAreaSeriesView3;
             this.chartWalls.SideBySideBarDistanceFixed = 0;
-            this.chartWalls.Size = new System.Drawing.Size(410, 1039);
+            this.chartWalls.Size = new System.Drawing.Size(0, 0);
             this.chartWalls.TabIndex = 6;
             // 
             // xtraTabPage2
             // 
             this.xtraTabPage2.Controls.Add(this.chartMarketDepth);
+            this.xtraTabPage2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.xtraTabPage2.Name = "xtraTabPage2";
-            this.xtraTabPage2.Size = new System.Drawing.Size(1844, 1099);
+            this.xtraTabPage2.Size = new System.Drawing.Size(922, 572);
             this.xtraTabPage2.Text = "Market Depth";
             // 
             // chartMarketDepth
@@ -605,7 +603,6 @@ namespace CryptoMarketClient {
             this.chartMarketDepth.Legends.AddRange(new DevExpress.XtraCharts.Legend[] {
             legend2});
             this.chartMarketDepth.Location = new System.Drawing.Point(0, 0);
-            this.chartMarketDepth.Margin = new System.Windows.Forms.Padding(6);
             this.chartMarketDepth.Name = "chartMarketDepth";
             series7.Name = "TotalVolumeBuy";
             areaSeriesView1.Color = System.Drawing.Color.FromArgb(((int)(((byte)(195)))), ((int)(((byte)(214)))), ((int)(((byte)(155)))));
@@ -620,21 +617,20 @@ namespace CryptoMarketClient {
             areaSeriesView3.Transparency = ((byte)(0));
             this.chartMarketDepth.SeriesTemplate.View = areaSeriesView3;
             this.chartMarketDepth.SideBySideBarDistanceFixed = 0;
-            this.chartMarketDepth.Size = new System.Drawing.Size(1844, 1099);
+            this.chartMarketDepth.Size = new System.Drawing.Size(922, 572);
             this.chartMarketDepth.TabIndex = 5;
             // 
             // TickerChartViewer
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.sidePanel1);
             this.Controls.Add(this.barDockControlLeft);
             this.Controls.Add(this.barDockControlRight);
             this.Controls.Add(this.barDockControlBottom);
             this.Controls.Add(this.barDockControlTop);
-            this.Margin = new System.Windows.Forms.Padding(6);
             this.Name = "TickerChartViewer";
-            this.Size = new System.Drawing.Size(1856, 1154);
+            this.Size = new System.Drawing.Size(928, 600);
             ((System.ComponentModel.ISupportInitialize)(xyDiagramPane1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(secondaryAxisY1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(secondaryAxisY2)).EndInit();

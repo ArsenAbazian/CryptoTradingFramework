@@ -48,10 +48,10 @@ namespace CryptoMarketClient.Common {
 
             Task task = Task.Factory.StartNew(() => {
                 for(int i = 0; i < info.Count; i++) {
-                    if(info.Tickers[i].UpdateOrderBook()) {
-                        if(info.Tickers[i].UpdateTrades() && info.Tickers[i].TradeStatistic.Count > 0)
-                            info.Tickers[i].OrderBook.TradeInfo = info.Tickers[i].TradeStatistic.Last();
-                        info.Tickers[i].OrderBook.CalcStatistics();
+                    if(info.Tickers[i].UpdateArbitrageOrderBook()) {
+                        //if(info.Tickers[i].UpdateTrades() && info.Tickers[i].TradeStatistic.Count > 0)
+                        //    info.Tickers[i].OrderBook.TradeInfo = info.Tickers[i].TradeStatistic.Last();
+                        //info.Tickers[i].OrderBook.CalcStatistics();
                         info.Tickers[i].OrderBook.UpdateHistory();
                         info.ObtainDataSuccessCount++;
                     }

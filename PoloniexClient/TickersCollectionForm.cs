@@ -57,30 +57,30 @@ namespace CryptoMarketClient {
         }
 
         private void OnConnectionTimerTick(object sender, EventArgs e) {
-            if(Exchange.SocketState == SocketConnectionState.None) {
+            if(Exchange.TickersSocketState == SocketConnectionState.None) {
                 this.biConnectionStatus.ImageOptions.SvgImage = this.svgImageCollection1["information"];
                 this.biConnectionStatus.Caption = "Initializing...";
             }
-            else if(Exchange.SocketState == SocketConnectionState.Connecting) {
+            else if(Exchange.TickersSocketState == SocketConnectionState.Connecting) {
                 this.biConnectionStatus.ImageOptions.SvgImage = this.svgImageCollection1["connecting"];
                 this.biConnectionStatus.Caption = "Connecting...";
             }
-            else if(Exchange.SocketState == SocketConnectionState.DelayRecv) {
+            else if(Exchange.TickersSocketState == SocketConnectionState.DelayRecv) {
                 this.biConnectionStatus.ImageOptions.SvgImage = this.svgImageCollection1["datadelay"];
                 this.biConnectionStatus.Caption = "No Data...";
                 this.biReconnect.Visibility = BarItemVisibility.Always;
             }
-            else if(Exchange.SocketState == SocketConnectionState.Disconnected) {
+            else if(Exchange.TickersSocketState == SocketConnectionState.Disconnected) {
                 this.biConnectionStatus.ImageOptions.SvgImage = this.svgImageCollection1["disconnected"];
                 this.biConnectionStatus.Caption = "Disconnected.";
                 this.biReconnect.Visibility = BarItemVisibility.Always;
             }
-            else if(Exchange.SocketState == SocketConnectionState.Error) {
+            else if(Exchange.TickersSocketState == SocketConnectionState.Error) {
                 this.biConnectionStatus.ImageOptions.SvgImage = this.svgImageCollection1["disconnected"];
                 this.biConnectionStatus.Caption = "Socket Error.";
                 this.biReconnect.Visibility = BarItemVisibility.Always;
             }
-            else if(Exchange.SocketState == SocketConnectionState.TooLongQue) {
+            else if(Exchange.TickersSocketState == SocketConnectionState.TooLongQue) {
                 this.biConnectionStatus.ImageOptions.SvgImage = this.svgImageCollection1["disconnected"];
                 this.biConnectionStatus.Caption = "Missing incremental update.";
                 this.biReconnect.Visibility = BarItemVisibility.Always;
@@ -115,9 +115,7 @@ namespace CryptoMarketClient {
 
         protected override void OnShown(EventArgs e) {
             base.OnShown(e);
-            Exchange.ObtainExchangeSettings();
-            Exchange.LoadTickers();
-            Exchange.UpdateTickersInfo();
+            Exchange.Connect();
             this.gridControl1.DataSource = Exchange.Tickers;
             this.gridView1.ExpandAllGroups();
             this.gridView1.BestFitColumns();

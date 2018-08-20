@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using CryptoMarketClient.Common;
 using CryptoMarketClient.Exchanges.Binance;
-using CryptoMarketClient.Helpers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using SuperSocket.ClientEngine;
@@ -56,7 +55,7 @@ namespace CryptoMarketClient.Binance {
             throw new NotImplementedException();
         }
 
-        public override string BaseWebSocketAddress => "wss://stream.binance.com:9443/ws/!ticker@arr";
+        public override string BaseWebSocketAdress => "wss://stream.binance.com:9443/ws/!ticker@arr";
 
         public override ExchangeType Type => ExchangeType.Binance;
 
@@ -67,11 +66,7 @@ namespace CryptoMarketClient.Binance {
                 return true;
             return false;
         }
-
-        Dictionary<WebSocket, SocketConnectionInfo> OrderBookSockets { get; } = new Dictionary<WebSocket, SocketConnectionInfo>();
-        Dictionary<WebSocket, SocketConnectionInfo> TradeHistorySockets { get; } = new Dictionary<WebSocket, SocketConnectionInfo>();
-        Dictionary<WebSocket, SocketConnectionInfo> KlineSockets { get; } = new Dictionary<WebSocket, SocketConnectionInfo>();
-
+        
         public override void StartListenKlineStream(Ticker ticker, CandleStickIntervalInfo klineInfo) {
             SocketConnectionInfo info = CreateKlineWebSocket(ticker, klineInfo);
             KlineSockets.Add(info.Socket, info);
@@ -203,58 +198,21 @@ namespace CryptoMarketClient.Binance {
 
         public override void StartListenTickerStream(Ticker ticker) {
             base.StartListenTickerStream(ticker);
-            StopListenTickerStream(ticker);
             SocketConnectionInfo info = CreateOrderBookWebSocket(ticker);
             OrderBookSockets.Add(info.Socket, info);
             SocketConnectionInfo tradeInfo = CreateTradesWebSocket(ticker);
             TradeHistorySockets.Add(tradeInfo.Socket, tradeInfo);
         }
 
-        SocketConnectionInfo CreateOrderBookWebSocket(Ticker ticker) {
-            SocketConnectionInfo info = new SocketConnectionInfo();
-            string adress = "wss://stream.binance.com:9443/ws/" + ticker.Name.ToLower() + "@depth5";
-            info.Ticker = ticker;
-            info.Adress = adress;
-            info.Socket = new WebSocket(adress, "");
-            info.Socket.Error += OnOrderBookSocketError;
-            info.Socket.Opened += OnOrderBookSocketOpened;
-            info.Socket.Closed += OnOrderBookSocketClosed;
-            info.Socket.MessageReceived += OnOrderBookSocketMessageReceived;
-            info.Open();
-
-            return info;
+        protected override string GetOrderBookSocketAddress(Ticker ticker) {
+            return "wss://stream.binance.com:9443/ws/" + ticker.Name.ToLower() + "@depth5";
         }
 
-        SocketConnectionInfo CreateTradesWebSocket(Ticker ticker) {
-            SocketConnectionInfo info = new SocketConnectionInfo();
-            string adress = "wss://stream.binance.com:9443/ws/" + ticker.Name.ToLower() + "@trade";
-            info.Ticker = ticker;
-            info.Adress = adress;
-            info.Socket = new WebSocket(adress, "");
-            info.Socket.Error += OnTradeHistorySocketError;
-            info.Socket.Opened += OnTradeHistorySocketOpened;
-            info.Socket.Closed += OnTradeHistorySocketClosed;
-            info.Socket.MessageReceived += OnTradeHistorySocketMessageReceived;
-            info.Open();
-
-            return info;
+        protected override string GetTradeSocketAddress(Ticker ticker) {
+            return "wss://stream.binance.com:9443/ws/" + ticker.Name.ToLower() + "@trade";
         }
 
-        private void OnOrderBookSocketMessageReceived(object sender, MessageReceivedEventArgs e) {
-            LastWebSocketRecvTime = DateTime.Now;
-            SocketConnectionInfo info = OrderBookSockets[(WebSocket)sender];
-            const string hour24TickerStart = "[{\"e\"";
-            const string orderBookStart = "{\"lastUpdateId\"";
-            if(e.Message.StartsWith(hour24TickerStart)) {
-                OnTickersSocketMessageReceived(sender, e);
-                return;
-            }
-
-            else if(e.Message.StartsWith(orderBookStart)) {
-                OnIncrementalOrderBookUpdateRecv(OrderBookSockets[(WebSocket)sender].Ticker, Encoding.Default.GetBytes(e.Message));
-                return;
-            }
-        }
+        
 
         protected string[] OrderBookStartItems { get; } = new string[] { "lastUpdateId"};
 
@@ -279,63 +237,41 @@ namespace CryptoMarketClient.Binance {
             OnIncrementalUpdateRecv(ticker.OrderBook.Updates);
         }
 
-        private void OnOrderBookSocketClosed(object sender, EventArgs e) {
+        protected override void OnOrderBookSocketMessageReceived(object sender, MessageReceivedEventArgs e) {
+            LastWebSocketRecvTime = DateTime.Now;
+            SocketConnectionInfo info = OrderBookSockets[(WebSocket)sender];
+            const string hour24TickerStart = "[{\"e\"";
+            const string orderBookStart = "{\"lastUpdateId\"";
+            if(e.Message.StartsWith(hour24TickerStart)) {
+                OnTickersSocketMessageReceived(sender, e);
+                return;
+            }
+
+            else if(e.Message.StartsWith(orderBookStart)) {
+                OnIncrementalOrderBookUpdateRecv(OrderBookSockets[(WebSocket)sender].Ticker, Encoding.Default.GetBytes(e.Message));
+                return;
+            }
+        }
+
+        protected override void OnOrderBookSocketClosed(object sender, EventArgs e) {
             SocketConnectionInfo info = OrderBookSockets[(WebSocket)sender];
             info.State = SocketConnectionState.Disconnected;
         }
 
-        private void OnOrderBookSocketOpened(object sender, EventArgs e) {
+        protected override void OnOrderBookSocketOpened(object sender, EventArgs e) {
             SocketConnectionInfo info = OrderBookSockets[(WebSocket)sender];
             info.State = SocketConnectionState.Connected;
             info.Ticker.UpdateOrderBook();
         }
 
-        private void OnOrderBookSocketError(object sender, ErrorEventArgs e) {
+        protected override void OnOrderBookSocketError(object sender, ErrorEventArgs e) {
             SocketConnectionInfo info = OrderBookSockets[(WebSocket)sender];
             info.State = SocketConnectionState.Error;
             info.LastError = e.Exception.ToString();
         }
-
-        protected SocketConnectionInfo GetConnectionInfo(Ticker ticker, CandleStickIntervalInfo info, Dictionary<WebSocket, SocketConnectionInfo> dictionary) {
-            foreach(SocketConnectionInfo i in dictionary.Values) {
-                if(i.Ticker == ticker && i.KlineInfo.Interval == info.Interval) {
-                    return i;
-                }
-            }
-            return null;
-        }
-
-        protected SocketConnectionInfo GetConnectionInfo(Ticker ticker, Dictionary<WebSocket, SocketConnectionInfo> dictionary) {
-            foreach(SocketConnectionInfo info in dictionary.Values) {
-                if(info.Ticker == ticker) {
-                    return info;
-                }
-            }
-            return null;
-        }
-
+        
         public override void StopListenTickerStream(Ticker ticker) {
             base.StopListenTickerStream(ticker);
-            SocketConnectionInfo info = GetConnectionInfo(ticker, OrderBookSockets);
-            if(info == null)
-                return;
-
-            info.Socket.Error -= OnOrderBookSocketError;
-            info.Socket.Opened -= OnOrderBookSocketOpened;
-            info.Socket.Closed -= OnOrderBookSocketClosed;
-            info.Socket.MessageReceived -= OnOrderBookSocketMessageReceived;
-            info.Close();
-            info.Dispose();
-            OrderBookSockets.Remove(info.Socket);
-
-            info = GetConnectionInfo(ticker, TradeHistorySockets);
-            info.Socket.Error -= OnTradeHistorySocketError;
-            info.Socket.Opened -= OnTradeHistorySocketOpened;
-            info.Socket.Closed -= OnTradeHistorySocketClosed;
-            info.Socket.MessageReceived -= OnTradeHistorySocketMessageReceived;
-            info.Close();
-            info.Dispose();
-            TradeHistorySockets.Remove(info.Socket);
         }
 
         string[] tradeItems;
@@ -347,7 +283,7 @@ namespace CryptoMarketClient.Binance {
             }
         }
 
-        private void OnTradeHistorySocketMessageReceived(object sender, MessageReceivedEventArgs e) {
+        protected override void OnTradeHistorySocketMessageReceived(object sender, MessageReceivedEventArgs e) {
             byte[] bytes = Encoding.Default.GetBytes(e.Message);
             int startIndex = 0;
             string[] trades = JSonHelper.Default.DeserializeObject(bytes, ref startIndex, TradeItems);
@@ -367,18 +303,18 @@ namespace CryptoMarketClient.Binance {
             ticker.RaiseTradeHistoryAdd();
         }
 
-        private void OnTradeHistorySocketOpened(object sender, EventArgs e) {
+        protected override void OnTradeHistorySocketOpened(object sender, EventArgs e) {
             SocketConnectionInfo info = TradeHistorySockets[(WebSocket)sender];
             info.State = SocketConnectionState.Connected;
             info.Ticker.TradeHistory.Clear();
         }
 
-        private void OnTradeHistorySocketClosed(object sender, EventArgs e) {
+        protected override void OnTradeHistorySocketClosed(object sender, EventArgs e) {
             SocketConnectionInfo info = TradeHistorySockets[(WebSocket)sender];
             info.State = SocketConnectionState.Disconnected;
         }
 
-        private void OnTradeHistorySocketError(object sender, ErrorEventArgs e) {
+        protected override void OnTradeHistorySocketError(object sender, ErrorEventArgs e) {
             SocketConnectionInfo info = TradeHistorySockets[(WebSocket)sender];
             info.State = SocketConnectionState.Error;
             info.LastError = e.Exception.ToString();
@@ -568,11 +504,14 @@ namespace CryptoMarketClient.Binance {
                 data.Close = FastValueConverter.Convert(item[4]);
                 data.Volume = FastValueConverter.Convert(item[5]);
                 data.QuoteVolume = FastValueConverter.Convert(item[7]);
+                data.BuyVolume = FastValueConverter.Convert(item[9]);
+                data.SellVolume = data.Volume - data.BuyVolume;
+                data.BuySellVolume = data.BuyVolume - data.SellVolume;
                 list.Add(data);
             }
 
-            List<TradeInfoItem> trades = GetTradeVolumesForCandleStick(ticker, startSec * 1000, end * 1000);
-            CandleStickChartHelper.InitializeVolumes(list, trades, ticker.CandleStickPeriodMin);
+            //List<TradeInfoItem> trades = GetTradeVolumesForCandleStick(ticker, startSec * 1000, end * 1000);
+            //CandleStickChartHelper.InitializeVolumes(list, trades, ticker.CandleStickPeriodMin);
             return list;
         }
 
@@ -676,6 +615,16 @@ namespace CryptoMarketClient.Binance {
         public override bool UpdateOpenedOrders(AccountInfo account, Ticker ticker) {
             return true;
             //throw new NotImplementedException();
+        }
+
+        public override bool UpdateArbitrageOrderBook(Ticker ticker, int depth) {
+            string address = string.Format("https://api.binance.com/api/v1/depth?symbol={0}&limit={1}",
+                Uri.EscapeDataString(ticker.CurrencyPair), depth);
+            byte[] bytes = ((Ticker)ticker).DownloadBytes(address);
+            if(bytes == null || bytes.Length == 0)
+                return false;
+            OnUpdateOrderBook(ticker, bytes);
+            return true;
         }
 
         public override bool UpdateOrderBook(Ticker ticker) {

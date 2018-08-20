@@ -144,7 +144,7 @@ namespace CryptoMarketClient {
 
                 int height = ScaleUtils.ScaleValue(3);
                 int width = (int)(gri.Bounds.Width * ee.VolumePercent + 0.5f);
-                e.Cache.FillRectangle(Exchange.AskColor, new Rectangle(gri.Bounds.Right - width, gri.Bounds.Bottom - height, width, height));
+                e.Cache.FillRectangle(Color.FromArgb(0x20, Exchange.AskColor), new Rectangle(gri.Bounds.Right - width, gri.Bounds.Y, width, gri.Bounds.Height));
             }
         }
 
@@ -153,11 +153,17 @@ namespace CryptoMarketClient {
                 GridViewInfo gvi = (GridViewInfo)this.bidGridView.GetViewInfo();
                 GridRowInfo gri = gvi.GetGridRowInfo(e.RowHandle);
                 OrderBookEntry ee = (OrderBookEntry)this.bidGridView.GetRow(e.RowHandle);
+                if(ee == null)
+                    return;
 
                 int height = ScaleUtils.ScaleValue(3);
                 int width = (int)(gri.Bounds.Width * ee.VolumePercent + 0.5f);
-                e.Cache.FillRectangle(Exchange.BidColor, new Rectangle(gri.Bounds.Right - width, gri.Bounds.Bottom - height, width, height));
+                e.Cache.FillRectangle(Color.FromArgb(0x20, Exchange.BidColor), new Rectangle(gri.Bounds.Right - width, gri.Bounds.Y, width, gri.Bounds.Height));
             }
+        }
+
+        private void askGridControl_Click(object sender, EventArgs e) {
+
         }
     }
 

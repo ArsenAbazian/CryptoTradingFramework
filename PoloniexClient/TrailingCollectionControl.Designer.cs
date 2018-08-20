@@ -1,5 +1,4 @@
-﻿using CryptoMarketClient.Common;
-
+﻿
 namespace CryptoMarketClient {
     partial class TrailingCollectionControl {
         /// <summary> 

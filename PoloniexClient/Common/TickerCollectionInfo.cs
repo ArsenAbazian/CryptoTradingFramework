@@ -1,5 +1,4 @@
-﻿using CryptoMarketClient.Analytics;
-using CryptoMarketClient.Common;
+﻿using CryptoMarketClient.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;

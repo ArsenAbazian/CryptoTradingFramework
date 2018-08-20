@@ -19,6 +19,7 @@ using DevExpress.XtraSplashScreen;
 using CryptoMarketClient.Binance;
 using DevExpress.LookAndFeel;
 using CryptoMarketClient.BitFinex;
+using DevExpress.XtraBars;
 
 namespace CryptoMarketClient {
     public partial class MainForm : DevExpress.XtraBars.Ribbon.RibbonForm {
@@ -42,8 +43,52 @@ namespace CryptoMarketClient {
             Exchange.BuildIconsDataBase(BittrexExchange.Default.Tickers.Select(t => new string[] { t.MarketCurrency, t.LogoUrl }), false);
             SplashScreenManager.CloseDefaultWaitForm();
 
+            InitializeExchangeButtons();
+
             //ExchangesForm.Show();
             //ExchangesForm.Activate();
+        }
+
+        void InitializeExchangeButtons() {
+            foreach(Exchange e in Exchange.Registered) {
+                BarCheckItem item = new BarCheckItem(this.ribbonControl1.Manager);
+                item.Caption = e.Name;
+                item.CheckedChanged += OnExchangeItemCheckedChanged;
+                item.LargeGlyph = e.Icon;
+                item.Tag = e;
+                this.rpgConnect.ItemLinks.Add(item);
+            }    
+        }
+
+        protected Dictionary<Exchange, TickersCollectionForm> TickersForms { get; } = new Dictionary<Exchange, TickersCollectionForm>();
+        protected TickersCollectionForm GetExchangeForm(Exchange e) {
+            TickersCollectionForm form = TickersForms.ContainsKey(e) ? TickersForms[e] : null;
+            if(form == null || form.IsDisposed) {
+                form = new TickersCollectionForm(e);
+                form.MdiParent = this;
+                if(TickersForms.ContainsKey(e))
+                    TickersForms.Remove(e);
+                TickersForms.Add(e, form);
+            }
+            return form;
+        }
+
+        protected virtual void OnExchangeItemCheckedChanged(object sender, ItemClickEventArgs e) {
+            BarCheckItem item = sender as BarCheckItem;
+            Exchange exchange = item.Tag as Exchange;
+            
+            if(item.Checked) {
+                exchange.Connect();
+                item.Caption = exchange.Name + "\n<color=lime>Connected</color>";
+                GetExchangeForm(exchange).Show();
+            }
+            else {
+                exchange.Disconnect();
+                item.Caption = exchange.Name;
+                if(TickersForms.ContainsKey(exchange)) {
+                    TickersForms[exchange].Hide();
+                }
+            }
         }
 
         ExchangeCollectionForm exchangesForm;
@@ -75,27 +120,27 @@ namespace CryptoMarketClient {
         //    }
         //}
 
-        TickersCollectionForm tickersForm;
-        public TickersCollectionForm PoloniexTickersForm {
-            get {
-                if(tickersForm == null || tickersForm.IsDisposed) {
-                    tickersForm = new TickersCollectionForm(PoloniexExchange.Default);
-                    tickersForm.MdiParent = this;
-                }
-                return tickersForm;
-            }
-        }
+        //TickersCollectionForm tickersForm;
+        //public TickersCollectionForm PoloniexTickersForm {
+        //    get {
+        //        if(tickersForm == null || tickersForm.IsDisposed) {
+        //            tickersForm = new TickersCollectionForm(PoloniexExchange.Default);
+        //            tickersForm.MdiParent = this;
+        //        }
+        //        return tickersForm;
+        //    }
+        //}
 
-        TickersCollectionForm bittrexMarketsForm;
-        public TickersCollectionForm BittrextMarketsForm {
-            get {
-                if(bittrexMarketsForm == null || bittrexMarketsForm.IsDisposed) {
-                    bittrexMarketsForm = new TickersCollectionForm(BittrexExchange.Default);
-                    bittrexMarketsForm.MdiParent = this;
-                }
-                return bittrexMarketsForm;
-            }
-        }
+        //TickersCollectionForm bittrexMarketsForm;
+        //public TickersCollectionForm BittrextMarketsForm {
+        //    get {
+        //        if(bittrexMarketsForm == null || bittrexMarketsForm.IsDisposed) {
+        //            bittrexMarketsForm = new TickersCollectionForm(BittrexExchange.Default);
+        //            bittrexMarketsForm.MdiParent = this;
+        //        }
+        //        return bittrexMarketsForm;
+        //    }
+        //}
 
         //TickersCollectionForm hitBtcMarketsForm;
         //public TickersCollectionForm HitBtcMarketsForm {
@@ -119,66 +164,66 @@ namespace CryptoMarketClient {
         //    }
         //}
 
-        private void bcPoloniex_CheckedChanged(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
-            if(this.bcPoloniex.Checked) {
-                PoloniexExchange.Default.IsConnected = true;
-                this.bcPoloniex.Caption = "Poloniex\n<color=lime>Connected</color>";
-                PoloniexTickersForm.Show();
-            }
-            else {
-                PoloniexExchange.Default.IsConnected = false;
-                this.bcPoloniex.Caption = "Poloniex";
-                PoloniexTickersForm.Hide();
-            }
-            SettingsStore.Default.Poloniex = this.bcPoloniex.Checked;
-            SettingsStore.Default.SaveToXml();
-        }
+        //private void bcPoloniex_CheckedChanged(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
+        //    if(this.bcPoloniex.Checked) {
+        //        PoloniexExchange.Default.IsConnected = true;
+        //        this.bcPoloniex.Caption = "Poloniex\n<color=lime>Connected</color>";
+        //        PoloniexTickersForm.Show();
+        //    }
+        //    else {
+        //        PoloniexExchange.Default.IsConnected = false;
+        //        this.bcPoloniex.Caption = "Poloniex";
+        //        PoloniexTickersForm.Hide();
+        //    }
+        //    SettingsStore.Default.Poloniex = this.bcPoloniex.Checked;
+        //    SettingsStore.Default.SaveToXml();
+        //}
 
-        private void bcBittrex_CheckedChanged(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
-            if(this.bcBittrex.Checked) {
-                BittrexExchange.Default.IsConnected = true;
-                this.bcBittrex.Caption = "Bittrex\n<color=lime>Connected</color>";
-                BittrextMarketsForm.Show();
-            }
-            else {
-                BittrexExchange.Default.IsConnected = false;
-                this.bcBittrex.Caption = "Bittrex";
-                BittrextMarketsForm.Hide();
-            }
-            SettingsStore.Default.Bittrex = this.bcBittrex.Checked;
-            SettingsStore.Default.SaveToXml();
-        }
+        //private void bcBittrex_CheckedChanged(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
+        //    if(this.bcBittrex.Checked) {
+        //        BittrexExchange.Default.IsConnected = true;
+        //        this.bcBittrex.Caption = "Bittrex\n<color=lime>Connected</color>";
+        //        BittrextMarketsForm.Show();
+        //    }
+        //    else {
+        //        BittrexExchange.Default.IsConnected = false;
+        //        this.bcBittrex.Caption = "Bittrex";
+        //        BittrextMarketsForm.Hide();
+        //    }
+        //    SettingsStore.Default.Bittrex = this.bcBittrex.Checked;
+        //    SettingsStore.Default.SaveToXml();
+        //}
 
-        private void bcBinance_CheckedChanged(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
-            if(this.bcBinance.Checked) {
-                BinanceExchange.Default.IsConnected = true;
-                this.bcBinance.Caption = "Binance\n<color=lime>Connected</color>";
-                BinanceTickersForm.Show();
-            }
-            else {
-                BinanceExchange.Default.IsConnected = false;
-                this.bcBinance.Caption = "Binance";
-                BinanceTickersForm.Hide();
-            }
+        //private void bcBinance_CheckedChanged(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
+        //    if(this.bcBinance.Checked) {
+        //        BinanceExchange.Default.IsConnected = true;
+        //        this.bcBinance.Caption = "Binance\n<color=lime>Connected</color>";
+        //        BinanceTickersForm.Show();
+        //    }
+        //    else {
+        //        BinanceExchange.Default.IsConnected = false;
+        //        this.bcBinance.Caption = "Binance";
+        //        BinanceTickersForm.Hide();
+        //    }
 
-            SettingsStore.Default.Binance = this.bcBinance.Checked;
-            SettingsStore.Default.SaveToXml();
-        }
+        //    SettingsStore.Default.Binance = this.bcBinance.Checked;
+        //    SettingsStore.Default.SaveToXml();
+        //}
 
-        private void biBitFinex_CheckedChanged(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
-            if(this.biBitFinex.Checked) {
-                BitFinexExchange.Default.IsConnected = true;
-                this.biBitFinex.Caption = "BitFinex\n<color=lime>Connected</color>";
-                BitFinexTickersForm.Show();
-            }
-            else {
-                BitFinexExchange.Default.IsConnected = false;
-                this.biBitFinex.Caption = "BitFinex";
-                BitFinexTickersForm.Hide();
-            }
-            SettingsStore.Default.BitFinex = this.biBitFinex.Checked;
-            SettingsStore.Default.SaveToXml();
-        }
+        //private void biBitFinex_CheckedChanged(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
+        //    if(this.biBitFinex.Checked) {
+        //        BitFinexExchange.Default.IsConnected = true;
+        //        this.biBitFinex.Caption = "BitFinex\n<color=lime>Connected</color>";
+        //        BitFinexTickersForm.Show();
+        //    }
+        //    else {
+        //        BitFinexExchange.Default.IsConnected = false;
+        //        this.biBitFinex.Caption = "BitFinex";
+        //        BitFinexTickersForm.Hide();
+        //    }
+        //    SettingsStore.Default.BitFinex = this.biBitFinex.Checked;
+        //    SettingsStore.Default.SaveToXml();
+        //}
 
         TickerArbitrageForm arbitrageForm;
         public TickerArbitrageForm ArbitrageForm {
@@ -379,30 +424,49 @@ namespace CryptoMarketClient {
         }
         
         public void ShowExchange(Exchange exchange) {
-            switch(exchange.Type) {
-                case ExchangeType.Poloniex:
-                    PoloniexTickersForm.Show();
-                    PoloniexTickersForm.Activate();
-                    break;
-                case ExchangeType.Bittrex:
-                    BittrextMarketsForm.Show();
-                    BittrextMarketsForm.Activate();
-                    break;
-                case ExchangeType.Binance:
-                    BinanceTickersForm.Show();
-                    BinanceTickersForm.Activate();
-                    break;
-                case ExchangeType.BitFinex:
-                    BitFinexTickersForm.Show();
-                    BitFinexTickersForm.Activate();
-                    break;
-            }
+            //switch(exchange.Type) {
+            //    case ExchangeType.Poloniex:
+            //        PoloniexTickersForm.Show();
+            //        PoloniexTickersForm.Activate();
+            //        break;
+            //    case ExchangeType.Bittrex:
+            //        BittrextMarketsForm.Show();
+            //        BittrextMarketsForm.Activate();
+            //        break;
+            //    case ExchangeType.Binance:
+            //        BinanceTickersForm.Show();
+            //        BinanceTickersForm.Activate();
+            //        break;
+            //    case ExchangeType.BitFinex:
+            //        BitFinexTickersForm.Show();
+            //        BitFinexTickersForm.Activate();
+            //        break;
+            //}
         }
 
         private void biCalculator_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
             using(CalculatorForm form = new CalculatorForm()) {
                 form.ShowDialog();
             }
+        }
+
+        DependencyArbitrageForm dependencyArbitrageForm;
+        public DependencyArbitrageForm DependencyArbitrageForm {
+            get {
+                if(dependencyArbitrageForm == null || dependencyArbitrageForm.IsDisposed) {
+                    dependencyArbitrageForm = new DependencyArbitrageForm();
+                    dependencyArbitrageForm.MdiParent = this;
+                }
+                return dependencyArbitrageForm;
+            }
+        }
+        private void barButtonItem5_ItemClick(object sender, ItemClickEventArgs e) {
+            DependencyArbitrageForm.Show();
+            DependencyArbitrageForm.Activate();
+        }
+
+        private void barButtonItem6_ItemClick(object sender, ItemClickEventArgs e) {
+
         }
     }
 }

@@ -120,7 +120,7 @@
             // 
             // bidGridView
             // 
-            this.bidGridView.Appearance.Row.Font = new System.Drawing.Font("Segoe UI", 7.875F);
+            this.bidGridView.Appearance.Row.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.bidGridView.Appearance.Row.Options.UseFont = true;
             this.bidGridView.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
             this.bidGridView.Columns.AddRange(new DevExpress.XtraGrid.Columns.GridColumn[] {
@@ -169,7 +169,6 @@
             // 
             this.repositoryItemTextEdit2.AutoHeight = false;
             this.repositoryItemTextEdit2.Name = "repositoryItemTextEdit2";
-            this.repositoryItemTextEdit2.Padding = new System.Windows.Forms.Padding(0, 5, 0, 5);
             // 
             // askPanel
             // 
@@ -197,11 +196,12 @@
             this.askGridControl.UseDirectXPaint = DevExpress.Utils.DefaultBoolean.True;
             this.askGridControl.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.askGridView});
+            this.askGridControl.Click += new System.EventHandler(this.askGridControl_Click);
             this.askGridControl.Resize += new System.EventHandler(this.askGridControl_Resize);
             // 
             // askGridView
             // 
-            this.askGridView.Appearance.Row.Font = new System.Drawing.Font("Segoe UI", 7.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.askGridView.Appearance.Row.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.askGridView.Appearance.Row.Options.UseFont = true;
             this.askGridView.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
             this.askGridView.Columns.AddRange(new DevExpress.XtraGrid.Columns.GridColumn[] {
@@ -242,7 +242,6 @@
             // 
             this.repositoryItemTextEdit1.AutoHeight = false;
             this.repositoryItemTextEdit1.Name = "repositoryItemTextEdit1";
-            this.repositoryItemTextEdit1.Padding = new System.Windows.Forms.Padding(0, 5, 0, 5);
             // 
             // gcAmount
             // 

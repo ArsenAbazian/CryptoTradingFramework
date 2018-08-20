@@ -1,14 +1,19 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.6
+VisualStudioVersion = 15.0.27130.2020
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CryptoMarketClient", "PoloniexClient\CryptoMarketClient.csproj", "{544E62E5-DC81-410C-9F75-F914A0B711C1}"
+	ProjectSection(ProjectDependencies) = postProject
+		{4A5B7AB2-B8CE-4C47-AA5E-7CE8BED74249} = {4A5B7AB2-B8CE-4C47-AA5E-7CE8BED74249}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{02B300A7-357F-42B2-A443-B901659D5255}"
 	ProjectSection(SolutionItems) = preProject
 		Performance1.psess = Performance1.psess
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Crypto.Core", "Crypto.Core\Crypto.Core.csproj", "{4A5B7AB2-B8CE-4C47-AA5E-7CE8BED74249}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -20,6 +25,10 @@ Global
 		{544E62E5-DC81-410C-9F75-F914A0B711C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{544E62E5-DC81-410C-9F75-F914A0B711C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{544E62E5-DC81-410C-9F75-F914A0B711C1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A5B7AB2-B8CE-4C47-AA5E-7CE8BED74249}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A5B7AB2-B8CE-4C47-AA5E-7CE8BED74249}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A5B7AB2-B8CE-4C47-AA5E-7CE8BED74249}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A5B7AB2-B8CE-4C47-AA5E-7CE8BED74249}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -95,9 +95,12 @@ namespace CryptoMarketClient.Common {
             LowestAskTicker = GetLowestAskTicker();
             HighestBidTicker = GetHighestBidTicker();
 
-            if(LowestAskTicker == HighestBidTicker) {
-                LowestAsk = LowestAskTicker.OrderBook.Asks[0].Value;
-                HighestBid = HighestBidTicker.OrderBook.Bids[0].Value;
+            List<OrderBookEntry> bids = HighestBidTicker.OrderBook.Bids;
+            List<OrderBookEntry> asks = LowestAskTicker.OrderBook.Asks;
+
+            if(LowestAskTicker == HighestBidTicker || bids.Count == 0 || asks.Count == 0) {
+                LowestAsk = asks.Count == 0? 0.0: asks[0].Value;
+                HighestBid = bids.Count == 0 ? 0.0: bids[0].Value;
                 Amount = 0;
                 BuyTotal = 0;
                 Spread = HighestBid - LowestAsk;
@@ -115,15 +118,12 @@ namespace CryptoMarketClient.Common {
 
             MaxProfit = InvalidValue;
 
-            List<OrderBookEntry> bids = HighestBidTicker.OrderBook.Bids;
-            List<OrderBookEntry> asks = LowestAskTicker.OrderBook.Asks;
-
             double bidAmount = 0;
             foreach(OrderBookEntry e in bids) { 
                 bidAmount += e.Amount;
                 double bid = e.Value;
                 double askAmount = 0;
-                for(int askIndex = 0; askIndex < Depth; askIndex++) {
+                for(int askIndex = 0; askIndex < asks.Count; askIndex++) {
                     double ask = asks[askIndex].Value;
                     if(ask > bid)
                         break;

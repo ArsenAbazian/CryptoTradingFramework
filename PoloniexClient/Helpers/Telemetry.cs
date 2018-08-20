@@ -22,9 +22,9 @@ namespace CryptoMarketClient {
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
 
-            TelemetryConfiguration.Active.InstrumentationKey = "ec07db0b-5506-4b5d-9173-4fe758364245";
+            TelemetryConfiguration.Active.InstrumentationKey = "c54faeb2-109e-40c8-ad03-58aa69c17592";
             Microsoft.ApplicationInsights.TelemetryClient tc = new Microsoft.ApplicationInsights.TelemetryClient();
-            tc.InstrumentationKey = "ec07db0b-5506-4b5d-9173-4fe758364245";
+            tc.InstrumentationKey = "c54faeb2-109e-40c8-ad03-58aa69c17592";
             tc.Context.User.Id = Environment.UserName;
             tc.Context.Session.Id = Guid.NewGuid().ToString();
             tc.Context.Device.OperatingSystem = Environment.OSVersion.ToString();

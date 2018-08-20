@@ -71,7 +71,7 @@ namespace CryptoMarketClient {
             public string userID { get; set; }
         }
 
-        public override string BaseWebSocketAddress { get { return "wss://api2.poloniex.com"; } }
+        public override string BaseWebSocketAdress { get { return "wss://api2.poloniex.com"; } }
 
         protected override void OnTickersSocketMessageReceived(object sender, MessageReceivedEventArgs e) {
             base.OnTickersSocketMessageReceived(sender, e);
@@ -180,8 +180,8 @@ namespace CryptoMarketClient {
             }
         }
 
-        protected override void OnSocketOpened(object sender, EventArgs e) {
-            base.OnSocketOpened(sender, e);
+        protected override void OnTickersSocketOpened(object sender, EventArgs e) {
+            base.OnTickersSocketOpened(sender, e);
             WebSocket.Send(JsonConvert.SerializeObject(new WebSocketSubscribeInfo() { channel = "1002", command = "subscribe" }));
         }
 
@@ -360,10 +360,10 @@ namespace CryptoMarketClient {
             }
             return true;
         }
-        public bool UpdateArbitrageOrderBook(PoloniexTicker ticker, int depth) {
+        public override bool UpdateArbitrageOrderBook(Ticker ticker, int depth) {
             string address = GetOrderBookString(ticker, depth);
             string text = ((Ticker)ticker).DownloadString(address);
-            return OnUpdateArbitrageOrderBook(ticker, text);
+            return OnUpdateArbitrageOrderBook(ticker, text, depth);
         }
         public override bool UpdateTicker(Ticker tickerBase) {
             return true;
@@ -410,7 +410,7 @@ namespace CryptoMarketClient {
             ticker.OrderBook.UpdateEntries();
             return true;
         }
-        public bool OnUpdateArbitrageOrderBook(Ticker ticker, string text) {
+        public bool OnUpdateArbitrageOrderBook(Ticker ticker, string text, int depth) {
             if(string.IsNullOrEmpty(text))
                 return false;
 
@@ -428,21 +428,23 @@ namespace CryptoMarketClient {
             int index = 0;
             List<OrderBookEntry> list = ticker.OrderBook.Bids;
             foreach(List<object> item in bids) {
-                OrderBookEntry entry = list[index];
+                OrderBookEntry entry = new OrderBookEntry();
+                list.Add(entry);
                 entry.ValueString = (string)item.First();
                 entry.AmountString = (string)item.Last();
                 index++;
-                if(index >= list.Count)
+                if(index >= depth)
                     break;
             }
             index = 0;
             list = ticker.OrderBook.Asks;
             foreach(List<object> item in asks) {
-                OrderBookEntry entry = list[index];
+                OrderBookEntry entry = new OrderBookEntry();
+                list.Add(entry);
                 entry.ValueString = (string)item.First();
                 entry.AmountString = (string)item.Last();
                 index++;
-                if(index >= list.Count)
+                if(index >= depth)
                     break;
             }
 
@@ -462,7 +464,7 @@ namespace CryptoMarketClient {
             return true;
         }
         public void UpdateOrderBook(Ticker ticker, string text) {
-            OnUpdateArbitrageOrderBook(ticker, text);
+            OnUpdateArbitrageOrderBook(ticker, text, 10000);
         }
         public bool GetOrderBook(Ticker ticker, int depth) {
             string address = string.Format("https://poloniex.com/public?command=returnOrderBook&currencyPair={0}&depth={1}",
@@ -1148,7 +1150,6 @@ namespace CryptoMarketClient {
     }
 
     public delegate void TickerUpdateEventHandler(object sender, TickerUpdateEventArgs e);
-    public delegate bool IfDelegate2(int itemIndex, int paramIndex, string value);
     public class TickerUpdateEventArgs : EventArgs {
         public Ticker Ticker { get; set; }
     }
