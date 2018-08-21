@@ -107,6 +107,9 @@ namespace CryptoMarketClient {
             SettingsStore.Default.SelectedThemeName = UserLookAndFeel.Default.ActiveSkinName;
             SettingsStore.Default.SelectedPaletteName = UserLookAndFeel.Default.ActiveSvgPaletteName;
             SettingsStore.Default.SaveToXml();
+            foreach(Exchange exchange in Exchange.Connected) {
+                exchange.StopListenStreams();
+            }
         }
 
         //TickersCollectionForm yobitForm;
