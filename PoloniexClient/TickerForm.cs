@@ -79,7 +79,8 @@ namespace CryptoMarketClient {
                     Ticker.UpdateTrailings();
                 if(Ticker != null)
                     Ticker.Time = DateTime.UtcNow;
-                BeginInvoke(new MethodInvoker(UpdateTickerInfoBarCore));
+                if(IsHandleCreated)
+                    BeginInvoke(new MethodInvoker(UpdateTickerInfoBarCore));
             }
             catch(Exception e) {
                 Telemetry.Default.TrackException(e);

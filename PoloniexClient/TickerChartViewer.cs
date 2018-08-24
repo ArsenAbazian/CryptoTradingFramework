@@ -16,6 +16,7 @@ using DevExpress.LookAndFeel;
 using DevExpress.XtraEditors;
 using System.Threading;
 using DevExpress.XtraSplashScreen;
+using DevExpress.Data;
 
 namespace CryptoMarketClient {
     public partial class TickerChartViewer : XtraUserControl {
@@ -56,7 +57,7 @@ namespace CryptoMarketClient {
             if(Ticker != null) {
                 Ticker.StopListenKlineStream();
                 SetCandleStickCheckItemValues();
-                UpdateDataFromServer();
+                UpdateDataFromServer(false);
                 UpdateCandleStickMenu();
                 UpdateChart();
                 Ticker.StartListenKlineStream();
@@ -171,7 +172,7 @@ namespace CryptoMarketClient {
             view.ReductionOptions.Visible = true;
 
             s.View = view;
-            s.DataSource = Ticker.CandleStickData;
+            s.DataSource = new RealTimeSource() { DataSource = Ticker.CandleStickData };
             return s;
         }
 
@@ -191,7 +192,7 @@ namespace CryptoMarketClient {
             view.ReductionOptions.Visible = true;
 
             s.View = view;
-            s.DataSource = Ticker.CandleStickData;
+            s.DataSource = new RealTimeSource() { DataSource = Ticker.CandleStickData };
             return s;
         }
 
@@ -205,7 +206,7 @@ namespace CryptoMarketClient {
                 return;
             SuppressUpdateCandlestickData = true;
             try {
-                this.chartControl1.Series["BuySellVolume"].DataSource = Ticker.CandleStickData;
+                this.chartControl1.Series["BuySellVolume"].DataSource = new RealTimeSource() { DataSource = Ticker.CandleStickData };
                 this.chartControl1.Series["BuySellVolume"].ArgumentDataMember = "Time";
                 this.chartControl1.Series["BuySellVolume"].ValueDataMembers.AddRange("BuySellVolume");
 
@@ -280,7 +281,7 @@ namespace CryptoMarketClient {
             Ticker.CandleStickPeriodMin = (int)((TimeSpan)item.Tag).TotalMinutes;
             Ticker.CandleStickData.Clear();
             Ticker.StartListenKlineStream();
-            UpdateDataFromServer();
+            UpdateDataFromServer(true);
         }
 
         private void OnChartTypeChanged(object sender, ItemClickEventArgs e) {
@@ -292,9 +293,9 @@ namespace CryptoMarketClient {
             this.chartControl1.Series["Current"].ChangeView(type);
             this.chartControl1.Series["Current"].DataSource = null;
             if(type == ViewType.CandleStick || type == ViewType.Stock)
-                this.chartControl1.Series["Current"].BindToData(Ticker.CandleStickData, "Time", "Low", "High", "Open", "Close");
+                this.chartControl1.Series["Current"].BindToData(new RealTimeSource() { DataSource = Ticker.CandleStickData }, "Time", "Low", "High", "Open", "Close");
             else
-                this.chartControl1.Series["Current"].BindToData(Ticker.History, "Time", "Current");
+                this.chartControl1.Series["Current"].BindToData(new RealTimeSource() { DataSource = Ticker.History }, "Time", "Current");
             UpdateChartProperties();
         }
         void InitializeCheckItems() {
@@ -311,7 +312,7 @@ namespace CryptoMarketClient {
             return candleStickCount * screenCount * interval;
         }
 
-        protected void UpdateDataFromServer() {
+        protected void UpdateDataFromServer(bool inBackgroundThread) {
             int totalWidth = this.chartControl1.ClientRectangle.Width;
             int screenCount = 3;
             int candleStickCount = (int)(totalWidth / (5 * DpiProvider.Default.DpiScaleFactor));
@@ -319,7 +320,7 @@ namespace CryptoMarketClient {
             int totalInterval = candleStickCount * screenCount * interval;
 
             DateTime start = DateTime.UtcNow; //.Subtract(TimeSpan.FromSeconds(totalInterval));
-            BackgroundUpdateCandleSticks(start);
+            BackgroundUpdateCandleSticks(start, inBackgroundThread);
             CandleStickSeriesView view = (CandleStickSeriesView)this.chartControl1.Series["Current"].View;
             view.AxisX.VisualRange.MinValue = start;
             view.AxisX.VisualRange.MaxValue = start.AddSeconds(candleStickCount * interval);
@@ -339,7 +340,7 @@ namespace CryptoMarketClient {
         }
 
         private void barButtonItem3_ItemClick(object sender, ItemClickEventArgs e) {
-            UpdateDataFromServer();
+            UpdateDataFromServer(true);
         }
         public void AddIndicator(TrailingSettings settings) {
             if(Ticker == null)
@@ -391,11 +392,37 @@ namespace CryptoMarketClient {
                 BackgroundUpdateCandleSticks((DateTime)e.Axis.VisualRange.MinValue);
             }
         }
+
         void BackgroundUpdateCandleSticks(DateTime date) {
+            BackgroundUpdateCandleSticks(date, true);
+        }
+        void BackgroundUpdateCandleSticks(DateTime date, bool inBackgroundThread) {
             if (this.isCandleSticksUpdate)
                 return;
 
             this.isCandleSticksUpdate = true;
+            if(!inBackgroundThread) {
+                try {
+                    int seconds = CalculateTotalIntervalInSeconds();
+                    BindingList<CandleStickData> data = Ticker.GetCandleStickData(Ticker.CandleStickPeriodMin, date.AddSeconds(-seconds), seconds);
+                    if(data != null) {
+                        foreach(CandleStickData prev in Ticker.CandleStickData)
+                            data.Add(prev);
+                        Ticker.CandleStickData = data;
+
+                        this.chartControl1.Series["Current"].DataSource = new RealTimeSource() { DataSource = data };
+                        this.chartControl1.Series["Volume"].DataSource = new RealTimeSource() { DataSource = data };
+                        this.chartControl1.Series["BuySellVolume"].DataSource = new RealTimeSource() { DataSource = data };
+                        this.isCandleSticksUpdate = false;
+                    }
+                }
+                catch(Exception e) {
+                    Telemetry.Default.TrackException(e, new string[,] { { "method", "update candlestick data from server" } });
+                    this.isCandleSticksUpdate = false;
+                }
+                return;
+            }
+
             UpdateCandleStickThread = new Thread(() => {
                 try {
                     int seconds = CalculateTotalIntervalInSeconds();
@@ -407,15 +434,20 @@ namespace CryptoMarketClient {
                             }
                             Ticker.CandleStickData = data;
                         }
-                        this.chartControl1.Series["Current"].DataSource = data;
-                        this.chartControl1.Series["Volume"].DataSource = data;
-                        this.chartControl1.Series["BuySellVolume"].DataSource = data;
+
+                        BeginInvoke(new Action<BindingList<CandleStickData>>((d) => {
+                            this.chartControl1.Series["Current"].DataSource = new RealTimeSource() { DataSource = d };
+                            this.chartControl1.Series["Volume"].DataSource = new RealTimeSource() { DataSource = d };
+                            this.chartControl1.Series["BuySellVolume"].DataSource = new RealTimeSource() { DataSource = d };
+                            this.isCandleSticksUpdate = false;
+                        }), new object[] { data });
                     }
                     try {
                         SplashScreenManager.CloseDefaultWaitForm();
                     }
-                    catch(Exception) { }
-                    this.isCandleSticksUpdate = false;
+                    catch(Exception) {
+                        this.isCandleSticksUpdate = false;
+                    }
                 }
                 catch(Exception e) {
                     Telemetry.Default.TrackException(e, new string[,] { { "method", "update candlestick data from server" } });

@@ -26,6 +26,7 @@ namespace CryptoMarketClient {
 
         public MainForm() {
             InitializeComponent();
+            FormBorderEffect = FormBorderEffect.None;
         }
 
         protected override bool SupportAdvancedTitlePainting => false;
