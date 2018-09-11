@@ -20,6 +20,7 @@ using CryptoMarketClient.Binance;
 using DevExpress.LookAndFeel;
 using CryptoMarketClient.BitFinex;
 using DevExpress.XtraBars;
+using DevExpress.Data;
 
 namespace CryptoMarketClient {
     public partial class MainForm : DevExpress.XtraBars.Ribbon.RibbonForm {
@@ -45,6 +46,9 @@ namespace CryptoMarketClient {
             SplashScreenManager.CloseDefaultWaitForm();
 
             InitializeExchangeButtons();
+
+            this.dpLog.Visibility = DevExpress.XtraBars.Docking.DockVisibility.Visible;
+            this.gcLog.DataSource = new RealTimeSource() { DataSource = LogManager.Default.Messages };
 
             //ExchangesForm.Show();
             //ExchangesForm.Activate();
@@ -471,6 +475,27 @@ namespace CryptoMarketClient {
 
         private void barButtonItem6_ItemClick(object sender, ItemClickEventArgs e) {
 
+        }
+
+        AnalyticsForm analyticsForm;
+        public AnalyticsForm AnalyticsForm {
+            get {
+                if(analyticsForm == null || analyticsForm.IsDisposed) {
+                    analyticsForm = new AnalyticsForm();
+                    analyticsForm.MdiParent = this;
+                }
+                return analyticsForm;
+            }
+        }
+
+        private void biDependencyArbitrageAnalitics_ItemClick(object sender, ItemClickEventArgs e) {
+            AnalyticsForm.Show();
+            AnalyticsForm.Activate();
+        }
+
+        private void biLog_ItemClick(object sender, ItemClickEventArgs e) {
+            this.dpLog.Visibility = DevExpress.XtraBars.Docking.DockVisibility.Visible;
+            this.gcLog.DataSource = new RealTimeSource() { DataSource = LogManager.Default.Messages };
         }
     }
 }

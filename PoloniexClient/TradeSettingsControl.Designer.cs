@@ -171,7 +171,7 @@ namespace CryptoMarketClient {
             this.BuyPriceTextEdit.Properties.AllowNullInput = DevExpress.Utils.DefaultBoolean.False;
             this.BuyPriceTextEdit.Properties.Appearance.Options.UseTextOptions = true;
             this.BuyPriceTextEdit.Properties.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Far;
-            this.BuyPriceTextEdit.Properties.DisplayFormat.FormatString = "0.########";
+            this.BuyPriceTextEdit.Properties.DisplayFormat.FormatString = "0.00000000";
             this.BuyPriceTextEdit.Properties.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.BuyPriceTextEdit.Properties.Mask.EditMask = "f8";
             this.BuyPriceTextEdit.Properties.Mask.MaskType = DevExpress.XtraEditors.Mask.MaskType.Numeric;
@@ -189,7 +189,7 @@ namespace CryptoMarketClient {
             this.AmoutTextEdit.Properties.AllowNullInput = DevExpress.Utils.DefaultBoolean.False;
             this.AmoutTextEdit.Properties.Appearance.Options.UseTextOptions = true;
             this.AmoutTextEdit.Properties.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Far;
-            this.AmoutTextEdit.Properties.DisplayFormat.FormatString = "0.########";
+            this.AmoutTextEdit.Properties.DisplayFormat.FormatString = "0.00000000";
             this.AmoutTextEdit.Properties.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.AmoutTextEdit.Properties.Mask.EditMask = "f8";
             this.AmoutTextEdit.Properties.Mask.MaskType = DevExpress.XtraEditors.Mask.MaskType.Numeric;
@@ -258,7 +258,7 @@ namespace CryptoMarketClient {
             this.textEdit1.Name = "textEdit1";
             this.textEdit1.Properties.Appearance.Options.UseTextOptions = true;
             this.textEdit1.Properties.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Far;
-            this.textEdit1.Properties.DisplayFormat.FormatString = "0.########";
+            this.textEdit1.Properties.DisplayFormat.FormatString = "0.00000000";
             this.textEdit1.Properties.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.textEdit1.Properties.Mask.EditMask = "f8";
             this.textEdit1.Properties.Mask.MaskType = DevExpress.XtraEditors.Mask.MaskType.Numeric;

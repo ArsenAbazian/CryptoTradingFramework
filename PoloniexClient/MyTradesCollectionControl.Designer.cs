@@ -64,7 +64,7 @@ namespace CryptoMarketClient {
             // 
             // colRate
             // 
-            this.colRate.DisplayFormat.FormatString = "0.########";
+            this.colRate.DisplayFormat.FormatString = "0.00000000";
             this.colRate.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.colRate.FieldName = "Rate";
             this.colRate.MinWidth = 40;
@@ -147,7 +147,7 @@ namespace CryptoMarketClient {
             // 
             // colAmount
             // 
-            this.colAmount.DisplayFormat.FormatString = "0.########";
+            this.colAmount.DisplayFormat.FormatString = "0.00000000";
             this.colAmount.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.colAmount.FieldName = "Amount";
             this.colAmount.MinWidth = 40;

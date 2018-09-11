@@ -166,7 +166,7 @@ namespace CryptoMarketClient {
         }
         void UpdateBalanceItem(BarItem item) {
             BalanceBase b = (BalanceBase)item.Tag;
-            string text = b.Exchange + ": <b>" + b.Available.ToString("0.########") + "</b>";
+            string text = b.Exchange + ": <b>" + b.Available.ToString("0.00000000") + "</b>";
             item.Caption = text;
         }
 

@@ -263,6 +263,12 @@
     <Compile Include="AccounTradesCollectionForm.Designer.cs">
       <DependentUpon>AccounTradesCollectionForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="AnalyticsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AnalyticsForm.Designer.cs">
+      <DependentUpon>AnalyticsForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="ConnectionForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -318,12 +324,6 @@
     </Compile>
     <Compile Include="TrailngCollectionForm.Designer.cs">
       <DependentUpon>TrailngCollectionForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="AnalyticsForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="AnalyticsForm.Designer.cs">
-      <DependentUpon>AnalyticsForm.cs</DependentUpon>
     </Compile>
     <Compile Include="CombinedBidAskForm.cs">
       <SubType>Form</SubType>
@@ -456,6 +456,9 @@
     <EmbeddedResource Include="AccounTradesCollectionForm.resx">
       <DependentUpon>AccounTradesCollectionForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="AnalyticsForm.resx">
+      <DependentUpon>AnalyticsForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="OpenedOrdersForm.resx">
       <DependentUpon>OpenedOrdersForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -483,9 +486,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="TrailngCollectionForm.resx">
       <DependentUpon>TrailngCollectionForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="AnalyticsForm.resx">
-      <DependentUpon>AnalyticsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CombinedBidAskForm.resx">
       <DependentUpon>CombinedBidAskForm.cs</DependentUpon>

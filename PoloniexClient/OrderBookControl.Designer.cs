@@ -61,7 +61,7 @@
             // gcVolume2
             // 
             this.gcVolume2.Caption = "Volume";
-            this.gcVolume2.DisplayFormat.FormatString = "0.########";
+            this.gcVolume2.DisplayFormat.FormatString = "0.00000000";
             this.gcVolume2.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.gcVolume2.FieldName = "Volume";
             this.gcVolume2.MinWidth = 40;
@@ -81,7 +81,7 @@
             // gcVolume
             // 
             this.gcVolume.Caption = "Volume";
-            this.gcVolume.DisplayFormat.FormatString = "0.########";
+            this.gcVolume.DisplayFormat.FormatString = "0.00000000";
             this.gcVolume.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.gcVolume.FieldName = "Volume";
             this.gcVolume.MinWidth = 40;

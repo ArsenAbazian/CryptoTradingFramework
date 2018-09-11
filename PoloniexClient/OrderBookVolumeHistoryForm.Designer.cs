@@ -114,7 +114,7 @@
             // 
             // colLowestAsk
             // 
-            this.colLowestAsk.DisplayFormat.FormatString = "0.########";
+            this.colLowestAsk.DisplayFormat.FormatString = "0.00000000";
             this.colLowestAsk.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.colLowestAsk.FieldName = "LowestAsk";
             this.colLowestAsk.Name = "colLowestAsk";
@@ -123,7 +123,7 @@
             // 
             // colHighestBid
             // 
-            this.colHighestBid.DisplayFormat.FormatString = "0.########";
+            this.colHighestBid.DisplayFormat.FormatString = "0.00000000";
             this.colHighestBid.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.colHighestBid.FieldName = "HighestBid";
             this.colHighestBid.Name = "colHighestBid";
@@ -150,7 +150,7 @@
             // 
             // colBidExpectation
             // 
-            this.colBidExpectation.DisplayFormat.FormatString = "0.########";
+            this.colBidExpectation.DisplayFormat.FormatString = "0.00000000";
             this.colBidExpectation.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.colBidExpectation.FieldName = "BidExpectation";
             this.colBidExpectation.Name = "colBidExpectation";
@@ -159,7 +159,7 @@
             // 
             // colAskExpectation
             // 
-            this.colAskExpectation.DisplayFormat.FormatString = "0.########";
+            this.colAskExpectation.DisplayFormat.FormatString = "0.00000000";
             this.colAskExpectation.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.colAskExpectation.FieldName = "AskExpectation";
             this.colAskExpectation.Name = "colAskExpectation";
@@ -168,7 +168,7 @@
             // 
             // colBidDispersion
             // 
-            this.colBidDispersion.DisplayFormat.FormatString = "0.############";
+            this.colBidDispersion.DisplayFormat.FormatString = "0.00000000####";
             this.colBidDispersion.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.colBidDispersion.FieldName = "BidDispersion";
             this.colBidDispersion.Name = "colBidDispersion";
@@ -177,7 +177,7 @@
             // 
             // colAskDispersion
             // 
-            this.colAskDispersion.DisplayFormat.FormatString = "0.############";
+            this.colAskDispersion.DisplayFormat.FormatString = "0.00000000####";
             this.colAskDispersion.FieldName = "AskDispersion";
             this.colAskDispersion.Name = "colAskDispersion";
             this.colAskDispersion.Visible = true;
@@ -223,7 +223,7 @@
             // 
             // colMinBuyPrice
             // 
-            this.colMinBuyPrice.DisplayFormat.FormatString = "0.########";
+            this.colMinBuyPrice.DisplayFormat.FormatString = "0.00000000";
             this.colMinBuyPrice.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.colMinBuyPrice.FieldName = "MinBuyPrice";
             this.colMinBuyPrice.Name = "colMinBuyPrice";
@@ -233,7 +233,7 @@
             // 
             // colMaxBuyPrice
             // 
-            this.colMaxBuyPrice.DisplayFormat.FormatString = "0.########";
+            this.colMaxBuyPrice.DisplayFormat.FormatString = "0.00000000";
             this.colMaxBuyPrice.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.colMaxBuyPrice.FieldName = "MaxBuyPrice";
             this.colMaxBuyPrice.Name = "colMaxBuyPrice";
@@ -243,7 +243,7 @@
             // 
             // colBuyAmount
             // 
-            this.colBuyAmount.DisplayFormat.FormatString = "0.########";
+            this.colBuyAmount.DisplayFormat.FormatString = "0.00000000";
             this.colBuyAmount.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.colBuyAmount.FieldName = "BuyAmount";
             this.colBuyAmount.Name = "colBuyAmount";
@@ -253,7 +253,7 @@
             // 
             // colBuyVolume
             // 
-            this.colBuyVolume.DisplayFormat.FormatString = "0.########";
+            this.colBuyVolume.DisplayFormat.FormatString = "0.00000000";
             this.colBuyVolume.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.colBuyVolume.FieldName = "BuyVolume";
             this.colBuyVolume.Name = "colBuyVolume";
@@ -263,7 +263,7 @@
             // 
             // colMinSellPrice
             // 
-            this.colMinSellPrice.DisplayFormat.FormatString = "0.########";
+            this.colMinSellPrice.DisplayFormat.FormatString = "0.00000000";
             this.colMinSellPrice.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.colMinSellPrice.FieldName = "MinSellPrice";
             this.colMinSellPrice.Name = "colMinSellPrice";
@@ -273,7 +273,7 @@
             // 
             // colMaxSellPrice
             // 
-            this.colMaxSellPrice.DisplayFormat.FormatString = "0.########";
+            this.colMaxSellPrice.DisplayFormat.FormatString = "0.00000000";
             this.colMaxSellPrice.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.colMaxSellPrice.FieldName = "MaxSellPrice";
             this.colMaxSellPrice.Name = "colMaxSellPrice";
@@ -283,7 +283,7 @@
             // 
             // colSellAmount
             // 
-            this.colSellAmount.DisplayFormat.FormatString = "0.########";
+            this.colSellAmount.DisplayFormat.FormatString = "0.00000000";
             this.colSellAmount.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.colSellAmount.FieldName = "SellAmount";
             this.colSellAmount.Name = "colSellAmount";
@@ -293,7 +293,7 @@
             // 
             // colSellVolume
             // 
-            this.colSellVolume.DisplayFormat.FormatString = "0.########";
+            this.colSellVolume.DisplayFormat.FormatString = "0.00000000";
             this.colSellVolume.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.colSellVolume.FieldName = "SellVolume";
             this.colSellVolume.Name = "colSellVolume";

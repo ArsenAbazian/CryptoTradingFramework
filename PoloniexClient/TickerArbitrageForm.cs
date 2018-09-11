@@ -64,7 +64,7 @@ namespace CryptoMarketClient {
                     UpdateBalanceNotification = false;
                     foreach(Exchange exchange in Exchange.Connected) {
                         foreach(BalanceBase info in exchange.DefaultAccount.Balances) {
-                            TelegramBot.Default.SendNotification(exchange.Name + " balance " + info.Currency + " = <b>" + info.Available.ToString("0.########") + "</b>");
+                            TelegramBot.Default.SendNotification(exchange.Name + " balance " + info.Currency + " = <b>" + info.Available.ToString("0.00000000") + "</b>");
                         }
                     }
 
@@ -179,7 +179,7 @@ namespace CryptoMarketClient {
             info.Calculate();
             info.UpateAmountByBalance();
             if(info.ExpectedProfitUSD - info.MaxProfitUSD > 10)
-                LogManager.Default.AddWarning("Arbitrage amount reduced because of balance not enough.", "New Amount = " + info.Amount.ToString("0.########") + ", ProfitUSD = " + info.MaxProfitUSD);
+                LogManager.Default.AddWarning("Arbitrage amount reduced because of balance not enough.", "New Amount = " + info.Amount.ToString("0.00000000") + ", ProfitUSD = " + info.MaxProfitUSD);
 
             if(info.AvailableProfitUSD <= 20) {
                 LogManager.Default.AddWarning("Arbitrage Profit reduced since last time. Skip trading.", SelectedCollection.Name + " expected " + info.ExpectedProfitUSD + " but after update" + info.MaxProfitUSD);
@@ -241,7 +241,7 @@ namespace CryptoMarketClient {
                         SendBoostStopNotification(ticker);
                 }
             });
-            if(useInvokeForUI)
+            if(useInvokeForUI && IsHandleCreated)
                 BeginInvoke(action);
             else
                 action();
@@ -273,8 +273,8 @@ namespace CryptoMarketClient {
             text += "<b>boost detected</b> " + info.HostName + " - " + info.Name;
             text += "<pre> bid BidHipe:       " + info.OrderBook.BidHipe.ToString("0.######") + "</pre>";
             text += "<pre> ask BidHipe:       " + info.OrderBook.AskHipe.ToString("0.######") + "</pre>";
-            text += "<pre> bid:               " + info.HighestBid.ToString("0.########") + "</pre>";
-            text += "<pre> ask:               " + info.LowestAsk.ToString("0.########") + "</pre>";
+            text += "<pre> bid:               " + info.HighestBid.ToString("0.00000000") + "</pre>";
+            text += "<pre> ask:               " + info.LowestAsk.ToString("0.00000000") + "</pre>";
             TelegramBot.Default.SendNotification(text);
         }
         void SendBoostStopNotification(Ticker info) {
@@ -283,8 +283,8 @@ namespace CryptoMarketClient {
             text += "<b>boost stopped</b> " + info.HostName + " - " + info.Name;
             text += "<pre> bid BidHipe:       " + info.OrderBook.BidHipe.ToString("0.######") + "</pre>";
             text += "<pre> ask BidHipe:       " + info.OrderBook.AskHipe.ToString("0.######") + "</pre>";
-            text += "<pre> bid:               " + info.HighestBid.ToString("0.########") + "</pre>";
-            text += "<pre> ask:               " + info.LowestAsk.ToString("0.########") + "</pre>";
+            text += "<pre> bid:               " + info.HighestBid.ToString("0.00000000") + "</pre>";
+            text += "<pre> ask:               " + info.LowestAsk.ToString("0.00000000") + "</pre>";
             TelegramBot.Default.SendNotification(text);
         }
         void SendTelegramNotification(TickerCollection collection, double prev) {
@@ -299,12 +299,12 @@ namespace CryptoMarketClient {
             if(prev <= 0)
                 eventText = prev <= 0 ? "<b>new</b> " : "<b>changed</b> ";
             text = eventText + collection.ShortName;
-            text += "<pre> buy:        " + info.LowestAsk.ToString("0.########") + "</pre>";
-            text += "<pre> sell:       " + info.HighestBid.ToString("0.########") + "</pre>";
-            text += "<pre> spread:     " + info.Spread.ToString("0.########") + "</pre>";
-            text += "<pre> amount:     " + info.Amount.ToString("0.########") + "</pre>";
+            text += "<pre> buy:        " + info.LowestAsk.ToString("0.00000000") + "</pre>";
+            text += "<pre> sell:       " + info.HighestBid.ToString("0.00000000") + "</pre>";
+            text += "<pre> spread:     " + info.Spread.ToString("0.00000000") + "</pre>";
+            text += "<pre> amount:     " + info.Amount.ToString("0.00000000") + "</pre>";
             text += "<pre> max profit: " + info.MaxProfitUSD.ToString("0.###") + "</pre>";
-            text += "<pre> spend:      " + info.BuyTotal.ToString("0.########") + "</pre>";
+            text += "<pre> spend:      " + info.BuyTotal.ToString("0.00000000") + "</pre>";
             text += "<pre></pre>";
             text += "buy on: <a href=\"" + info.LowestAskTicker.WebPageAddress + "\">" + info.LowestAskHost + "</a>";
             text += "<pre></pre>";
@@ -391,11 +391,11 @@ namespace CryptoMarketClient {
 
             double percent = Convert.ToDouble(this.beBuyLowestAsk.EditValue) / 100;
             double buyAmount = lowest.BaseCurrencyBalance * percent;
-            LogManager.Default.Add("Lowest Ask Base Currency Amount = " + buyAmount.ToString("0.########"));
+            LogManager.Default.Add("Lowest Ask Base Currency Amount = " + buyAmount.ToString("0.00000000"));
             double amount = buyAmount / info.LowestAsk;
 
             if(info.LowestAskTicker.Buy(info.LowestAsk, amount) == null)
-                LogManager.Default.AddError("Cant buy currency.", "At " + lowest.HostName + "-" + lowest.BaseCurrency + "(" + amount.ToString("0.########") + ")" + " for " + lowest.MarketCurrency);
+                LogManager.Default.AddError("Cant buy currency.", "At " + lowest.HostName + "-" + lowest.BaseCurrency + "(" + amount.ToString("0.00000000") + ")" + " for " + lowest.MarketCurrency);
 
             SelectedCollection = null;
             LogManager.Default.Show();
@@ -418,10 +418,10 @@ namespace CryptoMarketClient {
 
             double percent = Convert.ToDouble(this.beHighestBidSell.EditValue) / 100;
             double amount = highest.MarketCurrencyBalance * percent;
-            LogManager.Default.Add("Highest Bid Market Currency Amount = " + amount.ToString("0.########"));
+            LogManager.Default.Add("Highest Bid Market Currency Amount = " + amount.ToString("0.00000000"));
 
             if(info.HighestBidTicker.Sell(info.HighestBid, amount) == null)
-                LogManager.Default.AddError("Cant sell currency.", "At " + highest.HostName + "-" + highest.MarketCurrency + "(" + amount.ToString("0.########") + ")" + " for " + highest.BaseCurrency);
+                LogManager.Default.AddError("Cant sell currency.", "At " + highest.HostName + "-" + highest.MarketCurrency + "(" + amount.ToString("0.00000000") + ")" + " for " + highest.BaseCurrency);
 
             SelectedCollection = null;
         }
@@ -455,7 +455,7 @@ namespace CryptoMarketClient {
             if(allowLog) LogManager.Default.Add("Highest Bid Currency Deposit: " + highAddress);
 
             double amount = lowest.MarketCurrencyBalance;
-            if(allowLog) LogManager.Default.Add("Lowest Ask Currency Amount = " + amount.ToString("0.########"));
+            if(allowLog) LogManager.Default.Add("Lowest Ask Currency Amount = " + amount.ToString("0.00000000"));
 
             if(lowest.Withdraw(lowest.MarketCurrency, highAddress, "", amount)) {
                 string text = "Withdraw " + lowest.MarketCurrency + " " + lowest.HostName + " -> " + highest.HostName + " succeded.";
@@ -518,7 +518,7 @@ namespace CryptoMarketClient {
             LogManager.Default.Add("Highest Bid Base Currency Deposit: " + highAddress);
 
             double amount = highest.BaseCurrencyBalance;
-            LogManager.Default.Add("Highest Bid Base Currency Amount = " + amount.ToString("0.########"));
+            LogManager.Default.Add("Highest Bid Base Currency Amount = " + amount.ToString("0.00000000"));
 
             highest.Withdraw(highest.BaseCurrency, lowAddress, "", amount);
 
@@ -579,10 +579,6 @@ namespace CryptoMarketClient {
         }
 
         private void bbAnalytics_ItemClick(object sender, ItemClickEventArgs e) {
-            AnalyticsForm form = new AnalyticsForm();
-            TickerCollection info = (TickerCollection)this.bbTryArbitrage.Tag;
-            form.Ticker = info.Arbitrage.LowestAskTicker;
-            form.Show();
         }
 
         protected Type StrategyType { get; set; }

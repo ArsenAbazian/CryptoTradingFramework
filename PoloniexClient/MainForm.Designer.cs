@@ -25,6 +25,13 @@
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
+            DevExpress.XtraGrid.GridFormatRule gridFormatRule1 = new DevExpress.XtraGrid.GridFormatRule();
+            DevExpress.XtraEditors.FormatConditionRuleValue formatConditionRuleValue1 = new DevExpress.XtraEditors.FormatConditionRuleValue();
+            DevExpress.XtraGrid.GridFormatRule gridFormatRule2 = new DevExpress.XtraGrid.GridFormatRule();
+            DevExpress.XtraEditors.FormatConditionRuleValue formatConditionRuleValue2 = new DevExpress.XtraEditors.FormatConditionRuleValue();
+            DevExpress.XtraGrid.GridFormatRule gridFormatRule3 = new DevExpress.XtraGrid.GridFormatRule();
+            DevExpress.XtraEditors.FormatConditionRuleValue formatConditionRuleValue3 = new DevExpress.XtraEditors.FormatConditionRuleValue();
+            this.colType = new DevExpress.XtraGrid.Columns.GridColumn();
             this.ribbonControl1 = new DevExpress.XtraBars.Ribbon.RibbonControl();
             this.skinRibbonGalleryBarItem1 = new DevExpress.XtraBars.SkinRibbonGalleryBarItem();
             this.bcPoloniex = new DevExpress.XtraBars.BarCheckItem();
@@ -59,6 +66,8 @@
             this.biCalculator = new DevExpress.XtraBars.BarButtonItem();
             this.biFuturesArbitrage = new DevExpress.XtraBars.BarButtonItem();
             this.biFuturesSettings = new DevExpress.XtraBars.BarButtonItem();
+            this.biDependencyArbitrageAnalitics = new DevExpress.XtraBars.BarButtonItem();
+            this.biLog = new DevExpress.XtraBars.BarButtonItem();
             this.ribbonPageCategory1 = new DevExpress.XtraBars.Ribbon.RibbonPageCategory();
             this.ribbonPage2 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPageGroup2 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
@@ -82,6 +91,16 @@
             this.defaultBarAndDockingController1 = new DevExpress.XtraBars.DefaultBarAndDockingController(this.components);
             this.ribbonPage4 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPage6 = new DevExpress.XtraBars.Ribbon.RibbonPage();
+            this.dockManager1 = new DevExpress.XtraBars.Docking.DockManager(this.components);
+            this.dpLog = new DevExpress.XtraBars.Docking.DockPanel();
+            this.dockPanel1_Container = new DevExpress.XtraBars.Docking.ControlContainer();
+            this.gcLog = new DevExpress.XtraGrid.GridControl();
+            this.gvLog = new DevExpress.XtraGrid.Views.Grid.GridView();
+            this.colTime = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colText = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colDescription = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colExchange = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colTicker = new DevExpress.XtraGrid.Columns.GridColumn();
             ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemSpinEdit1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemSpinEdit2)).BeginInit();
@@ -89,7 +108,21 @@
             ((System.ComponentModel.ISupportInitialize)(this.documentManager1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tabbedView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.defaultBarAndDockingController1.Controller)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dockManager1)).BeginInit();
+            this.dpLog.SuspendLayout();
+            this.dockPanel1_Container.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gcLog)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gvLog)).BeginInit();
             this.SuspendLayout();
+            // 
+            // colType
+            // 
+            this.colType.FieldName = "Type";
+            this.colType.MinWidth = 40;
+            this.colType.Name = "colType";
+            this.colType.Visible = true;
+            this.colType.VisibleIndex = 0;
+            this.colType.Width = 66;
             // 
             // ribbonControl1
             // 
@@ -129,10 +162,12 @@
             this.bbShowSettings,
             this.biCalculator,
             this.biFuturesArbitrage,
-            this.biFuturesSettings});
+            this.biFuturesSettings,
+            this.biDependencyArbitrageAnalitics,
+            this.biLog});
             this.ribbonControl1.Location = new System.Drawing.Point(0, 0);
-            this.ribbonControl1.Margin = new System.Windows.Forms.Padding(12, 12, 12, 12);
-            this.ribbonControl1.MaxItemId = 40;
+            this.ribbonControl1.Margin = new System.Windows.Forms.Padding(12);
+            this.ribbonControl1.MaxItemId = 42;
             this.ribbonControl1.MdiMergeStyle = DevExpress.XtraBars.Ribbon.RibbonMdiMergeStyle.Always;
             this.ribbonControl1.Name = "ribbonControl1";
             this.ribbonControl1.PageCategories.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageCategory[] {
@@ -425,7 +460,7 @@
             // 
             this.biFuturesArbitrage.Caption = "Show";
             this.biFuturesArbitrage.Id = 38;
-            this.biFuturesArbitrage.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("barButtonItem5.ImageOptions.SvgImage")));
+            this.biFuturesArbitrage.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("biFuturesArbitrage.ImageOptions.SvgImage")));
             this.biFuturesArbitrage.Name = "biFuturesArbitrage";
             this.biFuturesArbitrage.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItem5_ItemClick);
             // 
@@ -436,6 +471,22 @@
             this.biFuturesSettings.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("biFuturesSettings.ImageOptions.SvgImage")));
             this.biFuturesSettings.Name = "biFuturesSettings";
             this.biFuturesSettings.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItem6_ItemClick);
+            // 
+            // biDependencyArbitrageAnalitics
+            // 
+            this.biDependencyArbitrageAnalitics.Caption = "Analytics";
+            this.biDependencyArbitrageAnalitics.Id = 40;
+            this.biDependencyArbitrageAnalitics.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("biDependencyArbitrageAnalitics.ImageOptions.SvgImage")));
+            this.biDependencyArbitrageAnalitics.Name = "biDependencyArbitrageAnalitics";
+            this.biDependencyArbitrageAnalitics.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.biDependencyArbitrageAnalitics_ItemClick);
+            // 
+            // biLog
+            // 
+            this.biLog.Caption = "Log";
+            this.biLog.Id = 41;
+            this.biLog.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("biLog.ImageOptions.SvgImage")));
+            this.biLog.Name = "biLog";
+            this.biLog.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.biLog_ItemClick);
             // 
             // ribbonPageCategory1
             // 
@@ -507,8 +558,9 @@
             // 
             this.ribbonPageGroup3.ItemLinks.Add(this.biFuturesArbitrage);
             this.ribbonPageGroup3.ItemLinks.Add(this.biFuturesSettings);
+            this.ribbonPageGroup3.ItemLinks.Add(this.biDependencyArbitrageAnalitics);
             this.ribbonPageGroup3.Name = "ribbonPageGroup3";
-            this.ribbonPageGroup3.Text = "Futures Arbitrage";
+            this.ribbonPageGroup3.Text = "Stat Arbitrage";
             // 
             // ribbonPageGroup8
             // 
@@ -528,6 +580,7 @@
             // ribbonPageGroup5
             // 
             this.ribbonPageGroup5.ItemLinks.Add(this.biCalculator);
+            this.ribbonPageGroup5.ItemLinks.Add(this.biLog);
             this.ribbonPageGroup5.Name = "ribbonPageGroup5";
             this.ribbonPageGroup5.Text = "Instruments";
             // 
@@ -569,7 +622,7 @@
             // 
             this.ribbonStatusBar1.AutoHeight = true;
             this.ribbonStatusBar1.Location = new System.Drawing.Point(0, 1040);
-            this.ribbonStatusBar1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.ribbonStatusBar1.Margin = new System.Windows.Forms.Padding(6);
             this.ribbonStatusBar1.Name = "ribbonStatusBar1";
             this.ribbonStatusBar1.Ribbon = this.ribbonControl1;
             this.ribbonStatusBar1.Size = new System.Drawing.Size(1930, 58);
@@ -597,16 +650,154 @@
             this.ribbonPage6.Name = "ribbonPage6";
             this.ribbonPage6.Text = "ribbonPage6";
             // 
+            // dockManager1
+            // 
+            this.dockManager1.Form = this;
+            this.dockManager1.RootPanels.AddRange(new DevExpress.XtraBars.Docking.DockPanel[] {
+            this.dpLog});
+            this.dockManager1.TopZIndexControls.AddRange(new string[] {
+            "DevExpress.XtraBars.BarDockControl",
+            "DevExpress.XtraBars.StandaloneBarDockControl",
+            "System.Windows.Forms.StatusBar",
+            "System.Windows.Forms.MenuStrip",
+            "System.Windows.Forms.StatusStrip",
+            "DevExpress.XtraBars.Ribbon.RibbonStatusBar",
+            "DevExpress.XtraBars.Ribbon.RibbonControl",
+            "DevExpress.XtraBars.Navigation.OfficeNavigationBar",
+            "DevExpress.XtraBars.Navigation.TileNavPane",
+            "DevExpress.XtraBars.TabFormControl",
+            "DevExpress.XtraBars.FluentDesignSystem.FluentDesignFormControl"});
+            // 
+            // dpLog
+            // 
+            this.dpLog.Controls.Add(this.dockPanel1_Container);
+            this.dpLog.Dock = DevExpress.XtraBars.Docking.DockingStyle.Bottom;
+            this.dpLog.ID = new System.Guid("cd4b6f88-5447-48ec-b285-d76f79e87621");
+            this.dpLog.Location = new System.Drawing.Point(0, 653);
+            this.dpLog.Name = "dpLog";
+            this.dpLog.OriginalSize = new System.Drawing.Size(200, 387);
+            this.dpLog.SavedSizeFactor = 0D;
+            this.dpLog.Size = new System.Drawing.Size(1930, 387);
+            this.dpLog.Text = "Log";
+            // 
+            // dockPanel1_Container
+            // 
+            this.dockPanel1_Container.Controls.Add(this.gcLog);
+            this.dockPanel1_Container.Location = new System.Drawing.Point(8, 51);
+            this.dockPanel1_Container.Name = "dockPanel1_Container";
+            this.dockPanel1_Container.Size = new System.Drawing.Size(1914, 328);
+            this.dockPanel1_Container.TabIndex = 0;
+            // 
+            // gcLog
+            // 
+            this.gcLog.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gcLog.Location = new System.Drawing.Point(0, 0);
+            this.gcLog.MainView = this.gvLog;
+            this.gcLog.Name = "gcLog";
+            this.gcLog.Size = new System.Drawing.Size(1914, 328);
+            this.gcLog.TabIndex = 4;
+            this.gcLog.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
+            this.gvLog});
+            // 
+            // gvLog
+            // 
+            this.gvLog.Columns.AddRange(new DevExpress.XtraGrid.Columns.GridColumn[] {
+            this.colType,
+            this.colTime,
+            this.colText,
+            this.colDescription,
+            this.colExchange,
+            this.colTicker});
+            gridFormatRule1.ApplyToRow = true;
+            gridFormatRule1.Column = this.colType;
+            gridFormatRule1.Name = "FormatRuleError";
+            formatConditionRuleValue1.Appearance.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
+            formatConditionRuleValue1.Appearance.Options.UseBackColor = true;
+            formatConditionRuleValue1.Condition = DevExpress.XtraEditors.FormatCondition.Equal;
+            formatConditionRuleValue1.Value1 = CryptoMarketClient.Common.LogType.Error;
+            gridFormatRule1.Rule = formatConditionRuleValue1;
+            gridFormatRule2.ApplyToRow = true;
+            gridFormatRule2.Column = this.colType;
+            gridFormatRule2.Name = "FormatRuleWarning";
+            formatConditionRuleValue2.Appearance.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(255)))), ((int)(((byte)(224)))), ((int)(((byte)(192)))));
+            formatConditionRuleValue2.Appearance.Options.UseBackColor = true;
+            formatConditionRuleValue2.Condition = DevExpress.XtraEditors.FormatCondition.Equal;
+            formatConditionRuleValue2.Value1 = CryptoMarketClient.Common.LogType.Warning;
+            gridFormatRule2.Rule = formatConditionRuleValue2;
+            gridFormatRule3.ApplyToRow = true;
+            gridFormatRule3.Name = "FormatRuleSuccess";
+            formatConditionRuleValue3.Appearance.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            formatConditionRuleValue3.Appearance.Options.UseBackColor = true;
+            formatConditionRuleValue3.Condition = DevExpress.XtraEditors.FormatCondition.Equal;
+            formatConditionRuleValue3.Value1 = CryptoMarketClient.Common.LogType.Success;
+            gridFormatRule3.Rule = formatConditionRuleValue3;
+            this.gvLog.FormatRules.Add(gridFormatRule1);
+            this.gvLog.FormatRules.Add(gridFormatRule2);
+            this.gvLog.FormatRules.Add(gridFormatRule3);
+            this.gvLog.GridControl = this.gcLog;
+            this.gvLog.Name = "gvLog";
+            this.gvLog.OptionsBehavior.Editable = false;
+            this.gvLog.OptionsView.ShowHorizontalLines = DevExpress.Utils.DefaultBoolean.False;
+            this.gvLog.OptionsView.ShowVerticalLines = DevExpress.Utils.DefaultBoolean.False;
+            // 
+            // colTime
+            // 
+            this.colTime.DisplayFormat.FormatString = "dd.MM.yyyy hh:mm:ss.fff";
+            this.colTime.DisplayFormat.FormatType = DevExpress.Utils.FormatType.DateTime;
+            this.colTime.FieldName = "Time";
+            this.colTime.MinWidth = 40;
+            this.colTime.Name = "colTime";
+            this.colTime.Visible = true;
+            this.colTime.VisibleIndex = 1;
+            this.colTime.Width = 258;
+            // 
+            // colText
+            // 
+            this.colText.FieldName = "Text";
+            this.colText.MinWidth = 40;
+            this.colText.Name = "colText";
+            this.colText.Visible = true;
+            this.colText.VisibleIndex = 4;
+            this.colText.Width = 791;
+            // 
+            // colDescription
+            // 
+            this.colDescription.FieldName = "Description";
+            this.colDescription.MinWidth = 40;
+            this.colDescription.Name = "colDescription";
+            this.colDescription.Visible = true;
+            this.colDescription.VisibleIndex = 5;
+            this.colDescription.Width = 509;
+            // 
+            // colExchange
+            // 
+            this.colExchange.FieldName = "Exchange";
+            this.colExchange.MinWidth = 40;
+            this.colExchange.Name = "colExchange";
+            this.colExchange.Visible = true;
+            this.colExchange.VisibleIndex = 2;
+            this.colExchange.Width = 124;
+            // 
+            // colTicker
+            // 
+            this.colTicker.FieldName = "Ticker";
+            this.colTicker.MinWidth = 40;
+            this.colTicker.Name = "colTicker";
+            this.colTicker.Visible = true;
+            this.colTicker.VisibleIndex = 3;
+            this.colTicker.Width = 124;
+            // 
             // MainForm
             // 
             this.AllowFormGlass = DevExpress.Utils.DefaultBoolean.False;
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1930, 1098);
+            this.Controls.Add(this.dpLog);
             this.Controls.Add(this.ribbonStatusBar1);
             this.Controls.Add(this.ribbonControl1);
             this.IsMdiContainer = true;
-            this.Margin = new System.Windows.Forms.Padding(12, 12, 12, 12);
+            this.Margin = new System.Windows.Forms.Padding(12);
             this.Name = "MainForm";
             this.Ribbon = this.ribbonControl1;
             this.StatusBar = this.ribbonStatusBar1;
@@ -620,6 +811,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.documentManager1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tabbedView1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.defaultBarAndDockingController1.Controller)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dockManager1)).EndInit();
+            this.dpLog.ResumeLayout(false);
+            this.dockPanel1_Container.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.gcLog)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gvLog)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -684,6 +880,19 @@
         private DevExpress.XtraBars.BarButtonItem biFuturesArbitrage;
         private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup3;
         private DevExpress.XtraBars.BarButtonItem biFuturesSettings;
+        private DevExpress.XtraBars.BarButtonItem biDependencyArbitrageAnalitics;
+        private DevExpress.XtraBars.BarButtonItem biLog;
+        private DevExpress.XtraBars.Docking.DockPanel dpLog;
+        private DevExpress.XtraBars.Docking.ControlContainer dockPanel1_Container;
+        private DevExpress.XtraBars.Docking.DockManager dockManager1;
+        private DevExpress.XtraGrid.GridControl gcLog;
+        private DevExpress.XtraGrid.Views.Grid.GridView gvLog;
+        private DevExpress.XtraGrid.Columns.GridColumn colType;
+        private DevExpress.XtraGrid.Columns.GridColumn colTime;
+        private DevExpress.XtraGrid.Columns.GridColumn colText;
+        private DevExpress.XtraGrid.Columns.GridColumn colDescription;
+        private DevExpress.XtraGrid.Columns.GridColumn colExchange;
+        private DevExpress.XtraGrid.Columns.GridColumn colTicker;
     }
 }
 

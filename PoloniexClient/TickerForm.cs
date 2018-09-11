@@ -69,8 +69,6 @@ namespace CryptoMarketClient {
                     Ticker.UpdateTicker();
                 if(Ticker != null && !Ticker.Exchange.SupportWebSocket(WebSocketType.Ticker))
                     Ticker.UpdateOrderBook();
-                if(Ticker != null)
-                    Ticker.UpdateBalance(Ticker.MarketCurrency);
                 if(Ticker != null && !Ticker.Exchange.SupportWebSocket(WebSocketType.Ticker))
                     Ticker.UpdateTrades();
                 if(Ticker != null)
@@ -119,6 +117,7 @@ namespace CryptoMarketClient {
                 ClearGrid();
                 ClearChart();
                 UnsubscribeEvents(prev);
+                prev.StopListenTickerStream();
             }
             UpdateTickerInfoBar();
             this.myTradesCollectionControl1.Ticker = Ticker;
@@ -135,6 +134,8 @@ namespace CryptoMarketClient {
             UpdateDockPanels();
             UpdateBuySellSettings();
             SubscribeEvents();
+            Ticker.UpdateBalance(Ticker.MarketCurrency);
+            Ticker.StartListenTickerStream();
         }
         void UpdateTickerInfoBar() {
             if(Ticker == null)
@@ -236,7 +237,7 @@ namespace CryptoMarketClient {
             if(IsHandleCreated) {
                 BeginInvoke(new Action(() => {
                     if(!IsDisposed) {
-                        this.siBalance.Caption = "Balance: " + Ticker.MarketCurrencyBalance.ToString("0.########");
+                        this.siBalance.Caption = "Balance: " + Ticker.MarketCurrencyBalance.ToString("0.00000000");
                         this.siUpdated.Caption = "Updated: " + Ticker.LastUpdateTime;
                     }
                 }));

@@ -53,7 +53,7 @@
             // 
             // colProfit
             // 
-            this.colProfit.DisplayFormat.FormatString = "0.########";
+            this.colProfit.DisplayFormat.FormatString = "0.00000000";
             this.colProfit.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.colProfit.FieldName = "Profit";
             this.colProfit.Name = "colProfit";
@@ -136,7 +136,7 @@
             // 
             // colDisbalance
             // 
-            this.colDisbalance.DisplayFormat.FormatString = "0.########";
+            this.colDisbalance.DisplayFormat.FormatString = "0.00000000";
             this.colDisbalance.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.colDisbalance.FieldName = "Disbalance";
             this.colDisbalance.Name = "colDisbalance";
@@ -154,7 +154,7 @@
             // 
             // colAltBasePrice
             // 
-            this.colAltBasePrice.DisplayFormat.FormatString = "0.########";
+            this.colAltBasePrice.DisplayFormat.FormatString = "0.00000000";
             this.colAltBasePrice.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.colAltBasePrice.FieldName = "AltBasePrice";
             this.colAltBasePrice.Name = "colAltBasePrice";
@@ -163,7 +163,7 @@
             // 
             // colAtlUsdtPrice
             // 
-            this.colAtlUsdtPrice.DisplayFormat.FormatString = "0.########";
+            this.colAtlUsdtPrice.DisplayFormat.FormatString = "0.00000000";
             this.colAtlUsdtPrice.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.colAtlUsdtPrice.FieldName = "AtlUsdtPrice";
             this.colAtlUsdtPrice.Name = "colAtlUsdtPrice";
@@ -172,7 +172,7 @@
             // 
             // colBaseUsdtPrice
             // 
-            this.colBaseUsdtPrice.DisplayFormat.FormatString = "0.########";
+            this.colBaseUsdtPrice.DisplayFormat.FormatString = "0.00000000";
             this.colBaseUsdtPrice.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.colBaseUsdtPrice.FieldName = "BaseUsdtPrice";
             this.colBaseUsdtPrice.Name = "colBaseUsdtPrice";
@@ -181,7 +181,7 @@
             // 
             // colAmount
             // 
-            this.colAmount.DisplayFormat.FormatString = "0.########";
+            this.colAmount.DisplayFormat.FormatString = "0.00000000";
             this.colAmount.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.colAmount.FieldName = "Amount";
             this.colAmount.Name = "colAmount";
@@ -190,7 +190,7 @@
             // 
             // colFee
             // 
-            this.colFee.DisplayFormat.FormatString = "0.########";
+            this.colFee.DisplayFormat.FormatString = "0.00000000";
             this.colFee.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.colFee.FieldName = "Fee";
             this.colFee.Name = "colFee";

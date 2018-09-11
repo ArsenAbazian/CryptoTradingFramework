@@ -151,7 +151,7 @@ namespace CryptoMarketClient {
             // 
             // colProfit
             // 
-            this.colProfit.DisplayFormat.FormatString = "0.########";
+            this.colProfit.DisplayFormat.FormatString = "0.00000000";
             this.colProfit.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.colProfit.FieldName = "MaxProfit";
             this.colProfit.MinWidth = 40;
@@ -247,7 +247,7 @@ namespace CryptoMarketClient {
             // colProfitUSD
             // 
             this.colProfitUSD.Caption = "In USD";
-            this.colProfitUSD.DisplayFormat.FormatString = "0.########";
+            this.colProfitUSD.DisplayFormat.FormatString = "0.00000000";
             this.colProfitUSD.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.colProfitUSD.FieldName = "MaxProfitUSD";
             this.colProfitUSD.MinWidth = 40;
@@ -457,7 +457,7 @@ namespace CryptoMarketClient {
             // 
             // colLowestAsk
             // 
-            this.colLowestAsk.DisplayFormat.FormatString = "0.########";
+            this.colLowestAsk.DisplayFormat.FormatString = "0.00000000";
             this.colLowestAsk.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.colLowestAsk.FieldName = "LowestAsk";
             this.colLowestAsk.MinWidth = 40;
@@ -470,7 +470,7 @@ namespace CryptoMarketClient {
             // 
             // colHighestBid
             // 
-            this.colHighestBid.DisplayFormat.FormatString = "0.########";
+            this.colHighestBid.DisplayFormat.FormatString = "0.00000000";
             this.colHighestBid.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.colHighestBid.FieldName = "HighestBid";
             this.colHighestBid.MinWidth = 40;
@@ -483,7 +483,7 @@ namespace CryptoMarketClient {
             // 
             // colSpread
             // 
-            this.colSpread.DisplayFormat.FormatString = "0.#########";
+            this.colSpread.DisplayFormat.FormatString = "0.00000000#";
             this.colSpread.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.colSpread.FieldName = "Spread";
             this.colSpread.MinWidth = 40;
@@ -507,7 +507,7 @@ namespace CryptoMarketClient {
             // 
             // colBuyTotal
             // 
-            this.colBuyTotal.DisplayFormat.FormatString = "0.########";
+            this.colBuyTotal.DisplayFormat.FormatString = "0.00000000";
             this.colBuyTotal.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.colBuyTotal.FieldName = "BuyTotal";
             this.colBuyTotal.MinWidth = 40;
@@ -519,7 +519,7 @@ namespace CryptoMarketClient {
             // 
             // colTotal
             // 
-            this.colTotal.DisplayFormat.FormatString = "0.########";
+            this.colTotal.DisplayFormat.FormatString = "0.00000000";
             this.colTotal.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.colTotal.FieldName = "Total";
             this.colTotal.MinWidth = 40;
@@ -547,7 +547,7 @@ namespace CryptoMarketClient {
             // 
             // colTotalFee
             // 
-            this.colTotalFee.DisplayFormat.FormatString = "0.########";
+            this.colTotalFee.DisplayFormat.FormatString = "0.00000000";
             this.colTotalFee.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.colTotalFee.FieldName = "TotalFee";
             this.colTotalFee.MinWidth = 40;
@@ -568,7 +568,7 @@ namespace CryptoMarketClient {
             // colAvailableProfit
             // 
             this.colAvailableProfit.Caption = "AvailableProfit";
-            this.colAvailableProfit.DisplayFormat.FormatString = "0.########";
+            this.colAvailableProfit.DisplayFormat.FormatString = "0.00000000";
             this.colAvailableProfit.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.colAvailableProfit.FieldName = "AvailableProfit";
             this.colAvailableProfit.MinWidth = 40;
@@ -579,7 +579,7 @@ namespace CryptoMarketClient {
             // colAvailableProfitUSD
             // 
             this.colAvailableProfitUSD.Caption = "AvailableProfitUSD";
-            this.colAvailableProfitUSD.DisplayFormat.FormatString = "0.########";
+            this.colAvailableProfitUSD.DisplayFormat.FormatString = "0.00000000";
             this.colAvailableProfitUSD.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.colAvailableProfitUSD.FieldName = "AvailableProfitUSD";
             this.colAvailableProfitUSD.MinWidth = 40;

@@ -309,9 +309,9 @@
             // repositoryItemTextEdit1
             // 
             this.repositoryItemTextEdit1.AutoHeight = false;
-            this.repositoryItemTextEdit1.DisplayFormat.FormatString = "0.########";
+            this.repositoryItemTextEdit1.DisplayFormat.FormatString = "0.00000000";
             this.repositoryItemTextEdit1.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
-            this.repositoryItemTextEdit1.EditFormat.FormatString = "0.########";
+            this.repositoryItemTextEdit1.EditFormat.FormatString = "0.00000000";
             this.repositoryItemTextEdit1.EditFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.repositoryItemTextEdit1.Mask.EditMask = "f8";
             this.repositoryItemTextEdit1.Mask.MaskType = DevExpress.XtraEditors.Mask.MaskType.Numeric;
@@ -322,9 +322,9 @@
             this.repositoryItemButtonEdit1.AutoHeight = false;
             this.repositoryItemButtonEdit1.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph, "All", 50, true, true, false, editorButtonImageOptions1, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject1, serializableAppearanceObject2, serializableAppearanceObject3, serializableAppearanceObject4, "", null, null, DevExpress.Utils.ToolTipAnchor.Default)});
-            this.repositoryItemButtonEdit1.DisplayFormat.FormatString = "0.########";
+            this.repositoryItemButtonEdit1.DisplayFormat.FormatString = "0.00000000";
             this.repositoryItemButtonEdit1.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
-            this.repositoryItemButtonEdit1.EditFormat.FormatString = "0.########";
+            this.repositoryItemButtonEdit1.EditFormat.FormatString = "0.00000000";
             this.repositoryItemButtonEdit1.EditFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.repositoryItemButtonEdit1.Mask.EditMask = "f8";
             this.repositoryItemButtonEdit1.Mask.MaskType = DevExpress.XtraEditors.Mask.MaskType.Numeric;
