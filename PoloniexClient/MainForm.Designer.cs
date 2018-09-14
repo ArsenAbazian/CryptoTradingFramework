@@ -25,13 +25,6 @@
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            DevExpress.XtraGrid.GridFormatRule gridFormatRule1 = new DevExpress.XtraGrid.GridFormatRule();
-            DevExpress.XtraEditors.FormatConditionRuleValue formatConditionRuleValue1 = new DevExpress.XtraEditors.FormatConditionRuleValue();
-            DevExpress.XtraGrid.GridFormatRule gridFormatRule2 = new DevExpress.XtraGrid.GridFormatRule();
-            DevExpress.XtraEditors.FormatConditionRuleValue formatConditionRuleValue2 = new DevExpress.XtraEditors.FormatConditionRuleValue();
-            DevExpress.XtraGrid.GridFormatRule gridFormatRule3 = new DevExpress.XtraGrid.GridFormatRule();
-            DevExpress.XtraEditors.FormatConditionRuleValue formatConditionRuleValue3 = new DevExpress.XtraEditors.FormatConditionRuleValue();
-            this.colType = new DevExpress.XtraGrid.Columns.GridColumn();
             this.ribbonControl1 = new DevExpress.XtraBars.Ribbon.RibbonControl();
             this.skinRibbonGalleryBarItem1 = new DevExpress.XtraBars.SkinRibbonGalleryBarItem();
             this.bcPoloniex = new DevExpress.XtraBars.BarCheckItem();
@@ -94,13 +87,7 @@
             this.dockManager1 = new DevExpress.XtraBars.Docking.DockManager(this.components);
             this.dpLog = new DevExpress.XtraBars.Docking.DockPanel();
             this.dockPanel1_Container = new DevExpress.XtraBars.Docking.ControlContainer();
-            this.gcLog = new DevExpress.XtraGrid.GridControl();
-            this.gvLog = new DevExpress.XtraGrid.Views.Grid.GridView();
-            this.colTime = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.colText = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.colDescription = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.colExchange = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.colTicker = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.logMessagesControl1 = new CryptoMarketClient.LogMessagesControl();
             ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemSpinEdit1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemSpinEdit2)).BeginInit();
@@ -111,18 +98,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.dockManager1)).BeginInit();
             this.dpLog.SuspendLayout();
             this.dockPanel1_Container.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.gcLog)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gvLog)).BeginInit();
             this.SuspendLayout();
-            // 
-            // colType
-            // 
-            this.colType.FieldName = "Type";
-            this.colType.MinWidth = 40;
-            this.colType.Name = "colType";
-            this.colType.Visible = true;
-            this.colType.VisibleIndex = 0;
-            this.colType.Width = 66;
             // 
             // ribbonControl1
             // 
@@ -183,7 +159,7 @@
             this.repositoryItemSpinEdit2});
             this.ribbonControl1.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonControlStyle.Office2013;
             this.ribbonControl1.ShowApplicationButton = DevExpress.Utils.DefaultBoolean.False;
-            this.ribbonControl1.Size = new System.Drawing.Size(1930, 267);
+            this.ribbonControl1.Size = new System.Drawing.Size(1930, 281);
             this.ribbonControl1.StatusBar = this.ribbonStatusBar1;
             this.ribbonControl1.Merge += new DevExpress.XtraBars.Ribbon.RibbonMergeEventHandler(this.ribbonControl1_Merge);
             this.ribbonControl1.UnMerge += new DevExpress.XtraBars.Ribbon.RibbonMergeEventHandler(this.ribbonControl1_UnMerge);
@@ -621,11 +597,11 @@
             // ribbonStatusBar1
             // 
             this.ribbonStatusBar1.AutoHeight = true;
-            this.ribbonStatusBar1.Location = new System.Drawing.Point(0, 1040);
+            this.ribbonStatusBar1.Location = new System.Drawing.Point(0, 1036);
             this.ribbonStatusBar1.Margin = new System.Windows.Forms.Padding(6);
             this.ribbonStatusBar1.Name = "ribbonStatusBar1";
             this.ribbonStatusBar1.Ribbon = this.ribbonControl1;
-            this.ribbonStatusBar1.Size = new System.Drawing.Size(1930, 58);
+            this.ribbonStatusBar1.Size = new System.Drawing.Size(1930, 62);
             // 
             // documentManager1
             // 
@@ -638,7 +614,6 @@
             // defaultBarAndDockingController1
             // 
             this.defaultBarAndDockingController1.Controller.PropertiesDocking.ViewStyle = DevExpress.XtraBars.Docking2010.Views.DockingViewStyle.Classic;
-            this.defaultBarAndDockingController1.Controller.PropertiesRibbon.ScaleIcons = false;
             // 
             // ribbonPage4
             // 
@@ -653,7 +628,7 @@
             // dockManager1
             // 
             this.dockManager1.Form = this;
-            this.dockManager1.RootPanels.AddRange(new DevExpress.XtraBars.Docking.DockPanel[] {
+            this.dockManager1.HiddenPanels.AddRange(new DevExpress.XtraBars.Docking.DockPanel[] {
             this.dpLog});
             this.dockManager1.TopZIndexControls.AddRange(new string[] {
             "DevExpress.XtraBars.BarDockControl",
@@ -676,116 +651,28 @@
             this.dpLog.Location = new System.Drawing.Point(0, 653);
             this.dpLog.Name = "dpLog";
             this.dpLog.OriginalSize = new System.Drawing.Size(200, 387);
-            this.dpLog.SavedSizeFactor = 0D;
+            this.dpLog.SavedDock = DevExpress.XtraBars.Docking.DockingStyle.Bottom;
+            this.dpLog.SavedIndex = 0;
+            this.dpLog.SavedSizeFactor = 1D;
             this.dpLog.Size = new System.Drawing.Size(1930, 387);
             this.dpLog.Text = "Log";
+            this.dpLog.Visibility = DevExpress.XtraBars.Docking.DockVisibility.Hidden;
             // 
             // dockPanel1_Container
             // 
-            this.dockPanel1_Container.Controls.Add(this.gcLog);
+            this.dockPanel1_Container.Controls.Add(this.logMessagesControl1);
             this.dockPanel1_Container.Location = new System.Drawing.Point(8, 51);
             this.dockPanel1_Container.Name = "dockPanel1_Container";
             this.dockPanel1_Container.Size = new System.Drawing.Size(1914, 328);
             this.dockPanel1_Container.TabIndex = 0;
             // 
-            // gcLog
+            // logMessagesControl1
             // 
-            this.gcLog.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gcLog.Location = new System.Drawing.Point(0, 0);
-            this.gcLog.MainView = this.gvLog;
-            this.gcLog.Name = "gcLog";
-            this.gcLog.Size = new System.Drawing.Size(1914, 328);
-            this.gcLog.TabIndex = 4;
-            this.gcLog.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
-            this.gvLog});
-            // 
-            // gvLog
-            // 
-            this.gvLog.Columns.AddRange(new DevExpress.XtraGrid.Columns.GridColumn[] {
-            this.colType,
-            this.colTime,
-            this.colText,
-            this.colDescription,
-            this.colExchange,
-            this.colTicker});
-            gridFormatRule1.ApplyToRow = true;
-            gridFormatRule1.Column = this.colType;
-            gridFormatRule1.Name = "FormatRuleError";
-            formatConditionRuleValue1.Appearance.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-            formatConditionRuleValue1.Appearance.Options.UseBackColor = true;
-            formatConditionRuleValue1.Condition = DevExpress.XtraEditors.FormatCondition.Equal;
-            formatConditionRuleValue1.Value1 = CryptoMarketClient.Common.LogType.Error;
-            gridFormatRule1.Rule = formatConditionRuleValue1;
-            gridFormatRule2.ApplyToRow = true;
-            gridFormatRule2.Column = this.colType;
-            gridFormatRule2.Name = "FormatRuleWarning";
-            formatConditionRuleValue2.Appearance.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(255)))), ((int)(((byte)(224)))), ((int)(((byte)(192)))));
-            formatConditionRuleValue2.Appearance.Options.UseBackColor = true;
-            formatConditionRuleValue2.Condition = DevExpress.XtraEditors.FormatCondition.Equal;
-            formatConditionRuleValue2.Value1 = CryptoMarketClient.Common.LogType.Warning;
-            gridFormatRule2.Rule = formatConditionRuleValue2;
-            gridFormatRule3.ApplyToRow = true;
-            gridFormatRule3.Name = "FormatRuleSuccess";
-            formatConditionRuleValue3.Appearance.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            formatConditionRuleValue3.Appearance.Options.UseBackColor = true;
-            formatConditionRuleValue3.Condition = DevExpress.XtraEditors.FormatCondition.Equal;
-            formatConditionRuleValue3.Value1 = CryptoMarketClient.Common.LogType.Success;
-            gridFormatRule3.Rule = formatConditionRuleValue3;
-            this.gvLog.FormatRules.Add(gridFormatRule1);
-            this.gvLog.FormatRules.Add(gridFormatRule2);
-            this.gvLog.FormatRules.Add(gridFormatRule3);
-            this.gvLog.GridControl = this.gcLog;
-            this.gvLog.Name = "gvLog";
-            this.gvLog.OptionsBehavior.Editable = false;
-            this.gvLog.OptionsView.ShowHorizontalLines = DevExpress.Utils.DefaultBoolean.False;
-            this.gvLog.OptionsView.ShowVerticalLines = DevExpress.Utils.DefaultBoolean.False;
-            // 
-            // colTime
-            // 
-            this.colTime.DisplayFormat.FormatString = "dd.MM.yyyy hh:mm:ss.fff";
-            this.colTime.DisplayFormat.FormatType = DevExpress.Utils.FormatType.DateTime;
-            this.colTime.FieldName = "Time";
-            this.colTime.MinWidth = 40;
-            this.colTime.Name = "colTime";
-            this.colTime.Visible = true;
-            this.colTime.VisibleIndex = 1;
-            this.colTime.Width = 258;
-            // 
-            // colText
-            // 
-            this.colText.FieldName = "Text";
-            this.colText.MinWidth = 40;
-            this.colText.Name = "colText";
-            this.colText.Visible = true;
-            this.colText.VisibleIndex = 4;
-            this.colText.Width = 791;
-            // 
-            // colDescription
-            // 
-            this.colDescription.FieldName = "Description";
-            this.colDescription.MinWidth = 40;
-            this.colDescription.Name = "colDescription";
-            this.colDescription.Visible = true;
-            this.colDescription.VisibleIndex = 5;
-            this.colDescription.Width = 509;
-            // 
-            // colExchange
-            // 
-            this.colExchange.FieldName = "Exchange";
-            this.colExchange.MinWidth = 40;
-            this.colExchange.Name = "colExchange";
-            this.colExchange.Visible = true;
-            this.colExchange.VisibleIndex = 2;
-            this.colExchange.Width = 124;
-            // 
-            // colTicker
-            // 
-            this.colTicker.FieldName = "Ticker";
-            this.colTicker.MinWidth = 40;
-            this.colTicker.Name = "colTicker";
-            this.colTicker.Visible = true;
-            this.colTicker.VisibleIndex = 3;
-            this.colTicker.Width = 124;
+            this.logMessagesControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.logMessagesControl1.Location = new System.Drawing.Point(0, 0);
+            this.logMessagesControl1.Name = "logMessagesControl1";
+            this.logMessagesControl1.Size = new System.Drawing.Size(1914, 328);
+            this.logMessagesControl1.TabIndex = 0;
             // 
             // MainForm
             // 
@@ -793,7 +680,6 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1930, 1098);
-            this.Controls.Add(this.dpLog);
             this.Controls.Add(this.ribbonStatusBar1);
             this.Controls.Add(this.ribbonControl1);
             this.IsMdiContainer = true;
@@ -814,8 +700,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.dockManager1)).EndInit();
             this.dpLog.ResumeLayout(false);
             this.dockPanel1_Container.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.gcLog)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gvLog)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -885,14 +769,7 @@
         private DevExpress.XtraBars.Docking.DockPanel dpLog;
         private DevExpress.XtraBars.Docking.ControlContainer dockPanel1_Container;
         private DevExpress.XtraBars.Docking.DockManager dockManager1;
-        private DevExpress.XtraGrid.GridControl gcLog;
-        private DevExpress.XtraGrid.Views.Grid.GridView gvLog;
-        private DevExpress.XtraGrid.Columns.GridColumn colType;
-        private DevExpress.XtraGrid.Columns.GridColumn colTime;
-        private DevExpress.XtraGrid.Columns.GridColumn colText;
-        private DevExpress.XtraGrid.Columns.GridColumn colDescription;
-        private DevExpress.XtraGrid.Columns.GridColumn colExchange;
-        private DevExpress.XtraGrid.Columns.GridColumn colTicker;
+        private LogMessagesControl logMessagesControl1;
     }
 }
 

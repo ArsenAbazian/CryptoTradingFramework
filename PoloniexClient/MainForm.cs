@@ -21,6 +21,7 @@ using DevExpress.LookAndFeel;
 using CryptoMarketClient.BitFinex;
 using DevExpress.XtraBars;
 using DevExpress.Data;
+using DevExpress.XtraBars.Docking;
 
 namespace CryptoMarketClient {
     public partial class MainForm : DevExpress.XtraBars.Ribbon.RibbonForm {
@@ -40,16 +41,13 @@ namespace CryptoMarketClient {
             this.bciAllowDirectXCharts.Checked = SettingsStore.Default.UseDirectXForCharts;
             this.bciAllowDirectXGrid.Checked = SettingsStore.Default.UseDirectXForGrid;
 
-            SplashScreenManager.ShowDefaultWaitForm("Loading crypto icons...");
+            //SplashScreenManager.ShowDefaultWaitForm("Loading crypto icons...");
             BittrexExchange.Default.GetTickersInfo(); // for icons
-            Exchange.BuildIconsDataBase(BittrexExchange.Default.Tickers.Select(t => new string[] { t.MarketCurrency, t.LogoUrl }), false);
-            SplashScreenManager.CloseDefaultWaitForm();
+            //Exchange.BuildIconsDataBase(BittrexExchange.Default.Tickers.Select(t => new string[] { t.MarketCurrency, t.LogoUrl }), false);
+            //SplashScreenManager.CloseDefaultWaitForm();
 
             InitializeExchangeButtons();
-
-            this.dpLog.Visibility = DevExpress.XtraBars.Docking.DockVisibility.Visible;
-            this.gcLog.DataSource = new RealTimeSource() { DataSource = LogManager.Default.Messages };
-
+            
             //ExchangesForm.Show();
             //ExchangesForm.Activate();
         }
@@ -494,8 +492,13 @@ namespace CryptoMarketClient {
         }
 
         private void biLog_ItemClick(object sender, ItemClickEventArgs e) {
-            this.dpLog.Visibility = DevExpress.XtraBars.Docking.DockVisibility.Visible;
-            this.gcLog.DataSource = new RealTimeSource() { DataSource = LogManager.Default.Messages };
+            DockPanel panel = this.dockManager1.Panels["LogPanel"];
+            if(panel != null)
+                return;
+            panel = new DockPanel();
+            panel.Controls.Add(new LogMessagesControl());
+            panel.Dock = DockingStyle.Bottom;
+            panel.Visibility = DockVisibility.Visible;
         }
     }
 }

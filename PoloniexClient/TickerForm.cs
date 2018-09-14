@@ -113,6 +113,7 @@ namespace CryptoMarketClient {
         void OnTickerChanged(Ticker prev) {
             if(prev != null) {
                 prev.IsOpened = false;
+                prev.OrderBook.SubscribeUpdateEntries(false);
                 ClearText();
                 ClearGrid();
                 ClearChart();
@@ -125,6 +126,7 @@ namespace CryptoMarketClient {
             this.buySettingsControl.Ticker = Ticker;
             if(Ticker == null)
                 return;
+            Ticker.OrderBook.SubscribeUpdateEntries(true);
             Icon = Ticker.FormIcon;
             this.rpMain.Text = Ticker.Name;
             Ticker.IsOpened = true;

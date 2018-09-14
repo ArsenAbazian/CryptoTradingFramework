@@ -281,6 +281,12 @@
     <Compile Include="ExchangeCollectionForm.Designer.cs">
       <DependentUpon>ExchangeCollectionForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="LogMessagesControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="LogMessagesControl.Designer.cs">
+      <DependentUpon>LogMessagesControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="OpenedOrdersForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -458,6 +464,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="AnalyticsForm.resx">
       <DependentUpon>AnalyticsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LogMessagesControl.resx">
+      <DependentUpon>LogMessagesControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="OpenedOrdersForm.resx">
       <DependentUpon>OpenedOrdersForm.cs</DependentUpon>

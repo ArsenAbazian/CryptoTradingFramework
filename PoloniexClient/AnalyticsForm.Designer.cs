@@ -96,7 +96,7 @@
             this.biRemove,
             this.biClear});
             this.ribbonControl1.Location = new System.Drawing.Point(0, 0);
-            this.ribbonControl1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.ribbonControl1.Margin = new System.Windows.Forms.Padding(6);
             this.ribbonControl1.MaxItemId = 4;
             this.ribbonControl1.Name = "ribbonControl1";
             this.ribbonControl1.PageCategories.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageCategory[] {
@@ -118,7 +118,7 @@
             this.pcSymbols.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
             this.pcSymbols.Controls.Add(this.layoutControl1);
             this.pcSymbols.Location = new System.Drawing.Point(24, 33);
-            this.pcSymbols.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.pcSymbols.Margin = new System.Windows.Forms.Padding(6);
             this.pcSymbols.Name = "pcSymbols";
             this.pcSymbols.Ribbon = this.ribbonControl1;
             this.pcSymbols.Size = new System.Drawing.Size(1010, 683);
@@ -133,7 +133,7 @@
             this.layoutControl1.Controls.Add(this.icbMarket);
             this.layoutControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.layoutControl1.Location = new System.Drawing.Point(0, 0);
-            this.layoutControl1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.layoutControl1.Margin = new System.Windows.Forms.Padding(6);
             this.layoutControl1.Name = "layoutControl1";
             this.layoutControl1.Root = this.layoutControlGroup1;
             this.layoutControl1.Size = new System.Drawing.Size(1010, 683);
@@ -143,16 +143,16 @@
             // gcDownExchanges
             // 
             this.gcDownExchanges.DataSource = typeof(CryptoMarketClient.ExchangeInfo);
-            this.gcDownExchanges.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
-            this.gcDownExchanges.Location = new System.Drawing.Point(24, 119);
+            this.gcDownExchanges.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(6);
+            this.gcDownExchanges.Location = new System.Drawing.Point(12, 100);
             this.gcDownExchanges.MainView = this.gvDownExchanges;
-            this.gcDownExchanges.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.gcDownExchanges.Margin = new System.Windows.Forms.Padding(6);
             this.gcDownExchanges.MenuManager = this.ribbonControl1;
             this.gcDownExchanges.Name = "gcDownExchanges";
             this.gcDownExchanges.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repositoryItemCheckEdit1,
             this.repositoryItemCheckEdit2});
-            this.gcDownExchanges.Size = new System.Drawing.Size(962, 489);
+            this.gcDownExchanges.Size = new System.Drawing.Size(986, 523);
             this.gcDownExchanges.TabIndex = 5;
             this.gcDownExchanges.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gvDownExchanges});
@@ -230,8 +230,8 @@
             // sbOkDownload
             // 
             this.sbOkDownload.AutoWidthInLayoutControl = true;
-            this.sbOkDownload.Location = new System.Drawing.Point(861, 616);
-            this.sbOkDownload.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.sbOkDownload.Location = new System.Drawing.Point(873, 627);
+            this.sbOkDownload.Margin = new System.Windows.Forms.Padding(6);
             this.sbOkDownload.Name = "sbOkDownload";
             this.sbOkDownload.Padding = new System.Windows.Forms.Padding(40, 0, 40, 0);
             this.sbOkDownload.Size = new System.Drawing.Size(125, 44);
@@ -242,26 +242,26 @@
             // 
             // icbBase
             // 
-            this.icbBase.Location = new System.Drawing.Point(191, 23);
-            this.icbBase.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.icbBase.Location = new System.Drawing.Point(176, 12);
+            this.icbBase.Margin = new System.Windows.Forms.Padding(6);
             this.icbBase.MenuManager = this.ribbonControl1;
             this.icbBase.Name = "icbBase";
             this.icbBase.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.icbBase.Size = new System.Drawing.Size(795, 40);
+            this.icbBase.Size = new System.Drawing.Size(822, 40);
             this.icbBase.StyleController = this.layoutControl1;
             this.icbBase.TabIndex = 0;
             this.icbBase.EditValueChanged += new System.EventHandler(this.icbBase_EditValueChanged);
             // 
             // icbMarket
             // 
-            this.icbMarket.Location = new System.Drawing.Point(191, 71);
-            this.icbMarket.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.icbMarket.Location = new System.Drawing.Point(176, 56);
+            this.icbMarket.Margin = new System.Windows.Forms.Padding(6);
             this.icbMarket.MenuManager = this.ribbonControl1;
             this.icbMarket.Name = "icbMarket";
             this.icbMarket.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.icbMarket.Size = new System.Drawing.Size(795, 40);
+            this.icbMarket.Size = new System.Drawing.Size(822, 40);
             this.icbMarket.StyleController = this.layoutControl1;
             this.icbMarket.TabIndex = 6;
             this.icbMarket.EditValueChanged += new System.EventHandler(this.icbMarket_EditValueChanged);
@@ -285,42 +285,42 @@
             this.layoutControlItem1.Control = this.icbBase;
             this.layoutControlItem1.Location = new System.Drawing.Point(0, 0);
             this.layoutControlItem1.Name = "layoutControlItem1";
-            this.layoutControlItem1.Size = new System.Drawing.Size(970, 48);
+            this.layoutControlItem1.Size = new System.Drawing.Size(990, 44);
             this.layoutControlItem1.Text = "Base Currency:";
             this.layoutControlItem1.TextSize = new System.Drawing.Size(161, 25);
             // 
             // layoutControlItem2
             // 
             this.layoutControlItem2.Control = this.sbOkDownload;
-            this.layoutControlItem2.Location = new System.Drawing.Point(837, 593);
+            this.layoutControlItem2.Location = new System.Drawing.Point(861, 615);
             this.layoutControlItem2.Name = "layoutControlItem2";
-            this.layoutControlItem2.Size = new System.Drawing.Size(133, 52);
+            this.layoutControlItem2.Size = new System.Drawing.Size(129, 48);
             this.layoutControlItem2.TextSize = new System.Drawing.Size(0, 0);
             this.layoutControlItem2.TextVisible = false;
             // 
             // emptySpaceItem2
             // 
             this.emptySpaceItem2.AllowHotTrack = false;
-            this.emptySpaceItem2.Location = new System.Drawing.Point(0, 593);
+            this.emptySpaceItem2.Location = new System.Drawing.Point(0, 615);
             this.emptySpaceItem2.Name = "emptySpaceItem2";
-            this.emptySpaceItem2.Size = new System.Drawing.Size(837, 52);
+            this.emptySpaceItem2.Size = new System.Drawing.Size(861, 48);
             this.emptySpaceItem2.TextSize = new System.Drawing.Size(0, 0);
             // 
             // layoutControlItem3
             // 
             this.layoutControlItem3.Control = this.gcDownExchanges;
-            this.layoutControlItem3.Location = new System.Drawing.Point(0, 96);
+            this.layoutControlItem3.Location = new System.Drawing.Point(0, 88);
             this.layoutControlItem3.Name = "layoutControlItem3";
-            this.layoutControlItem3.Size = new System.Drawing.Size(970, 497);
+            this.layoutControlItem3.Size = new System.Drawing.Size(990, 527);
             this.layoutControlItem3.TextSize = new System.Drawing.Size(0, 0);
             this.layoutControlItem3.TextVisible = false;
             // 
             // layoutControlItem4
             // 
             this.layoutControlItem4.Control = this.icbMarket;
-            this.layoutControlItem4.Location = new System.Drawing.Point(0, 48);
+            this.layoutControlItem4.Location = new System.Drawing.Point(0, 44);
             this.layoutControlItem4.Name = "layoutControlItem4";
-            this.layoutControlItem4.Size = new System.Drawing.Size(970, 48);
+            this.layoutControlItem4.Size = new System.Drawing.Size(990, 44);
             this.layoutControlItem4.Text = "Market Currency:";
             this.layoutControlItem4.TextSize = new System.Drawing.Size(161, 25);
             // 
@@ -366,7 +366,7 @@
             // 
             this.splitContainerControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainerControl1.Location = new System.Drawing.Point(0, 267);
-            this.splitContainerControl1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.splitContainerControl1.Margin = new System.Windows.Forms.Padding(6);
             this.splitContainerControl1.Name = "splitContainerControl1";
             this.splitContainerControl1.Panel1.Controls.Add(this.pcSymbols);
             this.splitContainerControl1.Panel1.Controls.Add(this.gcData);
@@ -381,10 +381,10 @@
             // 
             this.gcData.DataSource = typeof(CryptoMarketClient.ExchangeInfo);
             this.gcData.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gcData.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.gcData.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(6);
             this.gcData.Location = new System.Drawing.Point(0, 0);
             this.gcData.MainView = this.gwData;
-            this.gcData.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.gcData.Margin = new System.Windows.Forms.Padding(6);
             this.gcData.MenuManager = this.ribbonControl1;
             this.gcData.Name = "gcData";
             this.gcData.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
@@ -495,7 +495,7 @@
             this.ClientSize = new System.Drawing.Size(2288, 1179);
             this.Controls.Add(this.splitContainerControl1);
             this.Controls.Add(this.ribbonControl1);
-            this.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.Margin = new System.Windows.Forms.Padding(6);
             this.Name = "AnalyticsForm";
             this.Ribbon = this.ribbonControl1;
             this.Text = "AnalyticsForm";

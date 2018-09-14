@@ -381,6 +381,7 @@ namespace CryptoMarketClient {
         }
 
         Thread UpdateCandleStickThread { get; set; }
+        protected bool LastChangeLeadsToUpdate { get; set; }
         private void chartControl1_AxisVisualRangeChanged(object sender, AxisRangeChangedEventArgs e) {
             if(Ticker == null || SuppressUpdateCandlestickData || !Ticker.Exchange.AllowCandleStickIncrementalUpdate)
                 return;
@@ -388,9 +389,12 @@ namespace CryptoMarketClient {
                 return;
             if(UpdateCandleStickThread != null && UpdateCandleStickThread.IsAlive)
                 return;
-            if(object.Equals(e.Axis.VisualRange.MinValue, e.Axis.WholeRange.MinValue)) {
+            if(!LastChangeLeadsToUpdate && object.Equals(e.Axis.VisualRange.MinValue, e.Axis.WholeRange.MinValue)) {
+                LastChangeLeadsToUpdate = true;
                 BackgroundUpdateCandleSticks((DateTime)e.Axis.VisualRange.MinValue);
+                return;
             }
+            LastChangeLeadsToUpdate = false;
         }
 
         void BackgroundUpdateCandleSticks(DateTime date) {
