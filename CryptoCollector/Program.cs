@@ -9,14 +9,18 @@ namespace CryptoCollector
         static void Main(string[] args)
         {
             List<CollectorInfo> info = GetCollectorInfo(args);
-
-            Console.WriteLine("Got exchanges: ");
-            foreach(var item in info) {
-                Console.Write(string.Format("{0}:\t\t\t\t order book:{1}, trading history:{2}, kline:{3}", item.Exchange.Name, item.CollectOrderBook, item.CollectTradingHistory, item.CollectKline));
-            }
+            PrintExchanges(info);
             Console.ReadKey();
         }
-        static List<CollectorInfo> GetCollectorInfo(string[] args) { 
+
+        private static void PrintExchanges(List<CollectorInfo> info) {
+            Console.WriteLine("Got exchanges: ");
+            foreach(var item in info) {
+                Console.WriteLine(string.Format("{0}:\t\t\torder book:{1}, trading history:{2}, kline:{3}", item.Exchange.Name, item.CollectOrderBook, item.CollectTradingHistory, item.CollectKline));
+            }
+        }
+
+        static List<CollectorInfo> GetCollectorInfo(string[] args) {
             List<CollectorInfo> list = new List<CollectorInfo>();
             foreach(string item in args) {
                 string arg = item.StartsWith('-') ? item.Substring(1) : item;
@@ -34,6 +38,7 @@ namespace CryptoCollector
                     if(items[i] == "kline")
                         info.CollectKline = true;
                 }
+                list.Add(info);
             }
             return list;
         }
