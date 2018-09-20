@@ -1,4 +1,5 @@
 ﻿using CryptoMarketClient.Common;
+using CryptoMarketClient.Helpers;
 using DevExpress.Utils;
 using DevExpress.XtraBars.Docking;
 using DevExpress.XtraCharts;
@@ -127,7 +128,7 @@ namespace CryptoMarketClient {
             if(Ticker == null)
                 return;
             Ticker.OrderBook.SubscribeUpdateEntries(true);
-            Icon = Ticker.FormIcon;
+            Icon = CurrencyLogoProvider.GetFormIcon(Ticker.MarketCurrency);
             this.rpMain.Text = Ticker.Name;
             Ticker.IsOpened = true;
             UpdateText();
@@ -143,7 +144,7 @@ namespace CryptoMarketClient {
             if(Ticker == null)
                 return;
             this.siCurrencyIcon.Caption = "";
-            this.siCurrencyIcon.Glyph = Ticker.Logo32;
+            this.siCurrencyIcon.Glyph = CurrencyLogoProvider.GetLogo32Image(Ticker.MarketCurrency);
             this.siExchangeIcon.Caption = "<b><size=+3>" + Ticker.Exchange.Name + "</size></b>";
             UpdateTickerInfoBarCore();
         }

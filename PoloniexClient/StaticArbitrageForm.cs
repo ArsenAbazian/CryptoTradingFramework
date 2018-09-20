@@ -185,7 +185,7 @@ namespace CryptoMarketClient {
         }
 
         private void bbShowLog_ItemClick(object sender, ItemClickEventArgs e) {
-            LogManager.Default.Show();
+            LogManager.Default.ShowLogForm();
         }
     }
 }

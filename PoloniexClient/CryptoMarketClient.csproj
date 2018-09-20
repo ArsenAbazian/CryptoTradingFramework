@@ -8,7 +8,7 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>CryptoMarketClient</RootNamespace>
     <AssemblyName>PoloniexClient</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFrameworkProfile />
@@ -77,6 +77,10 @@
     </Reference>
     <Reference Include="DevExpress.XtraCharts.v18.1.Wizard, Version=18.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
       <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.XtraDialogs.v18.1, Version=18.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Work\2018.1\Bin\Framework4\DevExpress.XtraDialogs.v18.1.dll</HintPath>
     </Reference>
     <Reference Include="DevExpress.XtraEditors.v18.1, Version=18.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
       <Private>True</Private>
@@ -275,12 +279,48 @@
     <Compile Include="ConnectionForm.Designer.cs">
       <DependentUpon>ConnectionForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\MyChartControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="ExchangeCollectionForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="ExchangeCollectionForm.Designer.cs">
       <DependentUpon>ExchangeCollectionForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\AccountBalancesForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\AccountBalancesForm.Designer.cs">
+      <DependentUpon>AccountBalancesForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\AccountCollectionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\AccountCollectionForm.Designer.cs">
+      <DependentUpon>AccountCollectionForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\AccountEditingForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\AccountEditingForm.Designer.cs">
+      <DependentUpon>AccountEditingForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\LogForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\LogForm.Designer.cs">
+      <DependentUpon>LogForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ThreadUpdateForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\TimerUpdateForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Helpers\CmLogManager.cs" />
+    <Compile Include="Helpers\CurrencyLogoProvider.cs" />
+    <Compile Include="Helpers\ExchangeLogoProvider.cs" />
     <Compile Include="LogMessagesControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -316,6 +356,24 @@
     </Compile>
     <Compile Include="ExchangeCollectionControl.Designer.cs">
       <DependentUpon>ExchangeCollectionControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Strategies\Arbitrages\Dependency\DependencyArbitrageChartForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Strategies\Arbitrages\Dependency\DependencyArbitrageChartForm.Designer.cs">
+      <DependentUpon>DependencyArbitrageChartForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Strategies\Arbitrages\Dependency\DependencyArbitrageEditingForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Strategies\Arbitrages\Dependency\DependencyArbitrageEditingForm.Designer.cs">
+      <DependentUpon>DependencyArbitrageEditingForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Strategies\Arbitrages\Dependency\DependencyArbitrageForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Strategies\Arbitrages\Dependency\DependencyArbitrageForm.Designer.cs">
+      <DependentUpon>DependencyArbitrageForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Tests\FastValueConverterTest.cs" />
     <Compile Include="Tests\IncrementalUpdateQueueTests.cs" />
@@ -465,6 +523,21 @@
     <EmbeddedResource Include="AnalyticsForm.resx">
       <DependentUpon>AnalyticsForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\AccountBalancesForm.resx">
+      <DependentUpon>AccountBalancesForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\AccountCollectionForm.resx">
+      <DependentUpon>AccountCollectionForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\AccountEditingForm.resx">
+      <DependentUpon>AccountEditingForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\LogForm.resx">
+      <DependentUpon>LogForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ThreadUpdateForm.resx">
+      <DependentUpon>ThreadUpdateForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="LogMessagesControl.resx">
       <DependentUpon>LogMessagesControl.cs</DependentUpon>
     </EmbeddedResource>
@@ -489,6 +562,15 @@
     <EmbeddedResource Include="Properties\licenses.licx" />
     <EmbeddedResource Include="ExchangeCollectionControl.resx">
       <DependentUpon>ExchangeCollectionControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Strategies\Arbitrages\Dependency\DependencyArbitrageChartForm.resx">
+      <DependentUpon>DependencyArbitrageChartForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Strategies\Arbitrages\Dependency\DependencyArbitrageEditingForm.resx">
+      <DependentUpon>DependencyArbitrageEditingForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Strategies\Arbitrages\Dependency\DependencyArbitrageForm.resx">
+      <DependentUpon>DependencyArbitrageForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="TrailingCollectionControl.resx">
       <DependentUpon>TrailingCollectionControl.cs</DependentUpon>
@@ -597,12 +679,6 @@
     <None Include="Resources\chart.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Crypto.Core\Crypto.Core.csproj">
-      <Project>{4a5b7ab2-b8ce-4c47-aa5e-7ce8bed74249}</Project>
-      <Name>Crypto.Core</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Images\ExchangeImages\Binance.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -631,6 +707,12 @@
     <Content Include="Images\ExchangeImages\PoloniexIcon.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Crypto.Core\Crypto.Core.csproj">
+      <Project>{4a5b7ab2-b8ce-4c47-aa5e-7ce8bed74249}</Project>
+      <Name>Crypto.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

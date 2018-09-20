@@ -33,7 +33,7 @@ namespace CryptoMarketClient {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MyTradesCollectionControl));
             this.colType = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colRate = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.gcTrades = new CryptoMarketClient.MyGridControl();
+            this.gcTrades = new DevExpress.XtraGrid.GridControl();
             this.tradeHistoryItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.gvTrades = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.colTime = new DevExpress.XtraGrid.Columns.GridColumn();
@@ -282,7 +282,7 @@ namespace CryptoMarketClient {
 
         #endregion
 
-        private MyGridControl gcTrades;
+        private DevExpress.XtraGrid.GridControl gcTrades;
         private DevExpress.XtraGrid.Views.Grid.GridView gvTrades;
         private DevExpress.XtraGrid.Columns.GridColumn colTime;
         private DevExpress.XtraGrid.Columns.GridColumn colAmount;

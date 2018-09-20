@@ -101,7 +101,7 @@
             this.ribbonControl1.Name = "ribbonControl1";
             this.ribbonControl1.PageCategories.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageCategory[] {
             this.ribbonPageCategory1});
-            this.ribbonControl1.Size = new System.Drawing.Size(2288, 267);
+            this.ribbonControl1.Size = new System.Drawing.Size(2288, 281);
             // 
             // biAddSymbol
             // 
@@ -365,14 +365,14 @@
             // splitContainerControl1
             // 
             this.splitContainerControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainerControl1.Location = new System.Drawing.Point(0, 267);
+            this.splitContainerControl1.Location = new System.Drawing.Point(0, 281);
             this.splitContainerControl1.Margin = new System.Windows.Forms.Padding(6);
             this.splitContainerControl1.Name = "splitContainerControl1";
             this.splitContainerControl1.Panel1.Controls.Add(this.pcSymbols);
             this.splitContainerControl1.Panel1.Controls.Add(this.gcData);
             this.splitContainerControl1.Panel1.Text = "Panel1";
             this.splitContainerControl1.Panel2.Text = "Panel2";
-            this.splitContainerControl1.Size = new System.Drawing.Size(2288, 912);
+            this.splitContainerControl1.Size = new System.Drawing.Size(2288, 898);
             this.splitContainerControl1.SplitterPosition = 732;
             this.splitContainerControl1.TabIndex = 1;
             this.splitContainerControl1.Text = "splitContainerControl1";
@@ -390,7 +390,7 @@
             this.gcData.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repositoryItemCheckEdit3,
             this.repositoryItemCheckEdit4});
-            this.gcData.Size = new System.Drawing.Size(732, 912);
+            this.gcData.Size = new System.Drawing.Size(732, 898);
             this.gcData.TabIndex = 6;
             this.gcData.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gwData});

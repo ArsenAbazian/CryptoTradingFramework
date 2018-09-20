@@ -81,7 +81,7 @@
             this.ribbonStatusBar1 = new DevExpress.XtraBars.Ribbon.RibbonStatusBar();
             this.tickerChartViewer1 = new CryptoMarketClient.TickerChartViewer();
             this.orderBookControl1 = new CryptoMarketClient.OrderBookControl();
-            this.gcTrades = new CryptoMarketClient.MyGridControl();
+            this.gcTrades = new DevExpress.XtraGrid.GridControl();
             this.tradeHistoryItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.gvTrades = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.colTime = new DevExpress.XtraGrid.Columns.GridColumn();
@@ -117,7 +117,7 @@
             this.panelContainer2 = new DevExpress.XtraBars.Docking.DockPanel();
             this.dpOpenedOrders = new DevExpress.XtraBars.Docking.DockPanel();
             this.controlContainer1 = new DevExpress.XtraBars.Docking.ControlContainer();
-            this.gcOpenedOrders = new CryptoMarketClient.MyGridControl();
+            this.gcOpenedOrders = new DevExpress.XtraGrid.GridControl();
             this.openedOrderInfoBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.gvOpenedOrders = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.colDate = new DevExpress.XtraGrid.Columns.GridColumn();
@@ -1135,7 +1135,7 @@
 
         private DevExpress.XtraBars.Ribbon.RibbonControl ribbonControl1;
         private DevExpress.XtraBars.Ribbon.RibbonPage rpMain;
-        private MyGridControl gcTrades;
+        private DevExpress.XtraGrid.GridControl gcTrades;
         private DevExpress.XtraGrid.Views.Grid.GridView gvTrades;
         private System.Windows.Forms.BindingSource tradeHistoryItemBindingSource;
         private DevExpress.XtraGrid.Columns.GridColumn colTime;
@@ -1158,7 +1158,7 @@
         private DevExpress.XtraBars.Docking.ControlContainer dockPanel1_Container;
         private DevExpress.XtraBars.Docking.DockPanel dpOpenedOrders;
         private DevExpress.XtraBars.Docking.ControlContainer controlContainer1;
-        private MyGridControl gcOpenedOrders;
+        private DevExpress.XtraGrid.GridControl gcOpenedOrders;
         private DevExpress.XtraGrid.Views.Grid.GridView gvOpenedOrders;
         private System.Windows.Forms.BindingSource openedOrderInfoBindingSource;
         private DevExpress.XtraGrid.Columns.GridColumn colDate;

@@ -24,7 +24,7 @@
         /// </summary>
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
-            this.tradeGridControl = new MyGridControl();
+            this.tradeGridControl = new DevExpress.XtraGrid.GridControl();
             this.orderBookVolumeHistoryItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.gridView1 = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.colLowestAsk = new DevExpress.XtraGrid.Columns.GridColumn();
@@ -353,7 +353,7 @@
 
         #endregion
 
-        private MyGridControl tradeGridControl;
+        private DevExpress.XtraGrid.GridControl tradeGridControl;
         private DevExpress.XtraGrid.Views.Grid.GridView gridView1;
         private System.Windows.Forms.BindingSource orderBookVolumeHistoryItemBindingSource;
         private DevExpress.XtraEditors.Repository.RepositoryItemProgressBar repositoryItemProgressBar1;

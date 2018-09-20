@@ -1,4 +1,5 @@
 ﻿using CryptoMarketClient.Common;
+using CryptoMarketClient.Helpers;
 using CryptoMarketClient.Poloniex;
 using DevExpress.Skins;
 using DevExpress.XtraBars;
@@ -240,7 +241,7 @@ namespace CryptoMarketClient {
                 if(link == null) {
                     BarLargeButtonItem item = new BarLargeButtonItem(this.barManager1, info.ToString());
                     item.PaintStyle = BarItemPaintStyle.CaptionGlyph;
-                    item.ImageOptions.Image = Exchange.GetTicker(info).Logo32;
+                    item.ImageOptions.Image = CurrencyLogoProvider.GetLogo32Image(Exchange.GetTicker(info).MarketCurrency);
                     item.Tag = info;
                     addItems.Add(item);
                 }
@@ -366,8 +367,7 @@ namespace CryptoMarketClient {
 
         private void gridView1_GetThumbnailImage(object sender, DevExpress.XtraGrid.Views.Grid.GridViewThumbnailImageEventArgs e) {
             Ticker t = (Ticker)Exchange.Tickers[e.DataSourceIndex];
-            if(t.Logo != null) 
-                e.ThumbnailImage = new Bitmap(t.Logo, new Size(128, 128));
+            e.ThumbnailImage = new Bitmap(CurrencyLogoProvider.GetLogoImage(t.MarketCurrency), new Size(128, 128));
         }
 
         private void biReconnect_ItemClick(object sender, ItemClickEventArgs e) {

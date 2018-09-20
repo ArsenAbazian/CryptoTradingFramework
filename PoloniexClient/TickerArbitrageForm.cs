@@ -204,7 +204,7 @@ namespace CryptoMarketClient {
             return;
         }
         void ShowLog() {
-            LogManager.Default.Show();
+            LogManager.Default.ShowLogForm();
         }
 
         void RefreshGUI() {
@@ -385,7 +385,7 @@ namespace CryptoMarketClient {
             if(!lowest.UpdateBalance(lowest.BaseCurrency)) {
                 LogManager.Default.AddError("Cant update balance.", lowest.HostName + "-" + lowest.BaseCurrency);
                 SelectedCollection = null;
-                LogManager.Default.Show();
+                LogManager.Default.ShowLogForm();
                 return;
             }
 
@@ -398,7 +398,7 @@ namespace CryptoMarketClient {
                 LogManager.Default.AddError("Cant buy currency.", "At " + lowest.HostName + "-" + lowest.BaseCurrency + "(" + amount.ToString("0.00000000") + ")" + " for " + lowest.MarketCurrency);
 
             SelectedCollection = null;
-            LogManager.Default.Show();
+            LogManager.Default.ShowLogForm();
             return;
         }
 
@@ -412,7 +412,7 @@ namespace CryptoMarketClient {
             if(!highest.UpdateBalance(highest.MarketCurrency)) {
                 LogManager.Default.AddError("Cant update balance.", highest.HostName + "-" + highest.MarketCurrency);
                 SelectedCollection = null;
-                LogManager.Default.Show();
+                LogManager.Default.ShowLogForm();
                 return;
             }
 
@@ -436,19 +436,19 @@ namespace CryptoMarketClient {
             if(forceUpdateBalance || lowest.MarketCurrencyBalance == 0) {
                 if(!lowest.UpdateBalance(lowest.MarketCurrency)) {
                     if(allowLog) LogManager.Default.AddError("Cant update balance.", lowest.HostName + "-" + lowest.MarketCurrency);
-                    if(allowLog) LogManager.Default.Show();
+                    if(allowLog) LogManager.Default.ShowLogForm();
                     return false;
                 }
                 if(!highest.UpdateBalance(highest.MarketCurrency)) {
                     if(allowLog) LogManager.Default.AddError("Cant update balance.", highest.HostName + "-" + highest.MarketCurrency);
-                    if(allowLog) LogManager.Default.Show();
+                    if(allowLog) LogManager.Default.ShowLogForm();
                     return false;
                 }
             }
             string highAddress = highest.GetDepositAddress(highest.MarketCurrency);
             if(string.IsNullOrEmpty(highAddress)) {
                 if(allowLog) LogManager.Default.AddError("Cant get deposit address.", highest.HostName + "-" + highest.MarketCurrency);
-                if(allowLog) LogManager.Default.Show();
+                if(allowLog) LogManager.Default.ShowLogForm();
                 return false;
             }
 
@@ -474,7 +474,7 @@ namespace CryptoMarketClient {
             if(SelectedCollection == null)
                 return;
             SyncToHighestBid(SelectedCollection, true, true);
-            LogManager.Default.Show();
+            LogManager.Default.ShowLogForm();
             SelectedCollection = null;
         }
 
@@ -488,13 +488,13 @@ namespace CryptoMarketClient {
             if(!lowest.UpdateBalance(lowest.BaseCurrency)) {
                 LogManager.Default.AddError("Cant update balance.", lowest.HostName + "-" + lowest.BaseCurrency);
                 SelectedCollection = null;
-                LogManager.Default.Show();
+                LogManager.Default.ShowLogForm();
                 return;
             }
             if(!highest.UpdateBalance(highest.BaseCurrency)) {
                 LogManager.Default.AddError("Cant update balance.", highest.HostName + "-" + highest.BaseCurrency);
                 SelectedCollection = null;
-                LogManager.Default.Show();
+                LogManager.Default.ShowLogForm();
                 return;
             }
 
@@ -502,7 +502,7 @@ namespace CryptoMarketClient {
             if(string.IsNullOrEmpty(lowAddress)) {
                 LogManager.Default.AddError("Cant get deposit address.", lowest.HostName + "-" + lowest.BaseCurrency);
                 SelectedCollection = null;
-                LogManager.Default.Show();
+                LogManager.Default.ShowLogForm();
                 return;
             }
 
@@ -510,7 +510,7 @@ namespace CryptoMarketClient {
             if(string.IsNullOrEmpty(highAddress)) {
                 LogManager.Default.AddError("Cant get deposit address.", highest.HostName + "-" + highest.BaseCurrency);
                 SelectedCollection = null;
-                LogManager.Default.Show();
+                LogManager.Default.ShowLogForm();
                 return;
             }
 
@@ -522,7 +522,7 @@ namespace CryptoMarketClient {
 
             highest.Withdraw(highest.BaseCurrency, lowAddress, "", amount);
 
-            LogManager.Default.Show();
+            LogManager.Default.ShowLogForm();
             SelectedCollection = null;
         }
 

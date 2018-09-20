@@ -36,7 +36,7 @@ namespace CryptoMarketClient {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TrailingCollectionControl));
             this.colActualProfit = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colType = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.gcTrailings = new CryptoMarketClient.MyGridControl();
+            this.gcTrailings = new DevExpress.XtraGrid.GridControl();
             this.trailingSettingsBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.gvTrailings = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.colName = new DevExpress.XtraGrid.Columns.GridColumn();
@@ -480,7 +480,7 @@ namespace CryptoMarketClient {
 
         #endregion
 
-        private MyGridControl gcTrailings;
+        private DevExpress.XtraGrid.GridControl gcTrailings;
         private DevExpress.XtraGrid.Views.Grid.GridView gvTrailings;
         private System.Windows.Forms.BindingSource trailingSettingsBindingSource;
         private DevExpress.XtraGrid.Columns.GridColumn colBuyPrice;

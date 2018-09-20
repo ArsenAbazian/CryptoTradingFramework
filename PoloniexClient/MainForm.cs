@@ -22,6 +22,7 @@ using CryptoMarketClient.BitFinex;
 using DevExpress.XtraBars;
 using DevExpress.Data;
 using DevExpress.XtraBars.Docking;
+using CryptoMarketClient.Helpers;
 
 namespace CryptoMarketClient {
     public partial class MainForm : DevExpress.XtraBars.Ribbon.RibbonForm {
@@ -57,7 +58,7 @@ namespace CryptoMarketClient {
                 BarCheckItem item = new BarCheckItem(this.ribbonControl1.Manager);
                 item.Caption = e.Name;
                 item.CheckedChanged += OnExchangeItemCheckedChanged;
-                item.LargeGlyph = e.Icon;
+                item.LargeGlyph = ExchangeLogoProvider.GetIcon(e);
                 item.Tag = e;
                 this.rpgConnect.ItemLinks.Add(item);
             }    
@@ -402,7 +403,7 @@ namespace CryptoMarketClient {
 
         private void barButtonItem4_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
             SplashScreenManager.ShowDefaultWaitForm("Loading crypto icons...");
-            Exchange.BuildIconsDataBase(BittrexExchange.Default.Tickers.Select(t => new string[] { t.MarketCurrency, t.LogoUrl }), true);
+            CurrencyLogoProvider.BuildIconsDataBase(BittrexExchange.Default.Tickers.Select(t => new string[] { t.MarketCurrency, t.LogoUrl }), true);
             SplashScreenManager.CloseDefaultWaitForm();
             XtraMessageBox.Show("Please restart application. :)");
         }

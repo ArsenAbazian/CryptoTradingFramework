@@ -52,7 +52,7 @@ namespace CryptoMarketClient {
             this.colHighestBidHost = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colUpdateTime = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colProfitUSD = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.gridControl1 = new CryptoMarketClient.MyGridControl();
+            this.gridControl1 = new DevExpress.XtraGrid.GridControl();
             this.tickerArbitrageInfoBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.gridView1 = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.colIsSelected = new DevExpress.XtraGrid.Columns.GridColumn();
@@ -1215,6 +1215,6 @@ namespace CryptoMarketClient {
         private BarSubItem bsShowOrderBookHistory;
         private BarCheckItem bcShowNonZeroAmout;
         private DevExpress.XtraGrid.Columns.GridColumn colTotalBalance;
-        private MyGridControl gridControl1;
+        private DevExpress.XtraGrid.GridControl gridControl1;
     }
 }

@@ -43,7 +43,7 @@
             this.colAmount = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colFee = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gridColumn1 = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.gridControl1 = new MyGridControl();
+            this.gridControl1 = new DevExpress.XtraGrid.GridControl();
             this.colEarned = new DevExpress.XtraGrid.Columns.GridColumn();
             ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.staticArbitrageInfoHistoryItemBindingSource)).BeginInit();
@@ -264,7 +264,7 @@
         private DevExpress.XtraGrid.Columns.GridColumn colProfit;
         private DevExpress.XtraGrid.Columns.GridColumn colFee;
         private DevExpress.XtraGrid.Columns.GridColumn gridColumn1;
-        private MyGridControl gridControl1;
+        private DevExpress.XtraGrid.GridControl gridControl1;
         private DevExpress.XtraBars.Ribbon.RibbonStatusBar ribbonStatusBar1;
         private DevExpress.XtraGrid.Columns.GridColumn colEarned;
     }
