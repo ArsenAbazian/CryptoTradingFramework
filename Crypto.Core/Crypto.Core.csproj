@@ -153,9 +153,7 @@
     <Compile Include="Common\GrabDataSettings.cs" />
     <Compile Include="Helpers\LogManager.cs" />
     <Compile Include="Helpers\LogMessage.cs" />
-    <Compile Include="Helpers\MyWebClient.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Include="Helpers\MyWebClient.cs" />
     <Compile Include="Common\OrderBook\OrderBook.cs" />
     <Compile Include="Common\OrderBook\OrderBookEntry.cs" />
     <Compile Include="Common\OrderBook\OrderBookUpdateInfo.cs" />

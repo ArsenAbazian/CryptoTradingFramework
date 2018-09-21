@@ -33,19 +33,19 @@ namespace Crypto.Core.Common.Arbitrages {
         }
         void OnTickerChanged(Ticker prev, Ticker current) {
             if(prev != null)
-                prev.OrderBook.OnChanged -= OnChanged;
+                prev.OrderBook.Changed -= OnChanged;
             if(current != null)
-                current.OrderBook.OnChanged += OnChanged;
+                current.OrderBook.Changed += OnChanged;
             this.traidingPair = null;
         }
         public List<Ticker> First { get; } = new List<Ticker>();
         public void Add(Ticker first) {
             First.Add(first);
-            first.OrderBook.OnChanged += OnChanged;
+            first.OrderBook.Changed += OnChanged;
             this.traidingPair = null;
         }
         public void ClearFirst() {
-            First.ForEach(i => i.OrderBook.OnChanged -= OnChanged);
+            First.ForEach(i => i.OrderBook.Changed -= OnChanged);
             First.Clear();
         }
         string traidingPair;

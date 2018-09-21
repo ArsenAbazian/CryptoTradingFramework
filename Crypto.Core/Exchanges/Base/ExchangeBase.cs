@@ -19,6 +19,7 @@ using System.Text;
 using WebSocket4Net;
 using Microsoft.AspNet.SignalR.Client;
 using System.Threading;
+using System.Net.Http;
 
 namespace CryptoMarketClient {
     public abstract class Exchange : IXtraSerializable {
@@ -334,19 +335,10 @@ namespace CryptoMarketClient {
             }
         }
 
-        protected MyWebClient[] WebClientBuffer { get; } = new MyWebClient[32];
         protected int CurrentClientIndex { get; set; }
         public MyWebClient GetWebClient() {
-            //for(int i = 0; i < WebClientBuffer.Length; i++) {
-            //    if(WebClientBuffer[CurrentClientIndex] == null)
-            //        WebClientBuffer[CurrentClientIndex] = new MyWebClient();
-            //    if(!WebClientBuffer[CurrentClientIndex].IsBusy)
-            //        return WebClientBuffer[CurrentClientIndex];
-            //    CurrentClientIndex++;
-            //    if(CurrentClientIndex >= WebClientBuffer.Length)
-            //        CurrentClientIndex = 0;
-            //}
-            return new MyWebClient();
+            MyWebClient cl = new MyWebClient();
+            return cl;
         }
         protected virtual int WebSocketCheckTimerInterval { get { return 5000; } }
         protected virtual int WebSocketAllowedDelayInterval { get { return 5000; } }
@@ -593,6 +585,14 @@ namespace CryptoMarketClient {
 
         public SocketConnectionState GetOrderBookSocketState(Ticker ticker) {
             SocketConnectionInfo info = GetConnectionInfo(ticker, OrderBookSockets);
+            return info == null ? SocketConnectionState.Disconnected : info.State;
+        }
+        public SocketConnectionState GetTradingHistorySocketState(Ticker ticker) {
+            SocketConnectionInfo info = GetConnectionInfo(ticker, TradeHistorySockets);
+            return info == null ? SocketConnectionState.Disconnected : info.State;
+        }
+        public SocketConnectionState GetKlineSocketState(Ticker ticker) {
+            SocketConnectionInfo info = GetConnectionInfo(ticker, KlineSockets);
             return info == null ? SocketConnectionState.Disconnected : info.State;
         }
 

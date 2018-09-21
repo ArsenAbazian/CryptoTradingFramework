@@ -656,7 +656,7 @@ namespace CryptoMarketClient.Bittrex {
             else {
                 address = string.Format("https://bittrex.com/api/v1.1/account/getorderhistory?apikey={0}&nonce={1}", Uri.EscapeDataString(account.ApiKey), GetNonce());
             }
-            WebClient client = GetWebClient();
+            MyWebClient client = GetWebClient();
             client.Headers.Clear();
             client.Headers.Add("apisign", account.GetSign(address));
             try {
@@ -874,7 +874,7 @@ namespace CryptoMarketClient.Bittrex {
                 Uri.EscapeDataString(ticker.MarketName),
                 amount.ToString("0.00000000"),
                 rate.ToString("0.00000000"));
-            WebClient client = GetWebClient();
+            MyWebClient client = GetWebClient();
             client.Headers.Clear();
             client.Headers.Add("apisign", account.GetSign(address));
             string text = client.DownloadString(address);
@@ -887,7 +887,7 @@ namespace CryptoMarketClient.Bittrex {
                 Uri.EscapeDataString(ticker.MarketName),
                 amount.ToString("0.00000000"),
                 rate.ToString("0.00000000"));
-            WebClient client = GetWebClient();
+            MyWebClient client = GetWebClient();
             client.Headers.Clear();
             client.Headers.Add("apisign", account.GetSign(address));
             string text = client.DownloadString(address);
@@ -898,7 +898,7 @@ namespace CryptoMarketClient.Bittrex {
                 Uri.EscapeDataString(account.ApiKey),
                 GetNonce(),
                 orderId);
-            WebClient client = GetWebClient();
+            MyWebClient client = GetWebClient();
             client.Headers.Clear();
             client.Headers.Add("apisign", account.GetSign(address));
             try {
@@ -913,7 +913,7 @@ namespace CryptoMarketClient.Bittrex {
                 Uri.EscapeDataString(account.ApiKey),
                 GetNonce(),
                 orderId);
-            WebClient client = GetWebClient();
+            MyWebClient client = GetWebClient();
             client.Headers.Clear();
             client.Headers.Add("apisign", account.GetSign(address));
             return client.DownloadStringTaskAsync(address);
@@ -923,7 +923,7 @@ namespace CryptoMarketClient.Bittrex {
                 Uri.EscapeDataString(account.ApiKey),
                 GetNonce(),
                 info.MarketName);
-            WebClient client = GetWebClient();
+            MyWebClient client = GetWebClient();
             client.Headers.Clear();
             client.Headers.Add("apisign", account.GetSign(address));
             return client.DownloadStringTaskAsync(address);
@@ -941,7 +941,7 @@ namespace CryptoMarketClient.Bittrex {
                 Uri.EscapeDataString(account.ApiKey),
                 GetNonce());
             }
-            WebClient client = GetWebClient();
+            MyWebClient client = GetWebClient();
             client.Headers.Clear();
             client.Headers.Add("apisign", account.GetSign(address));
             byte[] bytes = null;
@@ -1070,7 +1070,7 @@ namespace CryptoMarketClient.Bittrex {
         
         public override bool GetBalance(AccountInfo account, string currency) {
             string address = string.Format("https://bittrex.com/api/v1.1/account/getbalance?apikey={0}&nonce={1}&currency={2}", Uri.EscapeDataString(account.ApiKey), GetNonce(), currency);
-            WebClient client = GetWebClient();
+            MyWebClient client = GetWebClient();
             client.Headers.Clear();
             client.Headers.Add("apisign", account.GetSign(address));
             try {
@@ -1120,7 +1120,7 @@ namespace CryptoMarketClient.Bittrex {
                     return false;
             }
             string address = string.Format("https://bittrex.com/api/v1.1/account/getbalances?apikey={0}&nonce={1}", Uri.EscapeDataString(account.ApiKey), GetNonce());
-            WebClient client = GetWebClient();
+            MyWebClient client = GetWebClient();
             client.Headers.Clear();
             client.Headers.Add("apisign", account.GetSign(address));
             try {
@@ -1158,7 +1158,7 @@ namespace CryptoMarketClient.Bittrex {
         }
         public Task<string> GetBalancesAsync(AccountInfo account) {
             string address = string.Format("https://bittrex.com/api/v1.1/account/getbalances?apikey={0}&nonce={1}", Uri.EscapeDataString(account.ApiKey), GetNonce());
-            WebClient client = GetWebClient();
+            MyWebClient client = GetWebClient();
             client.Headers.Clear();
             client.Headers.Add("apisign", account.GetSign(address));
             return client.DownloadStringTaskAsync(address);
@@ -1210,7 +1210,7 @@ namespace CryptoMarketClient.Bittrex {
                         amount.ToString("0.00000000"),
                         Uri.EscapeDataString(paymentId));
             }
-            WebClient client = GetWebClient();
+            MyWebClient client = GetWebClient();
             client.Headers.Clear();
             client.Headers.Add("apisign", account.GetSign(address));
             try {
@@ -1239,7 +1239,7 @@ namespace CryptoMarketClient.Bittrex {
                         amount.ToString("0.00000000"),
                         Uri.EscapeDataString(paymentId));
             }
-            WebClient client = GetWebClient();
+            MyWebClient client = GetWebClient();
             client.Headers.Clear();
             client.Headers.Add("apisign", account.GetSign(address));
             return client.DownloadStringTaskAsync(addr);
@@ -1250,7 +1250,7 @@ namespace CryptoMarketClient.Bittrex {
 
         public override string CreateDeposit(AccountInfo account, string currency) {
             string address = string.Format("https://bittrex.com/api/v1.1/account/getdepositaddress?apikey={0}&nonce={1}&currency={2}", Uri.EscapeDataString(account.ApiKey), GetNonce(), currency);
-            WebClient client = GetWebClient();
+            MyWebClient client = GetWebClient();
             client.Headers.Clear();
             client.Headers.Add("apisign", account.GetSign(address));
             return OnGetDeposit(account, currency, client.DownloadString(address));

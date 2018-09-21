@@ -2,7 +2,7 @@
   "profiles": {
     "CryptoCollector": {
       "commandName": "Project",
-      "commandLineArgs": "-poloniex:ob,th -binance:ob,th -bitmex:ob,th -bittrex:ob,th"
+      "commandLineArgs": "--init"
     }
   }
 }

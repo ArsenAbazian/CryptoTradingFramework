@@ -645,7 +645,7 @@ namespace CryptoMarketClient {
         public override bool UpdateAccountTrades(AccountInfo account, Ticker ticker) {
             string address = string.Format("https://poloniex.com/tradingApi");
 
-            NameValueCollection coll = new NameValueCollection();
+            HttpRequestParamsCollection coll = new HttpRequestParamsCollection();
             coll.Add("nonce", GetNonce());
             coll.Add("command", "returnTradeHistory");
             if(ticker == null)
@@ -655,7 +655,7 @@ namespace CryptoMarketClient {
             coll.Add("start", ToUnixTimestamp(DateTime.Now.AddYears(-1)).ToString());
             coll.Add("end", ToUnixTimestamp(DateTime.Now).ToString());
 
-            WebClient client = GetWebClient();
+            MyWebClient client = GetWebClient();
             client.Headers.Clear();
             client.Headers.Add("Sign", account.GetSign(ToQueryString(coll)));
             client.Headers.Add("Key", account.ApiKey);
@@ -732,31 +732,22 @@ namespace CryptoMarketClient {
             item.Fee = FastValueConverter.Convert(obj[6]);
             return item;
         }
-        public string ToQueryString(NameValueCollection nvc) {
+        public string ToQueryString(HttpRequestParamsCollection nvc) {
             StringBuilder sb = new StringBuilder();
 
-            foreach(string key in nvc.Keys) {
-                if(string.IsNullOrEmpty(key)) continue;
-
-                string[] values = nvc.GetValues(key);
-                if(values == null) continue;
-
-                foreach(string value in values) {
-                    if(sb.Length > 0) sb.Append("&");
-                    sb.AppendFormat("{0}={1}", Uri.EscapeDataString(key), Uri.EscapeDataString(value));
-                }
+            foreach(var item in nvc) {
+                sb.AppendFormat("&{0}={1}", Uri.EscapeDataString(item.Key), Uri.EscapeDataString(item.Value));
             }
-
             return sb.ToString();
         }
         public override bool UpdateBalances(AccountInfo account) {
             string address = string.Format("https://poloniex.com/tradingApi");
 
-            NameValueCollection coll = new NameValueCollection();
+            HttpRequestParamsCollection coll = new HttpRequestParamsCollection();
             coll.Add("command", "returnCompleteBalances");
             coll.Add("nonce", GetNonce());
 
-            WebClient client = GetWebClient();
+            MyWebClient client = GetWebClient();
             client.Headers.Clear();
             client.Headers.Add("Sign", account.GetSign(ToQueryString(coll)));
             client.Headers.Add("Key", account.ApiKey);
@@ -770,11 +761,11 @@ namespace CryptoMarketClient {
         public Task<byte[]> GetBalancesAsync(AccountInfo account) {
             string address = string.Format("https://poloniex.com/tradingApi");
 
-            NameValueCollection coll = new NameValueCollection();
+            HttpRequestParamsCollection coll = new HttpRequestParamsCollection();
             coll.Add("command", "returnCompleteBalances");
             coll.Add("nonce", GetNonce());
 
-            WebClient client = GetWebClient();
+            MyWebClient client = GetWebClient();
             client.Headers.Clear();
             client.Headers.Add("Sign", account.GetSign(ToQueryString(coll)));
             client.Headers.Add("Key", account.ApiKey);
@@ -816,11 +807,11 @@ namespace CryptoMarketClient {
         public Task<byte[]> GetDepositesAsync(AccountInfo account) {
             string address = string.Format("https://poloniex.com/tradingApi");
 
-            NameValueCollection coll = new NameValueCollection();
+            HttpRequestParamsCollection coll = new HttpRequestParamsCollection();
             coll.Add("command", "returnDepositAddresses");
             coll.Add("nonce", GetNonce());
 
-            WebClient client = GetWebClient();
+            MyWebClient client = GetWebClient();
             client.Headers.Clear();
             client.Headers.Add("Sign", account.GetSign(ToQueryString(coll)));
             client.Headers.Add("Key", account.ApiKey);
@@ -857,12 +848,12 @@ namespace CryptoMarketClient {
         public override bool UpdateOpenedOrders(AccountInfo account, Ticker ticker) {
             string address = string.Format("https://poloniex.com/tradingApi");
 
-            NameValueCollection coll = new NameValueCollection();
+            HttpRequestParamsCollection coll = new HttpRequestParamsCollection();
             coll.Add("nonce", GetNonce());
             coll.Add("command", "returnOpenOrders");
             coll.Add("currencyPair", ticker == null ? "all" : ticker.MarketName);
 
-            WebClient client = GetWebClient();
+            MyWebClient client = GetWebClient();
             client.Headers.Clear();
             client.Headers.Add("Sign", account.GetSign(ToQueryString(coll)));
             client.Headers.Add("Key", account.ApiKey);
@@ -886,12 +877,12 @@ namespace CryptoMarketClient {
         public Task<byte[]> GetOpenedOrders(AccountInfo account) {
             string address = string.Format("https://poloniex.com/tradingApi");
 
-            NameValueCollection coll = new NameValueCollection();
+            HttpRequestParamsCollection coll = new HttpRequestParamsCollection();
             coll.Add("nonce", GetNonce());
             coll.Add("command", "returnOpenOrders");
             coll.Add("currencyPair", "all");
 
-            WebClient client = GetWebClient();
+            MyWebClient client = GetWebClient();
             client.Headers.Clear();
             client.Headers.Add("Sign", account.GetSign(ToQueryString(coll)));
             client.Headers.Add("Key", account.ApiKey);
@@ -983,14 +974,14 @@ namespace CryptoMarketClient {
         public override TradingResult Buy(AccountInfo account, Ticker ticker, double rate, double amount) {
             string address = string.Format("https://poloniex.com/tradingApi");
 
-            NameValueCollection coll = new NameValueCollection();
+            HttpRequestParamsCollection coll = new HttpRequestParamsCollection();
             coll.Add("command", "buy");
             coll.Add("nonce", GetNonce());
             coll.Add("currencyPair", ticker.CurrencyPair);
             coll.Add("rate", rate.ToString("0.00000000"));
             coll.Add("amount", amount.ToString("0.00000000"));
 
-            WebClient client = GetWebClient();
+            MyWebClient client = GetWebClient();
             client.Headers.Clear();
             client.Headers.Add("Sign", account.GetSign(ToQueryString(coll)));
             client.Headers.Add("Key", account.ApiKey);
@@ -1007,14 +998,14 @@ namespace CryptoMarketClient {
         public override TradingResult Sell(AccountInfo account, Ticker ticker, double rate, double amount) {
             string address = string.Format("https://poloniex.com/tradingApi");
 
-            NameValueCollection coll = new NameValueCollection();
+            HttpRequestParamsCollection coll = new HttpRequestParamsCollection();
             coll.Add("command", "sell");
             coll.Add("nonce", GetNonce());
             coll.Add("currencyPair", ticker.CurrencyPair);
             coll.Add("rate", rate.ToString("0.00000000"));
             coll.Add("amount", amount.ToString("0.00000000"));
 
-            WebClient client = GetWebClient();
+            MyWebClient client = GetWebClient();
             client.Headers.Clear();
             client.Headers.Add("Sign", account.GetSign(ToQueryString(coll)));
             client.Headers.Add("Key", account.ApiKey);
@@ -1080,12 +1071,12 @@ namespace CryptoMarketClient {
         public override bool Cancel(AccountInfo account, string orderId) {
             string address = string.Format("https://poloniex.com/tradingApi");
 
-            NameValueCollection coll = new NameValueCollection();
+            HttpRequestParamsCollection coll = new HttpRequestParamsCollection();
             coll.Add("command", "cancelOrder");
             coll.Add("nonce", GetNonce());
             coll.Add("orderNumber", orderId);
 
-            WebClient client = GetWebClient();
+            MyWebClient client = GetWebClient();
             client.Headers.Clear();
             client.Headers.Add("Sign", account.GetSign(ToQueryString(coll)));
             client.Headers.Add("Key", account.ApiKey);
@@ -1100,12 +1091,12 @@ namespace CryptoMarketClient {
         public Task<byte[]> CancelOrder(AccountInfo account, string orderId) {
             string address = string.Format("https://poloniex.com/tradingApi");
 
-            NameValueCollection coll = new NameValueCollection();
+            HttpRequestParamsCollection coll = new HttpRequestParamsCollection();
             coll.Add("command", "cancelOrder");
             coll.Add("nonce", GetNonce());
             coll.Add("orderNumber", orderId);
 
-            WebClient client = GetWebClient();
+            MyWebClient client = GetWebClient();
             client.Headers.Clear();
             client.Headers.Add("Sign", account.GetSign(ToQueryString(coll)));
             client.Headers.Add("Key", account.ApiKey);
@@ -1123,7 +1114,7 @@ namespace CryptoMarketClient {
         public Task<byte[]> WithdrawAsync(AccountInfo account, string currency, double amount, string addr, string paymentId) {
             string address = string.Format("https://poloniex.com/tradingApi");
 
-            NameValueCollection coll = new NameValueCollection();
+            HttpRequestParamsCollection coll = new HttpRequestParamsCollection();
             coll.Add("command", "withdraw");
             coll.Add("nonce", GetNonce());
             coll.Add("currency", currency);
@@ -1132,7 +1123,7 @@ namespace CryptoMarketClient {
             if(!string.IsNullOrEmpty(paymentId))
                 coll.Add("paymentId", paymentId);
 
-            WebClient client = GetWebClient();
+            MyWebClient client = GetWebClient();
             client.Headers.Clear();
             client.Headers.Add("Sign", account.GetSign(ToQueryString(coll)));
             client.Headers.Add("Key", account.ApiKey);
@@ -1142,7 +1133,7 @@ namespace CryptoMarketClient {
         public override bool Withdraw(AccountInfo account, string currency, string addr, string paymentId, double amount) {
             string address = string.Format("https://poloniex.com/tradingApi");
 
-            NameValueCollection coll = new NameValueCollection();
+            HttpRequestParamsCollection coll = new HttpRequestParamsCollection();
             coll.Add("command", "withdraw");
             coll.Add("nonce", GetNonce());
             coll.Add("currency", currency);
@@ -1151,7 +1142,7 @@ namespace CryptoMarketClient {
             if(!string.IsNullOrEmpty(paymentId))
                 coll.Add("paymentId", paymentId);
 
-            WebClient client = GetWebClient();
+            MyWebClient client = GetWebClient();
             client.Headers.Clear();
             client.Headers.Add("Sign", account.GetSign(ToQueryString(coll)));
             client.Headers.Add("Key", account.ApiKey);
@@ -1177,12 +1168,12 @@ namespace CryptoMarketClient {
         public override string CreateDeposit(AccountInfo account, string currency) {
             string address = string.Format("https://poloniex.com/tradingApi");
 
-            NameValueCollection coll = new NameValueCollection();
+            HttpRequestParamsCollection coll = new HttpRequestParamsCollection();
             coll.Add("command", "generateNewAddress");
             coll.Add("nonce", GetNonce());
             coll.Add("currency", currency);
 
-            WebClient client = GetWebClient();
+            MyWebClient client = GetWebClient();
             client.Headers.Clear();
             client.Headers.Add("Sign", account.GetSign(ToQueryString(coll)));
             client.Headers.Add("Key", account.ApiKey);

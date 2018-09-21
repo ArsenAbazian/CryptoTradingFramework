@@ -8,6 +8,12 @@
         public override bool IsListeningOrderBook {
             get { return Poloniex.TickersSocketState == SocketConnectionState.Connected && IsOrderBookSubscribed; }
         }
+        public override bool IsListeningTradingHistory {
+            get { return Poloniex.TickersSocketState == SocketConnectionState.Connected && IsTradeHistorySubscribed; }
+        }
+        public override bool IsListeningKline {
+            get { return Poloniex.TickersSocketState == SocketConnectionState.Connected && IsKlineSubscribed; }
+        }
 
         public int Id { get; set; }
 

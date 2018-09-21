@@ -24,5 +24,11 @@ namespace CryptoMarketClient.Exchanges.Bitmex {
         public override bool IsListeningOrderBook {
             get { return IsOrderBookSubscribed && Exchange.GetOrderBookSocketState(this) == SocketConnectionState.Connected; }
         }
+        public override bool IsListeningTradingHistory {
+            get { return IsTradeHistorySubscribed && Exchange.GetTradingHistorySocketState(this) == SocketConnectionState.Connected; }
+        }
+        public override bool IsListeningKline {
+            get { return IsTradeHistorySubscribed && Exchange.GetKlineSocketState(this) == SocketConnectionState.Connected; }
+        }
     }
 }

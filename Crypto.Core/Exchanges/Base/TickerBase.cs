@@ -496,7 +496,6 @@ namespace CryptoMarketClient {
             return Withdraw(Exchange.DefaultAccount, currencyName, address, paymentId, amount);
         }
 
-        protected WebClient WebClient { get; } = new MyWebClient();
         public bool IsUpdating { get; set; }
         public long UpdateTimeMs { get; set; }
         public long StartUpdateTime { get; set; }
@@ -507,10 +506,6 @@ namespace CryptoMarketClient {
 
         public void UpdateHistoryItem() {
             TickerHistoryItem last = History.Count == 0 ? null : History.Last();
-            if(History.Count > 72000) {
-                for(int i = 0; i < 2000; i++)
-                    History.RemoveAt(0);
-            }
             if(last != null) {
                 if(last.Ask == LowestAsk && last.Bid == HighestBid && last.Current == Last)
                     return;
@@ -647,7 +642,15 @@ namespace CryptoMarketClient {
         public void StopListenOrderBook() {
             Exchange.StopListenOrderBook(this);
         }
+        public void StartListenTradingHistory() {
+            Exchange.StartListenTradeHistory(this);
+        }
+        public void StopListenTradingHistory() {
+            Exchange.StopListenTradeHistory(this);
+        }
         public virtual bool IsListeningOrderBook { get; }
+        public virtual bool IsListeningTradingHistory { get; }
+        public virtual bool IsListeningKline { get; }
 
         IncrementalUpdateQueue updates;
         public IncrementalUpdateQueue Updates {

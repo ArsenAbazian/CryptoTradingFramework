@@ -18,7 +18,13 @@ namespace CryptoMarketClient.Bittrex {
 
         public BittrexExchange Bittrex { get { return (BittrexExchange)Exchange; } }
         public override bool IsListeningOrderBook {
-            get => Bittrex.TickersSocketState == SocketConnectionState.Connected && IsOrderBookSubscribed;
+            get { return Bittrex.TickersSocketState == SocketConnectionState.Connected && IsOrderBookSubscribed; }
+        }
+        public override bool IsListeningTradingHistory {
+            get { return Bittrex.TickersSocketState == SocketConnectionState.Connected && IsTradeHistorySubscribed; }
+        }
+        public override bool IsListeningKline {
+            get { return Bittrex.TickersSocketState == SocketConnectionState.Connected && IsKlineSubscribed; }
         }
 
         public override string CurrencyPair { get { return MarketName; } set { MarketName = value; } }

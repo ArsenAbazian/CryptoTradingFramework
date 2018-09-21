@@ -32,10 +32,10 @@ namespace CryptoMarketClient {
         }
         protected internal void RaiseOnChanged(IncrementalUpdateInfo info) {
             OrderBookEventArgs e = new OrderBookEventArgs() { Update = info };
-            if(OnChanged != null)
-                OnChanged(this, e);
+            if(Changed != null)
+                Changed(this, e);
         }
-        public event OrderBookEventHandler OnChanged;
+        public event OrderBookEventHandler Changed;
 
         public double BidVolume { get; private set; }
         public double AskVolume { get; private set; }
@@ -442,7 +442,7 @@ namespace CryptoMarketClient {
     public class OrderBookEventArgs : EventArgs {
         public IncrementalUpdateInfo Update { get; set; }
     }
-
+    
     public class OrderBookStatisticItem {
         public OrderBookEntry[] Bids { get; set; }
         public OrderBookEntry[] Asks { get; set; }
