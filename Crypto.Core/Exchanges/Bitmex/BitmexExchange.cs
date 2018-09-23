@@ -318,7 +318,7 @@ namespace CryptoMarketClient.Exchanges.Bitmex {
                 t.UpdateTrailings();
 
                 lock(t) {
-                    RaiseTickerUpdate(t);
+                    RaiseTickerChanged(t);
                 }
             }
         }

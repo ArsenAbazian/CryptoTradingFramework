@@ -75,7 +75,7 @@ namespace CryptoCollector
                     if(!t.Enabled)
                         continue;
                     if(t.CollectOrderBook) {
-                        t.Ticker.OrderBook.Changed += OnOrderBookChanged;
+                        t.Ticker.OrderBookChanged += OnOrderBookChanged;
                         t.Ticker.StartListenOrderBook();
                         Console.WriteLine(string.Format("{0} \t\tlistening order book", t.Ticker.Name));
                     }
@@ -86,6 +86,7 @@ namespace CryptoCollector
                     if(!t.Enabled)
                         continue;
                     if(t.CollectTradingHistory) {
+                        t.Ticker.TradeHistoryChanged += OnTradeHistoryChanged;
                         t.Ticker.StartListenTradingHistory();
                         Console.WriteLine(string.Format("{0} \t\tlistening trade hisotry", t.Ticker.Name));
                     }
@@ -99,6 +100,17 @@ namespace CryptoCollector
                         t.Ticker.StartListenKlineStream();
                         Console.WriteLine(string.Format("{0} \t\tlistening kline", t.Ticker.Name));
                     }
+                }
+            }
+        }
+
+        private static void OnTradeHistoryChanged(object sender, TradeHistoryChangedEventArgs e) {
+            if(e.NewItem != null) {
+                Console.WriteLine(string.Format("{4} new th {0}:{1} {2} {3}", e.Ticker.Exchange.Name, e.Ticker.Name, e.NewItem.RateString, e.NewItem.AmountString, e.NewItem.TimeString));
+            }
+            else {
+                foreach(TradeInfoItem item in e.NewItems) {
+                    Console.WriteLine(string.Format("{4} new th {0}:{1} {2} {3}", e.Ticker.Exchange.Name, e.Ticker.Name, item.RateString, item.AmountString, item.TimeString));
                 }
             }
         }

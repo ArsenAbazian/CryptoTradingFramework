@@ -234,7 +234,10 @@ namespace CryptoMarketClient.Binance {
             item.Type = str[9][0] == 't' ? TradeType.Sell : TradeType.Buy;
 
             ticker.TradeHistory.Insert(0, item);
-            ticker.RaiseTradeHistoryAdd();
+            if(ticker.HasTradeHistorySubscribers) {
+                TradeHistoryChangedEventArgs e = new TradeHistoryChangedEventArgs() { NewItem = item };
+                ticker.RaiseTradeHistoryChanged(e);
+            }
         }
 
         string[] webSocketTickersInfo;
@@ -298,7 +301,7 @@ namespace CryptoMarketClient.Binance {
             t.UpdateTrailings();
 
             lock(t) {
-                RaiseTickerUpdate(t);
+                RaiseTickerChanged(t);
             }
         }
 
@@ -507,7 +510,9 @@ namespace CryptoMarketClient.Binance {
                 list.Add(item);
                 index++;
             }
-            ticker.RaiseTradeHistoryAdd();
+            if(ticker.HasTradeHistorySubscribers) {
+                ticker.RaiseTradeHistoryChanged(new TradeHistoryChangedEventArgs() { NewItems = list });
+            }
             return list;
         }
 
@@ -646,7 +651,7 @@ namespace CryptoMarketClient.Binance {
             
             int index = 0, parseIndex = 0;
             List<string[]> items = JSonHelper.Default.DeserializeArrayOfObjects(data, ref parseIndex, TradeItemString);
-
+            List<TradeInfoItem> newItems = new List<TradeInfoItem>();
             for(int i = items.Count - 1; i >= 0; i--) {
                 string[] item = items[i];
                 DateTime time = FromUnixTime(FastValueConverter.ConvertPositiveLong(item[3]));
@@ -663,9 +668,12 @@ namespace CryptoMarketClient.Binance {
                 double amount = t.Amount;
                 t.Total = price * amount;
                 ticker.TradeHistory.Add(t);
+                newItems.Add(t);
                 index++;
             }
-            ticker.RaiseTradeHistoryAdd();
+            if(ticker.HasTradeHistorySubscribers) {
+                ticker.RaiseTradeHistoryChanged(new TradeHistoryChangedEventArgs() { NewItems = newItems });
+            }
             return true;
         }
     }

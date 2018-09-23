@@ -436,25 +436,32 @@ namespace CryptoMarketClient {
             get { return apiRate; }
         }
 
-        protected internal void RaiseHistoryItemAdded() {
-            if(HistoryItemAdd != null)
-                HistoryItemAdd(this, EventArgs.Empty);
+        protected internal void RaiseHistoryChanged() {
+            if(HistoryChanged != null)
+                HistoryChanged(this, EventArgs.Empty);
         }
         protected internal void RaiseChanged() {
             if(Changed != null)
                 Changed(this, EventArgs.Empty);
         }
 
-        protected internal void RaiseTradeHistoryAdd() {
-            if(TradeHistoryAdd != null)
-                TradeHistoryAdd(this, EventArgs.Empty);
+        public bool HasTradeHistorySubscribers { get { return TradeHistoryChanged != null; } }
+
+        protected internal void RaiseTradeHistoryChanged(TradeHistoryChangedEventArgs e) {
+            e.Ticker = this;
+            if(TradeHistoryChanged != null)
+                TradeHistoryChanged(this, e);
         }
 
-        public event EventHandler HistoryItemAdd;
-        public event EventHandler TradeHistoryAdd;
+        public event EventHandler HistoryChanged;
+        public event TradeHistoryChangedEventHandler TradeHistoryChanged;
         public event EventHandler Changed;
         public event EventHandler OpenedOrdersChanged;
         public event EventHandler CandleStickChanged;
+        public event OrderBookEventHandler OrderBookChanged {
+            add { OrderBook.Changed += value; }
+            remove { OrderBook.Changed -= value; }
+        }
         public void RaiseOpenedOrdersChanged() {
             if(OpenedOrdersChanged != null)
                 OpenedOrdersChanged(this, EventArgs.Empty);
@@ -516,7 +523,7 @@ namespace CryptoMarketClient {
                     AskChange = (LowestAsk - last.Ask) * 100;
             }
             History.Add(new TickerHistoryItem() { Time = Time, Ask = LowestAsk, Bid = HighestBid, Current = Last });
-            RaiseHistoryItemAdded();
+            RaiseHistoryChanged();
         }
         public void UpdateMarketCurrencyStatusHistory() {
             if(MarketCurrencyStatusHistory.Count == 0) {
@@ -679,4 +686,13 @@ namespace CryptoMarketClient {
             return value;
         }
     }
+
+    public class TradeHistoryChangedEventArgs : EventArgs {
+        
+        public Ticker Ticker { get; set; }
+        public TradeInfoItem NewItem { get; set; }
+        public List<TradeInfoItem> NewItems { get; set; } = new List<TradeInfoItem>();
+    }
+
+    public delegate void TradeHistoryChangedEventHandler(object sender, TradeHistoryChangedEventArgs e);
 }

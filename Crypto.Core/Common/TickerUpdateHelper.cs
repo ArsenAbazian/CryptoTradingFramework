@@ -77,7 +77,7 @@ namespace CryptoMarketClient {
                 }
             }
             item.History.Add(new TickerHistoryItem() { Time = item.Time, Ask = item.LowestAsk, Bid = item.HighestBid, Current = item.Last });
-            item.RaiseHistoryItemAdded();
+            item.RaiseHistoryChanged();
         }
     }
 }

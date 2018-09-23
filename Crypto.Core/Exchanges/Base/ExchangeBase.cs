@@ -114,12 +114,12 @@ namespace CryptoMarketClient {
 
         public List<Ticker> Tickers { get; } = new List<Ticker>();
 
-        public event TickerUpdateEventHandler TickerUpdate;
+        public event TickerUpdateEventHandler TickerChanged;
         public event EventHandler TickersUpdate;
-        protected void RaiseTickerUpdate(Ticker t) {
+        protected void RaiseTickerChanged(Ticker t) {
             TickerUpdateEventArgs e = new TickerUpdateEventArgs() { Ticker = t };
-            if(TickerUpdate != null)
-                TickerUpdate(this, e);
+            if(TickerChanged != null)
+                TickerChanged(this, e);
             t.RaiseChanged();
         }
         protected void RaiseTickersUpdate() {

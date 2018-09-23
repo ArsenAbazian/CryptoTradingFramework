@@ -57,7 +57,9 @@ namespace CryptoMarketClient.Exchanges.Bittrex {
                 ticker.TradeHistory.Add(t);
             }
 
-            ticker.RaiseTradeHistoryAdd();
+            if(ticker.HasTradeHistorySubscribers) {
+                ticker.RaiseTradeHistoryChanged(new TradeHistoryChangedEventArgs() { NewItems = ticker.TradeHistory });
+            }
         }
     }
 }

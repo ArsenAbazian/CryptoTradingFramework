@@ -393,7 +393,9 @@ namespace CryptoMarketClient.BitFinex {
                     info.TradeHistory.Add(item);
                 }
             }
-            info.RaiseTradeHistoryAdd();
+            if(info.HasTradeHistorySubscribers) {
+                info.RaiseTradeHistoryChanged(new TradeHistoryChangedEventArgs() { NewItems = info.TradeHistory });
+            }
             return true;
         }
         public override bool UpdateAccountTrades(AccountInfo account, Ticker ticker) {
@@ -526,6 +528,7 @@ namespace CryptoMarketClient.BitFinex {
                 return true;
 
             int index = 0;
+            List<TradeInfoItem> newItems = new List<TradeInfoItem>();
             lock(info) {
                 foreach(string[] obj in res) {
                     TradeInfoItem item = new TradeInfoItem(null, info);
@@ -537,10 +540,13 @@ namespace CryptoMarketClient.BitFinex {
                     item.Type = obj[6].Length == 3 ? TradeType.Buy : TradeType.Sell;
                     item.Fill = obj[5].Length == 4 ? TradeFillType.Fill : TradeFillType.PartialFill;
                     info.TradeHistory.Insert(index, item);
+                    newItems.Insert(index, item);
                     index++;
                 }
             }
-            info.RaiseTradeHistoryAdd();
+            if(info.HasTradeHistorySubscribers) {
+                info.RaiseTradeHistoryChanged(new TradeHistoryChangedEventArgs() { NewItems = newItems });
+            }
             return true;
         }
         public bool UpdateTradesStatistic(BitFinexTicker info, int depth) {

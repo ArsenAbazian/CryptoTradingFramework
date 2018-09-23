@@ -55,7 +55,7 @@ namespace CryptoMarketClient {
         private void OnGetTickerItem(PoloniexTicker item) {
             lock(item) {
                 item.UpdateHistoryItem();
-                RaiseTickerUpdate(item);
+                RaiseTickerChanged(item);
             }
         }
 
@@ -172,7 +172,7 @@ namespace CryptoMarketClient {
             ticker.UpdateTrailings();
 
             lock(ticker) {
-                RaiseTickerUpdate(ticker);
+                RaiseTickerChanged(ticker);
             }
         }
 
@@ -556,7 +556,9 @@ namespace CryptoMarketClient {
                 list.Insert(index, item);
                 index++;
             }
-            ticker.RaiseTradeHistoryAdd();
+            if(ticker.HasTradeHistorySubscribers) {
+                ticker.RaiseTradeHistoryChanged(new TradeHistoryChangedEventArgs() { NewItems = list });
+            }
             return list;
         }
 
@@ -595,11 +597,6 @@ namespace CryptoMarketClient {
                 new string[] { "globalTradeID", "tradeID", "date", "type", "rate", "amount", "total" },
                 (itemIndex, paramIndex, value) => { return paramIndex != 1 || value != lastGotTradeId; });
 
-            TradeStatisticsItem st = new TradeStatisticsItem();
-            st.MinBuyPrice = double.MaxValue;
-            st.MinSellPrice = double.MaxValue;
-            st.Time = DateTime.UtcNow;
-
             int index = 0;
             List<TradeInfoItem> newTrades = new List<TradeInfoItem>();
             foreach(string[] obj in trades) {
@@ -614,31 +611,14 @@ namespace CryptoMarketClient {
                 double price = item.Rate;
                 double amount = item.Amount;
                 item.Total = price * amount;
-                if(isBuy) {
-                    st.BuyAmount += amount;
-                    st.MinBuyPrice = Math.Min(st.MinBuyPrice, price);
-                    st.MaxBuyPrice = Math.Max(st.MaxBuyPrice, price);
-                    st.BuyVolume += item.Total;
-                }
-                else {
-                    st.SellAmount += amount;
-                    st.MinSellPrice = Math.Min(st.MinSellPrice, price);
-                    st.MaxSellPrice = Math.Max(st.MaxSellPrice, price);
-                    st.SellVolume += item.Total;
-                }
                 newTrades.Add(item);
                 ticker.TradeHistory.Insert(index, item);
                 index++;
             }
-            CandleStickChartHelper.UpdateVolumes(ticker.CandleStickData, newTrades, ticker.CandleStickPeriodMin);
-            if(st.MinSellPrice == double.MaxValue)
-                st.MinSellPrice = 0;
-            if(st.MinBuyPrice == double.MaxValue)
-                st.MinBuyPrice = 0;
-            ticker.LastTradeStatisticTime = DateTime.UtcNow;
-            ticker.TradeStatistic.Add(st);
-            if(trades.Count > 0)
-                ticker.RaiseTradeHistoryAdd();
+            if(trades.Count > 0 && ticker.HasTradeHistorySubscribers) {
+                TradeHistoryChangedEventArgs e = new TradeHistoryChangedEventArgs() { NewItems = newTrades };
+                ticker.RaiseTradeHistoryChanged(e);
+            } 
             return true;
         }
 
