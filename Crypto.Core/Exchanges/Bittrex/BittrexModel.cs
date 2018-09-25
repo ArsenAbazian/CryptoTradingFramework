@@ -132,7 +132,6 @@ namespace CryptoMarketClient.Bittrex {
         }
         protected virtual void UpdateMarketsState(SignalSocketCommand command, string marketName, string s) {
             LastWebSocketRecvTime = DateTime.Now;
-            TickersSocketState = SocketConnectionState.Connected;
             byte[] data = SignalWebSocket.DecodeBytes(s);
 
             int startIndex = 0;
@@ -159,7 +158,6 @@ namespace CryptoMarketClient.Bittrex {
         protected virtual void UpdateExchangeState(SignalSocketCommand command, string marketName, string s) {
             //string decoded = BittrexWebSocket.Decode(s);
             LastWebSocketRecvTime = DateTime.Now;
-            TickersSocketState = SocketConnectionState.Connected;
             if(command == SignalSocketCommand.QueryExchangeState) {
                 OnSnapshotRecv(marketName, SignalWebSocket.Decode(s));
             }
@@ -245,12 +243,10 @@ namespace CryptoMarketClient.Bittrex {
 
         protected virtual void UpdateOrderState(string s) {
             LastWebSocketRecvTime = DateTime.Now;
-            TickersSocketState = SocketConnectionState.Connected;
         }
 
         protected virtual void UpdateBalancesState(string s) {
             LastWebSocketRecvTime = DateTime.Now;
-            TickersSocketState = SocketConnectionState.Connected;
         }
         
         public override bool AllowCandleStickIncrementalUpdate => false;

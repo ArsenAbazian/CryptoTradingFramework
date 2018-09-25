@@ -74,6 +74,7 @@ namespace CryptoCollector
                 foreach(TickerCollectionInfo t in e.Tickers) {
                     if(!t.Enabled)
                         continue;
+                    EnsureTableCreated(t.Ticker);
                     if(t.CollectOrderBook) {
                         t.Ticker.OrderBookChanged += OnOrderBookChanged;
                         t.Ticker.StartListenOrderBook();
@@ -102,6 +103,14 @@ namespace CryptoCollector
                     }
                 }
             }
+        }
+
+        private static void EnsureTableCreated(Ticker ticker) {
+            string tableName = GetTableName(ticker);
+        }
+
+        private static string GetTableName(Ticker ticker) {
+            return ticker.Exchange.Name.ToLower() + "_" + ticker.Name.ToLower();
         }
 
         private static void OnTradeHistoryChanged(object sender, TradeHistoryChangedEventArgs e) {

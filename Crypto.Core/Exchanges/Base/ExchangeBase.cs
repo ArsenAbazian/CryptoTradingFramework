@@ -625,7 +625,6 @@ namespace CryptoMarketClient {
         protected internal virtual void OnOrderBookSocketClosed(object sender, EventArgs e) {
             SocketConnectionInfo info = OrderBookSockets.FirstOrDefault(c => c.Key == sender);
             if(info != null) {
-                info.State = SocketConnectionState.Disconnected;
                 info.Ticker.IsOrderBookSubscribed = false;
                 Telemetry.Default.TrackEvent(LogType.Log, this, info.Ticker, "order book socket closed", e.ToString());
             }
@@ -636,7 +635,6 @@ namespace CryptoMarketClient {
         protected internal virtual void OnOrderBookSocketOpened(object sender, EventArgs e) {
             SocketConnectionInfo info = OrderBookSockets.FirstOrDefault(c => c.Key == sender);
             if(info != null) {
-                info.State = SocketConnectionState.Connected;
                 info.Ticker.UpdateOrderBook();
                 info.Ticker.IsOrderBookSubscribed = true;
                 Telemetry.Default.TrackEvent(LogType.Success, this, info.Ticker, "order book socket opened", "");
@@ -650,8 +648,6 @@ namespace CryptoMarketClient {
             if(info != null) {
                 bool isReconnecting = info.Reconnecting;
                 info.Reconnecting = false;
-                info.State = SocketConnectionState.Error;
-                info.LastError = e.Exception.Message;
                 Telemetry.Default.TrackEvent(LogType.Error, this, info.Ticker, "order book socket error", e.Exception.Message);
                 if(!isReconnecting)
                     Reconnect(info);
@@ -674,13 +670,11 @@ namespace CryptoMarketClient {
 
         protected internal virtual void OnKlineSocketClosed(object sender, EventArgs e) {
             SocketConnectionInfo info = KlineSockets.FirstOrDefault(c => c.Key == sender);
-            info.State = SocketConnectionState.Disconnected;
             Telemetry.Default.TrackEvent(LogType.Log, this, info.Ticker, "kline socket closed", "");
         }
 
         protected internal virtual void OnKlineSocketOpened(object sender, EventArgs e) {
             SocketConnectionInfo info = KlineSockets.FirstOrDefault(c => c.Key == sender);
-            info.State = SocketConnectionState.Connected;
             Telemetry.Default.TrackEvent(LogType.Success, this, info.Ticker, "kline socket opened", "");
         }
 
@@ -689,8 +683,6 @@ namespace CryptoMarketClient {
             if(info != null) {
                 bool isReconnecting = info.Reconnecting;
                 info.Reconnecting = false;
-                info.State = SocketConnectionState.Error;
-                info.LastError = e.Exception.Message;
                 Telemetry.Default.TrackEvent(LogType.Error, this, info.Ticker, "kline socket error", e.Exception.Message);
                 if(!isReconnecting)
                     info.Reconnect();
@@ -716,8 +708,6 @@ namespace CryptoMarketClient {
             if(info != null) {
                 bool isReconnecting = info.Reconnecting;
                 info.Reconnecting = false;
-                info.State = SocketConnectionState.Error;
-                info.LastError = e.Exception.Message;
                 Telemetry.Default.TrackEvent(LogType.Error, this, info.Ticker, "trade history socket error", e.Exception.Message);
                 if(!isReconnecting)
                     info.Reconnect();
@@ -741,11 +731,6 @@ namespace CryptoMarketClient {
 
         public SocketConnectionState TickersSocketState {
             get { return TickersSocket == null ? SocketConnectionState.Disconnected : TickersSocket.State; }
-            set {
-                if(TickersSocket == null)
-                    return;
-                TickersSocket.State = value;
-            }
         }
         public SocketConnectionInfo TickersSocket { get; protected set; }
         //public WebSocket WebSocket { get; private set; }
@@ -782,19 +767,16 @@ namespace CryptoMarketClient {
         protected internal virtual void OnTickersSocketMessageReceived(object sender, MessageReceivedEventArgs e) {
             if(TickersSocket == null)
                 return;
-            TickersSocket.State = SocketConnectionState.Connected;
             LastWebSocketRecvTime = DateTime.Now;
         }
 
         protected internal virtual void OnTickersSocketClosed(object sender, EventArgs e) {
             if(TickersSocket == null)
                 return;
-            TickersSocket.State = SocketConnectionState.Disconnected;
             Telemetry.Default.TrackEvent(LogType.Log, this, (Ticker)null, "tickers socket closed", "");
         }
 
         protected internal virtual void OnTickersSocketOpened(object sender, EventArgs e) {
-            TickersSocket.State = SocketConnectionState.Connected;
             Telemetry.Default.TrackEvent(LogType.Success, this, (Ticker)null, "tickers socket opened", "");
             //foreach(Ticker ticker in SubscribedTickers)
             //    StartListenTickerStream(ticker);
@@ -803,8 +785,6 @@ namespace CryptoMarketClient {
         protected internal virtual void OnTickersSocketError(object sender, SuperSocket.ClientEngine.ErrorEventArgs e) {
             bool isReconnecting = TickersSocket.Reconnecting;
             TickersSocket.Reconnecting = false;
-            TickersSocket.State = SocketConnectionState.Error;
-            TickersSocket.LastError = e.Exception.Message;
             Telemetry.Default.TrackEvent(LogType.Error, this, (Ticker)null, "tickers socket error", e.Exception.Message);
             if(!isReconnecting)
                 TickersSocket.Reconnect();
@@ -907,28 +887,16 @@ namespace CryptoMarketClient {
         protected internal abstract IIncrementalUpdateDataProvider CreateIncrementalUpdateDataProvider();
 
         protected internal virtual void OnSignalSocketError(Exception e) {
-            TickersSocket.State = SocketConnectionState.Error;
             Telemetry.Default.TrackEvent(LogType.Error, this, (Ticker)null, "on socket error", e.Message);
             TickersSocket.Reconnect();
         }
 
         protected internal virtual void OnSignalConnectionClosed() {
-            TickersSocket.State = SocketConnectionState.Disconnected;
             Telemetry.Default.TrackEvent(LogType.Log, this, (Ticker)null, "connection closed", "");
         }
 
         protected internal virtual void OnSignalStateChanged(StateChange e) {
             LogManager.Default.AddMessage(LogType.Log, this, (Ticker)null, "socket state changed", e.NewState.ToString());
-            if(e.NewState == ConnectionState.Connected) {
-                TickersSocket.State = SocketConnectionState.Connected;
-                TickersSocket.UpdateSubscribtions();
-            }
-            else if(e.NewState == ConnectionState.Connecting)
-                TickersSocket.State = SocketConnectionState.Connecting;
-            else if(e.NewState == ConnectionState.Disconnected)
-                TickersSocket.State = SocketConnectionState.Disconnected;
-            else if(e.NewState == ConnectionState.Reconnecting)
-                TickersSocket.State = SocketConnectionState.Connecting;
         }
 
         protected internal virtual void OnSignalReceived(string s) {
@@ -938,12 +906,11 @@ namespace CryptoMarketClient {
         protected void OnIncrementalUpdateRecv(IncrementalUpdateQueue updates) {
             if(updates.CanApply) {
                 updates.Apply();
-                TickersSocketState = SocketConnectionState.Connected;
                 // apply
             }
             if(updates.TooLongQueue) {
-                TickersSocketState = SocketConnectionState.TooLongQue;
                 // call snapshot
+                throw new IndexOutOfRangeException("too long que");
             }
         }
         public void UpdateDefaultAccount() {
@@ -1008,6 +975,10 @@ namespace CryptoMarketClient {
             if(GetConnectionInfo(ticker, KlineSockets) != null)
                 return true;
             return false;
+        }
+
+        public void OnSocketInfoStateChanged(object sender, ConnectionInfoChangedEventArgs e) {
+            
         }
 
         List<CandleStickIntervalInfo> allowedCandleStickIntervals;

@@ -51,7 +51,7 @@ namespace CryptoMarketClient.Common {
         SocketConnectionState state = SocketConnectionState.None;
         public SocketConnectionState State {
             get { return state; }
-            set {
+            protected set {
                 if(State == value)
                     return;
                 SocketConnectionState prev = State;
@@ -60,7 +60,14 @@ namespace CryptoMarketClient.Common {
             }
         }
 
+        public event ConnectionInfoChangedEventHandler StateChanged;
         private void OnStateChanged(SocketConnectionState prev) {
+            ConnectionInfoChangedEventArgs e = new ConnectionInfoChangedEventArgs() { PrevState = prev, NewState = State };
+            if(Exchange != null)
+                Exchange.OnSocketInfoStateChanged(this, e);
+            if(StateChanged != null) {
+                StateChanged(this, e);
+            }
         }
 
         public string LastError { get; set; }
@@ -258,6 +265,8 @@ namespace CryptoMarketClient.Common {
         private void UnsubscribeSignalEvents() {
             Signal.Received -= OnSignalReceived;
             Signal.StateChanged -= OnSignalStateChanged;
+            Signal.Closed -= OnSignalClosed;
+            Signal.Error -= OnSignalError;
             if(Type == SocketSubscribeType.Tickers) {
                 Signal.Error -= Exchange.OnSignalSocketError;
                 Signal.Closed -= Exchange.OnSignalConnectionClosed;
@@ -269,6 +278,8 @@ namespace CryptoMarketClient.Common {
         private void SubscribeSignalEvents() {
             Signal.Received += OnSignalReceived;
             Signal.StateChanged += OnSignalStateChanged;
+            Signal.Error += OnSignalError;
+            Signal.Closed += OnSignalClosed;
             if(Type == SocketSubscribeType.Tickers) {
                 Signal.Error += Exchange.OnSignalSocketError;
                 Signal.Closed += Exchange.OnSignalConnectionClosed;
@@ -277,11 +288,26 @@ namespace CryptoMarketClient.Common {
             }
         }
 
-        private void OnSignalStateChanged(Microsoft.AspNet.SignalR.Client.StateChange obj) {
-            if(obj.NewState == Microsoft.AspNet.SignalR.Client.ConnectionState.Connected) {
+        private void OnSignalClosed() {
+            State = SocketConnectionState.Disconnected;
+        }
+
+        private void OnSignalError(Exception e) {
+            State = SocketConnectionState.Error;
+            LastError = e.Message;
+        }
+
+        private void OnSignalStateChanged(Microsoft.AspNet.SignalR.Client.StateChange e) {
+            if(e.NewState == Microsoft.AspNet.SignalR.Client.ConnectionState.Connected) {
                 State = SocketConnectionState.Connected;
                 UpdateSubscribtions();
             }
+            else if(e.NewState == Microsoft.AspNet.SignalR.Client.ConnectionState.Connecting)
+                State = SocketConnectionState.Connecting;
+            else if(e.NewState == Microsoft.AspNet.SignalR.Client.ConnectionState.Disconnected)
+                State = SocketConnectionState.Disconnected;
+            else if(e.NewState == Microsoft.AspNet.SignalR.Client.ConnectionState.Reconnecting)
+                State = SocketConnectionState.Connecting;
         }
 
         private void OnSignalReceived(string obj) {
@@ -290,7 +316,9 @@ namespace CryptoMarketClient.Common {
 
         private void SubscribeWebSocketEvents() {
             Socket.MessageReceived += OnSocketMessageReceived;
-            Socket.Opened += OnSocketOpened;    
+            Socket.Opened += OnSocketOpened;
+            Socket.Closed += OnSocketClosed;
+            Socket.Error += OnSocketError;
             if(Type == SocketSubscribeType.Tickers) {
                 Socket.Error += Exchange.OnTickersSocketError;
                 Socket.Opened += Exchange.OnTickersSocketOpened;
@@ -318,11 +346,24 @@ namespace CryptoMarketClient.Common {
         }
 
         private void OnSocketOpened(object sender, EventArgs e) {
+            State = SocketConnectionState.Connected;
             UpdateSubscribtions();
+        }
+
+        private void OnSocketClosed(object sender, EventArgs e) {
+            State = SocketConnectionState.Disconnected;
+        }
+
+        private void OnSocketError(object sender, SuperSocket.ClientEngine.ErrorEventArgs e) {
+            State = SocketConnectionState.Error;
+            LastError = e.Exception.Message;
         }
 
         private void UnsubscribeWebSocketEvents() {
             Socket.MessageReceived -= OnSocketMessageReceived;
+            Socket.Opened -= OnSocketOpened;
+            Socket.Closed -= OnSocketClosed;
+            Socket.Error -= OnSocketError;
             if(Type == SocketSubscribeType.Tickers) {
                 Socket.Error -= Exchange.OnTickersSocketError;
                 Socket.Opened -= Exchange.OnTickersSocketOpened;
@@ -435,4 +476,10 @@ namespace CryptoMarketClient.Common {
         WebSocket,
         Signal
     }
+
+    public class ConnectionInfoChangedEventArgs : EventArgs {
+        public SocketConnectionState PrevState { get; set; }
+        public SocketConnectionState NewState { get; set; }
+    }
+    public delegate void ConnectionInfoChangedEventHandler(object sender, ConnectionInfoChangedEventArgs e);
 }
