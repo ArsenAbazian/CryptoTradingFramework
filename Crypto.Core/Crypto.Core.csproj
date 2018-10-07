@@ -142,6 +142,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\TickerNameInfo.cs" />
     <Compile Include="Strategies\Arbitrages\ArbitrageHistoryHelper.cs" />
     <Compile Include="Strategies\Arbitrages\ArbitrageInfo.cs" />
     <Compile Include="Strategies\Arbitrages\Dependency\DependencyArbitrageHelper.cs" />
@@ -209,8 +210,16 @@
     <Compile Include="Helpers\Telemetry.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Strategies\BaseGridStrategy.cs" />
+    <Compile Include="Strategies\IStrategyDataProvider.cs" />
     <Compile Include="Strategies\StaticGridStrategy.cs" />
+    <Compile Include="Strategies\SingleTickerStrategyBase.cs" />
+    <Compile Include="Strategies\StrategiesManager.cs" />
+    <Compile Include="Strategies\StrategiesRegistrator.cs" />
     <Compile Include="Strategies\StrategyBase.cs" />
+    <Compile Include="Strategies\StrategyHistoryItem.cs" />
+    <Compile Include="Strategies\StrategyInputInfo.cs" />
+    <Compile Include="Strategies\StrategyValidationError.cs" />
+    <Compile Include="Strategies\Stupid\SimpleBuyLowSellHighStrategy.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

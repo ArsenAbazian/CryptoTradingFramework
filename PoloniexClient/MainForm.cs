@@ -23,6 +23,7 @@ using DevExpress.XtraBars;
 using DevExpress.Data;
 using DevExpress.XtraBars.Docking;
 using CryptoMarketClient.Helpers;
+using CryptoMarketClient.Strategies;
 
 namespace CryptoMarketClient {
     public partial class MainForm : DevExpress.XtraBars.Ribbon.RibbonForm {
@@ -500,6 +501,19 @@ namespace CryptoMarketClient {
             panel.Controls.Add(new LogMessagesControl());
             panel.Dock = DockingStyle.Bottom;
             panel.Visibility = DockVisibility.Visible;
+        }
+
+        StrategiesCollectionForm strategiesForm;
+        public StrategiesCollectionForm StrategiesForm {
+            get {
+                if(strategiesForm == null || strategiesForm.IsDisposed)
+                    strategiesForm = new StrategiesCollectionForm();
+                return strategiesForm;
+            }
+        }
+
+        private void biStrategiesItem_ItemClick(object sender, ItemClickEventArgs e) {
+            StrategiesForm.ShowDialog();
         }
     }
 }

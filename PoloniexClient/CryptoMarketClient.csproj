@@ -7,7 +7,7 @@
     <ProjectGuid>{544E62E5-DC81-410C-9F75-F914A0B711C1}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>CryptoMarketClient</RootNamespace>
-    <AssemblyName>PoloniexClient</AssemblyName>
+    <AssemblyName>CryptoTraderAuto</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -357,23 +357,54 @@
     <Compile Include="ExchangeCollectionControl.Designer.cs">
       <DependentUpon>ExchangeCollectionControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Strategies\Arbitrages\Dependency\DependencyArbitrageChartForm.cs">
+    <Compile Include="Strategies\Arbitrages\Statistical\DependencyArbitrageChartForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Strategies\Arbitrages\Dependency\DependencyArbitrageChartForm.Designer.cs">
+    <Compile Include="Strategies\Arbitrages\Statistical\DependencyArbitrageChartForm.Designer.cs">
       <DependentUpon>DependencyArbitrageChartForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Strategies\Arbitrages\Dependency\DependencyArbitrageEditingForm.cs">
+    <Compile Include="Strategies\Arbitrages\Statistical\StatisticalArbitrageConfigurationControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Strategies\Arbitrages\Statistical\StatisticalArbitrageConfigurationControl.Designer.cs">
+      <DependentUpon>StatisticalArbitrageConfigurationControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Strategies\Arbitrages\Statistical\DependencyArbitrageForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Strategies\Arbitrages\Dependency\DependencyArbitrageEditingForm.Designer.cs">
-      <DependentUpon>DependencyArbitrageEditingForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Strategies\Arbitrages\Dependency\DependencyArbitrageForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Strategies\Arbitrages\Dependency\DependencyArbitrageForm.Designer.cs">
+    <Compile Include="Strategies\Arbitrages\Statistical\DependencyArbitrageForm.Designer.cs">
       <DependentUpon>DependencyArbitrageForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Strategies\StrategiesCollectionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Strategies\StrategiesCollectionForm.Designer.cs">
+      <DependentUpon>StrategiesCollectionForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Strategies\StrategiesConfigurationManager.cs" />
+    <Compile Include="Strategies\StrategyConfigurationForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Strategies\StrategyConfigurationForm.Designer.cs">
+      <DependentUpon>StrategyConfigurationForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Strategies\StrategySpecificConfigurationControlBase.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Strategies\StrategySpecificConfigurationControlBase.Designer.cs">
+      <DependentUpon>StrategySpecificConfigurationControlBase.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Strategies\StrategyValidationErrorsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Strategies\StrategyValidationErrorsForm.Designer.cs">
+      <DependentUpon>StrategyValidationErrorsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Strategies\Stupid\SimpleBuyLowSellHighConfigControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Strategies\Stupid\SimpleBuyLowSellHighConfigControl.Designer.cs">
+      <DependentUpon>SimpleBuyLowSellHighConfigControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Tests\FastValueConverterTest.cs" />
     <Compile Include="Tests\IncrementalUpdateQueueTests.cs" />
@@ -563,14 +594,29 @@
     <EmbeddedResource Include="ExchangeCollectionControl.resx">
       <DependentUpon>ExchangeCollectionControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Strategies\Arbitrages\Dependency\DependencyArbitrageChartForm.resx">
+    <EmbeddedResource Include="Strategies\Arbitrages\Statistical\DependencyArbitrageChartForm.resx">
       <DependentUpon>DependencyArbitrageChartForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Strategies\Arbitrages\Dependency\DependencyArbitrageEditingForm.resx">
-      <DependentUpon>DependencyArbitrageEditingForm.cs</DependentUpon>
+    <EmbeddedResource Include="Strategies\Arbitrages\Statistical\StatisticalArbitrageConfigurationControl.resx">
+      <DependentUpon>StatisticalArbitrageConfigurationControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Strategies\Arbitrages\Dependency\DependencyArbitrageForm.resx">
+    <EmbeddedResource Include="Strategies\Arbitrages\Statistical\DependencyArbitrageForm.resx">
       <DependentUpon>DependencyArbitrageForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Strategies\StrategiesCollectionForm.resx">
+      <DependentUpon>StrategiesCollectionForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Strategies\StrategyConfigurationForm.resx">
+      <DependentUpon>StrategyConfigurationForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Strategies\StrategySpecificConfigurationControlBase.resx">
+      <DependentUpon>StrategySpecificConfigurationControlBase.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Strategies\StrategyValidationErrorsForm.resx">
+      <DependentUpon>StrategyValidationErrorsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Strategies\Stupid\SimpleBuyLowSellHighConfigControl.resx">
+      <DependentUpon>SimpleBuyLowSellHighConfigControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="TrailingCollectionControl.resx">
       <DependentUpon>TrailingCollectionControl.cs</DependentUpon>

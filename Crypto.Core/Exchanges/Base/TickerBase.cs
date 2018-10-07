@@ -120,7 +120,6 @@ namespace CryptoMarketClient {
 
         public TickerFilter PriceFilter { get; set; }
         public TickerFilter QuantityFilter { get; set; }
-        public List<TickerStrategyBase> Strategies { get; } = new List<TickerStrategyBase>();
         public Exchange Exchange { get; private set; }
         public int Index { get; set; }
         public virtual string MarketName { get; set; }

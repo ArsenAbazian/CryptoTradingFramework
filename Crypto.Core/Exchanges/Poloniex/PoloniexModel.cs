@@ -688,6 +688,8 @@ namespace CryptoMarketClient {
             else {
                 List<string[]> trades = JSonHelper.Default.DeserializeArrayOfObjects(data, ref startIndex, AccountTradeItems,
                     (itemIndex, paramIndex, value) => { return paramIndex != 1 || value != lastGotTradeId; });
+                if(trades == null)
+                    return true;
 
                 int index = 0;
                 foreach(string[] obj in trades) {
@@ -759,7 +761,7 @@ namespace CryptoMarketClient {
             lock(account.Balances) {
                 foreach(JProperty prop in res.Children()) {
                     if(prop.Name == "error") {
-                        Debug.WriteLine("OnGetBalances fails: " + prop.Value<string>());
+                        Debug.WriteLine("OnGetBalances fails: " + prop.Value.Value<string>());
                         return false;
                     }
                     JObject obj = (JObject)prop.Value;
@@ -900,13 +902,20 @@ namespace CryptoMarketClient {
                     }
                 }
                 else {
-                    JArray array = JsonConvert.DeserializeObject<JArray>(text);
-                    foreach(JObject obj in array) {
-                        OpenedOrderInfo info = CreateOrderInfo(account, ticker, obj);
-                        openedOrders.Add(info);
+                    object objRes = JsonConvert.DeserializeObject(text);
+                    if(objRes is JObject) {
+                        Debug.WriteLine(objRes.ToString());
+                        return false;
                     }
-                    if(ticker != null)
-                        ticker.RaiseOpenedOrdersChanged();
+                    JArray array = objRes as JArray;
+                    if(array != null) {
+                        foreach(JObject obj in array) {
+                            OpenedOrderInfo info = CreateOrderInfo(account, ticker, obj);
+                            openedOrders.Add(info);
+                        }
+                        if(ticker != null)
+                            ticker.RaiseOpenedOrdersChanged();
+                    }
                 }
             }
             return true;

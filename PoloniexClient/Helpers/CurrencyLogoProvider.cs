@@ -91,7 +91,10 @@ namespace CryptoMarketClient.Helpers {
             if(CurrencyLogo32Image.TryGetValue(currencyName, out res))
                 return res;
             try {
-                CurrencyLogo32Image.Add(currencyName, new Bitmap(GetLogoImage(currencyName), new Size(32, 32)));
+                Image logoImage = GetLogoImage(currencyName);
+                if(logoImage == null)
+                    return null;
+                CurrencyLogo32Image.Add(currencyName, new Bitmap(logoImage, new Size(32, 32)));
                 return CurrencyLogo32Image[currencyName];
             }
             catch(Exception) {

@@ -11,6 +11,10 @@ using System.Threading.Tasks;
 namespace CryptoMarketClient {
     public class AccountInfo {
 
+        public AccountInfo() {
+            Id = Guid.NewGuid();
+        }
+
         Exchange exchange;
         public Exchange Exchange {
             get { return exchange; }
@@ -34,6 +38,8 @@ namespace CryptoMarketClient {
                 curr.UpdateDefaultAccount();
             }
         }
+        [XtraSerializableProperty]
+        public Guid Id { get; set; }
         [XtraSerializableProperty]
         public string Name { get; set; }
         bool isDefault;
@@ -208,6 +214,17 @@ namespace CryptoMarketClient {
 
         public override string ToString() {
             return Name;
+        }
+        public double GetBalance(string currency) {
+            try {
+                if(Exchange.GetBalance(this, currency))
+                    return Balances.FirstOrDefault(b => b.Currency == currency).Available;
+                return -1;
+            }
+            catch(Exception e) {
+                Telemetry.Default.TrackException(e);
+                return -1;
+            }
         }
     }
 

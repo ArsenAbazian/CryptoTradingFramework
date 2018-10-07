@@ -1,83 +1,111 @@
-﻿using System;
+﻿using CryptoMarketClient;
+using CryptoMarketClient.Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using CryptoMarketClient.Common;
 
-namespace CryptoMarketClient.Strategies {
-    public abstract class TickerStrategyBase  {
-        public TickerStrategyBase(Ticker ticker) {
-            Ticker = ticker;
-            ticker.Strategies.Add(this);
-            Enabled = false;
-            DemoMode = true;
+namespace Crypto.Core.Strategies {
+    public abstract class StrategyBase {
+        public StrategyBase() {
+            Id = Guid.NewGuid();
+            FileName = Id.ToString();
         }
 
-        public bool Enabled { get; set; }
-        public bool DemoMode { get; set; }
+        public Guid Id { get; set; }
+        public StrategiesManager Manager { get; set; }
+        public bool Enabled { get; set; } = false;
+        public bool DemoMode { get; set; } = true;
+        public string Description { get; set; }
+        public abstract string StateText { get; }
+        public double Earned { get; set; }
+        
+        public abstract string TypeName { get; }
+        public string Name { get; set; }
+        public IStrategyDataProvider DataProvider { get { return Manager.DataProvider; } }
+        public List<StrategyHistoryItem> History { get; } = new List<StrategyHistoryItem>();
+        public List<TradingResult> TradeHistory { get; } = new List<TradingResult>();
+        
 
-        public Ticker Ticker { get; private set; }
-        public abstract object HistoryDataSource { get; }
+        protected virtual void Log(LogType logType, string text, double rate, double amount, StrategyOperation operation) {
+            History.Add(new StrategyHistoryItem() { Type = logType, Rate = rate, Amount = amount, Operation = operation, Time = DateTime.Now, Text = text });
+        }
+
+        AccountInfo account;
+        public AccountInfo Account {
+            get { return account; }
+            set {
+                if(Account == value)
+                    return;
+                account = value;
+                OnAccountChanged();
+            }
+        }
+        void OnAccountChanged() {
+            AccountId = Account == null ? Guid.Empty : Account.Id;
+        }
+        Guid accountId;
+        public Guid AccountId {
+            get { return accountId; }
+            set {
+                if(AccountId == value)
+                    return;
+                accountId = value;
+                OnAccountIdChanged();
+            }
+        }
+        void OnAccountIdChanged() {
+            Account = Exchange.GetAccount(AccountId);
+        }
+        public double MaxAvailableDeposit { get; set; }
+
+        public string FileName { get; set; }
+        public bool Load() { throw new NotImplementedException(); }
+        public bool Save() { throw new NotImplementedException(); }
+
         public void OnTick() {
             if(!Enabled)
                 return;
             OnTickCore();
         }
+
         protected abstract void OnTickCore();
-        public abstract string Name { get; }
-        protected virtual void Log(LogType logType, string text) {
-            LogManager.Default.AddMessage(logType, Ticker.Exchange, Ticker, Name + "-" + Ticker.HostName + "-" + Ticker.Name, text);
+        public bool Initialize(IStrategyDataProvider dataProvider) {
+            throw new NotImplementedException();
         }
-        protected string GetRateAmountString(double rate, double amount) {
-            return amount.ToString("0.00000000") + " by " + rate.ToString("0.00000000");
+        public StrategyBase Clone() {
+            ConstructorInfo info = GetType().GetConstructor(new Type[] { });
+            StrategyBase cloned = (StrategyBase)info.Invoke(new object[] { });
+            cloned.Assign(this);
+            return cloned;
         }
-        protected virtual bool Buy(double rate, double amount) {
-            if(!DemoMode && Ticker.Buy(rate, amount) == null) {
-                Log(LogType.Error, "Buy " + GetRateAmountString(rate, amount) + " failed.");
-                return false;
-            }
-            Log(LogType.Success, "Buy " + GetRateAmountString(rate, amount) + " succeded.");
-            return true;
+        public virtual void Assign(StrategyBase from) {
+            Manager = from.Manager;
+            Enabled = from.Enabled;
+            DemoMode = from.DemoMode;
+            Description = from.Description;
+            FileName = from.FileName;
         }
-        protected virtual bool Sell(double rate, double amount) {
-            if(!DemoMode && Ticker.Sell(rate, amount) == null) {
-                Log(LogType.Error, "Sell " + GetRateAmountString(rate, amount) + " failed.");
-                return false;
-            }
-            Log(LogType.Success, "Sell " + GetRateAmountString(rate, amount) + " succeded.");
-            return true;
-        }
-        protected virtual bool PlaceBid(double rate, double amount) {
-            if(!DemoMode && Ticker.Buy(rate, amount) == null) {
-                Log(LogType.Error, "Place Bid " + GetRateAmountString(rate, amount) + " failed.");
-                return false;
-            }
-            Log(LogType.Success, "Place Bid " + GetRateAmountString(rate, amount) + " succeded.");
-            return true;
-        }
-        protected virtual bool PlaceAsk(double rate, double amount) {
-            if(!DemoMode && Ticker.Sell(rate, amount) == null) {
-                Log(LogType.Error, "Place Ask " + GetRateAmountString(rate, amount) + " failed.");
-                return false;
-            }
-            Log(LogType.Success, "Place Ask " + GetRateAmountString(rate, amount) + " succeded.");
-            return true;
-        }
-    }
 
-    public enum StrategyOperation {
-        BuyNow,
-        SellNow,
-        BuyPostponed,
-        SellPostponed
-    }
+        protected string GetTrimmedString(string value) {
+            return string.IsNullOrEmpty(value) ? value : value.Trim();
+        }
 
-    public class StrategyHistoryItem {
-        public DateTime Time { get; set; }
-        public StrategyOperation Operation { get; set; }
-        public double Rate { get; set; }
-        public double Amount { get; set; }
-        public double Total { get; set; }
+        protected void CheckNotEmptyString(List<StrategyValidationError> list, string value, string propName) {
+            if(string.IsNullOrEmpty(value))
+                list.Add(new StrategyValidationError() { PropertyName = propName, Description = "This property should not be empty", Value = Convert.ToString(value), DataObject = this });
+        }
+
+        public virtual List<StrategyValidationError> Validate() {
+            List<StrategyValidationError> list = new List<StrategyValidationError>();
+
+            Name = GetTrimmedString(Name);
+            FileName = GetTrimmedString(FileName);
+            CheckNotEmptyString(list, Name, "Name");
+            CheckNotEmptyString(list, FileName, "FileName");
+            return list;
+        }
     }
 }

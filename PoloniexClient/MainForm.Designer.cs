@@ -61,6 +61,7 @@
             this.biFuturesSettings = new DevExpress.XtraBars.BarButtonItem();
             this.biDependencyArbitrageAnalitics = new DevExpress.XtraBars.BarButtonItem();
             this.biLog = new DevExpress.XtraBars.BarButtonItem();
+            this.biStrategiesItem = new DevExpress.XtraBars.BarButtonItem();
             this.ribbonPageCategory1 = new DevExpress.XtraBars.Ribbon.RibbonPageCategory();
             this.ribbonPage2 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPageGroup2 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
@@ -73,6 +74,7 @@
             this.ribbonPageGroup8 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.ribbonPageGroup7 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.ribbonPageGroup5 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
+            this.ribbonPageGroup9 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.ribbonPage5 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPageGroup10 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.ribbonPage1 = new DevExpress.XtraBars.Ribbon.RibbonPage();
@@ -140,10 +142,11 @@
             this.biFuturesArbitrage,
             this.biFuturesSettings,
             this.biDependencyArbitrageAnalitics,
-            this.biLog});
+            this.biLog,
+            this.biStrategiesItem});
             this.ribbonControl1.Location = new System.Drawing.Point(0, 0);
             this.ribbonControl1.Margin = new System.Windows.Forms.Padding(12);
-            this.ribbonControl1.MaxItemId = 42;
+            this.ribbonControl1.MaxItemId = 43;
             this.ribbonControl1.MdiMergeStyle = DevExpress.XtraBars.Ribbon.RibbonMdiMergeStyle.Always;
             this.ribbonControl1.Name = "ribbonControl1";
             this.ribbonControl1.PageCategories.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageCategory[] {
@@ -464,6 +467,14 @@
             this.biLog.Name = "biLog";
             this.biLog.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.biLog_ItemClick);
             // 
+            // biStrategiesItem
+            // 
+            this.biStrategiesItem.Caption = "Strategies";
+            this.biStrategiesItem.Id = 42;
+            this.biStrategiesItem.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("biStrategiesItem.ImageOptions.SvgImage")));
+            this.biStrategiesItem.Name = "biStrategiesItem";
+            this.biStrategiesItem.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.biStrategiesItem_ItemClick);
+            // 
             // ribbonPageCategory1
             // 
             this.ribbonPageCategory1.Name = "ribbonPageCategory1";
@@ -514,7 +525,8 @@
             this.ribbonPageGroup3,
             this.ribbonPageGroup8,
             this.ribbonPageGroup7,
-            this.ribbonPageGroup5});
+            this.ribbonPageGroup5,
+            this.ribbonPageGroup9});
             this.rpPoloniex.Name = "rpPoloniex";
             this.rpPoloniex.Text = "Exchanges";
             // 
@@ -559,6 +571,12 @@
             this.ribbonPageGroup5.ItemLinks.Add(this.biLog);
             this.ribbonPageGroup5.Name = "ribbonPageGroup5";
             this.ribbonPageGroup5.Text = "Instruments";
+            // 
+            // ribbonPageGroup9
+            // 
+            this.ribbonPageGroup9.ItemLinks.Add(this.biStrategiesItem);
+            this.ribbonPageGroup9.Name = "ribbonPageGroup9";
+            this.ribbonPageGroup9.Text = "Automated Trading";
             // 
             // ribbonPage5
             // 
@@ -770,6 +788,8 @@
         private DevExpress.XtraBars.Docking.ControlContainer dockPanel1_Container;
         private DevExpress.XtraBars.Docking.DockManager dockManager1;
         private LogMessagesControl logMessagesControl1;
+        private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup9;
+        private DevExpress.XtraBars.BarButtonItem biStrategiesItem;
     }
 }
 

@@ -656,7 +656,6 @@ namespace CryptoMarketClient {
                 if(form.DialogResult == DialogResult.Cancel)
                     return;
             }
-            ticker.Strategies.Add(strategy);
         }
 
         private void pmTickers_BeforePopup(object sender, CancelEventArgs e) {

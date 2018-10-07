@@ -26,7 +26,7 @@ namespace CryptoMarketClient {
             this.arbitrageHistoryChart.Series.Add(CreateLineSeries(ticker, "Ask"));
             this.arbitrageHistoryChart.Series.Add(CreateLineSeries(ticker, "Current"));
             MonitoringTickers.Add(ticker);
-            ticker.HistoryItemAdd += Ticker_HistoryItemAdd;
+            ticker.HistoryChanged += Ticker_HistoryItemAdd;
 
             ((XYDiagram)this.arbitrageHistoryChart.Diagram).AxisY.WholeRange.AlwaysShowZeroLevel = false;
             ((XYDiagram)this.arbitrageHistoryChart.Diagram).EnableAxisXScrolling = true;
@@ -37,7 +37,7 @@ namespace CryptoMarketClient {
         protected override void OnClosed(EventArgs e) {
             base.OnClosed(e);
             foreach(Ticker ticker in MonitoringTickers) {
-                ticker.HistoryItemAdd -= Ticker_HistoryItemAdd;
+                ticker.HistoryChanged -= Ticker_HistoryItemAdd;
             }
         }
 

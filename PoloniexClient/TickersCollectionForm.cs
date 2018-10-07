@@ -127,7 +127,7 @@ namespace CryptoMarketClient {
                 SetInfoConnected();
             }
             else {
-                Exchange.TickerUpdate += OnWebSocketTickerUpdate;
+                Exchange.TickerChanged += OnWebSocketTickerUpdate;
                 Exchange.TickersUpdate += OnWebSocketTickersUpdate;
                 SubscribeWebSocket();
             }

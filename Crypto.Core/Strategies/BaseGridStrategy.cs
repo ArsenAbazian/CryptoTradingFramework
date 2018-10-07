@@ -1,4 +1,5 @@
-﻿using DevExpress.Utils.Serializing;
+﻿using Crypto.Core.Strategies;
+using DevExpress.Utils.Serializing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,26 +8,23 @@ using System.Threading.Tasks;
 
 namespace CryptoMarketClient.Strategies {
     public class GridStrategyBase : TickerStrategyBase {
-        public GridStrategyBase(Ticker ticker) : base(ticker) {
+        public GridStrategyBase() : base() {
         }
-
         protected override void OnTickCore() {
             throw new NotImplementedException();
         }
-        public override string Name => "GridStrategy";
+        
+        public override string TypeName => "GridStrategy";
 
         public List<OrderInfo> BidLines { get; } = new List<OrderInfo>();
         public List<OrderInfo> AskLines { get; } = new List<OrderInfo>();
+
+        public override string StateText => throw new NotImplementedException();
 
         [XtraSerializableProperty]
         public double BaseCurrencyMaximum { get; set; }
         [XtraSerializableProperty]
         public double MarketCurrencyMaximum { get; set; }
-
-        public override object HistoryDataSource
-        {
-            get { throw new NotImplementedException(); }
-        } 
 
         protected virtual void GenerateLines() { }
 
@@ -34,7 +32,6 @@ namespace CryptoMarketClient.Strategies {
             BidLines.Clear();
             AskLines.Clear();
         }
-
 
         /*
         protected double CalcBuyTotalAmount(double baseCurrencyAmount, out double totalSpent, out double lowestAsk) {

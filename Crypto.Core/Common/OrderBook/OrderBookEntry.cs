@@ -28,17 +28,20 @@ namespace CryptoMarketClient {
                 this.amountCalculated = false;
             }
         }
-        double value = 0, amount = 0;
+        double valueCore = 0, amount = 0;
         bool valueCalculated, amountCalculated;
         public double Value {
             get {
                 if(!valueCalculated) {
                     if(string.IsNullOrEmpty(ValueString))
-                        return value;
-                    value = FastValueConverter.Convert(ValueString);
+                        return valueCore;
+                    valueCore = FastValueConverter.Convert(ValueString);
                     valueCalculated = true;
                 }
-                return value;
+                return valueCore;
+            }
+            set {
+                valueCore = value;
             }
         }
         public double Amount {
@@ -60,7 +63,7 @@ namespace CryptoMarketClient {
         public double VolumeTotal { get; set; }
         public double VolumePercent { get; set; }
         public void Clear() {
-            this.value = 0;
+            this.valueCore = 0;
             this.amount = 0;
         }
     }

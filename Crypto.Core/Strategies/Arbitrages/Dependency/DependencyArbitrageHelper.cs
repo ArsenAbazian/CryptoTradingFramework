@@ -17,7 +17,7 @@ namespace Crypto.Core.Common.Arbitrages {
     public class DependencyArbitrageHelper : IXtraSerializable {
         public DependencyArbitrageHelper(string name) {
             Name = name;
-            Items = new List<DependencyArbitrageInfo>();
+            Items = new List<StatisticalArbitrageStrategy>();
         }
 
         public string Name { get; private set; }
@@ -37,25 +37,25 @@ namespace Crypto.Core.Common.Arbitrages {
         }
 
         [XtraSerializableProperty(XtraSerializationVisibility.Collection, true, false, true)]
-        public List<DependencyArbitrageInfo> Items { get; private set; }
+        public List<StatisticalArbitrageStrategy> Items { get; private set; }
 
-        DependencyArbitrageInfo XtraCreateItemsItem(XtraItemEventArgs e) {
-            return new DependencyArbitrageInfo();
+        StatisticalArbitrageStrategy XtraCreateItemsItem(XtraItemEventArgs e) {
+            return new StatisticalArbitrageStrategy();
         }
 
         void XtraSetIndexItemsItem(XtraSetItemIndexEventArgs e) {
-            Add((DependencyArbitrageInfo)e.Item.Value);
+            Add((StatisticalArbitrageStrategy)e.Item.Value);
         }
-        public void Add(DependencyArbitrageInfo info) {
+        public void Add(StatisticalArbitrageStrategy info) {
             Items.Add(info);
             info.Changed += OnItemChanged;
         }
-        public void Remove(DependencyArbitrageInfo info) {
+        public void Remove(StatisticalArbitrageStrategy info) {
             Items.Remove(info);
             info.Changed -= OnItemChanged;
         }
         protected void OnItemChanged(object sender, EventArgs e) {
-            DependencyArbitrageInfo info = (DependencyArbitrageInfo)sender;
+            StatisticalArbitrageStrategy info = (StatisticalArbitrageStrategy)sender;
             info.Calculate();
             if(ItemChanged != null)
                 ItemChanged(this, new DependencyArbitrageInfoChangedEventArgs() { Arbitrage = info });
@@ -119,7 +119,7 @@ namespace Crypto.Core.Common.Arbitrages {
             IsActive = false;
         }
         protected void StartListenOrderBookStreams() {
-            foreach(DependencyArbitrageInfo info in Items) {
+            foreach(StatisticalArbitrageStrategy info in Items) {
                 info.StartListenOrderBookStreams();
             }
         }
@@ -137,11 +137,11 @@ namespace Crypto.Core.Common.Arbitrages {
     }
 
     public interface IDependencyArbitrageUpdateListener {
-        void OnUpdateInfo(DependencyArbitrageInfo info);
+        void OnUpdateInfo(StatisticalArbitrageStrategy info);
     }
 
     public class DependencyArbitrageInfoChangedEventArgs : EventArgs {
-        public DependencyArbitrageInfo Arbitrage { get; set; }
+        public StatisticalArbitrageStrategy Arbitrage { get; set; }
     }
 
     public delegate void DependencyArbitrageChangeEventHandler(object sender, DependencyArbitrageInfoChangedEventArgs e);

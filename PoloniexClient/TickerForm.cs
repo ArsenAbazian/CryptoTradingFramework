@@ -193,10 +193,10 @@ namespace CryptoMarketClient {
         void UnsubscribeEvents(Ticker prev) {
             if(prev.Exchange.SupportWebSocket(WebSocketType.Ticker))
                 prev.StopListenTickerStream();
-            prev.OrderBook.OnChanged -= OnTickerOrderBookChanged;
+            prev.OrderBook.Changed -= OnTickerOrderBookChanged;
             prev.Changed -= OnTickerChanged;
-            prev.HistoryItemAdd -= OnTickerHistoryItemAdded;
-            prev.TradeHistoryAdd -= OnTickerTradeHistoryAdd;
+            prev.HistoryChanged -= OnTickerHistoryItemAdded;
+            prev.TradeHistoryChanged -= OnTickerTradeHistoryAdd;
             prev.OpenedOrdersChanged -= OnTickerOpenedOrdersChanged;
         }
 
@@ -216,10 +216,10 @@ namespace CryptoMarketClient {
                 Ticker.Exchange.UpdateTrades(Ticker);
                 Ticker.StartListenTickerStream();
             }
-            Ticker.OrderBook.OnChanged += OnTickerOrderBookChanged;
+            Ticker.OrderBook.Changed += OnTickerOrderBookChanged;
             Ticker.Changed += OnTickerChanged;
-            Ticker.HistoryItemAdd += OnTickerHistoryItemAdded;
-            Ticker.TradeHistoryAdd += OnTickerTradeHistoryAdd;
+            Ticker.HistoryChanged += OnTickerHistoryItemAdded;
+            Ticker.TradeHistoryChanged += OnTickerTradeHistoryAdd;
             Ticker.OpenedOrdersChanged += OnTickerOpenedOrdersChanged;
         }
 

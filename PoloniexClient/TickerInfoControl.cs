@@ -33,9 +33,9 @@ namespace CryptoMarketClient {
         
         void OnTickerChanged(Ticker prev) {
             if(prev != null)
-                prev.HistoryItemAdd -= Ticker_Changed;
+                prev.HistoryChanged -= Ticker_Changed;
             if(Ticker != null)
-                Ticker.HistoryItemAdd += Ticker_Changed;
+                Ticker.HistoryChanged += Ticker_Changed;
             List<Ticker> list = new List<Ticker>();
             list.Add(Ticker);
             this.bindingSource.DataSource = list;

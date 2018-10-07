@@ -107,6 +107,7 @@ namespace CryptoCollector
 
         private static void EnsureTableCreated(Ticker ticker) {
             string tableName = GetTableName(ticker);
+
         }
 
         private static string GetTableName(Ticker ticker) {

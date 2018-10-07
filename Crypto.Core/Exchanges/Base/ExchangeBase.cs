@@ -20,6 +20,7 @@ using WebSocket4Net;
 using Microsoft.AspNet.SignalR.Client;
 using System.Threading;
 using System.Net.Http;
+using Crypto.Core.Common;
 
 namespace CryptoMarketClient {
     public abstract class Exchange : IXtraSerializable {
@@ -43,6 +44,19 @@ namespace CryptoMarketClient {
 
         public static Color BidColor {
             get { return Color.Green; }
+        }
+
+        public static List<TickerNameInfo> GetTickersNameInfo() {
+            List<TickerNameInfo> list = new List<TickerNameInfo>();
+            foreach(Exchange e in Exchange.Registered) {
+                e.Connect();
+                if(!e.IsConnected)
+                    continue;
+                foreach(Ticker ticker in e.Tickers) {
+                    list.Add(new TickerNameInfo() { Exchange = e.Type, Ticker = ticker.Name, BaseCurrency = ticker.BaseCurrency, MarketCurrency = ticker.MarketCurrency });
+                }
+            }
+            return list;
         }
 
         public DateTime LastWebSocketRecvTime { get; set; }
@@ -979,6 +993,17 @@ namespace CryptoMarketClient {
 
         public void OnSocketInfoStateChanged(object sender, ConnectionInfoChangedEventArgs e) {
             
+        }
+        public static AccountInfo GetAccount(Guid accountId) {
+            foreach(Exchange e in Exchange.Registered) {
+                AccountInfo info = e.Accounts.FirstOrDefault(a => a.Id == accountId);
+                if(info != null)
+                    return info;
+            }
+            return null;
+        }
+        public Ticker GetTicker(string tickerName) {
+            return Tickers.FirstOrDefault(t => t.Name == tickerName);
         }
 
         List<CandleStickIntervalInfo> allowedCandleStickIntervals;

@@ -1,4 +1,5 @@
-﻿using CryptoMarketClient;
+﻿using Crypto.Core.Strategies;
+using CryptoMarketClient;
 using DevExpress.Utils;
 using DevExpress.Utils.Serializing;
 using System;
@@ -12,13 +13,19 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Crypto.Core.Common.Arbitrages {
-    public class DependencyArbitrageInfo : IXtraSerializable {
-        public DependencyArbitrageInfo() {
+    public class StatisticalArbitrageStrategy : StrategyBase ,IXtraSerializable {
+        public StatisticalArbitrageStrategy() {
             FileSuffix = DateTime.Now.ToString("dd_MM_yyyy_HH_mm_ss_fff");
         }
 
         protected string FileSuffix { get; set; }
         public object Tag { get; set; }
+
+        public override string TypeName => "Statistical Arbitrage";
+        protected override void OnTickCore() {
+            throw new NotImplementedException();
+        }
+        public override string StateText => State.ToString();
 
         Ticker second;
         public Ticker Second {
@@ -31,6 +38,32 @@ namespace Crypto.Core.Common.Arbitrages {
                 OnTickerChanged(prev, Second);
             }
         }
+
+        public override List<StrategyValidationError> Validate() {
+            List<StrategyValidationError> list = base.Validate();
+            string text = ValidateTickerInfo(SecondName);
+            if(text != null) 
+                list.Add(new StrategyValidationError() { DataObject = Second, Description = "Second: " + text, PropertyName = "SecondName", Value = SecondName.Ticker });
+            if(FirstNames.Count == 0)
+                list.Add(new StrategyValidationError() { DataObject = this, Description = "First: You must specify at least one ticker.", PropertyName = "First" });
+            foreach(var item in FirstNames) {
+                text = ValidateTickerInfo(item);
+                if(text != null)
+                    list.Add(new StrategyValidationError() { DataObject = item, Description = "First: " + text, PropertyName = "Ticker", Value = SecondName.Ticker });
+            }
+            UpdateItems();
+            return list;
+        }
+
+        public string ValidateTickerInfo(TickerNameInfo info) {
+            if(string.IsNullOrEmpty(info.Ticker))
+                return "Ticker not selected";
+            if(Exchange.Get(info.Exchange).Ticker(info.Ticker) == null)
+                return "Ticker '" + info.Ticker + "' not found on exchange '" + info.Exchange + "'";
+            return null;
+        }
+
+
         void OnTickerChanged(Ticker prev, Ticker current) {
             if(prev != null)
                 prev.OrderBook.Changed -= OnChanged;
@@ -250,15 +283,9 @@ namespace Crypto.Core.Common.Arbitrages {
             }
             return e.Ticker(item.Ticker);
         }
-        public DependencyArbitrageInfo Clone() {
-            DependencyArbitrageInfo info = new DependencyArbitrageInfo();
-            info.SecondName = SecondName.Clone();
-            foreach(var item in FirstNames) {
-                info.FirstNames.Add(item.Clone());
-            }
-            return info;
-        }
-        public void Assign(DependencyArbitrageInfo info) {
+        public override void Assign(StrategyBase from) {
+            base.Assign(from);
+            StatisticalArbitrageStrategy info = (StatisticalArbitrageStrategy)from;
             SecondName = info.SecondName.Clone();
             FirstNames.Clear();
             foreach(var item in info.FirstNames) {
@@ -343,7 +370,7 @@ namespace Crypto.Core.Common.Arbitrages {
                     Directory.CreateDirectory(directoryName);
                 string fileName = directoryName + "\\" + GetFileName();
                 StreamWriter writer = new StreamWriter(fileName);
-                foreach(var h in History) {
+                foreach(DependencyArbitrageHistoryItem h in History) {
                     if(h == null)
                         continue;
                     writer.Write(h.Time.ToString("dd.MM.yyyy HH:mm:ss.fff"));
@@ -407,7 +434,7 @@ namespace Crypto.Core.Common.Arbitrages {
         public void AddHistoryItem() {
             if(LockHistory || LowerAsk == 0 || UpperBid == 0)
                 return;
-            var last = History.Count > 0 ? History.Last() : null;
+            var last = (DependencyArbitrageHistoryItem)(History.Count > 0 ? History.Last() : null);
             if(last != null && last.MaxDeviation == MaxDeviation && last.MaxDeviationTicker == MaxDeviationTickerName)
                 return;
             double prevLowerAskRel = last == null ? 0 : LowerAsk / last.LowerAsk;
@@ -424,7 +451,7 @@ namespace Crypto.Core.Common.Arbitrages {
             History.Add(item);
         }
 
-        public BindingList<DependencyArbitrageHistoryItem> History { get; } = new BindingList<DependencyArbitrageHistoryItem>();
+        //public BindingList<DependencyArbitrageHistoryItem> History { get; } = new BindingList<DependencyArbitrageHistoryItem>();
 
         public void StopListenOrderBookStreams() {
             if(Second == null)
@@ -479,45 +506,18 @@ namespace Crypto.Core.Common.Arbitrages {
         public double LowerAsk { get; private set; }
     }
 
-    public class TickerNameInfo {
-        [XtraSerializableProperty]
-        public ExchangeType Exchange { get; set; }
-        [XtraSerializableProperty]
-        public string Ticker { get; set; }
-        public Ticker FindTicker() {
-            Exchange e = CryptoMarketClient.Exchange.Get(Exchange);
-            e.Connect();
-            return e.Ticker(Ticker);
-        }
-        public Ticker FindTickerFor(ExchangeType exchange) {
-            Exchange e2 = CryptoMarketClient.Exchange.Get(Exchange);
-            if(!e2.Connect())
-                return null;
-            Ticker t = e2.Ticker(Ticker);
-            Exchange e = CryptoMarketClient.Exchange.Get(exchange);
-            if(!e.Connect())
-                return null;
-            return e.Ticker(t.BaseCurrency, t.MarketCurrency);
-        }
-        public TickerNameInfo Clone() {
-            return new TickerNameInfo() { Exchange = this.Exchange, Ticker = this.Ticker };
-        }
-        public override string ToString() {
-            return Exchange.ToString() + ":" + Ticker;
-        }
-    }
+    
 
     public enum DependencyArbitrageState {
         None,
         Opened,
     }
 
-    public class DependencyArbitrageHistoryItem {
-        public DependencyArbitrageHistoryItem(DependencyArbitrageInfo owner) {
+    public class DependencyArbitrageHistoryItem : StrategyHistoryItem {
+        public DependencyArbitrageHistoryItem(StatisticalArbitrageStrategy owner) {
             Owner = owner;
         }
-        protected DependencyArbitrageInfo Owner { get; set; }
-        public DateTime Time { get; set; }
+        protected StatisticalArbitrageStrategy Owner { get; set; }
         public double MaxDeviation { get; set; }
         public double MaxDeviationLog { get { return UpperBidLog - LowerAskLog; } }
         public double LowerAsk { get; set; }
