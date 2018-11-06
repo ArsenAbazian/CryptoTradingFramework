@@ -6,8 +6,10 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace Crypto.Core.Strategies {
+    [Serializable]
     public abstract class StrategyBase {
         public StrategyBase() {
             Id = Guid.NewGuid();
@@ -15,6 +17,7 @@ namespace Crypto.Core.Strategies {
         }
 
         public Guid Id { get; set; }
+        [XmlIgnore]
         public StrategiesManager Manager { get; set; }
         public bool Enabled { get; set; } = false;
         public bool DemoMode { get; set; } = true;
@@ -34,6 +37,7 @@ namespace Crypto.Core.Strategies {
         }
 
         AccountInfo account;
+        [XmlIgnore]
         public AccountInfo Account {
             get { return account; }
             set {
@@ -59,7 +63,7 @@ namespace Crypto.Core.Strategies {
         void OnAccountIdChanged() {
             Account = Exchange.GetAccount(AccountId);
         }
-        public double MaxAvailableDeposit { get; set; }
+        public double MaxAllowedDeposit { get; set; }
 
         public string FileName { get; set; }
         public bool Load() { throw new NotImplementedException(); }
@@ -98,6 +102,13 @@ namespace Crypto.Core.Strategies {
                 list.Add(new StrategyValidationError() { PropertyName = propName, Description = "This property should not be empty", Value = Convert.ToString(value), DataObject = this });
         }
 
+        protected virtual void CheckAccountSpecified(List<StrategyValidationError> list) {
+            if(AccountId == Guid.Empty)
+                list.Add(new StrategyValidationError() { DataObject = this, Description = "Account not specified", PropertyName = "AccountId", Value = "[empty]" });
+            else if(Account == null)
+                list.Add(new StrategyValidationError() { DataObject = this, Description = "Account not found", PropertyName = "Account", Value = "[empty]" });
+        }
+
         public virtual List<StrategyValidationError> Validate() {
             List<StrategyValidationError> list = new List<StrategyValidationError>();
 
@@ -105,7 +116,15 @@ namespace Crypto.Core.Strategies {
             FileName = GetTrimmedString(FileName);
             CheckNotEmptyString(list, Name, "Name");
             CheckNotEmptyString(list, FileName, "FileName");
+            CheckAccountSpecified(list);
+            CheckAvailableDeposit(list);
+
             return list;
+        }
+
+        void CheckAvailableDeposit(List<StrategyValidationError> list) {
+            if(MaxAllowedDeposit == 0)
+                list.Add(new StrategyValidationError() { DataObject = this, Description = "Max allowed deposit not specified.", PropertyName = "MaxAllowedDeposit", Value = "0" });
         }
     }
 }

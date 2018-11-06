@@ -49,9 +49,8 @@ namespace CryptoMarketClient {
         public static List<TickerNameInfo> GetTickersNameInfo() {
             List<TickerNameInfo> list = new List<TickerNameInfo>();
             foreach(Exchange e in Exchange.Registered) {
-                e.Connect();
-                if(!e.IsConnected)
-                    continue;
+                if(e.Tickers.Count == 0)
+                    e.LoadTickers();
                 foreach(Ticker ticker in e.Tickers) {
                     list.Add(new TickerNameInfo() { Exchange = e.Type, Ticker = ticker.Name, BaseCurrency = ticker.BaseCurrency, MarketCurrency = ticker.MarketCurrency });
                 }
