@@ -1,6 +1,5 @@
-﻿using CryptoMarketClient;
-using DevExpress.Utils;
-using DevExpress.Utils.Serializing;
+﻿using Crypto.Core.Helpers;
+using CryptoMarketClient;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -12,40 +11,34 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml.Serialization;
 
 namespace Crypto.Core.Common.Arbitrages {
-    public class DependencyArbitrageHelper : IXtraSerializable {
+    [Serializable]
+    public class DependencyArbitrageHelper : ISupportSerialization {
         public DependencyArbitrageHelper(string name) {
             Name = name;
             Items = new List<StatisticalArbitrageStrategy>();
         }
 
-        public string Name { get; private set; }
-        void IXtraSerializable.OnStartSerializing() {
+        public string Name { get; set; }
+        
+        public static DependencyArbitrageHelper FromFile(string fileName) {
+            return (DependencyArbitrageHelper)SerializationHelper.FromFile(fileName, typeof(DependencyArbitrageHelper));
         }
 
-        void IXtraSerializable.OnEndSerializing() {
+        public void Load() {
+            SerializationHelper.Load(this, GetType());
         }
 
-        void IXtraSerializable.OnStartDeserializing(LayoutAllowEventArgs e) {
-        }
-
-        void IXtraSerializable.OnEndDeserializing(string restoredVersion) {
+        public virtual void OnEndDeserialize() {
             Items.ForEach(i => i.UpdateItems());
             Items.ForEach(i => i.Changed += OnItemChanged);
             UpdateIndices();
         }
 
-        [XtraSerializableProperty(XtraSerializationVisibility.Collection, true, false, true)]
         public List<StatisticalArbitrageStrategy> Items { get; private set; }
 
-        StatisticalArbitrageStrategy XtraCreateItemsItem(XtraItemEventArgs e) {
-            return new StatisticalArbitrageStrategy();
-        }
-
-        void XtraSetIndexItemsItem(XtraSetItemIndexEventArgs e) {
-            Add((StatisticalArbitrageStrategy)e.Item.Value);
-        }
         public void Add(StatisticalArbitrageStrategy info) {
             Items.Add(info);
             info.Changed += OnItemChanged;
@@ -61,53 +54,27 @@ namespace Crypto.Core.Common.Arbitrages {
                 ItemChanged(this, new DependencyArbitrageInfoChangedEventArgs() { Arbitrage = info });
         }
         public event DependencyArbitrageChangeEventHandler ItemChanged;
-        protected string FileName { get { return Name + ".xml"; } }
-        public void Save() {
+        public string FileName { get; set; }
+        public bool Save() {
             UpdateIndices();
-            SaveLayoutToXml(FileName);
+            if(string.IsNullOrEmpty(FileName))
+                return false;
+            try {
+                XmlSerializer formatter = new XmlSerializer(GetType());
+                using(FileStream fs = new FileStream(FileName, FileMode.OpenOrCreate)) {
+                    formatter.Serialize(fs, this);
+                }
+            }
+            catch(Exception e) {
+                Telemetry.Default.TrackException(e);
+                return false;
+            }
+            return true;
         }
-        public void Load() {
-            if(!File.Exists(FileName))
-                return;
-            RestoreLayoutFromXml(FileName);
-        }
+        
         void UpdateIndices() {
             for(int i = 0; i < Items.Count; i++)
                 Items[i].Index = i;
-        }
-
-        protected bool RestoringLayout { get; set; }
-        protected virtual bool SaveLayoutCore(XtraSerializer serializer, object path) {
-            System.IO.Stream stream = path as System.IO.Stream;
-            if(stream != null)
-                return serializer.SerializeObjects(GetXtraObjectInfo(), stream, this.GetType().Name);
-            else
-                return serializer.SerializeObjects(GetXtraObjectInfo(), path.ToString(), this.GetType().Name);
-        }
-        protected virtual void RestoreLayoutCore(XtraSerializer serializer, object path) {
-            RestoringLayout = true;
-            try {
-                System.IO.Stream stream = path as System.IO.Stream;
-                if(stream != null)
-                    serializer.DeserializeObjects(GetXtraObjectInfo(), stream, this.GetType().Name);
-                else
-                    serializer.DeserializeObjects(GetXtraObjectInfo(), path.ToString(), this.GetType().Name);
-            }
-            finally {
-                RestoringLayout = false;
-            }
-        }
-        protected XtraObjectInfo[] GetXtraObjectInfo() {
-            ArrayList result = new ArrayList();
-            result.Add(new XtraObjectInfo(Name, this));
-            return (XtraObjectInfo[])result.ToArray(typeof(XtraObjectInfo));
-        }
-        //layout
-        protected virtual void SaveLayoutToXml(string xmlFile) {
-            SaveLayoutCore(new XmlXtraSerializer(), xmlFile);
-        }
-        protected virtual void RestoreLayoutFromXml(string xmlFile) {
-            RestoreLayoutCore(new XmlXtraSerializer(), xmlFile);
         }
 
         public bool IsActive { get; set; }

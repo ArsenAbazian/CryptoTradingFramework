@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace CryptoMarketClient.Strategies.Stupid {
     public class SimpleBuyLowSellHighStrategy : TickerStrategyBase {
@@ -14,7 +15,12 @@ namespace CryptoMarketClient.Strategies.Stupid {
         public double SoldTotal { get; set; }
         public double BuyLevel { get; set; }
         public double SellLevel { get; set; }
+        [XmlIgnore]
         public double MaxActualSellDeposit { get; private set; }
+
+        public override void OnEndDeserialize() {
+            
+        }
 
         public override List<StrategyValidationError> Validate() {
             List<StrategyValidationError> list = base.Validate();

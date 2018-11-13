@@ -19,8 +19,7 @@ namespace CryptoMarketClient.Binance {
         public static BinanceExchange Default {
             get {
                 if(defaultExchange == null) {
-                    defaultExchange = new BinanceExchange();
-                    defaultExchange.Load();
+                    defaultExchange = (BinanceExchange)Exchange.FromFile(ExchangeType.Binance, typeof(BinanceExchange));
                 }
                 return defaultExchange;
             }

@@ -1,8 +1,7 @@
-﻿using CryptoMarketClient.Common;
+﻿using Crypto.Core.Helpers;
+using CryptoMarketClient.Common;
 using CryptoMarketClient.Exchanges.Base;
 using CryptoMarketClient.Strategies;
-using DevExpress.Utils;
-using DevExpress.Utils.Serializing;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -17,7 +16,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace CryptoMarketClient {
-    public abstract class Ticker : IXtraSerializable, IComparable {
+    [Serializable]
+    public abstract class Ticker : ISupportSerialization, IComparable {
         public Ticker(Exchange exchange) {
             Exchange = exchange;
             OrderBook = new OrderBook(this);
@@ -27,94 +27,30 @@ namespace CryptoMarketClient {
 
         public int Code { get; set; }
 
-        protected string FileName {
-            get {
-                return Exchange.TickersDirectory + "\\" + Name.ToLower() + ".xml";
-            }
+        public string FileName {
+            get { return Exchange.TickersDirectory + "\\" + Name.ToLower() + ".xml"; }
+            set { }
         }
 
-        #region Settings
-        public void Save() {
-            SaveLayoutToXml(FileName);
-        }
-        public void Load() {
-            if(!File.Exists(FileName))
-                return;
-            RestoreLayoutFromXml(FileName);
-        }
-
-        void IXtraSerializable.OnEndDeserializing(string restoredVersion) {
-            SuppressSave = false;
-            DateTime invalid = new DateTime(2018, 1, 1);
-            foreach(TrailingSettings set in Trailings) {
-                if(set.StartDate < invalid)
-                    set.StartDate = DateTime.Now;
-                if(set.Date < invalid)
-                    set.Date = DateTime.Now;
-            }
-        }
-
-        void IXtraSerializable.OnEndSerializing() {
-
-        }
-
-        void IXtraSerializable.OnStartDeserializing(LayoutAllowEventArgs e) {
-            SuppressSave = true;
-        }
-
-        void IXtraSerializable.OnStartSerializing() {
-            
+        public bool Load() {
+            return SerializationHelper.Load(this, GetType());
         }
 
         public bool IsOrderBookSubscribed { get; set; }
         public bool IsTradeHistorySubscribed { get; set; }
         public bool IsKlineSubscribed { get; set; }
-        protected bool SuppressSave { get; set; }
-        protected XtraObjectInfo[] GetXtraObjectInfo() {
-            ArrayList result = new ArrayList();
-            result.Add(new XtraObjectInfo("Ticker", this));
-            return (XtraObjectInfo[])result.ToArray(typeof(XtraObjectInfo));
-        }
-        protected bool RestoringLayout { get; set; }
-        protected virtual bool SaveLayoutCore(XtraSerializer serializer, object path) {
-            System.IO.Stream stream = path as System.IO.Stream;
-            if(stream != null)
-                return serializer.SerializeObjects(GetXtraObjectInfo(), stream, this.GetType().Name);
-            else
-                return serializer.SerializeObjects(GetXtraObjectInfo(), path.ToString(), this.GetType().Name);
-        }
-        protected virtual void RestoreLayoutCore(XtraSerializer serializer, object path) {
-            RestoringLayout = true;
-            try {
-                System.IO.Stream stream = path as System.IO.Stream;
-                if(stream != null)
-                    serializer.DeserializeObjects(GetXtraObjectInfo(), stream, this.GetType().Name);
-                else
-                    serializer.DeserializeObjects(GetXtraObjectInfo(), path.ToString(), this.GetType().Name);
-            }
-            finally {
-                RestoringLayout = false;
-            }
-        }
 
         public CandleStickIntervalInfo GetCandleStickIntervalInfo() {
             TimeSpan interval = TimeSpan.FromMinutes(CandleStickPeriodMin);
             return Exchange.AllowedCandleStickIntervals.FirstOrDefault(i => i.Interval == interval);
         }
 
-        //layout
-        public virtual void SaveLayoutToXml(string xmlFile) {
-            DateTime invalid = new DateTime(2018, 1, 1);
-            foreach(TrailingSettings ts in Trailings) {
-                if(ts.StartDate < invalid)
-                    ts.StartDate = invalid;
-            }
-            SaveLayoutCore(new XmlXtraSerializer(), xmlFile);
+        public static Ticker FromFile(string fileName, Type tickerType) {
+            return (Ticker)SerializationHelper.FromFile(fileName, tickerType);
         }
-        public virtual void RestoreLayoutFromXml(string xmlFile) {
-            RestoreLayoutCore(new XmlXtraSerializer(), xmlFile);
+        public bool Save() {
+            return SerializationHelper.Save(this, GetType(), null);
         }
-        #endregion
 
         public bool SelectedInDependencyArbitrage { get; set; }
 
@@ -158,19 +94,7 @@ namespace CryptoMarketClient {
             set;
         }
 
-        [XtraSerializableProperty(XtraSerializationVisibility.Collection, true, false, true)]
         public List<TrailingSettings> Trailings { get; } = new List<TrailingSettings>();
-
-        TrailingSettings XtraCreateTrailingsItem(XtraItemEventArgs e) {
-            return new TrailingSettings(this);
-        }
-        void XtraSetIndexTrailingsItem(XtraSetItemIndexEventArgs e) {
-            if(e.NewIndex == -1) {
-                Trailings.Add((TrailingSettings)e.Item.Value);
-                return;
-            }
-            Trailings.Insert(e.NewIndex, (TrailingSettings)e.Item.Value);
-        }
 
         public List<TradingResult> Trades { get; } = new List<TradingResult>();
         public List<TradeInfoItem> MyTradeHistory { get; } = new List<TradeInfoItem>();
@@ -550,7 +474,6 @@ namespace CryptoMarketClient {
 
 
         ObservableCollection<TickerEvent> events;
-        [XtraSerializableProperty(XtraSerializationVisibility.Collection, true, false, true)]
         public ObservableCollection<TickerEvent> Events {
             get {
                 if(events == null) {
@@ -560,27 +483,16 @@ namespace CryptoMarketClient {
                 return events;
             }
         }
-
-        protected TickerEvent XtraCreateEventsItem(XtraItemEventArgs e) {
-            return new TickerEvent();
-        }
-        void XtraSetIndexEventsItem(XtraSetItemIndexEventArgs e) {
-            if(e.NewIndex == -1) {
-                Events.Add((TickerEvent)e.Item.Value);
-                return;
-            }
-            Events.Insert(e.NewIndex, (TickerEvent)e.Item.Value);
-        }
+        
         public event NotifyCollectionChangedEventHandler EventsChanged {
             add { Events.CollectionChanged += value; }
             remove { Events.CollectionChanged -= value; }
         }
 
         private void OnEventsChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) {
-            if(RestoringLayout)
-                return;
             Save();
         }
+
         protected internal bool IsOpenedOrdersChanged(byte[] newBytes) {
             if(newBytes == null)
                 return false;
@@ -654,6 +566,11 @@ namespace CryptoMarketClient {
         public void StopListenTradingHistory() {
             Exchange.StopListenTradeHistory(this);
         }
+
+        public virtual void OnEndDeserialize() {
+
+        }
+
         public virtual bool IsListeningOrderBook { get; }
         public virtual bool IsListeningTradingHistory { get; }
         public virtual bool IsListeningKline { get; }

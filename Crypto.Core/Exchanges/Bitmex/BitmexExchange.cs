@@ -15,10 +15,8 @@ namespace CryptoMarketClient.Exchanges.Bitmex {
         static BitmexExchange defaultExchange;
         public static BitmexExchange Default {
             get {
-                if(defaultExchange == null) {
-                    defaultExchange = new BitmexExchange();
-                    defaultExchange.Load();
-                }
+                if(defaultExchange == null)
+                    defaultExchange = (BitmexExchange)Exchange.FromFile(ExchangeType.Bitmex, typeof(BitmexExchange));
                 return defaultExchange;
             }
         }

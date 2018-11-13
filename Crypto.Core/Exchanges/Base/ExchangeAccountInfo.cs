@@ -1,5 +1,4 @@
 ﻿using CryptoMarketClient.Common;
-using DevExpress.Utils.Serializing;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -7,8 +6,10 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace CryptoMarketClient {
+    [Serializable]
     public class AccountInfo {
 
         public AccountInfo() {
@@ -16,6 +17,7 @@ namespace CryptoMarketClient {
         }
 
         Exchange exchange;
+        [XmlIgnore]
         public Exchange Exchange {
             get { return exchange; }
             set {
@@ -38,12 +40,9 @@ namespace CryptoMarketClient {
                 curr.UpdateDefaultAccount();
             }
         }
-        [XtraSerializableProperty]
         public Guid Id { get; set; }
-        [XtraSerializableProperty]
         public string Name { get; set; }
         bool isDefault;
-        [XtraSerializableProperty]
         public bool Default {
             get { return isDefault; }
             set {
@@ -54,13 +53,10 @@ namespace CryptoMarketClient {
                     Exchange.UpdateDefaultAccount();
             }
         }
-        [XtraSerializableProperty]
         public bool Active { get; set; }
-        [XtraSerializableProperty]
         public ExchangeType Type { get; set; }
 
         string apiKey, apiKeyEncoded, secret, secretEncoded;
-        [XtraSerializableProperty]
         public string ApiKeyEncoded {
             get { return apiKeyEncoded; }
             set {
@@ -73,7 +69,6 @@ namespace CryptoMarketClient {
         protected void OnApiKeyEncodedChanged() {
             ApiKey = Decrypt(ApiKeyEncoded, true);
         }
-        [XtraSerializableProperty]
         public string SecretEncoded {
             get { return secretEncoded; }
             set {
@@ -86,6 +81,7 @@ namespace CryptoMarketClient {
         void OnSecretEncodedChanged() {
             Secret = Decrypt(SecretEncoded, true);
         }
+        [XmlIgnore]
         public string ApiKey {
             get { return apiKey; }
             set {
@@ -98,6 +94,7 @@ namespace CryptoMarketClient {
         void OnApiKeyChanged() {
             ApiKeyEncoded = Encrypt(ApiKey, true);
         }
+        [XmlIgnore]
         public string Secret {
             get { return secret; }
             set {
@@ -107,6 +104,7 @@ namespace CryptoMarketClient {
                 OnSecretChanged();
             }
         }
+        [XmlIgnore]
         public HMACSHA512 HmacSha { get; private set; }
         void OnSecretChanged() {
             SecretEncoded = Encrypt(Secret, true);
@@ -208,8 +206,11 @@ namespace CryptoMarketClient {
             return builder.ToString();
         }
 
+        [XmlIgnore]
         public List<BalanceBase> Balances { get; } = new List<BalanceBase>();
+        [XmlIgnore]
         public List<OpenedOrderInfo> OpenedOrders { get; } = new List<OpenedOrderInfo>();
+        [XmlIgnore]
         public List<TradeInfoItem> MyTrades { get; } = new List<TradeInfoItem>();
 
         public override string ToString() {

@@ -1,5 +1,4 @@
 ﻿using CryptoMarketClient;
-using DevExpress.Utils.Serializing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,14 +6,11 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Crypto.Core.Common {
+    [Serializable]
     public class TickerNameInfo {
-        [XtraSerializableProperty]
         public ExchangeType Exchange { get; set; }
-        [XtraSerializableProperty]
         public string Ticker { get; set; }
-        [XtraSerializableProperty]
         public string BaseCurrency { get; set; }
-        [XtraSerializableProperty]
         public string MarketCurrency { get; set; }
         public Ticker FindTicker() {
             Exchange e = CryptoMarketClient.Exchange.Get(Exchange);

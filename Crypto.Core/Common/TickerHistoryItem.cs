@@ -1,26 +1,28 @@
 ﻿using CryptoMarketClient.Common;
-using DevExpress.Utils.Serializing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace CryptoMarketClient {
+    [Serializable]
     public class TickerHistoryItem {
-        [XtraSerializableProperty]
         public DateTime Time { get; set; }
-        [XtraSerializableProperty]
         public double Bid { get; set; }
-        [XtraSerializableProperty]
         public double Ask { get; set; }
-        [XtraSerializableProperty]
         public double Current { get; set; }
 
+        [XmlIgnore]
         public OrderBookEntry[] Bids { get; set; }
+        [XmlIgnore]
         public OrderBookEntry[] Asks { get; set; }
+        [XmlIgnore]
         public OrderBookStatisticItem OrderBookInfo { get; set; }
+        [XmlIgnore]
         public TradeStatisticsItem TradeInfo { get; set; }
+        [XmlIgnore]
         public ArbitrageStatisticsItem ArbitrageInfo { get; set; }
     }
 

@@ -1,4 +1,5 @@
-﻿using CryptoMarketClient;
+﻿using Crypto.Core.Helpers;
+using CryptoMarketClient;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 namespace Crypto.Core.Strategies {
-    public class StrategiesManager {
+    public class StrategiesManager : ISupportSerialization {
         static StrategiesManager defaultManager;
         public static StrategiesManager Defaut {
             get {
@@ -39,39 +40,19 @@ namespace Crypto.Core.Strategies {
         public string FileName { get; set; }
 
         public static StrategiesManager FromFile(string fileName) {
-            if(string.IsNullOrEmpty(fileName))
-                return null;
-            if(!File.Exists(fileName))
-                return null;
-            try {
-                StrategiesManager manager = null;
-                XmlSerializer formatter = new XmlSerializer(typeof(StrategiesManager));
-                using(FileStream fs = new FileStream(fileName, FileMode.OpenOrCreate)) {
-                    manager = (StrategiesManager)formatter.Deserialize(fs);
-                }
-                manager.FileName = fileName;
-                return manager;
-            }
-            catch(Exception e) {
-                Telemetry.Default.TrackException(e);
-                return null;
-            }
+            return (StrategiesManager)SerializationHelper.FromFile(fileName, typeof(StrategiesManager));
+        }
+
+        public void OnEndDeserialize() {
+            
+        }
+
+        public bool Save(string path) {
+            return SerializationHelper.Save(this, GetType(), path);
         }
 
         public bool Save() {
-            if(string.IsNullOrEmpty(FileName))
-                return false;
-            try {
-                XmlSerializer formatter = new XmlSerializer(GetType());
-                using(FileStream fs = new FileStream(FileName, FileMode.OpenOrCreate)) {
-                    formatter.Serialize(fs, this);
-                }
-            }
-            catch(Exception e) {
-                Telemetry.Default.TrackException(e);
-                return false;
-            }
-            return true;
+            return SerializationHelper.Save(this, GetType(), null);
         }
 
         public void Add(StrategyBase strategy) {

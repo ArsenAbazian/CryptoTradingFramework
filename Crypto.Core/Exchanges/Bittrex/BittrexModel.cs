@@ -1,6 +1,5 @@
 ﻿using CryptoMarketClient.Common;
 using CryptoMarketClient.Exchanges.Bittrex;
-using DevExpress.XtraEditors;
 using Microsoft.AspNet.SignalR.Client;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -20,10 +19,8 @@ namespace CryptoMarketClient.Bittrex {
         static BittrexExchange defaultExchange;
         public static BittrexExchange Default {
             get {
-                if(defaultExchange == null) {
-                    defaultExchange = new BittrexExchange();
-                    defaultExchange.Load();
-                }
+                if(defaultExchange == null)
+                    defaultExchange = (BittrexExchange)Exchange.FromFile(ExchangeType.Bittrex, typeof(BittrexExchange));
                 return defaultExchange;
             }
         }

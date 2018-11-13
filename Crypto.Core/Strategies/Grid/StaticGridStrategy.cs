@@ -1,5 +1,4 @@
-﻿using DevExpress.Utils.Serializing;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,11 +9,8 @@ namespace CryptoMarketClient.Strategies {
 
         public StaticGridStrategy() : base() { }
 
-        [XtraSerializableProperty]
         public int GridCount { get; set; }
-        [XtraSerializableProperty]
         public double GridDelta { get; set; }
-        [XtraSerializableProperty]
         public double GridFirstLineDelta { get; set; }
 
         protected override void GenerateLines() {

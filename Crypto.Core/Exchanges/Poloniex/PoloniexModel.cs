@@ -25,10 +25,8 @@ namespace CryptoMarketClient {
         static PoloniexExchange defaultExchange;
         public static PoloniexExchange Default {
             get {
-                if(defaultExchange == null) {
-                    defaultExchange = new PoloniexExchange();
-                    defaultExchange.Load();
-                }
+                if(defaultExchange == null)
+                    defaultExchange = (PoloniexExchange)Exchange.FromFile(ExchangeType.Poloniex, typeof(PoloniexExchange));
                 return defaultExchange;
             }
         }

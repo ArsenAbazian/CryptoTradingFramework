@@ -111,7 +111,7 @@ namespace CryptoMarketClient {
             base.OnClosed(e);
             SettingsStore.Default.SelectedThemeName = UserLookAndFeel.Default.ActiveSkinName;
             SettingsStore.Default.SelectedPaletteName = UserLookAndFeel.Default.ActiveSvgPaletteName;
-            SettingsStore.Default.SaveToXml();
+            SettingsStore.Default.Save();
             foreach(Exchange exchange in Exchange.Connected) {
                 exchange.StopListenStreams();
             }
@@ -184,7 +184,7 @@ namespace CryptoMarketClient {
         //        PoloniexTickersForm.Hide();
         //    }
         //    SettingsStore.Default.Poloniex = this.bcPoloniex.Checked;
-        //    SettingsStore.Default.SaveToXml();
+        //    SettingsStore.Default.Save();
         //}
 
         //private void bcBittrex_CheckedChanged(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
@@ -199,7 +199,7 @@ namespace CryptoMarketClient {
         //        BittrextMarketsForm.Hide();
         //    }
         //    SettingsStore.Default.Bittrex = this.bcBittrex.Checked;
-        //    SettingsStore.Default.SaveToXml();
+        //    SettingsStore.Default.Save();
         //}
 
         //private void bcBinance_CheckedChanged(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
@@ -215,7 +215,7 @@ namespace CryptoMarketClient {
         //    }
 
         //    SettingsStore.Default.Binance = this.bcBinance.Checked;
-        //    SettingsStore.Default.SaveToXml();
+        //    SettingsStore.Default.Save();
         //}
 
         //private void biBitFinex_CheckedChanged(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
@@ -230,7 +230,7 @@ namespace CryptoMarketClient {
         //        BitFinexTickersForm.Hide();
         //    }
         //    SettingsStore.Default.BitFinex = this.biBitFinex.Checked;
-        //    SettingsStore.Default.SaveToXml();
+        //    SettingsStore.Default.Save();
         //}
 
         TickerArbitrageForm arbitrageForm;
@@ -384,13 +384,13 @@ namespace CryptoMarketClient {
         private void bciAllowDirectXGrid_CheckedChanged(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             SettingsStore.Default.UseDirectXForGrid = this.bciAllowDirectXGrid.Checked;
-            SettingsStore.Default.SaveToXml();
+            SettingsStore.Default.Save();
         }
 
         private void bciAllowDirectXCharts_CheckedChanged(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             SettingsStore.Default.UseDirectXForCharts = this.bciAllowDirectXCharts.Checked;
-            SettingsStore.Default.SaveToXml();
+            SettingsStore.Default.Save();
         }
 
         private void bbRegister_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
@@ -399,7 +399,7 @@ namespace CryptoMarketClient {
             TelegramBot.Default.RegistrationCode = SettingsStore.Default.TelegramBotRegistrationCode;
             TelegramBot.Default.Update();
             SettingsStore.Default.TelegramBotRegistrationCode = string.Empty;
-            SettingsStore.Default.SaveToXml();
+            SettingsStore.Default.Save();
         }
 
         private void barButtonItem4_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {

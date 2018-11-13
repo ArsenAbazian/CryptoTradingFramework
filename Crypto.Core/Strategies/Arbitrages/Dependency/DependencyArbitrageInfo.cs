@@ -1,7 +1,5 @@
 ﻿using Crypto.Core.Strategies;
 using CryptoMarketClient;
-using DevExpress.Utils;
-using DevExpress.Utils.Serializing;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -11,14 +9,16 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace Crypto.Core.Common.Arbitrages {
-    public class StatisticalArbitrageStrategy : StrategyBase ,IXtraSerializable {
+    public class StatisticalArbitrageStrategy : StrategyBase {
         public StatisticalArbitrageStrategy() {
             FileSuffix = DateTime.Now.ToString("dd_MM_yyyy_HH_mm_ss_fff");
         }
 
         protected string FileSuffix { get; set; }
+        [XmlIgnore]
         public object Tag { get; set; }
 
         public override string TypeName => "Statistical Arbitrage";
@@ -28,6 +28,7 @@ namespace Crypto.Core.Common.Arbitrages {
         public override string StateText => State.ToString();
 
         Ticker second;
+        [XmlIgnore]
         public Ticker Second {
             get { return second; }
             set {
@@ -104,45 +105,21 @@ namespace Crypto.Core.Common.Arbitrages {
                 return traidingPair;
             }
         }
-        [XtraSerializableProperty(XtraSerializationVisibility.Content)]
         public TickerNameInfo SecondName { get; set; } = new TickerNameInfo();
-        [XtraSerializableProperty(XtraSerializationVisibility.Collection, true, false, true)]
         public List<TickerNameInfo> FirstNames { get; } = new List<TickerNameInfo>();
 
-        [XtraSerializableProperty]
         public double Thresold { get; set; }
-        [XtraSerializableProperty]
         public DependencyArbitrageState State { get; set; }
 
-        [XtraSerializableProperty]
         public double UpperBidKoeff { get; set; } = 1.0;
-        [XtraSerializableProperty]
         public double LowerAskKoeff { get; set; } = 1.0;
-        [XtraSerializableProperty]
         public double UpperBidLogKoeff { get; set; } = 1.0;
-        [XtraSerializableProperty]
         public double LowerAskLogKoeff { get; set; } = 1.0;
 
         public bool IsSelectedInDependencyArbitrageForm { get; set; }
         public int Index { get; set; }
 
-        TickerNameInfo XtraCreateFirstNamesItem(XtraItemEventArgs e) {
-            return new TickerNameInfo();
-        }
-        void XtraSetIndexFirstNamesItem(XtraSetItemIndexEventArgs e) {
-            FirstNames.Add((TickerNameInfo)e.Item.Value);
-        }
-
-        void IXtraSerializable.OnStartSerializing() {
-        }
-
-        void IXtraSerializable.OnEndSerializing() {
-        }
-
-        void IXtraSerializable.OnStartDeserializing(LayoutAllowEventArgs e) {
-        }
-
-        void IXtraSerializable.OnEndDeserializing(string restoredVersion) {
+        public override void OnEndDeserialize() {
             foreach(TickerNameInfo name in FirstNames) {
                 Exchange e = Exchange.Registered.FirstOrDefault(ee => ee.Type == name.Exchange);
                 if(e == null) {
@@ -323,7 +300,6 @@ namespace Crypto.Core.Common.Arbitrages {
             CalcMaxDeviationTicker();
             CheckExecuteEnter();
         }
-        [XtraSerializableProperty]
         public OperationExecutionType Operation { get; set; } = OperationExecutionType.Watch;
         void CheckExecuteEnter() {
             

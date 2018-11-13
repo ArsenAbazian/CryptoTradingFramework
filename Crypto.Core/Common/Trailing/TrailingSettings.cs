@@ -1,5 +1,4 @@
-﻿using DevExpress.Utils.Serializing;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -9,8 +8,10 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace CryptoMarketClient.Common {
+    [Serializable]
     public class TrailingSettings : INotifyPropertyChanged {
         public TrailingSettings(Ticker ticker) {
             Enabled = true;
@@ -18,6 +19,7 @@ namespace CryptoMarketClient.Common {
         }
 
         Ticker ticker;
+        [XmlIgnore]
         public Ticker Ticker {
             get { return ticker; }
             private set {
@@ -30,18 +32,13 @@ namespace CryptoMarketClient.Common {
         void OnTickerChanged() {
             TickerName = Ticker.Name;
         }
-        [XtraSerializableProperty]
         public DateTime StartDate { get; set; }
-        [XtraSerializableProperty]
         public bool ShowOnChart { get; set; }
-        [XtraSerializableProperty]
         public string TickerName { get; set; }
+        [XmlIgnore]
         public Ticker UsdTicker { get { return Ticker == null ? null : Ticker.UsdTicker; } }
-        [XtraSerializableProperty]
         public bool Enabled { get; set; }
-        [XtraSerializableProperty]
         public ActionMode Mode { get; set; } = ActionMode.Notify;
-        [XtraSerializableProperty]
         public DateTime Date { get; set; }
 
         event PropertyChangedEventHandler PropertyChangedCore;
@@ -55,7 +52,6 @@ namespace CryptoMarketClient.Common {
         }
 
         double buyPrice;
-        [XtraSerializableProperty]
         public double TradePrice {
             get { return buyPrice; }
             set {
@@ -70,7 +66,6 @@ namespace CryptoMarketClient.Common {
             RaisePropertyChanged("TradePrice");
         }
         double amount;
-        [XtraSerializableProperty]
         public double Amount {
             get { return amount; }
             set {
@@ -85,7 +80,6 @@ namespace CryptoMarketClient.Common {
             RaisePropertyChanged("Amount");
         }
         double totalSpendInBaseCurrency;
-        [XtraSerializableProperty]
         public double TotalSpendInBaseCurrency {
             get { return totalSpendInBaseCurrency; }
             set {
@@ -105,25 +99,18 @@ namespace CryptoMarketClient.Common {
             RaisePropertyChanged("TotalSpendInBaseCurrency");
         }
 
-        [XtraSerializableProperty]
         public double StopLossPricePercent { get; set; } = 10;
 
-        [XtraSerializableProperty]
         public double TakeProfitStartPercent { get; set; } = 20;
-        [XtraSerializableProperty]
         public double TakeProfitPercent { get; set; } = 5;
 
         public double ActualProfit { get { return ActualPrice - TradePrice; } }
         public double ActualProfitUSD { get { return UsdTicker == null ? 0 : ActualProfit * UsdTicker.Last; } }
-        [XtraSerializableProperty]
         public double ActualPrice { get; set; }
-        [XtraSerializableProperty]
         public double MaxPrice { get; set; }
-        [XtraSerializableProperty]
         public double MinPrice { get; set; }
         public double OrderPrice { get { return GetOrderPrice(); } }
         public double TakeProfitStartPrice { get { return TradePrice * (Type == TrailingType.Sell ? 100 + TakeProfitStartPercent : 100 - TakeProfitStartPercent) * 0.01; } }
-        [XtraSerializableProperty]
         public bool IgnoreStopLoss { get; set; } = false;
 
         public string Name {
@@ -134,11 +121,8 @@ namespace CryptoMarketClient.Common {
             }
         }
 
-        [XtraSerializableProperty]
         public TrailingType Type { get; set; } = TrailingType.Sell;
-        [XtraSerializableProperty]
         public TrailingState State { get; set; } = TrailingState.Analyze;
-        [XtraSerializableProperty]
         public bool EnableIncrementalStopLoss { get; set; } = false;
         public string IndicatorText { get { return "Trailing indicator"; } }
 
@@ -236,18 +220,15 @@ namespace CryptoMarketClient.Common {
     public enum TrailingType { Buy, Sell }
     public enum TrailingState { Analyze, TakeProfit, Done } 
 
+    [Serializable]
     public class TickerEvent {
         public TickerEvent() {
             Color = Color.Pink;
         }
 
-        [XtraSerializableProperty]
         public string Text { get; set; }
-        [XtraSerializableProperty]
         public DateTime Time { get; set; }
-        [XtraSerializableProperty]
         public double Current { get; set; }
-        [XtraSerializableProperty]
         public Color Color { get; set; }
     }
 }

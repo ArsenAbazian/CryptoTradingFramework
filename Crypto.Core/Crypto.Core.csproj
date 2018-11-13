@@ -139,6 +139,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\TickerNameInfo.cs" />
+    <Compile Include="Helpers\SerializationHelper.cs" />
     <Compile Include="Strategies\Arbitrages\ArbitrageHistoryHelper.cs" />
     <Compile Include="Strategies\Arbitrages\ArbitrageInfo.cs" />
     <Compile Include="Strategies\Arbitrages\Dependency\DependencyArbitrageHelper.cs" />

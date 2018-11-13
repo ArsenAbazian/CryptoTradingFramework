@@ -28,6 +28,10 @@
             this.TickerInfoTextEdit = new DevExpress.XtraEditors.GridLookUpEdit();
             this.simpleBuyLowSellHighStrategyBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.tickerNameInfoBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.TickerInfoTextEditView = new DevExpress.XtraGrid.Views.Grid.GridView();
+            this.colExchange = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colBaseCurrency = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colMarketCurrency = new DevExpress.XtraGrid.Columns.GridColumn();
             this.repositoryItemTextEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemTextEdit();
             this.BuyLevelTextEdit = new DevExpress.XtraEditors.SpinEdit();
             this.SellLevelTextEdit = new DevExpress.XtraEditors.SpinEdit();
@@ -36,15 +40,12 @@
             this.ItemForBuyLevel = new DevExpress.XtraLayout.LayoutControlItem();
             this.ItemForSellLevel = new DevExpress.XtraLayout.LayoutControlItem();
             this.ItemForTickerInfo = new DevExpress.XtraLayout.LayoutControlItem();
-            this.TickerInfoTextEditView = new DevExpress.XtraGrid.Views.Grid.GridView();
-            this.colExchange = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.colBaseCurrency = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.colMarketCurrency = new DevExpress.XtraGrid.Columns.GridColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataLayoutControl1)).BeginInit();
             this.dataLayoutControl1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.TickerInfoTextEdit.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.simpleBuyLowSellHighStrategyBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tickerNameInfoBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.TickerInfoTextEditView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemTextEdit1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.BuyLevelTextEdit.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.SellLevelTextEdit.Properties)).BeginInit();
@@ -53,11 +54,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.ItemForBuyLevel)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ItemForSellLevel)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ItemForTickerInfo)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.TickerInfoTextEditView)).BeginInit();
             this.SuspendLayout();
             // 
             // dataLayoutControl1
             // 
+            this.dataLayoutControl1.Appearance.Control.FontSizeDelta = 4;
+            this.dataLayoutControl1.Appearance.Control.Options.UseFont = true;
             this.dataLayoutControl1.Controls.Add(this.TickerInfoTextEdit);
             this.dataLayoutControl1.Controls.Add(this.BuyLevelTextEdit);
             this.dataLayoutControl1.Controls.Add(this.SellLevelTextEdit);
@@ -73,7 +75,7 @@
             // TickerInfoTextEdit
             // 
             this.TickerInfoTextEdit.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.simpleBuyLowSellHighStrategyBindingSource, "TickerInfo", true));
-            this.TickerInfoTextEdit.Location = new System.Drawing.Point(108, 120);
+            this.TickerInfoTextEdit.Location = new System.Drawing.Point(155, 148);
             this.TickerInfoTextEdit.Name = "TickerInfoTextEdit";
             this.TickerInfoTextEdit.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.DropDown)});
@@ -83,7 +85,7 @@
             this.TickerInfoTextEdit.Properties.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repositoryItemTextEdit1});
             this.TickerInfoTextEdit.Properties.ViewType = DevExpress.XtraEditors.Repository.GridLookUpViewType.GridView;
-            this.TickerInfoTextEdit.Size = new System.Drawing.Size(1045, 40);
+            this.TickerInfoTextEdit.Size = new System.Drawing.Size(998, 54);
             this.TickerInfoTextEdit.StyleController = this.dataLayoutControl1;
             this.TickerInfoTextEdit.TabIndex = 6;
             this.TickerInfoTextEdit.EditValueChanged += new System.EventHandler(this.TickerInfoTextEdit_EditValueChanged);
@@ -95,126 +97,6 @@
             // tickerNameInfoBindingSource
             // 
             this.tickerNameInfoBindingSource.DataSource = typeof(Crypto.Core.Common.TickerNameInfo);
-            // 
-            // repositoryItemTextEdit1
-            // 
-            this.repositoryItemTextEdit1.AutoHeight = false;
-            this.repositoryItemTextEdit1.Name = "repositoryItemTextEdit1";
-            this.repositoryItemTextEdit1.Padding = new System.Windows.Forms.Padding(3);
-            // 
-            // BuyLevelTextEdit
-            // 
-            this.BuyLevelTextEdit.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.simpleBuyLowSellHighStrategyBindingSource, "BuyLevel", true));
-            this.BuyLevelTextEdit.EditValue = new decimal(new int[] {
-            1,
-            0,
-            0,
-            458752});
-            this.BuyLevelTextEdit.Location = new System.Drawing.Point(108, 16);
-            this.BuyLevelTextEdit.Name = "BuyLevelTextEdit";
-            this.BuyLevelTextEdit.Properties.Appearance.Options.UseTextOptions = true;
-            this.BuyLevelTextEdit.Properties.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Far;
-            this.BuyLevelTextEdit.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.BuyLevelTextEdit.Properties.EditValueChangedFiringMode = DevExpress.XtraEditors.Controls.EditValueChangedFiringMode.Default;
-            this.BuyLevelTextEdit.Properties.Mask.EditMask = "F";
-            this.BuyLevelTextEdit.Properties.Mask.UseMaskAsDisplayFormat = true;
-            this.BuyLevelTextEdit.Properties.MaxValue = new decimal(new int[] {
-            10000000,
-            0,
-            0,
-            0});
-            this.BuyLevelTextEdit.Properties.MinValue = new decimal(new int[] {
-            1,
-            0,
-            0,
-            458752});
-            this.BuyLevelTextEdit.Size = new System.Drawing.Size(1045, 40);
-            this.BuyLevelTextEdit.StyleController = this.dataLayoutControl1;
-            this.BuyLevelTextEdit.TabIndex = 4;
-            // 
-            // SellLevelTextEdit
-            // 
-            this.SellLevelTextEdit.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.simpleBuyLowSellHighStrategyBindingSource, "SellLevel", true));
-            this.SellLevelTextEdit.EditValue = new decimal(new int[] {
-            1,
-            0,
-            0,
-            458752});
-            this.SellLevelTextEdit.Location = new System.Drawing.Point(108, 68);
-            this.SellLevelTextEdit.Name = "SellLevelTextEdit";
-            this.SellLevelTextEdit.Properties.Appearance.Options.UseTextOptions = true;
-            this.SellLevelTextEdit.Properties.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Far;
-            this.SellLevelTextEdit.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.SellLevelTextEdit.Properties.EditValueChangedFiringMode = DevExpress.XtraEditors.Controls.EditValueChangedFiringMode.Default;
-            this.SellLevelTextEdit.Properties.Mask.EditMask = "F";
-            this.SellLevelTextEdit.Properties.Mask.UseMaskAsDisplayFormat = true;
-            this.SellLevelTextEdit.Properties.MaxValue = new decimal(new int[] {
-            10000000,
-            0,
-            0,
-            0});
-            this.SellLevelTextEdit.Properties.MinValue = new decimal(new int[] {
-            1,
-            0,
-            0,
-            458752});
-            this.SellLevelTextEdit.Size = new System.Drawing.Size(1045, 40);
-            this.SellLevelTextEdit.StyleController = this.dataLayoutControl1;
-            this.SellLevelTextEdit.TabIndex = 5;
-            // 
-            // layoutControlGroup1
-            // 
-            this.layoutControlGroup1.EnableIndentsWithoutBorders = DevExpress.Utils.DefaultBoolean.True;
-            this.layoutControlGroup1.GroupBordersVisible = false;
-            this.layoutControlGroup1.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
-            this.layoutControlGroup2});
-            this.layoutControlGroup1.Name = "layoutControlGroup1";
-            this.layoutControlGroup1.Size = new System.Drawing.Size(1169, 832);
-            this.layoutControlGroup1.TextVisible = false;
-            // 
-            // layoutControlGroup2
-            // 
-            this.layoutControlGroup2.AllowDrawBackground = false;
-            this.layoutControlGroup2.GroupBordersVisible = false;
-            this.layoutControlGroup2.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
-            this.ItemForBuyLevel,
-            this.ItemForSellLevel,
-            this.ItemForTickerInfo});
-            this.layoutControlGroup2.Location = new System.Drawing.Point(0, 0);
-            this.layoutControlGroup2.Name = "autoGeneratedGroup0";
-            this.layoutControlGroup2.Size = new System.Drawing.Size(1149, 812);
-            // 
-            // ItemForBuyLevel
-            // 
-            this.ItemForBuyLevel.Control = this.BuyLevelTextEdit;
-            this.ItemForBuyLevel.Location = new System.Drawing.Point(0, 0);
-            this.ItemForBuyLevel.Name = "ItemForBuyLevel";
-            this.ItemForBuyLevel.Padding = new DevExpress.XtraLayout.Utils.Padding(6, 6, 6, 6);
-            this.ItemForBuyLevel.Size = new System.Drawing.Size(1149, 52);
-            this.ItemForBuyLevel.Text = "Buy Level";
-            this.ItemForBuyLevel.TextSize = new System.Drawing.Size(89, 25);
-            // 
-            // ItemForSellLevel
-            // 
-            this.ItemForSellLevel.Control = this.SellLevelTextEdit;
-            this.ItemForSellLevel.Location = new System.Drawing.Point(0, 52);
-            this.ItemForSellLevel.Name = "ItemForSellLevel";
-            this.ItemForSellLevel.Padding = new DevExpress.XtraLayout.Utils.Padding(6, 6, 6, 6);
-            this.ItemForSellLevel.Size = new System.Drawing.Size(1149, 52);
-            this.ItemForSellLevel.Text = "Sell Level";
-            this.ItemForSellLevel.TextSize = new System.Drawing.Size(89, 25);
-            // 
-            // ItemForTickerInfo
-            // 
-            this.ItemForTickerInfo.Control = this.TickerInfoTextEdit;
-            this.ItemForTickerInfo.Location = new System.Drawing.Point(0, 104);
-            this.ItemForTickerInfo.Name = "ItemForTickerInfo";
-            this.ItemForTickerInfo.Padding = new DevExpress.XtraLayout.Utils.Padding(6, 6, 6, 6);
-            this.ItemForTickerInfo.Size = new System.Drawing.Size(1149, 708);
-            this.ItemForTickerInfo.Text = "Ticker";
-            this.ItemForTickerInfo.TextSize = new System.Drawing.Size(89, 25);
             // 
             // TickerInfoTextEditView
             // 
@@ -253,6 +135,132 @@
             this.colMarketCurrency.VisibleIndex = 0;
             this.colMarketCurrency.Width = 88;
             // 
+            // repositoryItemTextEdit1
+            // 
+            this.repositoryItemTextEdit1.AutoHeight = false;
+            this.repositoryItemTextEdit1.Name = "repositoryItemTextEdit1";
+            this.repositoryItemTextEdit1.Padding = new System.Windows.Forms.Padding(3);
+            // 
+            // BuyLevelTextEdit
+            // 
+            this.BuyLevelTextEdit.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.simpleBuyLowSellHighStrategyBindingSource, "BuyLevel", true));
+            this.BuyLevelTextEdit.EditValue = new decimal(new int[] {
+            1,
+            0,
+            0,
+            458752});
+            this.BuyLevelTextEdit.Location = new System.Drawing.Point(155, 16);
+            this.BuyLevelTextEdit.Name = "BuyLevelTextEdit";
+            this.BuyLevelTextEdit.Properties.Appearance.Options.UseTextOptions = true;
+            this.BuyLevelTextEdit.Properties.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Far;
+            this.BuyLevelTextEdit.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.BuyLevelTextEdit.Properties.DisplayFormat.FormatString = "0.########";
+            this.BuyLevelTextEdit.Properties.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+            this.BuyLevelTextEdit.Properties.EditFormat.FormatString = "0.########";
+            this.BuyLevelTextEdit.Properties.EditFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+            this.BuyLevelTextEdit.Properties.EditValueChangedFiringMode = DevExpress.XtraEditors.Controls.EditValueChangedFiringMode.Default;
+            this.BuyLevelTextEdit.Properties.Mask.EditMask = "F";
+            this.BuyLevelTextEdit.Properties.Mask.UseMaskAsDisplayFormat = true;
+            this.BuyLevelTextEdit.Properties.MaxValue = new decimal(new int[] {
+            10000000,
+            0,
+            0,
+            0});
+            this.BuyLevelTextEdit.Properties.MinValue = new decimal(new int[] {
+            1,
+            0,
+            0,
+            458752});
+            this.BuyLevelTextEdit.Size = new System.Drawing.Size(998, 54);
+            this.BuyLevelTextEdit.StyleController = this.dataLayoutControl1;
+            this.BuyLevelTextEdit.TabIndex = 4;
+            // 
+            // SellLevelTextEdit
+            // 
+            this.SellLevelTextEdit.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.simpleBuyLowSellHighStrategyBindingSource, "SellLevel", true));
+            this.SellLevelTextEdit.EditValue = new decimal(new int[] {
+            1,
+            0,
+            0,
+            458752});
+            this.SellLevelTextEdit.Location = new System.Drawing.Point(155, 82);
+            this.SellLevelTextEdit.Name = "SellLevelTextEdit";
+            this.SellLevelTextEdit.Properties.Appearance.Options.UseTextOptions = true;
+            this.SellLevelTextEdit.Properties.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Far;
+            this.SellLevelTextEdit.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.SellLevelTextEdit.Properties.EditValueChangedFiringMode = DevExpress.XtraEditors.Controls.EditValueChangedFiringMode.Default;
+            this.SellLevelTextEdit.Properties.Mask.EditMask = "F";
+            this.SellLevelTextEdit.Properties.Mask.UseMaskAsDisplayFormat = true;
+            this.SellLevelTextEdit.Properties.MaxValue = new decimal(new int[] {
+            10000000,
+            0,
+            0,
+            0});
+            this.SellLevelTextEdit.Properties.MinValue = new decimal(new int[] {
+            1,
+            0,
+            0,
+            458752});
+            this.SellLevelTextEdit.Size = new System.Drawing.Size(998, 54);
+            this.SellLevelTextEdit.StyleController = this.dataLayoutControl1;
+            this.SellLevelTextEdit.TabIndex = 5;
+            // 
+            // layoutControlGroup1
+            // 
+            this.layoutControlGroup1.AppearanceItemCaption.FontSizeDelta = 4;
+            this.layoutControlGroup1.AppearanceItemCaption.Options.UseFont = true;
+            this.layoutControlGroup1.EnableIndentsWithoutBorders = DevExpress.Utils.DefaultBoolean.True;
+            this.layoutControlGroup1.GroupBordersVisible = false;
+            this.layoutControlGroup1.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
+            this.layoutControlGroup2});
+            this.layoutControlGroup1.Name = "layoutControlGroup1";
+            this.layoutControlGroup1.Size = new System.Drawing.Size(1169, 832);
+            this.layoutControlGroup1.TextVisible = false;
+            // 
+            // layoutControlGroup2
+            // 
+            this.layoutControlGroup2.AllowDrawBackground = false;
+            this.layoutControlGroup2.GroupBordersVisible = false;
+            this.layoutControlGroup2.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
+            this.ItemForBuyLevel,
+            this.ItemForSellLevel,
+            this.ItemForTickerInfo});
+            this.layoutControlGroup2.Location = new System.Drawing.Point(0, 0);
+            this.layoutControlGroup2.Name = "autoGeneratedGroup0";
+            this.layoutControlGroup2.Size = new System.Drawing.Size(1149, 812);
+            // 
+            // ItemForBuyLevel
+            // 
+            this.ItemForBuyLevel.Control = this.BuyLevelTextEdit;
+            this.ItemForBuyLevel.Location = new System.Drawing.Point(0, 0);
+            this.ItemForBuyLevel.Name = "ItemForBuyLevel";
+            this.ItemForBuyLevel.Padding = new DevExpress.XtraLayout.Utils.Padding(6, 6, 6, 6);
+            this.ItemForBuyLevel.Size = new System.Drawing.Size(1149, 66);
+            this.ItemForBuyLevel.Text = "Buy Level";
+            this.ItemForBuyLevel.TextSize = new System.Drawing.Size(136, 39);
+            // 
+            // ItemForSellLevel
+            // 
+            this.ItemForSellLevel.Control = this.SellLevelTextEdit;
+            this.ItemForSellLevel.Location = new System.Drawing.Point(0, 66);
+            this.ItemForSellLevel.Name = "ItemForSellLevel";
+            this.ItemForSellLevel.Padding = new DevExpress.XtraLayout.Utils.Padding(6, 6, 6, 6);
+            this.ItemForSellLevel.Size = new System.Drawing.Size(1149, 66);
+            this.ItemForSellLevel.Text = "Sell Level";
+            this.ItemForSellLevel.TextSize = new System.Drawing.Size(136, 39);
+            // 
+            // ItemForTickerInfo
+            // 
+            this.ItemForTickerInfo.Control = this.TickerInfoTextEdit;
+            this.ItemForTickerInfo.Location = new System.Drawing.Point(0, 132);
+            this.ItemForTickerInfo.Name = "ItemForTickerInfo";
+            this.ItemForTickerInfo.Padding = new DevExpress.XtraLayout.Utils.Padding(6, 6, 6, 6);
+            this.ItemForTickerInfo.Size = new System.Drawing.Size(1149, 680);
+            this.ItemForTickerInfo.Text = "Ticker";
+            this.ItemForTickerInfo.TextSize = new System.Drawing.Size(136, 39);
+            // 
             // SimpleBuyLowSellHighConfigControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
@@ -265,6 +273,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.TickerInfoTextEdit.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.simpleBuyLowSellHighStrategyBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tickerNameInfoBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.TickerInfoTextEditView)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemTextEdit1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.BuyLevelTextEdit.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.SellLevelTextEdit.Properties)).EndInit();
@@ -273,7 +282,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.ItemForBuyLevel)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ItemForSellLevel)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ItemForTickerInfo)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.TickerInfoTextEditView)).EndInit();
             this.ResumeLayout(false);
 
         }

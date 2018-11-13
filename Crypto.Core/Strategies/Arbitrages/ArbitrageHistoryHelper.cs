@@ -1,5 +1,4 @@
-﻿using DevExpress.Utils;
-using DevExpress.Utils.Serializing;
+﻿using Crypto.Core.Helpers;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -11,14 +10,16 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace CryptoMarketClient.Common {
-    public class ArbitrageHistoryHelper : IXtraSerializable {
+    [Serializable]
+    public class ArbitrageHistoryHelper : ISupportSerialization { 
         static readonly string Name = "ArbitrageHistory.xml";
         static ArbitrageHistoryHelper defaultHelper;
         public static ArbitrageHistoryHelper Default {
             get {
                 if(defaultHelper == null) {
-                    defaultHelper = new ArbitrageHistoryHelper();
-                    defaultHelper.Load();
+                    defaultHelper = ArbitrageHistoryHelper.FromFile(Name);
+                    if(defaultHelper == null)
+                        defaultHelper = new ArbitrageHistoryHelper();
                 }
                 return defaultHelper;
             }
@@ -27,7 +28,8 @@ namespace CryptoMarketClient.Common {
         public ArbitrageHistoryHelper() {
             Timer = new Stopwatch();
             Timer.Start();
-            LastSaveTime = Timer.ElapsedMilliseconds; 
+            LastSaveTime = Timer.ElapsedMilliseconds;
+            FileName = Name;
         }
 
         #region Settings
@@ -37,58 +39,19 @@ namespace CryptoMarketClient.Common {
                 return;
             Saving = true;
             try {
-                SaveLayoutToXml(Name);
+                SerializationHelper.Save(this, typeof(ArbitrageHistoryHelper), null);
             }
             finally {
                 Saving = false;
             }
         }
-        public void Load() {
-            if(!File.Exists(Name))
-                return;
-            RestoreLayoutFromXml(Name);
+        public static ArbitrageHistoryHelper FromFile(string fileName) {
+            ArbitrageHistoryHelper res =(ArbitrageHistoryHelper)SerializationHelper.FromFile(fileName, typeof(ArbitrageHistoryHelper));
+            res.FileName = Name;
+            return res;
         }
-
-        void IXtraSerializable.OnEndDeserializing(string restoredVersion) {
-        }
-
-        void IXtraSerializable.OnEndSerializing() {
-
-        }
-
-        void IXtraSerializable.OnStartDeserializing(LayoutAllowEventArgs e) {
-
-        }
-
-        void IXtraSerializable.OnStartSerializing() {
-        }
-
-        protected XtraObjectInfo[] GetXtraObjectInfo() {
-            ArrayList result = new ArrayList();
-            result.Add(new XtraObjectInfo("History", this));
-            return (XtraObjectInfo[])result.ToArray(typeof(XtraObjectInfo));
-        }
-        protected virtual bool SaveLayoutCore(XtraSerializer serializer, object path) {
-            System.IO.Stream stream = path as System.IO.Stream;
-            if(stream != null)
-                return serializer.SerializeObjects(GetXtraObjectInfo(), stream, this.GetType().Name);
-            else
-                return serializer.SerializeObjects(GetXtraObjectInfo(), path.ToString(), this.GetType().Name);
-        }
-        protected virtual void RestoreLayoutCore(XtraSerializer serializer, object path) {
-            System.IO.Stream stream = path as System.IO.Stream;
-            if(stream != null)
-                serializer.DeserializeObjects(GetXtraObjectInfo(), stream, this.GetType().Name);
-            else
-                serializer.DeserializeObjects(GetXtraObjectInfo(), path.ToString(), this.GetType().Name);
-        }
-        //layout
-        public virtual void SaveLayoutToXml(string xmlFile) {
-            SaveLayoutCore(new XmlXtraSerializer(), xmlFile);
-        }
-        public virtual void RestoreLayoutFromXml(string xmlFile) {
-            RestoreLayoutCore(new XmlXtraSerializer(), xmlFile);
-        }
+        public virtual void OnEndDeserialize() { }
+        public string FileName { get; set; }
         protected Stopwatch Timer { get; set; }
         protected long LastSaveTime { get; set; }
         public void CheckSave() {
@@ -99,45 +62,25 @@ namespace CryptoMarketClient.Common {
         }
         #endregion
 
-        [XtraSerializableProperty(XtraSerializationVisibility.Collection, true, false, true)]
         public BindingList<ArbitrageStatisticsItem> History { get; } = new BindingList<ArbitrageStatisticsItem>();
-
-        protected object XtraCreateHistoryItem(XtraItemEventArgs e) {
-            ArbitrageStatisticsItem item = new ArbitrageStatisticsItem();
-            History.Add(item);
-            return item;
-        }
     }
 
+    [Serializable]
     public class ArbitrageStatisticsItem {
-        [XtraSerializableProperty]
         public string LowestAskHost { get; set; }
-        [XtraSerializableProperty]
         public string HighestBidHost { get; set; }
-        [XtraSerializableProperty]
         public DateTime Time { get; set; }
-        [XtraSerializableProperty]
         public string BaseCurrency { get; set; }
-        [XtraSerializableProperty]
         public string MarketCurrency { get; set; }
-        [XtraSerializableProperty]
         public bool LowestAskEnabled { get; set; }
-        [XtraSerializableProperty]
         public bool HighestBidEnabled { get; set; }
-        [XtraSerializableProperty]
         public double LowestAsk { get; set; }
-        [XtraSerializableProperty]
         public double HighestBid { get; set; }
-        [XtraSerializableProperty]
         public double Spread { get; set; }
-        [XtraSerializableProperty]
         public double Amount { get; set; }
-        [XtraSerializableProperty]
         public double MaxProfit { get; set; }
-        [XtraSerializableProperty]
         public double MaxProfitUSD { get; set; }
         public double TotalSpent { get { return Amount * LowestAsk; } }
-        [XtraSerializableProperty]
         public double RateInUSD { get; set; }
         public double TotalSpentUSD { get { return TotalSpent * RateInUSD; } }
         public double ProfitPercent { get { return TotalSpent == 0? 0: MaxProfit / TotalSpent * 100; } }

@@ -195,15 +195,15 @@ namespace CryptoMarketClient.Common {
 
         void UnsubscribeCore(WebSocketSubscribeInfo info) {
             if(info.Type == SocketSubscribeType.OrderBook) {
-                Ticker.IsOrderBookSubscribed = false;
+                info.Ticker.IsOrderBookSubscribed = false;
                 Telemetry.Default.TrackEvent(LogType.Log, Exchange, info.Ticker, "order book channel unsubscibed", "");
             }
             else if(info.Type == SocketSubscribeType.TradeHistory) {
-                Ticker.IsTradeHistorySubscribed = false;
+                info.Ticker.IsTradeHistorySubscribed = false;
                 Telemetry.Default.TrackEvent(LogType.Log, Exchange, info.Ticker, "trade history channel unsubscibed", "");
             }
             else if(info.Type == SocketSubscribeType.Kline) {
-                Ticker.IsKlineSubscribed = false;
+                info.Ticker.IsKlineSubscribed = false;
                 Telemetry.Default.TrackEvent(LogType.Log, Exchange, info.Ticker, "kline channel unsubscibed", "");
             }
 
@@ -214,13 +214,13 @@ namespace CryptoMarketClient.Common {
             }
             else {
                 if(info.Type == SocketSubscribeType.OrderBook) {
-                    Ticker.IsOrderBookSubscribed = false;
+                    info.Ticker.IsOrderBookSubscribed = false;
                 }
                 if(info.Type == SocketSubscribeType.TradeHistory) {
-                    Ticker.IsTradeHistorySubscribed = false;
+                    info.Ticker.IsTradeHistorySubscribed = false;
                 }
                 if(info.Type == SocketSubscribeType.Kline) {
-                    Ticker.IsKlineSubscribed = false;
+                    info.Ticker.IsKlineSubscribed = false;
                 }
             }
         }

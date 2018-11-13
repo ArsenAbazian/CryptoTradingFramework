@@ -19,10 +19,8 @@ namespace CryptoMarketClient.BitFinex {
         static BitFinexExchange defaultExchange;
         public static BitFinexExchange Default {
             get {
-                if(defaultExchange == null) {
-                    defaultExchange = new BitFinexExchange();
-                    defaultExchange.Load();
-                }
+                if(defaultExchange == null)
+                    defaultExchange = (BitFinexExchange)Exchange.FromFile(ExchangeType.BitFinex, typeof(BitFinexExchange));
                 return defaultExchange;
             }
         }

@@ -80,7 +80,6 @@
     </Reference>
     <Reference Include="DevExpress.XtraDialogs.v18.2, Version=18.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      
     </Reference>
     <Reference Include="DevExpress.XtraEditors.v18.2, Version=18.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
       <Private>True</Private>
@@ -96,7 +95,6 @@
     </Reference>
     <Reference Include="DevExpress.XtraTreeList.v18.2, Version=18.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      
     </Reference>
     <Reference Include="DevExpress.XtraVerticalGrid.v18.2, Version=18.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
       <Private>True</Private>
@@ -273,6 +271,12 @@
     <Compile Include="AnalyticsForm.Designer.cs">
       <DependentUpon>AnalyticsForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="ArbitrageHistoryForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ArbitrageHistoryForm.Designer.cs">
+      <DependentUpon>ArbitrageHistoryForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="ConnectionForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -426,12 +430,6 @@
     <Compile Include="CombinedBidAskForm.Designer.cs">
       <DependentUpon>CombinedBidAskForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="ArbitrageHistoryForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="ArbitrageHistoryForm.Designer.cs">
-      <DependentUpon>ArbitrageHistoryForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="CalculatorForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -554,6 +552,9 @@
     <EmbeddedResource Include="AnalyticsForm.resx">
       <DependentUpon>AnalyticsForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="ArbitrageHistoryForm.resx">
+      <DependentUpon>ArbitrageHistoryForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\AccountBalancesForm.resx">
       <DependentUpon>AccountBalancesForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -626,9 +627,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="CombinedBidAskForm.resx">
       <DependentUpon>CombinedBidAskForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="ArbitrageHistoryForm.resx">
-      <DependentUpon>ArbitrageHistoryForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CalculatorForm.resx">
       <DependentUpon>CalculatorForm.cs</DependentUpon>

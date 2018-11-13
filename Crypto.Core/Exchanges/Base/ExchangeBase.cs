@@ -3,8 +3,6 @@ using CryptoMarketClient.Bittrex;
 using CryptoMarketClient.Common;
 using CryptoMarketClient.Exchanges.Base;
 using CryptoMarketClient.Exchanges.Bitmex;
-using DevExpress.Utils;
-using DevExpress.Utils.Serializing;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -21,9 +19,12 @@ using Microsoft.AspNet.SignalR.Client;
 using System.Threading;
 using System.Net.Http;
 using Crypto.Core.Common;
+using System.Xml.Serialization;
+using Crypto.Core.Helpers;
+using System.Reflection;
 
 namespace CryptoMarketClient {
-    public abstract class Exchange : IXtraSerializable {
+    public abstract class Exchange : ISupportSerialization {
         public static List<Exchange> Registered { get; } = new List<Exchange>();
         public static List<Exchange> Connected { get; } = new List<Exchange>();
 
@@ -33,9 +34,10 @@ namespace CryptoMarketClient {
             Registered.Add(BittrexExchange.Default);
             Registered.Add(BinanceExchange.Default);
             Registered.Add(BitmexExchange.Default);
+        }
 
-            foreach(Exchange exchange in Registered)
-                exchange.Load();
+        public Exchange() {
+            FileName = Type.ToString() + ".xml";
         }
 
         public static Color AskColor {
@@ -49,8 +51,9 @@ namespace CryptoMarketClient {
         public static List<TickerNameInfo> GetTickersNameInfo() {
             List<TickerNameInfo> list = new List<TickerNameInfo>();
             foreach(Exchange e in Exchange.Registered) {
-                if(e.Tickers.Count == 0)
+                if(e.Tickers.Count == 0) {
                     e.LoadTickers();
+                }
                 foreach(Ticker ticker in e.Tickers) {
                     list.Add(new TickerNameInfo() { Exchange = e.Type, Ticker = ticker.Name, BaseCurrency = ticker.BaseCurrency, MarketCurrency = ticker.MarketCurrency });
                 }
@@ -76,6 +79,7 @@ namespace CryptoMarketClient {
 
         public static int OrderBookDepth { get; set; }
         public static bool AllowTradeHistory { get; set; }
+        [XmlIgnore]
         public bool IsConnected {
             get { return Connected.Contains(this); }
             protected set {
@@ -112,19 +116,12 @@ namespace CryptoMarketClient {
         public abstract bool GetTickersInfo();
         public abstract bool UpdateTickersInfo();
 
-        [XtraSerializableProperty(XtraSerializationVisibility.Collection, true, false, true)]
         public List<AccountInfo> Accounts { get; } = new List<AccountInfo>();
 
+        [XmlIgnore]
         public List<CurrencyInfoBase> Currencies { get; } = new List<CurrencyInfoBase>();
 
-        protected object XtraCreateAccountsItem(XtraItemEventArgs e) {
-            return new AccountInfo();
-        }
-
-        protected void XtraSetIndexAccountsItem(XtraSetItemIndexEventArgs e) {
-            Accounts.Add((AccountInfo)e.Item.Value);
-        }
-
+        [XmlIgnore]
         public List<Ticker> Tickers { get; } = new List<Ticker>();
 
         public event TickerUpdateEventHandler TickerChanged;
@@ -140,19 +137,9 @@ namespace CryptoMarketClient {
                 TickersUpdate(this, EventArgs.Empty);
         }
 
-        [XtraSerializableProperty(XtraSerializationVisibility.Collection, true, false, true)]
         public List<PinnedTickerInfo> PinnedTickers { get; set; } = new List<PinnedTickerInfo>();
-        PinnedTickerInfo XtraCreatePinnedTickersItem(XtraItemEventArgs e) {
-            return new PinnedTickerInfo();
-        }
-        void XtraSetIndexPinnedTickersItem(XtraSetItemIndexEventArgs e) {
-            if(e.NewIndex == -1) {
-                PinnedTickers.Add((PinnedTickerInfo)e.Item.Value);
-                return;
-            }
-            PinnedTickers.Insert(e.NewIndex, (PinnedTickerInfo)e.Item.Value);
-        }
 
+        [XmlIgnore]
         protected byte[] OpenedOrdersData { get; set; }
         protected internal bool IsOpenedOrdersChanged(byte[] newBytes) {
             if(newBytes == null)
@@ -169,6 +156,7 @@ namespace CryptoMarketClient {
         }
 
         AccountInfo defaultAccount;
+        [XmlIgnore]
         public AccountInfo DefaultAccount {
             get { return defaultAccount; }
             set {
@@ -187,67 +175,31 @@ namespace CryptoMarketClient {
 
         public abstract ExchangeType Type { get; }
         public string Name { get { return Type.ToString(); } }
-
-        #region Settings
-        public void Save() {
-            SaveLayoutToXml(Name + ".xml");
-        }
         public string TickersDirectory { get { return "\\Tickers\\" + Name; } }
-        public void Load() {
-            string dir = TickersDirectory;
+
+        public static Exchange FromFile(ExchangeType type, Type t) {
+            Exchange res = (Exchange)SerializationHelper.FromFile(type.ToString() + ".xml", t);
+            if(res == null) {
+                ConstructorInfo ci = t.GetConstructor(new Type[] { });
+                res = (Exchange)ci.Invoke(new object[] { });
+            }
+            string dir = res.TickersDirectory;
             if(!Directory.Exists(dir))
                 Directory.CreateDirectory(dir);
-
-            if(!File.Exists(Name + ".xml"))
-                return;
-            RestoreLayoutFromXml(Name + ".xml");
+            return res;
         }
 
-        void IXtraSerializable.OnEndDeserializing(string restoredVersion) {
+        public string FileName { get; set; }
+        public bool Save() {
+            return SerializationHelper.Save(this, GetType(), null);
         }
 
-        void IXtraSerializable.OnEndSerializing() {
-
-        }
-
-        void IXtraSerializable.OnStartDeserializing(LayoutAllowEventArgs e) {
-
-        }
-
-        void IXtraSerializable.OnStartSerializing() {
-        }
-
-        protected XtraObjectInfo[] GetXtraObjectInfo() {
-            ArrayList result = new ArrayList();
-            result.Add(new XtraObjectInfo("Exchange", this));
-            return (XtraObjectInfo[])result.ToArray(typeof(XtraObjectInfo));
-        }
-        protected virtual bool SaveLayoutCore(XtraSerializer serializer, object path) {
-            System.IO.Stream stream = path as System.IO.Stream;
-            if(stream != null)
-                return serializer.SerializeObjects(GetXtraObjectInfo(), stream, this.GetType().Name);
-            else
-                return serializer.SerializeObjects(GetXtraObjectInfo(), path.ToString(), this.GetType().Name);
-        }
-        protected virtual void RestoreLayoutCore(XtraSerializer serializer, object path) {
-            System.IO.Stream stream = path as System.IO.Stream;
-            if(stream != null)
-                serializer.DeserializeObjects(GetXtraObjectInfo(), stream, this.GetType().Name);
-            else
-                serializer.DeserializeObjects(GetXtraObjectInfo(), path.ToString(), this.GetType().Name);
-        }
-        //layout
-        public virtual void SaveLayoutToXml(string xmlFile) {
-            SaveLayoutCore(new XmlXtraSerializer(), xmlFile);
-        }
-        public virtual void RestoreLayoutFromXml(string xmlFile) {
-            RestoreLayoutCore(new XmlXtraSerializer(), xmlFile);
+        public virtual void OnEndDeserialize() {
             foreach(AccountInfo info in Accounts) {
-                info.Exchange = Exchange.Registered.FirstOrDefault(e => e.Type == info.Type);
+                info.Exchange = this;
             }
             UpdateDefaultAccount();
-        }
-        #endregion
+        }        
 
         #region Encryption
         private string Encrypt(string toEncrypt, bool useHashing) {
@@ -453,9 +405,20 @@ namespace CryptoMarketClient {
         protected List<RateLimit> RequestRate { get; set; }
         protected List<RateLimit> OrderRate { get; set; }
         public bool IsInitialized { get; set; }
+        protected bool SuppressCheckRequestLimits { get; set; }
         protected void CheckRequestRateLimits() {
-            if(RequestRate == null)
+            if(SuppressCheckRequestLimits)
                 return;
+            if(RequestRate == null) {
+                try {
+                    SuppressCheckRequestLimits = true;
+                    if(!ObtainExchangeSettings() || RequestRate == null)
+                        return;
+                }
+                finally {
+                    SuppressCheckRequestLimits = false;
+                }
+            }
             foreach(RateLimit limit in RequestRate)
                 limit.CheckAllow();
         }
@@ -745,6 +708,7 @@ namespace CryptoMarketClient {
         public SocketConnectionState TickersSocketState {
             get { return TickersSocket == null ? SocketConnectionState.Disconnected : TickersSocket.State; }
         }
+        [XmlIgnore]
         public SocketConnectionInfo TickersSocket { get; protected set; }
         //public WebSocket WebSocket { get; private set; }
         public abstract string BaseWebSocketAdress { get; }
@@ -1006,6 +970,7 @@ namespace CryptoMarketClient {
         }
 
         List<CandleStickIntervalInfo> allowedCandleStickIntervals;
+        [XmlIgnore]
         public List<CandleStickIntervalInfo> AllowedCandleStickIntervals {
             get {
                 if(allowedCandleStickIntervals == null)

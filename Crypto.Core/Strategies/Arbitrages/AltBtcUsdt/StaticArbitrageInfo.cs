@@ -1,5 +1,4 @@
-﻿using DevExpress.XtraEditors;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -9,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 namespace CryptoMarketClient.Common {
+    [Serializable]
     public class StaticArbitrageInfoHistoryItem {
         public StaticArbitrageInfoHistoryItem(StaticArbitrageInfo info) {
             Disbalance = info.Disbalance;

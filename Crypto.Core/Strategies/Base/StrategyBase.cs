@@ -1,5 +1,7 @@
 ﻿using CryptoMarketClient;
 using CryptoMarketClient.Common;
+using CryptoMarketClient.Strategies;
+using CryptoMarketClient.Strategies.Stupid;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +11,10 @@ using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 namespace Crypto.Core.Strategies {
+    [XmlInclude(typeof(SimpleBuyLowSellHighStrategy))]
+    [XmlInclude(typeof(GridStrategyBase))]
+    [XmlInclude(typeof(StaticGridStrategy))]
+    //[XmlInclude(typeof())]
     [Serializable]
     public abstract class StrategyBase {
         public StrategyBase() {
@@ -30,7 +36,8 @@ namespace Crypto.Core.Strategies {
         public IStrategyDataProvider DataProvider { get { return Manager.DataProvider; } }
         public List<StrategyHistoryItem> History { get; } = new List<StrategyHistoryItem>();
         public List<TradingResult> TradeHistory { get; } = new List<TradingResult>();
-        
+
+        public abstract void OnEndDeserialize();
 
         protected virtual void Log(LogType logType, string text, double rate, double amount, StrategyOperation operation) {
             History.Add(new StrategyHistoryItem() { Type = logType, Rate = rate, Amount = amount, Operation = operation, Time = DateTime.Now, Text = text });
