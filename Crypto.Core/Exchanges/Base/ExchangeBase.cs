@@ -441,7 +441,7 @@ namespace CryptoMarketClient {
             }
             catch(Exception e) {
                 WebException we = e as WebException;
-                if(we != null && we.Message.Contains("418") || we.Message.Contains("429"))
+                if(we != null && (we.Message.Contains("418") || we.Message.Contains("429")))
                     IsInitialized = false;
                 Telemetry.Default.TrackException(we);
                 return null;

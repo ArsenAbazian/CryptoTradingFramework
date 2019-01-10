@@ -37,6 +37,13 @@ namespace Crypto.Core.Strategies {
         public List<StrategyHistoryItem> History { get; } = new List<StrategyHistoryItem>();
         public List<TradingResult> TradeHistory { get; } = new List<TradingResult>();
 
+        public virtual bool Start() {
+            return true;
+        }
+        public virtual bool Stop() {
+            return true;
+        }
+
         public abstract void OnEndDeserialize();
 
         protected virtual void Log(LogType logType, string text, double rate, double amount, StrategyOperation operation) {
@@ -67,6 +74,7 @@ namespace Crypto.Core.Strategies {
                 OnAccountIdChanged();
             }
         }
+
         void OnAccountIdChanged() {
             Account = Exchange.GetAccount(AccountId);
         }

@@ -69,14 +69,14 @@ namespace Crypto.Core.Strategies {
         }
         public bool Start() {
             bool res = true;
-            //foreach(StrategyBase s in Strategies)
-            //    res &= s.Start();
+            foreach(StrategyBase s in Strategies)
+                res &= s.Start();
             return res;
         }
         public bool Stop() {
             bool res = true;
-            //foreach(StrategyBase s in Strategies)
-            //    res &= s.Stop();
+            foreach(StrategyBase s in Strategies)
+                res &= s.Stop();
             return res;
         }
     }

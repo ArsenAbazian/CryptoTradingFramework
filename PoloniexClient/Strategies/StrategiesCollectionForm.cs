@@ -111,5 +111,33 @@ namespace CryptoMarketClient.Strategies {
                 return;
 
         }
+
+        private void biEdit_ItemClick(object sender, ItemClickEventArgs e) {
+            StrategyBase strategy = (StrategyBase)this.gridView1.GetFocusedRow();
+            if(strategy == null) {
+                XtraMessageBox.Show("No strategy selected for editing.");
+                return;
+            }
+            StrategyBase cloned = strategy.Clone();
+            if(!StrategyConfigurationManager.Default.ConfigureDialog(cloned))
+                return;
+            strategy.Assign(cloned);
+            Manager.Save();
+            this.gridView1.RefreshData();
+        }
+
+        private void repositoryItemCheckEdit1_EditValueChanged(object sender, EventArgs e) {
+            StrategyBase strategy = (StrategyBase)this.gridView1.GetFocusedRow();
+            strategy.Enabled = ((CheckEdit)sender).Checked;
+            this.gridView1.CloseEditor();
+            Manager.Save();
+        }
+
+        private void repositoryItemCheckEdit2_EditValueChanged(object sender, EventArgs e) {
+            StrategyBase strategy = (StrategyBase)this.gridView1.GetFocusedRow();
+            strategy.DemoMode = ((CheckEdit)sender).Checked;
+            this.gridView1.CloseEditor();
+            Manager.Save();
+        }
     }
 }

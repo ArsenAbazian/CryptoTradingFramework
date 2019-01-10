@@ -107,7 +107,10 @@ namespace CryptoMarketClient.Helpers {
 
         public static Icon GetFormIcon(string currencyName) {
             Icon formIcon;
-            using(Bitmap bmp = new Bitmap(GetLogo32Image(currencyName), SmallIconSize)) {
+            Image logo32 = GetLogo32Image(currencyName);
+            if(logo32 == null)
+                return null;
+            using(Bitmap bmp = new Bitmap(logo32, SmallIconSize)) {
                 IntPtr hIcon = (bmp).GetHicon();
                 formIcon = Icon.FromHandle(hIcon);
             }

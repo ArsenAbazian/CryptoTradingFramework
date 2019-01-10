@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace Crypto.Core.Strategies {
     public interface IStrategyDataProvider {
-        bool ConnectExchange(ExchangeInputInfo info);
-        bool ConnectTicker(TickerInputInfo info);
-        bool ListenTicker(TickerInputInfo info);
+        bool Connect(ExchangeInputInfo info);
+        bool Connect(TickerInputInfo info);
+        bool Disconnect(ExchangeInputInfo info);
+        bool Disconnect(TickerInputInfo info);
     }
 }

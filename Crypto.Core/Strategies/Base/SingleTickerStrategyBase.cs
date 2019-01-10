@@ -86,6 +86,23 @@ namespace CryptoMarketClient.Strategies {
             TickerInfo = new TickerNameInfo() { Exchange = Ticker.Exchange.Type, Ticker = Ticker.Name };
         }
 
+        public override bool Start() {
+            if(!base.Start())
+                return false;
+
+            ExchangeInputInfo info = new ExchangeInputInfo() { Exchange = Ticker.Exchange, ExchangeType = Ticker.Exchange.Type };
+            info.Tickers.Add(new TickerInputInfo() { Ticker = Ticker, TickerName = Ticker.Name, OrderBook = true, TradeHistory = true });
+
+            return DataProvider.Connect(info);
+        }
+
+        public override bool Stop() {
+            if(!base.Stop())
+                return false;
+            return true;
+            //return DataProvider.Disconnect(); TODO
+        }
+
         protected TradingResult AddDemoTradingResult(double rate, double amount, OrderType type) {
             TradingResult res = new TradingResult() { Amount = amount, Type = type, Date = DateTime.Now, OrderNumber = -1, Total = rate * amount };
             res.Trades.Add(new TradeEntry() { Amount = amount, Date = DateTime.Now, Id = "demo", Rate = rate, Total = rate * amount, Type = type });

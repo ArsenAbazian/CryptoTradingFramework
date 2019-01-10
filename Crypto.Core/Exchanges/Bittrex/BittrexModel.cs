@@ -370,7 +370,7 @@ namespace CryptoMarketClient.Bittrex {
             if(!JSonHelper.Default.SkipSymbol(bytes, ':', 3, ref startIndex))
                 return false;
 
-            List<string[]> res = JSonHelper.Default.DeserializeArrayOfObjects(bytes, ref startIndex, new string[] { "MarketCurrency", "BaseCurrency", "MarketCurrencyLong", "BaseCurrencyLong", "MinTradeSize", "MarketName", "IsActive", "Created", "Notice", "IsSponsored", "LogoUrl" });
+            List<string[]> res = JSonHelper.Default.DeserializeArrayOfObjects(bytes, ref startIndex, new string[] { "MarketCurrency", "BaseCurrency", "MarketCurrencyLong", "BaseCurrencyLong", "MinTradeSize", "MarketName", "IsActive", "IsRestricted", "Created", "Notice", "IsSponsored", "LogoUrl" });
             foreach(string[] item in res) {
                 BittrexTicker m = new BittrexTicker(this);
 
@@ -381,8 +381,8 @@ namespace CryptoMarketClient.Bittrex {
                 m.MinTradeSize = FastValueConverter.Convert(item[4]);
                 m.MarketName = item[5];
                 m.IsActive = item[6].Length == 4 ? true : false;
-                m.Created = Convert.ToDateTime(item[7]).ToLocalTime();
-                m.LogoUrl = item[10];
+                m.Created = Convert.ToDateTime(item[8]).ToLocalTime();
+                m.LogoUrl = item[11];
                 m.Index = Tickers.Count;
                 Tickers.Add(m);
             }

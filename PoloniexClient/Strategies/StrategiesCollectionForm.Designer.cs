@@ -51,11 +51,15 @@ namespace CryptoMarketClient.Strategies {
             this.colName = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colStateText = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colEarned = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.repositoryItemCheckEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit();
+            this.repositoryItemCheckEdit2 = new DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit();
             ((System.ComponentModel.ISupportInitialize)(this.barManager1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.strategyBaseBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemTextEdit1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit2)).BeginInit();
             this.SuspendLayout();
             // 
             // barManager1
@@ -122,6 +126,7 @@ namespace CryptoMarketClient.Strategies {
             this.biEdit.Id = 2;
             this.biEdit.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("biEdit.ImageOptions.SvgImage")));
             this.biEdit.Name = "biEdit";
+            this.biEdit.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.biEdit_ItemClick);
             // 
             // biStart
             // 
@@ -167,6 +172,7 @@ namespace CryptoMarketClient.Strategies {
             // barDockControlTop
             // 
             this.barDockControlTop.CausesValidation = false;
+            this.barDockControlTop.CustomController = null;
             this.barDockControlTop.Dock = System.Windows.Forms.DockStyle.Top;
             this.barDockControlTop.Location = new System.Drawing.Point(0, 0);
             this.barDockControlTop.Manager = this.barManager1;
@@ -175,6 +181,7 @@ namespace CryptoMarketClient.Strategies {
             // barDockControlBottom
             // 
             this.barDockControlBottom.CausesValidation = false;
+            this.barDockControlBottom.CustomController = null;
             this.barDockControlBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.barDockControlBottom.Location = new System.Drawing.Point(0, 975);
             this.barDockControlBottom.Manager = this.barManager1;
@@ -183,6 +190,7 @@ namespace CryptoMarketClient.Strategies {
             // barDockControlLeft
             // 
             this.barDockControlLeft.CausesValidation = false;
+            this.barDockControlLeft.CustomController = null;
             this.barDockControlLeft.Dock = System.Windows.Forms.DockStyle.Left;
             this.barDockControlLeft.Location = new System.Drawing.Point(0, 60);
             this.barDockControlLeft.Manager = this.barManager1;
@@ -191,6 +199,7 @@ namespace CryptoMarketClient.Strategies {
             // barDockControlRight
             // 
             this.barDockControlRight.CausesValidation = false;
+            this.barDockControlRight.CustomController = null;
             this.barDockControlRight.Dock = System.Windows.Forms.DockStyle.Right;
             this.barDockControlRight.Location = new System.Drawing.Point(1667, 60);
             this.barDockControlRight.Manager = this.barManager1;
@@ -205,7 +214,9 @@ namespace CryptoMarketClient.Strategies {
             this.gridControl1.MenuManager = this.barManager1;
             this.gridControl1.Name = "gridControl1";
             this.gridControl1.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
-            this.repositoryItemTextEdit1});
+            this.repositoryItemTextEdit1,
+            this.repositoryItemCheckEdit1,
+            this.repositoryItemCheckEdit2});
             this.gridControl1.Size = new System.Drawing.Size(1667, 915);
             this.gridControl1.TabIndex = 4;
             this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
@@ -233,6 +244,7 @@ namespace CryptoMarketClient.Strategies {
             // 
             // colEnabled
             // 
+            this.colEnabled.ColumnEdit = this.repositoryItemCheckEdit1;
             this.colEnabled.FieldName = "Enabled";
             this.colEnabled.MinWidth = 40;
             this.colEnabled.Name = "colEnabled";
@@ -242,6 +254,7 @@ namespace CryptoMarketClient.Strategies {
             // 
             // colDemoMode
             // 
+            this.colDemoMode.ColumnEdit = this.repositoryItemCheckEdit2;
             this.colDemoMode.FieldName = "DemoMode";
             this.colDemoMode.MinWidth = 40;
             this.colDemoMode.Name = "colDemoMode";
@@ -297,6 +310,18 @@ namespace CryptoMarketClient.Strategies {
             this.colEarned.VisibleIndex = 5;
             this.colEarned.Width = 150;
             // 
+            // repositoryItemCheckEdit1
+            // 
+            this.repositoryItemCheckEdit1.AutoHeight = false;
+            this.repositoryItemCheckEdit1.Name = "repositoryItemCheckEdit1";
+            this.repositoryItemCheckEdit1.EditValueChanged += new System.EventHandler(this.repositoryItemCheckEdit1_EditValueChanged);
+            // 
+            // repositoryItemCheckEdit2
+            // 
+            this.repositoryItemCheckEdit2.AutoHeight = false;
+            this.repositoryItemCheckEdit2.Name = "repositoryItemCheckEdit2";
+            this.repositoryItemCheckEdit2.EditValueChanged += new System.EventHandler(this.repositoryItemCheckEdit2_EditValueChanged);
+            // 
             // StrategiesCollectionForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
@@ -314,6 +339,8 @@ namespace CryptoMarketClient.Strategies {
             ((System.ComponentModel.ISupportInitialize)(this.strategyBaseBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemTextEdit1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit2)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -344,5 +371,7 @@ namespace CryptoMarketClient.Strategies {
         private DevExpress.XtraEditors.Repository.RepositoryItemTextEdit repositoryItemTextEdit1;
         private DevExpress.XtraGrid.Columns.GridColumn colStateText;
         private DevExpress.XtraGrid.Columns.GridColumn colEarned;
+        private DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit repositoryItemCheckEdit1;
+        private DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit repositoryItemCheckEdit2;
     }
 }
