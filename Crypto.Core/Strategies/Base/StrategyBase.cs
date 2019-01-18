@@ -91,8 +91,8 @@ namespace Crypto.Core.Strategies {
         }
 
         protected abstract void OnTickCore();
-        public bool Initialize(IStrategyDataProvider dataProvider) {
-            throw new NotImplementedException();
+        public virtual bool Initialize(IStrategyDataProvider dataProvider) {
+            return true;
         }
         public StrategyBase Clone() {
             ConstructorInfo info = GetType().GetConstructor(new Type[] { });
@@ -106,6 +106,8 @@ namespace Crypto.Core.Strategies {
             DemoMode = from.DemoMode;
             Description = from.Description;
             FileName = from.FileName;
+            Account = from.Account;
+            MaxAllowedDeposit = from.MaxAllowedDeposit;
         }
 
         protected string GetTrimmedString(string value) {

@@ -340,7 +340,6 @@ namespace CryptoMarketClient {
             }
             return true;
         }
-
         public override bool GetTickersInfo() {
             string address = "https://poloniex.com/public?command=returnTicker";
             string text = string.Empty;
@@ -1173,7 +1172,12 @@ namespace CryptoMarketClient {
                 return null;
             }
         }
-
+        protected override void AddRefOrderBook(Ticker ticker) {
+        }
+        protected override void AddRefKline(Ticker ticker) {
+        }
+        protected override void AddRefTradeHistory(Ticker ticker) {
+        }
     }
 
     public delegate void TickerUpdateEventHandler(object sender, TickerUpdateEventArgs e);

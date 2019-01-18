@@ -26,13 +26,9 @@
             this.components = new System.ComponentModel.Container();
             this.dataLayoutControl1 = new DevExpress.XtraDataLayout.DataLayoutControl();
             this.TickerInfoTextEdit = new DevExpress.XtraEditors.GridLookUpEdit();
-            this.simpleBuyLowSellHighStrategyBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.tickerNameInfoBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.TickerInfoTextEditView = new DevExpress.XtraGrid.Views.Grid.GridView();
-            this.colExchange = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colBaseCurrency = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colMarketCurrency = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.repositoryItemTextEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemTextEdit();
             this.BuyLevelTextEdit = new DevExpress.XtraEditors.SpinEdit();
             this.SellLevelTextEdit = new DevExpress.XtraEditors.SpinEdit();
             this.layoutControlGroup1 = new DevExpress.XtraLayout.LayoutControlGroup();
@@ -40,13 +36,14 @@
             this.ItemForBuyLevel = new DevExpress.XtraLayout.LayoutControlItem();
             this.ItemForSellLevel = new DevExpress.XtraLayout.LayoutControlItem();
             this.ItemForTickerInfo = new DevExpress.XtraLayout.LayoutControlItem();
+            this.simpleBuyLowSellHighStrategyBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.tickerNameInfoBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.colExchange = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.repositoryItemTextEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemTextEdit();
             ((System.ComponentModel.ISupportInitialize)(this.dataLayoutControl1)).BeginInit();
             this.dataLayoutControl1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.TickerInfoTextEdit.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.simpleBuyLowSellHighStrategyBindingSource)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.tickerNameInfoBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.TickerInfoTextEditView)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemTextEdit1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.BuyLevelTextEdit.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.SellLevelTextEdit.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup1)).BeginInit();
@@ -54,6 +51,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.ItemForBuyLevel)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ItemForSellLevel)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ItemForTickerInfo)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.simpleBuyLowSellHighStrategyBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tickerNameInfoBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemTextEdit1)).BeginInit();
             this.SuspendLayout();
             // 
             // dataLayoutControl1
@@ -80,7 +80,7 @@
             this.TickerInfoTextEdit.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.DropDown)});
             this.TickerInfoTextEdit.Properties.DataSource = this.tickerNameInfoBindingSource;
-            this.TickerInfoTextEdit.Properties.DisplayMember = "Ticker";
+            this.TickerInfoTextEdit.Properties.DisplayMember = "FullName";
             this.TickerInfoTextEdit.Properties.PopupView = this.TickerInfoTextEditView;
             this.TickerInfoTextEdit.Properties.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repositoryItemTextEdit1});
@@ -89,14 +89,6 @@
             this.TickerInfoTextEdit.StyleController = this.dataLayoutControl1;
             this.TickerInfoTextEdit.TabIndex = 6;
             this.TickerInfoTextEdit.EditValueChanged += new System.EventHandler(this.TickerInfoTextEdit_EditValueChanged);
-            // 
-            // simpleBuyLowSellHighStrategyBindingSource
-            // 
-            this.simpleBuyLowSellHighStrategyBindingSource.DataSource = typeof(CryptoMarketClient.Strategies.Stupid.SimpleBuyLowSellHighStrategy);
-            // 
-            // tickerNameInfoBindingSource
-            // 
-            this.tickerNameInfoBindingSource.DataSource = typeof(Crypto.Core.Common.TickerNameInfo);
             // 
             // TickerInfoTextEditView
             // 
@@ -113,13 +105,6 @@
             new DevExpress.XtraGrid.Columns.GridColumnSortInfo(this.colExchange, DevExpress.Data.ColumnSortOrder.Ascending),
             new DevExpress.XtraGrid.Columns.GridColumnSortInfo(this.colBaseCurrency, DevExpress.Data.ColumnSortOrder.Ascending)});
             // 
-            // colExchange
-            // 
-            this.colExchange.FieldName = "Exchange";
-            this.colExchange.Name = "colExchange";
-            this.colExchange.Visible = true;
-            this.colExchange.VisibleIndex = 0;
-            // 
             // colBaseCurrency
             // 
             this.colBaseCurrency.FieldName = "BaseCurrency";
@@ -134,12 +119,6 @@
             this.colMarketCurrency.Visible = true;
             this.colMarketCurrency.VisibleIndex = 0;
             this.colMarketCurrency.Width = 88;
-            // 
-            // repositoryItemTextEdit1
-            // 
-            this.repositoryItemTextEdit1.AutoHeight = false;
-            this.repositoryItemTextEdit1.Name = "repositoryItemTextEdit1";
-            this.repositoryItemTextEdit1.Padding = new System.Windows.Forms.Padding(3);
             // 
             // BuyLevelTextEdit
             // 
@@ -261,6 +240,27 @@
             this.ItemForTickerInfo.Text = "Ticker";
             this.ItemForTickerInfo.TextSize = new System.Drawing.Size(136, 39);
             // 
+            // simpleBuyLowSellHighStrategyBindingSource
+            // 
+            this.simpleBuyLowSellHighStrategyBindingSource.DataSource = typeof(CryptoMarketClient.Strategies.Stupid.SimpleBuyLowSellHighStrategy);
+            // 
+            // tickerNameInfoBindingSource
+            // 
+            this.tickerNameInfoBindingSource.DataSource = typeof(Crypto.Core.Common.TickerNameInfo);
+            // 
+            // colExchange
+            // 
+            this.colExchange.FieldName = "Exchange";
+            this.colExchange.Name = "colExchange";
+            this.colExchange.Visible = true;
+            this.colExchange.VisibleIndex = 0;
+            // 
+            // repositoryItemTextEdit1
+            // 
+            this.repositoryItemTextEdit1.AutoHeight = false;
+            this.repositoryItemTextEdit1.Name = "repositoryItemTextEdit1";
+            this.repositoryItemTextEdit1.Padding = new System.Windows.Forms.Padding(3);
+            // 
             // SimpleBuyLowSellHighConfigControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
@@ -271,10 +271,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataLayoutControl1)).EndInit();
             this.dataLayoutControl1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.TickerInfoTextEdit.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.simpleBuyLowSellHighStrategyBindingSource)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.tickerNameInfoBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.TickerInfoTextEditView)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemTextEdit1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.BuyLevelTextEdit.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.SellLevelTextEdit.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup1)).EndInit();
@@ -282,6 +279,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.ItemForBuyLevel)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ItemForSellLevel)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ItemForTickerInfo)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.simpleBuyLowSellHighStrategyBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tickerNameInfoBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemTextEdit1)).EndInit();
             this.ResumeLayout(false);
 
         }

@@ -131,7 +131,7 @@ namespace CryptoMarketClient {
             xyDiagram1.AxisX.Label.ResolveOverlappingOptions.AllowRotate = false;
             xyDiagram1.AxisX.Label.ResolveOverlappingOptions.AllowStagger = false;
             xyDiagram1.AxisX.Label.TextPattern = "{A:h:mm d.MM}";
-            xyDiagram1.AxisX.StickToEnd = true;
+            xyDiagram1.AxisX.StickToEdge = true;
             xyDiagram1.AxisX.VisibleInPanesSerializable = "-1;0";
             xyDiagram1.AxisX.VisualRange.Auto = false;
             xyDiagram1.AxisX.VisualRange.AutoSideMargins = false;
@@ -494,7 +494,7 @@ namespace CryptoMarketClient {
             xyDiagram2.AxisX.Label.Font = new System.Drawing.Font("Segoe UI", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             xyDiagram2.AxisX.Label.ResolveOverlappingOptions.AllowStagger = false;
             xyDiagram2.AxisX.Label.TextPattern = "{A:#.00000000}";
-            xyDiagram2.AxisX.StickToEnd = true;
+            xyDiagram2.AxisX.StickToEdge = true;
             xyDiagram2.AxisX.Visibility = DevExpress.Utils.DefaultBoolean.False;
             xyDiagram2.AxisX.VisibleInPanesSerializable = "-1";
             xyDiagram2.AxisX.WholeRange.AutoSideMargins = false;
@@ -565,7 +565,7 @@ namespace CryptoMarketClient {
             xyDiagram3.AxisX.DateTimeScaleOptions.MeasureUnit = DevExpress.XtraCharts.DateTimeMeasureUnit.Minute;
             xyDiagram3.AxisX.Label.Font = new System.Drawing.Font("Segoe UI", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             xyDiagram3.AxisX.Label.TextPattern = "{A:#.00000000}";
-            xyDiagram3.AxisX.StickToEnd = true;
+            xyDiagram3.AxisX.StickToEdge = true;
             xyDiagram3.AxisX.VisibleInPanesSerializable = "-1";
             xyDiagram3.AxisX.WholeRange.AutoSideMargins = false;
             xyDiagram3.AxisX.WholeRange.SideMarginsValue = 0D;

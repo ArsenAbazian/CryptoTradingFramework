@@ -12,6 +12,7 @@ namespace Crypto.Core.Common {
         public string Ticker { get; set; }
         public string BaseCurrency { get; set; }
         public string MarketCurrency { get; set; }
+        public string FullName { get { return Exchange + ": " + Ticker; } }
         public Ticker FindTicker() {
             Exchange e = CryptoMarketClient.Exchange.Get(Exchange);
             e.Connect();

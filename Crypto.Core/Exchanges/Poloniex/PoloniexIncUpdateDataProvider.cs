@@ -37,16 +37,18 @@ namespace CryptoMarketClient.Exchanges.Poloniex {
 
             List<OrderBookEntry> entries = orderBook.Asks;
             List<OrderBookEntry> entriesInverted = orderBook.AsksInverted;
-            foreach(JProperty item in asks.Children()) {
-                entries.Add(new OrderBookEntry() { ValueString = item.Name, AmountString = item.Value.Value<string>() });
-                entriesInverted.Insert(0, new OrderBookEntry() { ValueString = item.Name, AmountString = item.Value.Value<string>() });
+            lock(entries) {
+                foreach(JProperty item in asks.Children()) {
+                    entries.Add(new OrderBookEntry() { ValueString = item.Name, AmountString = item.Value.Value<string>() });
+                    entriesInverted.Insert(0, new OrderBookEntry() { ValueString = item.Name, AmountString = item.Value.Value<string>() });
+                }
             }
-
             entries = orderBook.Bids;
-            foreach(JProperty item in bids.Children()) {
-                entries.Add(new OrderBookEntry() { ValueString = item.Name, AmountString = item.Value.Value<string>() });
+            lock(entries) {
+                foreach(JProperty item in bids.Children()) {
+                    entries.Add(new OrderBookEntry() { ValueString = item.Name, AmountString = item.Value.Value<string>() });
+                }
             }
-
             orderBook.UpdateEntries();
             orderBook.RaiseOnChanged(new IncrementalUpdateInfo());
         }

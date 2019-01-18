@@ -15,6 +15,19 @@ namespace CryptoMarketClient.Strategies.Stupid {
         public double SoldTotal { get; set; }
         public double BuyLevel { get; set; }
         public double SellLevel { get; set; }
+
+        public override void Assign(StrategyBase from) {
+            base.Assign(from);
+
+            SimpleBuyLowSellHighStrategy st = from as SimpleBuyLowSellHighStrategy;
+            if(st == null)
+                return;
+            BoughtTotal = st.BoughtTotal;
+            SoldTotal = st.SoldTotal;
+            BuyLevel = st.BuyLevel;
+            SellLevel = st.SellLevel;
+            State = st.State;
+        }
         [XmlIgnore]
         public double MaxActualSellDeposit { get; private set; }
 
@@ -52,9 +65,13 @@ namespace CryptoMarketClient.Strategies.Stupid {
         }
 
         protected bool PriceIsBelow(double buyLevel) {
+            if(Ticker.OrderBook.Asks.Count == 0)
+                return false;
             return Ticker.OrderBook.Asks[0].Value < buyLevel;
         }
         protected bool PriceIsAbove(double sellLevel) {
+            if(Ticker.OrderBook.Bids.Count == 0)
+                return false;
             return Ticker.OrderBook.Bids[0].Value > sellLevel;
         }
 
@@ -72,10 +89,12 @@ namespace CryptoMarketClient.Strategies.Stupid {
         protected OrderBookEntry GetAvailableToBuy(double limit) {
             OrderBookEntry res = new OrderBookEntry();
             res.Value = limit;
-            foreach(OrderBookEntry entry in Ticker.OrderBook.Asks) {
-                if(entry.Value <= limit) {
-                    res.Amount += entry.Amount;
-                    res.Value = entry.Value;
+            lock(Ticker.OrderBook.Asks) {
+                foreach(OrderBookEntry entry in Ticker.OrderBook.Asks) {
+                    if(entry.Value <= limit) {
+                        res.Amount += entry.Amount;
+                        res.Value = entry.Value;
+                    }
                 }
             }
             return res;
@@ -84,10 +103,12 @@ namespace CryptoMarketClient.Strategies.Stupid {
         protected OrderBookEntry GetAvailableToSell(double limit) {
             OrderBookEntry res = new OrderBookEntry();
             res.Value = limit;
-            foreach(OrderBookEntry entry in Ticker.OrderBook.Bids) {
-                if(entry.Value >= limit) {
-                    res.Amount += entry.Amount;
-                    res.Value = entry.Value;
+            lock(Ticker.OrderBook.Bids) {
+                foreach(OrderBookEntry entry in Ticker.OrderBook.Bids) {
+                    if(entry.Value >= limit) {
+                        res.Amount += entry.Amount;
+                        res.Value = entry.Value;
+                    }
                 }
             }
             return res;

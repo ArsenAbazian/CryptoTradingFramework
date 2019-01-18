@@ -210,6 +210,7 @@
     <Compile Include="Strategies\IStrategyDataProvider.cs" />
     <Compile Include="Strategies\Grid\StaticGridStrategy.cs" />
     <Compile Include="Strategies\Base\SingleTickerStrategyBase.cs" />
+    <Compile Include="Strategies\RealtimeStrategyDataProvider.cs" />
     <Compile Include="Strategies\StrategiesManager.cs" />
     <Compile Include="Strategies\StrategiesRegistrator.cs" />
     <Compile Include="Strategies\Base\StrategyBase.cs" />

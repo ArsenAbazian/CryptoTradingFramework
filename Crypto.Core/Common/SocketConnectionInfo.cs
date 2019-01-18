@@ -10,8 +10,8 @@ using static CryptoMarketClient.Exchanges.Bittrex.SignalWebSocket;
 namespace CryptoMarketClient.Common {
     public class SocketConnectionInfo {
         public SocketConnectionInfo(Exchange exchange, Ticker ticker, string address, SocketType socketType, SocketSubscribeType connType) {
-            if(connType == SocketSubscribeType.OrderBook || 
-                connType == SocketSubscribeType.TradeHistory || 
+            if(connType == SocketSubscribeType.OrderBook ||
+                connType == SocketSubscribeType.TradeHistory ||
                 connType == SocketSubscribeType.Kline) {
                 if(ticker == null)
                     throw new Exception("Ticker should not be null");
@@ -41,7 +41,7 @@ namespace CryptoMarketClient.Common {
         public DateTime LastActiveTime { get; set; }
         public bool ClosedByUser { get; set; }
         public string Name { get; set; }
-        public SocketSubscribeType Type {get; set;}
+        public SocketSubscribeType Type { get; set; }
         public SocketType SocketType { get; set; }
         public List<WebSocketSubscribeInfo> Subscribtions { get; } = new List<WebSocketSubscribeInfo>();
         public Ticker Ticker { get; set; }
@@ -100,7 +100,24 @@ namespace CryptoMarketClient.Common {
 
         public object Key { get { return Socket != null ? (object)Socket : (object)Signal; } }
 
-        public void Close() {
+        protected int RefCount { get; private set; }
+        public void AddRef() { RefCount++; }
+        public bool HasRef() {
+            if(RefCount > 0)
+                return true;
+            foreach(var subs in Subscribtions) {
+                if(subs.RefCount > 0)
+                    return true;
+            }
+            return false;
+        }
+        public void Release() {
+            if(RefCount > 0)
+                RefCount--;
+            if(!HasRef())
+                Close();
+        }
+        protected void Close() {
             ClosedByUser = true;
             try {
                 if(Socket != null)
@@ -129,12 +146,15 @@ namespace CryptoMarketClient.Common {
         }
 
         public void Subscribe(WebSocketSubscribeInfo info) {
-            if(Subscribtions.FirstOrDefault(s => s.Command.channel == info.Command.channel && s.Command.command == info.Command.command && s.Command.userID == info.Command.userID) != null)
+            WebSocketSubscribeInfo exist = Subscribtions.FirstOrDefault(s => s.Command.channel == info.Command.channel && s.Command.command == info.Command.command && s.Command.userID == info.Command.userID);
+            if(exist != null) {
+                exist.AddRef();
                 return;
+            }
             info.ShouldUpdateSubscribtion = true;
             Subscribtions.Add(info);
+            info.AddRef();
             SubscribeCore(info);
-
         }
         void SubscribeCore(WebSocketSubscribeInfo info) {
             if(!info.ShouldUpdateSubscribtion)
@@ -226,11 +246,13 @@ namespace CryptoMarketClient.Common {
         }
 
         public void Unsubscribe(WebSocketSubscribeInfo info) {
-            if(Signal != null) {
+            if(Signal != null)
                 return;
-            }
             WebSocketSubscribeInfo found = Subscribtions.FirstOrDefault(s => s.Command.channel == info.Command.channel && s.Command.userID == info.Command.userID);
             if(found == null)
+                return;
+            found.Release();
+            if(found.RefCount > 0)
                 return;
             Subscribtions.Remove(found);
             UnsubscribeCore(info);
@@ -437,6 +459,13 @@ namespace CryptoMarketClient.Common {
                 SubscribeCore(info);
             }
         }
+
+        protected internal void ClearRef() {
+            RefCount = 0;
+            foreach(var sb in Subscribtions) {
+                sb.ClearRef();
+            }
+        }
     }
 
     public class WebSocketCommandInfo {
@@ -462,6 +491,18 @@ namespace CryptoMarketClient.Common {
         public string command { get { return Command.command; } set { Command.command = value; } }
         public string channel { get { return Command.channel; } set { Command.channel = value; } }
         public string userID { get { return Command.userID; } set { Command.userID = value; } }
+
+        public int RefCount { get; private set; }
+
+        public void AddRef() { RefCount++; }
+        public void Release() {
+            if(RefCount > 0)
+                RefCount--;
+        }
+
+        public void ClearRef() {
+            RefCount = 0;
+        }
     }
 
     public enum SocketSubscribeType {

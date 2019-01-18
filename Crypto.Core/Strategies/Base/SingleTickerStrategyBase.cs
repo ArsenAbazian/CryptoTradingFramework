@@ -30,6 +30,14 @@ namespace CryptoMarketClient.Strategies {
             }
         }
 
+        public override void Assign(StrategyBase from) {
+            base.Assign(from);
+            TickerStrategyBase st = from as TickerStrategyBase;
+            if(st == null)
+                return;
+            TickerInfo = st.TickerInfo;
+        }
+
         double maxActualDeposit = -1;
         public double MaxActualDeposit {
             get {
@@ -89,11 +97,12 @@ namespace CryptoMarketClient.Strategies {
         public override bool Start() {
             if(!base.Start())
                 return false;
-
-            ExchangeInputInfo info = new ExchangeInputInfo() { Exchange = Ticker.Exchange, ExchangeType = Ticker.Exchange.Type };
-            info.Tickers.Add(new TickerInputInfo() { Ticker = Ticker, TickerName = Ticker.Name, OrderBook = true, TradeHistory = true });
-
-            return DataProvider.Connect(info);
+            
+            TickerInputInfo inputInfo = new TickerInputInfo() { Exchange = TickerInfo.Exchange, TickerName = TickerInfo.Ticker, OrderBook = true, TradeHistory = true };
+            bool res = DataProvider.Connect(inputInfo);
+            if(res)
+                Ticker = inputInfo.Ticker;
+            return res;
         }
 
         public override bool Stop() {

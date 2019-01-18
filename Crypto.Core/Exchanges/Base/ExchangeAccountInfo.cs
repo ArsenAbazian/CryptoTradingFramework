@@ -42,6 +42,9 @@ namespace CryptoMarketClient {
         }
         public Guid Id { get; set; }
         public string Name { get; set; }
+        public string FullName {
+            get { return Type + ": " + Name; }
+        }
         bool isDefault;
         public bool Default {
             get { return isDefault; }

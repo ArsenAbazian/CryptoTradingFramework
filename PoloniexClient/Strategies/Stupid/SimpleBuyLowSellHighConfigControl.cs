@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
+using Crypto.Core.Common;
 
 namespace CryptoMarketClient.Strategies.Stupid {
     public partial class SimpleBuyLowSellHighConfigControl : StrategySpecificConfigurationControlBase {
@@ -16,7 +17,14 @@ namespace CryptoMarketClient.Strategies.Stupid {
         }
 
         protected override void OnStrategyChanged() {
-            this.tickerNameInfoBindingSource.DataSource = Exchange.GetTickersNameInfo();
+            //TODO check that ticker correctly initiallized on editing.
+            List<TickerNameInfo> tickerNameList = Exchange.GetTickersNameInfo();
+            if(tickerNameList == null || tickerNameList.Count == 0) {
+                XtraMessageBox.Show("Tickers list not initialized. Please close editing form (do not press OK button) and then restart application.");
+                return;
+            }
+            this.tickerNameInfoBindingSource.DataSource = tickerNameList;
+            ((TickerStrategyBase)Strategy).TickerInfo = tickerNameList.FirstOrDefault(t => t.Ticker == ((TickerStrategyBase)Strategy).TickerInfo.Ticker);
             this.simpleBuyLowSellHighStrategyBindingSource.DataSource = Strategy;
             string faultExchanges = string.Empty;
             foreach(Exchange e in Exchange.Registered) {

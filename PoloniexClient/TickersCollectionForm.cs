@@ -134,6 +134,8 @@ namespace CryptoMarketClient {
         }
 
         private void OnWebSocketTickersUpdate(object sender, EventArgs e) {
+            if(!IsHandleCreated || IsDisposed)
+                return;
             BeginInvoke(new MethodInvoker(() => this.gridView1.RefreshData()));
         }
 

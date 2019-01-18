@@ -26,7 +26,13 @@ namespace CryptoMarketClient.Strategies {
 
         protected StrategiesManager Manager { get; private set; }
         private void biStart_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
-            if(Manager.Start()) {
+            if(!Manager.Initialized) {
+                if(!Manager.Initialize(new RealtimeStrategyDataProvider())) {
+                    XtraMessageBox.Show("There are troubles initializing manager with RealtimeStrategyDataProvider. Check log for detailed information.");
+                    return;
+                }
+            }
+            if(!Manager.Start()) {
                 XtraMessageBox.Show("There are troubles starting strategies manager. Check log for detailed information.");
                 return;
             }

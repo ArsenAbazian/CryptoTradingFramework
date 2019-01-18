@@ -30,19 +30,15 @@ namespace CryptoMarketClient.Strategies {
             this.simpleButton1 = new DevExpress.XtraEditors.SimpleButton();
             this.simpleButton2 = new DevExpress.XtraEditors.SimpleButton();
             this.EnabledCheckEdit = new DevExpress.XtraEditors.ToggleSwitch();
-            this.statisticalArbitrageStrategyBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.DemoModeCheckEdit = new DevExpress.XtraEditors.ToggleSwitch();
             this.textEdit1 = new DevExpress.XtraEditors.TextEdit();
             this.DescriptionTextEdit = new DevExpress.XtraEditors.MemoEdit();
             this.spinEdit1 = new DevExpress.XtraEditors.SpinEdit();
             this.leAccounts = new DevExpress.XtraEditors.GridLookUpEdit();
-            this.accountInfoBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.leAccountsView = new DevExpress.XtraGrid.Views.Grid.GridView();
-            this.colType = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colName = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colDefault = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colActive = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.repositoryItemTextEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemTextEdit();
             this.layoutControlGroup1 = new DevExpress.XtraLayout.LayoutControlGroup();
             this.layoutControlGroup2 = new DevExpress.XtraLayout.LayoutControlGroup();
             this.tabbedControlGroup1 = new DevExpress.XtraLayout.TabbedControlGroup();
@@ -58,18 +54,19 @@ namespace CryptoMarketClient.Strategies {
             this.layoutControlItem2 = new DevExpress.XtraLayout.LayoutControlItem();
             this.emptySpaceItem1 = new DevExpress.XtraLayout.EmptySpaceItem();
             this.dxErrorProvider1 = new DevExpress.XtraEditors.DXErrorProvider.DXErrorProvider(this.components);
+            this.statisticalArbitrageStrategyBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.accountInfoBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.colType = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.repositoryItemTextEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemTextEdit();
             ((System.ComponentModel.ISupportInitialize)(this.dataLayoutControl1)).BeginInit();
             this.dataLayoutControl1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.EnabledCheckEdit.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.statisticalArbitrageStrategyBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DemoModeCheckEdit.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.textEdit1.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DescriptionTextEdit.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.spinEdit1.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.leAccounts.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.accountInfoBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.leAccountsView)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemTextEdit1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tabbedControlGroup1)).BeginInit();
@@ -85,6 +82,9 @@ namespace CryptoMarketClient.Strategies {
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItem1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dxErrorProvider1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.statisticalArbitrageStrategyBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.accountInfoBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemTextEdit1)).BeginInit();
             this.SuspendLayout();
             // 
             // dataLayoutControl1
@@ -147,10 +147,6 @@ namespace CryptoMarketClient.Strategies {
             this.EnabledCheckEdit.StyleController = this.dataLayoutControl1;
             this.EnabledCheckEdit.TabIndex = 5;
             // 
-            // statisticalArbitrageStrategyBindingSource
-            // 
-            this.statisticalArbitrageStrategyBindingSource.DataSource = typeof(Crypto.Core.Strategies.StrategyBase);
-            // 
             // DemoModeCheckEdit
             // 
             this.DemoModeCheckEdit.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.statisticalArbitrageStrategyBindingSource, "DemoMode", true));
@@ -211,7 +207,7 @@ namespace CryptoMarketClient.Strategies {
             this.leAccounts.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
             this.leAccounts.Properties.DataSource = this.accountInfoBindingSource;
-            this.leAccounts.Properties.DisplayMember = "Name";
+            this.leAccounts.Properties.DisplayMember = "FullName";
             this.leAccounts.Properties.PopupFormSize = new System.Drawing.Size(600, 0);
             this.leAccounts.Properties.PopupView = this.leAccountsView;
             this.leAccounts.Properties.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
@@ -221,10 +217,6 @@ namespace CryptoMarketClient.Strategies {
             this.leAccounts.Size = new System.Drawing.Size(1026, 54);
             this.leAccounts.StyleController = this.dataLayoutControl1;
             this.leAccounts.TabIndex = 13;
-            // 
-            // accountInfoBindingSource
-            // 
-            this.accountInfoBindingSource.DataSource = typeof(CryptoMarketClient.AccountInfo);
             // 
             // leAccountsView
             // 
@@ -240,13 +232,6 @@ namespace CryptoMarketClient.Strategies {
             this.leAccountsView.OptionsView.ShowGroupPanel = false;
             this.leAccountsView.SortInfo.AddRange(new DevExpress.XtraGrid.Columns.GridColumnSortInfo[] {
             new DevExpress.XtraGrid.Columns.GridColumnSortInfo(this.colType, DevExpress.Data.ColumnSortOrder.Ascending)});
-            // 
-            // colType
-            // 
-            this.colType.FieldName = "Type";
-            this.colType.Name = "colType";
-            this.colType.Visible = true;
-            this.colType.VisibleIndex = 3;
             // 
             // colName
             // 
@@ -268,12 +253,6 @@ namespace CryptoMarketClient.Strategies {
             this.colActive.Name = "colActive";
             this.colActive.Visible = true;
             this.colActive.VisibleIndex = 2;
-            // 
-            // repositoryItemTextEdit1
-            // 
-            this.repositoryItemTextEdit1.AutoHeight = false;
-            this.repositoryItemTextEdit1.Name = "repositoryItemTextEdit1";
-            this.repositoryItemTextEdit1.Padding = new System.Windows.Forms.Padding(3);
             // 
             // layoutControlGroup1
             // 
@@ -439,30 +418,48 @@ namespace CryptoMarketClient.Strategies {
             // 
             this.dxErrorProvider1.ContainerControl = this;
             // 
+            // statisticalArbitrageStrategyBindingSource
+            // 
+            this.statisticalArbitrageStrategyBindingSource.DataSource = typeof(Crypto.Core.Strategies.StrategyBase);
+            // 
+            // accountInfoBindingSource
+            // 
+            this.accountInfoBindingSource.DataSource = typeof(CryptoMarketClient.AccountInfo);
+            // 
+            // colType
+            // 
+            this.colType.FieldName = "Type";
+            this.colType.Name = "colType";
+            this.colType.Visible = true;
+            this.colType.VisibleIndex = 3;
+            // 
+            // repositoryItemTextEdit1
+            // 
+            this.repositoryItemTextEdit1.AutoHeight = false;
+            this.repositoryItemTextEdit1.Name = "repositoryItemTextEdit1";
+            this.repositoryItemTextEdit1.Padding = new System.Windows.Forms.Padding(3);
+            // 
             // StrategyConfigurationForm
             // 
             this.Appearance.FontSizeDelta = 4;
             this.Appearance.Options.UseFont = true;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(23F, 51F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(35F, 77F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1390, 1144);
             this.Controls.Add(this.dataLayoutControl1);
-            this.Font = new System.Drawing.Font("Tahoma", 15.875F);
+            this.Font = new System.Drawing.Font("Tahoma", 23.875F);
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "StrategyConfigurationForm";
             this.Text = "Configuration";
             ((System.ComponentModel.ISupportInitialize)(this.dataLayoutControl1)).EndInit();
             this.dataLayoutControl1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.EnabledCheckEdit.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.statisticalArbitrageStrategyBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.DemoModeCheckEdit.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.textEdit1.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.DescriptionTextEdit.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.spinEdit1.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.leAccounts.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.accountInfoBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.leAccountsView)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemTextEdit1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tabbedControlGroup1)).EndInit();
@@ -478,6 +475,9 @@ namespace CryptoMarketClient.Strategies {
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItem1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dxErrorProvider1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.statisticalArbitrageStrategyBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.accountInfoBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemTextEdit1)).EndInit();
             this.ResumeLayout(false);
 
         }

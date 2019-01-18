@@ -113,7 +113,7 @@ namespace CryptoMarketClient {
             SettingsStore.Default.SelectedPaletteName = UserLookAndFeel.Default.ActiveSvgPaletteName;
             SettingsStore.Default.Save();
             foreach(Exchange exchange in Exchange.Connected) {
-                exchange.StopListenStreams();
+                exchange.StopListenStreams(true);
             }
         }
 

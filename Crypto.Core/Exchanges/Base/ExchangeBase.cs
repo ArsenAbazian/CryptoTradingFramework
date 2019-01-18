@@ -22,6 +22,7 @@ using Crypto.Core.Common;
 using System.Xml.Serialization;
 using Crypto.Core.Helpers;
 using System.Reflection;
+using Crypto.Core.Strategies;
 
 namespace CryptoMarketClient {
     public abstract class Exchange : ISupportSerialization {
@@ -109,6 +110,7 @@ namespace CryptoMarketClient {
                 foreach(Ticker ticker in Tickers) {
                     ticker.Load();
                 }
+                Save();
                 return true;
             }
             return false;
@@ -443,7 +445,7 @@ namespace CryptoMarketClient {
                 WebException we = e as WebException;
                 if(we != null && (we.Message.Contains("418") || we.Message.Contains("429")))
                     IsInitialized = false;
-                Telemetry.Default.TrackException(we);
+                Telemetry.Default.TrackException(e);
                 return null;
             }
         }
@@ -460,7 +462,7 @@ namespace CryptoMarketClient {
             }
             catch(Exception e) {
                 WebException we = e as WebException;
-                if(we != null && we.Message.Contains("418") || we.Message.Contains("429"))
+                if(we != null && (we.Message.Contains("418") || we.Message.Contains("429")))
                     IsInitialized = false;
                 Telemetry.Default.TrackException(e);
                 return null;
@@ -729,16 +731,27 @@ namespace CryptoMarketClient {
         }
 
         public virtual void StartListenTickersStream() {
+            if(TickersSocket != null) {
+                TickersSocket.AddRef();
+                return;
+            }
             TickersSocket = CreateTickersSocket();
             TickersSocket.Open();
+            TickersSocket.AddRef();
         }
 
         public virtual void StopListenTickersStream() {
+            StopListenTickersStream(false);
+        }
+        public virtual void StopListenTickersStream(bool force) {
             Telemetry.Default.TrackEvent(LogType.Log, this, (Ticker)null, "stop listening tickers stream", "");
             if(TickersSocket == null)
                 return;
-            TickersSocket.Close();
-            TickersSocket = null;
+            if(force)
+                TickersSocket.ClearRef();
+            TickersSocket.Release();
+            if(!TickersSocket.HasRef())
+                TickersSocket = null;
         }
 
         protected internal virtual void OnTickersSocketMessageReceived(object sender, MessageReceivedEventArgs e) {
@@ -799,21 +812,26 @@ namespace CryptoMarketClient {
         }
 
         public virtual void StopListenKline(Ticker ticker) {
-            SocketConnectionInfo info = GetConnectionInfo(ticker, KlineSockets);
-            if(info != null)
-                info.Close();
+            StopListenKline(ticker, false);
+        }
+
+        public virtual void StopListenKline(Ticker ticker, bool force) {
+            ReleaseKline(ticker, force);
         }
 
         public virtual void StopListenOrderBook(Ticker ticker) {
-            SocketConnectionInfo info = GetConnectionInfo(ticker, OrderBookSockets);
-            if(info != null)
-                info.Close();
+            StopListenOrderBook(ticker, false);
+        }
+
+        public virtual void StopListenOrderBook(Ticker ticker, bool force) {
+            ReleaseOrderBook(ticker, force);
         }
 
         public virtual void StopListenTradeHistory(Ticker ticker) {
-            SocketConnectionInfo info = GetConnectionInfo(ticker, TradeHistorySockets);
-            if(info != null)
-                info.Close();
+            StopListenTradeHistory(ticker, false);
+        }
+        public virtual void StopListenTradeHistory(Ticker ticker, bool force) {
+            ReleaseTradeHistory(ticker, force);
         }
 
         protected virtual void StartListenOrderBookCore(Ticker ticker) {
@@ -835,21 +853,30 @@ namespace CryptoMarketClient {
         }
 
         public virtual void StartListenOrderBook(Ticker ticker) {
-            if(IsListeningOrderBook(ticker))
+            if(IsListeningOrderBook(ticker)) {
+                AddRefOrderBook(ticker);
                 return;
+            }
             StartListenOrderBookCore(ticker);
+            AddRefOrderBook(ticker);
         }
 
         public virtual void StartListenTradeHistory(Ticker ticker) {
-            if(IsListeningTradeHistory(ticker))
+            if(IsListeningTradeHistory(ticker)) {
+                AddRefTradeHistory(ticker);
                 return;
+            }
             StartListenTradeHistoryCore(ticker);
+            AddRefTradeHistory(ticker);
         }
 
         public virtual void StartListenKline(Ticker ticker) {
-            if(IsListeningKline(ticker))
+            if(IsListeningKline(ticker)) {
+                AddRefKline(ticker);
                 return;
+            }
             StartListenKlineCore(ticker);
+            AddRefKline(ticker);
         }
 
         IncrementalUpdateQueue updates;
@@ -921,21 +948,71 @@ namespace CryptoMarketClient {
         public Ticker Ticker(string baseCurrency, string marketCurrency) {
             return Tickers.FirstOrDefault(t => t.BaseCurrency == baseCurrency && t.MarketCurrency == marketCurrency);
         }
-        public virtual void StopListenStreams() {
-            StopListenTickersStream();
+        public virtual void StopListenStreams(bool force) {
+            StopListenTickersStream(force);
 
             while(KlineSockets.Count > 0)
-                StopListenKline(KlineSockets.First().Ticker);
+                StopListenKline(KlineSockets.First().Ticker, force);
             while(OrderBookSockets.Count > 0)
-                StopListenTickerStream(OrderBookSockets.First().Ticker);
+                StopListenOrderBook(OrderBookSockets.First().Ticker, force);
             while(TradeHistorySockets.Count > 0)
-                StopListenTickerStream(TradeHistorySockets.First().Ticker);
+                StopListenTradeHistory(TradeHistorySockets.First().Ticker, force);
         }
         public void Disconnect() {
             IsConnected = false;
-            StopListenStreams();
+            StopListenStreams(true);
         }
-        
+
+        protected virtual void AddRefOrderBook(Ticker ticker) {
+            OrderBookSockets.FirstOrDefault(i => i.Ticker == ticker).AddRef();
+        }
+        protected virtual void AddRefTradeHistory(Ticker ticker) {
+            TradeHistorySockets.FirstOrDefault(i => i.Ticker == ticker).AddRef();
+        }
+        protected virtual void AddRefKline(Ticker ticker) {
+            KlineSockets.FirstOrDefault(i => i.Ticker == ticker).AddRef();
+        }
+        protected virtual void ReleaseOrderBook(Ticker ticker) {
+            ReleaseOrderBook(ticker, false);
+        }
+        protected virtual void ReleaseOrderBook(Ticker ticker, bool force) {
+            SocketConnectionInfo info = OrderBookSockets.FirstOrDefault(i => i.Ticker == ticker);
+            if(info == null)
+                return;
+            if(force)
+                info.ClearRef();
+            info.Release();
+            if(!info.HasRef())
+                OrderBookSockets.Remove(info);
+        }
+        protected virtual void ReleaseTradeHistory(Ticker ticker) {
+            ReleaseTradeHistory(ticker, false);
+        }
+        protected virtual void ReleaseTradeHistory(Ticker ticker, bool force) {
+            SocketConnectionInfo info = TradeHistorySockets.FirstOrDefault(i => i.Ticker == ticker);
+            if(info == null)
+                return;
+            if(force)
+                info.ClearRef();
+            info.Release();
+            if(!info.HasRef())
+                TradeHistorySockets.Remove(info);
+        }
+
+        protected virtual void ReleaseKline(Ticker ticker) {
+            ReleaseKline(ticker, false);
+        }
+        protected virtual void ReleaseKline(Ticker ticker, bool force) {
+            SocketConnectionInfo info = KlineSockets.FirstOrDefault(i => i.Ticker == ticker);
+            if(info == null)
+                return;
+            if(force)
+                info.ClearRef();
+            info.Release();
+            if(!info.HasRef())
+                KlineSockets.Remove(info);
+        }
+
         protected virtual bool IsListeningOrderBook(Ticker ticker) {
             if(GetConnectionInfo(ticker, OrderBookSockets) != null)
                 return true;
@@ -967,6 +1044,30 @@ namespace CryptoMarketClient {
         }
         public Ticker GetTicker(string tickerName) {
             return Tickers.FirstOrDefault(t => t.Name == tickerName);
+        }
+
+        public virtual bool Connect(TickerInputInfo info) {
+            if(info.Ticker == null)
+                return false;
+            if(info.OrderBook)
+                StartListenOrderBook(info.Ticker);
+            if(info.TradeHistory)
+                StartListenTradeHistory(info.Ticker);
+            if(info.Kline)
+                StartListenKline(info.Ticker);
+            return true;
+        }
+
+        public virtual bool Disconnect(TickerInputInfo info) {
+            if(info.Ticker == null)
+                return false;
+            if(info.OrderBook)
+                StopListenOrderBook(info.Ticker);
+            if(info.TradeHistory)
+                StopListenTradeHistory(info.Ticker);
+            if(info.Kline)
+                StopListenKline(info.Ticker);
+            return true;
         }
 
         List<CandleStickIntervalInfo> allowedCandleStickIntervals;

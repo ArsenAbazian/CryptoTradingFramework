@@ -24,6 +24,7 @@ namespace Crypto.Core.Strategies {
             TradeHistory = needTradeHistory;
             Kline = needKline;
         }
+        public ExchangeType Exchange { get; set; }
         public Ticker Ticker { get; set; }
         public string TickerName { get; set; }
         public bool OrderBook { get; set; }

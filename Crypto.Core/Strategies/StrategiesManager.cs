@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
@@ -31,8 +32,10 @@ namespace Crypto.Core.Strategies {
         public bool Initialize(IStrategyDataProvider dataProvider) {
             DataProvider = dataProvider;
             bool res = true;
-            foreach(StrategyBase s in Strategies)
+            foreach(StrategyBase s in Strategies) {
+                s.Manager = this;
                 res &= s.Initialize(dataProvider);
+            }
             Initialized = true;
             return res;
         }
@@ -40,11 +43,13 @@ namespace Crypto.Core.Strategies {
         public string FileName { get; set; }
 
         public static StrategiesManager FromFile(string fileName) {
-            return (StrategiesManager)SerializationHelper.FromFile(fileName, typeof(StrategiesManager));
+            StrategiesManager res = (StrategiesManager)SerializationHelper.FromFile(fileName, typeof(StrategiesManager));
+            return res;
         }
 
         public void OnEndDeserialize() {
-            
+            foreach(var s in Strategies)
+                s.Manager = this;
         }
 
         public bool Save(string path) {
@@ -67,14 +72,30 @@ namespace Crypto.Core.Strategies {
             strategy.Manager = null;
             Strategies.Remove(strategy);
         }
+        protected Thread RunThread { get; set; }
+        protected bool StopThread { get; set; }
         public bool Start() {
+            if(!Initialized)
+                throw new Exception("Strategies manager is not initialized with data provider");
             bool res = true;
             foreach(StrategyBase s in Strategies)
                 res &= s.Start();
+            if(res) {
+                StopThread = false;
+                RunThread = new Thread(() => {
+                    while(!StopThread) {
+                        foreach(var s in Strategies) {
+                            s.OnTick();
+                        }
+                    }
+                });
+                RunThread.Start();
+            }
             return res;
         }
         public bool Stop() {
             bool res = true;
+            StopThread = true;
             foreach(StrategyBase s in Strategies)
                 res &= s.Stop();
             return res;

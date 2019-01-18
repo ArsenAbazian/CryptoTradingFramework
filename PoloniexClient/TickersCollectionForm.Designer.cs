@@ -24,25 +24,25 @@
         /// </summary>
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
-            DevExpress.XtraGrid.GridFormatRule gridFormatRule1 = new DevExpress.XtraGrid.GridFormatRule();
-            DevExpress.XtraEditors.FormatConditionRuleValue formatConditionRuleValue1 = new DevExpress.XtraEditors.FormatConditionRuleValue();
-            DevExpress.XtraGrid.GridFormatRule gridFormatRule2 = new DevExpress.XtraGrid.GridFormatRule();
-            DevExpress.XtraEditors.FormatConditionRuleValue formatConditionRuleValue2 = new DevExpress.XtraEditors.FormatConditionRuleValue();
-            DevExpress.XtraGrid.GridFormatRule gridFormatRule3 = new DevExpress.XtraGrid.GridFormatRule();
-            DevExpress.XtraEditors.FormatConditionRuleIconSet formatConditionRuleIconSet1 = new DevExpress.XtraEditors.FormatConditionRuleIconSet();
-            DevExpress.XtraEditors.FormatConditionIconSet formatConditionIconSet1 = new DevExpress.XtraEditors.FormatConditionIconSet();
-            DevExpress.XtraEditors.FormatConditionIconSetIcon formatConditionIconSetIcon1 = new DevExpress.XtraEditors.FormatConditionIconSetIcon();
-            DevExpress.XtraEditors.FormatConditionIconSetIcon formatConditionIconSetIcon2 = new DevExpress.XtraEditors.FormatConditionIconSetIcon();
-            DevExpress.XtraEditors.FormatConditionIconSetIcon formatConditionIconSetIcon3 = new DevExpress.XtraEditors.FormatConditionIconSetIcon();
-            DevExpress.XtraGrid.GridFormatRule gridFormatRule4 = new DevExpress.XtraGrid.GridFormatRule();
-            DevExpress.XtraEditors.FormatConditionRuleIconSet formatConditionRuleIconSet2 = new DevExpress.XtraEditors.FormatConditionRuleIconSet();
-            DevExpress.XtraEditors.FormatConditionIconSet formatConditionIconSet2 = new DevExpress.XtraEditors.FormatConditionIconSet();
-            DevExpress.XtraEditors.FormatConditionIconSetIcon formatConditionIconSetIcon4 = new DevExpress.XtraEditors.FormatConditionIconSetIcon();
-            DevExpress.XtraEditors.FormatConditionIconSetIcon formatConditionIconSetIcon5 = new DevExpress.XtraEditors.FormatConditionIconSetIcon();
-            DevExpress.XtraEditors.FormatConditionIconSetIcon formatConditionIconSetIcon6 = new DevExpress.XtraEditors.FormatConditionIconSetIcon();
-            DevExpress.XtraGrid.GridFormatRule gridFormatRule5 = new DevExpress.XtraGrid.GridFormatRule();
-            DevExpress.XtraEditors.FormatConditionRuleValue formatConditionRuleValue3 = new DevExpress.XtraEditors.FormatConditionRuleValue();
-            DevExpress.Sparkline.LineSparklineView lineSparklineView1 = new DevExpress.Sparkline.LineSparklineView();
+            DevExpress.XtraGrid.GridFormatRule gridFormatRule6 = new DevExpress.XtraGrid.GridFormatRule();
+            DevExpress.XtraEditors.FormatConditionRuleValue formatConditionRuleValue4 = new DevExpress.XtraEditors.FormatConditionRuleValue();
+            DevExpress.XtraGrid.GridFormatRule gridFormatRule7 = new DevExpress.XtraGrid.GridFormatRule();
+            DevExpress.XtraEditors.FormatConditionRuleValue formatConditionRuleValue5 = new DevExpress.XtraEditors.FormatConditionRuleValue();
+            DevExpress.XtraGrid.GridFormatRule gridFormatRule8 = new DevExpress.XtraGrid.GridFormatRule();
+            DevExpress.XtraEditors.FormatConditionRuleIconSet formatConditionRuleIconSet3 = new DevExpress.XtraEditors.FormatConditionRuleIconSet();
+            DevExpress.XtraEditors.FormatConditionIconSet formatConditionIconSet3 = new DevExpress.XtraEditors.FormatConditionIconSet();
+            DevExpress.XtraEditors.FormatConditionIconSetIcon formatConditionIconSetIcon7 = new DevExpress.XtraEditors.FormatConditionIconSetIcon();
+            DevExpress.XtraEditors.FormatConditionIconSetIcon formatConditionIconSetIcon8 = new DevExpress.XtraEditors.FormatConditionIconSetIcon();
+            DevExpress.XtraEditors.FormatConditionIconSetIcon formatConditionIconSetIcon9 = new DevExpress.XtraEditors.FormatConditionIconSetIcon();
+            DevExpress.XtraGrid.GridFormatRule gridFormatRule9 = new DevExpress.XtraGrid.GridFormatRule();
+            DevExpress.XtraEditors.FormatConditionRuleIconSet formatConditionRuleIconSet4 = new DevExpress.XtraEditors.FormatConditionRuleIconSet();
+            DevExpress.XtraEditors.FormatConditionIconSet formatConditionIconSet4 = new DevExpress.XtraEditors.FormatConditionIconSet();
+            DevExpress.XtraEditors.FormatConditionIconSetIcon formatConditionIconSetIcon10 = new DevExpress.XtraEditors.FormatConditionIconSetIcon();
+            DevExpress.XtraEditors.FormatConditionIconSetIcon formatConditionIconSetIcon11 = new DevExpress.XtraEditors.FormatConditionIconSetIcon();
+            DevExpress.XtraEditors.FormatConditionIconSetIcon formatConditionIconSetIcon12 = new DevExpress.XtraEditors.FormatConditionIconSetIcon();
+            DevExpress.XtraGrid.GridFormatRule gridFormatRule10 = new DevExpress.XtraGrid.GridFormatRule();
+            DevExpress.XtraEditors.FormatConditionRuleValue formatConditionRuleValue6 = new DevExpress.XtraEditors.FormatConditionRuleValue();
+            DevExpress.Sparkline.LineSparklineView lineSparklineView2 = new DevExpress.Sparkline.LineSparklineView();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TickersCollectionForm));
             this.gcPercentChange = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gcLast = new DevExpress.XtraGrid.Columns.GridColumn();
@@ -112,22 +112,20 @@
             // 
             this.gcPercentChange.Caption = "Percent Change";
             this.gcPercentChange.FieldName = "PercentChange";
-            this.gcPercentChange.MinWidth = 10;
             this.gcPercentChange.Name = "gcPercentChange";
             this.gcPercentChange.OptionsColumn.AllowEdit = false;
-            this.gcPercentChange.Width = 43;
+            this.gcPercentChange.Width = 86;
             // 
             // gcLast
             // 
             this.gcLast.Caption = "Last";
             this.gcLast.ColumnEdit = this.teValueWithChange;
             this.gcLast.FieldName = "LastString";
-            this.gcLast.MinWidth = 10;
             this.gcLast.Name = "gcLast";
             this.gcLast.OptionsColumn.AllowEdit = false;
             this.gcLast.Visible = true;
             this.gcLast.VisibleIndex = 3;
-            this.gcLast.Width = 59;
+            this.gcLast.Width = 118;
             // 
             // teValueWithChange
             // 
@@ -139,61 +137,55 @@
             // 
             this.gcDeltaBid.Caption = "Bid Change";
             this.gcDeltaBid.FieldName = "DeltaBid";
-            this.gcDeltaBid.MinWidth = 10;
             this.gcDeltaBid.Name = "gcDeltaBid";
-            this.gcDeltaBid.Width = 37;
+            this.gcDeltaBid.Width = 74;
             // 
             // gcHighestBid
             // 
             this.gcHighestBid.Caption = "Highest Bid";
             this.gcHighestBid.ColumnEdit = this.teValueWithChange;
             this.gcHighestBid.FieldName = "HighestBidString";
-            this.gcHighestBid.MinWidth = 10;
             this.gcHighestBid.Name = "gcHighestBid";
             this.gcHighestBid.OptionsColumn.AllowEdit = false;
             this.gcHighestBid.Visible = true;
             this.gcHighestBid.VisibleIndex = 4;
-            this.gcHighestBid.Width = 59;
+            this.gcHighestBid.Width = 118;
             // 
             // gcDeltaAsk
             // 
             this.gcDeltaAsk.Caption = "Ask Change";
             this.gcDeltaAsk.FieldName = "DeltaAsk";
-            this.gcDeltaAsk.MinWidth = 10;
             this.gcDeltaAsk.Name = "gcDeltaAsk";
-            this.gcDeltaAsk.Width = 37;
+            this.gcDeltaAsk.Width = 74;
             // 
             // gcLowestAsk
             // 
             this.gcLowestAsk.Caption = "Lowest Ask";
             this.gcLowestAsk.ColumnEdit = this.teValueWithChange;
             this.gcLowestAsk.FieldName = "LowestAskString";
-            this.gcLowestAsk.MinWidth = 10;
             this.gcLowestAsk.Name = "gcLowestAsk";
             this.gcLowestAsk.OptionsColumn.AllowEdit = false;
             this.gcLowestAsk.Visible = true;
             this.gcLowestAsk.VisibleIndex = 5;
-            this.gcLowestAsk.Width = 59;
+            this.gcLowestAsk.Width = 118;
             // 
             // colIsActual
             // 
             this.colIsActual.Caption = "IsActual";
             this.colIsActual.FieldName = "IsActual";
-            this.colIsActual.MinWidth = 10;
             this.colIsActual.Name = "colIsActual";
-            this.colIsActual.Width = 37;
+            this.colIsActual.Width = 74;
             // 
             // gcSecond
             // 
             this.gcSecond.Caption = "Market Currency";
             this.gcSecond.ColumnEdit = this.repositoryItemTextEdit1;
             this.gcSecond.FieldName = "MarketCurrency";
-            this.gcSecond.MinWidth = 10;
             this.gcSecond.Name = "gcSecond";
             this.gcSecond.OptionsColumn.AllowEdit = false;
             this.gcSecond.Visible = true;
             this.gcSecond.VisibleIndex = 2;
-            this.gcSecond.Width = 121;
+            this.gcSecond.Width = 242;
             // 
             // repositoryItemTextEdit1
             // 
@@ -204,17 +196,17 @@
             // gridControl1
             // 
             this.gridControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gridControl1.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(12, 12, 12, 12);
-            this.gridControl1.Location = new System.Drawing.Point(0, 170);
+            this.gridControl1.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(24, 23, 24, 23);
+            this.gridControl1.Location = new System.Drawing.Point(0, 315);
             this.gridControl1.MainView = this.gridView1;
-            this.gridControl1.Margin = new System.Windows.Forms.Padding(12, 12, 12, 12);
+            this.gridControl1.Margin = new System.Windows.Forms.Padding(24, 23, 24, 23);
             this.gridControl1.Name = "gridControl1";
             this.gridControl1.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repositoryItemSparklineEdit1,
             this.repositoryItemCheckEdit1,
             this.repositoryItemTextEdit1,
             this.teValueWithChange});
-            this.gridControl1.Size = new System.Drawing.Size(726, 278);
+            this.gridControl1.Size = new System.Drawing.Size(1452, 547);
             this.gridControl1.TabIndex = 0;
             this.gridControl1.UseDirectXPaint = DevExpress.Utils.DefaultBoolean.True;
             this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
@@ -235,6 +227,7 @@
             this.gridView1.Appearance.Row.Options.UseFont = true;
             this.gridView1.Appearance.SelectedRow.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.gridView1.Appearance.SelectedRow.Options.UseBackColor = true;
+            this.gridView1.AutoFillColumn = this.gcQuoteVolume;
             this.gridView1.Columns.AddRange(new DevExpress.XtraGrid.Columns.GridColumn[] {
             this.colIsSelected,
             this.gcLogo,
@@ -255,84 +248,82 @@
             this.gcDeltaAsk,
             this.colUpdateTimeMs,
             this.colIsActual});
-            this.gridView1.DetailHeight = 182;
-            this.gridView1.FixedLineWidth = 1;
             this.gridView1.FocusRectStyle = DevExpress.XtraGrid.Views.Grid.DrawFocusRectStyle.None;
-            gridFormatRule1.Column = this.gcPercentChange;
-            gridFormatRule1.ColumnApplyTo = this.gcLast;
-            gridFormatRule1.Name = "FormatRulePercentChangeNegative";
-            formatConditionRuleValue1.Condition = DevExpress.XtraEditors.FormatCondition.Less;
-            formatConditionRuleValue1.PredefinedName = "Red Bold Text";
-            formatConditionRuleValue1.Value1 = new decimal(new int[] {
+            gridFormatRule6.Column = this.gcPercentChange;
+            gridFormatRule6.ColumnApplyTo = this.gcLast;
+            gridFormatRule6.Name = "FormatRulePercentChangeNegative";
+            formatConditionRuleValue4.Condition = DevExpress.XtraEditors.FormatCondition.Less;
+            formatConditionRuleValue4.PredefinedName = "Red Bold Text";
+            formatConditionRuleValue4.Value1 = new decimal(new int[] {
             0,
             0,
             0,
             0});
-            gridFormatRule1.Rule = formatConditionRuleValue1;
-            gridFormatRule2.Name = "FormatRulePercentChangePositive";
-            formatConditionRuleValue2.Condition = DevExpress.XtraEditors.FormatCondition.GreaterOrEqual;
-            formatConditionRuleValue2.PredefinedName = "Green Bold Text";
-            formatConditionRuleValue2.Value1 = new decimal(new int[] {
+            gridFormatRule6.Rule = formatConditionRuleValue4;
+            gridFormatRule7.Name = "FormatRulePercentChangePositive";
+            formatConditionRuleValue5.Condition = DevExpress.XtraEditors.FormatCondition.GreaterOrEqual;
+            formatConditionRuleValue5.PredefinedName = "Green Bold Text";
+            formatConditionRuleValue5.Value1 = new decimal(new int[] {
             0,
             0,
             0,
             0});
-            gridFormatRule2.Rule = formatConditionRuleValue2;
-            gridFormatRule3.Column = this.gcDeltaBid;
-            gridFormatRule3.ColumnApplyTo = this.gcHighestBid;
-            gridFormatRule3.Name = "FormatRuleBidDelta";
-            formatConditionIconSet1.CategoryName = "Positive/Negative";
-            formatConditionIconSetIcon1.PredefinedName = "Arrows3_3.png";
-            formatConditionIconSetIcon1.Value = new decimal(new int[] {
+            gridFormatRule7.Rule = formatConditionRuleValue5;
+            gridFormatRule8.Column = this.gcDeltaBid;
+            gridFormatRule8.ColumnApplyTo = this.gcHighestBid;
+            gridFormatRule8.Name = "FormatRuleBidDelta";
+            formatConditionIconSet3.CategoryName = "Positive/Negative";
+            formatConditionIconSetIcon7.PredefinedName = "Arrows3_3.png";
+            formatConditionIconSetIcon7.Value = new decimal(new int[] {
             -1,
             -1,
             -1,
             -2147483648});
-            formatConditionIconSetIcon1.ValueComparison = DevExpress.XtraEditors.FormatConditionComparisonType.GreaterOrEqual;
-            formatConditionIconSetIcon2.PredefinedName = "Arrows3_2.png";
-            formatConditionIconSetIcon2.ValueComparison = DevExpress.XtraEditors.FormatConditionComparisonType.GreaterOrEqual;
-            formatConditionIconSetIcon3.PredefinedName = "Arrows3_1.png";
-            formatConditionIconSet1.Icons.Add(formatConditionIconSetIcon1);
-            formatConditionIconSet1.Icons.Add(formatConditionIconSetIcon2);
-            formatConditionIconSet1.Icons.Add(formatConditionIconSetIcon3);
-            formatConditionIconSet1.Name = "PositiveNegativeArrows";
-            formatConditionIconSet1.ValueType = DevExpress.XtraEditors.FormatConditionValueType.Number;
-            formatConditionRuleIconSet1.IconSet = formatConditionIconSet1;
-            gridFormatRule3.Rule = formatConditionRuleIconSet1;
-            gridFormatRule4.Column = this.gcDeltaAsk;
-            gridFormatRule4.ColumnApplyTo = this.gcLowestAsk;
-            gridFormatRule4.Name = "FormatRuleAskDelta";
-            formatConditionIconSet2.CategoryName = "Positive/Negative";
-            formatConditionIconSetIcon4.PredefinedName = "Arrows3_3.png";
-            formatConditionIconSetIcon4.Value = new decimal(new int[] {
+            formatConditionIconSetIcon7.ValueComparison = DevExpress.XtraEditors.FormatConditionComparisonType.GreaterOrEqual;
+            formatConditionIconSetIcon8.PredefinedName = "Arrows3_2.png";
+            formatConditionIconSetIcon8.ValueComparison = DevExpress.XtraEditors.FormatConditionComparisonType.GreaterOrEqual;
+            formatConditionIconSetIcon9.PredefinedName = "Arrows3_1.png";
+            formatConditionIconSet3.Icons.Add(formatConditionIconSetIcon7);
+            formatConditionIconSet3.Icons.Add(formatConditionIconSetIcon8);
+            formatConditionIconSet3.Icons.Add(formatConditionIconSetIcon9);
+            formatConditionIconSet3.Name = "PositiveNegativeArrows";
+            formatConditionIconSet3.ValueType = DevExpress.XtraEditors.FormatConditionValueType.Number;
+            formatConditionRuleIconSet3.IconSet = formatConditionIconSet3;
+            gridFormatRule8.Rule = formatConditionRuleIconSet3;
+            gridFormatRule9.Column = this.gcDeltaAsk;
+            gridFormatRule9.ColumnApplyTo = this.gcLowestAsk;
+            gridFormatRule9.Name = "FormatRuleAskDelta";
+            formatConditionIconSet4.CategoryName = "Positive/Negative";
+            formatConditionIconSetIcon10.PredefinedName = "Arrows3_3.png";
+            formatConditionIconSetIcon10.Value = new decimal(new int[] {
             -1,
             -1,
             -1,
             -2147483648});
-            formatConditionIconSetIcon4.ValueComparison = DevExpress.XtraEditors.FormatConditionComparisonType.GreaterOrEqual;
-            formatConditionIconSetIcon5.PredefinedName = "Arrows3_2.png";
-            formatConditionIconSetIcon5.ValueComparison = DevExpress.XtraEditors.FormatConditionComparisonType.GreaterOrEqual;
-            formatConditionIconSetIcon6.PredefinedName = "Arrows3_1.png";
-            formatConditionIconSet2.Icons.Add(formatConditionIconSetIcon4);
-            formatConditionIconSet2.Icons.Add(formatConditionIconSetIcon5);
-            formatConditionIconSet2.Icons.Add(formatConditionIconSetIcon6);
-            formatConditionIconSet2.Name = "PositiveNegativeArrows";
-            formatConditionIconSet2.ValueType = DevExpress.XtraEditors.FormatConditionValueType.Number;
-            formatConditionRuleIconSet2.IconSet = formatConditionIconSet2;
-            gridFormatRule4.Rule = formatConditionRuleIconSet2;
-            gridFormatRule5.Column = this.colIsActual;
-            gridFormatRule5.ColumnApplyTo = this.gcSecond;
-            gridFormatRule5.Name = "FormatSuspended";
-            formatConditionRuleValue3.Appearance.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-            formatConditionRuleValue3.Appearance.Options.UseBackColor = true;
-            formatConditionRuleValue3.Condition = DevExpress.XtraEditors.FormatCondition.Equal;
-            formatConditionRuleValue3.Value1 = false;
-            gridFormatRule5.Rule = formatConditionRuleValue3;
-            this.gridView1.FormatRules.Add(gridFormatRule1);
-            this.gridView1.FormatRules.Add(gridFormatRule2);
-            this.gridView1.FormatRules.Add(gridFormatRule3);
-            this.gridView1.FormatRules.Add(gridFormatRule4);
-            this.gridView1.FormatRules.Add(gridFormatRule5);
+            formatConditionIconSetIcon10.ValueComparison = DevExpress.XtraEditors.FormatConditionComparisonType.GreaterOrEqual;
+            formatConditionIconSetIcon11.PredefinedName = "Arrows3_2.png";
+            formatConditionIconSetIcon11.ValueComparison = DevExpress.XtraEditors.FormatConditionComparisonType.GreaterOrEqual;
+            formatConditionIconSetIcon12.PredefinedName = "Arrows3_1.png";
+            formatConditionIconSet4.Icons.Add(formatConditionIconSetIcon10);
+            formatConditionIconSet4.Icons.Add(formatConditionIconSetIcon11);
+            formatConditionIconSet4.Icons.Add(formatConditionIconSetIcon12);
+            formatConditionIconSet4.Name = "PositiveNegativeArrows";
+            formatConditionIconSet4.ValueType = DevExpress.XtraEditors.FormatConditionValueType.Number;
+            formatConditionRuleIconSet4.IconSet = formatConditionIconSet4;
+            gridFormatRule9.Rule = formatConditionRuleIconSet4;
+            gridFormatRule10.Column = this.colIsActual;
+            gridFormatRule10.ColumnApplyTo = this.gcSecond;
+            gridFormatRule10.Name = "FormatSuspended";
+            formatConditionRuleValue6.Appearance.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
+            formatConditionRuleValue6.Appearance.Options.UseBackColor = true;
+            formatConditionRuleValue6.Condition = DevExpress.XtraEditors.FormatCondition.Equal;
+            formatConditionRuleValue6.Value1 = false;
+            gridFormatRule10.Rule = formatConditionRuleValue6;
+            this.gridView1.FormatRules.Add(gridFormatRule6);
+            this.gridView1.FormatRules.Add(gridFormatRule7);
+            this.gridView1.FormatRules.Add(gridFormatRule8);
+            this.gridView1.FormatRules.Add(gridFormatRule9);
+            this.gridView1.FormatRules.Add(gridFormatRule10);
             this.gridView1.GridControl = this.gridControl1;
             this.gridView1.GroupCount = 1;
             this.gridView1.LevelIndent = 0;
@@ -348,7 +339,7 @@
             this.gridView1.OptionsView.ShowIndicator = false;
             this.gridView1.OptionsView.ShowVerticalLines = DevExpress.Utils.DefaultBoolean.False;
             this.gridView1.PreviewIndent = 0;
-            this.gridView1.RowHeight = 25;
+            this.gridView1.RowHeight = 48;
             this.gridView1.SortInfo.AddRange(new DevExpress.XtraGrid.Columns.GridColumnSortInfo[] {
             new DevExpress.XtraGrid.Columns.GridColumnSortInfo(this.gcFirst, DevExpress.Data.ColumnSortOrder.Ascending)});
             this.gridView1.VertScrollVisibility = DevExpress.XtraGrid.Views.Base.ScrollVisibility.Always;
@@ -362,11 +353,10 @@
             this.colIsSelected.ColumnEdit = this.repositoryItemCheckEdit1;
             this.colIsSelected.CustomizationCaption = " ";
             this.colIsSelected.FieldName = "IsSelected";
-            this.colIsSelected.MinWidth = 10;
             this.colIsSelected.Name = "colIsSelected";
             this.colIsSelected.Visible = true;
             this.colIsSelected.VisibleIndex = 0;
-            this.colIsSelected.Width = 52;
+            this.colIsSelected.Width = 104;
             // 
             // repositoryItemCheckEdit1
             // 
@@ -378,72 +368,65 @@
             // 
             this.gcLogo.Caption = "Logo";
             this.gcLogo.FieldName = "Logo";
-            this.gcLogo.MinWidth = 10;
             this.gcLogo.Name = "gcLogo";
-            this.gcLogo.Width = 37;
+            this.gcLogo.Width = 74;
             // 
             // gcCurrencyPair
             // 
             this.gcCurrencyPair.Caption = "Market Name";
             this.gcCurrencyPair.FieldName = "CurrencyPair";
-            this.gcCurrencyPair.MinWidth = 10;
             this.gcCurrencyPair.Name = "gcCurrencyPair";
             this.gcCurrencyPair.OptionsColumn.AllowEdit = false;
             this.gcCurrencyPair.Visible = true;
             this.gcCurrencyPair.VisibleIndex = 1;
-            this.gcCurrencyPair.Width = 103;
+            this.gcCurrencyPair.Width = 206;
             // 
             // gcBaseVolume
             // 
             this.gcBaseVolume.Caption = "Base Volume";
             this.gcBaseVolume.FieldName = "BaseVolume";
-            this.gcBaseVolume.MinWidth = 10;
             this.gcBaseVolume.Name = "gcBaseVolume";
             this.gcBaseVolume.OptionsColumn.AllowEdit = false;
             this.gcBaseVolume.Visible = true;
             this.gcBaseVolume.VisibleIndex = 6;
-            this.gcBaseVolume.Width = 59;
+            this.gcBaseVolume.Width = 118;
             // 
             // gcQuoteVolume
             // 
             this.gcQuoteVolume.Caption = "Quote Volume";
             this.gcQuoteVolume.FieldName = "QuoteVolume";
-            this.gcQuoteVolume.MinWidth = 10;
             this.gcQuoteVolume.Name = "gcQuoteVolume";
             this.gcQuoteVolume.OptionsColumn.AllowEdit = false;
             this.gcQuoteVolume.Visible = true;
             this.gcQuoteVolume.VisibleIndex = 9;
-            this.gcQuoteVolume.Width = 77;
+            this.gcQuoteVolume.Width = 154;
             // 
             // gcIsFrozen
             // 
             this.gcIsFrozen.Caption = "Is Frozen";
             this.gcIsFrozen.FieldName = "IsFrozen";
-            this.gcIsFrozen.MinWidth = 10;
             this.gcIsFrozen.Name = "gcIsFrozen";
-            this.gcIsFrozen.Width = 37;
+            this.gcIsFrozen.Width = 74;
             // 
             // gcHr24High
             // 
             this.gcHr24High.Caption = "24 Hour High";
             this.gcHr24High.FieldName = "Hr24High";
-            this.gcHr24High.MinWidth = 10;
             this.gcHr24High.Name = "gcHr24High";
             this.gcHr24High.OptionsColumn.AllowEdit = false;
             this.gcHr24High.Visible = true;
             this.gcHr24High.VisibleIndex = 7;
-            this.gcHr24High.Width = 59;
+            this.gcHr24High.Width = 118;
             // 
             // gcHr24Low
             // 
             this.gcHr24Low.Caption = "24 Hour Low";
             this.gcHr24Low.FieldName = "Hr24Low";
-            this.gcHr24Low.MinWidth = 10;
             this.gcHr24Low.Name = "gcHr24Low";
             this.gcHr24Low.OptionsColumn.AllowEdit = false;
             this.gcHr24Low.Visible = true;
             this.gcHr24Low.VisibleIndex = 8;
-            this.gcHr24Low.Width = 59;
+            this.gcHr24Low.Width = 118;
             // 
             // gcTime
             // 
@@ -451,37 +434,34 @@
             this.gcTime.DisplayFormat.FormatString = "G";
             this.gcTime.DisplayFormat.FormatType = DevExpress.Utils.FormatType.DateTime;
             this.gcTime.FieldName = "Time";
-            this.gcTime.MinWidth = 10;
             this.gcTime.Name = "gcTime";
-            this.gcTime.Width = 37;
+            this.gcTime.Width = 74;
             // 
             // gcFirst
             // 
             this.gcFirst.Caption = "Base Currency";
             this.gcFirst.FieldName = "BaseCurrency";
-            this.gcFirst.MinWidth = 10;
             this.gcFirst.Name = "gcFirst";
             this.gcFirst.Visible = true;
             this.gcFirst.VisibleIndex = 11;
-            this.gcFirst.Width = 37;
+            this.gcFirst.Width = 74;
             // 
             // colUpdateTimeMs
             // 
             this.colUpdateTimeMs.Caption = "UpdateTimeMs";
             this.colUpdateTimeMs.FieldName = "UpdateTimeMs";
-            this.colUpdateTimeMs.MinWidth = 10;
             this.colUpdateTimeMs.Name = "colUpdateTimeMs";
             this.colUpdateTimeMs.OptionsColumn.AllowEdit = false;
-            this.colUpdateTimeMs.Width = 22;
+            this.colUpdateTimeMs.Width = 44;
             // 
             // repositoryItemSparklineEdit1
             // 
             this.repositoryItemSparklineEdit1.EditValueMember = "Current";
             this.repositoryItemSparklineEdit1.Name = "repositoryItemSparklineEdit1";
             this.repositoryItemSparklineEdit1.PointValueMember = "Time";
-            lineSparklineView1.Color = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
-            lineSparklineView1.ScaleFactor = 1F;
-            this.repositoryItemSparklineEdit1.View = lineSparklineView1;
+            lineSparklineView2.Color = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
+            lineSparklineView2.ScaleFactor = 1F;
+            this.repositoryItemSparklineEdit1.View = lineSparklineView2;
             // 
             // ribbonControl1
             // 
@@ -504,13 +484,13 @@
             this.biReconnect,
             this.biTradeHistory});
             this.ribbonControl1.Location = new System.Drawing.Point(0, 0);
-            this.ribbonControl1.Margin = new System.Windows.Forms.Padding(12, 12, 12, 12);
+            this.ribbonControl1.Margin = new System.Windows.Forms.Padding(24, 23, 24, 23);
             this.ribbonControl1.MaxItemId = 26;
             this.ribbonControl1.Name = "ribbonControl1";
             this.ribbonControl1.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
             this.ribbonPage1});
             this.ribbonControl1.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonControlStyle.Office2013;
-            this.ribbonControl1.Size = new System.Drawing.Size(726, 141);
+            this.ribbonControl1.Size = new System.Drawing.Size(1452, 277);
             this.ribbonControl1.StatusBar = this.ribbonStatusBar1;
             // 
             // svgImageCollection1
@@ -652,10 +632,11 @@
             this.ribbonStatusBar1.AutoHeight = true;
             this.ribbonStatusBar1.ItemLinks.Add(this.biConnectionStatus);
             this.ribbonStatusBar1.ItemLinks.Add(this.biReconnect);
-            this.ribbonStatusBar1.Location = new System.Drawing.Point(0, 421);
+            this.ribbonStatusBar1.Location = new System.Drawing.Point(0, 808);
+            this.ribbonStatusBar1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.ribbonStatusBar1.Name = "ribbonStatusBar1";
             this.ribbonStatusBar1.Ribbon = this.ribbonControl1;
-            this.ribbonStatusBar1.Size = new System.Drawing.Size(726, 27);
+            this.ribbonStatusBar1.Size = new System.Drawing.Size(1452, 54);
             // 
             // barManager1
             // 
@@ -667,7 +648,6 @@
             this.barManager1.DockControls.Add(this.barDockControlRight);
             this.barManager1.DockControls.Add(this.standaloneBarDockControl1);
             this.barManager1.Form = this;
-            this.barManager1.MaxItemId = 0;
             this.barManager1.OptionsStubGlyphs.AllowStubGlyphs = DevExpress.Utils.DefaultBoolean.True;
             this.barManager1.OptionsStubGlyphs.CaseMode = DevExpress.Utils.Drawing.GlyphTextCaseMode.UpperCase;
             this.barManager1.OptionsStubGlyphs.CornerRadius = 3;
@@ -699,11 +679,11 @@
             this.standaloneBarDockControl1.AutoSize = true;
             this.standaloneBarDockControl1.CausesValidation = false;
             this.standaloneBarDockControl1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.standaloneBarDockControl1.Location = new System.Drawing.Point(0, 141);
+            this.standaloneBarDockControl1.Location = new System.Drawing.Point(0, 277);
             this.standaloneBarDockControl1.Manager = this.barManager1;
-            this.standaloneBarDockControl1.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
+            this.standaloneBarDockControl1.Margin = new System.Windows.Forms.Padding(16, 15, 16, 15);
             this.standaloneBarDockControl1.Name = "standaloneBarDockControl1";
-            this.standaloneBarDockControl1.Size = new System.Drawing.Size(726, 29);
+            this.standaloneBarDockControl1.Size = new System.Drawing.Size(1452, 38);
             this.standaloneBarDockControl1.Text = "standaloneBarDockControl1";
             // 
             // barDockControlTop
@@ -712,17 +692,17 @@
             this.barDockControlTop.Dock = System.Windows.Forms.DockStyle.Top;
             this.barDockControlTop.Location = new System.Drawing.Point(0, 0);
             this.barDockControlTop.Manager = this.barManager1;
-            this.barDockControlTop.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
-            this.barDockControlTop.Size = new System.Drawing.Size(726, 0);
+            this.barDockControlTop.Margin = new System.Windows.Forms.Padding(16, 15, 16, 15);
+            this.barDockControlTop.Size = new System.Drawing.Size(1452, 0);
             // 
             // barDockControlBottom
             // 
             this.barDockControlBottom.CausesValidation = false;
             this.barDockControlBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.barDockControlBottom.Location = new System.Drawing.Point(0, 448);
+            this.barDockControlBottom.Location = new System.Drawing.Point(0, 862);
             this.barDockControlBottom.Manager = this.barManager1;
-            this.barDockControlBottom.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
-            this.barDockControlBottom.Size = new System.Drawing.Size(726, 0);
+            this.barDockControlBottom.Margin = new System.Windows.Forms.Padding(16, 15, 16, 15);
+            this.barDockControlBottom.Size = new System.Drawing.Size(1452, 0);
             // 
             // barDockControlLeft
             // 
@@ -730,17 +710,17 @@
             this.barDockControlLeft.Dock = System.Windows.Forms.DockStyle.Left;
             this.barDockControlLeft.Location = new System.Drawing.Point(0, 0);
             this.barDockControlLeft.Manager = this.barManager1;
-            this.barDockControlLeft.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
-            this.barDockControlLeft.Size = new System.Drawing.Size(0, 448);
+            this.barDockControlLeft.Margin = new System.Windows.Forms.Padding(16, 15, 16, 15);
+            this.barDockControlLeft.Size = new System.Drawing.Size(0, 862);
             // 
             // barDockControlRight
             // 
             this.barDockControlRight.CausesValidation = false;
             this.barDockControlRight.Dock = System.Windows.Forms.DockStyle.Right;
-            this.barDockControlRight.Location = new System.Drawing.Point(726, 0);
+            this.barDockControlRight.Location = new System.Drawing.Point(1452, 0);
             this.barDockControlRight.Manager = this.barManager1;
-            this.barDockControlRight.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
-            this.barDockControlRight.Size = new System.Drawing.Size(0, 448);
+            this.barDockControlRight.Margin = new System.Windows.Forms.Padding(16, 15, 16, 15);
+            this.barDockControlRight.Size = new System.Drawing.Size(0, 862);
             // 
             // popupMenu1
             // 
@@ -751,9 +731,9 @@
             // 
             // TickersCollectionForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(726, 448);
+            this.ClientSize = new System.Drawing.Size(1452, 862);
             this.Controls.Add(this.ribbonStatusBar1);
             this.Controls.Add(this.gridControl1);
             this.Controls.Add(this.standaloneBarDockControl1);
@@ -762,9 +742,9 @@
             this.Controls.Add(this.barDockControlRight);
             this.Controls.Add(this.barDockControlBottom);
             this.Controls.Add(this.barDockControlTop);
-            this.Margin = new System.Windows.Forms.Padding(12, 12, 12, 12);
+            this.Margin = new System.Windows.Forms.Padding(24, 23, 24, 23);
             this.Name = "TickersCollectionForm";
-            this.Text = "Poloniex Markets";
+            this.Text = "Tickers";
             ((System.ComponentModel.ISupportInitialize)(this.teValueWithChange)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemTextEdit1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).EndInit();
