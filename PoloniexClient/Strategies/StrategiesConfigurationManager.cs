@@ -1,6 +1,7 @@
 ﻿using Crypto.Core.Arbitrages.Deriatives;
 using Crypto.Core.Common.Arbitrages;
 using Crypto.Core.Strategies;
+using Crypto.Core.Strategies.Signal;
 using CryptoMarketClient.Strategies.Stupid;
 using DevExpress.XtraEditors;
 using System;
@@ -26,12 +27,33 @@ namespace CryptoMarketClient.Strategies {
         public StrategyConfigurationManager() {
             Items.Add(new StrategyConfigurationInfo() { StrategyType = typeof(SimpleBuyLowSellHighStrategy), ConfigurationFormType = typeof(SimpleBuyLowSellHighConfigControl) });
             Items.Add(new StrategyConfigurationInfo() { StrategyType = typeof(StatisticalArbitrageStrategy), ConfigurationFormType = typeof(StatisticalArbitrageEditingForm) });
+            Items.Add(new StrategyConfigurationInfo() { StrategyType = typeof(SignalNotificationStrategy), ConfigurationFormType = typeof(Signal.SignalNotificationConfigControl), DataFormType = typeof(Signal.SignalNotificationDataForm) });
         }
         public void Add(StrategyConfigurationInfo info) {
             StrategyConfigurationInfo prev = Items.FirstOrDefault(i => i.StrategyType == info.StrategyType);
             if(prev != null)
                 Items.Remove(prev);
             Items.Add(info);
+        }
+        public bool ShowData(StrategyBase strategy) {
+            Type type = strategy.GetType();
+            StrategyConfigurationInfo info = Items.FirstOrDefault(i => i.StrategyType == type);
+            if(info == null) {
+                XtraMessageBox.Show("Data form not found for strategy " + type.Name);
+                return false;
+            }
+            try {
+                ConstructorInfo ci = info.DataFormType.GetConstructor(new Type[] { });
+                StrategyDataForm form = (StrategyDataForm)ci.Invoke(null);
+                form.Text = strategy.Name + " - Data";
+                form.Strategy = strategy;
+                form.Show();
+            }
+            catch(Exception e) {
+                XtraMessageBox.Show("Invalid configuration form for strategy " + type.Name + " " + e.ToString());
+                return false;
+            }
+            return true;
         }
         public bool ConfigureDialog(StrategyBase strategy) {
             Type type = strategy.GetType();
@@ -62,5 +84,6 @@ namespace CryptoMarketClient.Strategies {
     public class StrategyConfigurationInfo {
         public Type StrategyType { get; set; }
         public Type ConfigurationFormType { get; set; }
+        public Type DataFormType { get; set; }
     }
 }

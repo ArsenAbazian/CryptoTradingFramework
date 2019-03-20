@@ -19,8 +19,20 @@ namespace CryptoMarketClient.Strategies {
             InitializeAddStrategiesMenu();
         }
         
+        protected void UpdateStatusText() {
+            if(!Manager.Running) {
+                this.siStatus.Caption = "<b>Stopped</b>";
+                this.siStatus.ItemAppearance.Normal.ForeColor = DevExpress.LookAndFeel.DXSkinColors.ForeColors.Critical;
+            }
+            else {
+                this.siStatus.Caption = "<b>Running</b>";
+                this.siStatus.ItemAppearance.Normal.ForeColor = DevExpress.LookAndFeel.DXSkinColors.ForeColors.Information;
+            }
+        }
+
         protected override void OnShown(EventArgs e) {
             base.OnShown(e);
+            UpdateStatusText();
             this.strategyBaseBindingSource.DataSource = Manager.Strategies;
         }
 
@@ -36,6 +48,7 @@ namespace CryptoMarketClient.Strategies {
                 XtraMessageBox.Show("There are troubles starting strategies manager. Check log for detailed information.");
                 return;
             }
+            UpdateStatusText();
             this.gridView1.RefreshData();
         }
 
@@ -46,6 +59,7 @@ namespace CryptoMarketClient.Strategies {
                 XtraMessageBox.Show("There are troubles stopping strategies manager. Check log for detailed information.");
                 return;
             }
+            UpdateStatusText();
             this.gridView1.RefreshData();
         }
 
@@ -54,6 +68,7 @@ namespace CryptoMarketClient.Strategies {
                 CreateStrategyGroupSubMenu(strategy);
             }
         }
+
         void CreateStrategyGroupSubMenu(StrategyRegistrationInfo info) {
             string[] path = info.Group.Split('.');
             BarSubItem root = this.siAdd;
@@ -115,7 +130,15 @@ namespace CryptoMarketClient.Strategies {
             }
             if(XtraMessageBox.Show("Do you really want to remove selected strategies? (May be better to deactivate them?)", "Removing", MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
                 return;
-
+            if(Manager.Running) {
+                XtraMessageBox.Show("Manager is running. Please stop execution first.");
+                return;
+            }
+            foreach(StrategyBase st in selected) {
+                Manager.Strategies.Remove(st);
+            }
+            Manager.Save();
+            this.gridControl1.RefreshDataSource();
         }
 
         private void biEdit_ItemClick(object sender, ItemClickEventArgs e) {
@@ -131,7 +154,21 @@ namespace CryptoMarketClient.Strategies {
             Manager.Save();
             this.gridView1.RefreshData();
         }
-
+        protected override void OnClosing(CancelEventArgs e) {
+            if(Manager.Running) {
+                if(XtraMessageBox.Show("Do you really want to stop active strategies?", "Stopping", MessageBoxButtons.YesNoCancel) != DialogResult.Yes) {
+                    e.Cancel = true;
+                    return;
+                }
+                if(!Manager.Stop()) {
+                    XtraMessageBox.Show("There are troubles stopping strategies manager. Check log for detailed information.");
+                    e.Cancel = true;
+                    return;
+                }
+            }
+            this.gridView1.RefreshData();
+            base.OnClosing(e);
+        }
         private void repositoryItemCheckEdit1_EditValueChanged(object sender, EventArgs e) {
             StrategyBase strategy = (StrategyBase)this.gridView1.GetFocusedRow();
             strategy.Enabled = ((CheckEdit)sender).Checked;
@@ -144,6 +181,20 @@ namespace CryptoMarketClient.Strategies {
             strategy.DemoMode = ((CheckEdit)sender).Checked;
             this.gridView1.CloseEditor();
             Manager.Save();
+        }
+
+        private void btShowData_ItemClick(object sender, ItemClickEventArgs e) {
+            StrategyBase strategy = (StrategyBase)this.gridView1.GetFocusedRow();
+            if(strategy == null)
+                return;
+            StrategyConfigurationManager.Default.ShowData(strategy);
+        }
+
+        private void gridView1_RowStyle(object sender, DevExpress.XtraGrid.Views.Grid.RowStyleEventArgs e) {
+            if(this.gridView1.FocusedRowHandle != e.RowHandle)
+                return;
+            e.Appearance.BackColor = Color.FromArgb(0x10, this.gridView1.PaintAppearance.FocusedRow.BackColor);
+            e.HighPriority = true;
         }
     }
 }

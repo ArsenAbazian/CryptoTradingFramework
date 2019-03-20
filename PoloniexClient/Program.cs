@@ -23,6 +23,7 @@ namespace CryptoMarketClient {
             WindowsFormsSettings.DefaultFont = new System.Drawing.Font("Segoe UI", 9);
             WindowsFormsSettings.ScrollUIMode = ScrollUIMode.Desktop;
             UserLookAndFeel.Default.SetSkinStyle(SettingsStore.Default.SelectedThemeName);
+            WindowsFormsSettings.FormThickBorder = true;
             if(UserLookAndFeel.Default.SkinName == "The Bezier") {
                 if(string.IsNullOrEmpty(SettingsStore.Default.SelectedPaletteName))
                     SettingsStore.Default.SelectedPaletteName = "Gloom Gloom";

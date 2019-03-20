@@ -9,6 +9,7 @@ namespace CryptoMarketClient {
     public enum TradeType { Buy, Sell }
 
     public class TradeInfoItem {
+        
         public TradeInfoItem(AccountInfo account, Ticker ticker) {
             Account = account;
             Ticker = ticker;

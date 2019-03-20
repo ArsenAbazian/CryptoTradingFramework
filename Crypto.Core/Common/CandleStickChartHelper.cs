@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Crypto.Core.Indicators;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -6,17 +7,13 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace CryptoMarketClient {
-    public class CandleStickData : INotifyPropertyChanged {
-        DateTime time;
-        public DateTime Time {
-            get { return time; }
-            set {
-                if(Time == value)
-                    return;
-                time = value;
-                RaisePropertyChanged("Time");
-            }
+    public class CandleStickData : TimeBaseValue, INotifyPropertyChanged {
+        protected override void OnTimeChanged() {
+            RaisePropertyChanged("Time");
         }
+
+        public CandleStickData Prev { get; set; }
+
         double open;
         public double Open {
             get { return open; }

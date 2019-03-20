@@ -1,4 +1,5 @@
 ﻿using Crypto.Core.Strategies;
+using CryptoMarketClient.Helpers;
 using DevExpress.XtraEditors;
 using DevExpress.XtraEditors.DXErrorProvider;
 using DevExpress.XtraLayout;
@@ -134,6 +135,26 @@ namespace CryptoMarketClient.Strategies {
 
         private void textEdit1_TextChanged(object sender, EventArgs e) {
             
+        }
+
+        private void beTelegramChatId_ButtonClick(object sender, DevExpress.XtraEditors.Controls.ButtonPressedEventArgs e) {
+            TelegramBot.Default.ClientRegistered += OnStrategyBotRegistered;
+            TelegramBot.Default.StartRegisterClient(Strategy.Id);
+            using(TelegramRegistrationForm form = new TelegramRegistrationForm()) {
+                form.Owner = this;
+                form.Command = "/regme " + TelegramBot.Default.RegistrationCode;
+                if(form.ShowDialog() != DialogResult.OK)
+                    return;
+            }
+            TelegramBot.Default.Update();
+        }
+
+        private void OnStrategyBotRegistered(object sender, TelegramClientInfoEventArgs e) {
+            BeginInvoke(new MethodInvoker(() => {
+                Strategy.ChatId = e.Client.ChatId.Identifier;
+                this.beTelegramChatId.EditValue = Strategy.ChatId;
+                XtraMessageBox.Show("Telegram Bot Registered!");
+            }));
         }
     }
 }

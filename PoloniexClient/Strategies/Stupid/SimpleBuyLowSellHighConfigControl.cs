@@ -24,7 +24,9 @@ namespace CryptoMarketClient.Strategies.Stupid {
                 return;
             }
             this.tickerNameInfoBindingSource.DataSource = tickerNameList;
-            ((TickerStrategyBase)Strategy).TickerInfo = tickerNameList.FirstOrDefault(t => t.Ticker == ((TickerStrategyBase)Strategy).TickerInfo.Ticker);
+            TickerStrategyBase ts = (TickerStrategyBase)Strategy;
+            if(ts.TickerInfo != null)
+                ts.TickerInfo = tickerNameList.FirstOrDefault(t => t.Ticker == ts.TickerInfo.Ticker);
             this.simpleBuyLowSellHighStrategyBindingSource.DataSource = Strategy;
             string faultExchanges = string.Empty;
             foreach(Exchange e in Exchange.Registered) {

@@ -128,6 +128,8 @@ namespace CryptoMarketClient.Binance {
 
             string[] kline = JSonHelper.Default.DeserializeObject(bytes, ref startIndex, KlineItems);
             SocketConnectionInfo info = KlineSockets.FirstOrDefault(c => c.Key == sender);
+            if(info == null)
+                return;
             OnKlineItemRecv(info.Ticker, kline);
         }
         protected virtual void OnKlineItemRecv(Ticker ticker, string[] item) {
@@ -138,14 +140,15 @@ namespace CryptoMarketClient.Binance {
                 return;
             Debug.WriteLine(item[6] + " " + item[7] + " " + item[8] + " " + item[9]);
             lock(ticker.CandleStickData) {
-                CandleStickData data = ticker.GetOrCreateCandleStickData(time);
+                CandleStickData data = new CandleStickData();
+                data.Time = time;
                 data.Open = FastValueConverter.Convert(item[6]);
                 data.Close = FastValueConverter.Convert(item[7]);
                 data.High = FastValueConverter.Convert(item[8]);
                 data.Low = FastValueConverter.Convert(item[9]);
                 data.Volume = FastValueConverter.Convert(item[10]);
                 data.QuoteVolume = FastValueConverter.Convert(item[13]);
-                ticker.RaiseCandleStickChanged();
+                ticker.UpdateCandleStickData(data);
             }
         }
         

@@ -14,6 +14,7 @@ namespace Crypto.Core.Strategies {
     [XmlInclude(typeof(SimpleBuyLowSellHighStrategy))]
     [XmlInclude(typeof(GridStrategyBase))]
     [XmlInclude(typeof(StaticGridStrategy))]
+    [XmlInclude(typeof(Signal.SignalNotificationStrategy))]
     //[XmlInclude(typeof())]
     [Serializable]
     public abstract class StrategyBase {
@@ -30,7 +31,9 @@ namespace Crypto.Core.Strategies {
         public string Description { get; set; }
         public abstract string StateText { get; }
         public double Earned { get; set; }
-        
+
+        public long ChatId { get; set; }
+
         public abstract string TypeName { get; }
         public string Name { get; set; }
         public IStrategyDataProvider DataProvider { get { return Manager.DataProvider; } }
@@ -108,6 +111,7 @@ namespace Crypto.Core.Strategies {
             FileName = from.FileName;
             Account = from.Account;
             MaxAllowedDeposit = from.MaxAllowedDeposit;
+            ChatId = from.ChatId;
         }
 
         protected string GetTrimmedString(string value) {

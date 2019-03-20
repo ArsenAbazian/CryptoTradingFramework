@@ -1,4 +1,5 @@
 ﻿using CryptoMarketClient.Common;
+using CryptoMarketClient.Helpers;
 using CryptoMarketClient.Strategies;
 using DevExpress.Data.Filtering;
 using DevExpress.XtraBars;

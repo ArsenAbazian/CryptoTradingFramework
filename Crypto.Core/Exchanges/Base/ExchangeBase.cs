@@ -648,7 +648,10 @@ namespace CryptoMarketClient {
 
         protected internal virtual void OnKlineSocketClosed(object sender, EventArgs e) {
             SocketConnectionInfo info = KlineSockets.FirstOrDefault(c => c.Key == sender);
-            Telemetry.Default.TrackEvent(LogType.Log, this, info.Ticker, "kline socket closed", "");
+            if(info != null)
+                Telemetry.Default.TrackEvent(LogType.Log, this, info.Ticker, "kline socket closed", "");
+            else
+                Telemetry.Default.TrackEvent(LogType.Log, this, "unknown", "kline socket closed", "");
         }
 
         protected internal virtual void OnKlineSocketOpened(object sender, EventArgs e) {
@@ -964,13 +967,16 @@ namespace CryptoMarketClient {
         }
 
         protected virtual void AddRefOrderBook(Ticker ticker) {
-            OrderBookSockets.FirstOrDefault(i => i.Ticker == ticker).AddRef();
+            SocketConnectionInfo info = OrderBookSockets.FirstOrDefault(i => i.Ticker == ticker);
+            if(info != null) info.AddRef();
         }
         protected virtual void AddRefTradeHistory(Ticker ticker) {
-            TradeHistorySockets.FirstOrDefault(i => i.Ticker == ticker).AddRef();
+            SocketConnectionInfo info = TradeHistorySockets.FirstOrDefault(i => i.Ticker == ticker);
+            if(info != null) info.AddRef();
         }
         protected virtual void AddRefKline(Ticker ticker) {
-            KlineSockets.FirstOrDefault(i => i.Ticker == ticker).AddRef();
+            SocketConnectionInfo info = KlineSockets.FirstOrDefault(i => i.Ticker == ticker);
+            if(info != null) info.AddRef();
         }
         protected virtual void ReleaseOrderBook(Ticker ticker) {
             ReleaseOrderBook(ticker, false);
@@ -1049,12 +1055,18 @@ namespace CryptoMarketClient {
         public virtual bool Connect(TickerInputInfo info) {
             if(info.Ticker == null)
                 return false;
-            if(info.OrderBook)
+            if(info.OrderBook) {
                 StartListenOrderBook(info.Ticker);
-            if(info.TradeHistory)
+            }
+            if(info.TradeHistory) {
                 StartListenTradeHistory(info.Ticker);
-            if(info.Kline)
+            }
+            if(info.Kline) {
+                info.Ticker.CandleStickPeriodMin = info.KlineIntervalMin;
+                int seconds = info.KlineIntervalMin * 60 * 100;
+                info.Ticker.CandleStickData = info.Ticker.GetCandleStickData(info.Ticker.CandleStickPeriodMin, DateTime.Now.AddSeconds(-seconds), seconds);
                 StartListenKline(info.Ticker);
+            }
             return true;
         }
 

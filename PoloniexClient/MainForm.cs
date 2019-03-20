@@ -394,12 +394,24 @@ namespace CryptoMarketClient {
         }
 
         private void bbRegister_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
-            SettingsStore.Default.GetTelegramBotRegistrationCode();
-            XtraMessageBox.Show("Please find '@ultra_crypto_bot' and send command '/regme " + SettingsStore.Default.TelegramBotRegistrationCode + "' then press OK button.");
-            TelegramBot.Default.RegistrationCode = SettingsStore.Default.TelegramBotRegistrationCode;
+            TelegramBot.Default.ClientRegistered += OnStrategyBotRegistered;
+            TelegramBot.Default.StartRegisterClient(22);
+            using(TelegramRegistrationForm form = new TelegramRegistrationForm()) {
+                form.Owner = this;
+                form.Command = "/regme " + TelegramBot.Default.RegistrationCode;
+                if(form.ShowDialog() != DialogResult.OK)
+                    return;
+            }
             TelegramBot.Default.Update();
-            SettingsStore.Default.TelegramBotRegistrationCode = string.Empty;
-            SettingsStore.Default.Save();
+        }
+
+        private void OnStrategyBotRegistered(object sender, TelegramClientInfoEventArgs e) {
+            BeginInvoke(new MethodInvoker(() => {
+                SettingsStore.Default.TelegramBotBroadcastId = e.Client.ChatId.Identifier;
+                SettingsStore.Default.TelegramBotActive = true;
+                SettingsStore.Default.Save();
+                XtraMessageBox.Show("Telegram Bot Registered!");
+            }));
         }
 
         private void barButtonItem4_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {

@@ -1,4 +1,5 @@
 ﻿using CryptoMarketClient.Common;
+using CryptoMarketClient.Helpers;
 using System.Data;
 using System.Linq;
 

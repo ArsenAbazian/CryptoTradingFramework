@@ -94,11 +94,15 @@ namespace CryptoMarketClient.Strategies {
             TickerInfo = new TickerNameInfo() { Exchange = Ticker.Exchange.Type, Ticker = Ticker.Name };
         }
 
+        protected virtual TickerInputInfo CreateInputInfo() {
+            return new TickerInputInfo() { Exchange = TickerInfo.Exchange, TickerName = TickerInfo.Ticker, OrderBook = true, TradeHistory = true };
+        }
+
         public override bool Start() {
             if(!base.Start())
                 return false;
-            
-            TickerInputInfo inputInfo = new TickerInputInfo() { Exchange = TickerInfo.Exchange, TickerName = TickerInfo.Ticker, OrderBook = true, TradeHistory = true };
+
+            TickerInputInfo inputInfo = CreateInputInfo();
             bool res = DataProvider.Connect(inputInfo);
             if(res)
                 Ticker = inputInfo.Ticker;

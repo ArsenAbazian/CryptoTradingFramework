@@ -74,9 +74,13 @@ namespace Crypto.Core.Strategies {
         }
         protected Thread RunThread { get; set; }
         protected bool StopThread { get; set; }
+        [XmlIgnore]
+        public bool Running { get; private set; }
         public bool Start() {
             if(!Initialized)
                 throw new Exception("Strategies manager is not initialized with data provider");
+            if(Running)
+                return true;
             bool res = true;
             foreach(StrategyBase s in Strategies)
                 res &= s.Start();
@@ -90,6 +94,7 @@ namespace Crypto.Core.Strategies {
                     }
                 });
                 RunThread.Start();
+                Running = true;
             }
             return res;
         }
@@ -98,6 +103,7 @@ namespace Crypto.Core.Strategies {
             StopThread = true;
             foreach(StrategyBase s in Strategies)
                 res &= s.Stop();
+            Running = false;
             return res;
         }
     }

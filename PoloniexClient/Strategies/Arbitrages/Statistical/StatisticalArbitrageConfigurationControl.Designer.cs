@@ -161,12 +161,6 @@ namespace Crypto.Core.Arbitrages.Deriatives {
             // 
             // barAndDockingController1
             // 
-            this.barAndDockingController1.AppearancesBar.BarAppearance.Hovered.FontSizeDelta = 2;
-            this.barAndDockingController1.AppearancesBar.BarAppearance.Hovered.Options.UseFont = true;
-            this.barAndDockingController1.AppearancesBar.BarAppearance.Normal.FontSizeDelta = 2;
-            this.barAndDockingController1.AppearancesBar.BarAppearance.Normal.Options.UseFont = true;
-            this.barAndDockingController1.AppearancesBar.BarAppearance.Pressed.FontSizeDelta = 2;
-            this.barAndDockingController1.AppearancesBar.BarAppearance.Pressed.Options.UseFont = true;
             this.barAndDockingController1.PropertiesDocking.ViewStyle = DevExpress.XtraBars.Docking2010.Views.DockingViewStyle.Default;
             // 
             // barDockControlTop
@@ -222,12 +216,6 @@ namespace Crypto.Core.Arbitrages.Deriatives {
             // 
             // gridView1
             // 
-            this.gridView1.Appearance.GroupRow.FontSizeDelta = 2;
-            this.gridView1.Appearance.GroupRow.Options.UseFont = true;
-            this.gridView1.Appearance.HeaderPanel.FontSizeDelta = 2;
-            this.gridView1.Appearance.HeaderPanel.Options.UseFont = true;
-            this.gridView1.Appearance.Row.FontSizeDelta = 2;
-            this.gridView1.Appearance.Row.Options.UseFont = true;
             this.gridView1.Columns.AddRange(new DevExpress.XtraGrid.Columns.GridColumn[] {
             this.colExchange,
             this.colTicker});
@@ -355,10 +343,6 @@ namespace Crypto.Core.Arbitrages.Deriatives {
             // 
             // layoutControlGroup1
             // 
-            this.layoutControlGroup1.AppearanceGroup.FontSizeDelta = 2;
-            this.layoutControlGroup1.AppearanceGroup.Options.UseFont = true;
-            this.layoutControlGroup1.AppearanceItemCaption.FontSizeDelta = 2;
-            this.layoutControlGroup1.AppearanceItemCaption.Options.UseFont = true;
             this.layoutControlGroup1.EnableIndentsWithoutBorders = DevExpress.Utils.DefaultBoolean.True;
             this.layoutControlGroup1.GroupBordersVisible = false;
             this.layoutControlGroup1.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
@@ -430,10 +414,7 @@ namespace Crypto.Core.Arbitrages.Deriatives {
             // 
             // StatisticalArbitrageEditingForm
             // 
-            this.Appearance.Font = new System.Drawing.Font("Tahoma", 27.875F);
-            this.Appearance.FontSizeDelta = 2;
-            this.Appearance.Options.UseFont = true;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(41F, 89F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.layoutControl1);
             this.Controls.Add(this.barDockControlLeft);

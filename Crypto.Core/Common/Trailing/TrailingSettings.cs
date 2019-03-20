@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using CryptoMarketClient.Helpers;
 
 namespace CryptoMarketClient.Common {
     [Serializable]
@@ -174,14 +175,14 @@ namespace CryptoMarketClient.Common {
 
         void OnExecuteOrder() {
             if (Mode == ActionMode.Notify) {
-                TelegramBot.Default.SendNotification(Ticker.Exchange + " - " + Ticker.Name + " - Order done!!");
+                //TelegramBot.Default.SendNotification(Ticker.Exchange + " - " + Ticker.Name + " - Order done!!");
                 State = TrailingState.Done;
             } else if (Mode == ActionMode.Execute) {
                 TradingResult res = Type == TrailingType.Sell ? Ticker.MarketSell(Amount) : Ticker.MarketBuy(Amount);
                 if (res != null)
                     State = TrailingState.Done;
-                else
-                    TelegramBot.Default.SendNotification($"{Ticker.Exchange}. Error!! Can't sell {Ticker.Name}");
+                //else
+                    //TelegramBot.Default.SendNotification($"{Ticker.Exchange}. Error!! Can't sell {Ticker.Name}");
             }
 
             Ticker.Events.Add(new TickerEvent() { Time = DateTime.UtcNow, Text = "Stoploss!" });
@@ -191,8 +192,8 @@ namespace CryptoMarketClient.Common {
             if(State == TrailingState.TakeProfit)
                 return;
             State = TrailingState.TakeProfit;
-            if (Mode == ActionMode.Notify)
-                TelegramBot.Default.SendNotification(Ticker.Exchange + " - " + Ticker.Name + " - Start TAKEPROFIT!!");
+            //if (Mode == ActionMode.Notify)
+            //    TelegramBot.Default.SendNotification(Ticker.Exchange + " - " + Ticker.Name + " - Start TAKEPROFIT!!");
             Ticker.Events.Add(new TickerEvent() { Time = DateTime.UtcNow, Text = "Takeprofit!" });
         }
 

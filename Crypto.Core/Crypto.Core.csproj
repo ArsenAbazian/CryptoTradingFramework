@@ -42,8 +42,26 @@
     <Reference Include="Microsoft.Win32.Primitives, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Win32.Primitives.4.3.0\lib\net46\Microsoft.Win32.Primitives.dll</HintPath>
     </Reference>
+    <Reference Include="MihaZupan.HttpToSocks5Proxy, Version=1.1.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\HttpToSocks5Proxy.1.1.2\lib\net45\MihaZupan.HttpToSocks5Proxy.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="PCLCrypto, Version=2.0.0.0, Culture=neutral, PublicKeyToken=d4421c8a4786956c, processorArchitecture=MSIL">
+      <HintPath>..\packages\PCLCrypto.2.0.147\lib\net45\PCLCrypto.dll</HintPath>
+    </Reference>
+    <Reference Include="PInvoke.BCrypt, Version=0.3.0.0, Culture=neutral, PublicKeyToken=9e300f9f87f04a7a, processorArchitecture=MSIL">
+      <HintPath>..\packages\PInvoke.BCrypt.0.3.2\lib\net40\PInvoke.BCrypt.dll</HintPath>
+    </Reference>
+    <Reference Include="PInvoke.Kernel32, Version=0.3.0.0, Culture=neutral, PublicKeyToken=9e300f9f87f04a7a, processorArchitecture=MSIL">
+      <HintPath>..\packages\PInvoke.Kernel32.0.3.2\lib\net40\PInvoke.Kernel32.dll</HintPath>
+    </Reference>
+    <Reference Include="PInvoke.NCrypt, Version=0.3.0.0, Culture=neutral, PublicKeyToken=9e300f9f87f04a7a, processorArchitecture=MSIL">
+      <HintPath>..\packages\PInvoke.NCrypt.0.3.2\lib\net40\PInvoke.NCrypt.dll</HintPath>
+    </Reference>
+    <Reference Include="PInvoke.Windows.Core, Version=0.3.0.0, Culture=neutral, PublicKeyToken=9e300f9f87f04a7a, processorArchitecture=MSIL">
+      <HintPath>..\packages\PInvoke.Windows.Core.0.3.2\lib\portable-net45+win+wpa81+MonoAndroid10+xamarinios10+MonoTouch10\PInvoke.Windows.Core.dll</HintPath>
     </Reference>
     <Reference Include="SlackClient, Version=0.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SlackClient.0.5.0.0\lib\net45\SlackClient.dll</HintPath>
@@ -130,8 +148,11 @@
     <Reference Include="System.Xml.ReaderWriter, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Xml.ReaderWriter.4.3.1\lib\net46\System.Xml.ReaderWriter.dll</HintPath>
     </Reference>
-    <Reference Include="Telegram.Bot, Version=14.9.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Telegram.Bot.14.9.0\lib\net45\Telegram.Bot.dll</HintPath>
+    <Reference Include="Telegram.Bot, Version=14.10.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Telegram.Bot.14.10.0\lib\net45\Telegram.Bot.dll</HintPath>
+    </Reference>
+    <Reference Include="Validation, Version=2.2.0.0, Culture=neutral, PublicKeyToken=2fc06f0d701809a7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Validation.2.2.8\lib\dotnet\Validation.dll</HintPath>
     </Reference>
     <Reference Include="WebSocket4Net, Version=0.15.2.11, Culture=neutral, PublicKeyToken=eb4e154b696bf72a, processorArchitecture=MSIL">
       <HintPath>..\packages\WebSocket4Net.0.15.2\lib\net45\WebSocket4Net.dll</HintPath>
@@ -140,6 +161,15 @@
   <ItemGroup>
     <Compile Include="Common\TickerNameInfo.cs" />
     <Compile Include="Helpers\SerializationHelper.cs" />
+    <Compile Include="Indicators\EmaIndicator.cs" />
+    <Compile Include="Indicators\IndicatorBase.cs" />
+    <Compile Include="Indicators\MacdIndicator.cs" />
+    <Compile Include="Indicators\MaIndicator.cs" />
+    <Compile Include="Indicators\MinMaxIndicator.cs" />
+    <Compile Include="Indicators\RsiIndicator.cs" />
+    <Compile Include="Indicators\SingleValueIndicator.cs" />
+    <Compile Include="Indicators\StochasticIndicator.cs" />
+    <Compile Include="Indicators\WindowIndicator.cs" />
     <Compile Include="Strategies\Arbitrages\ArbitrageHistoryHelper.cs" />
     <Compile Include="Strategies\Arbitrages\ArbitrageInfo.cs" />
     <Compile Include="Strategies\Arbitrages\Dependency\DependencyArbitrageHelper.cs" />
@@ -163,7 +193,7 @@
     <Compile Include="Common\SocketConnectionInfo.cs" />
     <Compile Include="Strategies\Arbitrages\AltBtcUsdt\StaticArbitrageHelper.cs" />
     <Compile Include="Strategies\Arbitrages\AltBtcUsdt\StaticArbitrageInfo.cs" />
-    <Compile Include="Common\TelegramBot.cs" />
+    <Compile Include="Helpers\TelegramBot.cs" />
     <Compile Include="Common\TickerCollection\TickerCollectionHelper.cs" />
     <Compile Include="Common\TickerCollection\TickerCollectionInfo.cs" />
     <Compile Include="Common\TickerCollection\TickerCollectionUpdateHelper.cs" />
@@ -211,6 +241,7 @@
     <Compile Include="Strategies\Grid\StaticGridStrategy.cs" />
     <Compile Include="Strategies\Base\SingleTickerStrategyBase.cs" />
     <Compile Include="Strategies\RealtimeStrategyDataProvider.cs" />
+    <Compile Include="Strategies\Signal\SignalNotificationStrategy.cs" />
     <Compile Include="Strategies\StrategiesManager.cs" />
     <Compile Include="Strategies\StrategiesRegistrator.cs" />
     <Compile Include="Strategies\Base\StrategyBase.cs" />

@@ -41,62 +41,62 @@
     <Reference Include="Castle.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <HintPath>..\packages\Castle.Core.4.3.1\lib\net45\Castle.Core.dll</HintPath>
     </Reference>
-    <Reference Include="DevExpress.Charts.v18.2.Core, Version=18.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
+    <Reference Include="DevExpress.Charts.v19.1.Core, Version=19.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.Data.v18.2, Version=18.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
+    <Reference Include="DevExpress.Data.v19.1, Version=19.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.Office.v18.2.Core, Version=18.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
+    <Reference Include="DevExpress.Office.v19.1.Core, Version=19.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.RichEdit.v18.2.Core, Version=18.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
+    <Reference Include="DevExpress.RichEdit.v19.1.Core, Version=19.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.RichEdit.v18.2.Export, Version=18.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
+    <Reference Include="DevExpress.RichEdit.v19.1.Export, Version=19.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.Printing.v18.2.Core, Version=18.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
+    <Reference Include="DevExpress.Printing.v19.1.Core, Version=19.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.Sparkline.v18.2.Core, Version=18.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4, processorArchitecture=MSIL">
+    <Reference Include="DevExpress.Sparkline.v19.1.Core, Version=19.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4, processorArchitecture=MSIL">
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.Utils.v18.2, Version=18.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
+    <Reference Include="DevExpress.Utils.v19.1, Version=19.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.Xpo.v18.2, Version=18.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4" />
-    <Reference Include="DevExpress.XtraBars.v18.2, Version=18.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
+    <Reference Include="DevExpress.Xpo.v19.1, Version=19.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4" />
+    <Reference Include="DevExpress.XtraBars.v19.1, Version=19.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.XtraCharts.v18.2, Version=18.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
+    <Reference Include="DevExpress.XtraCharts.v19.1, Version=19.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.XtraCharts.v18.2.UI, Version=18.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
+    <Reference Include="DevExpress.XtraCharts.v19.1.UI, Version=19.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.XtraCharts.v18.2.Wizard, Version=18.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
+    <Reference Include="DevExpress.XtraCharts.v19.1.Wizard, Version=19.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.XtraDialogs.v18.2, Version=18.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4, processorArchitecture=MSIL">
+    <Reference Include="DevExpress.XtraDialogs.v19.1, Version=19.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="DevExpress.XtraEditors.v18.2, Version=18.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
+    <Reference Include="DevExpress.XtraEditors.v19.1, Version=19.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.XtraGrid.v18.2, Version=18.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
+    <Reference Include="DevExpress.XtraGrid.v19.1, Version=19.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.XtraLayout.v18.2, Version=18.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
+    <Reference Include="DevExpress.XtraLayout.v19.1, Version=19.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.XtraPrinting.v18.2, Version=18.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
+    <Reference Include="DevExpress.XtraPrinting.v19.1, Version=19.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.XtraTreeList.v18.2, Version=18.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4, processorArchitecture=MSIL">
+    <Reference Include="DevExpress.XtraTreeList.v19.1, Version=19.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="DevExpress.XtraVerticalGrid.v18.2, Version=18.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
+    <Reference Include="DevExpress.XtraVerticalGrid.v19.1, Version=19.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4">
       <Private>True</Private>
     </Reference>
     <Reference Include="Fleck, Version=1.0.3.0, Culture=neutral, processorArchitecture=MSIL">
@@ -379,6 +379,18 @@
     <Compile Include="Strategies\Arbitrages\Statistical\DependencyArbitrageForm.Designer.cs">
       <DependentUpon>DependencyArbitrageForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Strategies\Signal\SignalNotificationConfigControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Strategies\Signal\SignalNotificationConfigControl.Designer.cs">
+      <DependentUpon>SignalNotificationConfigControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Strategies\Signal\SignalNotificationDataForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Strategies\Signal\SignalNotificationDataForm.Designer.cs">
+      <DependentUpon>SignalNotificationDataForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Strategies\StrategiesCollectionForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -391,6 +403,12 @@
     </Compile>
     <Compile Include="Strategies\StrategyConfigurationForm.Designer.cs">
       <DependentUpon>StrategyConfigurationForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Strategies\StrategyDataForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Strategies\StrategyDataForm.Designer.cs">
+      <DependentUpon>StrategyDataForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Strategies\StrategySpecificConfigurationControlBase.cs">
       <SubType>UserControl</SubType>
@@ -409,6 +427,12 @@
     </Compile>
     <Compile Include="Strategies\Stupid\SimpleBuyLowSellHighConfigControl.Designer.cs">
       <DependentUpon>SimpleBuyLowSellHighConfigControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TelegramRegistrationForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TelegramRegistrationForm.Designer.cs">
+      <DependentUpon>TelegramRegistrationForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Tests\FastValueConverterTest.cs" />
     <Compile Include="Tests\IncrementalUpdateQueueTests.cs" />
@@ -604,11 +628,20 @@
     <EmbeddedResource Include="Strategies\Arbitrages\Statistical\DependencyArbitrageForm.resx">
       <DependentUpon>DependencyArbitrageForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Strategies\Signal\SignalNotificationConfigControl.resx">
+      <DependentUpon>SignalNotificationConfigControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Strategies\Signal\SignalNotificationDataForm.resx">
+      <DependentUpon>SignalNotificationDataForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Strategies\StrategiesCollectionForm.resx">
       <DependentUpon>StrategiesCollectionForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Strategies\StrategyConfigurationForm.resx">
       <DependentUpon>StrategyConfigurationForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Strategies\StrategyDataForm.resx">
+      <DependentUpon>StrategyDataForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Strategies\StrategySpecificConfigurationControlBase.resx">
       <DependentUpon>StrategySpecificConfigurationControlBase.cs</DependentUpon>
@@ -618,6 +651,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Strategies\Stupid\SimpleBuyLowSellHighConfigControl.resx">
       <DependentUpon>SimpleBuyLowSellHighConfigControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TelegramRegistrationForm.resx">
+      <DependentUpon>TelegramRegistrationForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="TrailingCollectionControl.resx">
       <DependentUpon>TrailingCollectionControl.cs</DependentUpon>
@@ -757,6 +793,9 @@
       <Project>{4a5b7ab2-b8ce-4c47-aa5e-7ce8bed74249}</Project>
       <Name>Crypto.Core</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Indicators\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

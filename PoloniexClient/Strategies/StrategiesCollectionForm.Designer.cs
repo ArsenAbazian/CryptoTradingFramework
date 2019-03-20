@@ -35,6 +35,7 @@ namespace CryptoMarketClient.Strategies {
             this.biEdit = new DevExpress.XtraBars.BarButtonItem();
             this.biStart = new DevExpress.XtraBars.BarButtonItem();
             this.biStop = new DevExpress.XtraBars.BarButtonItem();
+            this.btShowData = new DevExpress.XtraBars.BarButtonItem();
             this.bar3 = new DevExpress.XtraBars.Bar();
             this.siStatus = new DevExpress.XtraBars.BarStaticItem();
             this.barDockControlTop = new DevExpress.XtraBars.BarDockControl();
@@ -53,6 +54,7 @@ namespace CryptoMarketClient.Strategies {
             this.colName = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colStateText = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colEarned = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.behaviorManager1 = new DevExpress.Utils.Behaviors.BehaviorManager(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.barManager1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.strategyBaseBindingSource)).BeginInit();
@@ -60,6 +62,7 @@ namespace CryptoMarketClient.Strategies {
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemTextEdit1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.behaviorManager1)).BeginInit();
             this.SuspendLayout();
             // 
             // barManager1
@@ -78,15 +81,15 @@ namespace CryptoMarketClient.Strategies {
             this.biEdit,
             this.siStatus,
             this.biStart,
-            this.biStop});
-            this.barManager1.MaxItemId = 6;
+            this.biStop,
+            this.btShowData});
+            this.barManager1.MaxItemId = 8;
             this.barManager1.OptionsStubGlyphs.AllowStubGlyphs = DevExpress.Utils.DefaultBoolean.True;
             this.barManager1.OptionsStubGlyphs.CaseMode = DevExpress.Utils.Drawing.GlyphTextCaseMode.UpperCase;
             this.barManager1.OptionsStubGlyphs.CornerRadius = 3;
             this.barManager1.OptionsStubGlyphs.Font = new System.Drawing.Font("Segoe UI", 12F);
             this.barManager1.OptionsStubGlyphs.LetterCount = DevExpress.Utils.Drawing.GlyphTextSymbolCount.Two;
             this.barManager1.OptionsStubGlyphs.UseFont = true;
-            this.barManager1.StatusBar = this.bar3;
             // 
             // bar1
             // 
@@ -99,7 +102,8 @@ namespace CryptoMarketClient.Strategies {
             new DevExpress.XtraBars.LinkPersistInfo(this.biRemove),
             new DevExpress.XtraBars.LinkPersistInfo(this.biEdit),
             new DevExpress.XtraBars.LinkPersistInfo(this.biStart, true),
-            new DevExpress.XtraBars.LinkPersistInfo(this.biStop)});
+            new DevExpress.XtraBars.LinkPersistInfo(this.biStop),
+            new DevExpress.XtraBars.LinkPersistInfo(this.btShowData, true)});
             this.bar1.OptionsBar.DrawBorder = false;
             this.bar1.OptionsBar.UseWholeRow = true;
             this.bar1.Text = "Tools";
@@ -118,6 +122,7 @@ namespace CryptoMarketClient.Strategies {
             this.biRemove.Id = 1;
             this.biRemove.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("biRemove.ImageOptions.SvgImage")));
             this.biRemove.Name = "biRemove";
+            this.biRemove.PaintStyle = DevExpress.XtraBars.BarItemPaintStyle.CaptionGlyph;
             this.biRemove.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.biRemove_ItemClick);
             // 
             // biEdit
@@ -126,6 +131,7 @@ namespace CryptoMarketClient.Strategies {
             this.biEdit.Id = 2;
             this.biEdit.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("biEdit.ImageOptions.SvgImage")));
             this.biEdit.Name = "biEdit";
+            this.biEdit.PaintStyle = DevExpress.XtraBars.BarItemPaintStyle.CaptionGlyph;
             this.biEdit.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.biEdit_ItemClick);
             // 
             // biStart
@@ -148,6 +154,15 @@ namespace CryptoMarketClient.Strategies {
             this.biStop.PaintStyle = DevExpress.XtraBars.BarItemPaintStyle.CaptionGlyph;
             this.biStop.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.biStop_ItemClick);
             // 
+            // btShowData
+            // 
+            this.btShowData.Caption = "Show Data";
+            this.btShowData.Id = 6;
+            this.btShowData.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("btShowData.ImageOptions.SvgImage")));
+            this.btShowData.Name = "btShowData";
+            this.btShowData.PaintStyle = DevExpress.XtraBars.BarItemPaintStyle.CaptionGlyph;
+            this.btShowData.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btShowData_ItemClick);
+            // 
             // bar3
             // 
             this.bar3.BarName = "Status bar";
@@ -164,9 +179,12 @@ namespace CryptoMarketClient.Strategies {
             // 
             // siStatus
             // 
+            this.siStatus.AllowHtmlText = DevExpress.Utils.DefaultBoolean.True;
             this.siStatus.Border = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
             this.siStatus.Caption = "    ";
             this.siStatus.Id = 3;
+            this.siStatus.ItemAppearance.Normal.ForeColor = DevExpress.LookAndFeel.DXSkinColors.ForeColors.Information;
+            this.siStatus.ItemAppearance.Normal.Options.UseForeColor = true;
             this.siStatus.Name = "siStatus";
             // 
             // barDockControlTop
@@ -181,9 +199,9 @@ namespace CryptoMarketClient.Strategies {
             // 
             this.barDockControlBottom.CausesValidation = false;
             this.barDockControlBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.barDockControlBottom.Location = new System.Drawing.Point(0, 975);
+            this.barDockControlBottom.Location = new System.Drawing.Point(0, 967);
             this.barDockControlBottom.Manager = this.barManager1;
-            this.barDockControlBottom.Size = new System.Drawing.Size(1667, 51);
+            this.barDockControlBottom.Size = new System.Drawing.Size(1667, 59);
             // 
             // barDockControlLeft
             // 
@@ -191,7 +209,7 @@ namespace CryptoMarketClient.Strategies {
             this.barDockControlLeft.Dock = System.Windows.Forms.DockStyle.Left;
             this.barDockControlLeft.Location = new System.Drawing.Point(0, 60);
             this.barDockControlLeft.Manager = this.barManager1;
-            this.barDockControlLeft.Size = new System.Drawing.Size(0, 915);
+            this.barDockControlLeft.Size = new System.Drawing.Size(0, 907);
             // 
             // barDockControlRight
             // 
@@ -199,7 +217,7 @@ namespace CryptoMarketClient.Strategies {
             this.barDockControlRight.Dock = System.Windows.Forms.DockStyle.Right;
             this.barDockControlRight.Location = new System.Drawing.Point(1667, 60);
             this.barDockControlRight.Manager = this.barManager1;
-            this.barDockControlRight.Size = new System.Drawing.Size(0, 915);
+            this.barDockControlRight.Size = new System.Drawing.Size(0, 907);
             // 
             // gridControl1
             // 
@@ -213,7 +231,7 @@ namespace CryptoMarketClient.Strategies {
             this.repositoryItemTextEdit1,
             this.repositoryItemCheckEdit1,
             this.repositoryItemCheckEdit2});
-            this.gridControl1.Size = new System.Drawing.Size(1667, 915);
+            this.gridControl1.Size = new System.Drawing.Size(1667, 907);
             this.gridControl1.TabIndex = 4;
             this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridView1});
@@ -232,11 +250,15 @@ namespace CryptoMarketClient.Strategies {
             this.colName,
             this.colStateText,
             this.colEarned});
+            this.gridView1.FocusRectStyle = DevExpress.XtraGrid.Views.Grid.DrawFocusRectStyle.RowFullFocus;
             this.gridView1.GridControl = this.gridControl1;
             this.gridView1.Name = "gridView1";
+            this.gridView1.OptionsDetail.EnableMasterViewMode = false;
+            this.gridView1.OptionsSelection.EnableAppearanceFocusedCell = false;
             this.gridView1.OptionsView.BestFitMode = DevExpress.XtraGrid.Views.Grid.GridBestFitMode.Full;
             this.gridView1.OptionsView.ShowHorizontalLines = DevExpress.Utils.DefaultBoolean.False;
             this.gridView1.OptionsView.ShowVerticalLines = DevExpress.Utils.DefaultBoolean.False;
+            this.gridView1.RowStyle += new DevExpress.XtraGrid.Views.Grid.RowStyleEventHandler(this.gridView1_RowStyle);
             // 
             // colEnabled
             // 
@@ -246,11 +268,12 @@ namespace CryptoMarketClient.Strategies {
             this.colEnabled.Name = "colEnabled";
             this.colEnabled.Visible = true;
             this.colEnabled.VisibleIndex = 0;
-            this.colEnabled.Width = 103;
+            this.colEnabled.Width = 175;
             // 
             // repositoryItemCheckEdit1
             // 
             this.repositoryItemCheckEdit1.AutoHeight = false;
+            this.repositoryItemCheckEdit1.CheckBoxOptions.Style = DevExpress.XtraEditors.Controls.CheckBoxStyle.SvgToggle1;
             this.repositoryItemCheckEdit1.Name = "repositoryItemCheckEdit1";
             this.repositoryItemCheckEdit1.EditValueChanged += new System.EventHandler(this.repositoryItemCheckEdit1_EditValueChanged);
             // 
@@ -262,11 +285,12 @@ namespace CryptoMarketClient.Strategies {
             this.colDemoMode.Name = "colDemoMode";
             this.colDemoMode.Visible = true;
             this.colDemoMode.VisibleIndex = 1;
-            this.colDemoMode.Width = 143;
+            this.colDemoMode.Width = 213;
             // 
             // repositoryItemCheckEdit2
             // 
             this.repositoryItemCheckEdit2.AutoHeight = false;
+            this.repositoryItemCheckEdit2.CheckBoxOptions.Style = DevExpress.XtraEditors.Controls.CheckBoxStyle.SvgToggle1;
             this.repositoryItemCheckEdit2.Name = "repositoryItemCheckEdit2";
             this.repositoryItemCheckEdit2.EditValueChanged += new System.EventHandler(this.repositoryItemCheckEdit2_EditValueChanged);
             // 
@@ -277,9 +301,7 @@ namespace CryptoMarketClient.Strategies {
             this.colDescription.MinWidth = 40;
             this.colDescription.Name = "colDescription";
             this.colDescription.OptionsColumn.AllowEdit = false;
-            this.colDescription.Visible = true;
-            this.colDescription.VisibleIndex = 2;
-            this.colDescription.Width = 683;
+            this.colDescription.Width = 554;
             // 
             // repositoryItemTextEdit1
             // 
@@ -295,17 +317,18 @@ namespace CryptoMarketClient.Strategies {
             this.colName.OptionsColumn.AllowEdit = false;
             this.colName.OptionsColumn.ReadOnly = true;
             this.colName.Visible = true;
-            this.colName.VisibleIndex = 3;
-            this.colName.Width = 702;
+            this.colName.VisibleIndex = 2;
+            this.colName.Width = 615;
             // 
             // colStateText
             // 
             this.colStateText.FieldName = "StateText";
             this.colStateText.MinWidth = 40;
             this.colStateText.Name = "colStateText";
+            this.colStateText.OptionsColumn.AllowEdit = false;
             this.colStateText.Visible = true;
-            this.colStateText.VisibleIndex = 4;
-            this.colStateText.Width = 150;
+            this.colStateText.VisibleIndex = 3;
+            this.colStateText.Width = 297;
             // 
             // colEarned
             // 
@@ -314,9 +337,10 @@ namespace CryptoMarketClient.Strategies {
             this.colEarned.FieldName = "Earned";
             this.colEarned.MinWidth = 40;
             this.colEarned.Name = "colEarned";
+            this.colEarned.OptionsColumn.AllowEdit = false;
             this.colEarned.Visible = true;
-            this.colEarned.VisibleIndex = 5;
-            this.colEarned.Width = 150;
+            this.colEarned.VisibleIndex = 4;
+            this.colEarned.Width = 331;
             // 
             // StrategiesCollectionForm
             // 
@@ -337,6 +361,7 @@ namespace CryptoMarketClient.Strategies {
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemTextEdit1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.behaviorManager1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -369,5 +394,7 @@ namespace CryptoMarketClient.Strategies {
         private DevExpress.XtraGrid.Columns.GridColumn colEarned;
         private DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit repositoryItemCheckEdit1;
         private DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit repositoryItemCheckEdit2;
+        private BarButtonItem btShowData;
+        private DevExpress.Utils.Behaviors.BehaviorManager behaviorManager1;
     }
 }

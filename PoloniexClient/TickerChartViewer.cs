@@ -69,7 +69,8 @@ namespace CryptoMarketClient {
         }
 
         private void OnTickerCandleStickChanged(object sender, EventArgs e) {
-            BeginInvoke(new MethodInvoker(RefreshChartData));
+            if(IsHandleCreated)
+                BeginInvoke(new MethodInvoker(RefreshChartData));
         }
 
         void RefreshChartData() {

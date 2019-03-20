@@ -30,6 +30,7 @@ namespace Crypto.Core.Strategies {
         public bool OrderBook { get; set; }
         public bool TradeHistory { get; set; }
         public bool Kline { get; set; }
+        public int KlineIntervalMin { get; set; }
     }
 
     public class StrategyExpectedDataTemplate {

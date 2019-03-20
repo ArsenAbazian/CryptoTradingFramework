@@ -102,7 +102,28 @@ namespace CryptoMarketClient {
         public BindingList<TickerHistoryItem> History { get; } = new BindingList<TickerHistoryItem>();
         public List<TradeInfoItem> TradeHistory { get; } = new List<TradeInfoItem>();
         public BindingList<TradeStatisticsItem> TradeStatistic { get; } = new BindingList<TradeStatisticsItem>();
-        public BindingList<CandleStickData> CandleStickData { get; set; } = new BindingList<CryptoMarketClient.CandleStickData>();
+
+        BindingList<CandleStickData> candleStickData;
+        protected void OnCandleStickDataItemsChanged(object sender, ListChangedEventArgs e) {
+            RaiseCandleStickChanged(e);
+        }
+        public BindingList<CandleStickData> CandleStickData {
+            get {
+                if(candleStickData == null) {
+                    candleStickData = new BindingList<CryptoMarketClient.CandleStickData>();
+                    candleStickData.ListChanged += OnCandleStickDataItemsChanged;
+                }
+                return candleStickData;
+            }
+            set {
+                if(CandleStickData != null)
+                    CandleStickData.ListChanged -= OnCandleStickDataItemsChanged;
+                candleStickData = value;
+                if(CandleStickData != null)
+                    CandleStickData.ListChanged += OnCandleStickDataItemsChanged;
+                RaiseCandleStickChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
+            }
+        }
         public BindingList<CurrencyStatusHistoryItem> MarketCurrencyStatusHistory { get; set; } = new BindingList<CurrencyStatusHistoryItem>();
 
         public OrderBook OrderBook { get; private set; }
@@ -380,7 +401,7 @@ namespace CryptoMarketClient {
         public event TradeHistoryChangedEventHandler TradeHistoryChanged;
         public event EventHandler Changed;
         public event EventHandler OpenedOrdersChanged;
-        public event EventHandler CandleStickChanged;
+        public event ListChangedEventHandler CandleStickChanged;
         public event OrderBookEventHandler OrderBookChanged {
             add { OrderBook.Changed += value; }
             remove { OrderBook.Changed -= value; }
@@ -515,25 +536,24 @@ namespace CryptoMarketClient {
         public void StartListenTickerStream() {
             Exchange.StartListenTickerStream(this);
         }
-        public CandleStickData GetOrCreateCandleStickData(DateTime dt) {
+        public CandleStickData UpdateCandleStickData(CandleStickData newData) {
+            DateTime dt = newData.Time;
             int end = Math.Max(0, CandleStickData.Count - 30);
             for(int i = CandleStickData.Count - 1; i >= end; i--) {
                 CandleStickData data = CandleStickData[i];
                 if(dt > data.Time)
                     break;
-                if(dt == data.Time)
-                    return data;
+                if(dt == data.Time) {
+                    CandleStickData[i] = newData;
+                    return newData;
+                }
                 if(dt < data.Time) {
-                    CandleStickData d = new CandleStickData();
-                    d.Time = dt;
-                    CandleStickData.Insert(i, d);
-                    return d;
+                    CandleStickData.Insert(i, newData);
+                    return newData;
                 }
             }
-            CandleStickData dd = new CandleStickData();
-            dd.Time = dt;
-            CandleStickData.Add(dd);
-            return dd;
+            CandleStickData.Add(newData);
+            return newData;
         }
         public override string ToString() {
             return CurrencyPair;
@@ -544,9 +564,9 @@ namespace CryptoMarketClient {
         public void StopListenKlineStream() {
             Exchange.StopListenKline(this);
         }
-        public void RaiseCandleStickChanged() {
+        public void RaiseCandleStickChanged(ListChangedEventArgs e) {
             if(CandleStickChanged != null)
-                CandleStickChanged(this, EventArgs.Empty);
+                CandleStickChanged(this, e);
         }
 
         public int CompareTo(object obj) {
