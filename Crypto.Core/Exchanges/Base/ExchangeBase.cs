@@ -1063,8 +1063,8 @@ namespace CryptoMarketClient {
             }
             if(info.Kline) {
                 info.Ticker.CandleStickPeriodMin = info.KlineIntervalMin;
-                int seconds = info.KlineIntervalMin * 60 * 100;
-                info.Ticker.CandleStickData = info.Ticker.GetCandleStickData(info.Ticker.CandleStickPeriodMin, DateTime.Now.AddSeconds(-seconds), seconds);
+                int seconds = info.KlineIntervalMin * 60 * 1000;
+                info.Ticker.CandleStickData = info.Ticker.GetCandleStickData(info.Ticker.CandleStickPeriodMin, DateTime.UtcNow.AddSeconds(-seconds), seconds);
                 StartListenKline(info.Ticker);
             }
             return true;

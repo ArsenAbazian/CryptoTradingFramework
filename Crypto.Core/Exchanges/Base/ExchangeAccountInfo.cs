@@ -221,8 +221,10 @@ namespace CryptoMarketClient {
         }
         public double GetBalance(string currency) {
             try {
-                if(Exchange.GetBalance(this, currency))
-                    return Balances.FirstOrDefault(b => b.Currency == currency).Available;
+                if(Exchange.GetBalance(this, currency)) {
+                    BalanceBase res = Balances.FirstOrDefault(b => b.Currency == currency);
+                    return res == null? 0: res.Available;
+                }
                 return -1;
             }
             catch(Exception e) {

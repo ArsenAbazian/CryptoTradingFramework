@@ -10,12 +10,7 @@ using System.Xml.Serialization;
 namespace CryptoMarketClient.Strategies.Stupid {
     public class SimpleBuyLowSellHighStrategy : TickerStrategyBase {
         public override string TypeName => "Stupid Buy Low Sell High";
-
-        public double BoughtTotal { get; set; }
-        public double SoldTotal { get; set; }
-        public double BuyLevel { get; set; }
-        public double SellLevel { get; set; }
-
+        
         public override void Assign(StrategyBase from) {
             base.Assign(from);
 
@@ -28,8 +23,7 @@ namespace CryptoMarketClient.Strategies.Stupid {
             SellLevel = st.SellLevel;
             State = st.State;
         }
-        [XmlIgnore]
-        public double MaxActualSellDeposit { get; private set; }
+        
 
         public override void OnEndDeserialize() {
             
@@ -45,25 +39,7 @@ namespace CryptoMarketClient.Strategies.Stupid {
                 list.Add(new StrategyValidationError() { DataObject = this, Description = "SellLevel should not be less than BuyLevel", PropertyName = "SellLevel", Value = "0" });
             return list;
         }
-
-        BuySellStrategyState state;
-        public BuySellStrategyState State {
-            get { return state; }
-            set {
-                if(State == value)
-                    return;
-                BuySellStrategyState prev = State;
-                state = value;
-                OnStateChanged(prev);
-            }
-        }
-
-        public override string StateText => State.ToString();
-
-        protected virtual void OnStateChanged(BuySellStrategyState prev) {
-            Log(LogType.Log, string.Format("Prev:{0}  New:{1}", prev, State), 0, 0, StrategyOperation.StateChanged);
-        }
-
+        
         protected bool PriceIsBelow(double buyLevel) {
             if(Ticker.OrderBook.Asks.Count == 0)
                 return false;
@@ -85,67 +61,5 @@ namespace CryptoMarketClient.Strategies.Stupid {
                     Sell();
             }
         }
-
-        protected OrderBookEntry GetAvailableToBuy(double limit) {
-            OrderBookEntry res = new OrderBookEntry();
-            res.Value = limit;
-            lock(Ticker.OrderBook.Asks) {
-                foreach(OrderBookEntry entry in Ticker.OrderBook.Asks) {
-                    if(entry.Value <= limit) {
-                        res.Amount += entry.Amount;
-                        res.Value = entry.Value;
-                    }
-                }
-            }
-            return res;
-        }
-
-        protected OrderBookEntry GetAvailableToSell(double limit) {
-            OrderBookEntry res = new OrderBookEntry();
-            res.Value = limit;
-            lock(Ticker.OrderBook.Bids) {
-                foreach(OrderBookEntry entry in Ticker.OrderBook.Bids) {
-                    if(entry.Value >= limit) {
-                        res.Amount += entry.Amount;
-                        res.Value = entry.Value;
-                    }
-                }
-            }
-            return res;
-        }
-
-        protected void Buy() {
-            OrderBookEntry e = GetAvailableToBuy(BuyLevel);
-            TradingResult res = MarketBuy(e.Value, e.Amount);
-            if(res != null) {
-                TradeHistory.Add(res);
-                BoughtTotal += res.Total;
-                MaxActualSellDeposit += res.Amount;
-            }
-
-            if(BoughtTotal > MaxActualDeposit) {
-                State = BuySellStrategyState.WaitingForSellOpportunity;
-                return;
-            }
-        }
-
-        protected void Sell() {
-            OrderBookEntry e = GetAvailableToSell(SellLevel);
-            TradingResult res = MarketSell(e.Value, e.Amount);
-            if(res != null) {
-                TradeHistory.Add(res);
-                SoldTotal += res.Total;
-            }
-
-            if(SoldTotal > MaxActualSellDeposit) {
-                State = BuySellStrategyState.WaitingForSellOpportunity;
-                return;
-            }
-        }
-    }
-
-    public enum BuySellStrategyState {
-        WaitingForBuyOpportunity,
-        WaitingForSellOpportunity
     }
 }

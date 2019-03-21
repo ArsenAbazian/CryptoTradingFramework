@@ -22,7 +22,8 @@ namespace Crypto.Core.Strategies {
             List<StrategyRegistrationInfo> list = new List<StrategyRegistrationInfo>();
             list.Add(new StrategyRegistrationInfo() { Type = typeof(SimpleBuyLowSellHighStrategy), Group = StrategyGroup.Simple, Name = "Simple Buy Low Sell High", Description = "No Rocket Scinece, Just buy low and sell high. Thats it." });
             list.Add(new StrategyRegistrationInfo() { Type = typeof(StatisticalArbitrageStrategy), Group = StrategyGroup.Arbitrage, Name = "Statistical Arbitrage", Description = "Simple Statistical Arbitrage Strategy for Trading Pairs (usually base currency and futures)." });
-            list.Add(new StrategyRegistrationInfo() { Type = typeof(SignalNotificationStrategy), Group = StrategyGroup.SignalNotificator, Name = "Signal Notification", Description = "This strategy just send notification when corresponding param's values found" });
+            list.Add(new StrategyRegistrationInfo() { Type = typeof(SignalNotificationStrategy), Group = StrategyGroup.Signal, Name = "Signal Notification", Description = "This strategy just send notification when corresponding param's values found" });
+            list.Add(new StrategyRegistrationInfo() { Type = typeof(TripleRsiIndicatorStrategy), Group = StrategyGroup.Signal, Name = "Triple Rsi Indicator", Description = "This strategy based on triple rsi indicators values." });
             return list;
         }
     }
@@ -43,6 +44,6 @@ namespace Crypto.Core.Strategies {
         Arbitrage = "Arbitrage",
         MarketMaking = "Market Making",
         Grid = "Grid",
-        SignalNotificator = "Signal Notificators";
+        Signal = "Signal Notificators";
     }
 }

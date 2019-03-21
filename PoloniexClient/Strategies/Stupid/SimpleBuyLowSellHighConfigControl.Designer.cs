@@ -27,7 +27,6 @@
             this.dataLayoutControl1 = new DevExpress.XtraDataLayout.DataLayoutControl();
             this.TickerInfoTextEdit = new DevExpress.XtraEditors.GridLookUpEdit();
             this.TickerInfoTextEditView = new DevExpress.XtraGrid.Views.Grid.GridView();
-            this.colExchange = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colBaseCurrency = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colMarketCurrency = new DevExpress.XtraGrid.Columns.GridColumn();
             this.BuyLevelTextEdit = new DevExpress.XtraEditors.SpinEdit();
@@ -39,6 +38,7 @@
             this.ItemForTickerInfo = new DevExpress.XtraLayout.LayoutControlItem();
             this.simpleBuyLowSellHighStrategyBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.tickerNameInfoBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.colExchange = new DevExpress.XtraGrid.Columns.GridColumn();
             this.repositoryItemTextEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemTextEdit();
             ((System.ComponentModel.ISupportInitialize)(this.dataLayoutControl1)).BeginInit();
             this.dataLayoutControl1.SuspendLayout();
@@ -102,13 +102,6 @@
             this.TickerInfoTextEditView.SortInfo.AddRange(new DevExpress.XtraGrid.Columns.GridColumnSortInfo[] {
             new DevExpress.XtraGrid.Columns.GridColumnSortInfo(this.colExchange, DevExpress.Data.ColumnSortOrder.Ascending),
             new DevExpress.XtraGrid.Columns.GridColumnSortInfo(this.colBaseCurrency, DevExpress.Data.ColumnSortOrder.Ascending)});
-            // 
-            // colExchange
-            // 
-            this.colExchange.FieldName = "Exchange";
-            this.colExchange.Name = "colExchange";
-            this.colExchange.Visible = true;
-            this.colExchange.VisibleIndex = 0;
             // 
             // colBaseCurrency
             // 
@@ -250,6 +243,13 @@
             // tickerNameInfoBindingSource
             // 
             this.tickerNameInfoBindingSource.DataSource = typeof(Crypto.Core.Common.TickerNameInfo);
+            // 
+            // colExchange
+            // 
+            this.colExchange.FieldName = "Exchange";
+            this.colExchange.Name = "colExchange";
+            this.colExchange.Visible = true;
+            this.colExchange.VisibleIndex = 0;
             // 
             // repositoryItemTextEdit1
             // 

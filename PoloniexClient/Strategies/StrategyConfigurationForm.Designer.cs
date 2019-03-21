@@ -65,6 +65,8 @@ namespace CryptoMarketClient.Strategies {
             this.layoutControlItem2 = new DevExpress.XtraLayout.LayoutControlItem();
             this.emptySpaceItem1 = new DevExpress.XtraLayout.EmptySpaceItem();
             this.dxErrorProvider1 = new DevExpress.XtraEditors.DXErrorProvider.DXErrorProvider(this.components);
+            this.layoutControlItem6 = new DevExpress.XtraLayout.LayoutControlItem();
+            this.checkEdit1 = new DevExpress.XtraEditors.ToggleSwitch();
             ((System.ComponentModel.ISupportInitialize)(this.dataLayoutControl1)).BeginInit();
             this.dataLayoutControl1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.EnabledCheckEdit.Properties)).BeginInit();
@@ -94,6 +96,8 @@ namespace CryptoMarketClient.Strategies {
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItem1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dxErrorProvider1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem6)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.checkEdit1.Properties)).BeginInit();
             this.SuspendLayout();
             // 
             // dataLayoutControl1
@@ -107,6 +111,7 @@ namespace CryptoMarketClient.Strategies {
             this.dataLayoutControl1.Controls.Add(this.spinEdit1);
             this.dataLayoutControl1.Controls.Add(this.leAccounts);
             this.dataLayoutControl1.Controls.Add(this.beTelegramChatId);
+            this.dataLayoutControl1.Controls.Add(this.checkEdit1);
             this.dataLayoutControl1.DataMember = null;
             this.dataLayoutControl1.DataSource = this.statisticalArbitrageStrategyBindingSource;
             this.dataLayoutControl1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -145,13 +150,13 @@ namespace CryptoMarketClient.Strategies {
             // EnabledCheckEdit
             // 
             this.EnabledCheckEdit.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.statisticalArbitrageStrategyBindingSource, "Enabled", true));
-            this.EnabledCheckEdit.Location = new System.Drawing.Point(228, 249);
+            this.EnabledCheckEdit.Location = new System.Drawing.Point(305, 249);
             this.EnabledCheckEdit.Name = "EnabledCheckEdit";
             this.EnabledCheckEdit.Properties.GlyphAlignment = DevExpress.Utils.HorzAlignment.Far;
             this.EnabledCheckEdit.Properties.OffText = "Off";
             this.EnabledCheckEdit.Properties.OnText = "On";
             this.EnabledCheckEdit.Properties.ShowText = false;
-            this.EnabledCheckEdit.Size = new System.Drawing.Size(1101, 46);
+            this.EnabledCheckEdit.Size = new System.Drawing.Size(1024, 46);
             this.EnabledCheckEdit.StyleController = this.dataLayoutControl1;
             this.EnabledCheckEdit.TabIndex = 5;
             // 
@@ -162,22 +167,22 @@ namespace CryptoMarketClient.Strategies {
             // DemoModeCheckEdit
             // 
             this.DemoModeCheckEdit.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.statisticalArbitrageStrategyBindingSource, "DemoMode", true));
-            this.DemoModeCheckEdit.Location = new System.Drawing.Point(228, 313);
+            this.DemoModeCheckEdit.Location = new System.Drawing.Point(305, 313);
             this.DemoModeCheckEdit.Name = "DemoModeCheckEdit";
             this.DemoModeCheckEdit.Properties.GlyphAlignment = DevExpress.Utils.HorzAlignment.Far;
             this.DemoModeCheckEdit.Properties.OffText = "Off";
             this.DemoModeCheckEdit.Properties.OnText = "On";
             this.DemoModeCheckEdit.Properties.ShowText = false;
-            this.DemoModeCheckEdit.Size = new System.Drawing.Size(1101, 46);
+            this.DemoModeCheckEdit.Size = new System.Drawing.Size(1024, 46);
             this.DemoModeCheckEdit.StyleController = this.dataLayoutControl1;
             this.DemoModeCheckEdit.TabIndex = 6;
             // 
             // textEdit1
             // 
             this.textEdit1.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.statisticalArbitrageStrategyBindingSource, "Name", true));
-            this.textEdit1.Location = new System.Drawing.Point(228, 75);
+            this.textEdit1.Location = new System.Drawing.Point(305, 75);
             this.textEdit1.Name = "textEdit1";
-            this.textEdit1.Size = new System.Drawing.Size(1101, 40);
+            this.textEdit1.Size = new System.Drawing.Size(1024, 40);
             this.textEdit1.StyleController = this.dataLayoutControl1;
             this.textEdit1.TabIndex = 11;
             this.textEdit1.TextChanged += new System.EventHandler(this.textEdit1_TextChanged);
@@ -185,9 +190,9 @@ namespace CryptoMarketClient.Strategies {
             // DescriptionTextEdit
             // 
             this.DescriptionTextEdit.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.statisticalArbitrageStrategyBindingSource, "Description", true));
-            this.DescriptionTextEdit.Location = new System.Drawing.Point(228, 377);
+            this.DescriptionTextEdit.Location = new System.Drawing.Point(305, 377);
             this.DescriptionTextEdit.Name = "DescriptionTextEdit";
-            this.DescriptionTextEdit.Size = new System.Drawing.Size(1101, 438);
+            this.DescriptionTextEdit.Size = new System.Drawing.Size(1024, 388);
             this.DescriptionTextEdit.StyleController = this.dataLayoutControl1;
             this.DescriptionTextEdit.TabIndex = 7;
             // 
@@ -199,7 +204,7 @@ namespace CryptoMarketClient.Strategies {
             0,
             0,
             0});
-            this.spinEdit1.Location = new System.Drawing.Point(228, 133);
+            this.spinEdit1.Location = new System.Drawing.Point(305, 133);
             this.spinEdit1.Name = "spinEdit1";
             this.spinEdit1.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
@@ -207,14 +212,14 @@ namespace CryptoMarketClient.Strategies {
             this.spinEdit1.Properties.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.spinEdit1.Properties.EditFormat.FormatString = "0.########";
             this.spinEdit1.Properties.EditFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
-            this.spinEdit1.Size = new System.Drawing.Size(1101, 40);
+            this.spinEdit1.Size = new System.Drawing.Size(1024, 40);
             this.spinEdit1.StyleController = this.dataLayoutControl1;
             this.spinEdit1.TabIndex = 12;
             // 
             // leAccounts
             // 
             this.leAccounts.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.statisticalArbitrageStrategyBindingSource, "AccountId", true));
-            this.leAccounts.Location = new System.Drawing.Point(228, 191);
+            this.leAccounts.Location = new System.Drawing.Point(305, 191);
             this.leAccounts.Name = "leAccounts";
             this.leAccounts.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
@@ -225,7 +230,7 @@ namespace CryptoMarketClient.Strategies {
             this.repositoryItemTextEdit1});
             this.leAccounts.Properties.ValueMember = "Id";
             this.leAccounts.Properties.ViewType = DevExpress.XtraEditors.Repository.GridLookUpViewType.GridView;
-            this.leAccounts.Size = new System.Drawing.Size(1101, 40);
+            this.leAccounts.Size = new System.Drawing.Size(1024, 40);
             this.leAccounts.StyleController = this.dataLayoutControl1;
             this.leAccounts.TabIndex = 13;
             // 
@@ -285,13 +290,13 @@ namespace CryptoMarketClient.Strategies {
             // beTelegramChatId
             // 
             this.beTelegramChatId.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.statisticalArbitrageStrategyBindingSource, "ChatId", true));
-            this.beTelegramChatId.Location = new System.Drawing.Point(221, 826);
+            this.beTelegramChatId.Location = new System.Drawing.Point(298, 776);
             this.beTelegramChatId.Name = "beTelegramChatId";
             editorButtonImageOptions1.SvgImageSize = new System.Drawing.Size(16, 16);
             this.beTelegramChatId.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph, "Register", -1, true, true, false, editorButtonImageOptions1, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject1, serializableAppearanceObject2, serializableAppearanceObject3, serializableAppearanceObject4, "", null, null, DevExpress.Utils.ToolTipAnchor.Default)});
             this.beTelegramChatId.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
-            this.beTelegramChatId.Size = new System.Drawing.Size(1115, 40);
+            this.beTelegramChatId.Size = new System.Drawing.Size(1038, 40);
             this.beTelegramChatId.StyleController = this.dataLayoutControl1;
             this.beTelegramChatId.TabIndex = 14;
             this.beTelegramChatId.ButtonClick += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.beTelegramChatId_ButtonClick);
@@ -338,7 +343,8 @@ namespace CryptoMarketClient.Strategies {
             this.ItemForDescription,
             this.layoutControlItem4,
             this.layoutControlItem5,
-            this.lcTelegram});
+            this.lcTelegram,
+            this.layoutControlItem6});
             this.layoutControlGroup3.Location = new System.Drawing.Point(0, 0);
             this.layoutControlGroup3.Name = "layoutControlGroup3";
             this.layoutControlGroup3.Size = new System.Drawing.Size(1315, 802);
@@ -352,7 +358,7 @@ namespace CryptoMarketClient.Strategies {
             this.ItemForEnabled.Padding = new DevExpress.XtraLayout.Utils.Padding(9, 9, 9, 9);
             this.ItemForEnabled.Size = new System.Drawing.Size(1315, 64);
             this.ItemForEnabled.Text = "Enabled";
-            this.ItemForEnabled.TextSize = new System.Drawing.Size(193, 25);
+            this.ItemForEnabled.TextSize = new System.Drawing.Size(270, 25);
             // 
             // ItemForDemoMode
             // 
@@ -362,7 +368,7 @@ namespace CryptoMarketClient.Strategies {
             this.ItemForDemoMode.Padding = new DevExpress.XtraLayout.Utils.Padding(9, 9, 9, 9);
             this.ItemForDemoMode.Size = new System.Drawing.Size(1315, 64);
             this.ItemForDemoMode.Text = "Demo Mode";
-            this.ItemForDemoMode.TextSize = new System.Drawing.Size(193, 25);
+            this.ItemForDemoMode.TextSize = new System.Drawing.Size(270, 25);
             // 
             // layoutControlItem3
             // 
@@ -372,7 +378,7 @@ namespace CryptoMarketClient.Strategies {
             this.layoutControlItem3.Padding = new DevExpress.XtraLayout.Utils.Padding(9, 9, 9, 9);
             this.layoutControlItem3.Size = new System.Drawing.Size(1315, 58);
             this.layoutControlItem3.Text = "Name";
-            this.layoutControlItem3.TextSize = new System.Drawing.Size(193, 25);
+            this.layoutControlItem3.TextSize = new System.Drawing.Size(270, 25);
             // 
             // ItemForDescription
             // 
@@ -380,9 +386,9 @@ namespace CryptoMarketClient.Strategies {
             this.ItemForDescription.Location = new System.Drawing.Point(0, 302);
             this.ItemForDescription.Name = "ItemForDescription";
             this.ItemForDescription.Padding = new DevExpress.XtraLayout.Utils.Padding(9, 9, 9, 9);
-            this.ItemForDescription.Size = new System.Drawing.Size(1315, 456);
+            this.ItemForDescription.Size = new System.Drawing.Size(1315, 406);
             this.ItemForDescription.Text = "Description";
-            this.ItemForDescription.TextSize = new System.Drawing.Size(193, 25);
+            this.ItemForDescription.TextSize = new System.Drawing.Size(270, 25);
             // 
             // layoutControlItem4
             // 
@@ -392,7 +398,7 @@ namespace CryptoMarketClient.Strategies {
             this.layoutControlItem4.Padding = new DevExpress.XtraLayout.Utils.Padding(9, 9, 9, 9);
             this.layoutControlItem4.Size = new System.Drawing.Size(1315, 58);
             this.layoutControlItem4.Text = "Max Allowed Deposit";
-            this.layoutControlItem4.TextSize = new System.Drawing.Size(193, 25);
+            this.layoutControlItem4.TextSize = new System.Drawing.Size(270, 25);
             // 
             // layoutControlItem5
             // 
@@ -402,16 +408,16 @@ namespace CryptoMarketClient.Strategies {
             this.layoutControlItem5.Padding = new DevExpress.XtraLayout.Utils.Padding(9, 9, 9, 9);
             this.layoutControlItem5.Size = new System.Drawing.Size(1315, 58);
             this.layoutControlItem5.Text = "Trading Account";
-            this.layoutControlItem5.TextSize = new System.Drawing.Size(193, 25);
+            this.layoutControlItem5.TextSize = new System.Drawing.Size(270, 25);
             // 
             // lcTelegram
             // 
             this.lcTelegram.Control = this.beTelegramChatId;
-            this.lcTelegram.Location = new System.Drawing.Point(0, 758);
+            this.lcTelegram.Location = new System.Drawing.Point(0, 708);
             this.lcTelegram.Name = "lcTelegram";
             this.lcTelegram.Size = new System.Drawing.Size(1315, 44);
             this.lcTelegram.Text = "Telegram Chat Id";
-            this.lcTelegram.TextSize = new System.Drawing.Size(193, 25);
+            this.lcTelegram.TextSize = new System.Drawing.Size(270, 25);
             // 
             // lcgStrategySpecific
             // 
@@ -451,6 +457,27 @@ namespace CryptoMarketClient.Strategies {
             // dxErrorProvider1
             // 
             this.dxErrorProvider1.ContainerControl = this;
+            // 
+            // layoutControlItem6
+            // 
+            this.layoutControlItem6.Control = this.checkEdit1;
+            this.layoutControlItem6.Location = new System.Drawing.Point(0, 752);
+            this.layoutControlItem6.Name = "layoutControlItem6";
+            this.layoutControlItem6.Size = new System.Drawing.Size(1315, 50);
+            this.layoutControlItem6.Text = "Enable Telegram Notification";
+            this.layoutControlItem6.TextSize = new System.Drawing.Size(270, 25);
+            // 
+            // checkEdit1
+            // 
+            this.checkEdit1.Location = new System.Drawing.Point(298, 820);
+            this.checkEdit1.Name = "checkEdit1";
+            this.checkEdit1.Properties.GlyphAlignment = DevExpress.Utils.HorzAlignment.Far;
+            this.checkEdit1.Properties.OffText = "Off";
+            this.checkEdit1.Properties.OnText = "On";
+            this.checkEdit1.Properties.ShowText = false;
+            this.checkEdit1.Size = new System.Drawing.Size(1038, 46);
+            this.checkEdit1.StyleController = this.dataLayoutControl1;
+            this.checkEdit1.TabIndex = 15;
             // 
             // StrategyConfigurationForm
             // 
@@ -492,6 +519,8 @@ namespace CryptoMarketClient.Strategies {
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItem1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dxErrorProvider1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem6)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.checkEdit1.Properties)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -532,5 +561,7 @@ namespace CryptoMarketClient.Strategies {
         private DevExpress.XtraGrid.Columns.GridColumn colActive;
         private DevExpress.XtraEditors.ButtonEdit beTelegramChatId;
         private DevExpress.XtraLayout.LayoutControlItem lcTelegram;
+        private DevExpress.XtraEditors.ToggleSwitch checkEdit1;
+        private DevExpress.XtraLayout.LayoutControlItem layoutControlItem6;
     }
 }

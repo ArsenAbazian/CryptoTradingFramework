@@ -8,5 +8,6 @@ namespace Crypto.Core.Strategies {
     public interface IStrategyDataProvider {
         bool Connect(TickerInputInfo info);
         bool Disconnect(TickerInputInfo info);
+        bool Initialize(StrategyBase s);
     }
 }

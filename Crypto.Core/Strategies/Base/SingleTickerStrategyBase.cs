@@ -14,6 +14,89 @@ namespace CryptoMarketClient.Strategies {
         public TickerStrategyBase() {
         }
 
+        public double BoughtTotal { get; set; }
+        public double SoldTotal { get; set; }
+        public double BuyLevel { get; set; }
+        public double SellLevel { get; set; }
+
+        protected OrderBookEntry GetAvailableToBuy(double limit) {
+            OrderBookEntry res = new OrderBookEntry();
+            res.Value = limit;
+            lock(Ticker.OrderBook.Asks) {
+                foreach(OrderBookEntry entry in Ticker.OrderBook.Asks) {
+                    if(entry.Value <= limit) {
+                        res.Amount += entry.Amount;
+                        res.Value = entry.Value;
+                    }
+                }
+            }
+            return res;
+        }
+
+        protected OrderBookEntry GetAvailableToSell(double limit) {
+            OrderBookEntry res = new OrderBookEntry();
+            res.Value = limit;
+            lock(Ticker.OrderBook.Bids) {
+                foreach(OrderBookEntry entry in Ticker.OrderBook.Bids) {
+                    if(entry.Value >= limit) {
+                        res.Amount += entry.Amount;
+                        res.Value = entry.Value;
+                    }
+                }
+            }
+            return res;
+        }
+
+        [XmlIgnore]
+        public double MaxActualSellDeposit { get; private set; }
+
+        BuySellStrategyState state;
+        public BuySellStrategyState State {
+            get { return state; }
+            set {
+                if(State == value)
+                    return;
+                BuySellStrategyState prev = State;
+                state = value;
+                OnStateChanged(prev);
+            }
+        }
+
+        public override string StateText => State.ToString();
+
+        protected virtual void OnStateChanged(BuySellStrategyState prev) {
+            Log(LogType.Log, string.Format("Prev:{0}  New:{1}", prev, State), 0, 0, StrategyOperation.StateChanged);
+        }
+
+        protected void Buy() {
+            OrderBookEntry e = GetAvailableToBuy(BuyLevel);
+            TradingResult res = MarketBuy(e.Value, e.Amount);
+            if(res != null) {
+                TradeHistory.Add(res);
+                BoughtTotal += res.Total;
+                MaxActualSellDeposit += res.Amount;
+            }
+
+            if(BoughtTotal > MaxActualDeposit) {
+                State = BuySellStrategyState.WaitingForSellOpportunity;
+                return;
+            }
+        }
+
+        protected void Sell() {
+            OrderBookEntry e = GetAvailableToSell(SellLevel);
+            TradingResult res = MarketSell(e.Value, e.Amount);
+            if(res != null) {
+                TradeHistory.Add(res);
+                SoldTotal += res.Total;
+            }
+
+            if(SoldTotal > MaxActualSellDeposit) {
+                State = BuySellStrategyState.WaitingForSellOpportunity;
+                return;
+            }
+        }
+
         Ticker ticker;
         [XmlIgnore]
         public Ticker Ticker {
@@ -94,7 +177,7 @@ namespace CryptoMarketClient.Strategies {
             TickerInfo = new TickerNameInfo() { Exchange = Ticker.Exchange.Type, Ticker = Ticker.Name };
         }
 
-        protected virtual TickerInputInfo CreateInputInfo() {
+        public override TickerInputInfo CreateInputInfo() {
             return new TickerInputInfo() { Exchange = TickerInfo.Exchange, TickerName = TickerInfo.Ticker, OrderBook = true, TradeHistory = true };
         }
 
@@ -199,5 +282,10 @@ namespace CryptoMarketClient.Strategies {
             if(TickerInfo.Exchange != Account.Exchange.Type)
                 list.Add(new StrategyValidationError() { DataObject = this, Description = string.Format("Ticker's exchange {0} does not match account's {1}.", TickerInfo.Exchange, Account.Exchange.Type), PropertyName = "Ticker", Value = GetTickerName() });
         }
+    }
+
+    public enum BuySellStrategyState {
+        WaitingForBuyOpportunity,
+        WaitingForSellOpportunity
     }
 }

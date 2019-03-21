@@ -1,5 +1,6 @@
 ﻿using CryptoMarketClient;
 using CryptoMarketClient.Common;
+using CryptoMarketClient.Helpers;
 using CryptoMarketClient.Strategies;
 using CryptoMarketClient.Strategies.Stupid;
 using System;
@@ -15,6 +16,7 @@ namespace Crypto.Core.Strategies {
     [XmlInclude(typeof(GridStrategyBase))]
     [XmlInclude(typeof(StaticGridStrategy))]
     [XmlInclude(typeof(Signal.SignalNotificationStrategy))]
+    [XmlInclude(typeof(Signal.TripleRsiIndicatorStrategy))]
     //[XmlInclude(typeof())]
     [Serializable]
     public abstract class StrategyBase {
@@ -33,6 +35,14 @@ namespace Crypto.Core.Strategies {
         public double Earned { get; set; }
 
         public long ChatId { get; set; }
+        public bool EnableNotifications { get; set; }
+
+        public void SendNotification(string notification) {
+            if(!EnableNotifications)
+                return;
+            TelegramBot.Default.SendNotification(notification, ChatId);
+        }
+
 
         public abstract string TypeName { get; }
         public string Name { get; set; }
@@ -40,7 +50,12 @@ namespace Crypto.Core.Strategies {
         public List<StrategyHistoryItem> History { get; } = new List<StrategyHistoryItem>();
         public List<TradingResult> TradeHistory { get; } = new List<TradingResult>();
 
+        public virtual TickerInputInfo CreateInputInfo() {
+            return new TickerInputInfo() { };
+        }
+
         public virtual bool Start() {
+            TelegramBot.Default.TryAddClient(ChatId, true, "", Id);
             return true;
         }
         public virtual bool Stop() {
@@ -94,9 +109,6 @@ namespace Crypto.Core.Strategies {
         }
 
         protected abstract void OnTickCore();
-        public virtual bool Initialize(IStrategyDataProvider dataProvider) {
-            return true;
-        }
         public StrategyBase Clone() {
             ConstructorInfo info = GetType().GetConstructor(new Type[] { });
             StrategyBase cloned = (StrategyBase)info.Invoke(new object[] { });

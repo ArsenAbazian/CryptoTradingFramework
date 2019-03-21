@@ -242,6 +242,8 @@
     <Compile Include="Strategies\Base\SingleTickerStrategyBase.cs" />
     <Compile Include="Strategies\RealtimeStrategyDataProvider.cs" />
     <Compile Include="Strategies\Signal\SignalNotificationStrategy.cs" />
+    <Compile Include="Strategies\Signal\TripleRsiIndicatorStrategy.cs" />
+    <Compile Include="Strategies\SimulationStrategyDataProvider.cs" />
     <Compile Include="Strategies\StrategiesManager.cs" />
     <Compile Include="Strategies\StrategiesRegistrator.cs" />
     <Compile Include="Strategies\Base\StrategyBase.cs" />

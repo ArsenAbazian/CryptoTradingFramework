@@ -196,5 +196,20 @@ namespace CryptoMarketClient.Strategies {
             e.Appearance.BackColor = Color.FromArgb(0x10, this.gridView1.PaintAppearance.FocusedRow.BackColor);
             e.HighPriority = true;
         }
+
+        private void biSimulation_ItemClick(object sender, ItemClickEventArgs e) {
+            StrategyBase strategy = (StrategyBase)this.gridView1.GetFocusedRow();
+            if(strategy == null) {
+                XtraMessageBox.Show("No strategy selected.");
+                return;
+            }
+
+            StrategiesManager manager = new StrategiesManager();
+            StrategyBase cloned = strategy.Clone();
+            manager.Strategies.Add(cloned);
+
+            manager.Initialize(new SimulationStrategyDataProvider());
+            manager.Start();
+        }
     }
 }

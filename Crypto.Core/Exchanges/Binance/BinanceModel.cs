@@ -397,6 +397,7 @@ namespace CryptoMarketClient.Binance {
         }
 
         public override BindingList<CandleStickData> GetCandleStickData(Ticker ticker, int candleStickPeriodMin, DateTime startUtc, long periodInSeconds) {
+            //startUtc = startUtc.ToUniversalTime();
             long startSec = (long)(startUtc.Subtract(epoch)).TotalSeconds;
             long end = startSec + periodInSeconds;
             CandleStickIntervalInfo info = AllowedCandleStickIntervals.FirstOrDefault(i => i.Interval.TotalMinutes == candleStickPeriodMin);

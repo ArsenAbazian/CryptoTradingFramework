@@ -39,6 +39,7 @@ namespace CryptoMarketClient {
             base.OnShown(e);
             Exchange.AllowTradeHistory = this.bcAllowTradeHistory.Checked;
             Exchange.OrderBookDepth = Convert.ToInt32(this.beOrderBookDepth.EditValue);
+            TelegramBot.Default.Update();
             TelegramBot.Default.SendNotification("hello!");
             this.bciAllowDirectXCharts.Checked = SettingsStore.Default.UseDirectXForCharts;
             this.bciAllowDirectXGrid.Checked = SettingsStore.Default.UseDirectXForGrid;

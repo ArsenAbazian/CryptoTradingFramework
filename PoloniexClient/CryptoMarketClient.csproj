@@ -379,6 +379,12 @@
     <Compile Include="Strategies\Arbitrages\Statistical\DependencyArbitrageForm.Designer.cs">
       <DependentUpon>DependencyArbitrageForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Strategies\Signal\TripleRsiStrategyConfigControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Strategies\Signal\TripleRsiStrategyConfigControl.Designer.cs">
+      <DependentUpon>TripleRsiStrategyConfigControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Strategies\Signal\SignalNotificationConfigControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -390,6 +396,12 @@
     </Compile>
     <Compile Include="Strategies\Signal\SignalNotificationDataForm.Designer.cs">
       <DependentUpon>SignalNotificationDataForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Strategies\Signal\TripleRsiStrategyDataForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Strategies\Signal\TripleRsiStrategyDataForm.Designer.cs">
+      <DependentUpon>TripleRsiStrategyDataForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Strategies\StrategiesCollectionForm.cs">
       <SubType>Form</SubType>
@@ -436,6 +448,7 @@
     </Compile>
     <Compile Include="Tests\FastValueConverterTest.cs" />
     <Compile Include="Tests\IncrementalUpdateQueueTests.cs" />
+    <Compile Include="Tests\IndicatorsTest.cs" />
     <Compile Include="TrailingCollectionControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -628,11 +641,17 @@
     <EmbeddedResource Include="Strategies\Arbitrages\Statistical\DependencyArbitrageForm.resx">
       <DependentUpon>DependencyArbitrageForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Strategies\Signal\TripleRsiStrategyConfigControl.resx">
+      <DependentUpon>TripleRsiStrategyConfigControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Strategies\Signal\SignalNotificationConfigControl.resx">
       <DependentUpon>SignalNotificationConfigControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Strategies\Signal\SignalNotificationDataForm.resx">
       <DependentUpon>SignalNotificationDataForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Strategies\Signal\TripleRsiStrategyDataForm.resx">
+      <DependentUpon>TripleRsiStrategyDataForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Strategies\StrategiesCollectionForm.resx">
       <DependentUpon>StrategiesCollectionForm.cs</DependentUpon>
