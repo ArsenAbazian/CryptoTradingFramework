@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 namespace Crypto.Core.Strategies {
     public class StrategyInputInfo {
         public List<ExchangeInputInfo> Exchanges { get; } = new List<ExchangeInputInfo>();
+        public List<TickerInputInfo> Tickers { get; } = new List<TickerInputInfo>();
     }
 
     public class ExchangeInputInfo {
         public ExchangeType ExchangeType { get; set; }
         public Exchange Exchange { get; set; }
-        public List<TickerInputInfo> Tickers { get; } = new List<TickerInputInfo>();
     } 
 
     public class TickerInputInfo {

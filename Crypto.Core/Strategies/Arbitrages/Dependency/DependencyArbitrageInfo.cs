@@ -21,11 +21,17 @@ namespace Crypto.Core.Common.Arbitrages {
         [XmlIgnore]
         public object Tag { get; set; }
 
+        public override bool SupportSimulation => false;
+
         public override string TypeName => "Statistical Arbitrage";
         protected override void OnTickCore() {
             throw new NotImplementedException();
         }
         public override string StateText => State.ToString();
+
+        public override bool InitializeCore() {
+            return false;
+        }
 
         Ticker second;
         [XmlIgnore]

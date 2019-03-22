@@ -23,6 +23,7 @@ using System.Xml.Serialization;
 using Crypto.Core.Helpers;
 using System.Reflection;
 using Crypto.Core.Strategies;
+using CryptoMarketClient.BitFinex;
 
 namespace CryptoMarketClient {
     public abstract class Exchange : ISupportSerialization {
@@ -60,6 +61,22 @@ namespace CryptoMarketClient {
                 }
             }
             return list;
+        }
+
+        public static Exchange CreateExchange(ExchangeType exchange) {
+            switch(exchange) {
+                case ExchangeType.Binance:
+                    return new BinanceExchange();
+                case ExchangeType.BitFinex:
+                    return new BitFinexExchange();
+                case ExchangeType.Bitmex:
+                    return new BitmexExchange();
+                case ExchangeType.Bittrex:
+                    return new BittrexExchange();
+                case ExchangeType.Poloniex:
+                    return new PoloniexExchange();
+            }
+            return null;
         }
 
         public DateTime LastWebSocketRecvTime { get; set; }

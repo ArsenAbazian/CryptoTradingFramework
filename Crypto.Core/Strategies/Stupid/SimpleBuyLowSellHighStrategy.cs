@@ -23,7 +23,9 @@ namespace CryptoMarketClient.Strategies.Stupid {
             SellLevel = st.SellLevel;
             State = st.State;
         }
-        
+
+        public override bool SupportSimulation => false;
+
 
         public override void OnEndDeserialize() {
             

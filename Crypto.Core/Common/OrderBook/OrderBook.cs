@@ -15,7 +15,8 @@ namespace CryptoMarketClient {
             Bids = CreateOrderBookEntries();
             Asks = CreateOrderBookEntries();
             AsksInverted = CreateOrderBookEntries();
-            Updates = new IncrementalUpdateQueue(owner.Exchange.CreateIncrementalUpdateDataProvider());
+            if(Owner != null)
+                Updates = new IncrementalUpdateQueue(owner.Exchange.CreateIncrementalUpdateDataProvider());
         }
 
         public IncrementalUpdateQueue Updates { get; set; }
@@ -40,6 +41,15 @@ namespace CryptoMarketClient {
         public double BidVolume { get; private set; }
         public double AskVolume { get; private set; }
         public double BidExpectation { get; private set; }
+
+        public void Offset(double firstBidValue) {
+            double delta = firstBidValue - Bids[0].Value;
+            foreach(var entry in Bids)
+                entry.Value += delta;
+            foreach(var entry in Asks)
+                entry.Value += delta;
+        }
+
         public double AskExpectation { get; private set; }
         public double BidDispersion { get; private set; }
         public double AskDispersion { get; private set; }
@@ -128,6 +138,30 @@ namespace CryptoMarketClient {
             AskDispersionChange = CalcChange(PrevAskDispersion, AskDispersion);
             BidAskRelationChange = CalcChange(PrevBidAskRelation, BidAskRelation);
         }
+
+        public void Assign(OrderBook orderBook) {
+            Bids.Clear();
+            Asks.Clear();
+            foreach(var entry in orderBook.Bids) {
+                this.Bids.Add(new OrderBookEntry() { Amount = entry.Amount, Value = entry.Value });
+            }
+            foreach(var entry in orderBook.Asks) {
+                this.Asks.Add(new OrderBookEntry() { Amount = entry.Amount, Value = entry.Value });
+            }
+        }
+
+        public void OffsetBids(double firstBidValue) {
+            double delta = firstBidValue - Bids[0].Value;
+            foreach(var entry in Bids)
+                entry.Value += delta;
+        }
+
+        public void OffsetAsks(double firstAskValue) {
+            double delta = firstAskValue - Asks[0].Value;
+            foreach(var entry in Asks)
+                entry.Value += delta;
+        }
+
         void CalcVolume(List<OrderBookEntry> list, out double volume, out double exp, out double disp, int depth) {
             int count = Math.Min(depth, list.Count);
             int index = 0;

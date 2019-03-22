@@ -1,10 +1,12 @@
 ﻿using Crypto.Core.Strategies;
 using DevExpress.XtraBars;
 using DevExpress.XtraEditors;
+using DevExpress.XtraSplashScreen;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -203,13 +205,41 @@ namespace CryptoMarketClient.Strategies {
                 XtraMessageBox.Show("No strategy selected.");
                 return;
             }
+            if(!strategy.SupportSimulation) {
+                XtraMessageBox.Show("This strategy does not support simulation.");
+                return;
+            }
 
             StrategiesManager manager = new StrategiesManager();
             StrategyBase cloned = strategy.Clone();
+            cloned.DemoMode = true;
             manager.Strategies.Add(cloned);
 
+            this.siStatus.Caption = "<b>Loading data from exchanges...</b>";
+            IOverlaySplashScreenHandle handle = SplashScreenManager.ShowOverlayForm(this);
+            Application.DoEvents();
             manager.Initialize(new SimulationStrategyDataProvider());
-            manager.Start();
+            if(!manager.Start()) {
+                XtraMessageBox.Show("Error starting simulation! Please check log messages");
+                return;
+            }
+            this.siStatus.Caption = "<b>Running simulation...</b>";
+            Application.DoEvents();
+
+            Stopwatch timer = new Stopwatch();
+            timer.Start();
+            int elapsedSeconds = 0;
+            while(manager.Running) {
+                if(timer.ElapsedMilliseconds / 1000 > elapsedSeconds) {
+                    elapsedSeconds = (int)(timer.ElapsedMilliseconds / 1000);
+                    this.siStatus.Caption = string.Format("<b>Running simulation... {0} sec</b>", elapsedSeconds);
+                    Application.DoEvents();
+                }
+            }
+            SplashScreenManager.CloseOverlayForm(handle);
+            this.siStatus.Caption = "<b>Simulation done.</b>";
+            Application.DoEvents();
+            StrategyConfigurationManager.Default.ShowData(cloned);
         }
     }
 }

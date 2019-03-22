@@ -34,7 +34,8 @@ namespace Crypto.Core.Strategies {
             bool res = true;
             foreach(StrategyBase s in Strategies) {
                 s.Manager = this;
-                res &= DataProvider.Initialize(s);
+                res &= DataProvider.InitializeDataFor(s);
+                res &= s.InitializeCore();
             }
             Initialized = true;
             return res;
@@ -88,6 +89,11 @@ namespace Crypto.Core.Strategies {
                 StopThread = false;
                 RunThread = new Thread(() => {
                     while(!StopThread) {
+                        if(DataProvider.IsFinished) {
+                            Stop();
+                            return;
+                        }
+                        DataProvider.OnTick();
                         foreach(var s in Strategies) {
                             s.OnTick();
                         }

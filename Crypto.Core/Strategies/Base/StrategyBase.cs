@@ -46,12 +46,19 @@ namespace Crypto.Core.Strategies {
 
         public abstract string TypeName { get; }
         public string Name { get; set; }
-        public IStrategyDataProvider DataProvider { get { return Manager.DataProvider; } }
+        public IStrategyDataProvider DataProvider { get { return Manager == null? null: Manager.DataProvider; } }
         public List<StrategyHistoryItem> History { get; } = new List<StrategyHistoryItem>();
         public List<TradingResult> TradeHistory { get; } = new List<TradingResult>();
+        public abstract bool SupportSimulation { get; }
 
-        public virtual TickerInputInfo CreateInputInfo() {
-            return new TickerInputInfo() { };
+        internal bool Initialize() {
+            Account = DataProvider.GetAccount(AccountId);
+            return InitializeCore();
+        }
+        public abstract bool InitializeCore();
+
+        public virtual StrategyInputInfo CreateInputInfo() {
+            return new StrategyInputInfo() { };
         }
 
         public virtual bool Start() {
@@ -94,7 +101,9 @@ namespace Crypto.Core.Strategies {
         }
 
         void OnAccountIdChanged() {
-            Account = Exchange.GetAccount(AccountId);
+            if(DataProvider == null)
+                return;
+            Account = DataProvider.GetAccount(AccountId);
         }
         public double MaxAllowedDeposit { get; set; }
 

@@ -239,7 +239,7 @@
     <Compile Include="Strategies\Grid\BaseGridStrategy.cs" />
     <Compile Include="Strategies\IStrategyDataProvider.cs" />
     <Compile Include="Strategies\Grid\StaticGridStrategy.cs" />
-    <Compile Include="Strategies\Base\SingleTickerStrategyBase.cs" />
+    <Compile Include="Strategies\Base\TickerStrategyBase.cs" />
     <Compile Include="Strategies\RealtimeStrategyDataProvider.cs" />
     <Compile Include="Strategies\Signal\SignalNotificationStrategy.cs" />
     <Compile Include="Strategies\Signal\TripleRsiIndicatorStrategy.cs" />

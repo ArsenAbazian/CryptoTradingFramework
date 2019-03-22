@@ -20,6 +20,8 @@ namespace CryptoMarketClient.Strategies {
             
         }
 
+        public override bool SupportSimulation => false;
+
         [XmlIgnore]
         public List<OrderInfo> BidLines { get; } = new List<OrderInfo>();
         [XmlIgnore]
