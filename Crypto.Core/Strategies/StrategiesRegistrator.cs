@@ -24,6 +24,7 @@ namespace Crypto.Core.Strategies {
             list.Add(new StrategyRegistrationInfo() { Type = typeof(StatisticalArbitrageStrategy), Group = StrategyGroup.Arbitrage, Name = "Statistical Arbitrage", Description = "Simple Statistical Arbitrage Strategy for Trading Pairs (usually base currency and futures)." });
             list.Add(new StrategyRegistrationInfo() { Type = typeof(SignalNotificationStrategy), Group = StrategyGroup.Signal, Name = "Signal Notification", Description = "This strategy just send notification when corresponding param's values found" });
             list.Add(new StrategyRegistrationInfo() { Type = typeof(TripleRsiIndicatorStrategy), Group = StrategyGroup.Signal, Name = "Triple Rsi Indicator", Description = "This strategy based on triple rsi indicators values." });
+            list.Add(new StrategyRegistrationInfo() { Type = typeof(MacdTrendStrategy), Group = StrategyGroup.Signal, Name = "Macd Trend", Description = "This strategy based on Macd trend." });
             return list;
         }
     }

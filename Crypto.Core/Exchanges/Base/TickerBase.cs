@@ -302,7 +302,6 @@ namespace CryptoMarketClient {
             LowestAsk = OrderBook.Asks[0].Value;
             Time = DateTime.UtcNow;
             UpdateHistoryItem();
-            CandleStickChartHelper.AddCandleStickData(CandleStickData, History.Last(), CandleStickPeriodMin * 60);
         }
         public bool ProcessOrderBook(string text) { return Exchange.ProcessOrderBook(this, text); }
         protected bool IsUpdatingTicker { get; set; }
@@ -315,7 +314,6 @@ namespace CryptoMarketClient {
                 if(res) {
                     Time = DateTime.UtcNow;
                     UpdateHistoryItem();
-                    CandleStickChartHelper.AddCandleStickData(CandleStickData, History.Last(), CandleStickPeriodMin * 60);
                 }
                 return res;
             }

@@ -24,6 +24,7 @@ using DevExpress.Data;
 using DevExpress.XtraBars.Docking;
 using CryptoMarketClient.Helpers;
 using CryptoMarketClient.Strategies;
+using CryptoMarketClient.Forms.Instruments;
 
 namespace CryptoMarketClient {
     public partial class MainForm : DevExpress.XtraBars.Ribbon.RibbonForm {
@@ -527,6 +528,12 @@ namespace CryptoMarketClient {
 
         private void biStrategiesItem_ItemClick(object sender, ItemClickEventArgs e) {
             StrategiesForm.ShowDialog();
+        }
+
+        private void bWalletInvestorStatistics_ItemClick(object sender, ItemClickEventArgs e) {
+            WalletInvestorDataForm form = new WalletInvestorDataForm();
+            form.MdiParent = FindForm();
+            form.Show();
         }
     }
 }

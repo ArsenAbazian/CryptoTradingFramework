@@ -17,6 +17,7 @@ namespace CryptoMarketClient.Strategies {
     public partial class StrategiesCollectionForm : XtraForm {
         public StrategiesCollectionForm() {
             Manager = StrategiesManager.Defaut;
+            Manager.DataProvider = new RealtimeStrategyDataProvider();
             InitializeComponent();
             InitializeAddStrategiesMenu();
         }
@@ -95,6 +96,7 @@ namespace CryptoMarketClient.Strategies {
         private void OnStrategyInfoItemClick(object sender, ItemClickEventArgs e) {
             StrategyRegistrationInfo info = (StrategyRegistrationInfo)e.Item.Tag;
             StrategyBase strategy = info.Create();
+            strategy.Manager = Manager;
             if(!StrategyConfigurationManager.Default.ConfigureDialog(strategy))
                 return;
             Manager.Add(strategy);

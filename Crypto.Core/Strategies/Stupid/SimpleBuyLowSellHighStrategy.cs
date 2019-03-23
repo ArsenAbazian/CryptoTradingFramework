@@ -54,7 +54,7 @@ namespace CryptoMarketClient.Strategies.Stupid {
         }
 
         protected override void OnTickCore() {
-            if(State == BuySellStrategyState.WaitingForBuyOpportunity) {
+            if(State == BuySellStrategyState.WaitingForBuy) {
                 if(PriceIsBelow(BuyLevel))
                     Buy();
             }

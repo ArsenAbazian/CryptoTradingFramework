@@ -17,6 +17,7 @@ namespace Crypto.Core.Strategies {
     [XmlInclude(typeof(StaticGridStrategy))]
     [XmlInclude(typeof(Signal.SignalNotificationStrategy))]
     [XmlInclude(typeof(Signal.TripleRsiIndicatorStrategy))]
+    [XmlInclude(typeof(Signal.MacdTrendStrategy))]
     //[XmlInclude(typeof())]
     [Serializable]
     public abstract class StrategyBase {
@@ -52,7 +53,6 @@ namespace Crypto.Core.Strategies {
         public abstract bool SupportSimulation { get; }
 
         internal bool Initialize() {
-            Account = DataProvider.GetAccount(AccountId);
             return InitializeCore();
         }
         public abstract bool InitializeCore();
@@ -71,23 +71,24 @@ namespace Crypto.Core.Strategies {
 
         public abstract void OnEndDeserialize();
 
+        public double BoughtTotal { get; set; }
+        public double SoldTotal { get; set; }
+
+        public double MaxActualSellDeposit { get; set; } = 0;
+        public double MaxActualBuyDeposit { get; set; } = -1;
+
         protected virtual void Log(LogType logType, string text, double rate, double amount, StrategyOperation operation) {
-            History.Add(new StrategyHistoryItem() { Type = logType, Rate = rate, Amount = amount, Operation = operation, Time = DateTime.Now, Text = text });
+            History.Add(new StrategyHistoryItem() { Type = logType, Rate = rate, Amount = amount, Operation = operation, Time = DateTime.Now, Text = text, BuyDeposit = MaxActualBuyDeposit, SellDeposit = MaxActualSellDeposit });
         }
 
         AccountInfo account;
         [XmlIgnore]
         public AccountInfo Account {
-            get { return account; }
-            set {
-                if(Account == value)
-                    return;
-                account = value;
-                OnAccountChanged();
+            get {
+                if(account == null || account.Id != AccountId)
+                    account = DataProvider.GetAccount(AccountId);
+                return account;
             }
-        }
-        void OnAccountChanged() {
-            AccountId = Account == null ? Guid.Empty : Account.Id;
         }
         Guid accountId;
         public Guid AccountId {
@@ -100,12 +101,21 @@ namespace Crypto.Core.Strategies {
             }
         }
 
-        void OnAccountIdChanged() {
-            if(DataProvider == null)
-                return;
-            Account = DataProvider.GetAccount(AccountId);
+        protected virtual void OnAccountIdChanged() { }
+        double maxAllowedDeposit;
+        public double MaxAllowedDeposit {
+            get { return maxAllowedDeposit; }
+            set {
+                if(MaxAllowedDeposit == value)
+                    return;
+                maxAllowedDeposit = value;
+                OnMaxAllowedDepositChanged();
+            }
         }
-        public double MaxAllowedDeposit { get; set; }
+
+        protected virtual void OnMaxAllowedDepositChanged() {
+            MaxActualBuyDeposit = -1;
+        }
 
         public string FileName { get; set; }
         public bool Load() { throw new NotImplementedException(); }
@@ -130,7 +140,7 @@ namespace Crypto.Core.Strategies {
             DemoMode = from.DemoMode;
             Description = from.Description;
             FileName = from.FileName;
-            Account = from.Account;
+            AccountId = from.AccountId;
             MaxAllowedDeposit = from.MaxAllowedDeposit;
             ChatId = from.ChatId;
         }

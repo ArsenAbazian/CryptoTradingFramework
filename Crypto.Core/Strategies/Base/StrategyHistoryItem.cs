@@ -22,5 +22,9 @@ namespace Crypto.Core.Strategies {
         public StrategyOperation Operation { get; set; }
         public double Rate { get; set; }
         public double Amount { get; set; }
+
+        public double ActualDeposit { get; set; }
+        public double BuyDeposit { get; set; }
+        public double SellDeposit { get; set; }
     }
 }

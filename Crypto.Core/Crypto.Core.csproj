@@ -241,6 +241,7 @@
     <Compile Include="Strategies\Grid\StaticGridStrategy.cs" />
     <Compile Include="Strategies\Base\TickerStrategyBase.cs" />
     <Compile Include="Strategies\RealtimeStrategyDataProvider.cs" />
+    <Compile Include="Strategies\Signal\MacdTrendAlgorithm.cs" />
     <Compile Include="Strategies\Signal\SignalNotificationStrategy.cs" />
     <Compile Include="Strategies\Signal\TripleRsiIndicatorStrategy.cs" />
     <Compile Include="Strategies\SimulationStrategyDataProvider.cs" />

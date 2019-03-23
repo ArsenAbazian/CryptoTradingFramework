@@ -25,7 +25,7 @@ namespace Crypto.Core.Strategies {
 
         public List<StrategyBase> Strategies { get; } = new List<StrategyBase>();
         [XmlIgnore]
-        public IStrategyDataProvider DataProvider { get; private set; }
+        public IStrategyDataProvider DataProvider { get; set; }
         [XmlIgnore]
         public bool Initialized { get; private set; }
 

@@ -102,6 +102,9 @@
     <Reference Include="Fleck, Version=1.0.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Fleck.1.0.3\lib\net45\Fleck.dll</HintPath>
     </Reference>
+    <Reference Include="HtmlAgilityPack, Version=1.11.0.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
+      <HintPath>..\packages\HtmlAgilityPack.1.11.0\lib\Net45\HtmlAgilityPack.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.ApplicationInsights, Version=2.7.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.ApplicationInsights.2.7.2\lib\net46\Microsoft.ApplicationInsights.dll</HintPath>
     </Reference>
@@ -310,6 +313,12 @@
     <Compile Include="Forms\AccountEditingForm.Designer.cs">
       <DependentUpon>AccountEditingForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Instruments\WalletInvestorDataForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Instruments\WalletInvestorDataForm.Designer.cs">
+      <DependentUpon>WalletInvestorDataForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\LogForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -379,6 +388,12 @@
     <Compile Include="Strategies\Arbitrages\Statistical\DependencyArbitrageForm.Designer.cs">
       <DependentUpon>DependencyArbitrageForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Strategies\Signal\MacdTrendStrategyConfigControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Strategies\Signal\MacdTrendStrategyConfigControl.Designer.cs">
+      <DependentUpon>MacdTrendStrategyConfigControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Strategies\Signal\TripleRsiStrategyConfigControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -396,6 +411,12 @@
     </Compile>
     <Compile Include="Strategies\Signal\SignalNotificationDataForm.Designer.cs">
       <DependentUpon>SignalNotificationDataForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Strategies\Signal\MacdTrendStrategyDataForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Strategies\Signal\MacdTrendStrategyDataForm.Designer.cs">
+      <DependentUpon>MacdTrendStrategyDataForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Strategies\Signal\TripleRsiStrategyDataForm.cs">
       <SubType>Form</SubType>
@@ -601,6 +622,9 @@
     <EmbeddedResource Include="Forms\AccountEditingForm.resx">
       <DependentUpon>AccountEditingForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Instruments\WalletInvestorDataForm.resx">
+      <DependentUpon>WalletInvestorDataForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\LogForm.resx">
       <DependentUpon>LogForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -641,6 +665,9 @@
     <EmbeddedResource Include="Strategies\Arbitrages\Statistical\DependencyArbitrageForm.resx">
       <DependentUpon>DependencyArbitrageForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Strategies\Signal\MacdTrendStrategyConfigControl.resx">
+      <DependentUpon>MacdTrendStrategyConfigControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Strategies\Signal\TripleRsiStrategyConfigControl.resx">
       <DependentUpon>TripleRsiStrategyConfigControl.cs</DependentUpon>
     </EmbeddedResource>
@@ -649,6 +676,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Strategies\Signal\SignalNotificationDataForm.resx">
       <DependentUpon>SignalNotificationDataForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Strategies\Signal\MacdTrendStrategyDataForm.resx">
+      <DependentUpon>MacdTrendStrategyDataForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Strategies\Signal\TripleRsiStrategyDataForm.resx">
       <DependentUpon>TripleRsiStrategyDataForm.cs</DependentUpon>
