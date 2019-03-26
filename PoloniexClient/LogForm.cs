@@ -1,5 +1,4 @@
-﻿using CryptoMarketClient.Common;
-using DevExpress.XtraEditors;
+﻿using DevExpress.XtraEditors;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

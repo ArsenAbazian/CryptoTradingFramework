@@ -26,7 +26,7 @@ namespace CryptoMarketClient {
         /// </summary>
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
-            this.gridControl1 = new MyGridControl();
+            this.gridControl1 = new DevExpress.XtraGrid.GridControl();
             this.gridView1 = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.barManager1 = new DevExpress.XtraBars.BarManager(this.components);
             this.bar1 = new DevExpress.XtraBars.Bar();
@@ -168,7 +168,7 @@ namespace CryptoMarketClient {
 
         #endregion
 
-        private MyGridControl gridControl1;
+        private DevExpress.XtraGrid.GridControl gridControl1;
         private DevExpress.XtraGrid.Views.Grid.GridView gridView1;
         private BarManager barManager1;
         private Bar bar1;

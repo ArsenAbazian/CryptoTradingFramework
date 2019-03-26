@@ -1,5 +1,6 @@
 ﻿using CryptoMarketClient.Common;
 using DevExpress.XtraEditors;
+using DevExpress.XtraLayout.Utils;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,6 +16,8 @@ namespace CryptoMarketClient {
         public TrailingSettinsForm() {
             InitializeComponent();
             this.imageComboBoxEdit1.Properties.AddEnum<ActionMode>();
+
+            this.cbType.Properties.Items.AddRange(typeof(TrailingType).GetEnumValues());
         }
 
         TrailingSettings settings;
@@ -28,7 +31,7 @@ namespace CryptoMarketClient {
             }
         }
 
-        public TickerBase Ticker {
+        public Ticker Ticker {
             get; set;
         }
 
@@ -95,6 +98,18 @@ namespace CryptoMarketClient {
 
         private void ceIgnoreStopLoss_CheckedChanged(object sender, EventArgs e) {
             ceIncrimentalStopLoss.Enabled = StopLossPricePercentTextEdit.Enabled = !ceIgnoreStopLoss.Checked;
+        }
+        private void cbType_EditValueChanged(object sender, System.EventArgs e) {
+            if (!(this.cbType.EditValue is TrailingType))
+                return;
+
+            bool isBuy = (TrailingType)this.cbType.EditValue == TrailingType.Buy;
+            this.ItemForBuyPrice.Text = isBuy ? "Buy Price" : "Sell Price";
+            this.TotalSpendInBaseCurrencyTextEdit.Text = isBuy ? "Total spend in base currency" : "Total earn in base currency";
+            LayoutVisibility visibility = isBuy ? LayoutVisibility.Never : LayoutVisibility.Always;
+            this.ItemForStopLossPricePercent.Visibility = visibility;
+            this.layoutControlItem5.Visibility = visibility;
+            this.layoutControlItem6.Visibility = visibility;
         }
     }
 }

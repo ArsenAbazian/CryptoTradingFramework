@@ -58,9 +58,9 @@
             this.tePrice.Properties.Appearance.Options.UseFont = true;
             this.tePrice.Properties.Appearance.Options.UseTextOptions = true;
             this.tePrice.Properties.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
-            this.tePrice.Properties.DisplayFormat.FormatString = "0.########";
+            this.tePrice.Properties.DisplayFormat.FormatString = "0.00000000";
             this.tePrice.Properties.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
-            this.tePrice.Properties.EditFormat.FormatString = "0.########";
+            this.tePrice.Properties.EditFormat.FormatString = "0.00000000";
             this.tePrice.Properties.EditFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.tePrice.Properties.Mask.EditMask = "f8";
             this.tePrice.Properties.Mask.MaskType = DevExpress.XtraEditors.Mask.MaskType.Numeric;
@@ -106,9 +106,9 @@
             this.teMinimalSpread.Properties.Appearance.Options.UseFont = true;
             this.teMinimalSpread.Properties.AppearanceReadOnly.Options.UseTextOptions = true;
             this.teMinimalSpread.Properties.AppearanceReadOnly.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
-            this.teMinimalSpread.Properties.DisplayFormat.FormatString = "0.########";
+            this.teMinimalSpread.Properties.DisplayFormat.FormatString = "0.00000000";
             this.teMinimalSpread.Properties.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
-            this.teMinimalSpread.Properties.EditFormat.FormatString = "0.########";
+            this.teMinimalSpread.Properties.EditFormat.FormatString = "0.00000000";
             this.teMinimalSpread.Properties.EditFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.teMinimalSpread.Properties.ReadOnly = true;
             this.teMinimalSpread.Size = new System.Drawing.Size(454, 66);
@@ -123,9 +123,9 @@
             this.teAmount.Properties.Appearance.Options.UseFont = true;
             this.teAmount.Properties.Appearance.Options.UseTextOptions = true;
             this.teAmount.Properties.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
-            this.teAmount.Properties.DisplayFormat.FormatString = "0.########";
+            this.teAmount.Properties.DisplayFormat.FormatString = "0.00000000";
             this.teAmount.Properties.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
-            this.teAmount.Properties.EditFormat.FormatString = "0.########";
+            this.teAmount.Properties.EditFormat.FormatString = "0.00000000";
             this.teAmount.Properties.EditFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.teAmount.Properties.Mask.EditMask = "f8";
             this.teAmount.Properties.Mask.MaskType = DevExpress.XtraEditors.Mask.MaskType.Numeric;
@@ -152,9 +152,9 @@
             this.teSellPrice.Properties.Appearance.Options.UseFont = true;
             this.teSellPrice.Properties.Appearance.Options.UseTextOptions = true;
             this.teSellPrice.Properties.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
-            this.teSellPrice.Properties.DisplayFormat.FormatString = "0.########";
+            this.teSellPrice.Properties.DisplayFormat.FormatString = "0.00000000";
             this.teSellPrice.Properties.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
-            this.teSellPrice.Properties.EditFormat.FormatString = "0.########";
+            this.teSellPrice.Properties.EditFormat.FormatString = "0.00000000";
             this.teSellPrice.Properties.EditFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.teSellPrice.Properties.Mask.EditMask = "f8";
             this.teSellPrice.Properties.Mask.MaskType = DevExpress.XtraEditors.Mask.MaskType.Numeric;
@@ -180,9 +180,9 @@
             this.teSpread.Properties.Appearance.Options.UseFont = true;
             this.teSpread.Properties.AppearanceReadOnly.Options.UseTextOptions = true;
             this.teSpread.Properties.AppearanceReadOnly.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
-            this.teSpread.Properties.DisplayFormat.FormatString = "0.########";
+            this.teSpread.Properties.DisplayFormat.FormatString = "0.00000000";
             this.teSpread.Properties.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
-            this.teSpread.Properties.EditFormat.FormatString = "0.########";
+            this.teSpread.Properties.EditFormat.FormatString = "0.00000000";
             this.teSpread.Properties.EditFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.teSpread.Properties.ReadOnly = true;
             this.teSpread.Size = new System.Drawing.Size(454, 66);
@@ -206,9 +206,9 @@
             this.teProfit.Properties.Appearance.Options.UseFont = true;
             this.teProfit.Properties.AppearanceReadOnly.Options.UseTextOptions = true;
             this.teProfit.Properties.AppearanceReadOnly.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
-            this.teProfit.Properties.DisplayFormat.FormatString = "0.########";
+            this.teProfit.Properties.DisplayFormat.FormatString = "0.00000000";
             this.teProfit.Properties.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
-            this.teProfit.Properties.EditFormat.FormatString = "0.########";
+            this.teProfit.Properties.EditFormat.FormatString = "0.00000000";
             this.teProfit.Properties.EditFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.teProfit.Properties.ReadOnly = true;
             this.teProfit.Size = new System.Drawing.Size(454, 66);
@@ -232,7 +232,7 @@
             this.teUsdProfit.Properties.Appearance.Options.UseFont = true;
             this.teUsdProfit.Properties.AppearanceReadOnly.Options.UseTextOptions = true;
             this.teUsdProfit.Properties.AppearanceReadOnly.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
-            this.teUsdProfit.Properties.DisplayFormat.FormatString = "0.########";
+            this.teUsdProfit.Properties.DisplayFormat.FormatString = "0.00000000";
             this.teUsdProfit.Properties.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.teUsdProfit.Properties.EditFormat.FormatString = "0.##";
             this.teUsdProfit.Properties.EditFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
@@ -258,9 +258,9 @@
             this.teMinimalSell.Properties.Appearance.Options.UseFont = true;
             this.teMinimalSell.Properties.AppearanceReadOnly.Options.UseTextOptions = true;
             this.teMinimalSell.Properties.AppearanceReadOnly.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
-            this.teMinimalSell.Properties.DisplayFormat.FormatString = "0.########";
+            this.teMinimalSell.Properties.DisplayFormat.FormatString = "0.00000000";
             this.teMinimalSell.Properties.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
-            this.teMinimalSell.Properties.EditFormat.FormatString = "0.########";
+            this.teMinimalSell.Properties.EditFormat.FormatString = "0.00000000";
             this.teMinimalSell.Properties.EditFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.teMinimalSell.Properties.ReadOnly = true;
             this.teMinimalSell.Size = new System.Drawing.Size(454, 66);
@@ -268,7 +268,7 @@
             // 
             // CalculatorForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1054, 786);
             this.Controls.Add(this.labelControl8);

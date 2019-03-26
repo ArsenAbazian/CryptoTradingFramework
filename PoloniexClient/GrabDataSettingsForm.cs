@@ -26,7 +26,7 @@ namespace CryptoMarketClient {
         }
 
         public GrabDataSettings Settings { get; set; }
-        public TickerBase Ticker { get; set; }
+        public Ticker Ticker { get; set; }
 
         private void buttonEdit1_ButtonClick(object sender, DevExpress.XtraEditors.Controls.ButtonPressedEventArgs e) {
             if(this.folderBrowserDialog1.ShowDialog() == DialogResult.OK) {

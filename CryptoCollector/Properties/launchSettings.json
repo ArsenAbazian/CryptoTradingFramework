@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "CryptoCollector": {
+      "commandName": "Project",
+      "commandLineArgs": "--init"
+    }
+  }
+}

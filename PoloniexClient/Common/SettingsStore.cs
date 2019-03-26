@@ -41,28 +41,35 @@ namespace CryptoMarketClient.Common {
         public static string ApplicationName { get { return "CryptoMarketClient"; } }
         static string SettingsSectionName { get { return "Settings"; } }
 
+        
         public SettingsStore() {
-            SelectedThemeName = "Office 2016 Dark";
+            SelectedThemeName = "The Bezier";
+            SelectedPaletteName = "Witch Rave";
             UseDirectXForGrid = true;
             UseDirectXForCharts = true;
+
+            Poloniex = true;
+            Bittrex = false;
+            Binance = false;
+            BitFinex = false;
         }
 
         protected virtual bool SaveLayoutCore(XtraSerializer serializer, object path) {
             System.IO.Stream stream = path as System.IO.Stream;
             if(stream != null)
                 return serializer.SerializeObjects(
-                    new XtraObjectInfo[] { new XtraObjectInfo(SettingsSectionName, this), new XtraObjectInfo(ApplicationName, this) }, stream, this.GetType().Name);
+                    new XtraObjectInfo[] { new XtraObjectInfo(SettingsSectionName, this) }, stream, this.GetType().Name);
             else
                 return serializer.SerializeObjects(
-                    new XtraObjectInfo[] { new XtraObjectInfo(SettingsSectionName, this), new XtraObjectInfo(ApplicationName, this) }, path.ToString(), this.GetType().Name);
+                    new XtraObjectInfo[] { new XtraObjectInfo(SettingsSectionName, this) }, path.ToString(), this.GetType().Name);
         }
         protected virtual void RestoreLayoutCore(XtraSerializer serializer, object path) {
             System.IO.Stream stream = path as System.IO.Stream;
             if(stream != null)
-                serializer.DeserializeObjects(new XtraObjectInfo[] { new XtraObjectInfo(SettingsSectionName, this), new XtraObjectInfo(ApplicationName, this) },
+                serializer.DeserializeObjects(new XtraObjectInfo[] { new XtraObjectInfo(SettingsSectionName, this) },
                     stream, this.GetType().Name);
             else
-                serializer.DeserializeObjects(new XtraObjectInfo[] { new XtraObjectInfo(SettingsSectionName, this), new XtraObjectInfo(ApplicationName, this) },
+                serializer.DeserializeObjects(new XtraObjectInfo[] { new XtraObjectInfo(SettingsSectionName, this) },
                     path.ToString(), this.GetType().Name);
         }
 
@@ -111,15 +118,32 @@ namespace CryptoMarketClient.Common {
         public bool UseDirectXForGrid {
             get; set;
         }
+
         [XtraSerializableProperty]
         public bool UseDirectXForCharts {
             get; set;
         }
+
         [XtraSerializableProperty]
         public long TelegramBotBroadcastId { get; set; }
 
         [XtraSerializableProperty]
         public bool TelegramBotActive { get; set; }
+
+        [XtraSerializableProperty]
+        public string SelectedPaletteName { get; set; }
+
+        [XtraSerializableProperty]
+        public bool Poloniex { get; set; }
+
+        [XtraSerializableProperty]
+        public bool Bittrex { get; set; }
+
+        [XtraSerializableProperty]
+        public bool Binance { get; set; }
+
+        [XtraSerializableProperty]
+        public bool BitFinex { get; set; }
     }
 }
 

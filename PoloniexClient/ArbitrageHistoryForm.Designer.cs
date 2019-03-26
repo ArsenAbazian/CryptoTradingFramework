@@ -32,7 +32,7 @@
             this.colLowestAskHost = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colHighestBidEnabled = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colHighestBidHost = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.gridControl1 = new MyGridControl();
+            this.gridControl1 = new DevExpress.XtraGrid.GridControl();
             this.arbitrageStatisticsItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.gridView1 = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.colTime = new DevExpress.XtraGrid.Columns.GridColumn();
@@ -176,7 +176,7 @@
             // 
             // colLowestAsk
             // 
-            this.colLowestAsk.DisplayFormat.FormatString = "0.########";
+            this.colLowestAsk.DisplayFormat.FormatString = "0.00000000";
             this.colLowestAsk.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.colLowestAsk.FieldName = "LowestAsk";
             this.colLowestAsk.Name = "colLowestAsk";
@@ -185,7 +185,7 @@
             // 
             // colHighestBid
             // 
-            this.colHighestBid.DisplayFormat.FormatString = "0.########";
+            this.colHighestBid.DisplayFormat.FormatString = "0.00000000";
             this.colHighestBid.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.colHighestBid.FieldName = "HighestBid";
             this.colHighestBid.Name = "colHighestBid";
@@ -194,7 +194,7 @@
             // 
             // colSpread
             // 
-            this.colSpread.DisplayFormat.FormatString = "0.########";
+            this.colSpread.DisplayFormat.FormatString = "0.00000000";
             this.colSpread.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.colSpread.FieldName = "Spread";
             this.colSpread.Name = "colSpread";
@@ -203,7 +203,7 @@
             // 
             // colAmount
             // 
-            this.colAmount.DisplayFormat.FormatString = "0.########";
+            this.colAmount.DisplayFormat.FormatString = "0.00000000";
             this.colAmount.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.colAmount.FieldName = "Amount";
             this.colAmount.Name = "colAmount";
@@ -213,7 +213,7 @@
             // colTotalSpent
             // 
             this.colTotalSpent.Caption = "TotalSpent";
-            this.colTotalSpent.DisplayFormat.FormatString = "0.########";
+            this.colTotalSpent.DisplayFormat.FormatString = "0.00000000";
             this.colTotalSpent.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.colTotalSpent.FieldName = "TotalSpent";
             this.colTotalSpent.Name = "colTotalSpent";
@@ -223,7 +223,7 @@
             // colTotalSpentUSD
             // 
             this.colTotalSpentUSD.Caption = "TotalSpentUSD";
-            this.colTotalSpentUSD.DisplayFormat.FormatString = "0.########";
+            this.colTotalSpentUSD.DisplayFormat.FormatString = "0.00000000";
             this.colTotalSpentUSD.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.colTotalSpentUSD.FieldName = "TotalSpentUSD";
             this.colTotalSpentUSD.Name = "colTotalSpentUSD";
@@ -232,7 +232,7 @@
             // 
             // colMaxProfit
             // 
-            this.colMaxProfit.DisplayFormat.FormatString = "0.########";
+            this.colMaxProfit.DisplayFormat.FormatString = "0.00000000";
             this.colMaxProfit.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.colMaxProfit.FieldName = "MaxProfit";
             this.colMaxProfit.Name = "colMaxProfit";
@@ -241,7 +241,7 @@
             // 
             // colMaxProfitUSD
             // 
-            this.colMaxProfitUSD.DisplayFormat.FormatString = "0.########";
+            this.colMaxProfitUSD.DisplayFormat.FormatString = "0.00000000";
             this.colMaxProfitUSD.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.colMaxProfitUSD.FieldName = "MaxProfitUSD";
             this.colMaxProfitUSD.Name = "colMaxProfitUSD";
@@ -251,7 +251,7 @@
             // colProfitPercent
             // 
             this.colProfitPercent.Caption = "Profit Percent In Spent";
-            this.colProfitPercent.DisplayFormat.FormatString = "0.########";
+            this.colProfitPercent.DisplayFormat.FormatString = "0.00000000";
             this.colProfitPercent.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.colProfitPercent.FieldName = "ProfitPercent";
             this.colProfitPercent.Name = "colProfitPercent";
@@ -293,7 +293,7 @@
 
         #endregion
 
-        private MyGridControl gridControl1;
+        private DevExpress.XtraGrid.GridControl gridControl1;
         private DevExpress.XtraGrid.Views.Grid.GridView gridView1;
         private DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit repositoryItemCheckEdit1;
         private DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit repositoryItemCheckEdit2;

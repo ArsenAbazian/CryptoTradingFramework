@@ -43,7 +43,7 @@
             this.ribbonPage1 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPageGroup1 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.ribbonStatusBar1 = new DevExpress.XtraBars.Ribbon.RibbonStatusBar();
-            this.gridControl1 = new MyGridControl();
+            this.gridControl1 = new DevExpress.XtraGrid.GridControl();
             this.staticArbitrageInfoBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.gridView1 = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.colAltBase = new DevExpress.XtraGrid.Columns.GridColumn();
@@ -98,7 +98,7 @@
             // colProfit
             // 
             this.colProfit.Caption = "Profit";
-            this.colProfit.DisplayFormat.FormatString = "0.########";
+            this.colProfit.DisplayFormat.FormatString = "0.00000000";
             this.colProfit.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.colProfit.FieldName = "Profit";
             this.colProfit.Name = "colProfit";
@@ -298,7 +298,7 @@
             // 
             // colDisbalance
             // 
-            this.colDisbalance.DisplayFormat.FormatString = "0.########";
+            this.colDisbalance.DisplayFormat.FormatString = "0.00000000";
             this.colDisbalance.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.colDisbalance.FieldName = "Disbalance";
             this.colDisbalance.Name = "colDisbalance";
@@ -364,7 +364,7 @@
             // 
             // colAltBasePrice
             // 
-            this.colAltBasePrice.DisplayFormat.FormatString = "0.########";
+            this.colAltBasePrice.DisplayFormat.FormatString = "0.00000000";
             this.colAltBasePrice.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.colAltBasePrice.FieldName = "AltBasePrice";
             this.colAltBasePrice.Name = "colAltBasePrice";
@@ -375,7 +375,7 @@
             // 
             // colAtlUsdtPrice
             // 
-            this.colAtlUsdtPrice.DisplayFormat.FormatString = "0.########";
+            this.colAtlUsdtPrice.DisplayFormat.FormatString = "0.00000000";
             this.colAtlUsdtPrice.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.colAtlUsdtPrice.FieldName = "AltUsdtPrice";
             this.colAtlUsdtPrice.Name = "colAtlUsdtPrice";
@@ -386,7 +386,7 @@
             // 
             // colBaseUsdtPrice
             // 
-            this.colBaseUsdtPrice.DisplayFormat.FormatString = "0.########";
+            this.colBaseUsdtPrice.DisplayFormat.FormatString = "0.00000000";
             this.colBaseUsdtPrice.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.colBaseUsdtPrice.FieldName = "BaseUsdtPrice";
             this.colBaseUsdtPrice.Name = "colBaseUsdtPrice";
@@ -442,7 +442,7 @@
             // colAmount
             // 
             this.colAmount.Caption = "Amount";
-            this.colAmount.DisplayFormat.FormatString = "0.########";
+            this.colAmount.DisplayFormat.FormatString = "0.00000000";
             this.colAmount.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.colAmount.FieldName = "Amount";
             this.colAmount.Name = "colAmount";
@@ -453,7 +453,7 @@
             // colFee
             // 
             this.colFee.Caption = "Fee";
-            this.colFee.DisplayFormat.FormatString = "0.########";
+            this.colFee.DisplayFormat.FormatString = "0.00000000";
             this.colFee.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.colFee.FieldName = "Fee";
             this.colFee.Name = "colFee";
@@ -462,7 +462,7 @@
             // 
             // gridColumn1
             // 
-            this.gridColumn1.DisplayFormat.FormatString = "0.########";
+            this.gridColumn1.DisplayFormat.FormatString = "0.00000000";
             this.gridColumn1.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.gridColumn1.FieldName = "MaxProfit";
             this.gridColumn1.Name = "gridColumn1";
@@ -473,7 +473,7 @@
             // colTotalSpent
             // 
             this.colTotalSpent.Caption = "Total Spent";
-            this.colTotalSpent.DisplayFormat.FormatString = "0.########";
+            this.colTotalSpent.DisplayFormat.FormatString = "0.00000000";
             this.colTotalSpent.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.colTotalSpent.FieldName = "TotalSpent";
             this.colTotalSpent.Name = "colTotalSpent";
@@ -484,7 +484,7 @@
             // colLastEarned
             // 
             this.colLastEarned.Caption = "Last Earned";
-            this.colLastEarned.DisplayFormat.FormatString = "0.########";
+            this.colLastEarned.DisplayFormat.FormatString = "0.00000000";
             this.colLastEarned.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.colLastEarned.FieldName = "LastEarned";
             this.colLastEarned.Name = "colLastEarned";
@@ -527,7 +527,7 @@
         private DevExpress.XtraBars.Ribbon.RibbonControl ribbonControl1;
         private DevExpress.XtraBars.Ribbon.RibbonPage ribbonPage1;
         private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup1;
-        private MyGridControl gridControl1;
+        private DevExpress.XtraGrid.GridControl gridControl1;
         private DevExpress.XtraGrid.Views.Grid.GridView gridView1;
         private System.Windows.Forms.BindingSource staticArbitrageInfoBindingSource;
         private DevExpress.XtraBars.BarCheckItem bbMonitorSelected;

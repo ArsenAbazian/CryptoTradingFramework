@@ -23,7 +23,7 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
-            this.gridControl1 = new MyGridControl();
+            this.gridControl1 = new DevExpress.XtraGrid.GridControl();
             this.trailingSettingsBindingSource = new System.Windows.Forms.BindingSource();
             this.gridView1 = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.colTicker = new DevExpress.XtraGrid.Columns.GridColumn();
@@ -241,7 +241,7 @@
 
         #endregion
 
-        private MyGridControl gridControl1;
+        private DevExpress.XtraGrid.GridControl gridControl1;
         private DevExpress.XtraGrid.Views.Grid.GridView gridView1;
         private DevExpress.XtraBars.Ribbon.RibbonControl ribbonControl1;
         private DevExpress.XtraBars.Ribbon.RibbonPage ribbonPage1;

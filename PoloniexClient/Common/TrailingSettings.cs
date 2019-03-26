@@ -12,13 +12,13 @@ using System.Threading.Tasks;
 
 namespace CryptoMarketClient.Common {
     public class TrailingSettings : INotifyPropertyChanged {
-        public TrailingSettings(TickerBase ticker) {
+        public TrailingSettings(Ticker ticker) {
             Enabled = true;
             Ticker = ticker;
         }
 
-        TickerBase ticker;
-        public TickerBase Ticker {
+        Ticker ticker;
+        public Ticker Ticker {
             get { return ticker; }
             private set {
                 if (Ticker == value)
@@ -36,7 +36,7 @@ namespace CryptoMarketClient.Common {
         public bool ShowOnChart { get; set; }
         [XtraSerializableProperty]
         public string TickerName { get; set; }
-        public TickerBase UsdTicker { get { return Ticker == null ? null : Ticker.UsdTicker; } }
+        public Ticker UsdTicker { get { return Ticker == null ? null : Ticker.UsdTicker; } }
         [XtraSerializableProperty]
         public bool Enabled { get; set; }
         [XtraSerializableProperty]
@@ -193,7 +193,8 @@ namespace CryptoMarketClient.Common {
                 TelegramBot.Default.SendNotification(Ticker.Exchange + " - " + Ticker.Name + " - Order done!!");
                 State = TrailingState.Done;
             } else if (Mode == ActionMode.Execute) {
-                if (Type == TrailingType.Sell ? Ticker.MarketSell(Amount) : Ticker.MarketBuy(Amount))
+                TradingResult res = Type == TrailingType.Sell ? Ticker.MarketSell(Amount) : Ticker.MarketBuy(Amount);
+                if (res != null)
                     State = TrailingState.Done;
                 else
                     TelegramBot.Default.SendNotification($"{Ticker.Exchange}. Error!! Can't sell {Ticker.Name}");

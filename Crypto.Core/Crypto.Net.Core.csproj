@@ -1,0 +1,67 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Exchanges\Exmo\**" />
+    <Compile Remove="Exchanges\HitBtc\**" />
+    <Compile Remove="Exchanges\Yobit\**" />
+    <Compile Remove="Forms\**" />
+    <EmbeddedResource Remove="Exchanges\Exmo\**" />
+    <EmbeddedResource Remove="Exchanges\HitBtc\**" />
+    <EmbeddedResource Remove="Exchanges\Yobit\**" />
+    <EmbeddedResource Remove="Forms\**" />
+    <None Remove="Exchanges\Exmo\**" />
+    <None Remove="Exchanges\HitBtc\**" />
+    <None Remove="Exchanges\Yobit\**" />
+    <None Remove="Forms\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Common\DepositInfo.cs" />
+    <Compile Remove="Exchanges\Bittrex\BittrexAccountBalancesForm.cs" />
+    <Compile Remove="Exchanges\Bittrex\BittrexAccountBalancesForm.Designer.cs" />
+    <Compile Remove="Exchanges\Bittrex\BittrexBalancesForm.cs" />
+    <Compile Remove="Exchanges\Bittrex\BittrexBalancesForm.Designer.cs" />
+    <Compile Remove="Exchanges\Bittrex\BittrexCurrenciesForm.cs" />
+    <Compile Remove="Exchanges\Bittrex\BittrexCurrenciesForm.Designer.cs" />
+    <Compile Remove="Exchanges\Bittrex\BittrexOrdersForm.cs" />
+    <Compile Remove="Exchanges\Bittrex\BittrexOrdersForm.Designer.cs" />
+    <Compile Remove="Helpers\SlackBot.cs" />
+    <Compile Remove="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Remove="Exchanges\Bittrex\BittrexAccountBalancesForm.resx" />
+    <EmbeddedResource Remove="Exchanges\Bittrex\BittrexBalancesForm.resx" />
+    <EmbeddedResource Remove="Exchanges\Bittrex\BittrexCurrenciesForm.resx" />
+    <EmbeddedResource Remove="Exchanges\Bittrex\BittrexOrdersForm.resx" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.ApplicationInsights" Version="2.7.2" />
+    <PackageReference Include="Microsoft.AspNet.SignalR.Client" Version="2.3.0" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Core" Version="1.0.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+    <PackageReference Include="Telegram.Bot" Version="14.10.0" />
+    <PackageReference Include="WebSocket4Net" Version="0.15.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="DevExpress.Data.v18.1">
+      <HintPath>..\..\..\..\Work\2018.1\Bin\NETCore\DevExpress.Data.v18.1.dll</HintPath>
+      <Private>true</Private>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+
+</Project>

@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace CryptoMarketClient {
     public static class TickerCollectionHelper {
-        static List<List<TickerBase>> GetMarketsList() {
-            List<List<TickerBase>> tickersList = new List<List<TickerBase>>();
+        static List<List<Ticker>> GetMarketsList() {
+            List<List<Ticker>> tickersList = new List<List<Ticker>>();
             foreach(Exchange exchange in Exchange.Connected) {
-                List<TickerBase> list = new List<TickerBase>();
+                List<Ticker> list = new List<Ticker>();
                 list.AddRange(exchange.Tickers);
                 tickersList.Add(list);
             }
@@ -17,14 +17,14 @@ namespace CryptoMarketClient {
         }
         public static List<TickerCollection> GetItems() {
             List<TickerCollection> arbitrageList = new List<TickerCollection>();
-            List<List<TickerBase>> markets = GetMarketsList();
-            foreach(TickerBase ticker in markets.First()) {
+            List<List<Ticker>> markets = GetMarketsList();
+            foreach(Ticker ticker in markets.First()) {
                 TickerCollection info = new TickerCollection();
                 info.BaseCurrency = ticker.BaseCurrency;
                 info.MarketCurrency = ticker.MarketCurrency;
                 info.Add(ticker);
                 for(int i = 1; i < markets.Count; i++) {
-                    TickerBase tt = markets[i].FirstOrDefault((t) => t.BaseCurrency == ticker.BaseCurrency && t.MarketCurrency == ticker.MarketCurrency);
+                    Ticker tt = markets[i].FirstOrDefault((t) => t.BaseCurrency == ticker.BaseCurrency && t.MarketCurrency == ticker.MarketCurrency);
                     if(tt == null)
                         continue;
                     info.Add(tt);

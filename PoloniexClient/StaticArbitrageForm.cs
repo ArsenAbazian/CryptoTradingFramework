@@ -27,22 +27,22 @@ namespace CryptoMarketClient {
         void UpdateBalances() {
             if(PoloniexExchange.Default.IsConnected) {
                 for(int i = 0; i < 3; i++)
-                    if(PoloniexExchange.Default.GetBalance("USDT"))
+                    if(PoloniexExchange.Default.GetBalance(PoloniexExchange.Default.DefaultAccount, "USDT"))
                         break;
             }
             if(BittrexExchange.Default.IsConnected)
                 for(int i = 0; i < 3; i++)
-                    if(BittrexExchange.Default.GetBalance("USDT"))
+                    if(BittrexExchange.Default.GetBalance(BittrexExchange.Default.DefaultAccount, "USDT"))
                         break;
             foreach(StaticArbitrageInfo info in Items) {
                 for(int i = 0; i < 3; i++) {
-                    if(info.AltBase.UpdateBalance(CurrencyType.MarketCurrency)) {
+                    if(info.AltBase.UpdateBalance(info.AltBase.MarketCurrency)) {
                         info.AltBalanceInfo = info.AltBase.MarketBalanceInfo;
                         break;
                     }
                 }
                 for(int i = 0; i < 3; i++) {
-                    if(info.BaseUsdt.UpdateBalance(CurrencyType.MarketCurrency)) {
+                    if(info.BaseUsdt.UpdateBalance(info.BaseUsdt.MarketCurrency)) {
                         info.BaseBalanceInfo = info.BaseUsdt.MarketBalanceInfo;
                         break;
                     }
@@ -166,7 +166,7 @@ namespace CryptoMarketClient {
         }
         void UpdateBalanceItem(BarItem item) {
             BalanceBase b = (BalanceBase)item.Tag;
-            string text = b.Exchange + ": <b>" + b.Available.ToString("0.########") + "</b>";
+            string text = b.Exchange + ": <b>" + b.Available.ToString("0.00000000") + "</b>";
             item.Caption = text;
         }
 
@@ -185,7 +185,7 @@ namespace CryptoMarketClient {
         }
 
         private void bbShowLog_ItemClick(object sender, ItemClickEventArgs e) {
-            LogManager.Default.Show();
+            LogManager.Default.ShowLogForm();
         }
     }
 }
