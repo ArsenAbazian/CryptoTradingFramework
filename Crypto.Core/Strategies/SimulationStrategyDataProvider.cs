@@ -52,7 +52,7 @@ namespace Crypto.Core.Strategies {
             foreach(StrategySimulationData s in SimulationData.Values) {
                 if(!s.Connected)
                     continue;
-                if(s.TickerInfo.Kline) {
+                if(s.TickerInfo.UseKline) {
                     if(s.CandleStickData.Count > 0 && s.CandleStickData.First().Time == time) {
                         SendCandleStickDataEvent(s.Ticker, s.CandleStickData);
                     }
@@ -65,7 +65,7 @@ namespace Crypto.Core.Strategies {
             foreach(StrategySimulationData s in SimulationData.Values) {
                 if(!s.Connected)
                     continue;
-                if(s.TickerInfo.Kline) {
+                if(s.TickerInfo.UseKline) {
                     DateTime time = s.CandleStickData.Count == 0 ? DateTime.MaxValue : s.CandleStickData.First().Time;
                     if(minTime > time)
                         minTime = time;
@@ -119,7 +119,7 @@ namespace Crypto.Core.Strategies {
                     TickerInfo = ti 
                 };
 
-                if(ti.Kline) {
+                if(ti.UseKline) {
                     data.CandleStickData = DownloadCandleStickData(ti);
                     if(data.CandleStickData.Count == 0)
                         return false;

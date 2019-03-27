@@ -1,4 +1,5 @@
 ﻿using Crypto.Core.Common.Arbitrages;
+using Crypto.Core.Strategies.Custom;
 using Crypto.Core.Strategies.Signal;
 using CryptoMarketClient.Strategies.Stupid;
 using System;
@@ -25,6 +26,7 @@ namespace Crypto.Core.Strategies {
             list.Add(new StrategyRegistrationInfo() { Type = typeof(SignalNotificationStrategy), Group = StrategyGroup.Signal, Name = "Signal Notification", Description = "This strategy just send notification when corresponding param's values found" });
             list.Add(new StrategyRegistrationInfo() { Type = typeof(TripleRsiIndicatorStrategy), Group = StrategyGroup.Signal, Name = "Triple Rsi Indicator", Description = "This strategy based on triple rsi indicators values." });
             list.Add(new StrategyRegistrationInfo() { Type = typeof(MacdTrendStrategy), Group = StrategyGroup.Signal, Name = "Macd Trend", Description = "This strategy based on Macd trend." });
+            list.Add(new StrategyRegistrationInfo() { Type = typeof(CustomTickerStrategy), Group = StrategyGroup.Custom, Name = "Custom Strategy", Description = "Your own fully customizable strategy" });
             return list;
         }
     }
@@ -45,6 +47,7 @@ namespace Crypto.Core.Strategies {
         Arbitrage = "Arbitrage",
         MarketMaking = "Market Making",
         Grid = "Grid",
-        Signal = "Signal Notificators";
+        Signal = "Signal Notificators",
+        Custom = "Custom";
     }
 }

@@ -1072,13 +1072,13 @@ namespace CryptoMarketClient {
         public virtual bool Connect(TickerInputInfo info) {
             if(info.Ticker == null)
                 return false;
-            if(info.OrderBook) {
+            if(info.UseOrderBook) {
                 StartListenOrderBook(info.Ticker);
             }
-            if(info.TradeHistory) {
+            if(info.UseTradeHistory) {
                 StartListenTradeHistory(info.Ticker);
             }
-            if(info.Kline) {
+            if(info.UseKline) {
                 info.Ticker.CandleStickPeriodMin = info.KlineIntervalMin;
                 int seconds = info.KlineIntervalMin * 60 * 1000;
                 info.Ticker.CandleStickData = info.Ticker.GetCandleStickData(info.Ticker.CandleStickPeriodMin, DateTime.UtcNow.AddSeconds(-seconds), seconds);
@@ -1090,11 +1090,11 @@ namespace CryptoMarketClient {
         public virtual bool Disconnect(TickerInputInfo info) {
             if(info.Ticker == null)
                 return false;
-            if(info.OrderBook)
+            if(info.UseOrderBook)
                 StopListenOrderBook(info.Ticker);
-            if(info.TradeHistory)
+            if(info.UseTradeHistory)
                 StopListenTradeHistory(info.Ticker);
-            if(info.Kline)
+            if(info.UseKline)
                 StopListenKline(info.Ticker);
             return true;
         }
@@ -1114,8 +1114,12 @@ namespace CryptoMarketClient {
     }
 
     public class CandleStickIntervalInfo {
+        public CandleStickIntervalInfo() {
+            Interval = TimeSpan.FromMinutes(1);
+        }
         public string Text { get; set; }
         public string Command { get; set; }
+        public int TotalMinutes { get { return (int)Interval.TotalMinutes; } set { Interval = TimeSpan.FromMinutes(value); } }
         public TimeSpan Interval { get; set; }
     }
 

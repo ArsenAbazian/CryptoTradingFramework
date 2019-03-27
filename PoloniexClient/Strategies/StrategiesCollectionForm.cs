@@ -97,7 +97,7 @@ namespace CryptoMarketClient.Strategies {
             StrategyRegistrationInfo info = (StrategyRegistrationInfo)e.Item.Tag;
             StrategyBase strategy = info.Create();
             strategy.Manager = Manager;
-            if(!StrategyConfigurationManager.Default.ConfigureDialog(strategy))
+            if(!StrategyConfigurationManager.Default.EditStrategy(strategy))
                 return;
             Manager.Add(strategy);
             Manager.Save();
@@ -152,7 +152,7 @@ namespace CryptoMarketClient.Strategies {
                 return;
             }
             StrategyBase cloned = strategy.Clone();
-            if(!StrategyConfigurationManager.Default.ConfigureDialog(cloned))
+            if(!StrategyConfigurationManager.Default.EditStrategy(cloned))
                 return;
             strategy.Assign(cloned);
             Manager.Save();

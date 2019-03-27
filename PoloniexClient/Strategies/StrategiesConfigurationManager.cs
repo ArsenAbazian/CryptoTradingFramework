@@ -1,7 +1,9 @@
 ﻿using Crypto.Core.Arbitrages.Deriatives;
 using Crypto.Core.Common.Arbitrages;
 using Crypto.Core.Strategies;
+using Crypto.Core.Strategies.Custom;
 using Crypto.Core.Strategies.Signal;
+using CryptoMarketClient.Strategies.Custom;
 using CryptoMarketClient.Strategies.Stupid;
 using DevExpress.XtraEditors;
 using System;
@@ -30,6 +32,7 @@ namespace CryptoMarketClient.Strategies {
             Items.Add(new StrategyConfigurationInfo() { StrategyType = typeof(SignalNotificationStrategy), ConfigurationFormType = typeof(Signal.SignalNotificationConfigControl), DataFormType = typeof(Signal.SignalNotificationDataForm) });
             Items.Add(new StrategyConfigurationInfo() { StrategyType = typeof(TripleRsiIndicatorStrategy), ConfigurationFormType = typeof(Signal.TripleRsiStrategyConfigControl), DataFormType = typeof(Signal.TripleRsiStrategyDataForm) });
             Items.Add(new StrategyConfigurationInfo() { StrategyType = typeof(MacdTrendStrategy), ConfigurationFormType = typeof(Signal.MacdTrendStrategyConfigControl), DataFormType = typeof(Signal.MacdTrendStrategyDataForm) });
+            Items.Add(new StrategyConfigurationInfo() { StrategyType = typeof(CustomTickerStrategy), ConfigurationFormType = typeof(CustomStrategyConfigurationControl), DataFormType = typeof(Custom.CustomStrategyDataForm) });
         }
         public void Add(StrategyConfigurationInfo info) {
             StrategyConfigurationInfo prev = Items.FirstOrDefault(i => i.StrategyType == info.StrategyType);
@@ -57,7 +60,7 @@ namespace CryptoMarketClient.Strategies {
             }
             return true;
         }
-        public bool ConfigureDialog(StrategyBase strategy) {
+        public bool EditStrategy(StrategyBase strategy) {
             Type type = strategy.GetType();
             StrategyConfigurationInfo info = Items.FirstOrDefault(i => i.StrategyType == type);
             if(info == null) {
@@ -73,7 +76,8 @@ namespace CryptoMarketClient.Strategies {
                 form.Strategy = strategy;
                 if(form.ShowDialog() != DialogResult.OK)
                     return false;
-                strategy.Assign(form.Strategy);
+                if(strategy != form.Strategy)
+                    strategy.Assign(form.Strategy);
             }
             catch(Exception e) {
                 XtraMessageBox.Show("Invalid configuration form for strategy " + type.Name + " " + e.ToString());

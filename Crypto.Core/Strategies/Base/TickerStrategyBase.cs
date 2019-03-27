@@ -63,8 +63,6 @@ namespace CryptoMarketClient.Strategies {
             return true;
         }
 
-        
-
         BuySellStrategyState state;
         public BuySellStrategyState State {
             get { return state; }
@@ -111,7 +109,7 @@ namespace CryptoMarketClient.Strategies {
 
         Ticker ticker;
         [XmlIgnore]
-        public Ticker Ticker {
+        public virtual Ticker Ticker {
             get {
                 if(ticker == null && TickerInfo != null)
                     ticker = GetTicker();
@@ -205,7 +203,7 @@ namespace CryptoMarketClient.Strategies {
         }
 
         public virtual TickerInputInfo CreateTickerInputInfo() {
-            return new TickerInputInfo() { Exchange = TickerInfo.Exchange, TickerName = TickerInfo.Ticker, OrderBook = true, TradeHistory = true, Ticker = Ticker };
+            return new TickerInputInfo() { Exchange = TickerInfo.Exchange, TickerName = TickerInfo.Ticker, UseOrderBook = true, UseTradeHistory = true, Ticker = Ticker };
         }
 
         public override StrategyInputInfo CreateInputInfo() {
@@ -306,7 +304,7 @@ namespace CryptoMarketClient.Strategies {
             CheckAccountMatchExchange(list);
             return list;
         }
-        void CheckTickerSpecified(List<StrategyValidationError> list) {
+        protected virtual void CheckTickerSpecified(List<StrategyValidationError> list) {
             if(TickerInfo == null || string.IsNullOrEmpty(TickerInfo.Ticker))
                 list.Add(new StrategyValidationError() { DataObject = this, Description = string.Format("Ticker not specified.", GetTickerName()), PropertyName = "Ticker", Value = GetTickerName() });
             else if(Ticker == null)

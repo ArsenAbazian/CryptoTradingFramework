@@ -26,18 +26,14 @@
             this.components = new System.ComponentModel.Container();
             this.dataLayoutControl1 = new DevExpress.XtraDataLayout.DataLayoutControl();
             this.TickerInfoTextEdit = new DevExpress.XtraEditors.GridLookUpEdit();
-            this.signalNotificationStrategyBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.tickerNameInfoBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.TickerInfoTextEditView = new DevExpress.XtraGrid.Views.Grid.GridView();
-            this.colExchange = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colBaseCurrency = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colMarketCurrency = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.repositoryItemTextEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemTextEdit();
             this.comboBoxEdit1 = new DevExpress.XtraEditors.LookUpEdit();
-            this.candleStickIntervalInfoBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.spinEdit1 = new DevExpress.XtraEditors.SpinEdit();
             this.spinEdit3 = new DevExpress.XtraEditors.SpinEdit();
             this.spinEdit5 = new DevExpress.XtraEditors.SpinEdit();
+            this.spinEdit2 = new DevExpress.XtraEditors.SpinEdit();
             this.layoutControlGroup1 = new DevExpress.XtraLayout.LayoutControlGroup();
             this.layoutControlGroup2 = new DevExpress.XtraLayout.LayoutControlGroup();
             this.ItemForTickerInfo = new DevExpress.XtraLayout.LayoutControlItem();
@@ -45,20 +41,21 @@
             this.layoutControlItem1 = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItem4 = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItem6 = new DevExpress.XtraLayout.LayoutControlItem();
-            this.spinEdit2 = new DevExpress.XtraEditors.SpinEdit();
             this.layoutControlItem3 = new DevExpress.XtraLayout.LayoutControlItem();
+            this.signalNotificationStrategyBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.tickerNameInfoBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.colExchange = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.repositoryItemTextEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemTextEdit();
+            this.candleStickIntervalInfoBindingSource = new System.Windows.Forms.BindingSource(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.dataLayoutControl1)).BeginInit();
             this.dataLayoutControl1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.TickerInfoTextEdit.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.signalNotificationStrategyBindingSource)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.tickerNameInfoBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.TickerInfoTextEditView)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemTextEdit1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.comboBoxEdit1.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.candleStickIntervalInfoBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.spinEdit1.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.spinEdit3.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.spinEdit5.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.spinEdit2.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ItemForTickerInfo)).BeginInit();
@@ -66,8 +63,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem4)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem6)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.spinEdit2.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.signalNotificationStrategyBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tickerNameInfoBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemTextEdit1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.candleStickIntervalInfoBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // dataLayoutControl1
@@ -105,14 +105,6 @@
             this.TickerInfoTextEdit.TabIndex = 6;
             this.TickerInfoTextEdit.EditValueChanged += new System.EventHandler(this.TickerInfoTextEdit_EditValueChanged);
             // 
-            // signalNotificationStrategyBindingSource
-            // 
-            this.signalNotificationStrategyBindingSource.DataSource = typeof(Crypto.Core.Strategies.Signal.MacdTrendStrategy);
-            // 
-            // tickerNameInfoBindingSource
-            // 
-            this.tickerNameInfoBindingSource.DataSource = typeof(Crypto.Core.Common.TickerNameInfo);
-            // 
             // TickerInfoTextEditView
             // 
             this.TickerInfoTextEditView.Columns.AddRange(new DevExpress.XtraGrid.Columns.GridColumn[] {
@@ -127,13 +119,6 @@
             this.TickerInfoTextEditView.SortInfo.AddRange(new DevExpress.XtraGrid.Columns.GridColumnSortInfo[] {
             new DevExpress.XtraGrid.Columns.GridColumnSortInfo(this.colExchange, DevExpress.Data.ColumnSortOrder.Ascending),
             new DevExpress.XtraGrid.Columns.GridColumnSortInfo(this.colBaseCurrency, DevExpress.Data.ColumnSortOrder.Ascending)});
-            // 
-            // colExchange
-            // 
-            this.colExchange.FieldName = "Exchange";
-            this.colExchange.Name = "colExchange";
-            this.colExchange.Visible = true;
-            this.colExchange.VisibleIndex = 0;
             // 
             // colBaseCurrency
             // 
@@ -150,12 +135,6 @@
             this.colMarketCurrency.VisibleIndex = 0;
             this.colMarketCurrency.Width = 88;
             // 
-            // repositoryItemTextEdit1
-            // 
-            this.repositoryItemTextEdit1.AutoHeight = false;
-            this.repositoryItemTextEdit1.Name = "repositoryItemTextEdit1";
-            this.repositoryItemTextEdit1.Padding = new System.Windows.Forms.Padding(3);
-            // 
             // comboBoxEdit1
             // 
             this.comboBoxEdit1.Location = new System.Drawing.Point(186, 64);
@@ -171,10 +150,6 @@
             this.comboBoxEdit1.StyleController = this.dataLayoutControl1;
             this.comboBoxEdit1.TabIndex = 8;
             this.comboBoxEdit1.EditValueChanged += new System.EventHandler(this.comboBoxEdit1_EditValueChanged);
-            // 
-            // candleStickIntervalInfoBindingSource
-            // 
-            this.candleStickIntervalInfoBindingSource.DataSource = typeof(CryptoMarketClient.CandleStickIntervalInfo);
             // 
             // spinEdit1
             // 
@@ -228,6 +203,32 @@
             this.spinEdit5.Size = new System.Drawing.Size(799, 40);
             this.spinEdit5.StyleController = this.dataLayoutControl1;
             this.spinEdit5.TabIndex = 13;
+            // 
+            // spinEdit2
+            // 
+            this.spinEdit2.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.signalNotificationStrategyBindingSource, "Tolerance", true));
+            this.spinEdit2.EditValue = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+            this.spinEdit2.Location = new System.Drawing.Point(186, 240);
+            this.spinEdit2.Name = "spinEdit2";
+            this.spinEdit2.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.spinEdit2.Properties.Increment = new decimal(new int[] {
+            5,
+            0,
+            0,
+            262144});
+            this.spinEdit2.Properties.MaxValue = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.spinEdit2.Size = new System.Drawing.Size(799, 40);
+            this.spinEdit2.StyleController = this.dataLayoutControl1;
+            this.spinEdit2.TabIndex = 14;
             // 
             // layoutControlGroup1
             // 
@@ -300,32 +301,6 @@
             this.layoutControlItem6.Text = "Signal Length";
             this.layoutControlItem6.TextSize = new System.Drawing.Size(171, 25);
             // 
-            // spinEdit2
-            // 
-            this.spinEdit2.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.signalNotificationStrategyBindingSource, "Tolerance", true));
-            this.spinEdit2.EditValue = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-            this.spinEdit2.Location = new System.Drawing.Point(186, 240);
-            this.spinEdit2.Name = "spinEdit2";
-            this.spinEdit2.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.spinEdit2.Properties.Increment = new decimal(new int[] {
-            5,
-            0,
-            0,
-            262144});
-            this.spinEdit2.Properties.MaxValue = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            this.spinEdit2.Size = new System.Drawing.Size(799, 40);
-            this.spinEdit2.StyleController = this.dataLayoutControl1;
-            this.spinEdit2.TabIndex = 14;
-            // 
             // layoutControlItem3
             // 
             this.layoutControlItem3.Control = this.spinEdit2;
@@ -334,6 +309,31 @@
             this.layoutControlItem3.Size = new System.Drawing.Size(977, 520);
             this.layoutControlItem3.Text = "Tolerance";
             this.layoutControlItem3.TextSize = new System.Drawing.Size(171, 25);
+            // 
+            // signalNotificationStrategyBindingSource
+            // 
+            this.signalNotificationStrategyBindingSource.DataSource = typeof(Crypto.Core.Strategies.Signal.MacdTrendStrategy);
+            // 
+            // tickerNameInfoBindingSource
+            // 
+            this.tickerNameInfoBindingSource.DataSource = typeof(Crypto.Core.Common.TickerNameInfo);
+            // 
+            // colExchange
+            // 
+            this.colExchange.FieldName = "Exchange";
+            this.colExchange.Name = "colExchange";
+            this.colExchange.Visible = true;
+            this.colExchange.VisibleIndex = 0;
+            // 
+            // repositoryItemTextEdit1
+            // 
+            this.repositoryItemTextEdit1.AutoHeight = false;
+            this.repositoryItemTextEdit1.Name = "repositoryItemTextEdit1";
+            this.repositoryItemTextEdit1.Padding = new System.Windows.Forms.Padding(3);
+            // 
+            // candleStickIntervalInfoBindingSource
+            // 
+            this.candleStickIntervalInfoBindingSource.DataSource = typeof(CryptoMarketClient.CandleStickIntervalInfo);
             // 
             // MacdTrendStrategyConfigControl
             // 
@@ -345,15 +345,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataLayoutControl1)).EndInit();
             this.dataLayoutControl1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.TickerInfoTextEdit.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.signalNotificationStrategyBindingSource)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.tickerNameInfoBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.TickerInfoTextEditView)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemTextEdit1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.comboBoxEdit1.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.candleStickIntervalInfoBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.spinEdit1.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.spinEdit3.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.spinEdit5.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.spinEdit2.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ItemForTickerInfo)).EndInit();
@@ -361,8 +358,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem4)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem6)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.spinEdit2.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.signalNotificationStrategyBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tickerNameInfoBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemTextEdit1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.candleStickIntervalInfoBindingSource)).EndInit();
             this.ResumeLayout(false);
 
         }

@@ -27,7 +27,7 @@ namespace CryptoMarketClient.Strategies {
             }
         }
         protected virtual void OnStrategyChanged() {
-            throw new NotImplementedException();
+            
         }
     }
 }

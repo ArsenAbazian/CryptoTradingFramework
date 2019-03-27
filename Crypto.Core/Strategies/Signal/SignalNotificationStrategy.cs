@@ -50,7 +50,7 @@ namespace Crypto.Core.Strategies.Signal {
         public StochasticIndicator StochIndicator { get; private set; }
 
         public override TickerInputInfo CreateTickerInputInfo() {
-            return new TickerInputInfo() { Exchange = TickerInfo.Exchange, TickerName = TickerInfo.Ticker, OrderBook = false, TradeHistory = false, Kline = true, KlineIntervalMin = CandleStickIntervalMin, Ticker = Ticker };
+            return new TickerInputInfo() { Exchange = TickerInfo.Exchange, TickerName = TickerInfo.Ticker, UseOrderBook = false, UseTradeHistory = false, UseKline = true, KlineIntervalMin = CandleStickIntervalMin, Ticker = Ticker };
         }
 
         public override void Assign(StrategyBase from) {

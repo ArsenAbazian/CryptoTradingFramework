@@ -29,7 +29,7 @@ namespace Crypto.Core.Strategies.Signal {
         }
 
         public override TickerInputInfo CreateTickerInputInfo() {
-            return new TickerInputInfo() { Exchange = TickerInfo.Exchange, TickerName = TickerInfo.Ticker, OrderBook = true, TradeHistory = false, Kline = true, KlineIntervalMin = CandleStickIntervalMin, Ticker = Ticker };
+            return new TickerInputInfo() { Exchange = TickerInfo.Exchange, TickerName = TickerInfo.Ticker, UseOrderBook = true, UseTradeHistory = false, UseKline = true, KlineIntervalMin = CandleStickIntervalMin, Ticker = Ticker };
         }
 
         public override void Assign(StrategyBase from) {

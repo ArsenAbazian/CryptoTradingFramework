@@ -1,4 +1,5 @@
-﻿using CryptoMarketClient;
+﻿using Crypto.Core.Strategies.Custom;
+using CryptoMarketClient;
 using CryptoMarketClient.Common;
 using CryptoMarketClient.Helpers;
 using CryptoMarketClient.Strategies;
@@ -18,6 +19,7 @@ namespace Crypto.Core.Strategies {
     [XmlInclude(typeof(Signal.SignalNotificationStrategy))]
     [XmlInclude(typeof(Signal.TripleRsiIndicatorStrategy))]
     [XmlInclude(typeof(Signal.MacdTrendStrategy))]
+    [XmlInclude(typeof(CustomTickerStrategy))]
     //[XmlInclude(typeof())]
     [Serializable]
     public abstract class StrategyBase {
@@ -43,7 +45,6 @@ namespace Crypto.Core.Strategies {
                 return;
             TelegramBot.Default.SendNotification(notification, ChatId);
         }
-
 
         public abstract string TypeName { get; }
         public string Name { get; set; }

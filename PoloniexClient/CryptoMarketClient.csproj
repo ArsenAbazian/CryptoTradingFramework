@@ -211,6 +211,7 @@
     </Reference>
     <Reference Include="System.Runtime.Remoting" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Runtime.Serialization.Formatters.Soap" />
     <Reference Include="System.Security.Cryptography.Algorithms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Security.Cryptography.Algorithms.4.3.1\lib\net46\System.Security.Cryptography.Algorithms.dll</HintPath>
       <Private>True</Private>
@@ -256,6 +257,8 @@
       <HintPath>..\packages\Telegram.Bot.14.9.0\lib\net45\Telegram.Bot.dll</HintPath>
     </Reference>
     <Reference Include="UIAutomationClient" />
+    <Reference Include="UIAutomationProvider" />
+    <Reference Include="UIAutomationTypes" />
     <Reference Include="WebSocket4Net, Version=0.15.2.11, Culture=neutral, PublicKeyToken=eb4e154b696bf72a, processorArchitecture=MSIL">
       <HintPath>..\packages\WebSocket4Net.0.15.2\lib\net45\WebSocket4Net.dll</HintPath>
     </Reference>
@@ -387,6 +390,18 @@
     </Compile>
     <Compile Include="Strategies\Arbitrages\Statistical\DependencyArbitrageForm.Designer.cs">
       <DependentUpon>DependencyArbitrageForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Strategies\Custom\CustomStrategyConfigurationControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Strategies\Custom\CustomStrategyConfigurationControl.Designer.cs">
+      <DependentUpon>CustomStrategyConfigurationControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Strategies\Custom\CustomStrategyDataForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Strategies\Custom\CustomStrategyDataForm.Designer.cs">
+      <DependentUpon>CustomStrategyDataForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Strategies\Signal\MacdTrendStrategyConfigControl.cs">
       <SubType>UserControl</SubType>
@@ -665,6 +680,12 @@
     <EmbeddedResource Include="Strategies\Arbitrages\Statistical\DependencyArbitrageForm.resx">
       <DependentUpon>DependencyArbitrageForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Strategies\Custom\CustomStrategyConfigurationControl.resx">
+      <DependentUpon>CustomStrategyConfigurationControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Strategies\Custom\CustomStrategyDataForm.resx">
+      <DependentUpon>CustomStrategyDataForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Strategies\Signal\MacdTrendStrategyConfigControl.resx">
       <DependentUpon>MacdTrendStrategyConfigControl.cs</DependentUpon>
     </EmbeddedResource>
@@ -782,6 +803,7 @@
     </EmbeddedResource>
     <None Include="app.manifest" />
     <None Include="packages.config" />
+    <None Include="Properties\DataSources\Crypto.Core.Common.TickerNameInfo.datasource" />
     <None Include="Properties\DataSources\Exchange.datasource" />
     <None Include="Properties\DataSources\TickerBase.datasource" />
     <None Include="Properties\Settings.settings">
