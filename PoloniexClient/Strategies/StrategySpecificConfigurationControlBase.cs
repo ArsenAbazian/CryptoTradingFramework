@@ -26,6 +26,22 @@ namespace CryptoMarketClient.Strategies {
                 OnStrategyChanged();
             }
         }
+        protected string GetFaultExchanges() {
+            string faultExchanges = string.Empty;
+            foreach(Exchange e in Exchange.Registered) {
+                if(e.Tickers.Count == 0) {
+                    if(!string.IsNullOrEmpty(faultExchanges))
+                        faultExchanges += ", ";
+                    faultExchanges += e.Name;
+                }
+            }
+
+            return faultExchanges;
+        }
+        protected List<CandleStickIntervalInfo> GetAllowedCandleSticksIntervals(TickerStrategyBase s) {
+            if(s == null) return new List<CandleStickIntervalInfo>();
+            return Exchange.Get(s.TickerInfo.Exchange).AllowedCandleStickIntervals;
+        }
         protected virtual void OnStrategyChanged() {
             throw new NotImplementedException();
         }

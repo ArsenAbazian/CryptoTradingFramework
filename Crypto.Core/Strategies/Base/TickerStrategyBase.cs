@@ -16,6 +16,7 @@ namespace CryptoMarketClient.Strategies {
         
         public double BuyLevel { get; set; }
         public double SellLevel { get; set; }
+        public int CandleStickIntervalMin { get; set; }
 
         protected virtual OrderBookEntry GetAvailableToBuy(double maxBuy) {
             OrderBookEntry res = new OrderBookEntry();

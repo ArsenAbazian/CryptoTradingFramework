@@ -18,7 +18,7 @@ namespace Crypto.Core.Strategies.Signal {
         public override string StateText => State.ToString();
         public override string TypeName => "Macd Trend Strategy";
 
-        public int CandleStickIntervalMin { get; set; }
+        
         public override bool SupportSimulation => true;
 
         [XmlIgnore]

@@ -424,38 +424,34 @@ namespace CryptoMarketClient {
             if(!JSonHelper.Default.FindChar(bytes, ':', ref startIndex))
                 return false;
             startIndex++;
-            List<string[]> asks = JSonHelper.Default.DeserializeArrayOfArrays(bytes, ref startIndex, 2);
+            List<string[]> jasks = JSonHelper.Default.DeserializeArrayOfArrays(bytes, ref startIndex, 2);
             if(!JSonHelper.Default.FindChar(bytes, ',', ref startIndex))
                 return false;
             startIndex++;
             if(!JSonHelper.Default.FindChar(bytes, ':', ref startIndex))
                 return false;
             startIndex++;
-            List<string[]> bids = JSonHelper.Default.DeserializeArrayOfArrays(bytes, ref startIndex, 2);
+            List<string[]> jbids = JSonHelper.Default.DeserializeArrayOfArrays(bytes, ref startIndex, 2);
 
             ticker.OrderBook.GetNewBidAsks();
             int index = 0;
-            List<OrderBookEntry> list = ticker.OrderBook.Bids;
-            foreach(string[] item in bids) {
-                OrderBookEntry entry = list[index];
-                entry.ValueString = item[0];
-                entry.AmountString = item[1];
-                index++;
-                if(index >= list.Count)
-                    break;
-            }
-            index = 0;
-            list = ticker.OrderBook.Asks;
-            foreach(string[] item in asks) {
-                OrderBookEntry entry = list[index];
-                entry.ValueString = item[0];
-                entry.AmountString = item[1];
-                index++;
-                if(index >= list.Count)
-                    break;
-            }
 
+            List<OrderBookEntry> bids = ticker.OrderBook.Bids;
+            List<OrderBookEntry> asks = ticker.OrderBook.Asks;
+            List<OrderBookEntry> iasks = ticker.OrderBook.AsksInverted;
+
+            foreach(string[] item in jbids)
+                bids.Add(new OrderBookEntry() { ValueString = item[0], AmountString = item[1] });
+
+            foreach(string[] item in jasks) {
+                OrderBookEntry e = new OrderBookEntry() { ValueString = item[0], AmountString = item[1] };
+                asks.Add(e);
+                iasks.Insert(0, e);
+            }
+            
             ticker.OrderBook.UpdateEntries();
+            ticker.OrderBook.RaiseOnChanged(new IncrementalUpdateInfo());
+            ticker.RaiseChanged();
             return true;
         }
         //public bool OnUpdateArbitrageOrderBook(Ticker ticker, string text, int depth) {
