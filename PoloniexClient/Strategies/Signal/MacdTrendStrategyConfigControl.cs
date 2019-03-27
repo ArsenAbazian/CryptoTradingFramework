@@ -29,18 +29,18 @@ namespace CryptoMarketClient.Strategies.Signal {
                 return;
             }
             this.tickerNameInfoBindingSource.DataSource = tickerNameList;
+            
             TickerStrategyBase ts = (TickerStrategyBase) Strategy;
+            
             if(ts.TickerInfo != null)
                 ts.TickerInfo = tickerNameList.FirstOrDefault(t => t.Ticker == ts.TickerInfo.Ticker);
+
             this.signalNotificationStrategyBindingSource.DataSource = Strategy;
-            string faultExchanges = GetFaultExchanges();
-            MacdTrendStrategy s = (MacdTrendStrategy) Strategy;
-            if(s.TickerInfo != null) {
-                this.candleStickIntervalInfoBindingSource.DataSource = Exchange.Get(s.TickerInfo.Exchange).AllowedCandleStickIntervals;
-                this.comboBoxEdit1.EditValue = Exchange.Get(s.TickerInfo.Exchange).AllowedCandleStickIntervals.FirstOrDefault(i => (int) (i.Interval.TotalMinutes) == s.CandleStickIntervalMin);
+            if(ts.TickerInfo != null) {
+                this.candleStickIntervalInfoBindingSource.DataSource = Exchange.Get(ts.TickerInfo.Exchange).AllowedCandleStickIntervals;
+                this.comboBoxEdit1.EditValue = Exchange.Get(ts.TickerInfo.Exchange).AllowedCandleStickIntervals.FirstOrDefault(i => (int) (i.Interval.TotalMinutes) == ts.CandleStickIntervalMin);
             }
-            if(!string.IsNullOrEmpty(faultExchanges))
-                XtraMessageBox.Show("Warning: failed load tickers for the following exchanges: " + faultExchanges);
+            CheckUnreachableExchanges();
         }
 
         void TickerInfoTextEdit_EditValueChanged(object sender, EventArgs e) {

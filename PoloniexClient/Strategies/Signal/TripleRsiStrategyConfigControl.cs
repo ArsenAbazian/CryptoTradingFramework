@@ -29,20 +29,20 @@ namespace CryptoMarketClient.Strategies.Signal {
                 return;
             }
             this.tickerNameInfoBindingSource.DataSource = tickerNameList;
-            TickerStrategyBase ts = (TickerStrategyBase)Strategy;
-            if(ts.TickerInfo != null)
-                ts.TickerInfo = tickerNameList.FirstOrDefault(t => t.Ticker == ts.TickerInfo.Ticker);
-            this.signalNotificationStrategyBindingSource.DataSource = Strategy;
-            string faultExchanges = GetFaultExchanges();
+            TickerStrategyBase ts = Strategy as TickerStrategyBase;
 
-            TickerStrategyBase s = Strategy as TickerStrategyBase;
-            if(s?.TickerInfo != null) {
-                this.candleStickIntervalInfoBindingSource.DataSource = Exchange.Get(s.TickerInfo.Exchange).AllowedCandleStickIntervals;
-                this.comboBoxEdit1.EditValue = GetAllowedCandleSticksIntervals(s).FirstOrDefault(i => (int) i.Interval.TotalMinutes == s.CandleStickIntervalMin);
+            if(ts?.TickerInfo != null)
+                ts.TickerInfo = tickerNameList.FirstOrDefault(t => t.Ticker == ts.TickerInfo.Ticker);
+
+            this.signalNotificationStrategyBindingSource.DataSource = Strategy;
+            
+            if(ts?.TickerInfo != null) {
+                this.candleStickIntervalInfoBindingSource.DataSource = Exchange.Get(ts.TickerInfo.Exchange).AllowedCandleStickIntervals;
+                this.comboBoxEdit1.EditValue = GetAllowedCandleSticksIntervals(ts).FirstOrDefault(i => (int) i.Interval.TotalMinutes == ts.CandleStickIntervalMin);
             }
-            if(!string.IsNullOrEmpty(faultExchanges))
-                XtraMessageBox.Show("Warning: failed load tickers for the following exchanges: " + faultExchanges);
+            CheckUnreachableExchanges();
         }
+
         void TickerInfoTextEdit_EditValueChanged(object sender, EventArgs e) {
             TickerNameInfo info = this.TickerInfoTextEdit.EditValue as TickerNameInfo;
             ((TickerStrategyBase)Strategy).TickerInfo = info;
@@ -56,7 +56,7 @@ namespace CryptoMarketClient.Strategies.Signal {
 
         void comboBoxEdit1_EditValueChanged(object sender, EventArgs e) {
             TripleRsiIndicatorStrategy s = (TripleRsiIndicatorStrategy)Strategy;
-            CandleStickIntervalInfo info = (CandleStickIntervalInfo)this.comboBoxEdit1.EditValue;
+            CandleStickIntervalInfo info = comboBoxEdit1.EditValue as CandleStickIntervalInfo;
             if(info != null)
                 s.CandleStickIntervalMin = (int)info.Interval.TotalMinutes;
             else
