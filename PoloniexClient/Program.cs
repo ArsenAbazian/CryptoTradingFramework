@@ -37,7 +37,7 @@ namespace CryptoMarketClient {
 
             WindowsFormsSettings.ForceDirectXPaint();
 
-            //CheckShowApiKeysForm();
+            CheckShowApiKeysForm();
             Application.Run(new MainForm());
         }
         static void CheckShowApiKeysForm() {

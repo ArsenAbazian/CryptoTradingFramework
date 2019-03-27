@@ -26,6 +26,27 @@ namespace CryptoMarketClient.Strategies {
                 OnStrategyChanged();
             }
         }
+        protected void CheckUnreachableExchanges() {
+            string unreachableExchanges = GetUnreachableExchanges();
+            if(!string.IsNullOrEmpty(unreachableExchanges))
+                XtraMessageBox.Show("Warning: failed load tickers for the following exchanges: " + unreachableExchanges);
+        }
+        protected string GetUnreachableExchanges() {
+            string unreachableExchanges = string.Empty;
+            foreach(Exchange e in Exchange.Registered) {
+                if(e.Tickers.Count == 0) {
+                    if(!string.IsNullOrEmpty(unreachableExchanges))
+                        unreachableExchanges += ", ";
+                    unreachableExchanges += e.Name;
+                }
+            }
+
+            return unreachableExchanges;
+        }
+        protected List<CandleStickIntervalInfo> GetAllowedCandleSticksIntervals(TickerStrategyBase s) {
+            if(s == null) return new List<CandleStickIntervalInfo>();
+            return Exchange.Get(s.TickerInfo.Exchange).AllowedCandleStickIntervals;
+        }
         protected virtual void OnStrategyChanged() {
             
         }

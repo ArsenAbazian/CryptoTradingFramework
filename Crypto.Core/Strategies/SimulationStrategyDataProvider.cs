@@ -14,10 +14,9 @@ namespace Crypto.Core.Strategies {
         bool IStrategyDataProvider.Connect(StrategyInputInfo info) {
             foreach(TickerInputInfo ti in info.Tickers) {
                 StrategySimulationData data = GetSimulationData(ti);
-                data.Connected = true;
+                if(data != null) data.Connected = true;
             }
-
-            return true;            
+            return true;
         }
 
         public DateTime LastTime { get; private set; } = DateTime.Now;
@@ -75,13 +74,15 @@ namespace Crypto.Core.Strategies {
         }
 
         private StrategySimulationData GetSimulationData(TickerInputInfo ti) {
-            return SimulationData[ti.Ticker];
+            StrategySimulationData data;
+            if(SimulationData.TryGetValue(ti.Ticker, out data)) return data;
+            return null;
         }
 
         bool IStrategyDataProvider.Disconnect(StrategyInputInfo info) {
             foreach(TickerInputInfo ti in info.Tickers) {
                 StrategySimulationData data = GetSimulationData(ti);
-                data.Connected = false;
+                if(data != null) data.Connected = false;
             }
 
             return true;

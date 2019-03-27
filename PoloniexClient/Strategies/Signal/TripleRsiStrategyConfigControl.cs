@@ -15,8 +15,12 @@ namespace CryptoMarketClient.Strategies.Signal {
     public partial class TripleRsiStrategyConfigControl : StrategySpecificConfigurationControlBase {
         public TripleRsiStrategyConfigControl() {
             InitializeComponent();
+            InitializeDefaults();   
         }
-
+        void InitializeDefaults() {
+            var intervals = GetAllowedCandleSticksIntervals(Strategy as TickerStrategyBase);
+            comboBoxEdit1.EditValue = intervals.FirstOrDefault();
+        }
         protected override void OnStrategyChanged() {
             //TODO check that ticker correctly initiallized on editing.
             List<TickerNameInfo> tickerNameList = Exchange.GetTickersNameInfo();
@@ -25,28 +29,21 @@ namespace CryptoMarketClient.Strategies.Signal {
                 return;
             }
             this.tickerNameInfoBindingSource.DataSource = tickerNameList;
-            TickerStrategyBase ts = (TickerStrategyBase)Strategy;
-            if(ts.TickerInfo != null)
+            TickerStrategyBase ts = Strategy as TickerStrategyBase;
+
+            if(ts?.TickerInfo != null)
                 ts.TickerInfo = tickerNameList.FirstOrDefault(t => t.Ticker == ts.TickerInfo.Ticker);
+
             this.signalNotificationStrategyBindingSource.DataSource = Strategy;
-            string faultExchanges = string.Empty;
-            foreach(Exchange e in Exchange.Registered) {
-                if(e.Tickers.Count == 0) {
-                    if(!string.IsNullOrEmpty(faultExchanges))
-                        faultExchanges += ", ";
-                    faultExchanges += e.Name;
-                }
+            
+            if(ts?.TickerInfo != null) {
+                this.candleStickIntervalInfoBindingSource.DataSource = Exchange.Get(ts.TickerInfo.Exchange).AllowedCandleStickIntervals;
+                this.comboBoxEdit1.EditValue = GetAllowedCandleSticksIntervals(ts).FirstOrDefault(i => (int) i.Interval.TotalMinutes == ts.CandleStickIntervalMin);
             }
-            TripleRsiIndicatorStrategy s = (TripleRsiIndicatorStrategy)Strategy;
-            if(s.TickerInfo != null) {
-                this.candleStickIntervalInfoBindingSource.DataSource = Exchange.Get(s.TickerInfo.Exchange).AllowedCandleStickIntervals;
-                this.comboBoxEdit1.EditValue = Exchange.Get(s.TickerInfo.Exchange).AllowedCandleStickIntervals.FirstOrDefault(i => (int)(i.Interval.TotalMinutes) == s.CandleStickIntervalMin);
-            }
-            if(!string.IsNullOrEmpty(faultExchanges))
-                XtraMessageBox.Show("Warning: failed load tickers for the following exchanges: " + faultExchanges);
+            CheckUnreachableExchanges();
         }
 
-        private void TickerInfoTextEdit_EditValueChanged(object sender, EventArgs e) {
+        void TickerInfoTextEdit_EditValueChanged(object sender, EventArgs e) {
             TickerNameInfo info = this.TickerInfoTextEdit.EditValue as TickerNameInfo;
             ((TickerStrategyBase)Strategy).TickerInfo = info;
             if(info == null) {
@@ -57,9 +54,9 @@ namespace CryptoMarketClient.Strategies.Signal {
             this.candleStickIntervalInfoBindingSource.DataSource = ee.AllowedCandleStickIntervals;
         }
 
-        private void comboBoxEdit1_EditValueChanged(object sender, EventArgs e) {
+        void comboBoxEdit1_EditValueChanged(object sender, EventArgs e) {
             TripleRsiIndicatorStrategy s = (TripleRsiIndicatorStrategy)Strategy;
-            CandleStickIntervalInfo info = (CandleStickIntervalInfo)this.comboBoxEdit1.EditValue;
+            CandleStickIntervalInfo info = comboBoxEdit1.EditValue as CandleStickIntervalInfo;
             if(info != null)
                 s.CandleStickIntervalMin = (int)info.Interval.TotalMinutes;
             else

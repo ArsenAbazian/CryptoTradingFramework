@@ -46,8 +46,8 @@ namespace CryptoMarketClient.Common {
             }
         }
         public static ArbitrageHistoryHelper FromFile(string fileName) {
-            ArbitrageHistoryHelper res =(ArbitrageHistoryHelper)SerializationHelper.FromFile(fileName, typeof(ArbitrageHistoryHelper));
-            res.FileName = Name;
+            ArbitrageHistoryHelper res = (ArbitrageHistoryHelper) SerializationHelper.FromFile(fileName, typeof(ArbitrageHistoryHelper));
+            if(res != null) res.FileName = Name;
             return res;
         }
         public virtual void OnEndDeserialize() { }

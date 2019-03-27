@@ -22,8 +22,6 @@ namespace Crypto.Core.Strategies.Signal {
         public override string StateText => State.ToString();
         public override string TypeName => "Triple Rsi Strategy";
 
-        public int CandleStickIntervalMin { get; set; }
-
         public override bool SupportSimulation => true;
 
         [XmlIgnore]
@@ -77,6 +75,7 @@ namespace Crypto.Core.Strategies.Signal {
 
             LastCount = RsiSlowIndicator.Result.Count;
             int index = LastCount - 1;
+            if(index < RsiFastIndicator.Result.Count) return;
             // check for buy
             if(TimeToBuy(RsiFastIndicator.Result[index].Value, RsiMiddleIndicator.Result[index].Value, RsiSlowIndicator.Result[index].Value)) {
                 if(State == BuySellStrategyState.WaitingForBuy) {

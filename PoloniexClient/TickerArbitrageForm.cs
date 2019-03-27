@@ -591,19 +591,21 @@ namespace CryptoMarketClient {
         }
         void AddEnterMarketMenuItems() {
             int index = 0;
-            foreach(Ticker ticker in ArbitrageList[0].Tickers) {
-                if(ticker == null)
-                    break;
-                BarButtonItem item = new BarButtonItem(this.ribbonControl1.Manager, ticker.HostName);
-                item.Tag = index;
-                item.ItemClick += OnShowTickerChartItemClick;
-                this.bsShowTickerChart.ItemLinks.Add(item);
+            if(ArbitrageList.Count > 0) {
+                foreach(Ticker ticker in ArbitrageList[0].Tickers) {
+                    if(ticker == null)
+                        break;
+                    BarButtonItem item = new BarButtonItem(this.ribbonControl1.Manager, ticker.HostName);
+                    item.Tag = index;
+                    item.ItemClick += OnShowTickerChartItemClick;
+                    this.bsShowTickerChart.ItemLinks.Add(item);
 
-                item = new BarButtonItem(this.ribbonControl1.Manager, ticker.HostName);
-                item.Tag = index;
-                item.ItemClick += OnShowOrderBookHistory;
-                this.bsShowOrderBookHistory.ItemLinks.Add(item);
-                index++;
+                    item = new BarButtonItem(this.ribbonControl1.Manager, ticker.HostName);
+                    item.Tag = index;
+                    item.ItemClick += OnShowOrderBookHistory;
+                    this.bsShowOrderBookHistory.ItemLinks.Add(item);
+                    index++;
+                }
             }
             BarButtonItem itemAll = new BarButtonItem(this.ribbonControl1.Manager, "Show All");
             itemAll.Tag = null;
