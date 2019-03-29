@@ -434,7 +434,6 @@ namespace CryptoMarketClient {
             List<string[]> jbids = JSonHelper.Default.DeserializeArrayOfArrays(bytes, ref startIndex, 2);
 
             ticker.OrderBook.GetNewBidAsks();
-            int index = 0;
 
             List<OrderBookEntry> bids = ticker.OrderBook.Bids;
             List<OrderBookEntry> asks = ticker.OrderBook.Asks;

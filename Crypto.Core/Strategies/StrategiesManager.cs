@@ -35,7 +35,7 @@ namespace Crypto.Core.Strategies {
             foreach(StrategyBase s in Strategies) {
                 s.Manager = this;
                 res &= DataProvider.InitializeDataFor(s);
-                res &= s.InitializeCore();
+                res &= s.Initialize();
             }
             Initialized = true;
             return res;

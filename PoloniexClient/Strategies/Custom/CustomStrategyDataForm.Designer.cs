@@ -23,7 +23,22 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
+            ((System.ComponentModel.ISupportInitialize)(this.tpChart)).BeginInit();
+            this.tpChart.SuspendLayout();
             this.SuspendLayout();
+            // 
+            // tpChart
+            // 
+            this.tpChart.SelectedTabPage = this.tpData;
+            this.tpChart.Size = new System.Drawing.Size(1203, 781);
+            // 
+            // tpData
+            // 
+            this.tpData.Size = new System.Drawing.Size(1191, 726);
+            // 
+            // tpChartPage
+            // 
+            this.tpChartPage.Size = new System.Drawing.Size(1191, 726);
             // 
             // CustomStrategyDataForm
             // 
@@ -32,6 +47,8 @@
             this.ClientSize = new System.Drawing.Size(1203, 781);
             this.Name = "CustomStrategyDataForm";
             this.Text = "CustomStrategyDataForm";
+            ((System.ComponentModel.ISupportInitialize)(this.tpChart)).EndInit();
+            this.tpChart.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }

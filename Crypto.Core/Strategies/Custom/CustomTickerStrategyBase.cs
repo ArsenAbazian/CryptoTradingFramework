@@ -2,6 +2,7 @@
 using CryptoMarketClient.Strategies;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -35,12 +36,7 @@ namespace Crypto.Core.Strategies.Custom {
             get { return Tickers.Count > 0 ? Tickers[0] : null; }
             set {  }
         }
-
-        protected override void CheckTickerSpecified(List<StrategyValidationError> list) {
-            if(StrategyInfo.Tickers.Count == 0)
-                list.Add(new StrategyValidationError() { DataObject = this, Description = string.Format("Should be added at least one ticker.", ""), PropertyName = "StrategyInfo.Tickers", Value = "" });
-        }
-
+        
         [XmlIgnore]
         public List<Ticker> Tickers { get; } = new List<Ticker>();
         protected virtual void OnStrategyInfoChanged() {
@@ -55,6 +51,11 @@ namespace Crypto.Core.Strategies.Custom {
             if(st == null)
                 return;
             StrategyInfo.Assign(st.StrategyInfo);
+        }
+
+        protected override void CheckTickerSpecified(List<StrategyValidationError> list) {
+            if(StrategyInfo.Tickers.Count == 0)
+                list.Add(new StrategyValidationError() { DataObject = this, Description = string.Format("Should be added at least one ticker.", ""), PropertyName = "StrategyInfo.Tickers", Value = "" });
         }
 
         public override StrategyInputInfo CreateInputInfo() {

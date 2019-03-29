@@ -72,12 +72,25 @@ namespace Crypto.Core.Strategies.Signal {
             return delta < -Tolerance;
         }
 
+        protected override void InitializeDataItems() {
+            TimeItem("Time");
+            CandleStickItem();
+            DataItem("Macd", "0.########", System.Drawing.Color.Blue).PanelIndex = 1;
+            DataItem("EmaFast", "0.########", System.Drawing.Color.Pink).PanelIndex = 1;
+            DataItem("EmaSlow", "0.########", System.Drawing.Color.Green).PanelIndex = 1;
+            DataItem("Signal", "0.########", System.Drawing.Color.Red).PanelIndex = 1;
+            DataItem("Delta", "0.########").Visibility = DataVisibility.Table;
+            AnnotationItem("BuySignal", "Buy", System.Drawing.Color.Green, "Low");
+            AnnotationItem("SellSignal", "Sell", System.Drawing.Color.Red, "High");
+        }
+
         protected override void OnTickCore() {
             if(LastCount == MacdIndicator.Result.Count)
                 return;
 
             LastCount = MacdIndicator.Result.Count;
             int index = LastCount - 1;
+            AddStrategyData(index);
             // check for buy
             if(TimeToBuy(MacdIndicator.Result[index].Value, MacdIndicator.SignalMaIndicator.Result[index].Value, MacdIndicator.FastEmaIndicator.Result[index].Value)) {
                 if(State == BuySellStrategyState.WaitingForBuy) {
@@ -104,6 +117,25 @@ namespace Crypto.Core.Strategies.Signal {
             }
         }
 
+        protected virtual void AddStrategyData(int i) {
+            MacdTrendStrategyHistoryItem item = new MacdTrendStrategyHistoryItem();
+            item.Time = MacdIndicator.Result[i].Time;
+            item.Source = MacdIndicator.Result[i].Source;
+            item.Open = Ticker.CandleStickData.Last().Open;
+            item.Close = Ticker.CandleStickData.Last().Close;
+            item.High = Ticker.CandleStickData.Last().High;
+            item.Low = Ticker.CandleStickData.Last().Low;
+            item.Macd = MacdIndicator.Result[i].Value;
+            item.EmaSlow = MacdIndicator.SlowEmaIndicator.Result[i].Value;
+            item.EmaFast = MacdIndicator.FastEmaIndicator.Result[i].Value;
+            item.Signal = MacdIndicator.SignalMaIndicator.Result[i].Value;
+            item.Delta = Calculate(item.Macd, item.Signal, item.EmaFast);
+            item.BuySignal = State == BuySellStrategyState.WaitingForBuy && TimeToBuy(item.Macd, item.Signal, item.EmaFast);
+            item.SellSignal = State == BuySellStrategyState.WaitingForSell && TimeToSell(item.Macd, item.Signal, item.EmaFast);
+            StrategyData.Add(item);
+        }
+
+
         public override bool Start() {
             bool res = base.Start();
             if(!res)
@@ -115,5 +147,21 @@ namespace Crypto.Core.Strategies.Signal {
             TelegramBot.Default.SendNotification(Name + "[" + GetType().Name + "]" + ": started at " + DateTime.Now.ToString("g"), ChatId);
             return true;
         }
+    }
+
+    public class MacdTrendStrategyHistoryItem {
+        public DateTime Time { get; set; }
+        public double Open { get; set; }
+        public double Close { get; set; }
+        public double High { get; set; }
+        public double Low { get; set; }
+        public double Source { get; set; }
+        public double Macd { get; set; }
+        public double EmaFast { get; set; }
+        public double EmaSlow { get; set; }
+        public double Signal { get; set; }
+        public double Delta { get; set; }
+        public bool BuySignal { get; set; }
+        public bool SellSignal { get; set; }
     }
 }

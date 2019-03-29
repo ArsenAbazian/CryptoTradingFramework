@@ -1,4 +1,10 @@
-﻿using System;
+﻿using Crypto.Core.Strategies;
+using Crypto.Core.Strategies.Custom;
+using DevExpress.Skins;
+using DevExpress.Utils;
+using DevExpress.XtraCharts;
+using DevExpress.XtraGrid.Columns;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;

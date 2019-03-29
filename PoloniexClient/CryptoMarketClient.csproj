@@ -470,6 +470,7 @@
     <Compile Include="Strategies\StrategyValidationErrorsForm.Designer.cs">
       <DependentUpon>StrategyValidationErrorsForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Strategies\StrategyVisualiser.cs" />
     <Compile Include="Strategies\Stupid\SimpleBuyLowSellHighConfigControl.cs">
       <SubType>UserControl</SubType>
     </Compile>

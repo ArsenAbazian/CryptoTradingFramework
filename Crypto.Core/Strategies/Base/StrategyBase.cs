@@ -6,6 +6,7 @@ using CryptoMarketClient.Strategies;
 using CryptoMarketClient.Strategies.Stupid;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -26,6 +27,7 @@ namespace Crypto.Core.Strategies {
         public StrategyBase() {
             Id = Guid.NewGuid();
             FileName = Id.ToString();
+            InitializeDataItems();
         }
 
         public Guid Id { get; set; }
@@ -53,9 +55,66 @@ namespace Crypto.Core.Strategies {
         public List<TradingResult> TradeHistory { get; } = new List<TradingResult>();
         public abstract bool SupportSimulation { get; }
 
+        [XmlIgnore]
+        public List<object> StrategyData { get; } = new List<object>();
+
+        [XmlIgnore]
+        public List<StrategyDataItemInfo> DataItemInfos { get; } = new List<StrategyDataItemInfo>();
+
+        public StrategyDataItemInfo CandleStickItem() {
+            DataItemInfos.Add(new StrategyDataItemInfo() { ChartType = ChartType.CandleStick });
+            return DataItemInfos.Last();
+        }
+
+        public StrategyDataItemInfo AnnotationItem(string fieldName, string text, Color color, string anchor) {
+            var item = DataItem(fieldName);
+            item.ChartType = ChartType.Dot;
+            item.Color = color;
+            item.Visibility = DataVisibility.Chart;
+            item.ChartType = ChartType.Annotation;
+            item.AnnotationText = text;
+            item.AnnotationAnchorField = anchor;
+            return item;
+        }
+
+        public StrategyDataItemInfo TimeItem(string fieldName) {
+            DataItemInfos.Add(new StrategyDataItemInfo() { FieldName = fieldName, Visibility = DataVisibility.Table, Type = DataType.DateTime, FormatString = "dd.MM.yyyy hh:mm" });
+            return DataItemInfos.Last();
+        }
+
+        public StrategyDataItemInfo DataItem(string fieldName) {
+            DataItemInfos.Add(new StrategyDataItemInfo() { FieldName = fieldName });
+            return DataItemInfos.Last();
+        }
+
+        public StrategyDataItemInfo DataItem(string fieldName, string formatString) {
+            DataItemInfos.Add(new StrategyDataItemInfo() { FieldName = fieldName, FormatString = formatString });
+            return DataItemInfos.Last();
+        }
+
+        public StrategyDataItemInfo DataItem(string fieldName, string formatString, Color color) {
+            DataItemInfos.Add(new StrategyDataItemInfo() { FieldName = fieldName, FormatString = formatString, Color = color });
+            return DataItemInfos.Last();
+        }
+
+        public StrategyDataItemInfo DataItem(string fieldName, Color color) {
+            DataItemInfos.Add(new StrategyDataItemInfo() { FieldName = fieldName, Color = color });
+            return DataItemInfos.Last();
+        }
+
+        public StrategyDataItemInfo DataItem(string fieldName, Color color, int width) {
+            DataItemInfos.Add(new StrategyDataItemInfo() { FieldName = fieldName, Color = color, GraphWidth = width });
+            return DataItemInfos.Last();
+        }
+        
         internal bool Initialize() {
+            DataItemInfos.Clear();
+            InitializeDataItems();
             return InitializeCore();
         }
+
+        protected virtual void InitializeDataItems() { }
+
         public abstract bool InitializeCore();
 
         public virtual StrategyInputInfo CreateInputInfo() {

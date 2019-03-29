@@ -30,10 +30,17 @@ namespace CryptoMarketClient.Strategies {
             DevExpress.XtraEditors.FormatConditionRuleValue formatConditionRuleValue1 = new DevExpress.XtraEditors.FormatConditionRuleValue();
             DevExpress.XtraGrid.GridFormatRule gridFormatRule2 = new DevExpress.XtraGrid.GridFormatRule();
             DevExpress.XtraEditors.FormatConditionRuleValue formatConditionRuleValue2 = new DevExpress.XtraEditors.FormatConditionRuleValue();
-            DevExpress.XtraCharts.StepAreaSeriesView stepAreaSeriesView1 = new DevExpress.XtraCharts.StepAreaSeriesView();
+            DevExpress.XtraCharts.XYDiagram xyDiagram1 = new DevExpress.XtraCharts.XYDiagram();
+            DevExpress.XtraCharts.Series series1 = new DevExpress.XtraCharts.Series();
+            DevExpress.XtraCharts.LineSeriesView lineSeriesView1 = new DevExpress.XtraCharts.LineSeriesView();
             this.colType1 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.tpChart = new DevExpress.XtraTab.XtraTabControl();
             this.tpData = new DevExpress.XtraTab.XtraTabPage();
+            this.gcData = new DevExpress.XtraGrid.GridControl();
+            this.gvData = new DevExpress.XtraGrid.Views.Grid.GridView();
+            this.repositoryItemTextEdit3 = new DevExpress.XtraEditors.Repository.RepositoryItemTextEdit();
+            this.repositoryItemCheckEdit5 = new DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit();
+            this.repositoryItemCheckEdit6 = new DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit();
             this.tpEvents = new DevExpress.XtraTab.XtraTabPage();
             this.gridControl1 = new DevExpress.XtraGrid.GridControl();
             this.strategyHistoryItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
@@ -60,10 +67,16 @@ namespace CryptoMarketClient.Strategies {
             this.repositoryItemTextEdit2 = new DevExpress.XtraEditors.Repository.RepositoryItemTextEdit();
             this.repositoryItemCheckEdit3 = new DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit();
             this.repositoryItemCheckEdit4 = new DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit();
-            this.xtraTabPage1 = new DevExpress.XtraTab.XtraTabPage();
-            this.myChartControl1 = new CryptoMarketClient.MyChartControl();
+            this.tpChartPage = new DevExpress.XtraTab.XtraTabPage();
+            this.chartControl = new CryptoMarketClient.MyChartControl();
             ((System.ComponentModel.ISupportInitialize)(this.tpChart)).BeginInit();
             this.tpChart.SuspendLayout();
+            this.tpData.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gcData)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gvData)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemTextEdit3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit5)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit6)).BeginInit();
             this.tpEvents.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.strategyHistoryItemBindingSource)).BeginInit();
@@ -78,9 +91,11 @@ namespace CryptoMarketClient.Strategies {
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemTextEdit2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit4)).BeginInit();
-            this.xtraTabPage1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.myChartControl1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(stepAreaSeriesView1)).BeginInit();
+            this.tpChartPage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.chartControl)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(xyDiagram1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(series1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(lineSeriesView1)).BeginInit();
             this.SuspendLayout();
             // 
             // colType1
@@ -102,15 +117,61 @@ namespace CryptoMarketClient.Strategies {
             this.tpChart.TabIndex = 0;
             this.tpChart.TabPages.AddRange(new DevExpress.XtraTab.XtraTabPage[] {
             this.tpData,
-            this.xtraTabPage1,
             this.tpEvents,
-            this.tpTradeHistory});
+            this.tpTradeHistory,
+            this.tpChartPage});
             // 
             // tpData
             // 
+            this.tpData.Controls.Add(this.gcData);
             this.tpData.Name = "tpData";
             this.tpData.Size = new System.Drawing.Size(1420, 988);
             this.tpData.Text = "Data";
+            // 
+            // gcData
+            // 
+            this.gcData.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gcData.Location = new System.Drawing.Point(0, 0);
+            this.gcData.MainView = this.gvData;
+            this.gcData.Name = "gcData";
+            this.gcData.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
+            this.repositoryItemTextEdit3,
+            this.repositoryItemCheckEdit5,
+            this.repositoryItemCheckEdit6});
+            this.gcData.Size = new System.Drawing.Size(1420, 988);
+            this.gcData.TabIndex = 9;
+            this.gcData.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
+            this.gvData});
+            // 
+            // gvData
+            // 
+            this.gvData.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+            this.gvData.GridControl = this.gcData;
+            this.gvData.Name = "gvData";
+            this.gvData.OptionsBehavior.Editable = false;
+            this.gvData.OptionsScrollAnnotations.ShowCustomAnnotations = DevExpress.Utils.DefaultBoolean.True;
+            this.gvData.OptionsSelection.EnableAppearanceFocusedCell = false;
+            this.gvData.OptionsView.BestFitMode = DevExpress.XtraGrid.Views.Grid.GridBestFitMode.Full;
+            this.gvData.OptionsView.ShowHorizontalLines = DevExpress.Utils.DefaultBoolean.False;
+            this.gvData.OptionsView.ShowVerticalLines = DevExpress.Utils.DefaultBoolean.False;
+            this.gvData.CustomScrollAnnotation += new System.EventHandler<DevExpress.XtraGrid.Views.Grid.GridCustomScrollAnnotationsEventArgs>(this.gvData_CustomScrollAnnotation);
+            this.gvData.RowStyle += new DevExpress.XtraGrid.Views.Grid.RowStyleEventHandler(this.gvData_RowStyle);
+            // 
+            // repositoryItemTextEdit3
+            // 
+            this.repositoryItemTextEdit3.AutoHeight = false;
+            this.repositoryItemTextEdit3.Name = "repositoryItemTextEdit3";
+            this.repositoryItemTextEdit3.Padding = new System.Windows.Forms.Padding(0, 3, 0, 3);
+            // 
+            // repositoryItemCheckEdit5
+            // 
+            this.repositoryItemCheckEdit5.AutoHeight = false;
+            this.repositoryItemCheckEdit5.Name = "repositoryItemCheckEdit5";
+            // 
+            // repositoryItemCheckEdit6
+            // 
+            this.repositoryItemCheckEdit6.AutoHeight = false;
+            this.repositoryItemCheckEdit6.Name = "repositoryItemCheckEdit6";
             // 
             // tpEvents
             // 
@@ -383,26 +444,32 @@ namespace CryptoMarketClient.Strategies {
             this.repositoryItemCheckEdit4.AutoHeight = false;
             this.repositoryItemCheckEdit4.Name = "repositoryItemCheckEdit4";
             // 
-            // xtraTabPage1
+            // tpChartPage
             // 
-            this.xtraTabPage1.Controls.Add(this.myChartControl1);
-            this.xtraTabPage1.Name = "xtraTabPage1";
-            this.xtraTabPage1.Size = new System.Drawing.Size(1420, 988);
-            this.xtraTabPage1.Text = "Chart";
+            this.tpChartPage.Controls.Add(this.chartControl);
+            this.tpChartPage.Name = "tpChartPage";
+            this.tpChartPage.Size = new System.Drawing.Size(1420, 988);
+            this.tpChartPage.Text = "Chart";
             // 
-            // myChartControl1
+            // chartControl
             // 
-            this.myChartControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.myChartControl1.Legend.AlignmentHorizontal = DevExpress.XtraCharts.LegendAlignmentHorizontal.Left;
-            this.myChartControl1.Legend.Name = "Default Legend";
-            this.myChartControl1.Legend.Visibility = DevExpress.Utils.DefaultBoolean.False;
-            this.myChartControl1.Location = new System.Drawing.Point(0, 0);
-            this.myChartControl1.Name = "myChartControl1";
-            this.myChartControl1.SeriesSerializable = new DevExpress.XtraCharts.Series[0];
-            stepAreaSeriesView1.Transparency = ((byte)(0));
-            this.myChartControl1.SeriesTemplate.View = stepAreaSeriesView1;
-            this.myChartControl1.Size = new System.Drawing.Size(1420, 988);
-            this.myChartControl1.TabIndex = 1;
+            xyDiagram1.AxisX.VisibleInPanesSerializable = "-1";
+            xyDiagram1.AxisY.VisibleInPanesSerializable = "-1";
+            xyDiagram1.EnableAxisXScrolling = true;
+            xyDiagram1.EnableAxisXZooming = true;
+            this.chartControl.Diagram = xyDiagram1;
+            this.chartControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.chartControl.Legend.AlignmentHorizontal = DevExpress.XtraCharts.LegendAlignmentHorizontal.Left;
+            this.chartControl.Legend.Name = "Default Legend";
+            this.chartControl.Legend.Visibility = DevExpress.Utils.DefaultBoolean.False;
+            this.chartControl.Location = new System.Drawing.Point(0, 0);
+            this.chartControl.Name = "chartControl";
+            series1.Name = "Series 1";
+            series1.View = lineSeriesView1;
+            this.chartControl.SeriesSerializable = new DevExpress.XtraCharts.Series[] {
+        series1};
+            this.chartControl.Size = new System.Drawing.Size(1420, 988);
+            this.chartControl.TabIndex = 3;
             // 
             // StrategyDataForm
             // 
@@ -414,6 +481,12 @@ namespace CryptoMarketClient.Strategies {
             this.Text = "StrategyDataForm";
             ((System.ComponentModel.ISupportInitialize)(this.tpChart)).EndInit();
             this.tpChart.ResumeLayout(false);
+            this.tpData.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.gcData)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gvData)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemTextEdit3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit5)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit6)).EndInit();
             this.tpEvents.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.strategyHistoryItemBindingSource)).EndInit();
@@ -428,9 +501,11 @@ namespace CryptoMarketClient.Strategies {
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemTextEdit2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit4)).EndInit();
-            this.xtraTabPage1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(stepAreaSeriesView1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.myChartControl1)).EndInit();
+            this.tpChartPage.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(xyDiagram1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(lineSeriesView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(series1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chartControl)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -466,7 +541,12 @@ namespace CryptoMarketClient.Strategies {
         private DevExpress.XtraGrid.Columns.GridColumn colType1;
         private DevExpress.XtraGrid.Columns.GridColumn colBuyDeposit;
         private DevExpress.XtraGrid.Columns.GridColumn colSellDeposit;
-        private DevExpress.XtraTab.XtraTabPage xtraTabPage1;
-        private MyChartControl myChartControl1;
+        public DevExpress.XtraTab.XtraTabPage tpChartPage;
+        private DevExpress.XtraGrid.Views.Grid.GridView gvData;
+        private DevExpress.XtraEditors.Repository.RepositoryItemTextEdit repositoryItemTextEdit3;
+        private DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit repositoryItemCheckEdit5;
+        private DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit repositoryItemCheckEdit6;
+        public DevExpress.XtraGrid.GridControl gcData;
+        public MyChartControl chartControl;
     }
 }
