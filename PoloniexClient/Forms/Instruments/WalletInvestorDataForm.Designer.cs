@@ -49,6 +49,7 @@ namespace CryptoMarketClient.Forms.Instruments {
             this.biRefresh = new DevExpress.XtraBars.BarButtonItem();
             this.barEditItem1 = new DevExpress.XtraBars.BarEditItem();
             this.repositoryItemSpinEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemSpinEdit();
+            this.biForecast = new DevExpress.XtraBars.BarButtonItem();
             this.barButtonItem1 = new DevExpress.XtraBars.BarButtonItem();
             this.bar3 = new DevExpress.XtraBars.Bar();
             this.siStatus = new DevExpress.XtraBars.BarStaticItem();
@@ -56,12 +57,18 @@ namespace CryptoMarketClient.Forms.Instruments {
             this.barDockControlBottom = new DevExpress.XtraBars.BarDockControl();
             this.barDockControlLeft = new DevExpress.XtraBars.BarDockControl();
             this.barDockControlRight = new DevExpress.XtraBars.BarDockControl();
+            this.biForecastSelected = new DevExpress.XtraBars.BarButtonItem();
+            this.popupMenu2 = new DevExpress.XtraBars.PopupMenu(this.components);
+            this.colForecast7Day = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colForecast14Day = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colForecast3Month = new DevExpress.XtraGrid.Columns.GridColumn();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.walletInvestorDataItemBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.barManager1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemSpinEdit1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.popupMenu2)).BeginInit();
             this.SuspendLayout();
             // 
             // colRise
@@ -91,7 +98,7 @@ namespace CryptoMarketClient.Forms.Instruments {
             this.gridControl.Name = "gridControl";
             this.gridControl.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repositoryItemCheckEdit1});
-            this.gridControl.Size = new System.Drawing.Size(1440, 796);
+            this.gridControl.Size = new System.Drawing.Size(1440, 803);
             this.gridControl.TabIndex = 2;
             this.gridControl.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridView1});
@@ -110,7 +117,10 @@ namespace CryptoMarketClient.Forms.Instruments {
             this.colVolume,
             this.colListedOnBinance,
             this.colListedOnPoloniex,
-            this.colMarketCap});
+            this.colMarketCap,
+            this.colForecast7Day,
+            this.colForecast14Day,
+            this.colForecast3Month});
             this.gridView1.DetailHeight = 673;
             this.gridView1.FixedLineWidth = 4;
             gridFormatRule1.Column = this.colRise;
@@ -216,8 +226,10 @@ namespace CryptoMarketClient.Forms.Instruments {
             this.siStatus,
             this.biRefresh,
             this.barEditItem1,
-            this.barButtonItem1});
-            this.barManager1.MaxItemId = 4;
+            this.barButtonItem1,
+            this.biForecast,
+            this.biForecastSelected});
+            this.barManager1.MaxItemId = 6;
             this.barManager1.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repositoryItemSpinEdit1});
             // 
@@ -230,6 +242,7 @@ namespace CryptoMarketClient.Forms.Instruments {
             this.bar1.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
             new DevExpress.XtraBars.LinkPersistInfo(this.biRefresh),
             new DevExpress.XtraBars.LinkPersistInfo(DevExpress.XtraBars.BarLinkUserDefines.Width, this.barEditItem1, "", false, true, true, 114),
+            new DevExpress.XtraBars.LinkPersistInfo(this.biForecast),
             new DevExpress.XtraBars.LinkPersistInfo(this.barButtonItem1)});
             this.bar1.OptionsBar.DrawBorder = false;
             this.bar1.OptionsBar.UseWholeRow = true;
@@ -271,6 +284,22 @@ namespace CryptoMarketClient.Forms.Instruments {
             0,
             0});
             this.repositoryItemSpinEdit1.Name = "repositoryItemSpinEdit1";
+            // 
+            // biForecast
+            // 
+            this.biForecast.AllowHtmlText = DevExpress.Utils.DefaultBoolean.True;
+            this.biForecast.Caption = "<b>Update Forecast</b>";
+            this.biForecast.Id = 4;
+            this.biForecast.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("biForecast.ImageOptions.SvgImage")));
+            this.biForecast.ItemAppearance.Hovered.ForeColor = DevExpress.LookAndFeel.DXSkinColors.ForeColors.Information;
+            this.biForecast.ItemAppearance.Hovered.Options.UseForeColor = true;
+            this.biForecast.ItemAppearance.Normal.ForeColor = DevExpress.LookAndFeel.DXSkinColors.ForeColors.Information;
+            this.biForecast.ItemAppearance.Normal.Options.UseForeColor = true;
+            this.biForecast.ItemAppearance.Pressed.ForeColor = DevExpress.LookAndFeel.DXSkinColors.ForeColors.Information;
+            this.biForecast.ItemAppearance.Pressed.Options.UseForeColor = true;
+            this.biForecast.Name = "biForecast";
+            this.biForecast.PaintStyle = DevExpress.XtraBars.BarItemPaintStyle.CaptionGlyph;
+            this.biForecast.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.biForecast_ItemClick);
             // 
             // barButtonItem1
             // 
@@ -324,9 +353,9 @@ namespace CryptoMarketClient.Forms.Instruments {
             // 
             this.barDockControlBottom.CausesValidation = false;
             this.barDockControlBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.barDockControlBottom.Location = new System.Drawing.Point(0, 856);
+            this.barDockControlBottom.Location = new System.Drawing.Point(0, 863);
             this.barDockControlBottom.Manager = this.barManager1;
-            this.barDockControlBottom.Size = new System.Drawing.Size(1440, 59);
+            this.barDockControlBottom.Size = new System.Drawing.Size(1440, 52);
             // 
             // barDockControlLeft
             // 
@@ -334,7 +363,7 @@ namespace CryptoMarketClient.Forms.Instruments {
             this.barDockControlLeft.Dock = System.Windows.Forms.DockStyle.Left;
             this.barDockControlLeft.Location = new System.Drawing.Point(0, 60);
             this.barDockControlLeft.Manager = this.barManager1;
-            this.barDockControlLeft.Size = new System.Drawing.Size(0, 796);
+            this.barDockControlLeft.Size = new System.Drawing.Size(0, 803);
             // 
             // barDockControlRight
             // 
@@ -342,7 +371,48 @@ namespace CryptoMarketClient.Forms.Instruments {
             this.barDockControlRight.Dock = System.Windows.Forms.DockStyle.Right;
             this.barDockControlRight.Location = new System.Drawing.Point(1440, 60);
             this.barDockControlRight.Manager = this.barManager1;
-            this.barDockControlRight.Size = new System.Drawing.Size(0, 796);
+            this.barDockControlRight.Size = new System.Drawing.Size(0, 803);
+            // 
+            // biForecastSelected
+            // 
+            this.biForecastSelected.Caption = "Update Forecast";
+            this.biForecastSelected.Id = 5;
+            this.biForecastSelected.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("biForecastSelected.ImageOptions.SvgImage")));
+            this.biForecastSelected.Name = "biForecastSelected";
+            // 
+            // popupMenu2
+            // 
+            this.popupMenu2.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
+            new DevExpress.XtraBars.LinkPersistInfo(this.biForecastSelected)});
+            this.popupMenu2.Manager = this.barManager1;
+            this.popupMenu2.Name = "popupMenu2";
+            // 
+            // colForecast7Day
+            // 
+            this.colForecast7Day.FieldName = "Forecast7Day";
+            this.colForecast7Day.MinWidth = 40;
+            this.colForecast7Day.Name = "colForecast7Day";
+            this.colForecast7Day.Visible = true;
+            this.colForecast7Day.VisibleIndex = 9;
+            this.colForecast7Day.Width = 150;
+            // 
+            // colForecast14Day
+            // 
+            this.colForecast14Day.FieldName = "Forecast14Day";
+            this.colForecast14Day.MinWidth = 40;
+            this.colForecast14Day.Name = "colForecast14Day";
+            this.colForecast14Day.Visible = true;
+            this.colForecast14Day.VisibleIndex = 8;
+            this.colForecast14Day.Width = 150;
+            // 
+            // colForecast3Month
+            // 
+            this.colForecast3Month.FieldName = "Forecast3Month";
+            this.colForecast3Month.MinWidth = 40;
+            this.colForecast3Month.Name = "colForecast3Month";
+            this.colForecast3Month.Visible = true;
+            this.colForecast3Month.VisibleIndex = 7;
+            this.colForecast3Month.Width = 150;
             // 
             // WalletInvestorDataForm
             // 
@@ -360,6 +430,7 @@ namespace CryptoMarketClient.Forms.Instruments {
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.barManager1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemSpinEdit1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.popupMenu2)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -391,5 +462,11 @@ namespace CryptoMarketClient.Forms.Instruments {
         private BarEditItem barEditItem1;
         private RepositoryItemSpinEdit repositoryItemSpinEdit1;
         private BarButtonItem barButtonItem1;
+        private BarButtonItem biForecast;
+        private BarButtonItem biForecastSelected;
+        private PopupMenu popupMenu2;
+        private DevExpress.XtraGrid.Columns.GridColumn colForecast7Day;
+        private DevExpress.XtraGrid.Columns.GridColumn colForecast14Day;
+        private DevExpress.XtraGrid.Columns.GridColumn colForecast3Month;
     }
 }

@@ -1,4 +1,5 @@
 ﻿using CryptoMarketClient.Binance;
+using CryptoMarketClient.Helpers;
 using DevExpress.XtraEditors;
 using DevExpress.XtraSplashScreen;
 using HtmlAgilityPack;
@@ -25,6 +26,8 @@ namespace CryptoMarketClient.Forms.Instruments {
             base.OnShown(e);
             DownloadData();
         }
+
+        public List<WalletInvestorDataItem> Items { get; set; }
 
         bool Stop { get; set; }
         private void DownloadData() {
@@ -64,15 +67,15 @@ namespace CryptoMarketClient.Forms.Instruments {
                     try {
                         WalletInvestorDataItem item = new WalletInvestorDataItem();
                         item.Name = name.Descendants().FirstOrDefault(n => n.GetAttributeValue("class", "") == "detail").InnerText.Trim();
-                        item.LastPrice = Convert.ToDouble(prices.Element("a").InnerText.Trim().Replace(",", "."));
+                        item.LastPrice = Convert.ToDouble(CorrectString(prices.Element("a").InnerText));
                         item.Rise = change24.Element("a").GetAttributeValue("class", "") != "red";
-                        string change = change24.InnerText.Trim().Replace("+", "").Replace(",", ".");
+                        string change = CorrectString(change24.InnerText);
                         item.Change24 = Convert.ToDouble(change);
                         if(item.Change24 < percent) {
                             finished = true;
                             break;
                         }
-                        item.Volume = Convert.ToDouble(volume24.InnerText.Trim().Replace(",", "."));
+                        item.Volume = volume24.InnerText.Trim();
                         item.MarketCap = marketCap.Element("a").InnerText.Trim();
                         item.ListedOnBinance = BinanceExchange.Default.Tickers.FirstOrDefault(t => t.MarketCurrency == item.Name) != null;
                         item.ListedOnPoloniex = PoloniexExchange.Default.Tickers.FirstOrDefault(t => t.MarketCurrency == item.Name) != null;
@@ -82,6 +85,7 @@ namespace CryptoMarketClient.Forms.Instruments {
                         continue;
                     }
                 }
+                Items = list;
                 this.gridView1.RefreshData();
                 Application.DoEvents();
                 if(finished)
@@ -97,6 +101,101 @@ namespace CryptoMarketClient.Forms.Instruments {
         private void barButtonItem1_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
             Stop = true;
         }
+
+        protected string CorrectString(string str) {
+            return str.Replace("%", "").Replace("+", "").Replace(',', '.').Trim();
+        }
+
+        protected virtual bool GetForecastFor(WalletInvestorDataItem item, WalletInvestorPortalHelper helper) {
+            PortalClient wc = new PortalClient(helper.Chromium);
+            
+            byte[] data = wc.DownloadData(string.Format("https://walletinvestor.com/forecast?currency={0}", item.Name));
+            if(data == null)
+                return false;
+            HtmlAgilityPack.HtmlDocument doc = new HtmlAgilityPack.HtmlDocument();
+            doc.Load(new MemoryStream(data));
+
+            HtmlNode node = doc.DocumentNode.Descendants().FirstOrDefault(n => n.GetAttributeValue("class", "") == "currency-desktop-table kv-grid-table table table-hover table-bordered table-striped table-condensed");
+            if(node == null)
+                return false;
+            HtmlNode body = node.Element("tbody");
+            List<HtmlNode> rows = body.Descendants().Where(n => n.GetAttributeValue("data-key", "") != "").ToList();
+            if(rows.Count == 0)
+                return false;
+            foreach(HtmlNode row in rows) {
+                HtmlNode name = row.Descendants().FirstOrDefault(n => n.GetAttributeValue("data-col-seq", "") == "0");
+                HtmlNode forecast14 = row.Descendants().FirstOrDefault(n => n.GetAttributeValue("data-col-seq", "") == "1");
+                HtmlNode forecast3Month = row.Descendants().FirstOrDefault(n => n.GetAttributeValue("data-col-seq", "") == "2");
+
+                try {
+                    string nameText = name.Descendants().FirstOrDefault(n => n.GetAttributeValue("class", "") == "detail").InnerText.Trim();
+                    if(item.Name != nameText)
+                        continue;
+
+                    item.Forecast14Day = Convert.ToDouble(CorrectString(forecast14.Element("a").InnerText));
+                    item.Forecast3Month = Convert.ToDouble(CorrectString(forecast3Month.Element("a").InnerText));
+
+                    Get7DayForecastFor(item, name.Element("a").GetAttributeValue("href", ""));
+
+                    break;
+                }
+                catch(Exception) {
+                    continue;
+                }
+            }
+            return false;
+        }
+
+        protected virtual bool Get7DayForecastFor(WalletInvestorDataItem item, string adress) {
+            WebClient wc = new WebClient();
+
+            byte[] data = wc.DownloadData(string.Format(adress, item.Name));
+            if(data == null)
+                return false;
+            HtmlAgilityPack.HtmlDocument doc = new HtmlAgilityPack.HtmlDocument();
+            doc.Load(new MemoryStream(data));
+
+            HtmlNode node = doc.DocumentNode.Descendants().FirstOrDefault(n => n.GetAttributeValue("class", "") == "seven-day-forecast-desc");
+            if(node == null)
+                return false;
+
+            string[] items = node.InnerText.Split(' ');
+            if(items.Length < 2)
+                return false;
+            try {
+                item.Forecast7Day = Convert.ToDouble(items[0].Trim());
+            }
+            catch(Exception) {
+                return false;
+            }
+            return true;
+        }
+
+        private void biForecast_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
+            Stop = false;
+
+            this.siStatus.Caption = "<b>Autorizing on walletinvestor.com</b>";
+            WalletInvestorPortalHelper helper = new WalletInvestorPortalHelper();
+            helper.Enter("ArsenAbazyan@gmail.com", "ejv8iU93bdBnRnG");
+            if(!helper.WaitUntil(30000, () => helper.State == PortalState.AutorizationDone)) {
+                XtraMessageBox.Show("Error autorizing on walletinvestor.com");
+                return;
+            }
+
+            foreach(WalletInvestorDataItem item in Items) {
+                this.siStatus.Caption = "<b>Update forecast for " + item.Name + "</b>";
+                if(GetForecastFor(item, helper))
+                    this.gridView1.RefreshRow(this.gridView1.GetRowHandle(Items.IndexOf(item)));
+                Application.DoEvents();
+                if(Stop)
+                    break;
+            }
+            if(Stop)
+                this.siStatus.Caption = "<b>Interrupted</b>";
+            else 
+                this.siStatus.Caption = "<b>Done</b>";
+        }
+
     }
 
     public class WalletInvestorDataItem {
@@ -104,12 +203,21 @@ namespace CryptoMarketClient.Forms.Instruments {
         public double LastPrice { get; set; }
         public double Change24 { get; set; }
         public bool Rise { get; set; }
-        public double Volume { get; set; }
+        public string Volume { get; set; }
         public string MarketCap { get; set; }
 
         [DisplayName("Listed on Binance")]
         public bool ListedOnBinance { get; set; }
         [DisplayName("Listed on Poloniex")]
         public bool ListedOnPoloniex { get; set; }
+
+        [DisplayName("7 Day Forecast")]
+        public double Forecast7Day { get; set; }
+
+        [DisplayName("14 Day Forecast")]
+        public double Forecast14Day { get; set; }
+
+        [DisplayName("3 Month Forecast")]
+        public double Forecast3Month { get; set; }
     }
 }
