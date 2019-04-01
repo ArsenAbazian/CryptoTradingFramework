@@ -167,14 +167,16 @@ namespace CryptoMarketClient.Forms.Instruments {
             this.colLastPrice.Visible = true;
             this.colLastPrice.VisibleIndex = 4;
             this.colLastPrice.Width = 150;
+            this.colLastPrice.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+            this.colLastPrice.DisplayFormat.FormatString = "0.########";
             // 
             // colVolume
             // 
             this.colVolume.FieldName = "Volume";
             this.colVolume.MinWidth = 40;
             this.colVolume.Name = "colVolume";
-            this.colVolume.Visible = true;
-            this.colVolume.VisibleIndex = 5;
+            this.colVolume.Visible = false;
+            this.colVolume.VisibleIndex = -1;
             this.colVolume.Width = 150;
             // 
             // colListedOnBinance
@@ -184,7 +186,7 @@ namespace CryptoMarketClient.Forms.Instruments {
             this.colListedOnBinance.MinWidth = 40;
             this.colListedOnBinance.Name = "colListedOnBinance";
             this.colListedOnBinance.Visible = true;
-            this.colListedOnBinance.VisibleIndex = 2;
+            this.colListedOnBinance.VisibleIndex = 10;
             this.colListedOnBinance.Width = 150;
             // 
             // repositoryItemCheckEdit1
@@ -200,7 +202,7 @@ namespace CryptoMarketClient.Forms.Instruments {
             this.colListedOnPoloniex.MinWidth = 40;
             this.colListedOnPoloniex.Name = "colListedOnPoloniex";
             this.colListedOnPoloniex.Visible = true;
-            this.colListedOnPoloniex.VisibleIndex = 3;
+            this.colListedOnPoloniex.VisibleIndex = 11;
             this.colListedOnPoloniex.Width = 150;
             // 
             // colMarketCap
@@ -208,8 +210,8 @@ namespace CryptoMarketClient.Forms.Instruments {
             this.colMarketCap.FieldName = "MarketCap";
             this.colMarketCap.MinWidth = 40;
             this.colMarketCap.Name = "colMarketCap";
-            this.colMarketCap.Visible = true;
-            this.colMarketCap.VisibleIndex = 6;
+            this.colMarketCap.Visible = false;
+            this.colMarketCap.VisibleIndex = -1;
             this.colMarketCap.Width = 150;
             // 
             // barManager1
@@ -393,8 +395,10 @@ namespace CryptoMarketClient.Forms.Instruments {
             this.colForecast7Day.MinWidth = 40;
             this.colForecast7Day.Name = "colForecast7Day";
             this.colForecast7Day.Visible = true;
-            this.colForecast7Day.VisibleIndex = 9;
+            this.colForecast7Day.VisibleIndex = 7;
             this.colForecast7Day.Width = 150;
+            this.colForecast7Day.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+            this.colForecast7Day.DisplayFormat.FormatString = "0.###";
             // 
             // colForecast14Day
             // 
@@ -404,6 +408,8 @@ namespace CryptoMarketClient.Forms.Instruments {
             this.colForecast14Day.Visible = true;
             this.colForecast14Day.VisibleIndex = 8;
             this.colForecast14Day.Width = 150;
+            this.colForecast14Day.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+            this.colForecast14Day.DisplayFormat.FormatString = "0.###";
             // 
             // colForecast3Month
             // 
@@ -411,8 +417,10 @@ namespace CryptoMarketClient.Forms.Instruments {
             this.colForecast3Month.MinWidth = 40;
             this.colForecast3Month.Name = "colForecast3Month";
             this.colForecast3Month.Visible = true;
-            this.colForecast3Month.VisibleIndex = 7;
+            this.colForecast3Month.VisibleIndex = 9;
             this.colForecast3Month.Width = 150;
+            this.colForecast3Month.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+            this.colForecast3Month.DisplayFormat.FormatString = "0.###";
             // 
             // WalletInvestorDataForm
             // 

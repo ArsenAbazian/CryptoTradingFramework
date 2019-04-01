@@ -3,6 +3,7 @@ using CefSharp.WinForms;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -64,6 +65,9 @@ namespace CryptoMarketClient.Helpers {
         bool ICookieVisitor.Visit(CefSharp.Cookie cookie, int count, int total, ref bool deleteCookie) {
             try {
                 deleteCookie = false;
+                if(cookie.Domain == null || cookie.Name == null)
+                    return true;
+                Debug.WriteLine(cookie.Name + ", " + cookie.Value + ", " + cookie.Domain + ", " + cookie.Path);
                 Request.CookieContainer.Add(new System.Net.Cookie(cookie.Name, cookie.Value, cookie.Path, cookie.Domain));
                 IsFinished = count == total - 1;
             }

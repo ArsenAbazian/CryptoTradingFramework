@@ -135,9 +135,8 @@ namespace CryptoMarketClient.Forms.Instruments {
                     item.Forecast14Day = Convert.ToDouble(CorrectString(forecast14.Element("a").InnerText));
                     item.Forecast3Month = Convert.ToDouble(CorrectString(forecast3Month.Element("a").InnerText));
 
-                    Get7DayForecastFor(item, name.Element("a").GetAttributeValue("href", ""));
-
-                    break;
+                    Get7DayForecastFor(item, name.Element("a").GetAttributeValue("href", ""), helper);
+                    return true;
                 }
                 catch(Exception) {
                     continue;
@@ -146,24 +145,33 @@ namespace CryptoMarketClient.Forms.Instruments {
             return false;
         }
 
-        protected virtual bool Get7DayForecastFor(WalletInvestorDataItem item, string adress) {
-            WebClient wc = new WebClient();
-
-            byte[] data = wc.DownloadData(string.Format(adress, item.Name));
-            if(data == null)
-                return false;
-            HtmlAgilityPack.HtmlDocument doc = new HtmlAgilityPack.HtmlDocument();
-            doc.Load(new MemoryStream(data));
-
-            HtmlNode node = doc.DocumentNode.Descendants().FirstOrDefault(n => n.GetAttributeValue("class", "") == "seven-day-forecast-desc");
-            if(node == null)
+        protected virtual bool Get7DayForecastFor(WalletInvestorDataItem item, string address, WalletInvestorPortalHelper helper) {
+            helper.State = PortalState.LoadPage;
+            helper.Chromium.Load(address);
+            if(!helper.WaitUntil(5000, () => helper.State == PortalState.PageLoaded))
                 return false;
 
-            string[] items = node.InnerText.Split(' ');
-            if(items.Length < 2)
-                return false;
+            string text = helper.GetElementByIdContent("seven-day-forecast-desc");
+            if(text == "Get It Now!") {
+                if(!helper.ClickOnObjectById("seven-day-forecast-desc"))
+                    return false;
+                if(!helper.WaitUntil(10000, () => helper.FindElementById("usersubscriberforecast-email")))
+                    return false;
+                if(!helper.SetElementValueById("usersubscriberforecast-email", "'" + helper.Login + "'"))
+                    return false;
+                if(!helper.ClickOnObjectById("usersubscriberforecast-agreement"))
+                    return false;
+                if(!helper.ClickOnObjectByClass("btn btn-success"))
+                    return false;
+                helper.Wait(2000);
+            }
+            Registered = true;
             try {
-                item.Forecast7Day = Convert.ToDouble(items[0].Trim());
+                text = helper.GetElementByIdContent("seven-day-forecast-desc");
+                string[] items = text.Split(' ');
+                if(items.Length != 2)
+                    return false;
+                item.Forecast7Day = (Convert.ToDouble(items[0].Trim()) - item.LastPrice) / item.LastPrice * 100;
             }
             catch(Exception) {
                 return false;
@@ -171,6 +179,7 @@ namespace CryptoMarketClient.Forms.Instruments {
             return true;
         }
 
+        protected bool Registered { get; set; }
         private void biForecast_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
             Stop = false;
 
@@ -181,7 +190,8 @@ namespace CryptoMarketClient.Forms.Instruments {
                 XtraMessageBox.Show("Error autorizing on walletinvestor.com");
                 return;
             }
-
+            Registered = false;
+            
             foreach(WalletInvestorDataItem item in Items) {
                 this.siStatus.Caption = "<b>Update forecast for " + item.Name + "</b>";
                 if(GetForecastFor(item, helper))
@@ -190,6 +200,7 @@ namespace CryptoMarketClient.Forms.Instruments {
                 if(Stop)
                     break;
             }
+            helper.Dispose();
             if(Stop)
                 this.siStatus.Caption = "<b>Interrupted</b>";
             else 

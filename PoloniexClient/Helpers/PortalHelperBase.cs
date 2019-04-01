@@ -41,7 +41,7 @@ namespace CryptoMarketClient.Helpers {
             State = PortalState.None;
         }
 
-        protected bool ClickOnObjectByClass(string className) {
+        public bool ClickOnObjectByClass(string className) {
             return ClickOnObjectByClass(className, 0);
         }
 
@@ -99,32 +99,52 @@ namespace CryptoMarketClient.Helpers {
             return true;
         }
 
-        protected bool SetElementTextById(string idName, string text) {
+        public bool SetElementValueById(string id, string value) {
             bool result = true;
             Task task = Chromium.EvaluateScriptAsync(
                 "(function() { " +
-                "    var item = document.getElementById('" + idName + "'); " +
-                "    if(item == null) return false;" +
-                "    item.value = '" + text + "';" +
-                "    item.defaultValue = '" + text + "';" +
-                "    var ev = new Event('input', { bubbles: true});" +
-                "    ev.simulated = true;" +
-                "    item.dispatchEvent(ev);" +
-                "    return true;" +
+                "    var input = document.getElementById('" + id + "');" +
+                "    if(input != null) {" +
+                "        input.value = " + value + ";" +
+                "        input.defaultValue = " + value + ";" +
+                "        var ev = new Event('input', { bubbles: true});" +
+                "        ev.simulated = true;" +
+                "        input.dispatchEvent(ev);" +
+                "        return true;" +
+                "    }" +
+                "    return false;" +
                 "})();").ContinueWith(x => {
-                    Console.WriteLine("enter value by id" + idName + " = " + text + " -> " + x.Result.Result.ToString());
                     if(x.Result != null && !((bool)x.Result.Result)) {
                         result = false;
                     }
                 });
-            task.Wait(10000);
+            task.Wait(5000);
             if(!result) {
                 return false;
             }
             return true;
         }
 
-        protected bool ClickOnObjectById(string idName) {
+        public string GetElementByIdContent(string id) {
+            return (string)Chromium.EvaluateScriptAsync(
+                "(function() { " +
+                "    var input = document.getElementById('" + id + "');" +
+                "    if(input != null) {" +
+                "        return input.innerText;" +
+                "    }" +
+                "    return null;" +
+                "})();").Result.Result;
+        }
+
+        public bool FindElementById(string id) {
+            return (bool)Chromium.EvaluateScriptAsync(
+                "(function() { " +
+                "    var input = document.getElementById('" + id + "');" +
+                "    return input != null;" +
+                "})();").Result.Result;
+        }
+
+        public bool ClickOnObjectById(string idName) {
             bool result = true;
             Task task = Chromium.EvaluateScriptAsync(
                 "(function() { " +
@@ -437,6 +457,9 @@ namespace CryptoMarketClient.Helpers {
             if(State == PortalState.Autorization) {
                 OnAutorizationLoaded(new WebBrowserDocumentCompletedEventArgs(new Uri(LoginPageAdress)));
             }
+            if(State == PortalState.LoadPage) {
+                State = PortalState.PageLoaded;
+            }
         }
 
         protected virtual void OnAutorizationLoaded(WebBrowserDocumentCompletedEventArgs webBrowserDocumentCompletedEventArgs) {
@@ -626,7 +649,7 @@ namespace CryptoMarketClient.Helpers {
             }
             return null;
         }
-        protected void Wait(int ms) {
+        public void Wait(int ms) {
             long start = ElapsedMs;
             if(!this.timer.IsRunning)
                 this.timer.Start();
@@ -652,7 +675,7 @@ namespace CryptoMarketClient.Helpers {
     }
 
     public enum PortalState {
-        None, LoginPage, LoginPageLoaded, Autorization, AutorizationDone,
+        None, LoginPage, LoginPageLoaded, Autorization, AutorizationDone, LoadPage, PageLoaded,
         ClosedUnexpectedly
     }
 
@@ -753,25 +776,66 @@ namespace CryptoMarketClient.Helpers {
             RestartTimer();
         }
 
-        protected override void OnLoginPageLoaded(WebBrowserDocumentCompletedEventArgs webBrowserDocumentCompletedEventArgs) {
-            if(!SetElementTextById("loginform-email", Login)) {
-                Debug.WriteLine("error entering login");
+        async void OnAutorizationDocumentLoadedCore() {
+            StopTimer();
+
+            Task<JavascriptResponse> task = Chromium.EvaluateScriptAsync(
+                "var me = document.getElementById('loginform-email'); me.focus();" +
+                "me.value ='" + Login + "'; me.blur();");
+            await task;
+            if(!task.Result.Success) {
                 return;
             }
-            if(!SetElementTextById("loginform-password", Password)) {
-                Debug.WriteLine("error entering password");
+
+            task = Chromium.EvaluateScriptAsync(
+                "var pass = document.getElementById('loginform-password'); pass.focus();" +
+                "pass.value = '" + Password + "'; pass.blur();");
+            await task;
+            if(!task.Result.Success) {
                 return;
             }
+
             State = PortalState.Autorization;
-            if(!ClickOnObjectByClass("btn btn-primary", 0)) {
-                Debug.WriteLine("error clicking enter");
+            task = Chromium.EvaluateScriptAsync(
+                "var button = document.getElementsByClassName('btn btn-primary'); " +
+                "button[0].click();");
+            await task;
+            if(!task.Result.Success) {
                 return;
             }
+        }
+
+        protected override void OnLoginPageLoaded(WebBrowserDocumentCompletedEventArgs webBrowserDocumentCompletedEventArgs) {
+            OnAutorizationDocumentLoadedCore();
+
+            //Debug.WriteLine("set login");
+            //Application.DoEvents();
+            //if(!SetElementValueById("loginform-email", Login)) {
+            //    Debug.WriteLine("error entering login");
+            //    return;
+            //}
+            //Application.DoEvents();
+            //Debug.WriteLine("set password");
+            //if(!SetElementValueById("loginform-password", Password)) {
+            //    Debug.WriteLine("error entering password");
+            //    return;
+            //}
+            //Application.DoEvents();
+            //State = PortalState.Autorization;
+            //Debug.WriteLine("click");
+            //if(!ClickOnObjectByClass("btn btn-primary", 0)) {
+            //    Debug.WriteLine("error clicking enter");
+            //    return;
+            //}
         }
 
         protected override void OnAutorizationLoaded(WebBrowserDocumentCompletedEventArgs webBrowserDocumentCompletedEventArgs) {
             base.OnAutorizationLoaded(webBrowserDocumentCompletedEventArgs);
             State = PortalState.AutorizationDone;
+        }
+
+        public void CloseForm() {
+            Form.Close();
         }
     }
 }
