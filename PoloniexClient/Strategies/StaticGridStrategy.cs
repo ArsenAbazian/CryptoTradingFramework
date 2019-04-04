@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace CryptoMarketClient.Strategies {
     public class StaticGridStrategy : GridStrategyBase {
 
-        public StaticGridStrategy(TickerBase ticker) : base(ticker) { }
+        public StaticGridStrategy(Ticker ticker) : base(ticker) { }
 
         [XtraSerializableProperty]
         public int GridCount { get; set; }

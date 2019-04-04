@@ -19,24 +19,24 @@ namespace CryptoMarketClient {
             
         }
 
-        TickerBase ticker;
-        public TickerBase Ticker {
+        Ticker ticker;
+        public Ticker Ticker {
             get { return ticker; }
             set {
                 if(Ticker == value)
                     return;
-                TickerBase prev = Ticker;
+                Ticker prev = Ticker;
                 ticker = value;
                 OnTickerChanged(prev);
             }
         }
         
-        void OnTickerChanged(TickerBase prev) {
+        void OnTickerChanged(Ticker prev) {
             if(prev != null)
-                prev.HistoryItemAdd -= Ticker_Changed;
+                prev.HistoryChanged -= Ticker_Changed;
             if(Ticker != null)
-                Ticker.HistoryItemAdd += Ticker_Changed;
-            List<TickerBase> list = new List<TickerBase>();
+                Ticker.HistoryChanged += Ticker_Changed;
+            List<Ticker> list = new List<Ticker>();
             list.Add(Ticker);
             this.bindingSource.DataSource = list;
             UpdateTickerInfo();

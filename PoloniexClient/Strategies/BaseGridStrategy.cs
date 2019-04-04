@@ -8,7 +8,7 @@ using DevExpress.XtraCharts;
 
 namespace CryptoMarketClient.Strategies {
     public class GridStrategyBase : TickerStrategyBase {
-        public GridStrategyBase(TickerBase ticker) : base(ticker) {
+        public GridStrategyBase(Ticker ticker) : base(ticker) {
         }
 
         protected override void OnTickCore() {

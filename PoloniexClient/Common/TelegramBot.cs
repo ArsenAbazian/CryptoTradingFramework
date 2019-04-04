@@ -84,32 +84,33 @@ namespace CryptoMarketClient.Common {
             t.Wait(10000);
         }
         public void Update() {
-            InnerClient.GetMeAsync().ContinueWith(u => Debug.WriteLine(u.Result.Username));
-            InnerClient.GetUpdatesAsync().ContinueWith(task => {
-                if(BroadcastId == null && !string.IsNullOrEmpty(RegistrationCode))
-                    RegisterNewUsers(task.Result);
-                if(BroadcastId == null)
-                    return;
-                foreach(Update upd in task.Result) {
-                    if(upd.Message.Chat.Id == BroadcastId.Identifier) {
-                        if(upd.Message.Text == "/stopit!")
-                            IsActive = false;
-                        if(upd.Message.Text == "/startit")
-                            IsActive = true;
-                        break;
-                    }
-                }
-                if(BroadcastId != null)
-                    InnerClient.SendTextMessageAsync(BroadcastId, IsActive ? "I am started!" : "I am stopped!");
-                StartListening();
-            });
+            return;
+            //InnerClient.GetMeAsync().ContinueWith(u => Debug.WriteLine(u.Result.Username));
+            //InnerClient.GetUpdatesAsync().ContinueWith(task => {
+            //    if(BroadcastId == null && !string.IsNullOrEmpty(RegistrationCode))
+            //        RegisterNewUsers(task.Result);
+            //    if(BroadcastId == null)
+            //        return;
+            //    foreach(Update upd in task.Result) {
+            //        if(upd.Message.Chat.Id == BroadcastId.Identifier) {
+            //            if(upd.Message.Text == "/stopit!")
+            //                IsActive = false;
+            //            if(upd.Message.Text == "/startit")
+            //                IsActive = true;
+            //            break;
+            //        }
+            //    }
+            //    //if(BroadcastId != null)
+            //    //    InnerClient.SendTextMessageAsync(BroadcastId, IsActive ? "I am started!" : "I am stopped!");
+            //    StartListening();
+            //});
         }
         public void SendNotification(string text) {
             if(BroadcastId == null) {
                 Debug.WriteLine("Error: Group ChatId == null");
                 return;
             }
-            InnerClient.SendTextMessageAsync(BroadcastId, text, Telegram.Bot.Types.Enums.ParseMode.Html);
+            //InnerClient.SendTextMessageAsync(BroadcastId, text, Telegram.Bot.Types.Enums.ParseMode.Html);
         }
     }
 }

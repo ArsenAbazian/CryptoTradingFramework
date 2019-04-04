@@ -1,5 +1,4 @@
-﻿using CryptoMarketClient.Common;
-
+﻿
 namespace CryptoMarketClient {
     partial class TrailingCollectionControl {
         /// <summary> 
@@ -37,7 +36,7 @@ namespace CryptoMarketClient {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TrailingCollectionControl));
             this.colActualProfit = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colType = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.gcTrailings = new CryptoMarketClient.MyGridControl();
+            this.gcTrailings = new DevExpress.XtraGrid.GridControl();
             this.trailingSettingsBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.gvTrailings = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.colName = new DevExpress.XtraGrid.Columns.GridColumn();
@@ -98,10 +97,10 @@ namespace CryptoMarketClient {
             // 
             this.gcTrailings.DataSource = this.trailingSettingsBindingSource;
             this.gcTrailings.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gcTrailings.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.gcTrailings.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(6);
             this.gcTrailings.Location = new System.Drawing.Point(0, 60);
             this.gcTrailings.MainView = this.gvTrailings;
-            this.gcTrailings.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.gcTrailings.Margin = new System.Windows.Forms.Padding(6);
             this.gcTrailings.Name = "gcTrailings";
             this.gcTrailings.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repositoryItemTextEdit1});
@@ -187,6 +186,7 @@ namespace CryptoMarketClient {
             this.gvTrailings.OptionsView.ShowGroupPanel = false;
             this.gvTrailings.OptionsView.ShowHorizontalLines = DevExpress.Utils.DefaultBoolean.False;
             this.gvTrailings.OptionsView.ShowIndicator = false;
+            this.gvTrailings.OptionsView.ShowVerticalLines = DevExpress.Utils.DefaultBoolean.False;
             // 
             // colName
             // 
@@ -364,7 +364,7 @@ namespace CryptoMarketClient {
             this.bar1.DockRow = 0;
             this.bar1.DockStyle = DevExpress.XtraBars.BarDockStyle.Top;
             this.bar1.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
-            new DevExpress.XtraBars.LinkPersistInfo(this.btAdd),
+            new DevExpress.XtraBars.LinkPersistInfo(this.btAdd, true),
             new DevExpress.XtraBars.LinkPersistInfo(this.btRemove),
             new DevExpress.XtraBars.LinkPersistInfo(this.barButtonItem1),
             new DevExpress.XtraBars.LinkPersistInfo(this.btEdit)});
@@ -378,6 +378,7 @@ namespace CryptoMarketClient {
             this.btAdd.Id = 0;
             this.btAdd.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("btAdd.ImageOptions.Image")));
             this.btAdd.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("btAdd.ImageOptions.LargeImage")));
+            this.btAdd.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("btAdd.ImageOptions.SvgImage")));
             this.btAdd.Name = "btAdd";
             this.btAdd.PaintStyle = DevExpress.XtraBars.BarItemPaintStyle.CaptionGlyph;
             this.btAdd.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btAdd_ItemClick);
@@ -388,6 +389,7 @@ namespace CryptoMarketClient {
             this.btRemove.Id = 1;
             this.btRemove.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("btRemove.ImageOptions.Image")));
             this.btRemove.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("btRemove.ImageOptions.LargeImage")));
+            this.btRemove.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("btRemove.ImageOptions.SvgImage")));
             this.btRemove.Name = "btRemove";
             this.btRemove.PaintStyle = DevExpress.XtraBars.BarItemPaintStyle.CaptionGlyph;
             this.btRemove.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btRemove_ItemClick);
@@ -398,6 +400,7 @@ namespace CryptoMarketClient {
             this.barButtonItem1.Id = 3;
             this.barButtonItem1.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("barButtonItem1.ImageOptions.Image")));
             this.barButtonItem1.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("barButtonItem1.ImageOptions.LargeImage")));
+            this.barButtonItem1.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("barButtonItem1.ImageOptions.SvgImage")));
             this.barButtonItem1.Name = "barButtonItem1";
             this.barButtonItem1.PaintStyle = DevExpress.XtraBars.BarItemPaintStyle.CaptionGlyph;
             this.barButtonItem1.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItem1_ItemClick);
@@ -408,6 +411,7 @@ namespace CryptoMarketClient {
             this.btEdit.Id = 2;
             this.btEdit.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("btEdit.ImageOptions.Image")));
             this.btEdit.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("btEdit.ImageOptions.LargeImage")));
+            this.btEdit.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("btEdit.ImageOptions.SvgImage")));
             this.btEdit.Name = "btEdit";
             this.btEdit.PaintStyle = DevExpress.XtraBars.BarItemPaintStyle.CaptionGlyph;
             this.btEdit.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btEdit_ItemClick);
@@ -418,7 +422,7 @@ namespace CryptoMarketClient {
             this.barDockControlTop.Dock = System.Windows.Forms.DockStyle.Top;
             this.barDockControlTop.Location = new System.Drawing.Point(0, 0);
             this.barDockControlTop.Manager = this.barManager1;
-            this.barDockControlTop.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.barDockControlTop.Margin = new System.Windows.Forms.Padding(4);
             this.barDockControlTop.Size = new System.Drawing.Size(1236, 60);
             // 
             // barDockControlBottom
@@ -427,7 +431,7 @@ namespace CryptoMarketClient {
             this.barDockControlBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.barDockControlBottom.Location = new System.Drawing.Point(0, 883);
             this.barDockControlBottom.Manager = this.barManager1;
-            this.barDockControlBottom.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.barDockControlBottom.Margin = new System.Windows.Forms.Padding(4);
             this.barDockControlBottom.Size = new System.Drawing.Size(1236, 0);
             // 
             // barDockControlLeft
@@ -436,7 +440,7 @@ namespace CryptoMarketClient {
             this.barDockControlLeft.Dock = System.Windows.Forms.DockStyle.Left;
             this.barDockControlLeft.Location = new System.Drawing.Point(0, 60);
             this.barDockControlLeft.Manager = this.barManager1;
-            this.barDockControlLeft.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.barDockControlLeft.Margin = new System.Windows.Forms.Padding(4);
             this.barDockControlLeft.Size = new System.Drawing.Size(0, 823);
             // 
             // barDockControlRight
@@ -445,7 +449,7 @@ namespace CryptoMarketClient {
             this.barDockControlRight.Dock = System.Windows.Forms.DockStyle.Right;
             this.barDockControlRight.Location = new System.Drawing.Point(1236, 60);
             this.barDockControlRight.Manager = this.barManager1;
-            this.barDockControlRight.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.barDockControlRight.Margin = new System.Windows.Forms.Padding(4);
             this.barDockControlRight.Size = new System.Drawing.Size(0, 823);
             // 
             // TrailingCollectionControl
@@ -457,7 +461,7 @@ namespace CryptoMarketClient {
             this.Controls.Add(this.barDockControlRight);
             this.Controls.Add(this.barDockControlBottom);
             this.Controls.Add(this.barDockControlTop);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "TrailingCollectionControl";
             this.Size = new System.Drawing.Size(1236, 883);
             ((System.ComponentModel.ISupportInitialize)(this.gcTrailings)).EndInit();
@@ -476,7 +480,7 @@ namespace CryptoMarketClient {
 
         #endregion
 
-        private MyGridControl gcTrailings;
+        private DevExpress.XtraGrid.GridControl gcTrailings;
         private DevExpress.XtraGrid.Views.Grid.GridView gvTrailings;
         private System.Windows.Forms.BindingSource trailingSettingsBindingSource;
         private DevExpress.XtraGrid.Columns.GridColumn colBuyPrice;

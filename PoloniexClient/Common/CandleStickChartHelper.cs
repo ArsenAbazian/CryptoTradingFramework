@@ -72,6 +72,8 @@ namespace CryptoMarketClient {
             }
         }
 
+        public double BuySellVolume { get; set; }
+
         double quoteVolume;
         public double QuoteVolume {
             get { return quoteVolume; }
@@ -94,6 +96,33 @@ namespace CryptoMarketClient {
             }
         }
 
+        double buyVolume;
+        public double BuyVolume {
+            get {
+                return buyVolume;
+            }
+            set {
+                if(BuyVolume == value)
+                    return;
+                buyVolume = value;
+                RaisePropertyChanged("BuyVolume");
+            }
+        }
+
+
+        double sellVolume;
+        public double SellVolume {
+            get {
+                return sellVolume;
+            }
+            set {
+                if(SellVolume == value)
+                    return;
+                sellVolume = value;
+                RaisePropertyChanged("SellVolume");
+            }
+        }
+
         event PropertyChangedEventHandler propertyChanged;
         event PropertyChangedEventHandler INotifyPropertyChanged.PropertyChanged {
             add { this.propertyChanged += value; }
@@ -101,12 +130,51 @@ namespace CryptoMarketClient {
         }
 
         protected void RaisePropertyChanged(string propName) {
-            if(this.propertyChanged != null)
-                this.propertyChanged.Invoke(this, new PropertyChangedEventArgs(propName));
+            if (this.propertyChanged != null) {
+                try {
+                    this.propertyChanged.Invoke(this, new PropertyChangedEventArgs(propName));
+                } catch { }
+            }
         }
     }
 
     public static class CandleStickChartHelper {
+        public static void InitializeVolumes(IList<CandleStickData> candles, List<TradeInfoItem> trades, int period) {
+            foreach(CandleStickData data in candles) {
+                data.BuyVolume = 0;
+                data.SellVolume = 0;
+            }
+            UpdateVolumes(candles, trades, period);
+        }
+        public static void UpdateVolumes(IList<CandleStickData> candles, List<TradeInfoItem> trades, int period) {
+            CandleStickData saved = null;
+            foreach(var trade in trades) {
+                if(saved == null || saved.Time > trade.Time || saved.Time.AddMinutes(period) <= saved.Time) {
+                    saved = candles.FirstOrDefault(c => c.Time <= trade.Time & c.Time.AddMinutes(period) > trade.Time);
+                }
+                if(saved != null) {
+                    UpdateCandle(saved, trade);
+                }
+            }
+        }
+        public static void UpdateCandle(CandleStickData candle, TradeInfoItem trade) {
+            if(trade.Type == TradeType.Buy)
+                candle.BuyVolume += trade.Amount;
+            else
+                candle.SellVolume += trade.Amount;
+            candle.BuySellVolume = candle.BuyVolume - candle.SellVolume;
+        }
+        public static void UpdateVolumes(BindingList<CandleStickData> candles, TradeInfoItem trade, int period) {
+            if(candles.Count == 0)
+                return;
+            CandleStickData saved = candles.Last();
+            if(saved.Time > trade.Time || saved.Time.AddMinutes(period) <= saved.Time) {
+                UpdateCandle(saved, trade);
+                return;
+            }
+            saved = candles.FirstOrDefault(c => c.Time <= trade.Time & c.Time.AddMinutes(period) > trade.Time);
+            UpdateCandle(saved, trade);
+        }
         public static BindingList<CandleStickData> CreateCandleStickData(IList<TickerHistoryItem> list, long rangeInSeconds) {
             BindingList<CandleStickData> res = new BindingList<CandleStickData>();
             CandleStickData candleItem = null;
@@ -144,9 +212,10 @@ namespace CryptoMarketClient {
             candleItem.High = Math.Max(candleItem.High, item.Current);
             return;
         }
-        public static IList<CandleStickData> CreateCandleStickData(TickerBase ticker) {
-            ticker.CandleStickData.Clear();
-            return CreateCandleStickData(ticker.History, ticker.CandleStickPeriodMin * 60);
-        }
+        
+        //public static IList<CandleStickData> CreateCandleStickData(Ticker ticker) {
+        //    ticker.CandleStickData.Clear();
+        //    return CreateCandleStickData(ticker.History, ticker.CandleStickPeriodMin * 60);
+        //}
     }
 }

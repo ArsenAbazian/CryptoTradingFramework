@@ -14,6 +14,7 @@ using DevExpress.XtraGrid;
 using DevExpress.XtraGrid.Views.Grid;
 using System.Collections;
 using DevExpress.Utils.DirectXPaint;
+using DevExpress.Utils;
 
 namespace CryptoMarketClient {
     public partial class OrderBookControl : XtraUserControl {
@@ -23,85 +24,47 @@ namespace CryptoMarketClient {
         public OrderBookControl() {
             InitializeComponent();
             this.askGridView.ViewCaptionHeight = 32;
-            //this.bidGridControl.DataSource = BidsSource;
-            //this.askGridControl.DataSource = AsksSource;
+            this.gcRate.AppearanceCell.ForeColor = Exchange.AskColor;
+            this.gcRate2.AppearanceCell.ForeColor = Exchange.BidColor;
         }
 
         protected int LastAskTopRowIndex { get; set; } = -1;
-        protected OrderBookDataSource BidsSource { get; private set; } = new OrderBookDataSource();
-        protected OrderBookDataSource AsksSource { get; private set; } = new OrderBookDataSource();
-        public OrderBookEntry[] Asks {
-            get { return AsksSource.Data; }
+        public List<OrderBookEntry> Asks {
+            get { return (List<OrderBookEntry>)this.askGridControl.DataSource; }
             set {
-                if(AsksSource.Data == value)
-                    return;
-                AsksSource.Data = value;
-                if(this.askGridControl.DataSource == null)
-                    this.askGridControl.DataSource = AsksSource;
-                UpdateView(this.askGridView, value);
+                this.askGridControl.DataSource = value;
+                OnAsksChanged();
             }
         }
 
-        public OrderBookEntry[] Bids {
-            get { return BidsSource.Data; }
-            set {
-                if(BidsSource.Data == value)
-                    return;
-                BidsSource.Data = value;
-                if(this.bidGridControl.DataSource == null)
-                    this.bidGridControl.DataSource = BidsSource;
-                UpdateView(this.bidGridView, value);
-            }
+        private void OnAsksChanged() {
+            if(Asks == null)
+                return;
+            SnapAsksToEnd = true;
+            this.askGridView.FocusedRowHandle = this.askGridView.GetRowHandle(Asks.Count - 1);
+            this.askGridView.MoveLast();
         }
-        protected void UpdateView(GridView view, OrderBookEntry[] entries) {
+
+        public List<OrderBookEntry> Bids {
+            get { return (List<OrderBookEntry>)this.bidGridControl.DataSource; }
+            set { this.bidGridControl.DataSource = value; }
+        }
+        protected void UpdateView(GridView view, List<OrderBookEntry> entries) {
             if(entries == null)
                 return;
-            GridViewInfo vi = (GridViewInfo)view.GetViewInfo();
-            if(vi.RowsInfo.Count == 0) {
-                vi.GridControl.Invalidate();
-                vi.GridControl.Update();
-                return;
-            }
-            foreach(GridDataRowInfo ri in vi.RowsInfo) {
-                OrderBookEntry entry = entries[view.GetDataSourceRowIndex(ri.RowHandle)];
-                foreach(var ci in ri.Cells) {
-                    if(ci.Column == null)
-                        continue;
-                    if(ci.Column.FieldName == "ValueString")
-                        ci.CellValue = entry.ValueString;
-                    else if(ci.Column.FieldName == "AmountString")
-                        ci.CellValue = entry.AmountString;
-                    else if(ci.Column.FieldName == "Volume")
-                        ci.CellValue = entry.Volume;
-                    else if(ci.Column.FieldName == "VolumePercent")
-                        ci.CellValue = entry.VolumePercent;
-                    if(ci.ViewInfo != null) {
-                        ci.ViewInfo.EditValue = ci.CellValue;
-                        ci.ViewInfo.IsReady = false;
-                    }
-                }
-                vi.UpdateRowConditionAndFormat(ri.RowHandle, ri);
-                vi.UpdateRowAppearance(ri);
-                foreach(var ci in ri.Cells) {
-                    vi.UpdateCellAppearance(ci);
-                }
-            }
-            if(((IDirectXClient)vi.GridControl).UseDirectXPaint)
-                ((IDirectXClient)vi.GridControl).Render();
-            else {
-                vi.GridControl.Invalidate();
-                vi.GridControl.Update();
-            }
+            view.RefreshData();
         }
-        public void RefreshData() {
-            if(LastAskTopRowIndex == -1)
-                LastAskTopRowIndex = Asks.Length;
-            RefreshBids();
-            RefreshAsks();
+
+        void UpdateAsksVisibleRowIndex() {
+            if(SnapAsksToEnd)
+                this.askGridView.MoveLast();
+            else
+                this.askGridView.TopRowIndex = LastAskTopRowIndex;
         }
 
         public void RefreshAsks() {
             UpdateView(this.askGridView, Asks);
+            UpdateAsksVisibleRowIndex();
         }
 
         public void RefreshBids() {
@@ -109,7 +72,7 @@ namespace CryptoMarketClient {
         }
 
         private void askGridControl_Resize(object sender, EventArgs e) {
-            this.askGridView.TopRowIndex = this.askGridView.DataRowCount;
+            UpdateAsksVisibleRowIndex();
         }
 
         private void OrderBookControl_Resize(object sender, EventArgs e) {
@@ -140,6 +103,7 @@ namespace CryptoMarketClient {
         void OnTickerCollectionChanged() {
             Bids = TickerCollection.Arbitrage.HighestBidTicker == null ? null : TickerCollection.Arbitrage.HighestBidTicker.OrderBook.Bids;
             Asks = TickerCollection.Arbitrage.LowestAskTicker == null ? null : TickerCollection.Arbitrage.LowestAskTicker.OrderBook.Asks;
+            SnapAsksToEnd = true;
             OrderBookCaption = TickerCollection.Name;
             UpdateAskTableHeight();
         }
@@ -184,88 +148,53 @@ namespace CryptoMarketClient {
             OrderBookEntry ee = (OrderBookEntry)this.bidGridView.GetRow(hi.RowHandle);
             RaiseBidRowChanged(ee);
         }
+
+        protected bool SnapAsksToEnd { get; set; }
+        private void askGridView_TopRowChanged(object sender, EventArgs e) {
+            LastAskTopRowIndex = this.askGridView.TopRowIndex;
+            if(this.askGridView.IsRowVisible(this.askGridView.GetRowHandle(Asks.Count - 1)) != RowVisibleState.Hidden)
+                SnapAsksToEnd = true;
+        }
+
+        private void askGridView_CustomDrawCell(object sender, RowCellCustomDrawEventArgs e) {
+            if(e.Column == this.gcAmount) {
+                GridViewInfo gvi = (GridViewInfo)this.askGridView.GetViewInfo();
+                GridRowInfo gri = gvi.GetGridRowInfo(e.RowHandle);
+                OrderBookEntry ee = (OrderBookEntry)this.askGridView.GetRow(e.RowHandle);
+                if(ee == null)
+                    return;
+
+                int height = ScaleUtils.ScaleValue(3);
+                int width = (int)(gri.Bounds.Width * ee.VolumePercent + 0.5f);
+                e.Cache.FillRectangle(Color.FromArgb(0x20, Exchange.AskColor), new Rectangle(gri.Bounds.Right - width, gri.Bounds.Y, width, gri.Bounds.Height));
+            }
+        }
+
+        private void bidGridView_CustomDrawCell(object sender, RowCellCustomDrawEventArgs e) {
+            if(e.Column == this.gcAmount2) {
+                GridViewInfo gvi = (GridViewInfo)this.bidGridView.GetViewInfo();
+                GridRowInfo gri = gvi.GetGridRowInfo(e.RowHandle);
+                OrderBookEntry ee = (OrderBookEntry)this.bidGridView.GetRow(e.RowHandle);
+                if(ee == null)
+                    return;
+
+                int height = ScaleUtils.ScaleValue(3);
+                int width = (int)(gri.Bounds.Width * ee.VolumePercent + 0.5f);
+                e.Cache.FillRectangle(Color.FromArgb(0x20, Exchange.BidColor), new Rectangle(gri.Bounds.Right - width, gri.Bounds.Y, width, gri.Bounds.Height));
+            }
+        }
+
+        private void askGridControl_Click(object sender, EventArgs e) {
+
+        }
+
+        private void askGridView_DataSourceChanged(object sender, EventArgs e) {
+            UpdateAsksVisibleRowIndex();
+        }
     }
 
     public delegate void SelectedOrderBookEntryChangedHandler(object sender, SelectedOrderBookEntryChangedEventArgs e);
     public class SelectedOrderBookEntryChangedEventArgs : EventArgs {
         public OrderBookEntry Entry { get; set; }
     }
-
-    public class OrderBookDataSource : IList<OrderBookEntry> {
-        public OrderBookDataSource() { }
-        public OrderBookDataSource(OrderBookEntry[] data) {
-            Data = data;
-        }
-        
-        public OrderBookEntry[] Data { get; set; }
-
-        OrderBookEntry IList<OrderBookEntry>.this[int index] {
-            get { return Data[index]; }
-            set { Data[index] = value; }
-        }
-        int ICollection<OrderBookEntry>.Count => Data == null ? 0 : Data.Length;
-        bool ICollection<OrderBookEntry>.IsReadOnly => true;
-
-        void ICollection<OrderBookEntry>.Add(OrderBookEntry item) {
-            
-        }
-
-        void ICollection<OrderBookEntry>.Clear() {
-            
-        }
-
-        bool ICollection<OrderBookEntry>.Contains(OrderBookEntry item) {
-            if(Data == null) return false;
-            return Data.Contains(item);
-        }
-
-        void ICollection<OrderBookEntry>.CopyTo(OrderBookEntry[] array, int arrayIndex) {
-            if(Data == null)
-                return;
-            Data.CopyTo(array, arrayIndex);
-        }
-
-        List<OrderBookEntry> empty = new List<OrderBookEntry>();
-        IEnumerator<OrderBookEntry> IEnumerable<OrderBookEntry>.GetEnumerator() {
-            if(Data == null) return empty.GetEnumerator();
-            return (IEnumerator<OrderBookEntry>)Data.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator() {
-            if(Data == null) return empty.GetEnumerator();
-            return Data.GetEnumerator();
-        }
-
-        int IList<OrderBookEntry>.IndexOf(OrderBookEntry item) {
-            if(Data == null) return -1;
-            return Data.FindIndex(i => i == item);
-        }
-
-        void IList<OrderBookEntry>.Insert(int index, OrderBookEntry item) {
-            
-        }
-
-        bool ICollection<OrderBookEntry>.Remove(OrderBookEntry item) {
-            return true;
-        }
-
-        void IList<OrderBookEntry>.RemoveAt(int index) {
-            
-        }
-    }
-
-    //public class FastGridControl : GridControl {
-    //    public void SetDataSourceFast() {
-
-    //    }
-    //}
-
-    //public class FastGridView : GridView {
-    //    protected override void OnDataSourceChanging() {
-    //        base.OnDataSourceChanging();
-    //    }
-    //    protected override void SetDataSource(BindingContext context, object dataSource, string dataMember) {
-    //        base.SetDataSource(context, dataSource, dataMember);
-    //    }
-    //}
 }

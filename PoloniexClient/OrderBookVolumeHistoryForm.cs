@@ -15,8 +15,8 @@ namespace CryptoMarketClient {
             InitializeComponent();
             this.repositoryItemProgressBar1.DrawBackground = DevExpress.XtraEditors.Repository.RepositoryItemBaseProgressBar.DrawBackgroundType.True;
         }
-        TickerBase ticker;
-        public TickerBase Ticker {
+        Ticker ticker;
+        public Ticker Ticker {
             get {
                 return ticker;
             }

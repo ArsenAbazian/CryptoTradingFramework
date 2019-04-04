@@ -37,7 +37,7 @@ namespace CryptoMarketClient {
 
         public ITradingResultOperationsProvider OperationsProvider { get; set; }
 
-        public TickerBase Ticker { get; set; }
+        public Ticker Ticker { get; set; }
         TrailingSettings settings;
         public TrailingSettings Settings {
             get {
@@ -66,12 +66,12 @@ namespace CryptoMarketClient {
                 return;
             }
             if ((TrailingType)this.comboBoxEdit1.EditValue == TrailingType.Buy) {
-                if (!Ticker.Buy(Settings.TradePrice, Settings.Amount)) {
+                if (Ticker.Buy(Settings.TradePrice, Settings.Amount) == null) {
                     XtraMessageBox.Show("Error buying. Please try later again.");
                     return;
                 }
             } else {
-                if (!Ticker.Sell(Settings.TradePrice, Settings.Amount)) {
+                if (Ticker.Sell(Settings.TradePrice, Settings.Amount) == null) {
                     XtraMessageBox.Show("Error selling. Please try later again.");
                     return;
                 }
@@ -117,6 +117,6 @@ namespace CryptoMarketClient {
     }
 
     public interface ITradingResultOperationsProvider {
-        void ShowTradingResult(TickerBase ticker);
+        void ShowTradingResult(Ticker ticker);
     }
 }
