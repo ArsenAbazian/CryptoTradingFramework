@@ -188,7 +188,6 @@ namespace CryptoMarketClient {
             this.chartControl1.Legends.AddRange(new DevExpress.XtraCharts.Legend[] {
             legend1});
             this.chartControl1.Location = new System.Drawing.Point(0, 0);
-            this.chartControl1.Margin = new System.Windows.Forms.Padding(6);
             this.chartControl1.Name = "chartControl1";
             series1.Name = "Volume";
             sideBySideBarSeriesView1.AxisYName = "Secondary AxisY 2";
@@ -382,10 +381,9 @@ namespace CryptoMarketClient {
             // 
             this.barDockControlBottom.CausesValidation = false;
             this.barDockControlBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.barDockControlBottom.Location = new System.Drawing.Point(0, 1154);
+            this.barDockControlBottom.Location = new System.Drawing.Point(0, 600);
             this.barDockControlBottom.Manager = this.barManager1;
-            this.barDockControlBottom.Margin = new System.Windows.Forms.Padding(6);
-            this.barDockControlBottom.Size = new System.Drawing.Size(1856, 0);
+            this.barDockControlBottom.Size = new System.Drawing.Size(928, 0);
             // 
             // barDockControlLeft
             // 
@@ -660,16 +658,15 @@ namespace CryptoMarketClient {
             // 
             // TickerChartViewer
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.sidePanel1);
             this.Controls.Add(this.barDockControlLeft);
             this.Controls.Add(this.barDockControlRight);
             this.Controls.Add(this.barDockControlBottom);
             this.Controls.Add(this.barDockControlTop);
-            this.Margin = new System.Windows.Forms.Padding(6);
             this.Name = "TickerChartViewer";
-            this.Size = new System.Drawing.Size(1856, 1154);
+            this.Size = new System.Drawing.Size(928, 600);
             ((System.ComponentModel.ISupportInitialize)(xyDiagramPane1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(secondaryAxisY1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(secondaryAxisY2)).EndInit();

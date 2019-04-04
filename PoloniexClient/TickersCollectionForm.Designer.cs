@@ -366,62 +366,62 @@
             0,
             0,
             0});
-            gridFormatRule2.Rule = formatConditionRuleValue2;
-            gridFormatRule3.Column = this.gcDeltaBid;
-            gridFormatRule3.ColumnApplyTo = this.gcHighestBid;
-            gridFormatRule3.Name = "FormatRuleBidDelta";
-            formatConditionIconSet1.CategoryName = "Positive/Negative";
-            formatConditionIconSetIcon1.PredefinedName = "Arrows3_3.png";
-            formatConditionIconSetIcon1.Value = new decimal(new int[] {
+            gridFormatRule7.Rule = formatConditionRuleValue5;
+            gridFormatRule8.Column = this.gcDeltaBid;
+            gridFormatRule8.ColumnApplyTo = this.gcHighestBid;
+            gridFormatRule8.Name = "FormatRuleBidDelta";
+            formatConditionIconSet3.CategoryName = "Positive/Negative";
+            formatConditionIconSetIcon7.PredefinedName = "Arrows3_3.png";
+            formatConditionIconSetIcon7.Value = new decimal(new int[] {
             -1,
             -1,
             -1,
             -2147483648});
-            formatConditionIconSetIcon1.ValueComparison = DevExpress.XtraEditors.FormatConditionComparisonType.GreaterOrEqual;
-            formatConditionIconSetIcon2.PredefinedName = "Arrows3_2.png";
-            formatConditionIconSetIcon2.ValueComparison = DevExpress.XtraEditors.FormatConditionComparisonType.GreaterOrEqual;
-            formatConditionIconSetIcon3.PredefinedName = "Arrows3_1.png";
-            formatConditionIconSet1.Icons.Add(formatConditionIconSetIcon1);
-            formatConditionIconSet1.Icons.Add(formatConditionIconSetIcon2);
-            formatConditionIconSet1.Icons.Add(formatConditionIconSetIcon3);
-            formatConditionIconSet1.Name = "PositiveNegativeArrows";
-            formatConditionIconSet1.ValueType = DevExpress.XtraEditors.FormatConditionValueType.Number;
-            formatConditionRuleIconSet1.IconSet = formatConditionIconSet1;
-            gridFormatRule3.Rule = formatConditionRuleIconSet1;
-            gridFormatRule4.Column = this.gcDeltaAsk;
-            gridFormatRule4.ColumnApplyTo = this.gcLowestAsk;
-            gridFormatRule4.Name = "FormatRuleAskDelta";
-            formatConditionIconSet2.CategoryName = "Positive/Negative";
-            formatConditionIconSetIcon4.PredefinedName = "Arrows3_3.png";
-            formatConditionIconSetIcon4.Value = new decimal(new int[] {
+            formatConditionIconSetIcon7.ValueComparison = DevExpress.XtraEditors.FormatConditionComparisonType.GreaterOrEqual;
+            formatConditionIconSetIcon8.PredefinedName = "Arrows3_2.png";
+            formatConditionIconSetIcon8.ValueComparison = DevExpress.XtraEditors.FormatConditionComparisonType.GreaterOrEqual;
+            formatConditionIconSetIcon9.PredefinedName = "Arrows3_1.png";
+            formatConditionIconSet3.Icons.Add(formatConditionIconSetIcon7);
+            formatConditionIconSet3.Icons.Add(formatConditionIconSetIcon8);
+            formatConditionIconSet3.Icons.Add(formatConditionIconSetIcon9);
+            formatConditionIconSet3.Name = "PositiveNegativeArrows";
+            formatConditionIconSet3.ValueType = DevExpress.XtraEditors.FormatConditionValueType.Number;
+            formatConditionRuleIconSet3.IconSet = formatConditionIconSet3;
+            gridFormatRule8.Rule = formatConditionRuleIconSet3;
+            gridFormatRule9.Column = this.gcDeltaAsk;
+            gridFormatRule9.ColumnApplyTo = this.gcLowestAsk;
+            gridFormatRule9.Name = "FormatRuleAskDelta";
+            formatConditionIconSet4.CategoryName = "Positive/Negative";
+            formatConditionIconSetIcon10.PredefinedName = "Arrows3_3.png";
+            formatConditionIconSetIcon10.Value = new decimal(new int[] {
             -1,
             -1,
             -1,
             -2147483648});
-            formatConditionIconSetIcon4.ValueComparison = DevExpress.XtraEditors.FormatConditionComparisonType.GreaterOrEqual;
-            formatConditionIconSetIcon5.PredefinedName = "Arrows3_2.png";
-            formatConditionIconSetIcon5.ValueComparison = DevExpress.XtraEditors.FormatConditionComparisonType.GreaterOrEqual;
-            formatConditionIconSetIcon6.PredefinedName = "Arrows3_1.png";
-            formatConditionIconSet2.Icons.Add(formatConditionIconSetIcon4);
-            formatConditionIconSet2.Icons.Add(formatConditionIconSetIcon5);
-            formatConditionIconSet2.Icons.Add(formatConditionIconSetIcon6);
-            formatConditionIconSet2.Name = "PositiveNegativeArrows";
-            formatConditionIconSet2.ValueType = DevExpress.XtraEditors.FormatConditionValueType.Number;
-            formatConditionRuleIconSet2.IconSet = formatConditionIconSet2;
-            gridFormatRule4.Rule = formatConditionRuleIconSet2;
-            gridFormatRule5.Column = this.colIsActual;
-            gridFormatRule5.ColumnApplyTo = this.gcSecond;
-            gridFormatRule5.Name = "FormatSuspended";
-            formatConditionRuleValue3.Appearance.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-            formatConditionRuleValue3.Appearance.Options.UseBackColor = true;
-            formatConditionRuleValue3.Condition = DevExpress.XtraEditors.FormatCondition.Equal;
-            formatConditionRuleValue3.Value1 = false;
-            gridFormatRule5.Rule = formatConditionRuleValue3;
-            this.gridView1.FormatRules.Add(gridFormatRule1);
-            this.gridView1.FormatRules.Add(gridFormatRule2);
-            this.gridView1.FormatRules.Add(gridFormatRule3);
-            this.gridView1.FormatRules.Add(gridFormatRule4);
-            this.gridView1.FormatRules.Add(gridFormatRule5);
+            formatConditionIconSetIcon10.ValueComparison = DevExpress.XtraEditors.FormatConditionComparisonType.GreaterOrEqual;
+            formatConditionIconSetIcon11.PredefinedName = "Arrows3_2.png";
+            formatConditionIconSetIcon11.ValueComparison = DevExpress.XtraEditors.FormatConditionComparisonType.GreaterOrEqual;
+            formatConditionIconSetIcon12.PredefinedName = "Arrows3_1.png";
+            formatConditionIconSet4.Icons.Add(formatConditionIconSetIcon10);
+            formatConditionIconSet4.Icons.Add(formatConditionIconSetIcon11);
+            formatConditionIconSet4.Icons.Add(formatConditionIconSetIcon12);
+            formatConditionIconSet4.Name = "PositiveNegativeArrows";
+            formatConditionIconSet4.ValueType = DevExpress.XtraEditors.FormatConditionValueType.Number;
+            formatConditionRuleIconSet4.IconSet = formatConditionIconSet4;
+            gridFormatRule9.Rule = formatConditionRuleIconSet4;
+            gridFormatRule10.Column = this.colIsActual;
+            gridFormatRule10.ColumnApplyTo = this.gcSecond;
+            gridFormatRule10.Name = "FormatSuspended";
+            formatConditionRuleValue6.Appearance.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
+            formatConditionRuleValue6.Appearance.Options.UseBackColor = true;
+            formatConditionRuleValue6.Condition = DevExpress.XtraEditors.FormatCondition.Equal;
+            formatConditionRuleValue6.Value1 = false;
+            gridFormatRule10.Rule = formatConditionRuleValue6;
+            this.gridView1.FormatRules.Add(gridFormatRule6);
+            this.gridView1.FormatRules.Add(gridFormatRule7);
+            this.gridView1.FormatRules.Add(gridFormatRule8);
+            this.gridView1.FormatRules.Add(gridFormatRule9);
+            this.gridView1.FormatRules.Add(gridFormatRule10);
             this.gridView1.GridControl = this.gridControl1;
             this.gridView1.LevelIndent = 0;
             this.gridView1.Name = "gridView1";
@@ -562,9 +562,9 @@
             this.repositoryItemSparklineEdit1.EditValueMember = "Current";
             this.repositoryItemSparklineEdit1.Name = "repositoryItemSparklineEdit1";
             this.repositoryItemSparklineEdit1.PointValueMember = "Time";
-            lineSparklineView1.Color = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
-            lineSparklineView1.ScaleFactor = 1F;
-            this.repositoryItemSparklineEdit1.View = lineSparklineView1;
+            lineSparklineView2.Color = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
+            lineSparklineView2.ScaleFactor = 1F;
+            this.repositoryItemSparklineEdit1.View = lineSparklineView2;
             // 
             // ribbonControl1
             // 

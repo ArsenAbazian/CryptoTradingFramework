@@ -21,7 +21,7 @@
     </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -394,20 +394,32 @@
     <Compile Include="TrailingCollectionControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="TrailingCollectionControl.Designer.cs">
-      <DependentUpon>TrailingCollectionControl.cs</DependentUpon>
+    <Compile Include="Strategies\Signal\MacdTrendStrategyConfigControl.Designer.cs">
+      <DependentUpon>MacdTrendStrategyConfigControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="TrailngCollectionForm.cs">
+    <Compile Include="Strategies\Signal\TripleRsiStrategyConfigControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Strategies\Signal\TripleRsiStrategyConfigControl.Designer.cs">
+      <DependentUpon>TripleRsiStrategyConfigControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Strategies\Signal\SignalNotificationConfigControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Strategies\Signal\SignalNotificationConfigControl.Designer.cs">
+      <DependentUpon>SignalNotificationConfigControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Strategies\Signal\SignalNotificationDataForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="TrailngCollectionForm.Designer.cs">
-      <DependentUpon>TrailngCollectionForm.cs</DependentUpon>
+    <Compile Include="Strategies\Signal\SignalNotificationDataForm.Designer.cs">
+      <DependentUpon>SignalNotificationDataForm.cs</DependentUpon>
     </Compile>
     <Compile Include="CombinedBidAskForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="CombinedBidAskForm.Designer.cs">
-      <DependentUpon>CombinedBidAskForm.cs</DependentUpon>
+    <Compile Include="Strategies\Signal\TripleRsiStrategyDataForm.Designer.cs">
+      <DependentUpon>TripleRsiStrategyDataForm.cs</DependentUpon>
     </Compile>
     <Compile Include="CalculatorForm.cs">
       <SubType>Form</SubType>
