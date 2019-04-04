@@ -216,7 +216,7 @@ namespace CryptoMarketClient {
         }
         public BalanceBase MarketBalanceInfo {
             get {
-                if(secondInfo == null)
+                if(secondInfo == null && Exchange.DefaultAccount != null)
                     secondInfo = Exchange.DefaultAccount.Balances.FirstOrDefault((b) => b.Currency == MarketCurrency);
                 return secondInfo;
             }

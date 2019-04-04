@@ -58,6 +58,7 @@ namespace CryptoMarketClient.Strategies {
         }
         
         public override bool InitializeCore() {
+            if(TickerInfo == null) return false;
             Ticker = DataProvider.GetExchange(TickerInfo.Exchange).GetTicker(TickerInfo.Ticker);
             if(Ticker == null)
                 return false;

@@ -700,7 +700,6 @@
     <EmbeddedResource Include="MyTradesCollectionControl.resx">
       <DependentUpon>MyTradesCollectionControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Properties\licenses.licx" />
     <EmbeddedResource Include="ExchangeCollectionControl.resx">
       <DependentUpon>ExchangeCollectionControl.cs</DependentUpon>
     </EmbeddedResource>
