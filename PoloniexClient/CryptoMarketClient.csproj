@@ -340,6 +340,9 @@
     <Compile Include="ArbitrageHistoryForm.Designer.cs">
       <DependentUpon>ArbitrageHistoryForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="CombinedBidAskForm.Designer.cs">
+      <DependentUpon>CombinedBidAskForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="ConnectionForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -394,9 +397,6 @@
     <Compile Include="TrailingCollectionControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Strategies\Signal\MacdTrendStrategyConfigControl.Designer.cs">
-      <DependentUpon>MacdTrendStrategyConfigControl.cs</DependentUpon>
-    </Compile>
     <Compile Include="Strategies\Signal\TripleRsiStrategyConfigControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -417,9 +417,6 @@
     </Compile>
     <Compile Include="CombinedBidAskForm.cs">
       <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Strategies\Signal\TripleRsiStrategyDataForm.Designer.cs">
-      <DependentUpon>TripleRsiStrategyDataForm.cs</DependentUpon>
     </Compile>
     <Compile Include="CalculatorForm.cs">
       <SubType>Form</SubType>
@@ -531,11 +528,20 @@
     <Compile Include="TradeResultControl.Designer.cs">
       <DependentUpon>TradeResultControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="TrailingCollectionControl.Designer.cs">
+      <DependentUpon>TrailingCollectionControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="TrailingSettinsForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="TrailingSettinsForm.Designer.cs">
       <DependentUpon>TrailingSettinsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TrailngCollectionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TrailngCollectionForm.Designer.cs">
+      <DependentUpon>TrailngCollectionForm.cs</DependentUpon>
     </Compile>
     <EmbeddedResource Include="AccounTradesCollectionForm.resx">
       <DependentUpon>AccounTradesCollectionForm.cs</DependentUpon>
@@ -567,7 +573,6 @@
     <EmbeddedResource Include="MyTradesCollectionControl.resx">
       <DependentUpon>MyTradesCollectionControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Properties\licenses.licx" />
     <EmbeddedResource Include="ExchangeCollectionControl.resx">
       <DependentUpon>ExchangeCollectionControl.cs</DependentUpon>
     </EmbeddedResource>
@@ -707,7 +712,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Indicators\" />
-    <Folder Include="Strategies\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
