@@ -444,6 +444,7 @@ namespace CryptoMarketClient.Helpers {
                     }
                     catch(Exception e) {
                         Telemetry.Default.TrackException(e);
+                        throw e;
                     }
                 }
                 return chromium;
@@ -517,6 +518,8 @@ namespace CryptoMarketClient.Helpers {
             ShowForm(Chromium);
         }
         protected virtual void ShowForm(Control browser) {
+            if(browser == null)
+                throw new Exception("Browser == null");
             browser.Dock = DockStyle.Fill;
             Form = new XtraForm();
             Form.StartPosition = FormStartPosition.CenterScreen;
