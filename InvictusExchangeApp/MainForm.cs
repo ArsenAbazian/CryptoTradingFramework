@@ -27,6 +27,7 @@ using DevExpress.XtraGrid;
 using DevExpress.XtraGrid.Columns;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using DevExpress.XtraGrid.Views.Grid;
 
 namespace InvictusExchangeApp {
     public partial class MainForm : XtraForm {
@@ -34,21 +35,61 @@ namespace InvictusExchangeApp {
             InitializeComponent();
             CheckSettings();
             UpdateFormatRules();
+            WiItems = new List<WalletInvestorDataItem>();
+            CpItems = new List<CoinPredictorDataItem>();
+            this.bcFilterMatchedCp.Checked = true;
+            this.bcFilter.Checked = true;
+        }
+
+        protected void ClearCustomFormatRules(GridView view) {
+            GridFormatRule[] rules = new GridFormatRule[view.FormatRules.Count];
+            view.FormatRules.CopyTo(rules, 0);
+            foreach(GridFormatRule rule in rules) {
+                if(rule.Tag != null)
+                    view.FormatRules.Remove(rule);
+            }
         }
 
         protected virtual void UpdateFormatRules() {
-            GridFormatRule[] rules = new GridFormatRule[this.gridView1.FormatRules.Count];
-            this.gridView1.FormatRules.CopyTo(rules, 0);
-            foreach(GridFormatRule rule in rules) {
-                if(rule.Tag != null)
-                    this.gridView1.FormatRules.Remove(rule);
-            }
+            ClearCustomFormatRules(this.gridView1);
+            ClearCustomFormatRules(this.gridView2);
+            ClearCustomFormatRules(this.gridView3);
+
             this.gridView1.FormatRules.Add(CreateRule(this.colForecast7Day, Settings.Min7DaysChange, true));
             this.gridView1.FormatRules.Add(CreateRule(this.colForecast14Day, Settings.Min14DayChange, true));
             this.gridView1.FormatRules.Add(CreateRule(this.colForecast3Month, Settings.Min3MonthChange, true));
             this.gridView1.FormatRules.Add(CreateRule(this.colForecast7Day, Settings.Min7DaysChange, false));
             this.gridView1.FormatRules.Add(CreateRule(this.colForecast14Day, Settings.Min14DayChange, false));
             this.gridView1.FormatRules.Add(CreateRule(this.colForecast3Month, Settings.Min3MonthChange, false));
+
+            this.gridView2.FormatRules.Add(CreateRule(this.colForecast1Day, Settings.MinCp24HourChange, true));
+            this.gridView2.FormatRules.Add(CreateRule(this.colForecast7Day1, Settings.MinCp7DayChange, true));
+            this.gridView2.FormatRules.Add(CreateRule(this.colForecast4Week, Settings.MinCp4WeekChange, true));
+            this.gridView2.FormatRules.Add(CreateRule(this.colForecast3Month1, Settings.MinCp3MonthChange, true));
+
+            this.gridView2.FormatRules.Add(CreateRule(this.colForecast1Day, Settings.MinCp24HourChange, false));
+            this.gridView2.FormatRules.Add(CreateRule(this.colForecast7Day1, Settings.MinCp7DayChange, false));
+            this.gridView2.FormatRules.Add(CreateRule(this.colForecast4Week, Settings.MinCp4WeekChange, false));
+            this.gridView2.FormatRules.Add(CreateRule(this.colForecast3Month1, Settings.MinCp3MonthChange, false));
+
+
+            this.gridView3.FormatRules.Add(CreateRule(this.colWi7Day, Settings.Min7DaysChange, true));
+            this.gridView3.FormatRules.Add(CreateRule(this.colWi14Day, Settings.Min14DayChange, true));
+            this.gridView3.FormatRules.Add(CreateRule(this.colWi3Month, Settings.Min3MonthChange, true));
+
+            this.gridView3.FormatRules.Add(CreateRule(this.colWi7Day, Settings.Min7DaysChange, false));
+            this.gridView3.FormatRules.Add(CreateRule(this.colWi14Day, Settings.Min14DayChange, false));
+            this.gridView3.FormatRules.Add(CreateRule(this.colWi3Month, Settings.Min3MonthChange, false));
+
+            this.gridView3.FormatRules.Add(CreateRule(this.colCp1Day, Settings.MinCp24HourChange, true));
+            this.gridView3.FormatRules.Add(CreateRule(this.colCp7Day, Settings.MinCp7DayChange, true));
+            this.gridView3.FormatRules.Add(CreateRule(this.colCp4Week, Settings.MinCp4WeekChange, true));
+            this.gridView3.FormatRules.Add(CreateRule(this.colCp3Month, Settings.MinCp3MonthChange, true));
+
+            this.gridView3.FormatRules.Add(CreateRule(this.colCp1Day, Settings.MinCp24HourChange, false));
+            this.gridView3.FormatRules.Add(CreateRule(this.colCp7Day, Settings.MinCp7DayChange, false));
+            this.gridView3.FormatRules.Add(CreateRule(this.colCp4Week, Settings.MinCp4WeekChange, false));
+            this.gridView3.FormatRules.Add(CreateRule(this.colCp3Month, Settings.MinCp3MonthChange, false));
         }
 
         private GridFormatRule CreateRule(GridColumn column, double value, bool greater) {
@@ -92,12 +133,15 @@ namespace InvictusExchangeApp {
         }
 
         private void biRefresh_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
-            DownloadData();
-            if(Stop)
+            if(DownloadingWalletInvestor)
                 return;
-            DownloadForecast();
-            //DownloadForecstCp();
-            this.gridView1.RefreshData();
+            try {
+                DownloadingWalletInvestor = true;
+                DownloadWalletInvestorForecast();
+            }
+            finally {
+                DownloadingWalletInvestor = false;
+            }
         }
 
         public string CorrectString(string str) {
@@ -105,12 +149,149 @@ namespace InvictusExchangeApp {
         }
 
         bool Stop { get; set; }
+        bool DownloadingWalletInvestor { get; set; }
+        bool DownloadingCoinPredictor { get; set; }
+        private void DownloadWalletInvestorForecast() {
+            var handle = SplashScreenManager.ShowOverlayForm(this.gridControl);
+
+            this.siStatus.Caption = "<b>Connect Binance</b>";
+            Application.DoEvents();
+            if(!BinanceExchange.Default.Connect()) {
+                XtraMessageBox.Show("Failed connect Binance");
+                this.siStatus.Caption = "<b>Failed connect Binance</b>";
+                SplashScreenManager.CloseOverlayForm(handle);
+            }
+            Stop = false;
+
+            this.siStatus.Caption = "<b>Autorizing on walletinvestor.com</b>";
+            Application.DoEvents();
+
+            WalletInvestorPortalHelper helper = new WalletInvestorPortalHelper();
+            helper.Enter(InvictusSettings.Default.Login, InvictusSettings.Default.Password);
+            if(!Registered && !helper.WaitUntil(30000, () => helper.State == PortalState.AutorizationDone)) {
+                XtraMessageBox.Show("Error autorizing on walletinvestor.com");
+                this.siStatus.Caption = "<b>Error autorizing on walletinvestor.com</b>";
+                SplashScreenManager.CloseOverlayForm(handle);
+                helper.Dispose();
+                return;
+            }
+
+            Registered = true;
+
+            List<WalletInvestorDataItem> list = new List<WalletInvestorDataItem>();
+            WiItems = list;
+            
+            double percent = Settings.Min24HourChange;
+            for(int i = 1; i < 1000; i++) {
+                if(Stop)
+                    break;
+                this.siStatus.Caption = "<b>Downloading page " + i + "</b>";
+                Application.DoEvents();
+                WebClient wc = new WebClient();
+                byte[] data = wc.DownloadData(string.Format("https://walletinvestor.com/forecast?sort=-forecast_percent_change_14d&page={0}&per-page=100", i));
+                if(data == null || data.Length == 0) {
+                    XtraMessageBox.Show("Error downloading page from walletinvestor.com");
+                    this.siStatus.Caption = "<b>Error downloading page from walletinvestor.com</b>";
+                    SplashScreenManager.CloseOverlayForm(handle);
+                    helper.Dispose();
+                    return;
+                }
+
+                HtmlAgilityPack.HtmlDocument doc = new HtmlAgilityPack.HtmlDocument();
+                doc.Load(new MemoryStream(data));
+
+                HtmlNode node = doc.DocumentNode.Descendants().FirstOrDefault(n => n.GetAttributeValue("class", "") == "currency-desktop-table kv-grid-table table table-hover table-bordered table-striped table-condensed");
+                if(node == null) {
+                    XtraMessageBox.Show("It seems that walletinvestor forecast page layout is changed. Please contact developer");
+                    SplashScreenManager.CloseOverlayForm(handle);
+                    helper.Dispose();
+                    this.siStatus.Caption = "<b>Error!</b>";
+                    return;
+                }
+
+                HtmlNode body = node.Element("tbody");
+                List<HtmlNode> rows = body.Descendants().Where(n => n.GetAttributeValue("data-key", "") != "").ToList();
+                bool finished = false;
+                foreach(HtmlNode row in rows) {
+                    HtmlNode name = row.Descendants().FirstOrDefault(n => n.GetAttributeValue("data-col-seq", "") == "0");
+                    try {
+                        string nameText = name.Descendants().FirstOrDefault(n => n.GetAttributeValue("class", "") == "detail").InnerText.Trim();
+                        WalletInvestorDataItem item = new WalletInvestorDataItem();
+
+                        item.Name = nameText;
+                        Ticker ticker = BinanceExchange.Default.Tickers.FirstOrDefault(t => t.MarketCurrency == item.Name && t.BaseCurrency == "BTC");
+
+                        HtmlNode forecast14 = row.Descendants().FirstOrDefault(n => n.GetAttributeValue("data-col-seq", "") == "1");
+                        item.Forecast14Day = Convert.ToDouble(CorrectString(forecast14.Element("a").InnerText));
+
+                        if(item.Forecast14Day < Settings.Min14DayChange) {
+                            finished = true;
+                            break;
+                        }
+                        if(ticker == null)
+                            continue;
+
+                        item.BinanceLink = ticker.WebPageAddress;
+                        HtmlNode forecast3Month = row.Descendants().FirstOrDefault(n => n.GetAttributeValue("data-col-seq", "") == "2");
+                        item.Forecast3Month = Convert.ToDouble(CorrectString(forecast3Month.Element("a").InnerText));
+
+                        item.ForecastLink = name.Element("a").GetAttributeValue("href", "");
+                        item.ForecastLink2 = string.Format("https://walletinvestor.com/forecast?currency={0}", item.Name); name.Element("a").GetAttributeValue("href", "");
+
+                        list.Add(item);
+                    }
+                    catch(Exception) {
+                        XtraMessageBox.Show("An error was detected when parsing page. Please contact developer");
+                        SplashScreenManager.CloseOverlayForm(handle);
+                        this.siStatus.Caption = "<b>Error!</b>";
+                        continue;
+                    }
+                }
+                this.gridView1.RefreshData();
+                Application.DoEvents();
+                if(finished)
+                    break;
+            }
+
+            this.siStatus.Caption = "<b>Downloading 7-day forecast</b>";
+            this.beProgress.EditValue = 0;
+            this.beProgress.Visibility = DevExpress.XtraBars.BarItemVisibility.Always;
+            Application.DoEvents();
+            int itemIndex = 0;
+            foreach(WalletInvestorDataItem item in WiItems) {
+                if(!Get7DayForecastFor(item, item.ForecastLink, helper)) {
+                    XtraMessageBox.Show("Error parsing 7-day forecast page. Please contact developer");
+                    this.siStatus.Caption = "<b>Error!</b>";
+                    helper.Dispose();
+                    this.gridView1.RefreshData();
+                    SplashScreenManager.CloseOverlayForm(handle);
+                    return;
+                }
+
+                item.Match = item.Forecast7Day >= Settings.Min7DaysChange &&
+                    item.Forecast14Day >= Settings.Min14DayChange &&
+                    item.Forecast3Month >= Settings.Min3MonthChange;
+                this.beProgress.EditValue = (int)((double)itemIndex / WiItems.Count * 100);
+                itemIndex++;
+                Application.DoEvents();
+                if(Stop)
+                    break;
+            }
+            this.beProgress.Visibility = DevExpress.XtraBars.BarItemVisibility.Never;
+
+            this.siStatus.Caption = Stop? "<b>Interrupted<b>": "<b>Done<b>";
+            this.gridView1.RefreshData();
+            helper.Dispose();
+            SplashScreenManager.CloseOverlayForm(handle);
+            UpdateCombined();
+            XtraMessageBox.Show(string.Format("Found {0} items matched criteria", WiItems.Count(i => i.Match)));
+        }
         private void DownloadData() {
             BinanceExchange.Default.Connect();
 
             Stop = false;
             List<WalletInvestorDataItem> list = new List<WalletInvestorDataItem>();
-            Items = list;
+            WiItems = list;
             var handle = SplashScreenManager.ShowOverlayForm(this.gridControl);
             double percent = Settings.Min24HourChange;
             for(int i = 1; i < 1000; i++) {
@@ -133,14 +314,15 @@ namespace InvictusExchangeApp {
                 bool finished = false;
                 foreach(HtmlNode row in rows) {
                     HtmlNode change24 = row.Descendants().FirstOrDefault(n => n.GetAttributeValue("data-col-seq", "") == "4");
+                    HtmlNode name = row.Descendants().FirstOrDefault(n => n.GetAttributeValue("data-col-seq", "") == "2");
+
                     string changeString = CorrectString(change24.InnerText);
                     double change = Convert.ToDouble(CorrectString(changeString));
                     if(change < Settings.Min24HourChange) {
                         finished = true;
                         break;
                     }
-
-                    HtmlNode name = row.Descendants().FirstOrDefault(n => n.GetAttributeValue("data-col-seq", "") == "2");
+                    
                     HtmlNode prices = row.Descendants().FirstOrDefault(n => n.GetAttributeValue("data-col-seq", "") == "3");
                     HtmlNode volume24 = row.Descendants().FirstOrDefault(n => n.GetAttributeValue("data-col-seq", "") == "5");
                     HtmlNode marketCap = row.Descendants().FirstOrDefault(n => n.GetAttributeValue("data-col-seq", "") == "7");
@@ -151,12 +333,14 @@ namespace InvictusExchangeApp {
                         if(nameDetail == null)
                             continue;
                         item.Name = nameDetail.InnerText.Trim();
+                        item.ListedOnBinance = BinanceExchange.Default.Tickers.FirstOrDefault(t => t.MarketCurrency == item.Name) != null;
+                        if(!item.ListedOnBinance)
+                            continue;
                         item.LastPrice = Convert.ToDouble(CorrectString(prices.Element("a").InnerText));
                         item.Rise = change24.Element("a").GetAttributeValue("class", "") != "red";
                         item.Change24 = change;
                         item.Volume = volume24.InnerText.Trim();
                         item.MarketCap = marketCap.Element("a").InnerText.Trim();
-                        item.ListedOnBinance = BinanceExchange.Default.Tickers.FirstOrDefault(t => t.MarketCurrency == item.Name) != null;
                         list.Add(item);
                     }
                     catch(Exception) {
@@ -175,7 +359,11 @@ namespace InvictusExchangeApp {
             SplashScreenManager.CloseOverlayForm(handle);
         }
 
-        protected virtual void DownloadForecstCp() {
+        protected virtual void DownloadCoinPredictorForecast() {
+            this.siStatus.Caption = "<b>Connecting Binance</b>";
+            Application.DoEvents();
+            BinanceExchange.Default.Connect();
+
             Stop = false;
             var handle = SplashScreenManager.ShowOverlayForm(this.gridControl);
             double percent = Settings.Min24HourChange;
@@ -185,25 +373,94 @@ namespace InvictusExchangeApp {
             WebClient wc = new WebClient();
 
             string text = wc.DownloadString(adress);
-            JObject obj = (JObject)JsonConvert.DeserializeObject(text);
-            JArray list = obj.Value<JArray>("list");
-            foreach(JObject item in list) {
-                string name = item.Value<string>("ticker");
-                WalletInvestorDataItem wi = Items.FirstOrDefault(i => i.Name == name);
-                if(wi == null)
-                    continue;
-                
-                double day7 = item.Value<double>("dayFormattedFirst");
-                double day1 = item.Value<double>("dayFormatted");
-                double week4 = item.Value<double>("weekFormatted");
-                double month = item.Value<double>("monthFormatted");
-
-                wi.CpForecast1Day = day1;
-                wi.CpForecast7Day = day7;
-                wi.CpForecast4Week = week4;
-                wi.CpForecast3Month = month;
+            if(string.IsNullOrEmpty(text)) {
+                SplashScreenManager.CloseOverlayForm(handle);
+                XtraMessageBox.Show("Error downloading data from coinpredictor.io. Please contact developer");
+                this.siStatus.Caption = "<b>Error downloading data from coinpredictor.io</b>";
+                SplashScreenManager.CloseOverlayForm(handle);
+                return;
             }
+
+            JObject obj = (JObject)JsonConvert.DeserializeObject(text);
+            if(obj == null) {
+                SplashScreenManager.CloseOverlayForm(handle);
+                XtraMessageBox.Show("Error deserializing data from coinpredictor.io. Please contact developer");
+                this.siStatus.Caption = "<b>Error deserializing data from coinpredictor.io</b>";
+                SplashScreenManager.CloseOverlayForm(handle);
+                return;
+            }
+
+            JArray list = obj.Value<JArray>("list");
+            if(list == null) {
+                SplashScreenManager.CloseOverlayForm(handle);
+                XtraMessageBox.Show("Error deserializing data from coinpredictor.io. Please contact developer");
+                this.siStatus.Caption = "<b>Error deserializing data from coinpredictor.io</b>";
+                SplashScreenManager.CloseOverlayForm(handle);
+                return;
+            }
+            this.siStatus.Caption = string.Format("<b>Parsing data (total {0})</b>", list.Count);
+            Application.DoEvents();
+
+            this.beProgress.EditValue = 0;
+            this.beProgress.Visibility = DevExpress.XtraBars.BarItemVisibility.Always;
+            int index = 0;
+            List<CoinPredictorDataItem> cplist = new List<CoinPredictorDataItem>();
+            CpItems = cplist;
+            foreach(JObject item in list) {
+                if(Stop)
+                    break;
+                string name = item.Value<string>("ticker");
+                Ticker ticker = BinanceExchange.Default.Tickers.FirstOrDefault(t => t.MarketCurrency == name && t.BaseCurrency == "BTC");
+                if(ticker == null)
+                    continue;
+                string slug = item.Value<string>("slug");
+
+                CoinPredictorDataItem cp = new CoinPredictorDataItem();
+                cp.Name = name;
+                cp.BinanceLink = ticker.WebPageAddress;
+                cp.ForecastLink = string.Format("https://coinpredictor.io/{0}#price", slug.ToLower());
+
+                double day7 = GetDoubleProperty(item, "dayFormatted", 0);
+                double day1 = GetDoubleProperty(item, "dayFormattedFirst", 0);
+                double week4 = GetDoubleProperty(item, "weekFormatted", 0);
+                double month = GetDoubleProperty(item, "monthFormatted", 0);
+                double price = GetDoubleProperty(item, "priceFormatted", 0);
+
+                cp.LastPrice = price;
+                cp.Forecast1Day = day1;
+                cp.Forecast7Day = day7;
+                cp.Forecast4Week = week4;
+                cp.Forecast3Month = month;
+                cp.ListedOnBinance = BinanceExchange.Default.GetTicker(cp.Name) != null;
+                cp.Match = 
+                    cp.Forecast1Day >= Settings.MinCp24HourChange &&
+                    cp.Forecast7Day >= Settings.MinCp7DayChange &&
+                    cp.Forecast4Week >= Settings.MinCp4WeekChange && 
+                    cp.Forecast3Month >= Settings.MinCp3MonthChange;
+
+                cplist.Add(cp);
+
+                int progress = index * 100 / list.Count;
+                if(((int)this.beProgress.EditValue) != progress) {
+                    this.beProgress.EditValue = progress;
+                    this.gridView2.RefreshData();
+                    Application.DoEvents();
+                }
+                index++;
+            }
+            this.beProgress.Visibility = DevExpress.XtraBars.BarItemVisibility.Never;
+            this.siStatus.Caption = Stop? "<b>Interrupted</b>": "<b>Done</b>";
+            this.gridView2.RefreshData();
             SplashScreenManager.CloseOverlayForm(handle);
+            UpdateCombined();
+            XtraMessageBox.Show(string.Format("Found {0} items matched criteria", CpItems.Count(i => i.Match)));
+        }
+
+        protected double GetDoubleProperty(JObject obj, string propertyName, double defaultValue) {
+            JToken token = null;
+            if(!obj.TryGetValue(propertyName, out token))
+                return defaultValue;
+            return token.Type == JTokenType.Null? defaultValue: token.Value<double>();
         }
 
         protected virtual bool GetForecastFor(WalletInvestorDataItem item, WalletInvestorPortalHelper helper) {
@@ -236,7 +493,7 @@ namespace InvictusExchangeApp {
                     item.Forecast3Month = Convert.ToDouble(CorrectString(forecast3Month.Element("a").InnerText));
                     if(item.Forecast14Day < Settings.Min14DayChange ||
                         item.Forecast3Month < Settings.Min3MonthChange)
-                        continue;
+                        return true;
 
                     Get7DayForecastFor(item, name.Element("a").GetAttributeValue("href", ""), helper);
                     return true;
@@ -253,6 +510,7 @@ namespace InvictusExchangeApp {
             helper.Chromium.Load(address);
             if(!helper.WaitUntil(5000, () => helper.State == PortalState.PageLoaded))
                 return false;
+            item.ForecastLink = address;
 
             string text = helper.GetElementByIdContent("seven-day-forecast-desc");
             if(text == "Get It Now!") {
@@ -269,10 +527,16 @@ namespace InvictusExchangeApp {
                 helper.Wait(2000);
             }
             try {
-                text = helper.GetElementByIdContent("seven-day-forecast-desc");
+                
+                text = helper.GetElementByClassNameContent("number");
                 string[] items = text.Split(' ');
+                item.LastPrice = Convert.ToDouble(RemoveGlyph(items[0]));
+
+                text = helper.GetElementByIdContent("seven-day-forecast-desc");
+                items = text.Split(' ');
                 if(items.Length != 2)
                     return false;
+
                 item.Forecast7Day = (Convert.ToDouble(items[0].Trim()) - item.LastPrice) / item.LastPrice * 100;
             }
             catch(Exception) {
@@ -281,11 +545,17 @@ namespace InvictusExchangeApp {
             return true;
         }
 
+        protected string RemoveGlyph(string v) {
+            if(!char.IsDigit(v[0]) && !char.IsSeparator(v[0]))
+                return v.Substring(1);
+            return v;
+        }
+
         private void barButtonItem1_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
             Stop = true;
         }
 
-        protected List<WalletInvestorDataItem> Items {
+        protected List<WalletInvestorDataItem> WiItems {
             get {
                 if(this.walletInvestorDataItemBindingSource.DataSource is List<WalletInvestorDataItem>)
                     return (List<WalletInvestorDataItem>)this.walletInvestorDataItemBindingSource.DataSource;
@@ -293,6 +563,16 @@ namespace InvictusExchangeApp {
             }
             set {
                 this.walletInvestorDataItemBindingSource.DataSource = value;
+            }
+        }
+        protected List<CoinPredictorDataItem> CpItems {
+            get {
+                if(this.coinPredictorDataItemBindingSource.DataSource is List<CoinPredictorDataItem>)
+                    return (List<CoinPredictorDataItem>)this.coinPredictorDataItemBindingSource.DataSource;
+                return null;
+            }
+            set {
+                this.coinPredictorDataItemBindingSource.DataSource = value;
             }
         }
 
@@ -328,7 +608,7 @@ namespace InvictusExchangeApp {
                     try {
                         HtmlNode nameDetail = name.Descendants().FirstOrDefault(n => n.GetAttributeValue("class", "") == "detail");
                         string nameString = nameDetail.InnerText.Trim();
-                        WalletInvestorDataItem item = Items.FirstOrDefault(it => it.Name == nameString);
+                        WalletInvestorDataItem item = WiItems.FirstOrDefault(it => it.Name == nameString);
                         if(item == null)
                             continue;
                         item.Forecast14Day = change;
@@ -357,40 +637,7 @@ namespace InvictusExchangeApp {
         }
         protected bool Registered { get; set; }
         private void biForecast_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
-            DownloadForecast();
-        }
-        void DownloadForecast() {
-            Stop = false;
-
-            this.siStatus.Caption = "<b>Autorizing on walletinvestor.com</b>";
-            GetForecasts();
-
-            WalletInvestorPortalHelper helper = new WalletInvestorPortalHelper();
-            helper.Enter(InvictusSettings.Default.Login, InvictusSettings.Default.Password);
-            if(!Registered && !helper.WaitUntil(30000, () => helper.State == PortalState.AutorizationDone)) {
-                XtraMessageBox.Show("Error autorizing on walletinvestor.com");
-                return;
-            }
-            Registered = true;
-
-            foreach(WalletInvestorDataItem item in Items) {
-                this.siStatus.Caption = "<b>Update forecast for " + item.Name + "</b>";
-                if(item.Forecast14Day < Settings.Min14DayChange || item.Forecast3Month < Settings.Min3MonthChange) {
-                    item.Match = false;
-                    continue;
-                }
-                GetForecastFor(item, helper);
-                item.Match = item.Forecast7Day >= Settings.Min7DaysChange;
-                this.gridView1.RefreshRow(this.gridView1.GetRowHandle(Items.IndexOf(item)));
-                Application.DoEvents();
-                if(Stop)
-                    break;
-            }
-            helper.Dispose();
-            if(Stop)
-                this.siStatus.Caption = "<b>Interrupted</b>";
-            else
-                this.siStatus.Caption = "<b>Done</b>";
+            //DownloadWalletInvestorForecast();
         }
 
         void ShowSettingsForm() {
@@ -411,11 +658,11 @@ namespace InvictusExchangeApp {
         }
 
         private void gridView1_CustomScrollAnnotation(object sender, DevExpress.XtraGrid.Views.Grid.GridCustomScrollAnnotationsEventArgs e) {
-            if(Items == null)
+            if(WiItems == null)
                 return;
             e.Annotations = new List<DevExpress.XtraGrid.Views.Grid.GridScrollAnnotationInfo>();
             int index = 0;
-            foreach(var item in Items) {
+            foreach(var item in WiItems) {
                 if(item.Match)
                     e.Annotations.Add(new DevExpress.XtraGrid.Views.Grid.GridScrollAnnotationInfo() { Color = Color.LightGreen, Index = index, RowHandle = this.gridView1.GetRowHandle(index) });
                 index++;
@@ -429,5 +676,151 @@ namespace InvictusExchangeApp {
             else
                 this.gridView1.ActiveFilterCriteria = null;
         }
+
+        private void gridView2_CustomScrollAnnotation(object sender, DevExpress.XtraGrid.Views.Grid.GridCustomScrollAnnotationsEventArgs e) {
+            if(CpItems == null)
+                return;
+            e.Annotations = new List<DevExpress.XtraGrid.Views.Grid.GridScrollAnnotationInfo>();
+            int index = 0;
+            foreach(var item in CpItems) {
+                if(item.Match)
+                    e.Annotations.Add(new DevExpress.XtraGrid.Views.Grid.GridScrollAnnotationInfo() { Color = Color.LightGreen, Index = index, RowHandle = this.gridView1.GetRowHandle(index) });
+                index++;
+            }
+        }
+
+        private void biRefreshCp_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
+            if(DownloadingCoinPredictor)
+                return;
+            try {
+                DownloadingCoinPredictor = true;
+                DownloadCoinPredictorForecast();
+            }
+            finally {
+                DownloadingCoinPredictor = false;
+            }
+        }
+
+        private void bcFilterMatchedCp_CheckedChanged(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
+            if(this.bcFilterMatchedCp.Checked) {
+                this.gridView2.ActiveFilterCriteria = new BinaryOperator("Match", true);
+            }
+            else
+                this.gridView2.ActiveFilterCriteria = null;
+        }
+
+        private void bcMode_CheckedChanged(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
+            if(this.bcMode.Checked)
+                this.bcMode.Caption = "Mode = Union (Match One Of)";
+            else
+                this.bcMode.Caption = "Mode = Cross (Match Both)";
+            UpdateCombined();
+        }
+
+        protected virtual void UpdateCombined() {
+            bool union = this.bcMode.Checked;
+            List<WalletInvestorDataItem> wi = WiItems.Where(i => i.Match).ToList();
+            List<CoinPredictorDataItem> cp = CpItems.Where(i => i.Match).ToList();
+
+            List<string> names = new List<string>();
+            foreach(WalletInvestorDataItem item in wi) {
+                if(union || cp.FirstOrDefault(i => i.Name == item.Name) != null)
+                    names.Add(item.Name);
+            }
+            foreach(CoinPredictorDataItem item in cp) {
+                if(names.Contains(item.Name))
+                    continue;
+                if(union || wi.FirstOrDefault(i => i.Name == item.Name) != null)
+                    names.Add(item.Name);
+            }
+
+            List<CombinedData> res = new List<CombinedData>();
+            foreach(string name in names) {
+                CombinedData data = new CombinedData();
+                WalletInvestorDataItem w = wi.FirstOrDefault(i => i.Name == name);
+                CoinPredictorDataItem c = cp.FirstOrDefault(i => i.Name == name);
+
+                string nameItem = w == null ? c.Name : w.Name;
+                data.Name = nameItem;
+                if(w != null) {
+                    data.Wi7Day = w.Forecast7Day;
+                    data.Wi14Day = w.Forecast14Day;
+                    data.Wi3Month = w.Forecast3Month;
+                    data.WiMatch = w.Match;
+                }
+
+                if(c != null) {
+                    data.Cp1Day = c.Forecast1Day;
+                    data.Cp7Day = c.Forecast7Day;
+                    data.Cp4Week = c.Forecast4Week;
+                    data.CpMatch = c.Match;
+                }
+
+                if(union)
+                    data.Match = data.WiMatch | data.CpMatch;
+                else
+                    data.Match = data.WiMatch & data.CpMatch;
+                res.Add(data);
+            }
+            this.combinedDataBindingSource.DataSource = res;
+        }
+
+        private void barButtonItem2_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
+            WalletInvestorDataItem item = this.gridView1.GetFocusedRow() as WalletInvestorDataItem;
+            if(item == null) {
+                XtraMessageBox.Show("Row not selected.");
+                return;
+            }
+            System.Diagnostics.Process.Start(item.BinanceLink);
+        }
+
+        private void biCpShowBinance_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
+            CoinPredictorDataItem item = this.gridView2.GetFocusedRow() as CoinPredictorDataItem;
+            if(item == null) {
+                XtraMessageBox.Show("Row not selected.");
+                return;
+            }
+            System.Diagnostics.Process.Start(item.BinanceLink);
+        }
+
+        private void biOpenWiForecast_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
+            WalletInvestorDataItem item = this.gridView1.GetFocusedRow() as WalletInvestorDataItem;
+            if(item == null) {
+                XtraMessageBox.Show("Row not selected.");
+                return;
+            }
+            System.Diagnostics.Process.Start(item.ForecastLink2);
+        }
+
+        private void biCpOpenForecast_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
+            CoinPredictorDataItem item = this.gridView2.GetFocusedRow() as CoinPredictorDataItem;
+            if(item == null) {
+                XtraMessageBox.Show("Row not selected.");
+                return;
+            }
+            System.Diagnostics.Process.Start(item.ForecastLink);
+        }
+    }
+
+    public class CombinedData {
+        public string Name { get; set; }
+        [DisplayName("Wi-7day")]
+        public double Wi7Day { get; set; }
+        [DisplayName("Wi-14day")]
+        public double Wi14Day { get; set; }
+        [DisplayName("Wi-3month")]
+        public double Wi3Month { get; set; }
+        public bool WiMatch { get; set; }
+        [DisplayName("Cp-1day")]
+        public double Cp1Day { get; set; }
+        [DisplayName("Cp-7day")]
+        public double Cp7Day { get; set; }
+        [DisplayName("Cp-4week")]
+        public double Cp4Week { get; set; }
+        [DisplayName("Cp-3month")]
+        public double Cp3Month { get; set; }
+
+        public bool CpMatch { get; set; }
+        public bool Match { get; set; }
     }
 }

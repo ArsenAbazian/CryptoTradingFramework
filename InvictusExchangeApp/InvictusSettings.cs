@@ -50,6 +50,9 @@ namespace InvictusExchangeApp {
             this.Min7DaysChange = s.Min7DaysChange;
             this.Min14DayChange = s.Min14DayChange;
             this.Min3MonthChange = s.Min3MonthChange;
+            this.MinCp24HourChange = s.MinCp24HourChange;
+            this.MinCp4WeekChange = s.MinCp4WeekChange;
+            this.MinCp7DayChange = s.MinCp7DayChange;
             this.Login = s.Login;
             this.Password = s.Password;
         }
@@ -96,6 +99,11 @@ namespace InvictusExchangeApp {
         public double Min7DaysChange { get; set; } = 10;
         public double Min14DayChange { get; set; } = 20;
         public double Min3MonthChange { get; set; } = 50;
+
+        public double MinCp24HourChange { get; set; } = 5;
+        public double MinCp7DayChange { get; set; } = 10;
+        public double MinCp4WeekChange { get; set; } = 30;
+        public double MinCp3MonthChange { get; set; } = 50;
 
         public static InvictusSettings FromFile(string fileName) {
             InvictusSettings res = (InvictusSettings)SerializationHelper.FromFile(fileName, typeof(InvictusSettings));

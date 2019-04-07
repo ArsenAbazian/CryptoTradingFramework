@@ -29,5 +29,9 @@ namespace InvictusExchangeApp {
         private void OnSettingsChanged() {
             this.invictusSettingsBindingSource.DataSource = Settings;
         }
+
+        private void spinEdit4_EditValueChanged(object sender, EventArgs e) {
+
+        }
     }
 }

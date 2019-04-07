@@ -125,6 +125,17 @@ namespace CryptoMarketClient.Helpers {
             return true;
         }
 
+        public string GetElementByClassNameContent(string className) {
+            return (string)Chromium.EvaluateScriptAsync(
+                "(function() { " +
+                "    var input = document.getElementsByClassName('" + className + "');" +
+                "    if(input != null && input.length > 0) {" +
+                "        return input[0].innerText;" +
+                "    }" +
+                "    return null;" +
+                "})();").Result.Result;
+        }
+
         public string GetElementByIdContent(string id) {
             return (string)Chromium.EvaluateScriptAsync(
                 "(function() { " +

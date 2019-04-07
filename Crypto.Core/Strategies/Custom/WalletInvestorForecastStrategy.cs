@@ -286,6 +286,31 @@ namespace Crypto.Core.Strategies {
     }
 
     [Serializable]
+    public class CoinPredictorDataItem {
+        public string Name { get; set; }
+        public double LastPrice { get; set; }
+
+        [DisplayName("1 Day Forecast (CP)")]
+        public double Forecast1Day { get; set; }
+
+        [DisplayName("7 Day Forecast (CP)")]
+        public double Forecast7Day { get; set; }
+
+        [DisplayName("4 Week Forecast (CP)")]
+        public double Forecast4Week { get; set; }
+
+        [DisplayName("3 Month Forecast (CP)")]
+        public double Forecast3Month { get; set; }
+
+        public bool Match { get; set; }
+        [DisplayName("Listed on Binance")]
+        public bool ListedOnBinance { get; set; }
+
+        public string BinanceLink { get; set; }
+        public string ForecastLink { get; set; }
+    }
+
+    [Serializable]
     public class WalletInvestorDataItem {
         public string Name { get; set; }
         public double LastPrice { get; set; }
@@ -293,6 +318,9 @@ namespace Crypto.Core.Strategies {
         public bool Rise { get; set; }
         public string Volume { get; set; }
         public string MarketCap { get; set; }
+        public string ForecastLink { get; set; }
+        public string ForecastLink2 { get; set; }
+        public string BinanceLink { get; set; }
 
         public bool Match { get; set; }
 
@@ -311,18 +339,6 @@ namespace Crypto.Core.Strategies {
 
         [DisplayName("3 Month Forecast")]
         public double Forecast3Month { get; set; }
-
-        [DisplayName("1 Day Forecast (CP)")]
-        public double CpForecast1Day { get; set; }
-
-        [DisplayName("7 Day Forecast (CP)")]
-        public double CpForecast7Day { get; set; }
-
-        [DisplayName("4 Week Forecast (CP)")]
-        public double CpForecast4Week { get; set; }
-
-        [DisplayName("3 Month Forecast (CP)")]
-        public double CpForecast3Month { get; set; }
     }
 
     public interface IWalletInvestorForecastProvider {
