@@ -32,15 +32,16 @@ namespace CryptoMarketClient.Exchanges.Bittrex {
 
             List<OrderBookEntry> entries = orderBook.Asks;
             List<OrderBookEntry> entriesInverted = orderBook.AsksInverted;
-            foreach(JObject item in jasks) {
+            for(int i = 0; i < jasks.Count; i++) {
+                JObject item = (JObject) jasks[i];
                 entries.Add(new OrderBookEntry() { ValueString = item.Value<string>("R"), AmountString = item.Value<string>("Q") });
                 entriesInverted.Insert(0, new OrderBookEntry() { ValueString = item.Value<string>("R"), AmountString = item.Value<string>("Q") });
             }
-
             entries = orderBook.Bids;
-            foreach(JObject item in jbids)
+            for(int i = 0; i < jbids.Count; i++) {
+                JObject item = (JObject) jbids[i];
                 entries.Add(new OrderBookEntry() { ValueString = item.Value<string>("R"), AmountString = item.Value<string>("Q") });
-
+            }
             orderBook.UpdateEntries();
             orderBook.RaiseOnChanged(new IncrementalUpdateInfo());
 

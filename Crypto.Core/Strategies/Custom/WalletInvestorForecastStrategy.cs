@@ -190,13 +190,13 @@ namespace Crypto.Core.Strategies {
                 if(rows.Count == 0)
                     break;
                 bool finished = false;
-                foreach(HtmlNode row in rows) {
+                for(int ni = 0; ni < rows.Count; ni++) {
+                    HtmlNode row = rows[ni];
                     HtmlNode name = row.Descendants().FirstOrDefault(n => n.GetAttributeValue("data-col-seq", "") == "2");
                     HtmlNode prices = row.Descendants().FirstOrDefault(n => n.GetAttributeValue("data-col-seq", "") == "3");
                     HtmlNode change24 = row.Descendants().FirstOrDefault(n => n.GetAttributeValue("data-col-seq", "") == "4");
                     HtmlNode volume24 = row.Descendants().FirstOrDefault(n => n.GetAttributeValue("data-col-seq", "") == "5");
                     HtmlNode marketCap = row.Descendants().FirstOrDefault(n => n.GetAttributeValue("data-col-seq", "") == "7");
-
                     try {
                         WalletInvestorDataItem item = new WalletInvestorDataItem();
                         item.Name = name.Descendants().FirstOrDefault(n => n.GetAttributeValue("class", "") == "detail").InnerText.Trim();
@@ -213,10 +213,8 @@ namespace Crypto.Core.Strategies {
                         item.ListedOnBinance = BinanceExchange.Default.Tickers.FirstOrDefault(t => t.MarketCurrency == item.Name) != null;
                         item.ListedOnBittrex = BittrexExchange.Default.Tickers.FirstOrDefault(t => t.MarketCurrency == item.Name) != null;
                         item.ListedOnBitmex = BitmexExchange.Default.Tickers.FirstOrDefault(t => t.MarketCurrency == item.Name) != null;
-
                         if(!item.ListedOnBinance && !item.ListedOnBitmex && !item.ListedOnBittrex)
                             continue;
-
                         list.Add(item);
                     }
                     catch(Exception) {
@@ -237,12 +235,14 @@ namespace Crypto.Core.Strategies {
             Log(LogType.Success, "initialize forecast data provider", 0, 0, StrategyOperation.Connect);
             Log(LogType.Log, "get forecast data", 0, 0, StrategyOperation.Connect);
             List<WalletInvestorDataItem> filtered = new List<WalletInvestorDataItem>();
-            foreach(var item in list) {
+            for(int i = 0; i < list.Count; i++) {
+                var item = list[i];
                 ForecastProvider.UpdateForecast(this, item);
                 if(item.Forecast7Day >= Day7MinPercent && item.Forecast14Day >= Day14MinPercent && item.Forecast3Month >= Month3MinPercent)
                     filtered.Add(item);
             }
-            foreach(var item in filtered) {
+            for(int fi = 0; fi < filtered.Count; fi++) {
+                var item = filtered[fi];
                 if(Items.FirstOrDefault(i => i.Name == item.Name) != null)
                     continue;
                 Items.Add(item);

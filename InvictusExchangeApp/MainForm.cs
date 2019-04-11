@@ -212,32 +212,28 @@ namespace InvictusExchangeApp {
                 HtmlNode body = node.Element("tbody");
                 List<HtmlNode> rows = body.Descendants().Where(n => n.GetAttributeValue("data-key", "") != "").ToList();
                 bool finished = false;
-                foreach(HtmlNode row in rows) {
+                for(int ri = 0; ri < rows.Count; ri++) {
+                    HtmlNode row = rows[ri];
                     HtmlNode name = row.Descendants().FirstOrDefault(n => n.GetAttributeValue("data-col-seq", "") == "0");
                     try {
                         string nameText = name.Descendants().FirstOrDefault(n => n.GetAttributeValue("class", "") == "detail").InnerText.Trim();
                         WalletInvestorDataItem item = new WalletInvestorDataItem();
-
                         item.Name = nameText;
                         Ticker ticker = BinanceExchange.Default.Tickers.FirstOrDefault(t => t.MarketCurrency == item.Name && t.BaseCurrency == "BTC");
-
                         HtmlNode forecast14 = row.Descendants().FirstOrDefault(n => n.GetAttributeValue("data-col-seq", "") == "1");
                         item.Forecast14Day = Convert.ToDouble(CorrectString(forecast14.Element("a").InnerText));
-
                         if(item.Forecast14Day < Settings.Min14DayChange) {
                             finished = true;
                             break;
                         }
                         if(ticker == null)
                             continue;
-
                         item.BinanceLink = ticker.WebPageAddress;
                         HtmlNode forecast3Month = row.Descendants().FirstOrDefault(n => n.GetAttributeValue("data-col-seq", "") == "2");
                         item.Forecast3Month = Convert.ToDouble(CorrectString(forecast3Month.Element("a").InnerText));
-
                         item.ForecastLink = name.Element("a").GetAttributeValue("href", "");
-                        item.ForecastLink2 = string.Format("https://walletinvestor.com/forecast?currency={0}", item.Name); name.Element("a").GetAttributeValue("href", "");
-
+                        item.ForecastLink2 = string.Format("https://walletinvestor.com/forecast?currency={0}", item.Name);
+                        name.Element("a").GetAttributeValue("href", "");
                         list.Add(item);
                     }
                     catch(Exception) {
@@ -312,21 +308,19 @@ namespace InvictusExchangeApp {
                 if(rows.Count == 0)
                     break;
                 bool finished = false;
-                foreach(HtmlNode row in rows) {
+                for(int ri = 0; ri < rows.Count; ri++) {
+                    HtmlNode row = rows[ri];
                     HtmlNode change24 = row.Descendants().FirstOrDefault(n => n.GetAttributeValue("data-col-seq", "") == "4");
                     HtmlNode name = row.Descendants().FirstOrDefault(n => n.GetAttributeValue("data-col-seq", "") == "2");
-
                     string changeString = CorrectString(change24.InnerText);
                     double change = Convert.ToDouble(CorrectString(changeString));
                     if(change < Settings.Min24HourChange) {
                         finished = true;
                         break;
                     }
-                    
                     HtmlNode prices = row.Descendants().FirstOrDefault(n => n.GetAttributeValue("data-col-seq", "") == "3");
                     HtmlNode volume24 = row.Descendants().FirstOrDefault(n => n.GetAttributeValue("data-col-seq", "") == "5");
                     HtmlNode marketCap = row.Descendants().FirstOrDefault(n => n.GetAttributeValue("data-col-seq", "") == "7");
-
                     try {
                         WalletInvestorDataItem item = new WalletInvestorDataItem();
                         HtmlNode nameDetail = name.Descendants().FirstOrDefault(n => n.GetAttributeValue("class", "") == "detail");
@@ -406,7 +400,8 @@ namespace InvictusExchangeApp {
             int index = 0;
             List<CoinPredictorDataItem> cplist = new List<CoinPredictorDataItem>();
             CpItems = cplist;
-            foreach(JObject item in list) {
+            for(int i = 0; i < list.Count; i++) {
+                JObject item = (JObject) list[i];
                 if(Stop)
                     break;
                 string name = item.Value<string>("ticker");
@@ -414,34 +409,26 @@ namespace InvictusExchangeApp {
                 if(ticker == null)
                     continue;
                 string slug = item.Value<string>("slug");
-
                 CoinPredictorDataItem cp = new CoinPredictorDataItem();
                 cp.Name = name;
                 cp.BinanceLink = ticker.WebPageAddress;
                 cp.ForecastLink = string.Format("https://coinpredictor.io/{0}#price", slug.ToLower());
-
                 double day7 = GetDoubleProperty(item, "dayFormatted", 0);
                 double day1 = GetDoubleProperty(item, "dayFormattedFirst", 0);
                 double week4 = GetDoubleProperty(item, "weekFormatted", 0);
                 double month = GetDoubleProperty(item, "monthFormatted", 0);
                 double price = GetDoubleProperty(item, "priceFormatted", 0);
-
                 cp.LastPrice = price;
                 cp.Forecast1Day = day1;
                 cp.Forecast7Day = day7;
                 cp.Forecast4Week = week4;
                 cp.Forecast3Month = month;
                 cp.ListedOnBinance = BinanceExchange.Default.GetTicker(cp.Name) != null;
-                cp.Match = 
-                    cp.Forecast1Day >= Settings.MinCp24HourChange &&
-                    cp.Forecast7Day >= Settings.MinCp7DayChange &&
-                    cp.Forecast4Week >= Settings.MinCp4WeekChange && 
-                    cp.Forecast3Month >= Settings.MinCp3MonthChange;
-
+                cp.Match = cp.Forecast1Day >= Settings.MinCp24HourChange && cp.Forecast7Day >= Settings.MinCp7DayChange && cp.Forecast4Week >= Settings.MinCp4WeekChange &&
+                           cp.Forecast3Month >= Settings.MinCp3MonthChange;
                 cplist.Add(cp);
-
                 int progress = index * 100 / list.Count;
-                if(((int)this.beProgress.EditValue) != progress) {
+                if(((int) this.beProgress.EditValue) != progress) {
                     this.beProgress.EditValue = progress;
                     this.gridView2.RefreshData();
                     Application.DoEvents();
@@ -479,22 +466,19 @@ namespace InvictusExchangeApp {
             List<HtmlNode> rows = body.Descendants().Where(n => n.GetAttributeValue("data-key", "") != "").ToList();
             if(rows.Count == 0)
                 return false;
-            foreach(HtmlNode row in rows) {
+            for(int ri = 0; ri < rows.Count; ri++) {
+                HtmlNode row = rows[ri];
                 HtmlNode name = row.Descendants().FirstOrDefault(n => n.GetAttributeValue("data-col-seq", "") == "0");
                 HtmlNode forecast14 = row.Descendants().FirstOrDefault(n => n.GetAttributeValue("data-col-seq", "") == "1");
                 HtmlNode forecast3Month = row.Descendants().FirstOrDefault(n => n.GetAttributeValue("data-col-seq", "") == "2");
-
                 try {
                     string nameText = name.Descendants().FirstOrDefault(n => n.GetAttributeValue("class", "") == "detail").InnerText.Trim();
                     if(item.Name != nameText)
                         continue;
-
                     item.Forecast14Day = Convert.ToDouble(CorrectString(forecast14.Element("a").InnerText));
                     item.Forecast3Month = Convert.ToDouble(CorrectString(forecast3Month.Element("a").InnerText));
-                    if(item.Forecast14Day < Settings.Min14DayChange ||
-                        item.Forecast3Month < Settings.Min3MonthChange)
+                    if(item.Forecast14Day < Settings.Min14DayChange || item.Forecast3Month < Settings.Min3MonthChange)
                         return true;
-
                     Get7DayForecastFor(item, name.Element("a").GetAttributeValue("href", ""), helper);
                     return true;
                 }
@@ -599,11 +583,11 @@ namespace InvictusExchangeApp {
                 if(rows.Count == 0)
                     break;
                 bool finished = false;
-                foreach(HtmlNode row in rows) {
+                for(int ri = 0; ri < rows.Count; ri++) {
+                    HtmlNode row = rows[ri];
                     HtmlNode day14Change = row.Descendants().FirstOrDefault(n => n.GetAttributeValue("data-col-seq", "") == "1");
                     string changeString = CorrectString(day14Change.InnerText);
                     double change = Convert.ToDouble(CorrectString(changeString));
-
                     HtmlNode name = row.Descendants().FirstOrDefault(n => n.GetAttributeValue("data-col-seq", "") == "0");
                     try {
                         HtmlNode nameDetail = name.Descendants().FirstOrDefault(n => n.GetAttributeValue("class", "") == "detail");
@@ -614,7 +598,6 @@ namespace InvictusExchangeApp {
                         item.Forecast14Day = change;
                         HtmlNode month3Change = row.Descendants().FirstOrDefault(n => n.GetAttributeValue("data-col-seq", "") == "2");
                         item.Forecast3Month = Convert.ToDouble(CorrectString(month3Change.Element("a").InnerText));
-
                         if(change < Settings.Min14DayChange) {
                             finished = true;
                             break;
@@ -723,23 +706,24 @@ namespace InvictusExchangeApp {
             List<CoinPredictorDataItem> cp = CpItems.Where(i => i.Match).ToList();
 
             List<string> names = new List<string>();
-            foreach(WalletInvestorDataItem item in wi) {
+            for(int ii = 0; ii < wi.Count; ii++) {
+                WalletInvestorDataItem item = wi[ii];
                 if(union || cp.FirstOrDefault(i => i.Name == item.Name) != null)
                     names.Add(item.Name);
             }
-            foreach(CoinPredictorDataItem item in cp) {
+            for(int ii = 0; ii < cp.Count; ii++) {
+                CoinPredictorDataItem item = cp[ii];
                 if(names.Contains(item.Name))
                     continue;
                 if(union || wi.FirstOrDefault(i => i.Name == item.Name) != null)
                     names.Add(item.Name);
             }
-
             List<CombinedData> res = new List<CombinedData>();
-            foreach(string name in names) {
+            for(int ni = 0; ni < names.Count; ni++) {
+                string name = names[ni];
                 CombinedData data = new CombinedData();
                 WalletInvestorDataItem w = wi.FirstOrDefault(i => i.Name == name);
                 CoinPredictorDataItem c = cp.FirstOrDefault(i => i.Name == name);
-
                 string nameItem = w == null ? c.Name : w.Name;
                 data.Name = nameItem;
                 if(w != null) {
@@ -748,14 +732,12 @@ namespace InvictusExchangeApp {
                     data.Wi3Month = w.Forecast3Month;
                     data.WiMatch = w.Match;
                 }
-
                 if(c != null) {
                     data.Cp1Day = c.Forecast1Day;
                     data.Cp7Day = c.Forecast7Day;
                     data.Cp4Week = c.Forecast4Week;
                     data.CpMatch = c.Match;
                 }
-
                 if(union)
                     data.Match = data.WiMatch | data.CpMatch;
                 else

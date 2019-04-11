@@ -171,13 +171,12 @@ namespace CryptoMarketClient.Exchanges.Bitmex {
             List<OrderBookEntry> bids = ticker.OrderBook.Bids;
             List<OrderBookEntry> asks = ticker.OrderBook.Asks;
             List<OrderBookEntry> iasks = ticker.OrderBook.AsksInverted;
-            foreach(string[] item in items) {
+            for(int i = 0; i < items.Count; i++) {
+                string[] item = items[i];
                 OrderBookEntry entry = new OrderBookEntry();
-
                 entry.Id = FastValueConverter.ConvertPositiveLong(item[1]);
                 entry.ValueString = item[4];
                 entry.AmountString = item[3];
-
                 if(item[2][0] == 'S') {
                     iasks.Add(entry);
                     asks.Insert(0, entry);
@@ -276,16 +275,16 @@ namespace CryptoMarketClient.Exchanges.Bitmex {
             JArray items = jObject.Value<JArray>("data");
             if(items == null)
                 return;
-            foreach(JObject item in items) {
+            for(int i = 0; i < items.Count; i++) {
+                JObject item = (JObject) items[i];
                 string tickerName = item.Value<string>("symbol");
-                BitmexTicker t = (BitmexTicker)Tickers.FirstOrDefault(tt => tt.CurrencyPair == tickerName);
+                BitmexTicker t = (BitmexTicker) Tickers.FirstOrDefault(tt => tt.CurrencyPair == tickerName);
                 if(t == null)
                     continue;
-
                 JEnumerable<JToken> props = item.Children();
                 foreach(JProperty prop in props) {
                     string name = prop.Name;
-                    string value = prop.Value == null? null: prop.Value.ToString();
+                    string value = prop.Value == null ? null : prop.Value.ToString();
                     switch(name) {
                         case "lastPrice":
                             t.Last = FastValueConverter.Convert(value);
@@ -297,7 +296,7 @@ namespace CryptoMarketClient.Exchanges.Bitmex {
                             t.Hr24Low = FastValueConverter.Convert(value);
                             break;
                         case "bidPrice":
-                            t.HighestBid = FastValueConverter.Convert(value); 
+                            t.HighestBid = FastValueConverter.Convert(value);
                             break;
                         case "askPrice":
                             t.LowestAsk = FastValueConverter.Convert(value);
@@ -314,7 +313,6 @@ namespace CryptoMarketClient.Exchanges.Bitmex {
                     }
                 }
                 t.UpdateTrailings();
-
                 lock(t) {
                     RaiseTickerChanged(t);
                 }

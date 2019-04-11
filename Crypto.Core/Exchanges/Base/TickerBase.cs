@@ -484,7 +484,8 @@ namespace CryptoMarketClient {
         }
         public void UpdateTrailings() {
             lock(this) {
-                foreach(TrailingSettings tr in Trailings) {
+                for(int i = 0; i < Trailings.Count; i++) {
+                    TrailingSettings tr = Trailings[i];
                     tr.Update();
                 }
             }

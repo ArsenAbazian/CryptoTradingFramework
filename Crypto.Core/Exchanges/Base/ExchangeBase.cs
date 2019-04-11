@@ -56,7 +56,8 @@ namespace CryptoMarketClient {
                 if(e.Tickers.Count == 0) {
                     e.LoadTickers();
                 }
-                foreach(Ticker ticker in e.Tickers) {
+                for(int i = 0; i < e.Tickers.Count; i++) {
+                    Ticker ticker = e.Tickers[i];
                     list.Add(new TickerNameInfo() { Exchange = e.Type, Ticker = ticker.Name, BaseCurrency = ticker.BaseCurrency, MarketCurrency = ticker.MarketCurrency });
                 }
             }
@@ -342,8 +343,9 @@ namespace CryptoMarketClient {
         }
 
         void CheckSocketConnectionInfoDelay(List<SocketConnectionInfo> sockets) {
-            foreach(SocketConnectionInfo info in sockets)
-                CheckConnection(info);
+            for(int si = 0; si < sockets.Count; si++) {
+                CheckConnection(sockets[si]);
+            }
         }
 
         void CheckConnection(SocketConnectionInfo info) {
@@ -592,7 +594,8 @@ namespace CryptoMarketClient {
         }
 
         protected SocketConnectionInfo GetConnectionInfo(Ticker ticker, CandleStickIntervalInfo info, List<SocketConnectionInfo> sockets) {
-            foreach(SocketConnectionInfo i in sockets) {
+            for(int si = 0; si < sockets.Count; si++) {
+                SocketConnectionInfo i = sockets[si];
                 if(i.Ticker == ticker && i.KlineInfo.Interval == info.Interval) {
                     return i;
                 }
@@ -601,7 +604,8 @@ namespace CryptoMarketClient {
         }
 
         protected SocketConnectionInfo GetConnectionInfo(Ticker ticker, List<SocketConnectionInfo> sockets) {
-            foreach(SocketConnectionInfo info in sockets) {
+            for(int si = 0; si < sockets.Count; si++) {
+                SocketConnectionInfo info = sockets[si];
                 if(info.Ticker == ticker) {
                     return info;
                 }

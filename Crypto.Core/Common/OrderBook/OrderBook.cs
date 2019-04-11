@@ -168,7 +168,8 @@ namespace CryptoMarketClient {
             volume = 0;
             exp = 0;
             disp = 0;
-            foreach(OrderBookEntry e in list) {
+            for(int i = 0; i < list.Count; i++) {
+                OrderBookEntry e = list[i];
                 volume += e.Amount;
                 exp += e.Amount * e.Value;
                 index++;
@@ -343,7 +344,8 @@ namespace CryptoMarketClient {
             
             int index = 0;
             if(type == OrderBookUpdateType.Remove) {
-                foreach(OrderBookEntry e in list) {
+                for(int i = 0; i < list.Count; i++) {
+                    OrderBookEntry e = list[i];
                     if(e.Id == id) {
                         list.Remove(e);
                         return;
@@ -355,7 +357,8 @@ namespace CryptoMarketClient {
             }
             double amount = FastValueConverter.Convert(amountString);
             if(type == OrderBookUpdateType.Modify) {
-                foreach(OrderBookEntry e in list) {
+                for(int i = 0; i < list.Count; i++) {
+                    OrderBookEntry e = list[i];
                     if(e.Id == id) {
                         e.Amount = amount;
                         return;
@@ -367,7 +370,8 @@ namespace CryptoMarketClient {
             }
             double value = FastValueConverter.Convert(rateString);
             if(ascending) {
-                foreach(OrderBookEntry e in list) {
+                for(int i = 0; i < list.Count; i++) {
+                    OrderBookEntry e = list[i];
                     if(e.Value > value) {
                         OrderBookEntry ee = new OrderBookEntry() { ValueString = rateString, AmountString = amountString, Id = id };
                         list.Insert(index, ee);
@@ -377,7 +381,8 @@ namespace CryptoMarketClient {
                 }
             }
             else {
-                foreach(OrderBookEntry e in list) {
+                for(int i = 0; i < list.Count; i++) {
+                    OrderBookEntry e = list[i];
                     if(e.Value < value) {
                         OrderBookEntry ee = new OrderBookEntry() { ValueString = rateString, AmountString = amountString, Id = id };
                         list.Insert(index, ee);

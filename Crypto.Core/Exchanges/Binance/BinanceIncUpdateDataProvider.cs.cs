@@ -11,11 +11,14 @@ namespace CryptoMarketClient.Exchanges.Binance {
             List<OrderBookEntry> bids = ticker.OrderBook.Bids;
 
             OrderBook orderBook = ticker.OrderBook;
-            foreach(string[] item in info.BidsUpdates)
+            for(int i = 0; i < info.BidsUpdates.Count; i++) {
+                string[] item = info.BidsUpdates[i];
                 orderBook.ApplyIncrementalUpdate(OrderBookEntryType.Bid, item[0], item[1]);
-            foreach(string[] item in info.AsksUpdates)
+            }
+            for(int i = 0; i < info.AsksUpdates.Count; i++) {
+                string[] item = info.AsksUpdates[i];
                 orderBook.ApplyIncrementalUpdate(OrderBookEntryType.Ask, item[0], item[1]);
-
+            }
             ticker.OnApplyIncrementalUpdate();
         }
         public void ApplySnapshot(JObject jObject, Ticker ticker) {

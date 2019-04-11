@@ -17,11 +17,13 @@ namespace CryptoMarketClient.Common {
             List<StaticArbitrageInfo> items = new List<StaticArbitrageInfo>();
             string[] baseCurr = new string[] { "XMR", "ETH", "BTC" };
             if(PoloniexExchange.Default.IsConnected) {
-                foreach(string curr in baseCurr) {
+                for(int ci = 0; ci < baseCurr.Length; ci++) {
+                    string curr = baseCurr[ci];
                     Ticker btcUsdtTicker = PoloniexExchange.Default.Tickers.FirstOrDefault(t => t.BaseCurrency == "USDT" && t.MarketCurrency == curr);
                     if(btcUsdtTicker == null)
                         throw new Exception("Static Arbitrage BtcUsdtTicker == null");
-                    foreach(Ticker altUsdtTicker in PoloniexExchange.Default.Tickers) {
+                    for(int ti = 0; ti < PoloniexExchange.Default.Tickers.Count; ti++) {
+                        Ticker altUsdtTicker = PoloniexExchange.Default.Tickers[ti];
                         if(altUsdtTicker.BaseCurrency != "USDT")
                             continue;
                         Ticker altBtcTicker = PoloniexExchange.Default.Tickers.FirstOrDefault(t => t.BaseCurrency == curr && t.MarketCurrency == altUsdtTicker.MarketCurrency);
@@ -32,11 +34,13 @@ namespace CryptoMarketClient.Common {
                 }
             }
             if(BittrexExchange.Default.IsConnected) {
-                foreach(string curr in baseCurr) {
+                for(int ci = 0; ci < baseCurr.Length; ci++) {
+                    string curr = baseCurr[ci];
                     Ticker btcUsdtTicker = BittrexExchange.Default.Tickers.FirstOrDefault(t => t.BaseCurrency == "USDT" && t.MarketCurrency == curr);
                     if(btcUsdtTicker == null)
                         throw new Exception("Static Arbitrage BtcUsdtTicker == null");
-                    foreach(Ticker altUsdtTicker in BittrexExchange.Default.Tickers) {
+                    for(int ti = 0; ti < BittrexExchange.Default.Tickers.Count; ti++) {
+                        Ticker altUsdtTicker = BittrexExchange.Default.Tickers[ti];
                         if(altUsdtTicker.BaseCurrency != "USDT")
                             continue;
                         Ticker altBtcTicker = BittrexExchange.Default.Tickers.FirstOrDefault(t => t.BaseCurrency == curr && t.MarketCurrency == altUsdtTicker.MarketCurrency);

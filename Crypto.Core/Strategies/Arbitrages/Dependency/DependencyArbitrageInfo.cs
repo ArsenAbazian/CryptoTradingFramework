@@ -53,7 +53,8 @@ namespace Crypto.Core.Common.Arbitrages {
                 list.Add(new StrategyValidationError() { DataObject = Second, Description = "Second: " + text, PropertyName = "SecondName", Value = SecondName.Ticker });
             if(FirstNames.Count == 0)
                 list.Add(new StrategyValidationError() { DataObject = this, Description = "First: You must specify at least one ticker.", PropertyName = "First" });
-            foreach(var item in FirstNames) {
+            for(int i = 0; i < FirstNames.Count; i++) {
+                var item = FirstNames[i];
                 text = ValidateTickerInfo(item);
                 if(text != null)
                     list.Add(new StrategyValidationError() { DataObject = item, Description = "First: " + text, PropertyName = "Ticker", Value = SecondName.Ticker });
@@ -216,7 +217,8 @@ namespace Crypto.Core.Common.Arbitrages {
                 if(!Directory.Exists(directoryName))
                     Directory.CreateDirectory(directoryName);
                 List<string> files = GetHistoryFiles(directoryName);
-                foreach(string file in files) {
+                for(int i = 0; i < files.Count; i++) {
+                    string file = files[i];
                     StreamReader reader = new StreamReader(file);
                     DependencyArbitrageHistoryItem last = null;
                     while(true) {

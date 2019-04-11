@@ -52,13 +52,13 @@ namespace CryptoMarketClient.Forms.Instruments {
                 if(rows.Count == 0)
                     break;
                 bool finished = false;
-                foreach(HtmlNode row in rows) {
+                for(int ri = 0; ri < rows.Count; ri++) {
+                    HtmlNode row = rows[ri];
                     HtmlNode name = row.Descendants().FirstOrDefault(n => n.GetAttributeValue("data-col-seq", "") == "2");
                     HtmlNode prices = row.Descendants().FirstOrDefault(n => n.GetAttributeValue("data-col-seq", "") == "3");
                     HtmlNode change24 = row.Descendants().FirstOrDefault(n => n.GetAttributeValue("data-col-seq", "") == "4");
                     HtmlNode volume24 = row.Descendants().FirstOrDefault(n => n.GetAttributeValue("data-col-seq", "") == "5");
                     HtmlNode marketCap = row.Descendants().FirstOrDefault(n => n.GetAttributeValue("data-col-seq", "") == "7");
-
                     try {
                         WalletInvestorDataItem item = new WalletInvestorDataItem();
                         item.Name = name.Descendants().FirstOrDefault(n => n.GetAttributeValue("class", "") == "detail").InnerText.Trim();
@@ -142,19 +142,17 @@ namespace CryptoMarketClient.Forms.Instruments {
             List<HtmlNode> rows = body.Descendants().Where(n => n.GetAttributeValue("data-key", "") != "").ToList();
             if(rows.Count == 0)
                 return false;
-            foreach(HtmlNode row in rows) {
+            for(int ri = 0; ri < rows.Count; ri++) {
+                HtmlNode row = rows[ri];
                 HtmlNode name = row.Descendants().FirstOrDefault(n => n.GetAttributeValue("data-col-seq", "") == "0");
                 HtmlNode forecast14 = row.Descendants().FirstOrDefault(n => n.GetAttributeValue("data-col-seq", "") == "1");
                 HtmlNode forecast3Month = row.Descendants().FirstOrDefault(n => n.GetAttributeValue("data-col-seq", "") == "2");
-
                 try {
                     string nameText = name.Descendants().FirstOrDefault(n => n.GetAttributeValue("class", "") == "detail").InnerText.Trim();
                     if(item.Name != nameText)
                         continue;
-
                     item.Forecast14Day = Convert.ToDouble(CorrectString(forecast14.Element("a").InnerText));
                     item.Forecast3Month = Convert.ToDouble(CorrectString(forecast3Month.Element("a").InnerText));
-
                     Get7DayForecastFor(item, name.Element("a").GetAttributeValue("href", ""), helper);
                     return true;
                 }

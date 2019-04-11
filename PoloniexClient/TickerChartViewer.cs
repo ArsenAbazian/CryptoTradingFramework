@@ -413,8 +413,10 @@ namespace CryptoMarketClient {
                     int seconds = CalculateTotalIntervalInSeconds();
                     BindingList<CandleStickData> data = Ticker.GetCandleStickData(Ticker.CandleStickPeriodMin, date.AddSeconds(-seconds), seconds);
                     if(data != null) {
-                        foreach(CandleStickData prev in Ticker.CandleStickData)
+                        for(int i = 0; i < Ticker.CandleStickData.Count; i++) {
+                            CandleStickData prev = Ticker.CandleStickData[i];
                             data.Add(prev);
+                        }
                         Ticker.CandleStickData = data;
 
                         this.chartControl1.Series["Current"].DataSource = new RealTimeSource() { DataSource = data };
@@ -436,7 +438,8 @@ namespace CryptoMarketClient {
                     BindingList<CandleStickData> data = Ticker.GetCandleStickData(Ticker.CandleStickPeriodMin, date.AddSeconds(-seconds), seconds);
                     if(data != null) {
                         lock(Ticker.CandleStickData) {
-                            foreach(CandleStickData prev in Ticker.CandleStickData) {
+                            for(int i = 0; i < Ticker.CandleStickData.Count; i++) {
+                                CandleStickData prev = Ticker.CandleStickData[i];
                                 data.Add(prev);
                             }
                             Ticker.CandleStickData = data;
