@@ -491,7 +491,11 @@ namespace CryptoMarketClient {
             return PinnedTickers.FirstOrDefault(p => p.BaseCurrency == tickerBase.BaseCurrency && p.MarketCurrency == tickerBase.MarketCurrency) != null;
         }
         public Ticker GetTicker(PinnedTickerInfo info) {
-            return Tickers.FirstOrDefault(t => t.BaseCurrency == info.BaseCurrency && t.MarketCurrency == info.MarketCurrency);
+            for(int i = 0; i < Tickers.Count; i++) {
+                Ticker t = Tickers[i];
+                if(t.BaseCurrency == info.BaseCurrency && t.MarketCurrency == info.MarketCurrency) return t;
+            }
+            return null;
         }
         public List<OpenedOrderInfo> UpdateAllOpenedOrders() {
             List<OpenedOrderInfo> list = new List<OpenedOrderInfo>();
@@ -967,10 +971,18 @@ namespace CryptoMarketClient {
             return Registered.FirstOrDefault(e => e.Type == exchange);
         }
         public Ticker Ticker(string tickerName) {
-            return Tickers.FirstOrDefault(t => t.Name == tickerName);
+            for(int i = 0; i < Tickers.Count; i++) {
+                Ticker t = Tickers[i];
+                if(t.Name == tickerName) return t;
+            }
+            return null;
         }
         public Ticker Ticker(string baseCurrency, string marketCurrency) {
-            return Tickers.FirstOrDefault(t => t.BaseCurrency == baseCurrency && t.MarketCurrency == marketCurrency);
+            for(int i = 0; i < Tickers.Count; i++) {
+                Ticker t = Tickers[i];
+                if(t.BaseCurrency == baseCurrency && t.MarketCurrency == marketCurrency) return t;
+            }
+            return null;
         }
         public virtual void StopListenStreams(bool force) {
             StopListenTickersStream(force);
@@ -1070,7 +1082,11 @@ namespace CryptoMarketClient {
             return null;
         }
         public Ticker GetTicker(string tickerName) {
-            return Tickers.FirstOrDefault(t => t.Name == tickerName);
+            for(int i = 0; i < Tickers.Count; i++) {
+                Ticker t = Tickers[i];
+                if(t.Name == tickerName) return t;
+            }
+            return null;
         }
 
         public virtual bool Connect(TickerInputInfo info) {

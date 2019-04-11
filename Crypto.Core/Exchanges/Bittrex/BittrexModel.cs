@@ -137,7 +137,15 @@ namespace CryptoMarketClient.Bittrex {
             List<string[]> items = JSonHelper.Default.DeserializeArrayOfObjects(data, ref startIndex, SocketMarketSummaryStateInfo);
             for(int i = 0; i < items.Count; i++) {
                 string[] item = items[i];
-                BittrexTicker t = (BittrexTicker) Tickers.FirstOrDefault(tt => tt.Name == item[0]);
+                Ticker first = null;
+                for(int index = 0; index < Tickers.Count; index++) {
+                    Ticker tt = Tickers[index];
+                    if(tt.Name == item[0]) {
+                        first = tt;
+                        break;
+                    }
+                }
+                BittrexTicker t = (BittrexTicker) first;
                 if(t == null)
                     continue;
                 t.Hr24High = FastValueConverter.Convert(item[1]);
@@ -200,8 +208,14 @@ namespace CryptoMarketClient.Bittrex {
             string[] startItems = JSonHelper.Default.StartDeserializeObject(bytes, ref startIndex, IncrementalUpdateStartItems);
             int st = 0;
             long seqNumber = FastValueConverter.ConvertPositiveLong(startItems[1], ref st);
-            Ticker ticker = Tickers.FirstOrDefault(t => t.Name == startItems[0]);
-
+            Ticker ticker = null;
+            for(int i = 0; i < Tickers.Count; i++) {
+                Ticker t = Tickers[i];
+                if(t.Name == startItems[0]) {
+                    ticker = t;
+                    break;
+                }
+            }
             List<string[]> bids = null, asks = null, trades = null;
             startIndex += 2; // skip ,"
 
@@ -514,7 +528,15 @@ namespace CryptoMarketClient.Bittrex {
             for(int i = 0; i < res.Count; i++) {
                 string[] item = res[i];
                 string marketName = item[0];
-                BittrexTicker info = (BittrexTicker) Tickers.FirstOrDefault((m) => m.MarketName == marketName);
+                Ticker first = null;
+                for(int ti = 0; ti < Tickers.Count; ti++) {
+                    Ticker m = Tickers[ti];
+                    if(m.MarketName == marketName) {
+                        first = m;
+                        break;
+                    }
+                }
+                BittrexTicker info = (BittrexTicker) first;
                 if(info == null)
                     continue;
                 info.Hr24High = FastValueConverter.Convert(item[1]);
@@ -702,7 +724,15 @@ namespace CryptoMarketClient.Bittrex {
                 myTrades.Clear();
                 for(int i = 0; i < res.Count; i++) {
                     string[] obj = res[i];
-                    Ticker t = ticker == null ? Tickers.FirstOrDefault(tt => tt.CurrencyPair == obj[1]) : ticker;
+                    Ticker first = null;
+                    for(int index = 0; index < Tickers.Count; index++) {
+                        Ticker tt = Tickers[index];
+                        if(tt.CurrencyPair == obj[1]) {
+                            first = tt;
+                            break;
+                        }
+                    }
+                    Ticker t = ticker ?? first;
                     TradeInfoItem item = new TradeInfoItem(account, t);
                     item.OrderNumber = obj[0];
                     item.IdString = obj[0];
@@ -1048,7 +1078,15 @@ namespace CryptoMarketClient.Bittrex {
             lock(openedOrders) {
                 for(int i = 0; i < res.Count; i++) {
                     string[] obj = res[i];
-                    Ticker t = ticker == null ? Tickers.FirstOrDefault(tt => tt.CurrencyPair == obj[2]) : ticker;
+                    Ticker first = null;
+                    for(int index = 0; index < Tickers.Count; index++) {
+                        Ticker tt = Tickers[index];
+                        if(tt.CurrencyPair == obj[2]) {
+                            first = tt;
+                            break;
+                        }
+                    }
+                    Ticker t = ticker ?? first;
                     BittrexOrderInfo info = new BittrexOrderInfo(account, t);
                     info.OrderId = obj[1];
                     info.OrderUuid = obj[1];

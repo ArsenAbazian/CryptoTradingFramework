@@ -40,7 +40,7 @@ namespace CryptoMarketClient {
                 }
                 if(info.Count < 2)
                     continue;
-                info.UsdTicker = markets.First().FirstOrDefault((t) => t.MarketCurrency == info.BaseCurrency && t.BaseCurrency == "USDT");
+                info.UsdTicker = mFirst.FirstOrDefault((t) => t.MarketCurrency == info.BaseCurrency && t.BaseCurrency == "USDT");
                 arbitrageList.Add(info);
             }
             for(int ai = 0; ai < arbitrageList.Count; ai++) {

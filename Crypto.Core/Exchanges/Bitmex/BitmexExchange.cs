@@ -278,7 +278,15 @@ namespace CryptoMarketClient.Exchanges.Bitmex {
             for(int i = 0; i < items.Count; i++) {
                 JObject item = (JObject) items[i];
                 string tickerName = item.Value<string>("symbol");
-                BitmexTicker t = (BitmexTicker) Tickers.FirstOrDefault(tt => tt.CurrencyPair == tickerName);
+                Ticker first = null;
+                for(int index = 0; index < Tickers.Count; index++) {
+                    Ticker tt = Tickers[index];
+                    if(tt.CurrencyPair == tickerName) {
+                        first = tt;
+                        break;
+                    }
+                }
+                BitmexTicker t = (BitmexTicker) first;
                 if(t == null)
                     continue;
                 JEnumerable<JToken> props = item.Children();

@@ -70,8 +70,14 @@ namespace CryptoMarketClient {
             else {
                 int startIndex = 1;
                 int value = FastValueConverter.ConvertPositiveInteger(e.Message, ref startIndex); startIndex++;
-
-                Ticker t = Tickers.FirstOrDefault(tt => tt.Code == value);
+                Ticker t = null;
+                for(int index = 0; index < Tickers.Count; index++) {
+                    Ticker tt = Tickers[index];
+                    if(tt.Code == value) {
+                        t = tt;
+                        break;
+                    }
+                }
                 if(t != null)
                     OnTickerOrderBookAndTradesRecv(t, e.Message, startIndex);
             }
@@ -154,7 +160,15 @@ namespace CryptoMarketClient {
             int current = start + 1;
 
             int code = DeserializePositiveInt(bytes, ref current, end);
-            PoloniexTicker ticker = (PoloniexTicker)Tickers.FirstOrDefault(t => t.Code == code);
+            Ticker first = null;
+            for(int index = 0; index < Tickers.Count; index++) {
+                Ticker t = Tickers[index];
+                if(t.Code == code) {
+                    first = t;
+                    break;
+                }
+            }
+            PoloniexTicker ticker = (PoloniexTicker)first;
             if(ticker == null)
                 return;
             ticker.Last = DeserializeDoubleInQuotes(bytes, ref current, end);
@@ -889,7 +903,14 @@ namespace CryptoMarketClient {
                             Debug.WriteLine("OnGetOpenedOrders fails: " + prop.Value<string>());
                             return false;
                         }
-                        ticker = Tickers.FirstOrDefault(tt => tt.CurrencyPair == prop.Name);
+                        ticker = null;
+                        for(int index = 0; index < Tickers.Count; index++) {
+                            Ticker tt = Tickers[index];
+                            if(tt.CurrencyPair == prop.Name) {
+                                ticker = tt;
+                                break;
+                            }
+                        }
                         JArray array = (JArray)prop.Value;
                         for(int i = 0; i < array.Count; i++) {
                             JObject obj = (JObject) array[i];

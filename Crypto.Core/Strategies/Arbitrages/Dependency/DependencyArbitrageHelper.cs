@@ -32,8 +32,11 @@ namespace Crypto.Core.Common.Arbitrages {
         }
 
         public virtual void OnEndDeserialize() {
-            Items.ForEach(i => i.UpdateItems());
-            Items.ForEach(i => i.Changed += OnItemChanged);
+            for(int index = 0; index < Items.Count; index++) 
+                Items[index].UpdateItems();
+            for(int index = 0; index < Items.Count; index++) {
+                Items[index].Changed += OnItemChanged;
+            }
             UpdateIndices();
         }
 

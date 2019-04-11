@@ -127,7 +127,14 @@ namespace CryptoMarketClient.Binance {
                 return;
 
             string[] kline = JSonHelper.Default.DeserializeObject(bytes, ref startIndex, KlineItems);
-            SocketConnectionInfo info = KlineSockets.FirstOrDefault(c => c.Key == sender);
+            SocketConnectionInfo info = null;
+            for(int i = 0; i < KlineSockets.Count; i++) {
+                SocketConnectionInfo c = KlineSockets[i];
+                if(c.Key == sender) {
+                    info = c;
+                    break;
+                }
+            }
             if(info == null)
                 return;
             OnKlineItemRecv(info.Ticker, kline);
@@ -135,7 +142,14 @@ namespace CryptoMarketClient.Binance {
         protected virtual void OnKlineItemRecv(Ticker ticker, string[] item) {
             long dt = FastValueConverter.ConvertPositiveLong(item[0]);
             DateTime time = FromUnixTime(dt);
-            CandleStickIntervalInfo info = AllowedCandleStickIntervals.FirstOrDefault(i => i.Command == item[3]);
+            CandleStickIntervalInfo info = null;
+            for(int ci = 0; ci < AllowedCandleStickIntervals.Count; ci++) {
+                CandleStickIntervalInfo i = AllowedCandleStickIntervals[ci];
+                if(i.Command == item[3]) {
+                    info = i;
+                    break;
+                }
+            }
             if(ticker.CandleStickPeriodMin != info.Interval.TotalMinutes)
                 return;
             Debug.WriteLine(item[6] + " " + item[7] + " " + item[8] + " " + item[9]);
@@ -196,7 +210,14 @@ namespace CryptoMarketClient.Binance {
 
         protected internal override void OnOrderBookSocketMessageReceived(object sender, MessageReceivedEventArgs e) {
             LastWebSocketRecvTime = DateTime.Now;
-            SocketConnectionInfo info = OrderBookSockets.FirstOrDefault(c => c.Key == sender);
+            SocketConnectionInfo info = null;
+            for(int oi = 0; oi < OrderBookSockets.Count; oi++) {
+                SocketConnectionInfo c = OrderBookSockets[oi];
+                if(c.Key == sender) {
+                    info = c;
+                    break;
+                }
+            }
             if(info == null)
                 return;
             const string hour24TickerStart = "[{\"e\"";
@@ -292,7 +313,15 @@ namespace CryptoMarketClient.Binance {
 
         protected void On24HourTickerRecv(string[] item) {
             string symbolName = item[2];
-            BinanceTicker t = (BinanceTicker)Tickers.FirstOrDefault(tt => tt.Name == symbolName);
+            Ticker first = null;
+            for(int i = 0; i < Tickers.Count; i++) {
+                Ticker tt = Tickers[i];
+                if(tt.Name == symbolName) {
+                    first = tt;
+                    break;
+                }
+            }
+            BinanceTicker t = (BinanceTicker)first;
             if(t == null)
                 throw new DllNotFoundException("binance symbol not found " + symbolName);
             t.Change = FastValueConverter.Convert(item[4]);
@@ -406,8 +435,14 @@ namespace CryptoMarketClient.Binance {
             //startUtc = startUtc.ToUniversalTime();
             long startSec = (long)(startUtc.Subtract(epoch)).TotalSeconds;
             long end = startSec + periodInSeconds;
-            CandleStickIntervalInfo info = AllowedCandleStickIntervals.FirstOrDefault(i => i.Interval.TotalMinutes == candleStickPeriodMin);
-
+            CandleStickIntervalInfo info = null;
+            for(int index = 0; index < AllowedCandleStickIntervals.Count; index++) {
+                CandleStickIntervalInfo i = AllowedCandleStickIntervals[index];
+                if(i.Interval.TotalMinutes == candleStickPeriodMin) {
+                    info = i;
+                    break;
+                }
+            }
             string address = string.Format("https://api.binance.com/api/v1/klines?symbol={0}&interval={1}&startTime={2}&endTime={3}&limit=10000",
                 Uri.EscapeDataString(ticker.CurrencyPair), info.Command, startSec * 1000, end * 1000);
             byte[] bytes = null;
@@ -623,9 +658,18 @@ namespace CryptoMarketClient.Binance {
             if(string.IsNullOrEmpty(text))
                 return false;
             JArray res = JsonConvert.DeserializeObject<JArray>(text);
-            foreach(JObject item in res) {
+            for(int index = 0; index < res.Count; index++) {
+                JObject item = (JObject) res[index];
                 string currencyPair = item.Value<string>("symbol");
-                BinanceTicker t = (BinanceTicker)Tickers.FirstOrDefault(tr => tr.CurrencyPair == currencyPair);
+                Ticker first = null;
+                for(int i = 0; i < Tickers.Count; i++) {
+                    Ticker tr = Tickers[i];
+                    if(tr.CurrencyPair == currencyPair) {
+                        first = tr;
+                        break;
+                    }
+                }
+                BinanceTicker t = (BinanceTicker) first;
                 if(t == null)
                     continue;
                 t.Last = item.Value<double>("lastPrice");

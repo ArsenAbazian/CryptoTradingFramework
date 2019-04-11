@@ -149,7 +149,14 @@ namespace CryptoMarketClient {
             for(int i = 0; i < trades.Count; i++) {
                 var trade = trades[i];
                 if(saved == null || saved.Time > trade.Time || saved.Time.AddMinutes(period) <= saved.Time) {
-                    saved = candles.FirstOrDefault(c => c.Time <= trade.Time & c.Time.AddMinutes(period) > trade.Time);
+                    saved = null;
+                    for(int ci = 0; ci < candles.Count; ci++) {
+                        CandleStickData c = candles[ci];
+                        if(c.Time <= trade.Time & c.Time.AddMinutes(period) > trade.Time) {
+                            saved = c;
+                            break;
+                        }
+                    }
                 }
                 if(saved != null) {
                     UpdateCandle(saved, trade);
@@ -171,7 +178,14 @@ namespace CryptoMarketClient {
                 UpdateCandle(saved, trade);
                 return;
             }
-            saved = candles.FirstOrDefault(c => c.Time <= trade.Time & c.Time.AddMinutes(period) > trade.Time);
+            saved = null;
+            for(int ci = 0; ci < candles.Count; ci++) {
+                CandleStickData c = candles[ci];
+                if(c.Time <= trade.Time & c.Time.AddMinutes(period) > trade.Time) {
+                    saved = c;
+                    break;
+                }
+            }
             UpdateCandle(saved, trade);
         }
         public static BindingList<CandleStickData> CreateCandleStickData(IList<TickerHistoryItem> list, long rangeInSeconds) {

@@ -19,7 +19,14 @@ namespace CryptoMarketClient.Common {
             if(PoloniexExchange.Default.IsConnected) {
                 for(int ci = 0; ci < baseCurr.Length; ci++) {
                     string curr = baseCurr[ci];
-                    Ticker btcUsdtTicker = PoloniexExchange.Default.Tickers.FirstOrDefault(t => t.BaseCurrency == "USDT" && t.MarketCurrency == curr);
+                    Ticker btcUsdtTicker = null;
+                    for(int i = 0; i < PoloniexExchange.Default.Tickers.Count; i++) {
+                        Ticker t = PoloniexExchange.Default.Tickers[i];
+                        if(t.BaseCurrency == "USDT" && t.MarketCurrency == curr) {
+                            btcUsdtTicker = t;
+                            break;
+                        }
+                    }
                     if(btcUsdtTicker == null)
                         throw new Exception("Static Arbitrage BtcUsdtTicker == null");
                     for(int ti = 0; ti < PoloniexExchange.Default.Tickers.Count; ti++) {
@@ -36,7 +43,14 @@ namespace CryptoMarketClient.Common {
             if(BittrexExchange.Default.IsConnected) {
                 for(int ci = 0; ci < baseCurr.Length; ci++) {
                     string curr = baseCurr[ci];
-                    Ticker btcUsdtTicker = BittrexExchange.Default.Tickers.FirstOrDefault(t => t.BaseCurrency == "USDT" && t.MarketCurrency == curr);
+                    Ticker btcUsdtTicker = null;
+                    for(int i = 0; i < BittrexExchange.Default.Tickers.Count; i++) {
+                        Ticker t = BittrexExchange.Default.Tickers[i];
+                        if(t.BaseCurrency == "USDT" && t.MarketCurrency == curr) {
+                            btcUsdtTicker = t;
+                            break;
+                        }
+                    }
                     if(btcUsdtTicker == null)
                         throw new Exception("Static Arbitrage BtcUsdtTicker == null");
                     for(int ti = 0; ti < BittrexExchange.Default.Tickers.Count; ti++) {
