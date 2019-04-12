@@ -125,8 +125,8 @@ namespace CryptoMarketClient {
 
         public bool LoadTickers() {
             if(GetTickersInfo()) {
-                foreach(Ticker ticker in Tickers) {
-                    ticker.Load();
+                for(int i = 0; i < Tickers.Count; i++) {
+                    Tickers[i].Load();
                 }
                 Save();
                 return true;
@@ -369,7 +369,8 @@ namespace CryptoMarketClient {
                     return;
                 }
             }
-            foreach(var s in info.Subscribtions) {
+            for(int i = 0; i < info.Subscribtions.Count; i++) {
+                var s = info.Subscribtions[i];
                 if(s.Ticker == null)
                     continue;
                 if(s.Type == SocketSubscribeType.OrderBook || !s.Ticker.IsListeningOrderBook)
@@ -409,12 +410,14 @@ namespace CryptoMarketClient {
         public void Reconnect() {
             if(TickersSocket != null)
                 TickersSocket.Reconnect();
-            foreach(var item in OrderBookSockets)
-                item.Reconnect();
-            foreach(var item in TradeHistorySockets)
-                item.Reconnect();
-            foreach(var item in KlineSockets)
-                item.Reconnect();
+            for(int i = 0; i < OrderBookSockets.Count; i++)
+                OrderBookSockets[i].Reconnect();
+            for(int i = 0; i < TradeHistorySockets.Count; i++) {
+                TradeHistorySockets[i].Reconnect();
+            }
+            for(int i = 0; i < KlineSockets.Count; i++) {
+                KlineSockets[i].Reconnect();
+            }
         }
 
         protected virtual void OnConnectionLost(WebSocket webSocket) {
@@ -440,14 +443,16 @@ namespace CryptoMarketClient {
                     SuppressCheckRequestLimits = false;
                 }
             }
-            foreach(RateLimit limit in RequestRate)
-                limit.CheckAllow();
+            for(int i = 0; i < RequestRate.Count; i++) {
+                RequestRate[i].CheckAllow();
+            }
         }
         protected void CheckOrderRateLimits() {
             if(OrderRate == null)
                 return;
-            foreach(RateLimit limit in OrderRate)
-                limit.CheckAllow();
+            for(int i = 0; i < OrderRate.Count; i++) {
+                OrderRate[i].CheckAllow();
+            }
         }
 
         public static DateTime FromUnixTime(long unixTime) {

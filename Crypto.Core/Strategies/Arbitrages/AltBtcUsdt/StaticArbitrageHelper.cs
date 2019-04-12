@@ -64,7 +64,8 @@ namespace CryptoMarketClient.Common {
                     }
                 }
             }
-            foreach(StaticArbitrageInfo info in items) {
+            for(int i = 0; i < items.Count; i++) {
+                StaticArbitrageInfo info = items[i];
                 info.AltBase.UpdateMode = TickerUpdateMode.Arbitrage;
                 info.AltUsdt.UpdateMode = TickerUpdateMode.Arbitrage;
                 info.BaseUsdt.UpdateMode = TickerUpdateMode.Arbitrage;

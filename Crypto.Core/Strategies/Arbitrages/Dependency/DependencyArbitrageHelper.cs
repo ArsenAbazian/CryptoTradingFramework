@@ -89,8 +89,8 @@ namespace Crypto.Core.Common.Arbitrages {
             IsActive = false;
         }
         protected void StartListenOrderBookStreams() {
-            foreach(StatisticalArbitrageStrategy info in Items) {
-                info.StartListenOrderBookStreams();
+            for(int i = 0; i < Items.Count; i++) {
+                Items[i].StartListenOrderBookStreams();
             }
         }
     }

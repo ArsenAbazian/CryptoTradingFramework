@@ -65,8 +65,9 @@ namespace CryptoMarketClient {
                 Ticker.StartListenKlineStream();
             }
             else {
-                foreach(Series s in this.chartControl1.Series)
-                    s.DataSource = null;
+                for(int i = 0; i < this.chartControl1.Series.Count; i++) {
+                    this.chartControl1.Series[i].DataSource = null;
+                }
             }
         }
 
@@ -266,7 +267,8 @@ namespace CryptoMarketClient {
             if(Ticker == null)
                 return;
             var intervals = Ticker.Exchange.AllowedCandleStickIntervals;
-            foreach(CandleStickIntervalInfo info in intervals) {
+            for(int i = 0; i < intervals.Count; i++) {
+                CandleStickIntervalInfo info = intervals[i];
                 BarCheckItem item = new BarCheckItem(this.barManager1) { Caption = info.Text, Tag = info.Interval, GroupIndex = 22 };
                 item.CheckedChanged += OnIntervalItemCheckedChanged;
                 this.bsCandleStickPeriod.ItemLinks.Add(item);
@@ -367,13 +369,14 @@ namespace CryptoMarketClient {
             Series s = this.chartControl1.Series["Events"];
             if(e == null || e.Action != System.Collections.Specialized.NotifyCollectionChangedAction.Add) {
                 s.Points.Clear();
-                foreach(TickerEvent ev in Ticker.Events) {
-                    s.Points.Add(CreateEventPoint(ev));
+                for(int i = 0; i < Ticker.Events.Count; i++) {
+                    s.Points.Add(CreateEventPoint(Ticker.Events[i]));
                 }
             }
             else {
-                foreach(TickerEvent ev in e.NewItems)
-                    s.Points.Add(CreateEventPoint(ev));
+                for(int i = 0; i < e.NewItems.Count; i++) {
+                    s.Points.Add(CreateEventPoint((TickerEvent) e.NewItems[i]));
+                }
             }
         }
 

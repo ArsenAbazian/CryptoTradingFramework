@@ -17,7 +17,8 @@ namespace CryptoMarketClient.Common {
             Date = DateTime.UtcNow;
             double amount = 0;
             double total = 0;
-            foreach(TradeEntry e in Trades) {
+            for(int i = 0; i < Trades.Count; i++) {
+                TradeEntry e = Trades[i];
                 amount += e.Amount;
                 total += e.Total;
             }

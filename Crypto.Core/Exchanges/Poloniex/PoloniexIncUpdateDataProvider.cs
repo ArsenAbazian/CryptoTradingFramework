@@ -8,20 +8,15 @@ using System.Threading.Tasks;
 namespace CryptoMarketClient.Exchanges.Poloniex {
     public class PoloniexIncrementalUpdateDataProvider : IIncrementalUpdateDataProvider {
         public void Update(Ticker ticker, IncrementalUpdateInfo info) {
-            foreach(string[] item in info.Updates) {
+            for(int i = 0; i < info.Updates.Count; i++) {
+                string[] item = info.Updates[i];
                 if(item[0][0] == 'o') {
-                    ticker.OrderBook.ApplyIncrementalUpdate(
-                        item[1][0] == '1' ? OrderBookEntryType.Bid : OrderBookEntryType.Ask,
-                        item[2],
-                        item[3]);
+                    ticker.OrderBook.ApplyIncrementalUpdate(item[1][0] == '1' ? OrderBookEntryType.Bid : OrderBookEntryType.Ask, item[2], item[3]);
                 }
                 else if(item[0][0] == 't') {
                     TradeInfoItem trade = new TradeInfoItem(null, ticker) {
-                        Type = item[2][0] == '0' ? TradeType.Sell : TradeType.Buy,
-                        RateString = item[3],
-                        AmountString = item[4],
-                        Time = new DateTime(Convert.ToInt64(item[5]))
-                        };
+                            Type = item[2][0] == '0' ? TradeType.Sell : TradeType.Buy, RateString = item[3], AmountString = item[4], Time = new DateTime(Convert.ToInt64(item[5]))
+                    };
                     ticker.TradeHistory.Insert(0, trade);
                     CandleStickChartHelper.UpdateVolumes(ticker.CandleStickData, trade, ticker.CandleStickPeriodMin);
                 }

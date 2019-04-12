@@ -105,8 +105,8 @@ namespace CryptoMarketClient.Common {
         public bool HasRef() {
             if(RefCount > 0)
                 return true;
-            foreach(var subs in Subscribtions) {
-                if(subs.RefCount > 0)
+            for(int i = 0; i < Subscribtions.Count; i++) {
+                if(Subscribtions[i].RefCount > 0)
                     return true;
             }
             return false;
@@ -447,14 +447,16 @@ namespace CryptoMarketClient.Common {
         }
 
         public void ForceUpdateSubscribtions() {
-            foreach(WebSocketSubscribeInfo info in Subscribtions) {
+            for(int i = 0; i < Subscribtions.Count; i++) {
+                WebSocketSubscribeInfo info = Subscribtions[i];
                 info.ShouldUpdateSubscribtion = true;
                 Telemetry.Default.TrackEvent(LogType.Warning, Exchange, info.Ticker, "updating subscribtion", info.Type.ToString());
                 SubscribeCore(info);
             }
         }
         public void UpdateSubscribtions() {
-            foreach(WebSocketSubscribeInfo info in Subscribtions) {
+            for(int i = 0; i < Subscribtions.Count; i++) {
+                WebSocketSubscribeInfo info = Subscribtions[i];
                 Telemetry.Default.TrackEvent(LogType.Warning, Exchange, info.Ticker, "updating subscribtion", info.Type.ToString());
                 SubscribeCore(info);
             }
@@ -462,8 +464,8 @@ namespace CryptoMarketClient.Common {
 
         protected internal void ClearRef() {
             RefCount = 0;
-            foreach(var sb in Subscribtions) {
-                sb.ClearRef();
+            for(int i = 0; i < Subscribtions.Count; i++) {
+                Subscribtions[i].ClearRef();
             }
         }
     }

@@ -44,10 +44,12 @@ namespace CryptoMarketClient {
 
         public void Offset(double firstBidValue) {
             double delta = firstBidValue - Bids[0].Value;
-            foreach(var entry in Bids)
-                entry.Value += delta;
-            foreach(var entry in Asks)
-                entry.Value += delta;
+            for(int i = 0; i < Bids.Count; i++) {
+                Bids[i].Value += delta;
+            }
+            for(int i = 0; i < Asks.Count; i++) {
+                Asks[i].Value += delta;
+            }
         }
 
         public double AskExpectation { get; private set; }
@@ -142,24 +144,28 @@ namespace CryptoMarketClient {
         public void Assign(OrderBook orderBook) {
             Bids.Clear();
             Asks.Clear();
-            foreach(var entry in orderBook.Bids) {
+            for(int i = 0; i < orderBook.Bids.Count; i++) {
+                var entry = orderBook.Bids[i];
                 this.Bids.Add(new OrderBookEntry() { Amount = entry.Amount, Value = entry.Value });
             }
-            foreach(var entry in orderBook.Asks) {
+            for(int i = 0; i < orderBook.Asks.Count; i++) {
+                var entry = orderBook.Asks[i];
                 this.Asks.Add(new OrderBookEntry() { Amount = entry.Amount, Value = entry.Value });
             }
         }
 
         public void OffsetBids(double firstBidValue) {
             double delta = firstBidValue - Bids[0].Value;
-            foreach(var entry in Bids)
-                entry.Value += delta;
+            for(int i = 0; i < Bids.Count; i++) {
+                Bids[i].Value += delta;
+            }
         }
 
         public void OffsetAsks(double firstAskValue) {
             double delta = firstAskValue - Asks[0].Value;
-            foreach(var entry in Asks)
-                entry.Value += delta;
+            for(int i = 0; i < Asks.Count; i++) {
+                Asks[i].Value += delta;
+            }
         }
 
         void CalcVolume(List<OrderBookEntry> list, out double volume, out double exp, out double disp, int depth) {
@@ -185,7 +191,8 @@ namespace CryptoMarketClient {
             index = 0;
             double invVolume = 1.0 / volume;
             double qexp = exp * exp;
-            foreach(OrderBookEntry e in list) {
+            for(int i = 0; i < list.Count; i++) {
+                OrderBookEntry e = list[i];
                 disp += (e.Value * e.Value) * e.Amount * invVolume - qexp;
                 index++;
                 if(index == count) break;
@@ -213,15 +220,16 @@ namespace CryptoMarketClient {
                 return;
             double MaxVolume = 0;
             double vt = 0;
-            foreach(OrderBookEntry e in Bids) {
+            for(int i = 0; i < Bids.Count; i++) {
+                OrderBookEntry e = Bids[i];
                 e.Volume = e.Value * e.Amount;
                 vt += e.Volume;
                 e.VolumeTotal = vt;
                 MaxVolume = Math.Max(MaxVolume, e.Volume);
             }
             vt = 0;
-            
-            foreach(OrderBookEntry e in Asks) {
+            for(int i = 0; i < Asks.Count; i++) {
+                OrderBookEntry e = Asks[i];
                 e.Volume = e.Value * e.Amount;
                 vt += e.Volume;
                 e.VolumeTotal = vt;
@@ -229,7 +237,8 @@ namespace CryptoMarketClient {
             }
             double mv = Asks.Count == 0 ? 0: Asks.Last().VolumeTotal;
             vt = 0;
-            foreach(OrderBookEntry e in AsksInverted) {
+            for(int i = 0; i < AsksInverted.Count; i++) {
+                OrderBookEntry e = AsksInverted[i];
                 e.Volume = e.Value * e.Amount;
                 vt += e.Volume;
                 e.VolumeTotal = mv - vt;
@@ -237,12 +246,18 @@ namespace CryptoMarketClient {
             if(MaxVolume == 0)
                 return;
             MaxVolume = 1 / MaxVolume;
-            foreach(OrderBookEntry e in Bids)
+            for(int i = 0; i < Bids.Count; i++) {
+                OrderBookEntry e = Bids[i];
                 e.VolumePercent = e.Volume * MaxVolume;
-            foreach(OrderBookEntry e in Asks)
+            }
+            for(int i = 0; i < Asks.Count; i++) {
+                OrderBookEntry e = Asks[i];
                 e.VolumePercent = e.Volume * MaxVolume;
-            foreach(OrderBookEntry e in AsksInverted)
+            }
+            for(int i = 0; i < AsksInverted.Count; i++) {
+                OrderBookEntry e = AsksInverted[i];
                 e.VolumePercent = e.Volume * MaxVolume;
+            }
         }
         public double BidEnergy { get; set; }
         public double AskEnergy { get; set; }
@@ -402,7 +417,8 @@ namespace CryptoMarketClient {
             double amount = FastValueConverter.Convert(amountString);
             int index = 0;
             if(amount == 0) {
-                foreach(OrderBookEntry e in list) {
+                for(int i = 0; i < list.Count; i++) {
+                    OrderBookEntry e = list[i];
                     if(IsEqual(e.Value, value)) {
                         list.Remove(e);
                         return;
@@ -412,7 +428,8 @@ namespace CryptoMarketClient {
                 //throw new DllNotFoundException("entry not found -> with value " + value + " and amount " + amount);
             }
             if(ascending) {
-                foreach(OrderBookEntry e in list) {
+                for(int i = 0; i < list.Count; i++) {
+                    OrderBookEntry e = list[i];
                     if(IsEqual(e.Value, value)) {
                         e.AmountString = amountString;
                         //if(!e.ValueString.StartsWith(rateString))
@@ -426,10 +443,10 @@ namespace CryptoMarketClient {
                     }
                     index++;
                 }
-                
             }
             else {
-                foreach(OrderBookEntry e in list) {
+                for(int i = 0; i < list.Count; i++) {
+                    OrderBookEntry e = list[i];
                     if(IsEqual(e.Value, value)) {
                         e.AmountString = amountString;
                         //if(!e.ValueString.StartsWith(rateString))

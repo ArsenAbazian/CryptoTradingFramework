@@ -135,7 +135,8 @@ namespace CryptoMarketClient.Exchanges.Poloniex {
         }
         public static Dictionary<string, int> GetCodes() {
             Dictionary<string, int> items = new Dictionary<string, int>();
-            foreach(var code in Items) {
+            for(int i = 0; i < Items.Count; i++) {
+                var code = Items[i];
                 items.Add(code.Name, code.Code);
             }
             return items;

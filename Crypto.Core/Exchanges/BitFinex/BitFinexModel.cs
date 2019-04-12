@@ -148,10 +148,10 @@ namespace CryptoMarketClient.BitFinex {
             text = text.Replace('"', ' ');
 
             string[] tickers = text.Split(',');
-            foreach(string item in tickers) {
+            for(int i = 0; i < tickers.Length; i++) {
+                string item = tickers[i];
                 BitFinexTicker m = new BitFinexTicker(this);
                 string currencyPair = item.Trim();
-
                 m.MarketCurrency = currencyPair.Substring(0, 3).ToUpper();
                 m.BaseCurrency = currencyPair.Substring(3, 3).ToUpper();
                 m.CurrencyPair = "t" + currencyPair.ToUpper();
@@ -160,7 +160,8 @@ namespace CryptoMarketClient.BitFinex {
                 Tickers.Add(m);
             }
             address = "https://api.bitfinex.com/v2/tickers?symbols=";
-            foreach(BitFinexTicker ticker in Tickers) {
+            for(int i = 0; i < Tickers.Count; i++) {
+                BitFinexTicker ticker = (BitFinexTicker) Tickers[i];
                 address += ticker.CurrencyPair;
                 if(Tickers.IndexOf(ticker) < Tickers.Count - 1)
                     address += ",";
@@ -449,7 +450,8 @@ namespace CryptoMarketClient.BitFinex {
             if(res.Count == 0)
                 return true;
             int index = 0;
-            foreach(string[] obj in res) {
+            for(int i = 0; i < res.Count; i++) {
+                string[] obj = res[i];
                 TradeInfoItem item = new TradeInfoItem(account, ticker);
                 item.IdString = obj[0];
                 item.Type = obj[3] == "LIMIT_BUY" ? TradeType.Buy : TradeType.Sell;
@@ -461,7 +463,6 @@ namespace CryptoMarketClient.BitFinex {
                 ticker.MyTradeHistory.Insert(index, item);
                 index++;
             }
-
             return true;
         }
         public override List<TradeInfoItem> GetTrades(Ticker info, DateTime starTime) {

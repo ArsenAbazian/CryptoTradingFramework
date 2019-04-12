@@ -33,8 +33,9 @@ namespace Crypto.Core.Helpers {
                         IList srcList = (IList)value;
                         IList dstList = (IList)prop.GetValue(obj, null);
                         dstList.Clear();
-                        foreach(var item in srcList)
-                            dstList.Add(item);
+                        for(int i = 0; i < srcList.Count; i++) {
+                            dstList.Add(srcList[i]);
+                        }
                     }
                     else if(value is IDictionary) {
                         IDictionary srcDict = (IDictionary)value;

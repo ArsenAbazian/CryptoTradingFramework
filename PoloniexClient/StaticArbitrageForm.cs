@@ -34,7 +34,8 @@ namespace CryptoMarketClient {
                 for(int i = 0; i < 3; i++)
                     if(BittrexExchange.Default.GetBalance(BittrexExchange.Default.DefaultAccount, "USDT"))
                         break;
-            foreach(StaticArbitrageInfo info in Items) {
+            for(int ii = 0; ii < Items.Count; ii++) {
+                StaticArbitrageInfo info = Items[ii];
                 for(int i = 0; i < 3; i++) {
                     if(info.AltBase.UpdateBalance(info.AltBase.MarketCurrency)) {
                         info.AltBalanceInfo = info.AltBase.MarketBalanceInfo;
@@ -171,8 +172,10 @@ namespace CryptoMarketClient {
         }
 
         private void bbClearSelected_ItemClick(object sender, ItemClickEventArgs e) {
-            foreach(StaticArbitrageInfo info in Items)
+            for(int i = 0; i < Items.Count; i++) {
+                StaticArbitrageInfo info = Items[i];
                 info.IsSelected = false;
+            }
             this.gridControl1.RefreshDataSource();
         }
 

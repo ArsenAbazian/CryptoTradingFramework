@@ -182,8 +182,9 @@ namespace CryptoMarketClient {
             IsUpdating = true;
             try {
                 Exchange.UpdateTickersInfo();
-                foreach(Ticker ticker in Exchange.Tickers)
-                    ticker.UpdateTrailings();
+                for(int i = 0; i < Exchange.Tickers.Count; i++) {
+                    Exchange.Tickers[i].UpdateTrailings();
+                }
             }
             finally {
                 IsUpdating = false;
@@ -266,7 +267,8 @@ namespace CryptoMarketClient {
         }
 
         protected void UpdatePinnedItems() {
-            foreach(PinnedTickerInfo info in Exchange.PinnedTickers) {
+            for(int i = 0; i < Exchange.PinnedTickers.Count; i++) {
+                PinnedTickerInfo info = Exchange.PinnedTickers[i];
                 Ticker t = Exchange.Tickers.FirstOrDefault(tt => tt.BaseCurrency == info.BaseCurrency && tt.MarketCurrency == info.MarketCurrency);
                 if(t != null)
                     t.IsSelected = true;

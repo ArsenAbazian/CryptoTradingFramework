@@ -15,8 +15,9 @@ namespace Crypto.Core.Strategies {
 
         bool IStrategyDataProvider.Connect(StrategyInputInfo info) {
             bool res = true;
-            foreach(TickerInputInfo ti in info.Tickers) {
-                Exchange e = ((IStrategyDataProvider)this).GetExchange(ti.Exchange);
+            for(int i = 0; i < info.Tickers.Count; i++) {
+                TickerInputInfo ti = info.Tickers[i];
+                Exchange e = ((IStrategyDataProvider) this).GetExchange(ti.Exchange);
                 if(!e.Connect())
                     return false;
                 ti.Ticker = e.GetTicker(ti.TickerName);
@@ -27,8 +28,9 @@ namespace Crypto.Core.Strategies {
 
         bool IStrategyDataProvider.Disconnect(StrategyInputInfo info) {
             bool res = true;
-            foreach(TickerInputInfo ti in info.Tickers) {
-                Exchange e = ((IStrategyDataProvider)this).GetExchange(ti.Exchange);
+            for(int i = 0; i < info.Tickers.Count; i++) {
+                TickerInputInfo ti = info.Tickers[i];
+                Exchange e = ((IStrategyDataProvider) this).GetExchange(ti.Exchange);
                 ti.Ticker = e.GetTicker(ti.TickerName);
                 res &= e.Disconnect(ti);
             }

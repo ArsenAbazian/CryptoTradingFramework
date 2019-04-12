@@ -250,9 +250,9 @@ namespace CryptoMarketClient.Exchanges.Bitmex {
                 return;
 
             OrderBookUpdateType type = String2UpdateType(obj.Value<string>("action"));
-            foreach(JObject item in items) {
+            for(int i = 0; i < items.Count; i++) {
+                JObject item = (JObject) items[i];
                 Ticker t = info.Ticker;
-
                 OrderBookEntryType entryType = item.Value<string>("side")[0] == 'S' ? OrderBookEntryType.Ask : OrderBookEntryType.Bid;
                 string rate = type == OrderBookUpdateType.Add ? item.Value<string>("price") : null;
                 string size = type != OrderBookUpdateType.Remove ? item.Value<string>("size") : null;

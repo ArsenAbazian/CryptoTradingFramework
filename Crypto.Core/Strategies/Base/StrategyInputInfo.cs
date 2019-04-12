@@ -22,8 +22,9 @@ namespace Crypto.Core.Strategies {
             foreach(ExchangeInputInfo e in info.Exchanges) {
                 Exchanges.Add((ExchangeInputInfo)e.Clone());
             }
-            foreach(TickerInputInfo t in info.Tickers) {
-                Tickers.Add((TickerInputInfo)t.Clone());
+            for(int i = 0; i < info.Tickers.Count; i++) {
+                TickerInputInfo t = info.Tickers[i];
+                Tickers.Add((TickerInputInfo) t.Clone());
             }
         }
     }

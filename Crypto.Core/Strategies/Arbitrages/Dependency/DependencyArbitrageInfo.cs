@@ -97,7 +97,8 @@ namespace Crypto.Core.Common.Arbitrages {
             b.Append(Second.Exchange.Type);
             b.Append(':');
             b.Append(Second.Name);
-            foreach(var item in First) {
+            for(int i = 0; i < First.Count; i++) {
+                var item = First[i];
                 b.Append('/');
                 b.Append(item.Exchange.Type);
                 b.Append(':');
@@ -295,8 +296,8 @@ namespace Crypto.Core.Common.Arbitrages {
         bool CheckAllConnections() {
             if(!Second.IsListeningOrderBook)
                 return false;
-            foreach(var item in First) {
-                if(!item.IsListeningOrderBook)
+            for(int i = 0; i < First.Count; i++) {
+                if(!First[i].IsListeningOrderBook)
                     return false;
             }
             return true;
@@ -327,7 +328,8 @@ namespace Crypto.Core.Common.Arbitrages {
             UpperBid = Second.OrderBook.Bids[0].Value;
             LowerAsk = First[0].OrderBook.Asks.Count == 0 ? 0: First[0].OrderBook.Asks[0].Value;
             double nullDeviation = double.NegativeInfinity;
-            foreach(Ticker first in First) {
+            for(int i = 0; i < First.Count; i++) {
+                Ticker first = First[i];
                 if(first.OrderBook.Asks.Count == 0)
                     continue;
                 double deviation = Second.OrderBook.Bids[0].Value - first.OrderBook.Asks[0].Value;
@@ -440,26 +442,26 @@ namespace Crypto.Core.Common.Arbitrages {
         public void StopListenOrderBookStreams() {
             if(Second == null)
                 return;
-            foreach(Ticker first in First) {
-                if(first == null)
+            for(int i = 0; i < First.Count; i++) {
+                if(First[i] == null)
                     return;
             }
             Second.StartListenOrderBook();
-            foreach(Ticker first in First) {
-                first.StartListenOrderBook();
+            for(int i = 0; i < First.Count; i++) {
+                First[i].StartListenOrderBook();
             }
         }
 
         public void StartListenOrderBookStreams() {
             if(Second == null)
                 return;
-            foreach(Ticker first in First) {
-                if(first == null)
+            for(int i = 0; i < First.Count; i++) {
+                if(First[i] == null)
                     return;
             }
             Second.StartListenOrderBook();
-            foreach(Ticker first in First) {
-                first.StartListenOrderBook();
+            for(int i = 0; i < First.Count; i++) {
+                First[i].StartListenOrderBook();
             }
         }
         
@@ -476,7 +478,8 @@ namespace Crypto.Core.Common.Arbitrages {
                     return false;
                 if(!Second.IsListeningOrderBook)
                     return false;
-                foreach(Ticker t in First) {
+                for(int i = 0; i < First.Count; i++) {
+                    Ticker t = First[i];
                     if(t == null)
                         return false;
                     if(!t.IsListeningOrderBook)
