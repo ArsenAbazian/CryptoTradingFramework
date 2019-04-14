@@ -154,13 +154,10 @@ namespace Crypto.Core.Strategies {
             for(int i = 0; i < candleStickCount / deltaCount; i++) {
                 BindingList<CandleStickData> data = info.Ticker.GetCandleStickData(info.KlineIntervalMin, start, intervalInSeconds * deltaCount);
                 if(data == null || data.Count == 0)
-                    break;
-                splitData.Insert(0, data);
+                    continue;
+                res.AddRange(data);
                 Thread.Sleep(300);
-                start = start.AddSeconds(-intervalInSeconds);
-            }
-            foreach(var item in splitData) {
-                res.AddRange(item);
+                start = start.AddSeconds(intervalInSeconds * deltaCount);
             }
             return res;   
         }

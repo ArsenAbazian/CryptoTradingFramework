@@ -151,6 +151,45 @@ namespace InvictusExchangeApp {
         bool Stop { get; set; }
         bool DownloadingWalletInvestor { get; set; }
         bool DownloadingCoinPredictor { get; set; }
+
+        private void DownloadDetailedForecast(string coin) {
+            PortalClient wc = new PortalClient();
+
+            byte[] data = wc.DownloadData(string.Format("https://walletinvestor.com/forecast?currency={0}", coin));
+            if(data == null)
+                return;
+            HtmlAgilityPack.HtmlDocument doc = new HtmlAgilityPack.HtmlDocument();
+            doc.Load(new MemoryStream(data));
+
+            HtmlNode node = doc.DocumentNode.Descendants().FirstOrDefault(n => n.GetAttributeValue("class", "") == "currency-desktop-table kv-grid-table table table-hover table-bordered table-striped table-condensed");
+            if(node == null)
+                return;
+            HtmlNode body = node.Element("tbody");
+            List<HtmlNode> rows = body.Descendants().Where(n => n.GetAttributeValue("data-key", "") != "").ToList();
+            if(rows.Count == 0)
+                return;
+            foreach(HtmlNode row in rows) {
+                HtmlNode name = row.Descendants().FirstOrDefault(n => n.GetAttributeValue("data-col-seq", "") == "0");
+                HtmlNode forecast14 = row.Descendants().FirstOrDefault(n => n.GetAttributeValue("data-col-seq", "") == "1");
+                HtmlNode forecast3Month = row.Descendants().FirstOrDefault(n => n.GetAttributeValue("data-col-seq", "") == "2");
+
+                try {
+                    WalletInvestorDataItem item = new WalletInvestorDataItem() { Name = coin };
+                    string nameText = name.Descendants().FirstOrDefault(n => n.GetAttributeValue("class", "") == "detail").InnerText.Trim();
+                    if(item.Name != nameText)
+                        continue;
+                    item.Description = name.InnerText.Remove(name.InnerText.Length - nameText.Length);
+
+                    item.Forecast14Day = Convert.ToDouble(CorrectString(forecast14.Element("a").InnerText));
+                    item.Forecast3Month = Convert.ToDouble(CorrectString(forecast3Month.Element("a").InnerText));
+                    WiItems.Add(item);
+                }
+                catch(Exception) {
+                    continue;
+                }
+            }
+        }
+
         private void DownloadWalletInvestorForecast() {
             var handle = SplashScreenManager.ShowOverlayForm(this.gridControl);
 
@@ -168,7 +207,7 @@ namespace InvictusExchangeApp {
 
             WalletInvestorPortalHelper helper = new WalletInvestorPortalHelper();
             helper.Enter(InvictusSettings.Default.Login, InvictusSettings.Default.Password);
-            if(!Registered && !helper.WaitUntil(30000, () => helper.State == PortalState.AutorizationDone)) {
+            if(!Registered && !helper.WaitUntil(Settings.AutorizationOperationWaitTimeInSeconds * 1000, () => helper.State == PortalState.AutorizationDone)) {
                 XtraMessageBox.Show("Error autorizing on walletinvestor.com");
                 this.siStatus.Caption = "<b>Error autorizing on walletinvestor.com</b>";
                 SplashScreenManager.CloseOverlayForm(handle);
@@ -181,6 +220,8 @@ namespace InvictusExchangeApp {
             List<WalletInvestorDataItem> list = new List<WalletInvestorDataItem>();
             WiItems = list;
             
+            List<Ticker>
+
             double percent = Settings.Min24HourChange;
             for(int i = 1; i < 1000; i++) {
                 if(Stop)
@@ -218,7 +259,10 @@ namespace InvictusExchangeApp {
                         string nameText = name.Descendants().FirstOrDefault(n => n.GetAttributeValue("class", "") == "detail").InnerText.Trim();
                         WalletInvestorDataItem item = new WalletInvestorDataItem();
 
+                        string description = name.InnerText.Remove(name.InnerText.Length - nameText.Length);
+
                         item.Name = nameText;
+                        item.Description = description;
                         Ticker ticker = BinanceExchange.Default.Tickers.FirstOrDefault(t => t.MarketCurrency == item.Name && t.BaseCurrency == "BTC");
 
                         HtmlNode forecast14 = row.Descendants().FirstOrDefault(n => n.GetAttributeValue("data-col-seq", "") == "1");
@@ -414,9 +458,11 @@ namespace InvictusExchangeApp {
                 if(ticker == null)
                     continue;
                 string slug = item.Value<string>("slug");
+                string description = item.Value<string>("name");
 
                 CoinPredictorDataItem cp = new CoinPredictorDataItem();
                 cp.Name = name;
+                cp.Description = description;
                 cp.BinanceLink = ticker.WebPageAddress;
                 cp.ForecastLink = string.Format("https://coinpredictor.io/{0}#price", slug.ToLower());
 
@@ -508,7 +554,7 @@ namespace InvictusExchangeApp {
         protected virtual bool Get7DayForecastFor(WalletInvestorDataItem item, string address, WalletInvestorPortalHelper helper) {
             helper.State = PortalState.LoadPage;
             helper.Chromium.Load(address);
-            if(!helper.WaitUntil(5000, () => helper.State == PortalState.PageLoaded))
+            if(!helper.WaitUntil(Settings.AutorizationOperationWaitTimeInSeconds * 1000, () => helper.State == PortalState.PageLoaded))
                 return false;
             item.ForecastLink = address;
 
@@ -516,7 +562,7 @@ namespace InvictusExchangeApp {
             if(text == "Get It Now!") {
                 if(!helper.ClickOnObjectById("seven-day-forecast-desc"))
                     return false;
-                if(!helper.WaitUntil(10000, () => helper.FindElementById("usersubscriberforecast-email")))
+                if(!helper.WaitUntil(Settings.AutorizationOperationWaitTimeInSeconds * 1000, () => helper.FindElementById("usersubscriberforecast-email")))
                     return false;
                 if(!helper.SetElementValueById("usersubscriberforecast-email", "'" + helper.Login + "'"))
                     return false;
@@ -524,7 +570,10 @@ namespace InvictusExchangeApp {
                     return false;
                 if(!helper.ClickOnObjectByClass("btn btn-success"))
                     return false;
-                helper.Wait(2000);
+                if(helper.WaitUntil(10000, () => helper.CheckElementByClassNameContent("swal2-confirm swal2-styled", "OK") == true)) {
+                    XtraMessageBox.Show("You did not unlock all of our 7 days forecasts for this E-mail: " + helper.Login + ". Please go to your mail client, find the e-mail from walletinvestor and active your e-mail by click on the link");
+                }
+                helper.Wait(10000);
             }
             try {
                 

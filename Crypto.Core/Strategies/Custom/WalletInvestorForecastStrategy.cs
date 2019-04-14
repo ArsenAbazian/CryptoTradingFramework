@@ -287,7 +287,10 @@ namespace Crypto.Core.Strategies {
 
     [Serializable]
     public class CoinPredictorDataItem {
+        [DisplayName("Coin")]
         public string Name { get; set; }
+        [DisplayName("Name")]
+        public string Description { get; set; }
         public double LastPrice { get; set; }
 
         [DisplayName("1 Day Forecast (CP)")]
@@ -312,7 +315,10 @@ namespace Crypto.Core.Strategies {
 
     [Serializable]
     public class WalletInvestorDataItem {
+        [DisplayName("Coin")]
         public string Name { get; set; }
+        [DisplayName("Name")]
+        public string Description { get; set; }
         public double LastPrice { get; set; }
         public double Change24 { get; set; }
         public bool Rise { get; set; }

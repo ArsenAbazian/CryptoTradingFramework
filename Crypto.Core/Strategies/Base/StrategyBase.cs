@@ -1,4 +1,5 @@
-﻿using Crypto.Core.Strategies.Custom;
+﻿using Crypto.Core.Strategies.Arbitrages.AltBtcUsdt;
+using Crypto.Core.Strategies.Custom;
 using CryptoMarketClient;
 using CryptoMarketClient.Common;
 using CryptoMarketClient.Helpers;
@@ -22,6 +23,7 @@ namespace Crypto.Core.Strategies {
     [XmlInclude(typeof(Signal.MacdTrendStrategy))]
     [XmlInclude(typeof(CustomTickerStrategy))]
     [XmlInclude(typeof(WalletInvestorForecastStrategy))]
+    [XmlInclude(typeof(TriplePairStrategy))]
     //[XmlInclude(typeof())]
     [Serializable]
     public abstract class StrategyBase {
@@ -90,6 +92,11 @@ namespace Crypto.Core.Strategies {
 
         public StrategyDataItemInfo DataItem(string fieldName, string formatString) {
             DataItemInfos.Add(new StrategyDataItemInfo() { FieldName = fieldName, FormatString = formatString });
+            return DataItemInfos.Last();
+        }
+       
+        public StrategyDataItemInfo EnumItem(string fieldName) {
+            DataItemInfos.Add(new StrategyDataItemInfo() { FieldName = fieldName, Visibility = DataVisibility.Table });
             return DataItemInfos.Last();
         }
 

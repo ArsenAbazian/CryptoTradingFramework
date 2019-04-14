@@ -48,7 +48,7 @@ namespace CryptoMarketClient.Common {
 
             Task task = Task.Factory.StartNew(() => {
                 for(int i = 0; i < info.Count; i++) {
-                    if(info.Tickers[i].UpdateArbitrageOrderBook()) {
+                    if(info.Tickers[i].UpdateArbitrageOrderBook(OrderBook.Depth)) {
                         //if(info.Tickers[i].UpdateTrades() && info.Tickers[i].TradeStatistic.Count > 0)
                         //    info.Tickers[i].OrderBook.TradeInfo = info.Tickers[i].TradeStatistic.Last();
                         //info.Tickers[i].OrderBook.CalcStatistics();
@@ -72,7 +72,7 @@ namespace CryptoMarketClient.Common {
             }
             info.LastUpdate = DateTime.UtcNow;
         }
-        public async void Update(StaticArbitrageInfo info, IStaticArbitrageUpdateListener listener) {
+        public async void Update(TriplePairArbitrageInfo info, IStaticArbitrageUpdateListener listener) {
             if(concurrentTickersCount2 > 8)
                 return;
             Interlocked.Increment(ref concurrentTickersCount2);
@@ -114,6 +114,6 @@ namespace CryptoMarketClient.Common {
     }
 
     public interface IStaticArbitrageUpdateListener {
-        void OnUpdateInfo(StaticArbitrageInfo info, bool useInvokeForUI);
+        void OnUpdateInfo(TriplePairArbitrageInfo info, bool useInvokeForUI);
     }
 }

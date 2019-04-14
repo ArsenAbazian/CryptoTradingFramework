@@ -9,8 +9,8 @@ using System.Threading.Tasks;
 
 namespace CryptoMarketClient.Common {
     [Serializable]
-    public class StaticArbitrageInfoHistoryItem {
-        public StaticArbitrageInfoHistoryItem(StaticArbitrageInfo info) {
+    public class TriplePairInfoHistoryItem {
+        public TriplePairInfoHistoryItem(TriplePairArbitrageInfo info) {
             Disbalance = info.Disbalance;
             Direction = info.Direction;
             AltBasePrice = info.AltBasePrice;
@@ -48,8 +48,8 @@ namespace CryptoMarketClient.Common {
         public double Earned { get; set; }
     }
 
-    public class StaticArbitrageInfo {
-        public List<StaticArbitrageInfoHistoryItem> History { get; } = new List<StaticArbitrageInfoHistoryItem>();
+    public class TriplePairArbitrageInfo {
+        public List<TriplePairInfoHistoryItem> History { get; } = new List<TriplePairInfoHistoryItem>();
 
         public Ticker AltBase { get; set; }
         public Ticker BaseUsdt { get; set; }
@@ -233,7 +233,7 @@ namespace CryptoMarketClient.Common {
                 MaxProfit = Math.Max(MaxProfit, Profit);
 
                 if(History.Count == 0 || History.Last().Amount != Amount || History.Last().Disbalance != Disbalance)
-                    History.Add(new StaticArbitrageInfoHistoryItem(this));
+                    History.Add(new TriplePairInfoHistoryItem(this));
             }
             else {
                 Amount = 0;
@@ -281,6 +281,8 @@ namespace CryptoMarketClient.Common {
             return false;
         }
         protected bool CheckUpdateBaseBalance(double amount) {
+            if(DemoMode)
+                return true;
             double prev = BaseBalanceInfo.Available;
             for(int i = 0; i < 10; i++) {
                 if(!UpdateBaseBalance())
@@ -349,6 +351,8 @@ namespace CryptoMarketClient.Common {
             return true;
         }
         protected bool CheckUpdateUstdBalance(double amount) {
+            if(DemoMode)
+                return true;
             double prev = UsdtBalanceInfo.Available;
             for(int i = 0; i < 10; i++) {
                 if(!UpdateUsdtBalance())
@@ -437,6 +441,8 @@ namespace CryptoMarketClient.Common {
             return Math.Min(allowedAmount, (BaseBalanceInfo.Available / AltBasePrice) * 0.9970);
         }
         protected bool BuyBaseByUsdt(double price, double amount) {
+            if(DemoMode)
+                return true;
             if(BaseUsdt.Buy(price, amount) == null) {
                 LogManager.Default.AddError("usdt -> base fail. " + ToString());
                 Debug.WriteLine("usdt -> base fail.");
@@ -446,6 +452,8 @@ namespace CryptoMarketClient.Common {
             return true;
         }
         protected bool BuyAltByBase(double price, double amount) {
+            if(DemoMode)
+                return true;
             if(AltBase.Buy(price, amount) == null) {
                 LogManager.Default.AddError("base -> alt fail. " + ToString());
                 Debug.WriteLine("base -> alt fail.");
@@ -455,6 +463,8 @@ namespace CryptoMarketClient.Common {
             return true;
         }
         protected bool SellAltByUsdt(double price, double amount) {
+            if(DemoMode)
+                return true;
             if(AltUsdt.Sell(price, amount) == null) {
                 LogManager.Default.AddError("alt -> usdt fail. " + ToString());
                 Debug.WriteLine("alt -> usdt fail.");
@@ -483,87 +493,88 @@ namespace CryptoMarketClient.Common {
 
                 Debug.WriteLine("make operation -> " + ToString());
                 Debug.WriteLine("calculated alt amount = " + altAmount.ToString("0.00000000"));
-
-                if(Direction == OperationDirection.BuyBaseSellUsdt) {
-                    if(!BuyBaseByUsdt(BaseUsdtPrice, altAmount * AltBasePrice))
-                        return true;
-
-                    if(!CheckUpdateBaseBalance(altAmount * AltBasePrice))
-                        return false;
-
-                    if(!CheckUpdateUstdBalance(-BaseUsdtPrice * altAmount * AltBasePrice))
-                        return false;
-
-                    altAmount = CalcAltAmountByBase(altAmount);
-                    Debug.WriteLine("updated alt amount = " + altAmount.ToString("0.00000000"));
-
-                    if(!BuyAltByBase(AltBasePrice, altAmount))
-                        return false;
-
-                    if(!CheckUpdateAltBalance(altAmount))
-                        return false;
-
-                    altAmount = Math.Min(altAmount, AltBalanceInfo.Available);
-                    Debug.WriteLine("updated alt amount = " + altAmount.ToString("0.00000000"));
-
-                    if(!SellAltByUsdt(AltUsdtPrice, altAmount))
-                        return false;
-
-                    if(!CheckUpdateAltBalance(-altAmount))
-                        return false;
-
-                    if(!CheckUpdateUstdBalance(altAmount * AltUsdtPrice))
-                        return false;
-                }
-                else {
-                    return true;
-                    //if(!AltUsdt.Buy(AtlUsdtPrice, altAmount)) {
-                    //    LogManager.Default.AddError("BuyUsdtSellBase.AltUsdt.Buy fail. " + ToString());
-                    //    return true;
-                    //}
-                    //if(!UpdateAltBalance()) {
-                    //    LogManager.Default.AddError("BuyUsdtSellBase.UpdateAltBalance fail. " + ToString());
-                    //    return false;
-                    //}
-                    //if(!UpdateUsdtBalance()) {
-                    //    LogManager.Default.AddError("BuyUsdtSellBase.UpdateUsdtBalance fail. " + ToString());
-                    //    return false;
-                    //}
-                    //if(!AltBase.Sell(AltBasePrice, AltBalanceInfo.Available)) {
-                    //    LogManager.Default.AddError("BuyUsdtSellBase.AltBase.Sell fail. " + ToString());
-                    //    return false;
-                    //}
-                    //if(!UpdateBaseBalance()) {
-                    //    LogManager.Default.AddError("BuyUsdtSellBase.UpdateBaseBalance fail. " + ToString());
-                    //    return false;
-                    //}
-                    //if(!BaseUsdt.Sell(BaseUsdtPrice, BaseBalanceInfo.Available)) {
-                    //    LogManager.Default.AddError("BuyUsdtSellBase.BaseUsdt.Sell fail. " + ToString());
-                    //    return false;
-                    //}
-                    //if(!UpdateBaseBalance()) {
-                    //    LogManager.Default.AddError("BuyUsdtSellBase.UpdateBaseBalance fail. " + ToString());
-                    //    return false;
-                    //}
-                    //if(!UpdateUsdtBalance()) {
-                    //    LogManager.Default.AddError("BuyUsdtSellBase.UpdateUsdtBalance fail. " + ToString());
-                    //    return false;
-                    //}
-                }
-                LastEarned = UsdtBalanceInfo.Available - usdtBefore;
-                LastOperationTime = DateTime.UtcNow;
-                IsSelected = false;
-
-                OperationExecuted = true;
-                if(LastEarned < 0) {
-                    LogManager.Default.AddError(ToString() + ": statistic arbitrage: fail make positive profit. " + LastEarned.ToString("0.00000000"));
-                    Debug.WriteLine("statistic arbitrage: fail make positive profit. " + LastEarned.ToString("0.00000000"));
-                    return false;
-                }
-
-                LogManager.Default.AddError(ToString() + ": statistic arbitrage: operation completed succesfully. " + LastEarned.ToString("0.00000000"));
-                Debug.WriteLine("statistic arbitrage: operation completed succesfully. " + LastEarned.ToString("0.00000000"));
                 return true;
+
+                //if(Direction == OperationDirection.BuyBaseSellUsdt) {
+                //    if(!BuyBaseByUsdt(BaseUsdtPrice, altAmount * AltBasePrice))
+                //        return true;
+
+                //    if(!CheckUpdateBaseBalance(altAmount * AltBasePrice))
+                //        return false;
+
+                //    if(!CheckUpdateUstdBalance(-BaseUsdtPrice * altAmount * AltBasePrice))
+                //        return false;
+
+                //    altAmount = CalcAltAmountByBase(altAmount);
+                //    Debug.WriteLine("updated alt amount = " + altAmount.ToString("0.00000000"));
+
+                //    if(!BuyAltByBase(AltBasePrice, altAmount))
+                //        return false;
+
+                //    if(!CheckUpdateAltBalance(altAmount))
+                //        return false;
+
+                //    altAmount = Math.Min(altAmount, AltBalanceInfo.Available);
+                //    Debug.WriteLine("updated alt amount = " + altAmount.ToString("0.00000000"));
+
+                //    if(!SellAltByUsdt(AltUsdtPrice, altAmount))
+                //        return false;
+
+                //    if(!CheckUpdateAltBalance(-altAmount))
+                //        return false;
+
+                //    if(!CheckUpdateUstdBalance(altAmount * AltUsdtPrice))
+                //        return false;
+                //}
+                //else {
+                //    return true;
+                //    //if(!AltUsdt.Buy(AtlUsdtPrice, altAmount)) {
+                //    //    LogManager.Default.AddError("BuyUsdtSellBase.AltUsdt.Buy fail. " + ToString());
+                //    //    return true;
+                //    //}
+                //    //if(!UpdateAltBalance()) {
+                //    //    LogManager.Default.AddError("BuyUsdtSellBase.UpdateAltBalance fail. " + ToString());
+                //    //    return false;
+                //    //}
+                //    //if(!UpdateUsdtBalance()) {
+                //    //    LogManager.Default.AddError("BuyUsdtSellBase.UpdateUsdtBalance fail. " + ToString());
+                //    //    return false;
+                //    //}
+                //    //if(!AltBase.Sell(AltBasePrice, AltBalanceInfo.Available)) {
+                //    //    LogManager.Default.AddError("BuyUsdtSellBase.AltBase.Sell fail. " + ToString());
+                //    //    return false;
+                //    //}
+                //    //if(!UpdateBaseBalance()) {
+                //    //    LogManager.Default.AddError("BuyUsdtSellBase.UpdateBaseBalance fail. " + ToString());
+                //    //    return false;
+                //    //}
+                //    //if(!BaseUsdt.Sell(BaseUsdtPrice, BaseBalanceInfo.Available)) {
+                //    //    LogManager.Default.AddError("BuyUsdtSellBase.BaseUsdt.Sell fail. " + ToString());
+                //    //    return false;
+                //    //}
+                //    //if(!UpdateBaseBalance()) {
+                //    //    LogManager.Default.AddError("BuyUsdtSellBase.UpdateBaseBalance fail. " + ToString());
+                //    //    return false;
+                //    //}
+                //    //if(!UpdateUsdtBalance()) {
+                //    //    LogManager.Default.AddError("BuyUsdtSellBase.UpdateUsdtBalance fail. " + ToString());
+                //    //    return false;
+                //    //}
+                //}
+                //LastEarned = UsdtBalanceInfo.Available - usdtBefore;
+                //LastOperationTime = DateTime.UtcNow;
+                //IsSelected = false;
+
+                //OperationExecuted = true;
+                //if(LastEarned < 0) {
+                //    LogManager.Default.AddError(ToString() + ": statistic arbitrage: fail make positive profit. " + LastEarned.ToString("0.00000000"));
+                //    Debug.WriteLine("statistic arbitrage: fail make positive profit. " + LastEarned.ToString("0.00000000"));
+                //    return false;
+                //}
+
+                //LogManager.Default.AddError(ToString() + ": statistic arbitrage: operation completed succesfully. " + LastEarned.ToString("0.00000000"));
+                //Debug.WriteLine("statistic arbitrage: operation completed succesfully. " + LastEarned.ToString("0.00000000"));
+                //return true;
             }
             finally {
                 timer.Stop();
@@ -576,6 +587,7 @@ namespace CryptoMarketClient.Common {
             return Exchange + "-" + AltCoin + "-" + BaseCoin;
         }
         public string Error { get; set; }
+        public bool DemoMode { get; internal set; }
     }
 
     public enum OperationDirection {

@@ -16,6 +16,7 @@ namespace Crypto.Core.Strategies {
         public int PanelIndex { get; set; } = 0;
         public string AnnotationText { get; set; }
         public string AnnotationAnchorField { get; set; }
+        public int CandleStickMinutesInterval { get; set; } = 30;
         public DataVisibility Visibility { get; set; } = DataVisibility.Both;
     }
 

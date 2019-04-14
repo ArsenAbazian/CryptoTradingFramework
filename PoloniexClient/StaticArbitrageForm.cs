@@ -18,7 +18,7 @@ namespace CryptoMarketClient {
     public partial class StaticArbitrageForm : ThreadUpdateForm, IStaticArbitrageUpdateListener {
         public StaticArbitrageForm() {
             InitializeComponent();
-            Items = StaticArbitrageHelper.Default.GetItems();
+            Items = TriplePairArbitrageHelper.Default.GetItems();
             this.staticArbitrageInfoBindingSource.DataSource = Items;
             //UpdateBalances();
             //GenerateBalanceItems();
@@ -34,7 +34,7 @@ namespace CryptoMarketClient {
                 for(int i = 0; i < 3; i++)
                     if(BittrexExchange.Default.GetBalance(BittrexExchange.Default.DefaultAccount, "USDT"))
                         break;
-            foreach(StaticArbitrageInfo info in Items) {
+            foreach(TriplePairArbitrageInfo info in Items) {
                 for(int i = 0; i < 3; i++) {
                     if(info.AltBase.UpdateBalance(info.AltBase.MarketCurrency)) {
                         info.AltBalanceInfo = info.AltBase.MarketBalanceInfo;
@@ -49,10 +49,10 @@ namespace CryptoMarketClient {
                 }
                 info.UsdtBalanceInfo = info.AltUsdt.BaseBalanceInfo;
             }
-            UsdtBalances = StaticArbitrageHelper.Default.GetUsdtBalances();
+            UsdtBalances = TriplePairArbitrageHelper.Default.GetUsdtBalances();
         }
 
-        public List<StaticArbitrageInfo> Items { get; private set; }
+        public List<TriplePairArbitrageInfo> Items { get; private set; }
         public List<BalanceBase> UsdtBalances { get; private set; }
         protected bool ShouldProcessArbitrage { get; set; }
 
@@ -73,7 +73,7 @@ namespace CryptoMarketClient {
                     }
                     if(this.bbMonitorSelected.Checked && !Items[i].IsSelected)
                         continue;
-                    StaticArbitrageInfo current = Items[i];
+                    TriplePairArbitrageInfo current = Items[i];
                     if(current.IsUpdating)
                         continue;
                     if(!current.ObtainingData) {
@@ -86,16 +86,16 @@ namespace CryptoMarketClient {
                         current.IsActual = false;
                         current.NextOverdueMs += 3000;
                         if(IsHandleCreated)
-                            BeginInvoke(new Action<StaticArbitrageInfo>(RefreshGridRow), current);
+                            BeginInvoke(new Action<TriplePairArbitrageInfo>(RefreshGridRow), current);
                     }
                     continue;
                 }
             }
         }
-        public void RefreshGridRow(StaticArbitrageInfo info) {
+        public void RefreshGridRow(TriplePairArbitrageInfo info) {
             this.gridView1.RefreshRow(this.gridView1.GetRowHandle(Items.IndexOf(info)));
         }
-        async Task UpdateArbitrageInfoTask(StaticArbitrageInfo info) {
+        async Task UpdateArbitrageInfoTask(TriplePairArbitrageInfo info) {
             Task task = Task.Factory.StartNew(() => {
                 TickerCollectionUpdateHelper.Default.Update(info, this);
             });
@@ -116,7 +116,7 @@ namespace CryptoMarketClient {
 
         }
 
-        void IStaticArbitrageUpdateListener.OnUpdateInfo(StaticArbitrageInfo info, bool useInvokeForUI) {
+        void IStaticArbitrageUpdateListener.OnUpdateInfo(TriplePairArbitrageInfo info, bool useInvokeForUI) {
             info.Calculate();
             if(!ShouldProcessArbitrage && info.IsSelected) {
                 ShouldProcessArbitrage = true;
@@ -130,7 +130,7 @@ namespace CryptoMarketClient {
                 }
                 ShouldProcessArbitrage = false;
             }
-            this.BeginInvoke(new Action<StaticArbitrageInfo>(RefreshGridRow), info);
+            this.BeginInvoke(new Action<TriplePairArbitrageInfo>(RefreshGridRow), info);
             info.IsUpdating = false;
         }
         void UpdateBalanceItems() {
@@ -146,7 +146,7 @@ namespace CryptoMarketClient {
         }
 
         private void bbShowHistory_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
-            StaticArbitrageInfo info = (StaticArbitrageInfo)this.gridView1.GetFocusedRow();
+            TriplePairArbitrageInfo info = (TriplePairArbitrageInfo)this.gridView1.GetFocusedRow();
             StaticArbitrageHistoryForm form = new StaticArbitrageHistoryForm();
             form.Info = info;
             form.MdiParent = MdiParent;
@@ -171,7 +171,7 @@ namespace CryptoMarketClient {
         }
 
         private void bbClearSelected_ItemClick(object sender, ItemClickEventArgs e) {
-            foreach(StaticArbitrageInfo info in Items)
+            foreach(TriplePairArbitrageInfo info in Items)
                 info.IsSelected = false;
             this.gridControl1.RefreshDataSource();
         }

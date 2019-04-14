@@ -195,6 +195,12 @@
     <Compile Include="Forms\AccountEditingForm.Designer.cs">
       <DependentUpon>AccountEditingForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Strategies\Arbitrages\TriplePairStrategyConfigurationControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Strategies\Arbitrages\TriplePairStrategyConfigurationControl.Designer.cs">
+      <DependentUpon>TriplePairStrategyConfigurationControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Strategies\Custom\InvictusExchange\WalletInvestorItemsControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -354,6 +360,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\AccountEditingForm.resx">
       <DependentUpon>AccountEditingForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Strategies\Arbitrages\TriplePairStrategyConfigurationControl.resx">
+      <DependentUpon>TriplePairStrategyConfigurationControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Strategies\Custom\InvictusExchange\WalletInvestorItemsControl.resx">
       <DependentUpon>WalletInvestorItemsControl.cs</DependentUpon>

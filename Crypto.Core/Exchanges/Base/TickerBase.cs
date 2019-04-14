@@ -269,17 +269,32 @@ namespace CryptoMarketClient {
         public DateTime LastTradeStatisticTime { get; set; }
         public long LastTradeId { get; set; }
         public abstract string WebPageAddress { get; }
-        public bool UpdateArbitrageOrderBook() {
+        public bool UpdateArbitrageOrderBook(int depth) {
             if(IsUpdatingOrderBook)
                 return true;
             try {
                 IsUpdatingOrderBook = true;
-                return Exchange.UpdateArbitrageOrderBook(this, OrderBook.Depth);
+                return Exchange.UpdateArbitrageOrderBook(this, depth);
             }
             finally {
                 IsUpdatingOrderBook = false;
             }
         }
+        //public bool UpdateOrderBook(int depth) {
+        //    if(IsUpdatingOrderBook)
+        //        return true;
+        //    try {
+        //        IsUpdatingOrderBook = true;
+        //        bool res = Exchange.UpdateArbitrageOrderBook(this, depth);
+        //        if(res) {
+        //            OnApplyIncrementalUpdate();
+        //        }
+        //        return res;
+        //    }
+        //    finally {
+        //        IsUpdatingOrderBook = false;
+        //    }
+        //}
         public bool UpdateOrderBook() {
             if(IsUpdatingOrderBook)
                 return true;

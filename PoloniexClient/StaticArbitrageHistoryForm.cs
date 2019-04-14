@@ -16,8 +16,8 @@ namespace CryptoMarketClient {
             InitializeComponent();
         }
 
-        StaticArbitrageInfo info;
-        public StaticArbitrageInfo Info {
+        TriplePairArbitrageInfo info;
+        public TriplePairArbitrageInfo Info {
             get {
                 return info;
             }

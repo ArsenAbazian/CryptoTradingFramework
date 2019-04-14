@@ -53,6 +53,8 @@ namespace InvictusExchangeApp {
             this.MinCp24HourChange = s.MinCp24HourChange;
             this.MinCp4WeekChange = s.MinCp4WeekChange;
             this.MinCp7DayChange = s.MinCp7DayChange;
+            this.MinCp3MonthChange = s.MinCp3MonthChange;
+            this.AutorizationOperationWaitTimeInSeconds = s.AutorizationOperationWaitTimeInSeconds;
             this.Login = s.Login;
             this.Password = s.Password;
         }
@@ -95,6 +97,7 @@ namespace InvictusExchangeApp {
             PasswordEncoded = EncryptHelper.Encrypt(Password, true);
         }
 
+        public int AutorizationOperationWaitTimeInSeconds { get; set; } = 60;
         public double Min24HourChange { get; set; } = 20;
         public double Min7DaysChange { get; set; } = 10;
         public double Min14DayChange { get; set; } = 20;

@@ -467,8 +467,12 @@ namespace CryptoMarketClient.Strategies {
             // 
             // chartControl
             // 
+            xyDiagram1.AxisX.DateTimeScaleOptions.AggregateFunction = DevExpress.XtraCharts.AggregateFunction.None;
+            xyDiagram1.AxisX.DateTimeScaleOptions.MeasureUnit = DevExpress.XtraCharts.DateTimeMeasureUnit.Minute;
+            xyDiagram1.AxisX.Label.TextPattern = "{A:h:mm d.MM}";
             xyDiagram1.AxisX.VisibleInPanesSerializable = "-1";
             xyDiagram1.AxisY.Alignment = DevExpress.XtraCharts.AxisAlignment.Far;
+            xyDiagram1.AxisY.Label.TextPattern = "{V:f8}";
             xyDiagram1.AxisY.VisibleInPanesSerializable = "-1";
             xyDiagram1.AxisY.WholeRange.AlwaysShowZeroLevel = false;
             xyDiagram1.DependentAxesYRange = DevExpress.Utils.DefaultBoolean.True;
@@ -481,6 +485,7 @@ namespace CryptoMarketClient.Strategies {
             this.chartControl.Legend.Visibility = DevExpress.Utils.DefaultBoolean.False;
             this.chartControl.Location = new System.Drawing.Point(0, 60);
             this.chartControl.Name = "chartControl";
+            series1.ArgumentScaleType = DevExpress.XtraCharts.ScaleType.DateTime;
             series1.Name = "Series 1";
             series1.View = lineSeriesView1;
             this.chartControl.SeriesSerializable = new DevExpress.XtraCharts.Series[] {

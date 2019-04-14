@@ -26,6 +26,8 @@ namespace Crypto.Core.Strategies {
         }
 
         bool IStrategyDataProvider.Disconnect(StrategyInputInfo info) {
+            if(info == null)
+                return true;
             bool res = true;
             foreach(TickerInputInfo ti in info.Tickers) {
                 Exchange e = ((IStrategyDataProvider)this).GetExchange(ti.Exchange);

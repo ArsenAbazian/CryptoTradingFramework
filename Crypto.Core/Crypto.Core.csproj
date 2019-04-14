@@ -213,6 +213,7 @@
     <Compile Include="Indicators\StochasticIndicator.cs" />
     <Compile Include="Indicators\CandlePatternIndicator.cs" />
     <Compile Include="Indicators\WindowIndicator.cs" />
+    <Compile Include="Strategies\Arbitrages\AltBtcUsdt\TriplePairStrategy.cs" />
     <Compile Include="Strategies\Arbitrages\ArbitrageHistoryHelper.cs" />
     <Compile Include="Strategies\Arbitrages\ArbitrageInfo.cs" />
     <Compile Include="Strategies\Arbitrages\Dependency\DependencyArbitrageHelper.cs" />

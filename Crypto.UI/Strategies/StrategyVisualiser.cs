@@ -64,6 +64,7 @@ namespace CryptoMarketClient.Strategies {
                 view.Pane = ((XYDiagram2D)Chart.Diagram).Panes[info.PanelIndex - 1];
                 view.AxisY = ((XYDiagram)Chart.Diagram).SecondaryAxesY[info.PanelIndex - 1];
             }
+            
             return res;
         }
 
@@ -185,14 +186,22 @@ namespace CryptoMarketClient.Strategies {
             s.ArgumentScaleType = ScaleType.DateTime;
             s.ValueDataMembers.AddRange("Low", "High", "Open", "Close");
             s.ValueScaleType = ScaleType.Numerical;
+            
             CandleStickSeriesView view = new CandleStickSeriesView();
 
             view.LineThickness = (int)(info.GraphWidth * DpiProvider.Default.DpiScaleFactor);
             view.LevelLineLength = 0.25;
             view.ReductionOptions.ColorMode = ReductionColorMode.OpenToCloseValue;
             view.ReductionOptions.FillMode = CandleStickFillMode.FilledOnReduction;
+            
             view.ReductionOptions.Level = StockLevel.Open;
             view.ReductionOptions.Visible = true;
+            view.AggregateFunction = SeriesAggregateFunction.None;
+            view.LineThickness = (int)(1 * DpiProvider.Default.DpiScaleFactor);
+            view.LevelLineLength = 0.25;
+
+            
+            ((XYDiagram)Chart.Diagram).AxisX.DateTimeScaleOptions.MeasureUnitMultiplier = info.CandleStickMinutesInterval;
 
             s.View = view;
             if(Strategy.StrategyData != null && Strategy.StrategyData.Count > 0)

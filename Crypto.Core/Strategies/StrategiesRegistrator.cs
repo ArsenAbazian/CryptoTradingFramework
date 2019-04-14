@@ -1,4 +1,5 @@
 ﻿using Crypto.Core.Common.Arbitrages;
+using Crypto.Core.Strategies.Arbitrages.AltBtcUsdt;
 using Crypto.Core.Strategies.Custom;
 using Crypto.Core.Strategies.Signal;
 using CryptoMarketClient.Strategies.Stupid;
@@ -27,6 +28,7 @@ namespace Crypto.Core.Strategies {
             list.Add(new StrategyRegistrationInfo() { Type = typeof(TripleRsiIndicatorStrategy), Group = StrategyGroup.Signal, Name = "Triple Rsi Indicator", Description = "This strategy based on triple rsi indicators values." });
             list.Add(new StrategyRegistrationInfo() { Type = typeof(MacdTrendStrategy), Group = StrategyGroup.Signal, Name = "Macd Trend", Description = "This strategy based on Macd trend." });
             list.Add(new StrategyRegistrationInfo() { Type = typeof(CustomTickerStrategy), Group = StrategyGroup.Custom, Name = "Custom Strategy", Description = "Your own fully customizable strategy" });
+            list.Add(new StrategyRegistrationInfo() { Type = typeof(TriplePairStrategy), Group = StrategyGroup.Arbitrage, Name = "Triple Pair Strategy", Description = "" });
             return list;
         }
     }

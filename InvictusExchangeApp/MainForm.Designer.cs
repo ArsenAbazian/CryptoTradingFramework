@@ -112,10 +112,12 @@
             this.colCp1Day = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colCp7Day = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colCp4Week = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colCp3Month = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colCpMatch = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colMatch2 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.repositoryItemCheckEdit3 = new DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit();
-            this.colCp3Month = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colDescription = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colDescription1 = new DevExpress.XtraGrid.Columns.GridColumn();
             ((System.ComponentModel.ISupportInitialize)(this.barManager2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemProgressBar1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemSpinEdit1)).BeginInit();
@@ -358,7 +360,7 @@
             this.standaloneBarDockControl1.Location = new System.Drawing.Point(0, 0);
             this.standaloneBarDockControl1.Manager = this.barManager2;
             this.standaloneBarDockControl1.Name = "standaloneBarDockControl1";
-            this.standaloneBarDockControl1.Size = new System.Drawing.Size(952, 31);
+            this.standaloneBarDockControl1.Size = new System.Drawing.Size(1426, 60);
             this.standaloneBarDockControl1.Text = "standaloneBarDockControl1";
             // 
             // bar4
@@ -428,7 +430,7 @@
             this.standaloneBarDockControl2.Location = new System.Drawing.Point(0, 0);
             this.standaloneBarDockControl2.Manager = this.barManager2;
             this.standaloneBarDockControl2.Name = "standaloneBarDockControl2";
-            this.standaloneBarDockControl2.Size = new System.Drawing.Size(952, 31);
+            this.standaloneBarDockControl2.Size = new System.Drawing.Size(1426, 60);
             this.standaloneBarDockControl2.Text = "standaloneBarDockControl2";
             // 
             // bar5
@@ -474,7 +476,7 @@
             this.standaloneBarDockControl3.Location = new System.Drawing.Point(0, 0);
             this.standaloneBarDockControl3.Manager = this.barManager2;
             this.standaloneBarDockControl3.Name = "standaloneBarDockControl3";
-            this.standaloneBarDockControl3.Size = new System.Drawing.Size(952, 31);
+            this.standaloneBarDockControl3.Size = new System.Drawing.Size(946, 60);
             this.standaloneBarDockControl3.Text = "standaloneBarDockControl3";
             // 
             // barDockControl1
@@ -483,31 +485,31 @@
             this.barDockControl1.Dock = System.Windows.Forms.DockStyle.Top;
             this.barDockControl1.Location = new System.Drawing.Point(0, 0);
             this.barDockControl1.Manager = this.barManager2;
-            this.barDockControl1.Size = new System.Drawing.Size(958, 31);
+            this.barDockControl1.Size = new System.Drawing.Size(1438, 60);
             // 
             // barDockControl2
             // 
             this.barDockControl2.CausesValidation = false;
             this.barDockControl2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.barDockControl2.Location = new System.Drawing.Point(0, 460);
+            this.barDockControl2.Location = new System.Drawing.Point(0, 722);
             this.barDockControl2.Manager = this.barManager2;
-            this.barDockControl2.Size = new System.Drawing.Size(958, 29);
+            this.barDockControl2.Size = new System.Drawing.Size(1438, 52);
             // 
             // barDockControl3
             // 
             this.barDockControl3.CausesValidation = false;
             this.barDockControl3.Dock = System.Windows.Forms.DockStyle.Left;
-            this.barDockControl3.Location = new System.Drawing.Point(0, 31);
+            this.barDockControl3.Location = new System.Drawing.Point(0, 60);
             this.barDockControl3.Manager = this.barManager2;
-            this.barDockControl3.Size = new System.Drawing.Size(0, 429);
+            this.barDockControl3.Size = new System.Drawing.Size(0, 662);
             // 
             // barDockControl4
             // 
             this.barDockControl4.CausesValidation = false;
             this.barDockControl4.Dock = System.Windows.Forms.DockStyle.Right;
-            this.barDockControl4.Location = new System.Drawing.Point(958, 31);
+            this.barDockControl4.Location = new System.Drawing.Point(1438, 60);
             this.barDockControl4.Manager = this.barManager2;
-            this.barDockControl4.Size = new System.Drawing.Size(0, 429);
+            this.barDockControl4.Size = new System.Drawing.Size(0, 662);
             // 
             // biForecast
             // 
@@ -547,13 +549,13 @@
             this.gridControl.DataSource = this.walletInvestorDataItemBindingSource;
             this.gridControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gridControl.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(6);
-            this.gridControl.Location = new System.Drawing.Point(0, 31);
+            this.gridControl.Location = new System.Drawing.Point(0, 60);
             this.gridControl.MainView = this.gridView1;
             this.gridControl.Margin = new System.Windows.Forms.Padding(6);
             this.gridControl.Name = "gridControl";
             this.gridControl.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repositoryItemCheckEdit1});
-            this.gridControl.Size = new System.Drawing.Size(952, 370);
+            this.gridControl.Size = new System.Drawing.Size(1426, 547);
             this.gridControl.TabIndex = 8;
             this.gridControl.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridView1});
@@ -565,6 +567,7 @@
             // gridView1
             // 
             this.gridView1.Columns.AddRange(new DevExpress.XtraGrid.Columns.GridColumn[] {
+            this.colDescription,
             this.colName,
             this.colRise,
             this.colListedOnBinance,
@@ -612,8 +615,8 @@
             this.colName.MinWidth = 40;
             this.colName.Name = "colName";
             this.colName.Visible = true;
-            this.colName.VisibleIndex = 0;
-            this.colName.Width = 212;
+            this.colName.VisibleIndex = 1;
+            this.colName.Width = 167;
             // 
             // colListedOnBinance
             // 
@@ -637,8 +640,8 @@
             this.colForecast7Day.MinWidth = 40;
             this.colForecast7Day.Name = "colForecast7Day";
             this.colForecast7Day.Visible = true;
-            this.colForecast7Day.VisibleIndex = 1;
-            this.colForecast7Day.Width = 450;
+            this.colForecast7Day.VisibleIndex = 2;
+            this.colForecast7Day.Width = 357;
             // 
             // colForecast14Day
             // 
@@ -648,8 +651,8 @@
             this.colForecast14Day.MinWidth = 40;
             this.colForecast14Day.Name = "colForecast14Day";
             this.colForecast14Day.Visible = true;
-            this.colForecast14Day.VisibleIndex = 2;
-            this.colForecast14Day.Width = 450;
+            this.colForecast14Day.VisibleIndex = 3;
+            this.colForecast14Day.Width = 357;
             // 
             // colForecast3Month
             // 
@@ -659,16 +662,16 @@
             this.colForecast3Month.MinWidth = 40;
             this.colForecast3Month.Name = "colForecast3Month";
             this.colForecast3Month.Visible = true;
-            this.colForecast3Month.VisibleIndex = 3;
-            this.colForecast3Month.Width = 454;
+            this.colForecast3Month.VisibleIndex = 4;
+            this.colForecast3Month.Width = 365;
             // 
             // xtraTabControl1
             // 
             this.xtraTabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.xtraTabControl1.Location = new System.Drawing.Point(0, 31);
+            this.xtraTabControl1.Location = new System.Drawing.Point(0, 60);
             this.xtraTabControl1.Name = "xtraTabControl1";
             this.xtraTabControl1.SelectedTabPage = this.xtraTabPage1;
-            this.xtraTabControl1.Size = new System.Drawing.Size(958, 429);
+            this.xtraTabControl1.Size = new System.Drawing.Size(1438, 662);
             this.xtraTabControl1.TabIndex = 13;
             this.xtraTabControl1.TabPages.AddRange(new DevExpress.XtraTab.XtraTabPage[] {
             this.xtraTabPage1,
@@ -682,7 +685,7 @@
             this.xtraTabPage1.Controls.Add(this.gridControl);
             this.xtraTabPage1.Controls.Add(this.standaloneBarDockControl1);
             this.xtraTabPage1.Name = "xtraTabPage1";
-            this.xtraTabPage1.Size = new System.Drawing.Size(952, 401);
+            this.xtraTabPage1.Size = new System.Drawing.Size(1426, 607);
             this.xtraTabPage1.Text = "walletinvestor.com";
             // 
             // xtraTabPage2
@@ -692,7 +695,7 @@
             this.xtraTabPage2.Controls.Add(this.standaloneBarDockControl2);
             this.xtraTabPage2.Controls.Add(this.gridControl1);
             this.xtraTabPage2.Name = "xtraTabPage2";
-            this.xtraTabPage2.Size = new System.Drawing.Size(952, 401);
+            this.xtraTabPage2.Size = new System.Drawing.Size(1426, 607);
             this.xtraTabPage2.Text = "cryptopredictor.io";
             // 
             // gridControl1
@@ -706,7 +709,7 @@
             this.gridControl1.Name = "gridControl1";
             this.gridControl1.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repositoryItemCheckEdit2});
-            this.gridControl1.Size = new System.Drawing.Size(952, 401);
+            this.gridControl1.Size = new System.Drawing.Size(1426, 607);
             this.gridControl1.TabIndex = 9;
             this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridView2});
@@ -718,6 +721,7 @@
             // gridView2
             // 
             this.gridView2.Columns.AddRange(new DevExpress.XtraGrid.Columns.GridColumn[] {
+            this.colDescription1,
             this.colName1,
             this.colLastPrice,
             this.colForecast1Day,
@@ -762,7 +766,7 @@
             this.colName1.MinWidth = 40;
             this.colName1.Name = "colName1";
             this.colName1.Visible = true;
-            this.colName1.VisibleIndex = 0;
+            this.colName1.VisibleIndex = 1;
             this.colName1.Width = 150;
             // 
             // colLastPrice
@@ -771,7 +775,7 @@
             this.colLastPrice.MinWidth = 40;
             this.colLastPrice.Name = "colLastPrice";
             this.colLastPrice.Visible = true;
-            this.colLastPrice.VisibleIndex = 1;
+            this.colLastPrice.VisibleIndex = 2;
             this.colLastPrice.Width = 150;
             // 
             // colForecast1Day
@@ -780,7 +784,7 @@
             this.colForecast1Day.MinWidth = 40;
             this.colForecast1Day.Name = "colForecast1Day";
             this.colForecast1Day.Visible = true;
-            this.colForecast1Day.VisibleIndex = 2;
+            this.colForecast1Day.VisibleIndex = 3;
             this.colForecast1Day.Width = 150;
             // 
             // colForecast7Day1
@@ -789,7 +793,7 @@
             this.colForecast7Day1.MinWidth = 40;
             this.colForecast7Day1.Name = "colForecast7Day1";
             this.colForecast7Day1.Visible = true;
-            this.colForecast7Day1.VisibleIndex = 3;
+            this.colForecast7Day1.VisibleIndex = 4;
             this.colForecast7Day1.Width = 150;
             // 
             // colForecast4Week
@@ -798,7 +802,7 @@
             this.colForecast4Week.MinWidth = 40;
             this.colForecast4Week.Name = "colForecast4Week";
             this.colForecast4Week.Visible = true;
-            this.colForecast4Week.VisibleIndex = 4;
+            this.colForecast4Week.VisibleIndex = 5;
             this.colForecast4Week.Width = 150;
             // 
             // colForecast3Month1
@@ -807,7 +811,7 @@
             this.colForecast3Month1.MinWidth = 40;
             this.colForecast3Month1.Name = "colForecast3Month1";
             this.colForecast3Month1.Visible = true;
-            this.colForecast3Month1.VisibleIndex = 5;
+            this.colForecast3Month1.VisibleIndex = 6;
             this.colForecast3Month1.Width = 150;
             // 
             // colMatch1
@@ -830,7 +834,7 @@
             this.xtraTabPage3.Controls.Add(this.standaloneBarDockControl3);
             this.xtraTabPage3.Controls.Add(this.gridControl2);
             this.xtraTabPage3.Name = "xtraTabPage3";
-            this.xtraTabPage3.Size = new System.Drawing.Size(952, 401);
+            this.xtraTabPage3.Size = new System.Drawing.Size(946, 374);
             this.xtraTabPage3.Text = "Combine (Cross/Union)";
             // 
             // gridControl2
@@ -844,7 +848,7 @@
             this.gridControl2.Name = "gridControl2";
             this.gridControl2.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repositoryItemCheckEdit3});
-            this.gridControl2.Size = new System.Drawing.Size(952, 401);
+            this.gridControl2.Size = new System.Drawing.Size(946, 374);
             this.gridControl2.TabIndex = 10;
             this.gridControl2.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridView3});
@@ -967,6 +971,13 @@
             this.colCp4Week.VisibleIndex = 6;
             this.colCp4Week.Width = 150;
             // 
+            // colCp3Month
+            // 
+            this.colCp3Month.FieldName = "Cp3Month";
+            this.colCp3Month.Name = "colCp3Month";
+            this.colCp3Month.Visible = true;
+            this.colCp3Month.VisibleIndex = 7;
+            // 
             // colCpMatch
             // 
             this.colCpMatch.FieldName = "CpMatch";
@@ -987,16 +998,27 @@
             this.repositoryItemCheckEdit3.CheckBoxOptions.Style = DevExpress.XtraEditors.Controls.CheckBoxStyle.SvgFlag1;
             this.repositoryItemCheckEdit3.Name = "repositoryItemCheckEdit3";
             // 
-            // colCp3Month
+            // colDescription
             // 
-            this.colCp3Month.FieldName = "Cp3Month";
-            this.colCp3Month.Name = "colCp3Month";
-            this.colCp3Month.Visible = true;
-            this.colCp3Month.VisibleIndex = 7;
+            this.colDescription.FieldName = "Description";
+            this.colDescription.MinWidth = 40;
+            this.colDescription.Name = "colDescription";
+            this.colDescription.Visible = true;
+            this.colDescription.VisibleIndex = 0;
+            this.colDescription.Width = 144;
+            // 
+            // colDescription1
+            // 
+            this.colDescription1.FieldName = "Description";
+            this.colDescription1.MinWidth = 40;
+            this.colDescription1.Name = "colDescription1";
+            this.colDescription1.Visible = true;
+            this.colDescription1.VisibleIndex = 0;
+            this.colDescription1.Width = 150;
             // 
             // MainForm
             // 
-            this.ClientSize = new System.Drawing.Size(958, 489);
+            this.ClientSize = new System.Drawing.Size(1438, 774);
             this.Controls.Add(this.xtraTabControl1);
             this.Controls.Add(this.barDockControl3);
             this.Controls.Add(this.barDockControl4);
@@ -1106,6 +1128,8 @@
         private DevExpress.XtraBars.BarButtonItem biOpenWiForecast;
         private DevExpress.XtraBars.BarButtonItem biCpOpenForecast;
         private DevExpress.XtraGrid.Columns.GridColumn colCp3Month;
+        private DevExpress.XtraGrid.Columns.GridColumn colDescription;
+        private DevExpress.XtraGrid.Columns.GridColumn colDescription1;
     }
 }
 

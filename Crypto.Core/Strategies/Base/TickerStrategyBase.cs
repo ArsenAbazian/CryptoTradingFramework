@@ -57,10 +57,15 @@ namespace CryptoMarketClient.Strategies {
             return res;
         }
         
-        public override bool InitializeCore() {
+        protected virtual bool InitializeTicker() {
             Ticker = DataProvider.GetExchange(TickerInfo.Exchange).GetTicker(TickerInfo.Ticker);
             if(Ticker == null)
                 return false;
+            return true;
+        }
+
+        public override bool InitializeCore() {
+            InitializeTicker();
             return true;
         }
 
@@ -220,10 +225,15 @@ namespace CryptoMarketClient.Strategies {
                 return false;
 
             StrategyInputInfo inputInfo = CreateInputInfo();
-            bool res = DataProvider.Connect(inputInfo);
-            if(res)
-                Ticker = inputInfo.Tickers[0].Ticker;
+            bool res = true;
+            if(inputInfo != null) {
+                res = DataProvider.Connect(inputInfo);
+                if(res) {
+                    if(inputInfo.Tickers.Count > 0)
+                        Ticker = inputInfo.Tickers[0].Ticker;
+                }
 
+            }
             if(MaxActualBuyDeposit == -1)
                 MaxActualBuyDeposit = MaxActualDeposit;
 

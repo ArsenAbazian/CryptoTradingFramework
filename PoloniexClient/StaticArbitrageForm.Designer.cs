@@ -209,7 +209,7 @@
             // 
             // staticArbitrageInfoBindingSource
             // 
-            this.staticArbitrageInfoBindingSource.DataSource = typeof(CryptoMarketClient.Common.StaticArbitrageInfo);
+            this.staticArbitrageInfoBindingSource.DataSource = typeof(CryptoMarketClient.Common.TriplePairArbitrageInfo);
             // 
             // gridView1
             // 

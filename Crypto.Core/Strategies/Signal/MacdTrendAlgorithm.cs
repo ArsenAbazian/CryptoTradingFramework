@@ -76,8 +76,8 @@ namespace Crypto.Core.Strategies.Signal {
             TimeItem("Time");
             CandleStickItem();
             DataItem("Macd", "0.########", System.Drawing.Color.Blue).PanelIndex = 1;
-            DataItem("EmaFast", "0.########", System.Drawing.Color.Pink).PanelIndex = 1;
-            DataItem("EmaSlow", "0.########", System.Drawing.Color.Green).PanelIndex = 1;
+            DataItem("EmaFast", "0.########", System.Drawing.Color.Pink).Visibility = DataVisibility.Table;
+            DataItem("EmaSlow", "0.########", System.Drawing.Color.Green).Visibility = DataVisibility.Table;
             DataItem("Signal", "0.########", System.Drawing.Color.Red).PanelIndex = 1;
             DataItem("Delta", "0.########").Visibility = DataVisibility.Table;
             AnnotationItem("BuySignal", "Buy", System.Drawing.Color.Green, "Low");
@@ -97,10 +97,10 @@ namespace Crypto.Core.Strategies.Signal {
                     SendNotification(GetNotificationString("time to buy"));
                     Buy();
 
-                    if(!CanBuyMore) {
-                        State = BuySellStrategyState.WaitingForSell;
-                        return;
-                    }
+                    //if(!CanBuyMore) {
+                    State = BuySellStrategyState.WaitingForSell;
+                    return;
+                    //}
                 }
             }
             // check for sell
@@ -109,10 +109,10 @@ namespace Crypto.Core.Strategies.Signal {
                     SendNotification(GetNotificationString("time to sell"));
                     Sell();
 
-                    if(!CanSellMore) {
-                        State = BuySellStrategyState.WaitingForBuy;
-                        return;
-                    }
+                    //if(!CanSellMore) {
+                    State = BuySellStrategyState.WaitingForBuy;
+                    return;
+                    //}
                 }
             }
         }
