@@ -71,8 +71,9 @@ namespace Crypto.Core.Strategies.Custom {
 
         protected virtual void UpdateTickersList() {
             Tickers.Clear();
-            foreach(TickerInputInfo ti in StrategyInfo.Tickers)
-                Tickers.Add(ti.Ticker);
+            for(int i = 0; i < StrategyInfo.Tickers.Count; i++) {
+                Tickers.Add(StrategyInfo.Tickers[i].Ticker);
+            }
         }
 
         protected override void OnTickCore() {

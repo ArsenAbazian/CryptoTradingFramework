@@ -35,7 +35,8 @@ namespace CryptoMarketClient {
                 Ticker.Changed += OnTickerUpdated;
             this.gcTrailings.DataSource = Ticker == null ? null : Ticker.Trailings;
             if(ChartControl != null && Ticker != null) {
-                foreach(TrailingSettings settings in Ticker.Trailings) {
+                for(int i = 0; i < Ticker.Trailings.Count; i++) {
+                    TrailingSettings settings = Ticker.Trailings[i];
                     if(settings.ShowOnChart)
                         ChartControl.AddIndicator(settings);
                 }

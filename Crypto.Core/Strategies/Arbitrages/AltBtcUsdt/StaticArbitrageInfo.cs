@@ -246,7 +246,8 @@ namespace CryptoMarketClient.Common {
         public double CalcAmount(List<OrderBookEntry> entries, int indexIncluded) {
             double amount = 0;
             int index = 0;
-            foreach(var e in entries) {
+            for(int i = 0; i < entries.Count; i++) {
+                var e = entries[i];
                 amount += e.Amount;
                 index++;
                 if(index > indexIncluded)

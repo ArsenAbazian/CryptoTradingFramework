@@ -137,7 +137,8 @@ namespace CryptoMarketClient {
 
     public static class CandleStickChartHelper {
         public static void InitializeVolumes(IList<CandleStickData> candles, List<TradeInfoItem> trades, int period) {
-            foreach(CandleStickData data in candles) {
+            for(int i = 0; i < candles.Count; i++) {
+                CandleStickData data = candles[i];
                 data.BuyVolume = 0;
                 data.SellVolume = 0;
             }
@@ -145,9 +146,17 @@ namespace CryptoMarketClient {
         }
         public static void UpdateVolumes(IList<CandleStickData> candles, List<TradeInfoItem> trades, int period) {
             CandleStickData saved = null;
-            foreach(var trade in trades) {
+            for(int i = 0; i < trades.Count; i++) {
+                var trade = trades[i];
                 if(saved == null || saved.Time > trade.Time || saved.Time.AddMinutes(period) <= saved.Time) {
-                    saved = candles.FirstOrDefault(c => c.Time <= trade.Time & c.Time.AddMinutes(period) > trade.Time);
+                    saved = null;
+                    for(int ci = 0; ci < candles.Count; ci++) {
+                        CandleStickData c = candles[ci];
+                        if(c.Time <= trade.Time & c.Time.AddMinutes(period) > trade.Time) {
+                            saved = c;
+                            break;
+                        }
+                    }
                 }
                 if(saved != null) {
                     UpdateCandle(saved, trade);
@@ -169,14 +178,22 @@ namespace CryptoMarketClient {
                 UpdateCandle(saved, trade);
                 return;
             }
-            saved = candles.FirstOrDefault(c => c.Time <= trade.Time & c.Time.AddMinutes(period) > trade.Time);
+            saved = null;
+            for(int ci = 0; ci < candles.Count; ci++) {
+                CandleStickData c = candles[ci];
+                if(c.Time <= trade.Time & c.Time.AddMinutes(period) > trade.Time) {
+                    saved = c;
+                    break;
+                }
+            }
             UpdateCandle(saved, trade);
         }
         public static BindingList<CandleStickData> CreateCandleStickData(IList<TickerHistoryItem> list, long rangeInSeconds) {
             BindingList<CandleStickData> res = new BindingList<CandleStickData>();
             CandleStickData candleItem = null;
             long maxTickCount = rangeInSeconds * TimeSpan.TicksPerSecond;
-            foreach(TickerHistoryItem item in list) {
+            for(int i = 0; i < list.Count; i++) {
+                TickerHistoryItem item = list[i];
                 if(candleItem == null || (item.Time.Ticks - candleItem.Time.Ticks > maxTickCount)) {
                     candleItem = new CandleStickData();
                     candleItem.Time = item.Time;

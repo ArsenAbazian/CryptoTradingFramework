@@ -119,7 +119,8 @@ namespace CryptoMarketClient.Common {
             MaxProfit = InvalidValue;
 
             double bidAmount = 0;
-            foreach(OrderBookEntry e in bids) { 
+            for(int i = 0; i < bids.Count; i++) {
+                OrderBookEntry e = bids[i];
                 bidAmount += e.Amount;
                 double bid = e.Value;
                 double askAmount = 0;
@@ -147,7 +148,6 @@ namespace CryptoMarketClient.Common {
                     }
                 }
             }
-
             if(MaxProfit == InvalidValue) {
                 MaxProfit = 0;
                 Amount = 0;

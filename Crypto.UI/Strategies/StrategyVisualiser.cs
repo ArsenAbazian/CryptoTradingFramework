@@ -28,7 +28,8 @@ namespace CryptoMarketClient.Strategies {
         public StrategyBase Strategy { get; private set; }
 
         protected virtual void InitializeChart() {
-            foreach(StrategyDataItemInfo info in Strategy.DataItemInfos) {
+            for(int i = 0; i < Strategy.DataItemInfos.Count; i++) {
+                StrategyDataItemInfo info = Strategy.DataItemInfos[i];
                 if(!info.Visibility.HasFlag(DataVisibility.Chart))
                     continue;
                 if(info.ChartType == ChartType.Annotation)
@@ -37,7 +38,8 @@ namespace CryptoMarketClient.Strategies {
                 Chart.Series.Add(s);
             }
             Chart.Series.RemoveAt(0);
-            foreach(StrategyDataItemInfo info in Strategy.DataItemInfos) {
+            for(int i = 0; i < Strategy.DataItemInfos.Count; i++) {
+                StrategyDataItemInfo info = Strategy.DataItemInfos[i];
                 if(!info.Visibility.HasFlag(DataVisibility.Chart))
                     continue;
                 if(info.ChartType != ChartType.Annotation)
@@ -79,18 +81,18 @@ namespace CryptoMarketClient.Strategies {
 
             //Series s = CreatePointSeries(info);
             //s.DataSource = null;
-            foreach(object obj in Strategy.StrategyData) {
-                bool value = (bool)pInfo.GetValue(obj);
+            for(int i = 0; i < Strategy.StrategyData.Count; i++) {
+                object obj = Strategy.StrategyData[i];
+                bool value = (bool) pInfo.GetValue(obj);
                 if(!value) {
                     index++;
                     continue;
                 }
-                DateTime time = (DateTime)pTime.GetValue(obj);
-                double yValue = (double)pAnchor.GetValue(obj);
+                DateTime time = (DateTime) pTime.GetValue(obj);
+                double yValue = (double) pAnchor.GetValue(obj);
                 //SeriesPoint pt = new SeriesPoint(time, new double[] { yValue });
                 //s.Points.Add(pt);
-
-                TextAnnotation annotation = ((XYDiagram)Chart.Diagram).DefaultPane.Annotations.AddTextAnnotation(info.FieldName, info.AnnotationText);
+                TextAnnotation annotation = ((XYDiagram) Chart.Diagram).DefaultPane.Annotations.AddTextAnnotation(info.FieldName, info.AnnotationText);
                 PaneAnchorPoint point = new PaneAnchorPoint();
                 point.AxisXCoordinate.AxisValue = time;
                 point.AxisYCoordinate.AxisValue = yValue;
@@ -99,7 +101,6 @@ namespace CryptoMarketClient.Strategies {
                 //TextAnnotation annotation = pt.Annotations.AddTextAnnotation(info.FieldName, info.AnnotationText);
                 //annotation.Text = info.AnnotationText;
                 annotation.ShapeKind = ShapeKind.Rectangle;
-
                 index++;
             }
             //Chart.Series.Add(s);
@@ -227,7 +228,8 @@ namespace CryptoMarketClient.Strategies {
 
         private void InitializeTable() {
             int index = 0;
-            foreach(StrategyDataItemInfo info in Strategy.DataItemInfos) {
+            for(int i = 0; i < Strategy.DataItemInfos.Count; i++) {
+                StrategyDataItemInfo info = Strategy.DataItemInfos[i];
                 if(!info.Visibility.HasFlag(DataVisibility.Table))
                     continue;
                 GridColumn column = new GridColumn();
@@ -236,7 +238,7 @@ namespace CryptoMarketClient.Strategies {
                 column.FieldName = info.FieldName;
                 column.DisplayFormat.FormatType = GetFormatType(info.Type);
                 column.DisplayFormat.FormatString = info.FormatString;
-                ((GridView)Grid.MainView).Columns.Add(column);
+                ((GridView) Grid.MainView).Columns.Add(column);
                 index++;
             }
             lock(Strategy.StrategyData) {

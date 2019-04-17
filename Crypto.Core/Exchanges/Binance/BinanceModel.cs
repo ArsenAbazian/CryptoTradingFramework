@@ -127,7 +127,14 @@ namespace CryptoMarketClient.Binance {
                 return;
 
             string[] kline = JSonHelper.Default.DeserializeObject(bytes, ref startIndex, KlineItems);
-            SocketConnectionInfo info = KlineSockets.FirstOrDefault(c => c.Key == sender);
+            SocketConnectionInfo info = null;
+            for(int i = 0; i < KlineSockets.Count; i++) {
+                SocketConnectionInfo c = KlineSockets[i];
+                if(c.Key == sender) {
+                    info = c;
+                    break;
+                }
+            }
             if(info == null)
                 return;
             OnKlineItemRecv(info.Ticker, kline);
@@ -135,7 +142,14 @@ namespace CryptoMarketClient.Binance {
         protected virtual void OnKlineItemRecv(Ticker ticker, string[] item) {
             long dt = FastValueConverter.ConvertPositiveLong(item[0]);
             DateTime time = FromUnixTime(dt);
-            CandleStickIntervalInfo info = AllowedCandleStickIntervals.FirstOrDefault(i => i.Command == item[3]);
+            CandleStickIntervalInfo info = null;
+            for(int ci = 0; ci < AllowedCandleStickIntervals.Count; ci++) {
+                CandleStickIntervalInfo i = AllowedCandleStickIntervals[ci];
+                if(i.Command == item[3]) {
+                    info = i;
+                    break;
+                }
+            }
             if(ticker.CandleStickPeriodMin != info.Interval.TotalMinutes)
                 return;
             Debug.WriteLine(item[6] + " " + item[7] + " " + item[8] + " " + item[9]);
@@ -196,7 +210,14 @@ namespace CryptoMarketClient.Binance {
 
         protected internal override void OnOrderBookSocketMessageReceived(object sender, MessageReceivedEventArgs e) {
             LastWebSocketRecvTime = DateTime.Now;
-            SocketConnectionInfo info = OrderBookSockets.FirstOrDefault(c => c.Key == sender);
+            SocketConnectionInfo info = null;
+            for(int oi = 0; oi < OrderBookSockets.Count; oi++) {
+                SocketConnectionInfo c = OrderBookSockets[oi];
+                if(c.Key == sender) {
+                    info = c;
+                    break;
+                }
+            }
             if(info == null)
                 return;
             const string hour24TickerStart = "[{\"e\"";
@@ -282,7 +303,8 @@ namespace CryptoMarketClient.Binance {
             byte[] data = Encoding.Default.GetBytes(e.Message);
             int startIndex = 0;
             List<string[]> items = JSonHelper.Default.DeserializeArrayOfObjects(data, ref startIndex, WebSocketTickersInfo);
-            foreach(string[] item in items) {
+            for(int i = 0; i < items.Count; i++) {
+                string[] item = items[i];
                 string eventType = item[0];
                 if(eventType == "24hrTicker")
                     On24HourTickerRecv(item);
@@ -291,7 +313,15 @@ namespace CryptoMarketClient.Binance {
 
         protected void On24HourTickerRecv(string[] item) {
             string symbolName = item[2];
-            BinanceTicker t = (BinanceTicker)Tickers.FirstOrDefault(tt => tt.Name == symbolName);
+            Ticker first = null;
+            for(int i = 0; i < Tickers.Count; i++) {
+                Ticker tt = Tickers[i];
+                if(tt.Name == symbolName) {
+                    first = tt;
+                    break;
+                }
+            }
+            BinanceTicker t = (BinanceTicker)first;
             if(t == null)
                 throw new DllNotFoundException("binance symbol not found " + symbolName);
             t.Change = FastValueConverter.Convert(item[4]);
@@ -334,16 +364,17 @@ namespace CryptoMarketClient.Binance {
             JArray rateLimits = settings.Value<JArray>("rateLimits");
             RequestRate = new List<RateLimit>();
             OrderRate = new List<RateLimit>();
-            foreach(JObject rateLimit in rateLimits) {
+            for(int i = 0; i < rateLimits.Count; i++) {
+                JObject rateLimit = (JObject) rateLimits[i];
                 string rateType = rateLimit.Value<string>("rateLimitType");
                 if(rateType == "REQUESTS")
                     RequestRate.Add(GetRateLimit(rateLimit));
                 if(rateType == "ORDERS")
                     OrderRate.Add(GetRateLimit(rateLimit));
             }
-
             JArray symbols = settings.Value<JArray>("symbols");
-            foreach(JObject s in symbols) {
+            for(int i = 0; i < symbols.Count; i++) {
+                JObject s = (JObject) symbols[i];
                 BinanceTicker t = new BinanceTicker(this);
                 t.CurrencyPair = s.Value<string>("symbol");
                 t.MarketCurrency = s.Value<string>("baseAsset");
@@ -351,9 +382,9 @@ namespace CryptoMarketClient.Binance {
                 if(Tickers.FirstOrDefault(tt => tt.CurrencyPair == t.CurrencyPair) != null)
                     continue;
                 Tickers.Add(t);
-
                 JArray filters = s.Value<JArray>("filters");
-                foreach(JObject filter in filters) {
+                for(int fi = 0; fi < filters.Count; fi++) {
+                    JObject filter = (JObject) filters[fi];
                     string filterType = filter.Value<string>("filterType");
                     if(filterType == "PRICE_FILTER")
                         t.PriceFilter = new TickerFilter() { MinValue = filter.Value<double>("minPrice"), MaxValue = filter.Value<double>("maxPrice"), TickSize = filter.Value<double>("tickSize") };
@@ -404,8 +435,14 @@ namespace CryptoMarketClient.Binance {
             //startUtc = startUtc.ToUniversalTime();
             long startSec = (long)(startUtc.Subtract(epoch)).TotalSeconds;
             long end = startSec + periodInSeconds;
-            CandleStickIntervalInfo info = AllowedCandleStickIntervals.FirstOrDefault(i => i.Interval.TotalMinutes == candleStickPeriodMin);
-
+            CandleStickIntervalInfo info = null;
+            for(int index = 0; index < AllowedCandleStickIntervals.Count; index++) {
+                CandleStickIntervalInfo i = AllowedCandleStickIntervals[index];
+                if(i.Interval.TotalMinutes == candleStickPeriodMin) {
+                    info = i;
+                    break;
+                }
+            }
             string address = string.Format("https://api.binance.com/api/v1/klines?symbol={0}&interval={1}&startTime={2}&endTime={3}&limit=10000",
                 Uri.EscapeDataString(ticker.CurrencyPair), info.Command, startSec * 1000, end * 1000);
             byte[] bytes = null;
@@ -424,7 +461,8 @@ namespace CryptoMarketClient.Binance {
             int startIndex = 0;
             List<string[]> res = JSonHelper.Default.DeserializeArrayOfArrays(bytes, ref startIndex, 12);
             if(res == null) return list;
-            foreach(string[] item in res) {
+            for(int i = 0; i < res.Count; i++) {
+                string[] item = res[i];
                 CandleStickData data = new CandleStickData();
                 data.Time = startTime.AddMilliseconds(FastValueConverter.ConvertPositiveLong(item[0])).ToLocalTime();
                 data.Open = FastValueConverter.Convert(item[1]);
@@ -498,12 +536,12 @@ namespace CryptoMarketClient.Binance {
 
             List<TradeInfoItem> list = new List<TradeInfoItem>();
             int index = 0;
-            foreach(JObject obj in trades) {
+            for(int i = 0; i < trades.Count; i++) {
+                JObject obj = (JObject) trades[i];
                 DateTime time = new DateTime(obj.Value<Int64>("time"));
                 int tradeId = obj.Value<int>("id");
                 if(time < starTime)
                     break;
-
                 TradeInfoItem item = new TradeInfoItem(null, ticker);
                 bool isBuy = obj.Value<string>("type").Length == 3;
                 item.AmountString = obj.Value<string>("qty");
@@ -587,16 +625,16 @@ namespace CryptoMarketClient.Binance {
             bids.Clear();
             asks.Clear();
             iasks.Clear();
-
-            foreach(string[] item in jbids)
+            for(int i = 0; i < jbids.Count; i++) {
+                string[] item = jbids[i];
                 bids.Add(new OrderBookEntry() { ValueString = item[0], AmountString = item[1] });
-
-            foreach(string[] item in jasks) {
+            }
+            for(int i = 0; i < jasks.Count; i++) {
+                string[] item = jasks[i];
                 OrderBookEntry e = new OrderBookEntry() { ValueString = item[0], AmountString = item[1] };
                 asks.Add(e);
                 iasks.Insert(0, e);
             }
-
             ticker.OrderBook.Updates.Clear(FastValueConverter.ConvertPositiveLong(updateId[0]) + 1);
             ticker.OrderBook.UpdateEntries();
             ticker.OrderBook.RaiseOnChanged(new IncrementalUpdateInfo());
@@ -620,9 +658,18 @@ namespace CryptoMarketClient.Binance {
             if(string.IsNullOrEmpty(text))
                 return false;
             JArray res = JsonConvert.DeserializeObject<JArray>(text);
-            foreach(JObject item in res) {
+            for(int index = 0; index < res.Count; index++) {
+                JObject item = (JObject) res[index];
                 string currencyPair = item.Value<string>("symbol");
-                BinanceTicker t = (BinanceTicker)Tickers.FirstOrDefault(tr => tr.CurrencyPair == currencyPair);
+                Ticker first = null;
+                for(int i = 0; i < Tickers.Count; i++) {
+                    Ticker tr = Tickers[i];
+                    if(tr.CurrencyPair == currencyPair) {
+                        first = tr;
+                        break;
+                    }
+                }
+                BinanceTicker t = (BinanceTicker) first;
                 if(t == null)
                     continue;
                 t.Last = item.Value<double>("lastPrice");

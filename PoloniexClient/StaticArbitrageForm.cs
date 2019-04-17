@@ -173,6 +173,7 @@ namespace CryptoMarketClient {
         private void bbClearSelected_ItemClick(object sender, ItemClickEventArgs e) {
             foreach(TriplePairArbitrageInfo info in Items)
                 info.IsSelected = false;
+            }
             this.gridControl1.RefreshDataSource();
         }
 

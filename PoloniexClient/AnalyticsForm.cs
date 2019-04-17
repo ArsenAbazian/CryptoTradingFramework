@@ -63,7 +63,8 @@ namespace CryptoMarketClient {
             JObject data = res.Value<JObject>("Data");
             JArray exchanges = data.Value<JArray>("Exchanges");
             List<ExchangeInfo> list = new List<ExchangeInfo>();
-            foreach(JObject e in exchanges) {
+            for(int i = 0; i < exchanges.Count; i++) {
+                JObject e = (JObject) exchanges[i];
                 ExchangeInfo info = new ExchangeInfo();
                 info.Base = fsym;
                 info.Market = tsym;
@@ -82,7 +83,8 @@ namespace CryptoMarketClient {
             List<ExchangeInfo> list = (List<ExchangeInfo>)this.gcDownExchanges.DataSource;
             if(list == null)
                 return;
-            foreach(ExchangeInfo info in list) {
+            for(int eii = 0; eii < list.Count; eii++) {
+                ExchangeInfo info = list[eii];
                 if(!info.Selected)
                     continue;
                 DownloadHistory(info);
@@ -111,7 +113,8 @@ namespace CryptoMarketClient {
                 return;
 
             JArray data = res.Value<JArray>("Data");
-            foreach(JObject item in data) {
+            for(int i = 0; i < data.Count; i++) {
+                JObject item = (JObject) data[i];
                 TradeInfo info = new TradeInfo();
                 info.Time = Exchange.FromUnixTime(item.Value<long>("time"));
                 if(info.Open == 0)
@@ -124,7 +127,6 @@ namespace CryptoMarketClient {
                 info.VolumeTo = item.Value<double>("volumeto");
                 e.History.Add(info);
             }
-
             e.Downloaded = true;
             List<ExchangeInfo> list = (List<ExchangeInfo>)this.gcDownExchanges.DataSource;
             int index = list.IndexOf(e);

@@ -8,16 +8,19 @@ using System.Threading.Tasks;
 namespace CryptoMarketClient.Exchanges.Bittrex {
     public class BittrexIncrementalUpdateDataProvider : IIncrementalUpdateDataProvider {
         public void Update(Ticker ticker, IncrementalUpdateInfo info) {
-            foreach(string[] item in info.BidsUpdates)
+            for(int i = 0; i < info.BidsUpdates.Count; i++) {
+                string[] item = info.BidsUpdates[i];
                 ticker.OrderBook.ApplyIncrementalUpdate(OrderBookEntryType.Bid, item[1], item[2]);
-            foreach(string[] item in info.AsksUpdates)
+            }
+            for(int i = 0; i < info.AsksUpdates.Count; i++) {
+                string[] item = info.AsksUpdates[i];
                 ticker.OrderBook.ApplyIncrementalUpdate(OrderBookEntryType.Ask, item[1], item[2]);
-            foreach(string[] item in info.TradeUpdates) {
+            }
+            for(int i = 0; i < info.TradeUpdates.Count; i++) {
+                string[] item = info.TradeUpdates[i];
                 TradeInfoItem trade = new TradeInfoItem(null, ticker) {
-                    Type = item[0][0] == 'S' ? TradeType.Sell : TradeType.Buy,
-                    RateString = item[1],
-                    AmountString = item[2],
-                    Time = new DateTime(Convert.ToInt64(item[3])).ToLocalTime()};
+                        Type = item[0][0] == 'S' ? TradeType.Sell : TradeType.Buy, RateString = item[1], AmountString = item[2], Time = new DateTime(Convert.ToInt64(item[3])).ToLocalTime()
+                };
                 ticker.TradeHistory.Insert(0, trade);
                 CandleStickChartHelper.UpdateVolumes(ticker.CandleStickData, trade, ticker.CandleStickPeriodMin);
             }
@@ -32,15 +35,16 @@ namespace CryptoMarketClient.Exchanges.Bittrex {
 
             List<OrderBookEntry> entries = orderBook.Asks;
             List<OrderBookEntry> entriesInverted = orderBook.AsksInverted;
-            foreach(JObject item in jasks) {
+            for(int i = 0; i < jasks.Count; i++) {
+                JObject item = (JObject) jasks[i];
                 entries.Add(new OrderBookEntry() { ValueString = item.Value<string>("R"), AmountString = item.Value<string>("Q") });
                 entriesInverted.Insert(0, new OrderBookEntry() { ValueString = item.Value<string>("R"), AmountString = item.Value<string>("Q") });
             }
-
             entries = orderBook.Bids;
-            foreach(JObject item in jbids)
+            for(int i = 0; i < jbids.Count; i++) {
+                JObject item = (JObject) jbids[i];
                 entries.Add(new OrderBookEntry() { ValueString = item.Value<string>("R"), AmountString = item.Value<string>("Q") });
-
+            }
             orderBook.UpdateEntries();
             orderBook.RaiseOnChanged(new IncrementalUpdateInfo());
 

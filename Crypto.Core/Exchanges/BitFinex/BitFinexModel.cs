@@ -109,7 +109,8 @@ namespace CryptoMarketClient.BitFinex {
 
             List<string[]> res = JSonHelper.Default.DeserializeArrayOfObjects(bytes, ref startIndex, new string[] { "O", "H", "L", "C", "V", "T", "BV" });
             if(res == null) return list;
-            foreach(string[] item in res) {
+            for(int i = 0; i < res.Count; i++) {
+                string[] item = res[i];
                 CandleStickData data = new CandleStickData();
                 data.Time = Convert.ToDateTime(item[5]);
                 data.High = FastValueConverter.Convert(item[1]);
@@ -147,10 +148,10 @@ namespace CryptoMarketClient.BitFinex {
             text = text.Replace('"', ' ');
 
             string[] tickers = text.Split(',');
-            foreach(string item in tickers) {
+            for(int i = 0; i < tickers.Length; i++) {
+                string item = tickers[i];
                 BitFinexTicker m = new BitFinexTicker(this);
                 string currencyPair = item.Trim();
-
                 m.MarketCurrency = currencyPair.Substring(0, 3).ToUpper();
                 m.BaseCurrency = currencyPair.Substring(3, 3).ToUpper();
                 m.CurrencyPair = "t" + currencyPair.ToUpper();
@@ -159,7 +160,8 @@ namespace CryptoMarketClient.BitFinex {
                 Tickers.Add(m);
             }
             address = "https://api.bitfinex.com/v2/tickers?symbols=";
-            foreach(BitFinexTicker ticker in Tickers) {
+            for(int i = 0; i < Tickers.Count; i++) {
+                BitFinexTicker ticker = (BitFinexTicker) Tickers[i];
                 address += ticker.CurrencyPair;
                 if(Tickers.IndexOf(ticker) < Tickers.Count - 1)
                     address += ",";
@@ -186,9 +188,10 @@ namespace CryptoMarketClient.BitFinex {
                 return false;
 
             List<string[]> res = JSonHelper.Default.DeserializeArrayOfObjects(bytes, ref startIndex, new string[] { "Currency", "CurrencyLong", "MinConfirmation", "TxFee", "IsActive", "CoinType", "BaseAddress", "Notice" });
-            foreach(string[] item in res) {
+            for(int i = 0; i < res.Count; i++) {
+                string[] item = res[i];
                 string currency = item[0];
-                BitFinexCurrencyInfo c = (BitFinexCurrencyInfo)Currencies.FirstOrDefault(curr => curr.Currency == currency);
+                BitFinexCurrencyInfo c = (BitFinexCurrencyInfo) Currencies.FirstOrDefault(curr => curr.Currency == currency);
                 if(c == null) {
                     c = new BitFinexCurrencyInfo();
                     c.Currency = item[0];
@@ -197,7 +200,6 @@ namespace CryptoMarketClient.BitFinex {
                     c.TxFee = FastValueConverter.Convert(item[3]);
                     c.CoinType = item[5];
                     c.BaseAddress = item[6];
-
                     Currencies.Add(c);
                 }
                 c.IsActive = item[4].Length == 4;
@@ -275,8 +277,9 @@ namespace CryptoMarketClient.BitFinex {
 
             int startIndex = 0;
             List<string[]> list = JSonHelper.Default.DeserializeArrayOfArrays(bytes, ref startIndex, 11);
-            foreach(string[] item in list) {
-                BitFinexTicker ticker = (BitFinexTicker)Tickers.FirstOrDefault(t => t.CurrencyPair == item[0]);
+            for(int i = 0; i < list.Count; i++) {
+                string[] item = list[i];
+                BitFinexTicker ticker = (BitFinexTicker) Tickers.FirstOrDefault(t => t.CurrencyPair == item[0]);
                 ticker.HighestBid = FastValueConverter.Convert(item[1]);
                 ticker.LowestAsk = FastValueConverter.Convert(item[3]);
                 ticker.Change = FastValueConverter.Convert(item[6]);
@@ -285,7 +288,6 @@ namespace CryptoMarketClient.BitFinex {
                 ticker.Hr24High = FastValueConverter.Convert(item[9]);
                 ticker.Hr24Low = FastValueConverter.Convert(item[10]);
             }
-
             return true;
         }
         protected override void StartListenOrderBookCore(Ticker ticker) {
@@ -331,7 +333,8 @@ namespace CryptoMarketClient.BitFinex {
             int bidIndex = 0, askIndex = 0;
             List<OrderBookEntry> bids = ticker.OrderBook.Bids;
             List<OrderBookEntry> asks = ticker.OrderBook.Asks;
-            foreach(string[] item in items) {
+            for(int i = 0; i < items.Count; i++) {
+                string[] item = items[i];
                 OrderBookEntry entry = null;
                 if(item[2][0] == '-') {
                     entry = asks[askIndex];
@@ -344,7 +347,6 @@ namespace CryptoMarketClient.BitFinex {
                     bidIndex++;
                 }
                 entry.ValueString = item[0];
-                
                 if(bidIndex >= bids.Count || askIndex >= asks.Count)
                     break;
             }
@@ -379,9 +381,11 @@ namespace CryptoMarketClient.BitFinex {
                 return false;
             lock(info) {
                 info.TradeHistory.Clear();
-                foreach(string[] obj in res) {
+                for(int i = 0; i < res.Count; i++) {
+                    string[] obj = res[i];
                     TradeInfoItem item = new TradeInfoItem(null, info);
-                    item.Id = Convert.ToInt64(obj[0]); ;
+                    item.Id = Convert.ToInt64(obj[0]);
+                    ;
                     item.Time = Convert.ToDateTime(obj[1]);
                     item.AmountString = obj[2];
                     item.RateString = obj[3];
@@ -446,7 +450,8 @@ namespace CryptoMarketClient.BitFinex {
             if(res.Count == 0)
                 return true;
             int index = 0;
-            foreach(string[] obj in res) {
+            for(int i = 0; i < res.Count; i++) {
+                string[] obj = res[i];
                 TradeInfoItem item = new TradeInfoItem(account, ticker);
                 item.IdString = obj[0];
                 item.Type = obj[3] == "LIMIT_BUY" ? TradeType.Buy : TradeType.Sell;
@@ -458,7 +463,6 @@ namespace CryptoMarketClient.BitFinex {
                 ticker.MyTradeHistory.Insert(index, item);
                 index++;
             }
-
             return true;
         }
         public override List<TradeInfoItem> GetTrades(Ticker info, DateTime starTime) {
@@ -486,7 +490,8 @@ namespace CryptoMarketClient.BitFinex {
             List<TradeInfoItem> list = new List<TradeInfoItem>();
 
             int index = 0;
-            foreach(string[] obj in res) {
+            for(int i = 0; i < res.Count; i++) {
+                string[] obj = res[i];
                 TradeInfoItem item = new TradeInfoItem(null, info);
                 item.Id = Convert.ToInt64(obj[0]);
                 item.Time = Convert.ToDateTime(obj[1]);
@@ -528,7 +533,8 @@ namespace CryptoMarketClient.BitFinex {
             int index = 0;
             List<TradeInfoItem> newItems = new List<TradeInfoItem>();
             lock(info) {
-                foreach(string[] obj in res) {
+                for(int i = 0; i < res.Count; i++) {
+                    string[] obj = res[i];
                     TradeInfoItem item = new TradeInfoItem(null, info);
                     item.Id = Convert.ToInt64(obj[0]);
                     item.Time = Convert.ToDateTime(obj[1]);
@@ -585,7 +591,8 @@ namespace CryptoMarketClient.BitFinex {
             st.MinBuyPrice = double.MaxValue;
             st.MinSellPrice = double.MaxValue;
             lock(info) {
-                foreach(string[] obj in res) {
+                for(int i = 0; i < res.Count; i++) {
+                    string[] obj = res[i];
                     bool isBuy = obj[6].Length == 3;
                     double price = FastValueConverter.Convert(obj[3]);
                     double amount = FastValueConverter.Convert(obj[2]);
@@ -789,7 +796,8 @@ namespace CryptoMarketClient.BitFinex {
 
             List<OpenedOrderInfo> openedOrders = ticker == null ? account.OpenedOrders : ticker.OpenedOrders;
             lock(openedOrders) {
-                foreach(string[] obj in res) {
+                for(int i = 0; i < res.Count; i++) {
+                    string[] obj = res[i];
                     BitFinexOrderInfo info = new BitFinexOrderInfo(account, ticker);
 
                     //info.OrderUuid = obj[1];
@@ -808,7 +816,6 @@ namespace CryptoMarketClient.BitFinex {
                     //info.IsConditional = obj[14].Length == 4 ? true : false;
                     //info.Condition = obj[15];
                     //info.ConditionTarget = obj[16];
-
                     openedOrders.Add(info);
                 }
             }
@@ -884,9 +891,9 @@ namespace CryptoMarketClient.BitFinex {
                 "Pending",
                 "CryptoAddress"
             });
-
-                foreach(string[] item in res) {
-                    BitFinexAccountBalanceInfo binfo = (BitFinexAccountBalanceInfo)account.Balances.FirstOrDefault(b => b.Currency == item[0]);
+                for(int i = 0; i < res.Count; i++) {
+                    string[] item = res[i];
+                    BitFinexAccountBalanceInfo binfo = (BitFinexAccountBalanceInfo) account.Balances.FirstOrDefault(b => b.Currency == item[0]);
                     if(binfo == null) {
                         binfo = new BitFinexAccountBalanceInfo(account);
                         binfo.Currency = item[0];

@@ -77,17 +77,15 @@ namespace CryptoMarketClient {
                         }
                     }
                 }
-                 
-                foreach(TickerCollection item in ArbitrageList) {
-                    item.CalcTotalBalance();
+                for(int i = 0; i < ArbitrageList.Count; i++) {
+                    ArbitrageList[i].CalcTotalBalance();
                 }
-
-                foreach(var coll in ArbitrageList) {
+                for(int ii = 0; ii < ArbitrageList.Count; ii++) {
+                    var coll = ArbitrageList[ii];
                     for(int i = 0; i < coll.Count; i++) {
                         coll.Tickers[i].UpdateMarketCurrencyStatusHistory();
                     }
                 }
-
                 Thread.Sleep(5 * 60 * 1000); // sleep 5 min
             }
         }
@@ -592,14 +590,14 @@ namespace CryptoMarketClient {
         void AddEnterMarketMenuItems() {
             int index = 0;
             if(ArbitrageList.Count > 0) {
-                foreach(Ticker ticker in ArbitrageList[0].Tickers) {
+                for(int i = 0; i < ArbitrageList[0].Tickers.Length; i++) {
+                    Ticker ticker = ArbitrageList[0].Tickers[i];
                     if(ticker == null)
                         break;
                     BarButtonItem item = new BarButtonItem(this.ribbonControl1.Manager, ticker.HostName);
                     item.Tag = index;
                     item.ItemClick += OnShowTickerChartItemClick;
                     this.bsShowTickerChart.ItemLinks.Add(item);
-
                     item = new BarButtonItem(this.ribbonControl1.Manager, ticker.HostName);
                     item.Tag = index;
                     item.ItemClick += OnShowOrderBookHistory;
@@ -628,7 +626,8 @@ namespace CryptoMarketClient {
                 return;
             TickerForm form;
             if(e.Item.Tag == null) {
-                foreach(Ticker ticker in collection.Tickers) {
+                for(int i = 0; i < collection.Tickers.Length; i++) {
+                    Ticker ticker = collection.Tickers[i];
                     if(ticker == null)
                         return;
                     form = new TickerForm();

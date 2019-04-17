@@ -81,21 +81,19 @@ namespace Crypto.UI.Strategies {
             List<HtmlNode> rows = body.Descendants().Where(n => n.GetAttributeValue("data-key", "") != "").ToList();
             if(rows.Count == 0)
                 return false;
-            foreach(HtmlNode row in rows) {
+            for(int ni = 0; ni < rows.Count; ni++) {
+                HtmlNode row = rows[ni];
                 HtmlNode name = row.Descendants().FirstOrDefault(n => n.GetAttributeValue("data-col-seq", "") == "0");
                 HtmlNode forecast14 = row.Descendants().FirstOrDefault(n => n.GetAttributeValue("data-col-seq", "") == "1");
                 HtmlNode forecast3Month = row.Descendants().FirstOrDefault(n => n.GetAttributeValue("data-col-seq", "") == "2");
-
                 try {
                     string nameText = name.Descendants().FirstOrDefault(n => n.GetAttributeValue("class", "") == "detail").InnerText.Trim();
                     if(item.Name != nameText)
                         continue;
-
                     item.Forecast14Day = Convert.ToDouble(strategy.CorrectString(forecast14.Element("a").InnerText));
                     item.Forecast3Month = Convert.ToDouble(strategy.CorrectString(forecast3Month.Element("a").InnerText));
                     if(item.Forecast14Day < strategy.Day14MinPercent || item.Forecast3Month < strategy.Month3MinPercent)
                         return true;
-
                     Get7DayForecastFor(item, name.Element("a").GetAttributeValue("href", ""));
                     return true;
                 }

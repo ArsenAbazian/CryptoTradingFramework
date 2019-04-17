@@ -21,8 +21,10 @@ namespace CryptoMarketClient {
             if(markets.Count == 0)
                 return arbitrageList;
             //string[] marketItems = new string[] { "ETC", "LTC", "ADA", "XRP", "EOS", "NES", "ETH", "BTC", "STR", "XMR", "DASH", "ZEC", "NXT" };
-            foreach(Ticker ticker in markets.First()) {
-                //if(!marketItems.Contains(ticker.MarketCurrency))
+            var mFirst = markets[0];
+            for(int mi = 0; mi < mFirst.Count; mi++) {
+                Ticker ticker = mFirst[mi];
+//if(!marketItems.Contains(ticker.MarketCurrency))
                 //    continue;
                 //if(ticker.BaseCurrency != "BTC")
                 //    continue;
@@ -38,10 +40,11 @@ namespace CryptoMarketClient {
                 }
                 if(info.Count < 2)
                     continue;
-                info.UsdTicker = markets.First().FirstOrDefault((t) => t.MarketCurrency == info.BaseCurrency && t.BaseCurrency == "USDT");
+                info.UsdTicker = mFirst.FirstOrDefault((t) => t.MarketCurrency == info.BaseCurrency && t.BaseCurrency == "USDT");
                 arbitrageList.Add(info);
             }
-            foreach(TickerCollection coll in arbitrageList) {
+            for(int ai = 0; ai < arbitrageList.Count; ai++) {
+                TickerCollection coll = arbitrageList[ai];
                 for(int i = 0; i < coll.Count; i++) {
                     coll.Tickers[i].UpdateMode = TickerUpdateMode.Arbitrage;
                 }

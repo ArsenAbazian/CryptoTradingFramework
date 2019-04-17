@@ -56,7 +56,8 @@ namespace CryptoMarketClient {
                 if(e.Tickers.Count == 0) {
                     e.LoadTickers();
                 }
-                foreach(Ticker ticker in e.Tickers) {
+                for(int i = 0; i < e.Tickers.Count; i++) {
+                    Ticker ticker = e.Tickers[i];
                     list.Add(new TickerNameInfo() { Exchange = e.Type, Ticker = ticker.Name, BaseCurrency = ticker.BaseCurrency, MarketCurrency = ticker.MarketCurrency });
                 }
             }
@@ -124,8 +125,8 @@ namespace CryptoMarketClient {
 
         public bool LoadTickers() {
             if(GetTickersInfo()) {
-                foreach(Ticker ticker in Tickers) {
-                    ticker.Load();
+                for(int i = 0; i < Tickers.Count; i++) {
+                    Tickers[i].Load();
                 }
                 Save();
                 return true;
@@ -342,8 +343,9 @@ namespace CryptoMarketClient {
         }
 
         void CheckSocketConnectionInfoDelay(List<SocketConnectionInfo> sockets) {
-            foreach(SocketConnectionInfo info in sockets)
-                CheckConnection(info);
+            for(int si = 0; si < sockets.Count; si++) {
+                CheckConnection(sockets[si]);
+            }
         }
 
         void CheckConnection(SocketConnectionInfo info) {
@@ -367,7 +369,8 @@ namespace CryptoMarketClient {
                     return;
                 }
             }
-            foreach(var s in info.Subscribtions) {
+            for(int i = 0; i < info.Subscribtions.Count; i++) {
+                var s = info.Subscribtions[i];
                 if(s.Ticker == null)
                     continue;
                 if(s.Type == SocketSubscribeType.OrderBook || !s.Ticker.IsListeningOrderBook)
@@ -407,12 +410,14 @@ namespace CryptoMarketClient {
         public void Reconnect() {
             if(TickersSocket != null)
                 TickersSocket.Reconnect();
-            foreach(var item in OrderBookSockets)
-                item.Reconnect();
-            foreach(var item in TradeHistorySockets)
-                item.Reconnect();
-            foreach(var item in KlineSockets)
-                item.Reconnect();
+            for(int i = 0; i < OrderBookSockets.Count; i++)
+                OrderBookSockets[i].Reconnect();
+            for(int i = 0; i < TradeHistorySockets.Count; i++) {
+                TradeHistorySockets[i].Reconnect();
+            }
+            for(int i = 0; i < KlineSockets.Count; i++) {
+                KlineSockets[i].Reconnect();
+            }
         }
 
         protected virtual void OnConnectionLost(WebSocket webSocket) {
@@ -438,14 +443,16 @@ namespace CryptoMarketClient {
                     SuppressCheckRequestLimits = false;
                 }
             }
-            foreach(RateLimit limit in RequestRate)
-                limit.CheckAllow();
+            for(int i = 0; i < RequestRate.Count; i++) {
+                RequestRate[i].CheckAllow();
+            }
         }
         protected void CheckOrderRateLimits() {
             if(OrderRate == null)
                 return;
-            foreach(RateLimit limit in OrderRate)
-                limit.CheckAllow();
+            for(int i = 0; i < OrderRate.Count; i++) {
+                OrderRate[i].CheckAllow();
+            }
         }
 
         public static DateTime FromUnixTime(long unixTime) {
@@ -489,7 +496,11 @@ namespace CryptoMarketClient {
             return PinnedTickers.FirstOrDefault(p => p.BaseCurrency == tickerBase.BaseCurrency && p.MarketCurrency == tickerBase.MarketCurrency) != null;
         }
         public Ticker GetTicker(PinnedTickerInfo info) {
-            return Tickers.FirstOrDefault(t => t.BaseCurrency == info.BaseCurrency && t.MarketCurrency == info.MarketCurrency);
+            for(int i = 0; i < Tickers.Count; i++) {
+                Ticker t = Tickers[i];
+                if(t.BaseCurrency == info.BaseCurrency && t.MarketCurrency == info.MarketCurrency) return t;
+            }
+            return null;
         }
         public List<OpenedOrderInfo> UpdateAllOpenedOrders() {
             List<OpenedOrderInfo> list = new List<OpenedOrderInfo>();
@@ -592,7 +603,8 @@ namespace CryptoMarketClient {
         }
 
         protected SocketConnectionInfo GetConnectionInfo(Ticker ticker, CandleStickIntervalInfo info, List<SocketConnectionInfo> sockets) {
-            foreach(SocketConnectionInfo i in sockets) {
+            for(int si = 0; si < sockets.Count; si++) {
+                SocketConnectionInfo i = sockets[si];
                 if(i.Ticker == ticker && i.KlineInfo.Interval == info.Interval) {
                     return i;
                 }
@@ -601,7 +613,8 @@ namespace CryptoMarketClient {
         }
 
         protected SocketConnectionInfo GetConnectionInfo(Ticker ticker, List<SocketConnectionInfo> sockets) {
-            foreach(SocketConnectionInfo info in sockets) {
+            for(int si = 0; si < sockets.Count; si++) {
+                SocketConnectionInfo info = sockets[si];
                 if(info.Ticker == ticker) {
                     return info;
                 }
@@ -963,10 +976,18 @@ namespace CryptoMarketClient {
             return Registered.FirstOrDefault(e => e.Type == exchange);
         }
         public Ticker Ticker(string tickerName) {
-            return Tickers.FirstOrDefault(t => t.Name == tickerName);
+            for(int i = 0; i < Tickers.Count; i++) {
+                Ticker t = Tickers[i];
+                if(t.Name == tickerName) return t;
+            }
+            return null;
         }
         public Ticker Ticker(string baseCurrency, string marketCurrency) {
-            return Tickers.FirstOrDefault(t => t.BaseCurrency == baseCurrency && t.MarketCurrency == marketCurrency);
+            for(int i = 0; i < Tickers.Count; i++) {
+                Ticker t = Tickers[i];
+                if(t.BaseCurrency == baseCurrency && t.MarketCurrency == marketCurrency) return t;
+            }
+            return null;
         }
         public virtual void StopListenStreams(bool force) {
             StopListenTickersStream(force);
@@ -1066,7 +1087,11 @@ namespace CryptoMarketClient {
             return null;
         }
         public Ticker GetTicker(string tickerName) {
-            return Tickers.FirstOrDefault(t => t.Name == tickerName);
+            for(int i = 0; i < Tickers.Count; i++) {
+                Ticker t = Tickers[i];
+                if(t.Name == tickerName) return t;
+            }
+            return null;
         }
 
         public virtual bool Connect(TickerInputInfo info) {

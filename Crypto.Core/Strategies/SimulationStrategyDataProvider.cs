@@ -12,7 +12,8 @@ namespace Crypto.Core.Strategies {
         bool IStrategyDataProvider.IsFinished { get { return FinishedCore; } }
         protected bool FinishedCore { get; set; }
         bool IStrategyDataProvider.Connect(StrategyInputInfo info) {
-            foreach(TickerInputInfo ti in info.Tickers) {
+            for(int i = 0; i < info.Tickers.Count; i++) {
+                TickerInputInfo ti = info.Tickers[i];
                 StrategySimulationData data = GetSimulationData(ti);
                 if(data != null) data.Connected = true;
             }
@@ -80,11 +81,11 @@ namespace Crypto.Core.Strategies {
         }
 
         bool IStrategyDataProvider.Disconnect(StrategyInputInfo info) {
-            foreach(TickerInputInfo ti in info.Tickers) {
+            for(int i = 0; i < info.Tickers.Count; i++) {
+                TickerInputInfo ti = info.Tickers[i];
                 StrategySimulationData data = GetSimulationData(ti);
                 if(data != null) data.Connected = false;
             }
-
             return true;
         }
 
@@ -104,22 +105,15 @@ namespace Crypto.Core.Strategies {
 
         bool IStrategyDataProvider.InitializeDataFor(StrategyBase s) {
             StrategyInputInfo info = s.CreateInputInfo();
-
-            foreach(TickerInputInfo ti in info.Tickers) {
-                Exchange e = ((IStrategyDataProvider)this).GetExchange(ti.Exchange);
+            for(int i = 0; i < info.Tickers.Count; i++) {
+                TickerInputInfo ti = info.Tickers[i];
+                Exchange e = ((IStrategyDataProvider) this).GetExchange(ti.Exchange);
                 if(e == null)
                     return false;
                 ti.Ticker = e.GetTicker(ti.TickerName);
                 if(ti.Ticker == null)
                     return false;
-
-                StrategySimulationData data = new StrategySimulationData() {
-                    Ticker = ti.Ticker,
-                    Exchange = e,
-                    Strategy = s,
-                    TickerInfo = ti 
-                };
-
+                StrategySimulationData data = new StrategySimulationData() { Ticker = ti.Ticker, Exchange = e, Strategy = s, TickerInfo = ti };
                 if(ti.UseKline) {
                     data.CandleStickData = DownloadCandleStickData(ti);
                     if(data.CandleStickData.Count == 0)
@@ -128,7 +122,6 @@ namespace Crypto.Core.Strategies {
                 data.OrderBook = DownloadOrderBook(ti);
                 if(data.OrderBook == null)
                     return false;
-
                 SimulationData.Add(ti.Ticker, data);
             }
             return true;

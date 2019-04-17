@@ -70,8 +70,14 @@ namespace CryptoMarketClient {
             else {
                 int startIndex = 1;
                 int value = FastValueConverter.ConvertPositiveInteger(e.Message, ref startIndex); startIndex++;
-
-                Ticker t = Tickers.FirstOrDefault(tt => tt.Code == value);
+                Ticker t = null;
+                for(int index = 0; index < Tickers.Count; index++) {
+                    Ticker tt = Tickers[index];
+                    if(tt.Code == value) {
+                        t = tt;
+                        break;
+                    }
+                }
                 if(t != null)
                     OnTickerOrderBookAndTradesRecv(t, e.Message, startIndex);
             }
@@ -154,7 +160,15 @@ namespace CryptoMarketClient {
             int current = start + 1;
 
             int code = DeserializePositiveInt(bytes, ref current, end);
-            PoloniexTicker ticker = (PoloniexTicker)Tickers.FirstOrDefault(t => t.Code == code);
+            Ticker first = null;
+            for(int index = 0; index < Tickers.Count; index++) {
+                Ticker t = Tickers[index];
+                if(t.Code == code) {
+                    first = t;
+                    break;
+                }
+            }
+            PoloniexTicker ticker = (PoloniexTicker)first;
             if(ticker == null)
                 return;
             ticker.Last = DeserializeDoubleInQuotes(bytes, ref current, end);
@@ -294,7 +308,8 @@ namespace CryptoMarketClient {
             int startIndex = 0;
             List<string[]> res = JSonHelper.Default.DeserializeArrayOfObjects(bytes, ref startIndex, new string[] { "date", "high", "low", "open", "close", "volume", "quoteVolume", "weightedAverage" });
             if(res == null) return list;
-            foreach(string[] item in res) {
+            for(int i = 0; i < res.Count; i++) {
+                string[] item = res[i];
                 CandleStickData data = new CandleStickData();
                 data.Time = startTime.AddSeconds(FastValueConverter.ConvertPositiveLong(item[0]));
                 data.High = FastValueConverter.Convert(item[1]);
@@ -306,7 +321,6 @@ namespace CryptoMarketClient {
                 data.WeightedAverage = FastValueConverter.Convert(item[7]);
                 list.Add(data);
             }
-
             List<TradeInfoItem> trades = GetTradeVolumesForCandleStick(ticker, startSec, end);
             CandleStickChartHelper.InitializeVolumes(list, trades, ticker.CandleStickPeriodMin);
             return list;
@@ -438,16 +452,16 @@ namespace CryptoMarketClient {
             List<OrderBookEntry> bids = ticker.OrderBook.Bids;
             List<OrderBookEntry> asks = ticker.OrderBook.Asks;
             List<OrderBookEntry> iasks = ticker.OrderBook.AsksInverted;
-
-            foreach(string[] item in jbids)
+            for(int i = 0; i < jbids.Count; i++) {
+                string[] item = jbids[i];
                 bids.Add(new OrderBookEntry() { ValueString = item[0], AmountString = item[1] });
-
-            foreach(string[] item in jasks) {
+            }
+            for(int i = 0; i < jasks.Count; i++) {
+                string[] item = jasks[i];
                 OrderBookEntry e = new OrderBookEntry() { ValueString = item[0], AmountString = item[1] };
                 asks.Add(e);
                 iasks.Insert(0, e);
             }
-            
             ticker.OrderBook.UpdateEntries();
             ticker.OrderBook.RaiseOnChanged(new IncrementalUpdateInfo());
             ticker.RaiseChanged();
@@ -529,12 +543,12 @@ namespace CryptoMarketClient {
             List<TradeInfoItem> list = new List<TradeInfoItem>();
 
             int index = 0;
-            foreach(JObject obj in trades) {
+            for(int i = 0; i < trades.Count; i++) {
+                JObject obj = (JObject) trades[i];
                 DateTime time = obj.Value<DateTime>("date");
                 int tradeId = obj.Value<int>("tradeID");
                 if(time < starTime)
                     break;
-
                 TradeInfoItem item = new TradeInfoItem(null, ticker);
                 bool isBuy = obj.Value<string>("type").Length == 3;
                 item.AmountString = obj.Value<string>("amount");
@@ -566,7 +580,8 @@ namespace CryptoMarketClient {
             List<string[]> trades = JSonHelper.Default.DeserializeArrayOfObjects(bytes, ref startIndex, new string[] { "globalTradeID", "tradeID", "date", "type", "rate", "amount", "total" });
 
             List<TradeInfoItem> newTrades = new List<TradeInfoItem>();
-            foreach(string[] obj in trades) {
+            for(int i = 0; i < trades.Count; i++) {
+                string[] obj = trades[i];
                 TradeInfoItem item = new TradeInfoItem(null, ticker);
                 item.TimeString = obj[2];
                 item.AmountString = obj[5];
@@ -591,11 +606,11 @@ namespace CryptoMarketClient {
 
             int index = 0;
             List<TradeInfoItem> newTrades = new List<TradeInfoItem>();
-            foreach(string[] obj in trades) {
+            for(int i = 0; i < trades.Count; i++) {
+                string[] obj = trades[i];
                 TradeInfoItem item = new TradeInfoItem(null, ticker);
                 item.IdString = obj[1];
                 item.TimeString = obj[2];
-
                 bool isBuy = obj[3].Length == 3;
                 item.AmountString = obj[5];
                 item.Type = isBuy ? TradeType.Buy : TradeType.Sell;
@@ -670,9 +685,11 @@ namespace CryptoMarketClient {
             if(ticker == null) {
                 myTrades.Clear();
                 var tickers = JSonHelper.Default.DeserializeInfiniteObjectWithArrayProperty(data, ref startIndex, AccountTradeItems);
-                foreach(var t in tickers) {
+                for(int i = 0; i < tickers.Count; i++) {
+                    var t = tickers[i];
                     Ticker tc = Tickers.FirstOrDefault(tt => tt.CurrencyPair == t.Property);
-                    foreach(string[] item in t.Items) {
+                    for(int ii = 0; ii < t.Items.Count; ii++) {
+                        string[] item = t.Items[ii];
                         myTrades.Add(CreateTradeInfo(account, tc, item));
                     }
                 }
@@ -684,7 +701,8 @@ namespace CryptoMarketClient {
                     return true;
 
                 int index = 0;
-                foreach(string[] obj in trades) {
+                for(int ti = 0; ti < trades.Count; ti++) {
+                    string[] obj = trades[ti];
                     myTrades.Insert(index, CreateTradeInfo(account, ticker, obj));
                     index++;
                 }
@@ -885,9 +903,17 @@ namespace CryptoMarketClient {
                             Debug.WriteLine("OnGetOpenedOrders fails: " + prop.Value<string>());
                             return false;
                         }
-                        ticker = Tickers.FirstOrDefault(tt => tt.CurrencyPair == prop.Name);
+                        ticker = null;
+                        for(int index = 0; index < Tickers.Count; index++) {
+                            Ticker tt = Tickers[index];
+                            if(tt.CurrencyPair == prop.Name) {
+                                ticker = tt;
+                                break;
+                            }
+                        }
                         JArray array = (JArray)prop.Value;
-                        foreach(JObject obj in array) {
+                        for(int i = 0; i < array.Count; i++) {
+                            JObject obj = (JObject) array[i];
                             OpenedOrderInfo info = CreateOrderInfo(account, ticker, obj);
                             openedOrders.Add(info);
                         }
@@ -901,7 +927,8 @@ namespace CryptoMarketClient {
                     }
                     JArray array = objRes as JArray;
                     if(array != null) {
-                        foreach(JObject obj in array) {
+                        for(int i = 0; i < array.Count; i++) {
+                            JObject obj = (JObject) array[i];
                             OpenedOrderInfo info = CreateOrderInfo(account, ticker, obj);
                             openedOrders.Add(info);
                         }

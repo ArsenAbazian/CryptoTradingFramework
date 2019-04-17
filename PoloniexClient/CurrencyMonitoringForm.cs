@@ -16,7 +16,8 @@ namespace CryptoMarketClient {
         protected Exchange Exchange { get; private set; }
         protected override void OnThreadUpdate() {
             while(true) {
-                foreach(Ticker ticker in Exchange.Tickers) {
+                for(int i = 0; i < Exchange.Tickers.Count; i++) {
+                    Ticker ticker = Exchange.Tickers[i];
                     ticker.PrevMarketCurrencyEnabled = ticker.MarketCurrencyEnabled;
                 }
                 int tryIndex = 0;
@@ -28,7 +29,8 @@ namespace CryptoMarketClient {
                     if(this.bbSendNotifications.Checked)
                         TelegramBot.Default.SendNotification(Exchange + ": problem obtaining currency status.");
                 }
-                foreach(Ticker ticker in Exchange.Tickers) {
+                for(int ti = 0; ti < Exchange.Tickers.Count; ti++) {
+                    Ticker ticker = Exchange.Tickers[ti];
                     ticker.UpdateMarketCurrencyStatusHistory();
                     if(ticker.PrevMarketCurrencyEnabled && !ticker.MarketCurrencyEnabled) {
                         if(this.bbSendNotifications.Checked)

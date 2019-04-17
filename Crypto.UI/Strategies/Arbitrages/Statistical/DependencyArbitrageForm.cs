@@ -132,21 +132,22 @@ namespace CryptoMarketClient {
         }
         void SaveHistory() {
             Thread t = new Thread(() => {
-                foreach(var item in ArbitrageHelper.Items) {
-                    item.SaveHistory();
+                for(int i = 0; i < ArbitrageHelper.Items.Count; i++) {
+                    ArbitrageHelper.Items[i].SaveHistory();
                 }
             });
             t.Start();
         }
         void LoadHistory() {
-            foreach(var item in ArbitrageHelper.Items) {
-                item.LoadHistory();
+            for(int i = 0; i < ArbitrageHelper.Items.Count; i++) {
+                ArbitrageHelper.Items[i].LoadHistory();
             }
         }
 
         private void biStart_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
-            foreach(var item in ArbitrageHelper.Items)
-                item.History.Clear();
+            for(int i = 0; i < ArbitrageHelper.Items.Count; i++) {
+                ArbitrageHelper.Items[i].History.Clear();
+            }
             ArbitrageHelper.StartWorking();
             SaveTimer.Start();
             UpdateTimer.Start();

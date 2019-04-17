@@ -112,12 +112,14 @@ namespace CryptoMarketClient.Strategies {
 
         private void DetachePoints() {
             DetachedPoints = new Dictionary<Series, SeriesPoint[]>();
-            foreach(Series s in this.chartControl.Series) {
+            for(int i = 0; i < this.chartControl.Series.Count; i++) {
+                Series s = this.chartControl.Series[i];
                 if(s.DataSource == null && s.Points.Count > 0) {
                     SeriesPoint[] list = new SeriesPoint[s.Points.Count];
                     int index = 0;
-                    foreach(SeriesPoint pt in s.Points) {
-                        list[index] = pt; index++;
+                    for(int ii = 0; ii < s.Points.Count; ii++) {
+                        list[index] = s.Points[ii];
+                        index++;
                     }
                     s.Points.Clear();
                     DetachedPoints.Add(s, list);

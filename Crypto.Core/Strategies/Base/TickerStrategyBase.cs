@@ -22,7 +22,8 @@ namespace CryptoMarketClient.Strategies {
             OrderBookEntry res = new OrderBookEntry();
             double maxDeposit = ApplyFee(MaxActualBuyDeposit);
             lock(Ticker.OrderBook.Asks) {
-                foreach(OrderBookEntry entry in Ticker.OrderBook.Asks) {
+                for(int i = 0; i < Ticker.OrderBook.Asks.Count; i++) {
+                    OrderBookEntry entry = Ticker.OrderBook.Asks[i];
                     if(maxBuy != 0 && entry.Value > maxBuy)
                         break;
                     res.Value = entry.Value;
@@ -43,7 +44,8 @@ namespace CryptoMarketClient.Strategies {
             double maxDeposit = ApplyFee(MaxActualSellDeposit);
             res.Amount = maxDeposit;
             lock(Ticker.OrderBook.Bids) {
-                foreach(OrderBookEntry entry in Ticker.OrderBook.Bids) {
+                for(int i = 0; i < Ticker.OrderBook.Bids.Count; i++) {
+                    OrderBookEntry entry = Ticker.OrderBook.Bids[i];
                     if(minSell != 0 && entry.Value < minSell)
                         break;
                     res.Value = entry.Value;
