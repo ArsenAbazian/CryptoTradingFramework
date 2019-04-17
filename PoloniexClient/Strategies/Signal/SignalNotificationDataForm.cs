@@ -59,16 +59,4 @@ namespace CryptoMarketClient.Strategies.Signal {
             e.HighPriority = true;
         }
     }
-
-    public class CombinedSignalDataItem {
-        public int Index { get; set; }
-        public DateTime Time { get; set; }
-        public double Rsi { get; set; }
-        public double MacdFast { get; set; }
-        public double MacdSlow { get; set; }
-        public double Macd { get; set; }
-        public double MacdSignal { get; set; }
-        public double StochK { get; set; }
-        public double StochD { get; set; }
-    }
 }

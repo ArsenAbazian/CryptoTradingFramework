@@ -12,6 +12,8 @@ using System.Windows.Forms;
 using WebSocket4Net;
 using SuperSocket.ClientEngine;
 using CryptoMarketClient.Helpers;
+using System.Security.Cryptography;
+using Crypto.Core.Exchanges.Binance;
 
 namespace CryptoMarketClient.Binance {
     public class BinanceExchange : Exchange {
@@ -340,13 +342,13 @@ namespace CryptoMarketClient.Binance {
         }
 
         public override bool GetDeposites(AccountInfo account) {
-            throw new NotImplementedException();
+            return true;
         }
 
-        //public override Form CreateAccountForm() {
-        //    return null;
-        //}
-        
+        protected internal override HMAC CreateHmac(string secret) {
+            return new HMACSHA256(ASCIIEncoding.Default.GetBytes(secret));
+        }
+
         public override bool ObtainExchangeSettings() {
             string address = "https://api.binance.com/api/v1/exchangeInfo";
             string text = string.Empty;
@@ -566,9 +568,57 @@ namespace CryptoMarketClient.Binance {
             //throw new NotImplementedException();
         }
 
-        public override bool UpdateBalances(AccountInfo info) {
+        string GetNonce() {
+            long timestamp = (long)(DateTime.UtcNow - epoch).TotalMilliseconds;
+            return timestamp.ToString();
+        }
+
+        protected long GetServerTime() {
+            string adress = "https://binance.com/api/v1/time";
+            MyWebClient client = GetWebClient();
+            try {
+                return FastValueConverter.ConvertPositiveLong(client.DownloadString(adress));
+            }
+            catch(Exception e) {
+                LogManager.Default.Add(e.ToString());
+                return (long)(DateTime.UtcNow - epoch).TotalMilliseconds;
+            }
+        }
+
+        public override bool UpdateBalances(AccountInfo account) {
+            string queryString = string.Format("timestamp={0}", GetNonce());
+            string signature = account.GetSign(queryString);
+
+            string address = string.Format("https://binance.com/api/v3/account?{0}&signature={1}", queryString, signature);
+            MyWebClient client = GetWebClient();
+            
+            client.Headers.Clear();
+            client.Headers.Add("X-MBX-APIKEY", account.ApiKey);
+
+            try {
+                return OnGetBalances(account, client.UploadValues(address, new HttpRequestParamsCollection()));
+            }
+            catch(Exception e) {
+                LogManager.Default.Add(e.ToString());
+                return false;
+            }
+        }
+
+        public bool OnGetBalances(AccountInfo account, byte[] data) {
+            string text = UTF8Encoding.Default.GetString(data);
+            JObject root = (JObject)JsonConvert.DeserializeObject(text);
+            JArray balances = root.Value<JArray>("balances");
+            if(balances == null)
+                return false;
+            account.Balances.Clear();
+            foreach(JObject obj in balances) {
+                BinanceAccountBalanceInfo b = new BinanceAccountBalanceInfo(account);
+                b.Currency = obj.Value<string>("asset");
+                b.Available = obj.Value<double>("free");
+                b.OnOrders = obj.Value<double>("locked");
+                account.Balances.Add(b);
+            }
             return true;
-            //throw new NotImplementedException();
         }
 
         public override bool UpdateCurrencies() {

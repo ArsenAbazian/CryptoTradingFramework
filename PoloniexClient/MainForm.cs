@@ -265,8 +265,11 @@ namespace CryptoMarketClient {
         }
 
         private void bbShowYourTotalDeposit_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
-            //DepositsTotal form = new DepositsTotal();
-            //form.Show();
+            AccountBalancesForm form = new AccountBalancesForm();
+            form.Exchanges.Add(PoloniexExchange.Default);
+            form.Exchanges.Add(BittrexExchange.Default);
+            form.Exchanges.Add(BinanceExchange.Default);
+            form.Show();
         }
 
         private void bbShowHistory_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {

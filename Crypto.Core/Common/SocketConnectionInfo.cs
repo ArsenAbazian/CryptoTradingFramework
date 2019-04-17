@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using WebSocket4Net;
 using static CryptoMarketClient.Exchanges.Bittrex.SignalWebSocket;
 
@@ -412,8 +413,10 @@ namespace CryptoMarketClient.Common {
             }
         }
         void CreateSocket() {
-            if(SocketType == SocketType.WebSocket)
+            if(SocketType == SocketType.WebSocket) {
                 Socket = new WebSocket(Address, "");
+                Socket.Security.EnabledSslProtocols = System.Security.Authentication.SslProtocols.Tls12;
+            }
             else {
                 Signal = new SignalWebSocket(Address);
                 Signal.UpdateBalanceState = UpdateBalanceState;

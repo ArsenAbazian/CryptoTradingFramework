@@ -1,4 +1,5 @@
-﻿using CryptoMarketClient.Common;
+﻿using CryptoMarketClient.Bittrex;
+using CryptoMarketClient.Common;
 using CryptoMarketClient.Helpers;
 using CryptoMarketClient.Strategies;
 using DevExpress.Data.Filtering;
@@ -47,14 +48,14 @@ namespace CryptoMarketClient {
         void UpdateCurrencies() {
             UpdateBalanceNotification = true;
             while(AllowWorkThread) {
-                foreach(Exchange exchange in Exchange.Connected) {
+                foreach(Exchange exchange in UpdateHelper.Exchanges) {
                     for(int i = 0; i < 3; i++) {
                         if(exchange.UpdateCurrencies())
                             break;
                     }
                 }
 
-                foreach(Exchange exchange in Exchange.Connected) {
+                foreach(Exchange exchange in UpdateHelper.Exchanges) {
                     for(int i = 0; i < 3; i++) {
                         if(exchange.UpdateDefaultAccountBalances())
                             break;
@@ -63,13 +64,13 @@ namespace CryptoMarketClient {
 
                 if(UpdateBalanceNotification) {
                     UpdateBalanceNotification = false;
-                    foreach(Exchange exchange in Exchange.Connected) {
+                    foreach(Exchange exchange in UpdateHelper.Exchanges) {
                         foreach(BalanceBase info in exchange.DefaultAccount.Balances) {
                             TelegramBot.Default.SendNotification(exchange.Name + " balance " + info.Currency + " = <b>" + info.Available.ToString("0.00000000") + "</b>");
                         }
                     }
 
-                    foreach(Exchange exchange in Exchange.Connected) {
+                    foreach(Exchange exchange in UpdateHelper.Exchanges) {
                         foreach(BalanceBase info in exchange.DefaultAccount.Balances) {
                             if(info.DepositChanged > 0.05) {
                                 TelegramBot.Default.SendNotification(exchange.Name + " deposit changed: " + info.Currency + " = " + info.Available);
@@ -118,7 +119,7 @@ namespace CryptoMarketClient {
                     if(!current.ObtainingData) {
                         while(concurrentTickersCount > 8)
                             Thread.Sleep(1);
-                        TickerCollectionUpdateHelper.Default.Update(current, this);
+                        UpdateHelper.Update(current, this);
                         continue;
                     }
                     int currentUpdateTimeMS = (int)(timer.ElapsedMilliseconds - current.StartUpdateMs);
@@ -135,7 +136,7 @@ namespace CryptoMarketClient {
         }
         async Task UpdateArbitrageInfoTask(TickerCollection info) {
             Task task = Task.Factory.StartNew(() => {
-                TickerCollectionUpdateHelper.Default.Update(info, this);
+                UpdateHelper.Update(info, this);
             });
             await task;
         }
@@ -323,9 +324,16 @@ namespace CryptoMarketClient {
         }
 
         public List<TickerCollection> ArbitrageList { get; private set; }
+        public TickerCollectionUpdateHelper UpdateHelper { get; private set; }
         void BuildCurrenciesList() {
-            TickerCollectionUpdateHelper.Default.Initialize();
-            ArbitrageList = TickerCollectionUpdateHelper.Default.Items;
+            PoloniexExchange.Default.Connect();
+            BittrexExchange.Default.Connect();
+            UpdateHelper = new TickerCollectionUpdateHelper();
+            UpdateHelper.Exchanges.Add(PoloniexExchange.Default);
+            UpdateHelper.Exchanges.Add(BittrexExchange.Default);
+
+            UpdateHelper.Initialize();
+            ArbitrageList = UpdateHelper.Items;
             tickerArbitrageInfoBindingSource.DataSource = ArbitrageList;
         }
 
@@ -341,6 +349,8 @@ namespace CryptoMarketClient {
 
         private void gridView1_Click(object sender, EventArgs e) {
             TickerCollection info = (TickerCollection)this.gridView1.GetRow(this.gridView1.FocusedRowHandle);
+            if(info == null)
+                return;
             bbTryArbitrage.Tag = info;
             bbTryArbitrage.Caption = "Try Arbitrage on " + info.ShortName;
         }

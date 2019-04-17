@@ -201,8 +201,20 @@ namespace CryptoMarketClient.Strategies {
             view.LineThickness = (int)(1 * DpiProvider.Default.DpiScaleFactor);
             view.LevelLineLength = 0.25;
 
-            
-            ((XYDiagram)Chart.Diagram).AxisX.DateTimeScaleOptions.MeasureUnitMultiplier = info.CandleStickMinutesInterval;
+            if(Strategy.StrategyData.Count == 0)
+                ((XYDiagram)Chart.Diagram).AxisX.DateTimeScaleOptions.MeasureUnitMultiplier = 30;
+            else {
+                object data1 = Strategy.StrategyData[1];
+                object data0 = Strategy.StrategyData[0];
+                PropertyInfo pi = data1.GetType().GetProperty("Time", BindingFlags.Public | BindingFlags.Instance);
+                if(pi == null)
+                    ((XYDiagram)Chart.Diagram).AxisX.DateTimeScaleOptions.MeasureUnitMultiplier = 30;
+                else {
+                    DateTime time1 = (DateTime)pi.GetValue(data1);
+                    DateTime time0 = (DateTime)pi.GetValue(data0);
+                    ((XYDiagram)Chart.Diagram).AxisX.DateTimeScaleOptions.MeasureUnitMultiplier = (int)((time1 - time0).TotalMinutes);
+                }
+            }
 
             s.View = view;
             if(Strategy.StrategyData != null && Strategy.StrategyData.Count > 0)

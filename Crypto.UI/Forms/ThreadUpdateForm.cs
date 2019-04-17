@@ -55,8 +55,8 @@ namespace CryptoMarketClient {
             Stopwatch w = new Stopwatch();
             w.Start();
             while(AllowWorkThread) {
-                Thread.Sleep(UpdateInervalMs);
                 OnThreadUpdate();
+                Thread.Sleep(UpdateInervalMs);
             }
         }
         protected virtual void OnThreadUpdate() {

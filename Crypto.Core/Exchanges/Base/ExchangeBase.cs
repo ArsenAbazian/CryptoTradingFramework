@@ -50,6 +50,16 @@ namespace CryptoMarketClient {
             get { return Color.Green; }
         }
 
+        public string ToQueryString(HttpRequestParamsCollection nvc) {
+            StringBuilder sb = new StringBuilder();
+
+            foreach(var item in nvc) {
+                sb.AppendFormat("&{0}={1}", Uri.EscapeDataString(item.Key), Uri.EscapeDataString(item.Value));
+            }
+            sb.Remove(0, 1);
+            return sb.ToString();
+        }
+
         public static List<TickerNameInfo> GetTickersNameInfo() {
             List<TickerNameInfo> list = new List<TickerNameInfo>();
             foreach(Exchange e in Exchange.Registered) {
@@ -94,6 +104,10 @@ namespace CryptoMarketClient {
                 }
                 return btcUsdtTicker;
             }
+        }
+
+        protected internal virtual HMAC CreateHmac(string secret) {
+            return new HMACSHA512(ASCIIEncoding.Default.GetBytes(secret));
         }
 
         public static int OrderBookDepth { get; set; }
@@ -801,8 +815,6 @@ namespace CryptoMarketClient {
 
         protected internal virtual void OnTickersSocketOpened(object sender, EventArgs e) {
             Telemetry.Default.TrackEvent(LogType.Success, this, (Ticker)null, "tickers socket opened", "");
-            //foreach(Ticker ticker in SubscribedTickers)
-            //    StartListenTickerStream(ticker);
         }
 
         protected internal virtual void OnTickersSocketError(object sender, SuperSocket.ClientEngine.ErrorEventArgs e) {

@@ -6,18 +6,18 @@ using System.Threading.Tasks;
 
 namespace CryptoMarketClient {
     public static class TickerCollectionHelper {
-        static List<List<Ticker>> GetMarketsList() {
+        static List<List<Ticker>> GetMarketsList(List<Exchange> exchanges) {
             List<List<Ticker>> tickersList = new List<List<Ticker>>();
-            foreach(Exchange exchange in Exchange.Connected) {
+            foreach(Exchange exchange in exchanges) {
                 List<Ticker> list = new List<Ticker>();
                 list.AddRange(exchange.Tickers);
                 tickersList.Add(list);
             }
             return tickersList;
         }
-        public static List<TickerCollection> GetItems() {
+        public static List<TickerCollection> GetItems(List<Exchange> exchanges) {
             List<TickerCollection> arbitrageList = new List<TickerCollection>();
-            List<List<Ticker>> markets = GetMarketsList();
+            List<List<Ticker>> markets = GetMarketsList(exchanges);
             if(markets.Count == 0)
                 return arbitrageList;
             //string[] marketItems = new string[] { "ETC", "LTC", "ADA", "XRP", "EOS", "NES", "ETH", "BTC", "STR", "XMR", "DASH", "ZEC", "NXT" };

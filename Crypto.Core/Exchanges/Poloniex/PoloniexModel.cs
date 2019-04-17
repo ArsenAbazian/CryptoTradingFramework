@@ -724,14 +724,7 @@ namespace CryptoMarketClient {
             item.Fee = FastValueConverter.Convert(obj[6]);
             return item;
         }
-        public string ToQueryString(HttpRequestParamsCollection nvc) {
-            StringBuilder sb = new StringBuilder();
 
-            foreach(var item in nvc) {
-                sb.AppendFormat("&{0}={1}", Uri.EscapeDataString(item.Key), Uri.EscapeDataString(item.Value));
-            }
-            return sb.ToString();
-        }
         public override bool UpdateBalances(AccountInfo account) {
             string address = string.Format("https://poloniex.com/tradingApi");
 
@@ -741,8 +734,10 @@ namespace CryptoMarketClient {
 
             MyWebClient client = GetWebClient();
             client.Headers.Clear();
-            client.Headers.Add("Sign", account.GetSign(ToQueryString(coll)));
+            string queryString = ToQueryString(coll);
             client.Headers.Add("Key", account.ApiKey);
+            client.Headers.Add("Sign", account.GetSign(queryString));
+
             try {
                 return OnGetBalances(account, client.UploadValues(address, coll));
             }
@@ -759,7 +754,8 @@ namespace CryptoMarketClient {
 
             MyWebClient client = GetWebClient();
             client.Headers.Clear();
-            client.Headers.Add("Sign", account.GetSign(ToQueryString(coll)));
+            string queryString = ToQueryString(coll);
+            client.Headers.Add("Sign", account.GetSign(queryString));
             client.Headers.Add("Key", account.ApiKey);
             return client.UploadValuesTaskAsync(address, coll);
         }
@@ -835,7 +831,7 @@ namespace CryptoMarketClient {
             return true;
         }
         string GetNonce() {
-            return ((long)((DateTime.UtcNow - new DateTime(1, 1, 1)).TotalMilliseconds * 10000)).ToString();
+            return ((long)((DateTime.UtcNow - epoch).TotalMilliseconds/* * 10000*/)).ToString();
         }
         public override bool UpdateOpenedOrders(AccountInfo account, Ticker ticker) {
             string address = string.Format("https://poloniex.com/tradingApi");

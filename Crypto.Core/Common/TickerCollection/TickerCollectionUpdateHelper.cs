@@ -27,9 +27,9 @@ namespace CryptoMarketClient.Common {
         }
 
         public List<TickerCollection> Items { get; private set; }
+        public List<Exchange> Exchanges { get; } = new List<Exchange>();
         public void Initialize() {
-            Items = TickerCollectionHelper.GetItems();
-            //Items = Items.Where((i) => (i.BaseCurrency == "USDT" && i.MarketCurrency == "BTC")).ToList();
+            Items = TickerCollectionHelper.GetItems(Exchanges);
             Items = Items.Where((i) => i.BaseCurrency == "BTC" || (i.BaseCurrency == "USDT" && i.MarketCurrency == "BTC")).ToList();
         }
 

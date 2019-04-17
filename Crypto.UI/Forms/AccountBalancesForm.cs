@@ -15,46 +15,56 @@ namespace CryptoMarketClient.Common {
             InitializeComponent();
             Text = exchange.Name + " Account Balances";
             Exchange = exchange;
+            Exchanges.Add(Exchange);
+            UpdateFilter();
+        }
+
+        public AccountBalancesForm() {
+            InitializeComponent();
+            Text = "Account Balances";
         }
 
         protected Exchange Exchange { get; set; }
+        public List<Exchange> Exchanges { get; } = new List<Exchange>();
 
         protected override int UpdateInervalMs => 5000;
         protected override bool AllowUpdateInactive => false;
 
         protected override void OnThreadUpdate() {
-            if(!Exchange.IsConnected)
-                return;
             UpdateBalances();
         }
         
         void UpdateBalances() {
-            if(!Exchange.UpdateAllAccountsBalances()) {
-                this.bsInfo.Caption = "<color=red><b>UpdateBalances failed.</color></b>";
-                return;
-            }
-            if(!Exchange.GetAllAccountsDeposites()) {
-                this.bsInfo.Caption = "<color=red><b>GetDeposites failed</color></b>";
-                return;
-            }
-            this.bsInfo.Caption = "";
-            if(!IsHandleCreated || IsDisposed)
-                return;
-
-            BeginInvoke(new MethodInvoker(() => {
-                if(!this.gridControl1.IsHandleCreated || this.gridControl1.IsDisposed)
+            foreach(Exchange e in Exchanges) {
+                if(!e.IsConnected)
+                    e.Connect();
+                if(!e.UpdateAllAccountsBalances()) {
+                    this.bsInfo.Caption = "<color=red><b>UpdateBalances failed.</color></b>";
                     return;
-                if(this.poloniexAccountBalanceInfoBindingSource.DataSource is Type) {
-                    this.poloniexAccountBalanceInfoBindingSource.DataSource = Exchange.GetAllBalances();
-                    this.gridView1.ExpandAllGroups();
                 }
-                else {
-                    this.gridView1.RefreshData();
+                if(!e.GetAllAccountsDeposites()) {
+                    this.bsInfo.Caption = "<color=red><b>GetDeposites failed</color></b>";
+                    return;
                 }
-            }));
+                this.bsInfo.Caption = "";
+                if(!IsHandleCreated || IsDisposed)
+                    return;
+
+                BeginInvoke(new MethodInvoker(() => {
+                    if(!this.gridControl1.IsHandleCreated || this.gridControl1.IsDisposed)
+                        return;
+                    if(this.poloniexAccountBalanceInfoBindingSource.DataSource is Type) {
+                        this.poloniexAccountBalanceInfoBindingSource.DataSource = e.GetAllBalances();
+                        this.gridView1.ExpandAllGroups();
+                    }
+                    else {
+                        this.gridView1.RefreshData();
+                    }
+                }));
+            }
         }
 
-        private void bcShowNonZero_CheckedChanged(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
+        protected void UpdateFilter() {
             if(this.bcShowNonZero.Checked) {
                 CriteriaOperator op = new BinaryOperator("NonZero", true, BinaryOperatorType.Equal);
                 this.gridView1.ActiveFilterCriteria = op;
@@ -62,6 +72,10 @@ namespace CryptoMarketClient.Common {
             else {
                 this.gridView1.ActiveFilterString = null;
             }
+        }
+
+        private void bcShowNonZero_CheckedChanged(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
+            UpdateFilter();
         }
     }
 }

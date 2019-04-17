@@ -107,12 +107,29 @@ namespace CryptoMarketClient {
                 OnSecretChanged();
             }
         }
+        HMAC hmacSha;
         [XmlIgnore]
-        public HMACSHA512 HmacSha { get; private set; }
+        public HMAC HmacSha {
+            get {
+                if(hmacSha == null && Exchange != null)
+                    hmacSha = Exchange.CreateHmac(Secret);
+                return hmacSha;
+            }
+            set {
+                hmacSha = value;
+            }
+        }
         void OnSecretChanged() {
             SecretEncoded = Encrypt(Secret, true);
-            HmacSha = new HMACSHA512(Encoding.UTF8.GetBytes(Secret));
+            HmacSha = CreateHmac(Secret);
         }
+
+        protected virtual HMAC CreateHmac(string secret) {
+            if(Exchange == null)
+                return null;
+            return Exchange.CreateHmac(secret);
+        }
+
         static string Text { get { return "Yes, man is mortal, but that would be only half the trouble. The worst of it is that he's sometimes unexpectedly mortal—there's the trick!"; } }
         #region Encryption
         private string Encrypt(string toEncrypt, bool useHashing) {
@@ -201,12 +218,13 @@ namespace CryptoMarketClient {
         #endregion
 
         public string GetSign(string text) {
-            byte[] data = Encoding.UTF8.GetBytes(text);
-            byte[] hash = HmacSha.ComputeHash(data, 0, data.Length);
-            StringBuilder builder = new StringBuilder();
-            for(int i = 0; i < hash.Length; i++)
-                builder.Append(hash[i].ToString("x2", CultureInfo.InvariantCulture));
-            return builder.ToString();
+            byte[] data = Encoding.ASCII.GetBytes(text);
+            byte[] hash = HmacSha.ComputeHash(data);
+            return BitConverter.ToString(hash).Replace("-", string.Empty).ToLower();
+            //StringBuilder builder = new StringBuilder();
+            //for(int i = 0; i < hash.Length; i++)
+            //    builder.Append(hash[i].ToString("x2", CultureInfo.InvariantCulture));
+            //return builder.ToString();
         }
 
         [XmlIgnore]

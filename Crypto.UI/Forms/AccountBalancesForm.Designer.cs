@@ -50,6 +50,7 @@
             this.colAvailable = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colOnOrders = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colBtcValue = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colExchange = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colDepositAddress = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colNonZero = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colAccount = new DevExpress.XtraGrid.Columns.GridColumn();
@@ -74,7 +75,7 @@
             // 
             this.gridControl1.DataSource = this.poloniexAccountBalanceInfoBindingSource;
             this.gridControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gridControl1.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(6, 5, 6, 5);
+            this.gridControl1.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.gridControl1.Location = new System.Drawing.Point(0, 58);
             this.gridControl1.MainView = this.gridView1;
             this.gridControl1.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
@@ -106,6 +107,7 @@
             this.colAvailable,
             this.colOnOrders,
             this.colBtcValue,
+            this.colExchange,
             this.colDepositAddress,
             this.colNonZero,
             this.colAccount,
@@ -172,15 +174,12 @@
             this.gridView1.FormatRules.Add(gridFormatRule2);
             this.gridView1.FormatRules.Add(gridFormatRule3);
             this.gridView1.GridControl = this.gridControl1;
-            this.gridView1.GroupCount = 1;
             this.gridView1.Name = "gridView1";
             this.gridView1.OptionsBehavior.AllowPixelScrolling = DevExpress.Utils.DefaultBoolean.True;
             this.gridView1.OptionsBehavior.AllowSortAnimation = DevExpress.Utils.DefaultBoolean.True;
             this.gridView1.OptionsBehavior.Editable = false;
             this.gridView1.OptionsDetail.EnableMasterViewMode = false;
             this.gridView1.OptionsView.ShowFooter = true;
-            this.gridView1.SortInfo.AddRange(new DevExpress.XtraGrid.Columns.GridColumnSortInfo[] {
-            new DevExpress.XtraGrid.Columns.GridColumnSortInfo(this.colAccount, DevExpress.Data.ColumnSortOrder.Ascending)});
             // 
             // colCurrency
             // 
@@ -202,7 +201,7 @@
             this.colAvailable.FieldName = "Available";
             this.colAvailable.Name = "colAvailable";
             this.colAvailable.Visible = true;
-            this.colAvailable.VisibleIndex = 1;
+            this.colAvailable.VisibleIndex = 2;
             this.colAvailable.Width = 203;
             // 
             // colOnOrders
@@ -210,7 +209,7 @@
             this.colOnOrders.FieldName = "OnOrders";
             this.colOnOrders.Name = "colOnOrders";
             this.colOnOrders.Visible = true;
-            this.colOnOrders.VisibleIndex = 2;
+            this.colOnOrders.VisibleIndex = 3;
             this.colOnOrders.Width = 203;
             // 
             // colBtcValue
@@ -220,15 +219,24 @@
             this.colBtcValue.Summary.AddRange(new DevExpress.XtraGrid.GridSummaryItem[] {
             new DevExpress.XtraGrid.GridColumnSummaryItem(DevExpress.Data.SummaryItemType.Sum, "BtcValue", "SUM={0:0.00000000}")});
             this.colBtcValue.Visible = true;
-            this.colBtcValue.VisibleIndex = 3;
+            this.colBtcValue.VisibleIndex = 4;
             this.colBtcValue.Width = 203;
+            // 
+            // colExchange
+            // 
+            this.colExchange.FieldName = "Exchange";
+            this.colExchange.MinWidth = 40;
+            this.colExchange.Name = "colExchange";
+            this.colExchange.Visible = true;
+            this.colExchange.VisibleIndex = 5;
+            this.colExchange.Width = 150;
             // 
             // colDepositAddress
             // 
             this.colDepositAddress.FieldName = "DepositAddress";
             this.colDepositAddress.Name = "colDepositAddress";
             this.colDepositAddress.Visible = true;
-            this.colDepositAddress.VisibleIndex = 5;
+            this.colDepositAddress.VisibleIndex = 7;
             this.colDepositAddress.Width = 392;
             // 
             // colNonZero
@@ -243,7 +251,7 @@
             this.colAccount.MinWidth = 47;
             this.colAccount.Name = "colAccount";
             this.colAccount.Visible = true;
-            this.colAccount.VisibleIndex = 0;
+            this.colAccount.VisibleIndex = 1;
             this.colAccount.Width = 175;
             // 
             // colUsdtValue
@@ -254,7 +262,7 @@
             this.colUsdtValue.Summary.AddRange(new DevExpress.XtraGrid.GridSummaryItem[] {
             new DevExpress.XtraGrid.GridColumnSummaryItem(DevExpress.Data.SummaryItemType.Sum, "UsdtValue", "SUM={0:0.00000000}")});
             this.colUsdtValue.Visible = true;
-            this.colUsdtValue.VisibleIndex = 4;
+            this.colUsdtValue.VisibleIndex = 6;
             this.colUsdtValue.Width = 292;
             // 
             // barManager1
@@ -293,9 +301,10 @@
             // 
             // bcShowNonZero
             // 
-            this.bcShowNonZero.Alignment = DevExpress.XtraBars.BarItemLinkAlignment.Right;
+            this.bcShowNonZero.BindableChecked = true;
             this.bcShowNonZero.Caption = "Show Non Zero Balances";
-            this.bcShowNonZero.CheckBoxVisibility = DevExpress.XtraBars.CheckBoxVisibility.AfterText;
+            this.bcShowNonZero.CheckBoxVisibility = DevExpress.XtraBars.CheckBoxVisibility.BeforeText;
+            this.bcShowNonZero.Checked = true;
             this.bcShowNonZero.Id = 0;
             this.bcShowNonZero.Name = "bcShowNonZero";
             this.bcShowNonZero.CheckedChanged += new DevExpress.XtraBars.ItemClickEventHandler(this.bcShowNonZero_CheckedChanged);
@@ -317,7 +326,6 @@
             // bsInfo
             // 
             this.bsInfo.AllowHtmlText = DevExpress.Utils.DefaultBoolean.True;
-            this.bsInfo.Caption = "barStaticItem1";
             this.bsInfo.Id = 1;
             this.bsInfo.Name = "bsInfo";
             // 
@@ -361,7 +369,7 @@
             // 
             this.Appearance.FontSizeDelta = 2;
             this.Appearance.Options.UseFont = true;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(18F, 39F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(26F, 58F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1538, 1176);
             this.Controls.Add(this.gridControl1);
@@ -369,7 +377,7 @@
             this.Controls.Add(this.barDockControlRight);
             this.Controls.Add(this.barDockControlBottom);
             this.Controls.Add(this.barDockControlTop);
-            this.Font = new System.Drawing.Font("Tahoma", 11.875F);
+            this.Font = new System.Drawing.Font("Tahoma", 17.875F);
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "AccountBalancesForm";
             this.Text = "Poloniex Account Balances";
@@ -406,5 +414,6 @@
         private DevExpress.XtraGrid.Columns.GridColumn colAccount;
         private DevExpress.XtraGrid.Columns.GridColumn colUsdtValue;
         private DevExpress.XtraEditors.Repository.RepositoryItemTextEdit repositoryItemTextEdit1;
+        private DevExpress.XtraGrid.Columns.GridColumn colExchange;
     }
 }
