@@ -220,7 +220,7 @@ namespace InvictusExchangeApp {
             List<WalletInvestorDataItem> list = new List<WalletInvestorDataItem>();
             WiItems = list;
             
-            List<Ticker>
+            //List<Ticker>
 
             double percent = Settings.Min24HourChange;
             for(int i = 1; i < 1000; i++) {
