@@ -840,7 +840,7 @@ namespace CryptoMarketClient {
             return true;
         }
         string GetNonce() {
-            return ((long)((DateTime.UtcNow - epoch).TotalMilliseconds/* * 10000*/)).ToString();
+            return ((long)((DateTime.UtcNow - new DateTime(1,1,1)).TotalMilliseconds * 10000)).ToString();
         }
         public override bool UpdateOpenedOrders(AccountInfo account, Ticker ticker) {
             string address = string.Format("https://poloniex.com/tradingApi");
