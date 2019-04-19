@@ -21,6 +21,7 @@ namespace Crypto.Core.Strategies {
         }
 
         public DateTime LastTime { get; private set; } = DateTime.Now;
+        DateTime IStrategyDataProvider.CurrentTime { get { return LastTime; } }
         void IStrategyDataProvider.OnTick() {
             DateTime nextTime = GetNextTime();
             if(nextTime == DateTime.MaxValue)
@@ -33,6 +34,8 @@ namespace Crypto.Core.Strategies {
         protected virtual void UpdateTickersOrderBook() {
             Random r = new Random();
             foreach(StrategySimulationData data in SimulationData.Values) {
+                if(data.UseSimulationFile)
+                    continue;
                 data.Ticker.OrderBook.Assign(data.OrderBook);
                 if(data.CandleStickData.Count == 0)
                     continue;
@@ -52,9 +55,14 @@ namespace Crypto.Core.Strategies {
             foreach(StrategySimulationData s in SimulationData.Values) {
                 if(!s.Connected)
                     continue;
-                if(s.TickerInfo.UseKline) {
-                    if(s.CandleStickData.Count > 0 && s.CandleStickData.First().Time == time) {
-                        SendCandleStickDataEvent(s.Ticker, s.CandleStickData);
+                if(s.UseSimulationFile) {
+                    s.Ticker.ApplyCapturedEvent(time);
+                }
+                else {
+                    if(s.TickerInfo.UseKline) {
+                        if(s.CandleStickData.Count > 0 && s.CandleStickData.First().Time == time) {
+                            SendCandleStickDataEvent(s.Ticker, s.CandleStickData);
+                        }
                     }
                 }
             }
@@ -65,10 +73,19 @@ namespace Crypto.Core.Strategies {
             foreach(StrategySimulationData s in SimulationData.Values) {
                 if(!s.Connected)
                     continue;
-                if(s.TickerInfo.UseKline) {
-                    DateTime time = s.CandleStickData.Count == 0 ? DateTime.MaxValue : s.CandleStickData.First().Time;
+                if(s.UseSimulationFile) {
+                    if(s.Ticker.CaptureDataHistory.Items.Count == 0)
+                        continue;
+                    DateTime time = s.Ticker.CaptureDataHistory.Items[0].Time;
                     if(minTime > time)
                         minTime = time;
+                }
+                else {
+                    if(s.TickerInfo.UseKline) {
+                        DateTime time = s.CandleStickData.Count == 0 ? DateTime.MaxValue : s.CandleStickData.First().Time;
+                        if(minTime > time)
+                            minTime = time;
+                    }
                 }
             }
             return minTime;
@@ -114,14 +131,21 @@ namespace Crypto.Core.Strategies {
                 if(ti.Ticker == null)
                     return false;
                 StrategySimulationData data = new StrategySimulationData() { Ticker = ti.Ticker, Exchange = e, Strategy = s, TickerInfo = ti };
-                if(ti.UseKline) {
-                    data.CandleStickData = DownloadCandleStickData(ti);
-                    if(data.CandleStickData.Count == 0)
+                if(!string.IsNullOrEmpty(ti.SimulationDataFile)) {
+                    data.UseSimulationFile = true;
+                    if(!ti.Ticker.CaptureDataHistory.Load(ti.SimulationDataFile))
                         return false;
                 }
-                data.OrderBook = DownloadOrderBook(ti);
-                if(data.OrderBook == null)
-                    return false;
+                else {
+                    if(ti.UseKline) {
+                        data.CandleStickData = DownloadCandleStickData(ti);
+                        if(data.CandleStickData.Count == 0)
+                            return false;
+                    }
+                    data.OrderBook = DownloadOrderBook(ti);
+                    if(data.OrderBook == null)
+                        return false;
+                }
                 SimulationData.Add(ti.Ticker, data);
             }
             return true;
@@ -171,5 +195,6 @@ namespace Crypto.Core.Strategies {
         public OrderBook OrderBook { get; set; }
         public ExchangeInputInfo ExchangeInfo { get; set; }
         public TickerInputInfo TickerInfo { get; set; }
+        public bool UseSimulationFile { get; set; }
     }
 }

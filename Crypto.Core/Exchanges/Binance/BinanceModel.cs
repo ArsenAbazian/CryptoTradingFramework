@@ -14,6 +14,7 @@ using SuperSocket.ClientEngine;
 using CryptoMarketClient.Helpers;
 using System.Security.Cryptography;
 using Crypto.Core.Exchanges.Binance;
+using Crypto.Core.Exchanges.Base;
 
 namespace CryptoMarketClient.Binance {
     public class BinanceExchange : Exchange {
@@ -779,6 +780,9 @@ namespace CryptoMarketClient.Binance {
                 ticker.RaiseTradeHistoryChanged(new TradeHistoryChangedEventArgs() { NewItems = newItems });
             }
             return true;
+        }
+        protected internal override void ApplyCapturedEvent(Ticker ticker, TickerCaptureDataInfo info) {
+            throw new NotImplementedException();
         }
     }
 }

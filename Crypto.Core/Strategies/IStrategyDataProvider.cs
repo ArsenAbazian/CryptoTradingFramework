@@ -14,5 +14,6 @@ namespace Crypto.Core.Strategies {
         AccountInfo GetAccount(Guid accountId);
         void OnTick();
         bool IsFinished { get; }
+        DateTime CurrentTime { get; }
     }
 }

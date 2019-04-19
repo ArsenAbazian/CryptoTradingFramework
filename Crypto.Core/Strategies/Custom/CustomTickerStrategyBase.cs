@@ -76,6 +76,11 @@ namespace Crypto.Core.Strategies.Custom {
             }
         }
 
+        protected override bool InitializeTicker() {
+            return true;
+            //return base.InitializeTicker();
+        }
+
         protected override void OnTickCore() {
             if(CheckLongCore())
                 EnterLong();

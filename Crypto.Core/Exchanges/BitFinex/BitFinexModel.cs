@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using WebSocket4Net;
 using CryptoMarketClient.Helpers;
+using Crypto.Core.Exchanges.Base;
 
 namespace CryptoMarketClient.BitFinex {
     public class BitFinexExchange : Exchange {
@@ -1029,6 +1030,9 @@ namespace CryptoMarketClient.BitFinex {
 
         string GetNonce() {
            return ((DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds).ToString();
+        }
+        protected internal override void ApplyCapturedEvent(Ticker ticker, TickerCaptureDataInfo info) {
+            throw new NotImplementedException();
         }
     }
 }

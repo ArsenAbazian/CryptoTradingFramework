@@ -77,6 +77,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Accessibility" />
     <Reference Include="DevExpress.Charts.v19.1.Core, Version=19.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\2019.1\Bin\Framework4\DevExpress.Charts.v19.1.Core.dll</HintPath>
@@ -160,8 +161,15 @@
       <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.Linq" />
+    <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Runtime.Serialization.Formatters.Soap" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -194,6 +202,12 @@
     </Compile>
     <Compile Include="Forms\AccountEditingForm.Designer.cs">
       <DependentUpon>AccountEditingForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\TickerCaptureSettingsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\TickerCaptureSettingsForm.Designer.cs">
+      <DependentUpon>TickerCaptureSettingsForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Strategies\Arbitrages\TriplePairStrategyConfigurationControl.cs">
       <SubType>UserControl</SubType>
@@ -361,6 +375,9 @@
     <EmbeddedResource Include="Forms\AccountEditingForm.resx">
       <DependentUpon>AccountEditingForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\TickerCaptureSettingsForm.resx">
+      <DependentUpon>TickerCaptureSettingsForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Strategies\Arbitrages\TriplePairStrategyConfigurationControl.resx">
       <DependentUpon>TriplePairStrategyConfigurationControl.cs</DependentUpon>
     </EmbeddedResource>
@@ -439,9 +456,11 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
+    <None Include="Properties\DataSources\Crypto.Core.Common.TickerCaptureSettings.datasource" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Forms\Instruments\" />
+    <Folder Include="Strategies\Listeners\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Crypto.Core\Crypto.Core.csproj">

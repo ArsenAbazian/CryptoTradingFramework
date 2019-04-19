@@ -202,6 +202,7 @@
   <ItemGroup>
     <Compile Include="Common\EncryptHelper.cs" />
     <Compile Include="Common\TickerNameInfo.cs" />
+    <Compile Include="Exchanges\Base\TickerCaptureDataInfo.cs" />
     <Compile Include="Exchanges\Binance\BinanceAccountBalanceInfo.cs" />
     <Compile Include="Helpers\SerializationHelper.cs" />
     <Compile Include="Indicators\EmaIndicator.cs" />
@@ -288,6 +289,7 @@
     <Compile Include="Strategies\IStrategyDataProvider.cs" />
     <Compile Include="Strategies\Grid\StaticGridStrategy.cs" />
     <Compile Include="Strategies\Base\TickerStrategyBase.cs" />
+    <Compile Include="Strategies\Listeners\TickerDataCaptureStrategy.cs" />
     <Compile Include="Strategies\RealtimeStrategyDataProvider.cs" />
     <Compile Include="Strategies\Signal\MacdTrendAlgorithm.cs" />
     <Compile Include="Strategies\Signal\SignalNotificationStrategy.cs" />
@@ -299,6 +301,7 @@
     <Compile Include="Strategies\Base\StrategyHistoryItem.cs" />
     <Compile Include="Strategies\Base\StrategyInputInfo.cs" />
     <Compile Include="Strategies\StrategyValidationError.cs" />
+    <Compile Include="Strategies\Stupid\MarketMakingStrategy.cs" />
     <Compile Include="Strategies\Stupid\SimpleBuyLowSellHighStrategy.cs" />
   </ItemGroup>
   <ItemGroup>

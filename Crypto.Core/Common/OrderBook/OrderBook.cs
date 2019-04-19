@@ -110,7 +110,7 @@ namespace CryptoMarketClient {
             //CalcHipe();
             //CalcEnergy();
         }
-        protected void CalcVolume(int depth) {
+        public void CalcVolume(int depth) {
             PrevBidVolume = BidVolume;
             PrevAskVolume = AskVolume;
             PrevBidExpectation = BidExpectation;

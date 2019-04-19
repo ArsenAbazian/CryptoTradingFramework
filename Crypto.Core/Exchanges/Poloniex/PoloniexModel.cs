@@ -17,6 +17,7 @@ using System.Windows.Forms;
 using SuperSocket.ClientEngine;
 using WebSocket4Net;
 using System.Net.Sockets;
+using Crypto.Core.Exchanges.Base;
 
 namespace CryptoMarketClient {
     public class PoloniexExchange : Exchange {
@@ -107,9 +108,13 @@ namespace CryptoMarketClient {
         
         protected void OnTickerOrderBookAndTradesRecv(Ticker ticker, string message, int startIndex) {
             long seqNumber = FastValueConverter.ConvertPositiveLong(message, ref startIndex); startIndex++;
-
+            
             const string header = "[[\"i\",{\"currencyPair\"";
             if(StartsWith(message, startIndex, header)) {
+
+                if(ticker.CaptureData)
+                    ticker.CaptureDataCore(CaptureStreamType.OrderBook, CaptureMessageType.Snapshot, message);
+
                 ticker.Updates.Clear(seqNumber + 1);
                 OnSnapshotRecv(ticker, message, startIndex + header.Length);
                 return;
@@ -120,6 +125,10 @@ namespace CryptoMarketClient {
                 Reconnect();
                 return;
             }
+
+            if(ticker.CaptureData)
+                ticker.CaptureDataCore(CaptureStreamType.OrderBook, CaptureMessageType.Incremental, message);
+
             OnIncrementalUpdateRecv(ticker.Updates);
         }
 
@@ -1195,6 +1204,11 @@ namespace CryptoMarketClient {
         protected override void AddRefKline(Ticker ticker) {
         }
         protected override void AddRefTradeHistory(Ticker ticker) {
+        }
+        protected internal override void ApplyCapturedEvent(Ticker ticker, TickerCaptureDataInfo info) {
+            if(info.StreamType == CaptureStreamType.OrderBook || info.StreamType == CaptureStreamType.TradeHistory) {
+                OnTickersSocketMessageReceived(this, new MessageReceivedEventArgs(info.Message));
+            }
         }
     }
 

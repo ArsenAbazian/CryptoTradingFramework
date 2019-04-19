@@ -24,6 +24,7 @@ using Crypto.Core.Helpers;
 using System.Reflection;
 using Crypto.Core.Strategies;
 using CryptoMarketClient.BitFinex;
+using Crypto.Core.Exchanges.Base;
 
 namespace CryptoMarketClient {
     public abstract class Exchange : ISupportSerialization {
@@ -73,6 +74,8 @@ namespace CryptoMarketClient {
             }
             return list;
         }
+
+        protected internal abstract void ApplyCapturedEvent(Ticker ticker, TickerCaptureDataInfo info);
 
         public static Exchange CreateExchange(ExchangeType exchange) {
             switch(exchange) {
@@ -209,7 +212,8 @@ namespace CryptoMarketClient {
 
         public abstract ExchangeType Type { get; }
         public string Name { get { return Type.ToString(); } }
-        public string TickersDirectory { get { return "\\Tickers\\" + Name; } }
+        public string TickersDirectory { get { return SettingsStore.ApplicationDirectory + "\\Tickers\\" + Name; } }
+        public string CaptureDataDirectory { get { return SettingsStore.ApplicationDirectory + "\\CapturedData\\" + Name; } }
 
         public static Exchange FromFile(ExchangeType type, Type t) {
             Exchange res = (Exchange)SerializationHelper.FromFile(type.ToString() + ".xml", t);
@@ -220,6 +224,8 @@ namespace CryptoMarketClient {
             string dir = res.TickersDirectory;
             if(!Directory.Exists(dir))
                 Directory.CreateDirectory(dir);
+            if(!Directory.Exists(res.CaptureDataDirectory))
+                Directory.CreateDirectory(res.CaptureDataDirectory);
             return res;
         }
 

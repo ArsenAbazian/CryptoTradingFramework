@@ -1,5 +1,7 @@
 ﻿using Crypto.Core.Strategies.Arbitrages.AltBtcUsdt;
 using Crypto.Core.Strategies.Custom;
+using Crypto.Core.Strategies.Listeners;
+using Crypto.Core.Strategies.Stupid;
 using CryptoMarketClient;
 using CryptoMarketClient.Common;
 using CryptoMarketClient.Helpers;
@@ -24,6 +26,8 @@ namespace Crypto.Core.Strategies {
     [XmlInclude(typeof(CustomTickerStrategy))]
     [XmlInclude(typeof(WalletInvestorForecastStrategy))]
     [XmlInclude(typeof(TriplePairStrategy))]
+    [XmlInclude(typeof(TickerDataCaptureStrategy))]
+    [XmlInclude(typeof(MarketMakingStrategy))]
     //[XmlInclude(typeof())]
     [Serializable]
     public abstract class StrategyBase {

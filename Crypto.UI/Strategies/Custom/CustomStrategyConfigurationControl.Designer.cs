@@ -51,6 +51,8 @@
             this.colUseKline = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colKlineIntervalMin = new DevExpress.XtraGrid.Columns.GridColumn();
             this.repositoryItemLookUpEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemLookUpEdit();
+            this.colSimulationDataFile = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.repositoryItemButtonEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemButtonEdit();
             ((System.ComponentModel.ISupportInitialize)(this.barManager1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tickerInputInfoBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.exchangeTickersBindingSource)).BeginInit();
@@ -61,6 +63,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.cbExchangeTickers)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemGridLookUpEdit1View)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemLookUpEdit1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemButtonEdit1)).BeginInit();
             this.SuspendLayout();
             // 
             // barManager1
@@ -163,7 +166,8 @@
             this.tickersGridControl.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.cbExchangeTickers,
             this.rpiExchanges,
-            this.repositoryItemLookUpEdit1});
+            this.repositoryItemLookUpEdit1,
+            this.repositoryItemButtonEdit1});
             this.tickersGridControl.Size = new System.Drawing.Size(1314, 772);
             this.tickersGridControl.TabIndex = 9;
             this.tickersGridControl.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
@@ -177,7 +181,8 @@
             this.colUseOrderBook,
             this.colUseTradeHistory,
             this.colUseKline,
-            this.colKlineIntervalMin});
+            this.colKlineIntervalMin,
+            this.colSimulationDataFile});
             this.gridView1.GridControl = this.tickersGridControl;
             this.gridView1.Name = "gridView1";
             this.gridView1.OptionsSelection.CheckBoxSelectorField = "SelectedInDependencyArbitrage";
@@ -310,6 +315,26 @@
             this.repositoryItemLookUpEdit1.ShowLines = false;
             this.repositoryItemLookUpEdit1.ValueMember = "TotalMinutes";
             // 
+            // colSimulationDataFile
+            // 
+            this.colSimulationDataFile.ColumnEdit = this.repositoryItemButtonEdit1;
+            this.colSimulationDataFile.FieldName = "SimulationDataFile";
+            this.colSimulationDataFile.MinWidth = 40;
+            this.colSimulationDataFile.Name = "colSimulationDataFile";
+            this.colSimulationDataFile.Visible = true;
+            this.colSimulationDataFile.VisibleIndex = 6;
+            this.colSimulationDataFile.Width = 150;
+            // 
+            // repositoryItemButtonEdit1
+            // 
+            this.repositoryItemButtonEdit1.AutoHeight = false;
+            this.repositoryItemButtonEdit1.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Delete)});
+            this.repositoryItemButtonEdit1.Name = "repositoryItemButtonEdit1";
+            this.repositoryItemButtonEdit1.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+            this.repositoryItemButtonEdit1.ButtonClick += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.repositoryItemButtonEdit1_ButtonClick);
+            // 
             // CustomStrategyConfigurationControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
@@ -331,6 +356,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.cbExchangeTickers)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemGridLookUpEdit1View)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemLookUpEdit1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemButtonEdit1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -364,5 +390,7 @@
         private DevExpress.XtraGrid.Columns.GridColumn colMarketCurrency;
         private DevExpress.XtraGrid.Columns.GridColumn colBaseCurrency;
         private DevExpress.XtraGrid.Columns.GridColumn colMarketName;
+        private DevExpress.XtraGrid.Columns.GridColumn colSimulationDataFile;
+        private DevExpress.XtraEditors.Repository.RepositoryItemButtonEdit repositoryItemButtonEdit1;
     }
 }

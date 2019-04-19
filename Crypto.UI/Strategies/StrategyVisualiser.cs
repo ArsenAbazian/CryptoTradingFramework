@@ -46,13 +46,21 @@ namespace CryptoMarketClient.Strategies {
                     continue;
                 CreateAnnotations(info);
             }
+
+            StrategyDataItemInfo di = Strategy.DataItemInfos.FirstOrDefault(i => i.Type == DataType.DateTime && i.FieldName == "Time");
+            if(di != null) {
+                if(di.UseCustomTimeUnit) {
+                    ((XYDiagram)Chart.Diagram).AxisX.DateTimeScaleOptions.MeasureUnit = (DateTimeMeasureUnit)Enum.Parse(typeof(DateTimeMeasureUnit), di.TimeUnit.ToString());
+                    ((XYDiagram)Chart.Diagram).AxisX.DateTimeScaleOptions.MeasureUnitMultiplier = di.TimeUnitMeasureMultiplier;
+                }
+            }
         }
         protected virtual Series CreateSeries(StrategyDataItemInfo info) {
             CheckAddPanel(info);
             Series res = null;
             if(info.ChartType == ChartType.CandleStick)
                 res = CreateCandleStickSeries(info);
-            if(info.ChartType == ChartType.Line)
+            if(info.ChartType == ChartType.Line || info.ChartType == ChartType.StepLine)
                 res = CreateLineSeries(info);
             if(info.ChartType == ChartType.Bar)
                 res = CreateBarSeries(info);
@@ -172,7 +180,7 @@ namespace CryptoMarketClient.Strategies {
             s.ValueDataMembers.AddRange(info.FieldName);
             s.ValueScaleType = ScaleType.Numerical;
             s.ShowInLegend = true;
-            StepLineSeriesView view = new StepLineSeriesView();
+            LineSeriesView view = info.ChartType == ChartType.StepLine? new StepLineSeriesView(): new LineSeriesView();
             view.Color = info.Color;
             view.LineStyle.Thickness = (int)(info.GraphWidth * DpiProvider.Default.DpiScaleFactor);
             s.View = view;
@@ -200,7 +208,7 @@ namespace CryptoMarketClient.Strategies {
             view.AggregateFunction = SeriesAggregateFunction.None;
             view.LineThickness = (int)(1 * DpiProvider.Default.DpiScaleFactor);
             view.LevelLineLength = 0.25;
-
+            
             if(Strategy.StrategyData.Count == 0)
                 ((XYDiagram)Chart.Diagram).AxisX.DateTimeScaleOptions.MeasureUnitMultiplier = 30;
             else {

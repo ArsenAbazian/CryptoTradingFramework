@@ -17,10 +17,25 @@ namespace Crypto.Core.Strategies {
         public string AnnotationText { get; set; }
         public string AnnotationAnchorField { get; set; }
         public DataVisibility Visibility { get; set; } = DataVisibility.Both;
+        public bool UseCustomTimeUnit { get; set; } = false;
+        public StrategyDateTimeMeasureUnit TimeUnit { get; set; }
+        public int TimeUnitMeasureMultiplier { get; set; } = 1;
     }
 
-    public enum ChartType { CandleStick, Line, Area, Bar, Dot, Annotation }
+    public enum ChartType { CandleStick, Line, Area, Bar, Dot, Annotation, StepLine }
     public enum DataType { DateTime, Numeric }
     [Flags]
     public enum DataVisibility { None, Table, Chart, Both = Table | Chart }
+
+    public enum StrategyDateTimeMeasureUnit {
+        Millisecond = 0,
+        Second = 1,
+        Minute = 2,
+        Hour = 3,
+        Day = 4,
+        Week = 5,
+        Month = 6,
+        Quarter = 7,
+        Year = 8
+    }
 }

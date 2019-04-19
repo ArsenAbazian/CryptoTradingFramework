@@ -24,6 +24,13 @@ using DevExpress.Data;
 using DevExpress.XtraBars.Docking;
 using CryptoMarketClient.Helpers;
 using CryptoMarketClient.Strategies;
+using Crypto.Core.Strategies.Listeners;
+using Crypto.UI.Forms;
+using Crypto.Core.Strategies;
+using Crypto.Core.Exchanges.Base;
+using Crypto.Core.Helpers;
+using System.IO.Compression;
+using System.IO.Packaging;
 
 namespace CryptoMarketClient {
     public partial class MainForm : DevExpress.XtraBars.Ribbon.RibbonForm {
@@ -537,6 +544,56 @@ namespace CryptoMarketClient {
             //WalletInvestorDataForm form = new WalletInvestorDataForm();
             //form.MdiParent = FindForm();
             //form.Show();
+        }
+
+        private void bbGrabData_ItemClick(object sender, ItemClickEventArgs e) {
+            TickerDataCaptureStrategy s = new TickerDataCaptureStrategy();
+            s.Enabled = true;
+            s.DemoMode = false;
+            using(TickerCaptureSettingsForm form = new TickerCaptureSettingsForm()) {
+                form.Settings = s;
+                if(form.ShowDialog() != DialogResult.OK)
+                    return;
+            }
+            StrategiesManager m = new StrategiesManager();
+            m.Strategies.Add(s);
+            m.Initialize(new RealtimeStrategyDataProvider());
+            m.Start();
+        }
+
+        private void bbCompressAndSend_ItemClick(object sender, ItemClickEventArgs e) {
+            OpenFileDialog dialog = new OpenFileDialog();
+            dialog.Filter = "Xml files (*.xml)|*.xml|All files (*.*)|*.*";
+            dialog.Title = "Open first chunk file";
+            if(dialog.ShowDialog() != DialogResult.OK)
+                return;
+            string fileName = dialog.FileName;
+            int lastIndex = fileName.LastIndexOf('_');
+            if(lastIndex == -1) {
+                XtraMessageBox.Show("Invalid chunk filename");
+                return;
+            }
+            string coreName = fileName.Substring(0, lastIndex);
+            TickerCaptureData data = new TickerCaptureData();
+            data.FileName = Path.GetFileName(coreName) + ".xml";
+            for(int i = 0; i < 9999; i++) {
+                string chunkName = coreName + '_' + i.ToString("D3") + ".xml";
+                if(!File.Exists(chunkName))
+                    break;
+                TickerCaptureData chunk = TickerCaptureData.FromFile(chunkName);
+                data.Items.AddRange(chunk.Items);
+                data.TickerName = chunk.TickerName;
+                data.Exchange = chunk.Exchange;
+            }
+            string rootDir = Path.GetDirectoryName(fileName);
+            string zipDir = rootDir + "\\ForZip\\";
+            Directory.CreateDirectory(zipDir);
+            data.Save(zipDir);
+            string destFile = rootDir + "\\" + data.FileName.Replace(".xml", ".zip");
+            if(File.Exists(destFile))
+                File.Delete(destFile);
+            ZipFile.CreateFromDirectory(zipDir, destFile);
+            Directory.Delete(zipDir, true);
         }
     }
 }

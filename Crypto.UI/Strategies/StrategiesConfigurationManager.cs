@@ -4,6 +4,7 @@ using Crypto.Core.Strategies;
 using Crypto.Core.Strategies.Arbitrages.AltBtcUsdt;
 using Crypto.Core.Strategies.Custom;
 using Crypto.Core.Strategies.Signal;
+using Crypto.Core.Strategies.Stupid;
 using Crypto.UI.Strategies.Arbitrages;
 using Crypto.UI.Strategies.Custom;
 using CryptoMarketClient.Strategies.Custom;
@@ -37,6 +38,7 @@ namespace CryptoMarketClient.Strategies {
             Items.Add(new StrategyConfigurationInfo() { StrategyType = typeof(MacdTrendStrategy), ConfigurationFormType = typeof(Signal.MacdTrendStrategyConfigControl), DataFormType = typeof(Signal.MacdTrendStrategyDataForm) });
             Items.Add(new StrategyConfigurationInfo() { StrategyType = typeof(CustomTickerStrategy), ConfigurationFormType = typeof(CustomStrategyConfigurationControl), DataFormType = typeof(Custom.CustomStrategyDataForm) });
             Items.Add(new StrategyConfigurationInfo() { StrategyType = typeof(TriplePairStrategy), ConfigurationFormType = typeof(TriplePairStrategyConfigurationControl), DataFormType = typeof(Custom.CustomStrategyDataForm) });
+            Items.Add(new StrategyConfigurationInfo() { StrategyType = typeof(MarketMakingStrategy), ConfigurationFormType = typeof(CustomStrategyConfigurationControl), DataFormType = typeof(Custom.CustomStrategyDataForm) });
             //Items.Add(new StrategyConfigurationInfo() { StrategyType = typeof(WalletInvestorForecastStrategy), ConfigurationFormType = typeof(WalletInvestorStrategyConfigControl), DataFormType = typeof(WalletInvestorDataForm) });
         }
         public void Add(StrategyConfigurationInfo info) {

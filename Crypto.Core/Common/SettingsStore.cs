@@ -51,6 +51,7 @@ namespace CryptoMarketClient.Common {
 
         public static string SettingsFileName { get { return "settings.xml"; } }
         public static string ApplicationName { get { return "CryptoMarketClient"; } }
+        public static string ApplicationDirectory { get; set; } = "";
         static string SettingsSectionName { get { return "Settings"; } }
 
         

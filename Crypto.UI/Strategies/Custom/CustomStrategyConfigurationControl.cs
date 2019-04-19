@@ -117,5 +117,25 @@ namespace CryptoMarketClient.Strategies.Custom {
                 this.candleStickIntervalInfoBindingSource.DataSource = ee.GetAllowedCandleStickIntervals();
             }
         }
+
+        private void repositoryItemButtonEdit1_ButtonClick(object sender, DevExpress.XtraEditors.Controls.ButtonPressedEventArgs e) {
+            TickerInputInfo info = (TickerInputInfo)this.gridView1.GetFocusedRow();
+            if(e.Button.Kind == DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis) {
+                OpenFileDialog dialog = new OpenFileDialog();
+                dialog.Filter = "Zip files (*.zip)|*.zip|All files (*.*)|*.*";
+                dialog.Title = "Open zip packed ticker's captured data file";
+                if(dialog.ShowDialog() != DialogResult.OK)
+                    return;
+                if(!dialog.FileName.ToLower().Contains(info.TickerName.ToLower())) {
+                    XtraMessageBox.Show("This simulation data file do not belonge to specified ticker.");
+                    return;
+                }
+                
+                ((ButtonEdit)sender).Text = dialog.FileName;
+            }
+            else
+                ((ButtonEdit)sender).EditValue = null;
+            this.gridView1.CloseEditor();
+        }
     }
 }

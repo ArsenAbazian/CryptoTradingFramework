@@ -26,6 +26,8 @@ namespace Crypto.Core.Strategies {
             return res;
         }
 
+        DateTime IStrategyDataProvider.CurrentTime { get { return DateTime.UtcNow; } }
+
         bool IStrategyDataProvider.Disconnect(StrategyInputInfo info) {
             if(info == null)
                 return true;

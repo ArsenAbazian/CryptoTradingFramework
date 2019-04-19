@@ -13,6 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using CryptoMarketClient.Helpers;
+using Crypto.Core.Exchanges.Base;
 
 namespace CryptoMarketClient.Bittrex {
     public class BittrexExchange : Exchange {
@@ -1321,6 +1322,9 @@ namespace CryptoMarketClient.Bittrex {
 
         string GetNonce() {
            return ((DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds).ToString();
+        }
+        protected internal override void ApplyCapturedEvent(Ticker ticker, TickerCaptureDataInfo info) {
+            throw new NotImplementedException();
         }
     }
 }

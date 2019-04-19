@@ -1,4 +1,5 @@
-﻿using Crypto.Core.Helpers;
+﻿using Crypto.Core.Exchanges.Base;
+using Crypto.Core.Helpers;
 using CryptoMarketClient.Common;
 using CryptoMarketClient.Exchanges.Base;
 using CryptoMarketClient.Strategies;
@@ -14,6 +15,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml.Serialization;
 
 namespace CryptoMarketClient {
     [Serializable]
@@ -34,6 +36,42 @@ namespace CryptoMarketClient {
 
         public bool Load() {
             return SerializationHelper.Load(this, GetType());
+        }
+
+        [XmlIgnore]
+        public TickerCaptureData CaptureDataHistory { get; } = new TickerCaptureData();
+        public void CaptureDataCore(CaptureStreamType stream, CaptureMessageType msgType, string message) {
+            CaptureDataHistory.Items.Add(new TickerCaptureDataInfo() { StreamType = stream, MessageType = msgType, Message = message, Time = DateTime.UtcNow });
+            if(CaptureDataHistory.Items.Count % 5000 == 0) {
+                SaveCaptureData();
+            }
+        }
+
+        protected int SaveCount { get; set; }
+        protected string GetCaptureFileName() {
+            return CaptureDirectory + "\\" + Exchange.Type + "_" + Name.ToLower() + "_" + DateTime.Now.ToString("dd_MM_yyyy_") + SaveCount.ToString("D3") + ".xml";
+        }
+        private void SaveCaptureData() {
+            CaptureDataHistory.Exchange = Exchange.Type;
+            CaptureDataHistory.TickerName = Name;
+            XmlSerializer ser = new XmlSerializer(typeof(TickerCaptureData));
+            using(FileStream f = new FileStream(GetCaptureFileName(), FileMode.OpenOrCreate)) {
+                ser.Serialize(f, CaptureDataHistory);
+            }
+            SaveCount++;
+            CaptureDataHistory.Items.Clear();
+        }
+
+        public void ApplyCapturedEvent(DateTime time) {
+            if(CaptureDataHistory.Items.Count == 0)
+                return;
+            while(CaptureDataHistory.Items.Count > 0) {
+                TickerCaptureDataInfo info = CaptureDataHistory.Items[0];
+                if(info.Time != time)
+                    return;
+                Exchange.ApplyCapturedEvent(this, info);
+                CaptureDataHistory.Items.RemoveAt(0);
+            }
         }
 
         public bool IsOrderBookSubscribed { get; set; }
@@ -617,6 +655,9 @@ namespace CryptoMarketClient {
                 return updates;
             }
         }
+
+        public string CaptureDirectory { get; set; }
+        public bool CaptureData { get; set; }
     }
 
     public enum TickerUpdateMode {

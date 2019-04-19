@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using WebSocket4Net;
 using SuperSocket.ClientEngine;
 using CryptoMarketClient.Helpers;
+using Crypto.Core.Exchanges.Base;
 
 namespace CryptoMarketClient.Exchanges.Bitmex {
     public class BitmexExchange : Exchange {
@@ -329,6 +330,10 @@ namespace CryptoMarketClient.Exchanges.Bitmex {
 
         protected void OnTickerOrderBookRecv(JObject jObject) {
             
+        }
+
+        protected internal override void ApplyCapturedEvent(Ticker ticker, TickerCaptureDataInfo info) {
+            throw new NotImplementedException();
         }
     }
 }
