@@ -35,7 +35,8 @@ namespace CryptoMarketClient.Exchanges.Poloniex {
             lock(entries) {
                 foreach(JProperty item in asks.Children()) {
                     entries.Add(new OrderBookEntry() { ValueString = item.Name, AmountString = item.Value.Value<string>() });
-                    entriesInverted.Insert(0, new OrderBookEntry() { ValueString = item.Name, AmountString = item.Value.Value<string>() });
+                    if(entriesInverted != null)
+                        entriesInverted.Insert(0, new OrderBookEntry() { ValueString = item.Name, AmountString = item.Value.Value<string>() });
                 }
             }
             entries = orderBook.Bids;

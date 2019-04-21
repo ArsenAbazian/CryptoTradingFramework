@@ -675,7 +675,8 @@ namespace CryptoMarketClient.Binance {
 
             bids.Clear();
             asks.Clear();
-            iasks.Clear();
+            if(iasks != null)
+                iasks.Clear();
             for(int i = 0; i < jbids.Count; i++) {
                 string[] item = jbids[i];
                 bids.Add(new OrderBookEntry() { ValueString = item[0], AmountString = item[1] });
@@ -684,6 +685,7 @@ namespace CryptoMarketClient.Binance {
                 string[] item = jasks[i];
                 OrderBookEntry e = new OrderBookEntry() { ValueString = item[0], AmountString = item[1] };
                 asks.Add(e);
+                if(iasks != null)
                 iasks.Insert(0, e);
             }
             ticker.OrderBook.Updates.Clear(FastValueConverter.ConvertPositiveLong(updateId[0]) + 1);

@@ -87,7 +87,7 @@ namespace CryptoMarketClient {
             // 
             // dataLayoutControl1
             // 
-            this.dataLayoutControl1.Appearance.Control.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.dataLayoutControl1.Appearance.Control.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.dataLayoutControl1.Appearance.Control.Options.UseFont = true;
             this.dataLayoutControl1.Controls.Add(this.comboBoxEdit1);
             this.dataLayoutControl1.Controls.Add(this.ceIncrementalStopLoss);

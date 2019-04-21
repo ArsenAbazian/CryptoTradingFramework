@@ -23,9 +23,7 @@ using System.IO;
 namespace CryptoMarketClient {
     public partial class TickerChartViewer : XtraUserControl {
         bool isCandleSticksUpdate = false;
-        bool set = false;
         delegate void CrossThreadMethodDelegate();
-        double tol = 0.01;
         public TickerChartViewer() {
             InitializeComponent();
             InitializeCheckItems();
@@ -48,13 +46,11 @@ namespace CryptoMarketClient {
         }
         void OnTickerChanged(Ticker prev) {
             if(prev != null) {
-                //prev.HistoryItemAdd -= Ticker_HistoryItemAdd;
                 prev.CandleStickChanged -= OnTickerCandleStickChanged;
                 prev.EventsChanged -= Settings_EventsChanged;
                 prev.StopListenKlineStream();
             }
             if(Ticker != null) {
-                //Ticker.HistoryItemAdd += Ticker_HistoryItemAdd;
                 Ticker.CandleStickChanged += OnTickerCandleStickChanged;
                 Ticker.EventsChanged += Settings_EventsChanged;
             }
@@ -492,6 +488,7 @@ namespace CryptoMarketClient {
         }
 
         protected string ChartSettingsFileName { get { return "TickerChart.xml"; } }
+        protected string MarketDepthSettingsFileName { get { return "MarketDepthChart.xml"; } }
 
         private void biCustomize_ItemClick(object sender, ItemClickEventArgs e) {
             ChartDesigner designer = new ChartDesigner(this.chartControl1);
@@ -503,6 +500,18 @@ namespace CryptoMarketClient {
         private void biResetDefaults_ItemClick(object sender, ItemClickEventArgs e) {
             if(File.Exists(ChartSettingsFileName))
                 File.Delete(ChartSettingsFileName);
+        }
+
+        private void biCustomize2_ItemClick(object sender, ItemClickEventArgs e) {
+            ChartDesigner designer = new ChartDesigner(this.chartMarketDepth);
+            if(designer.ShowDialog() == DialogResult.OK) {
+                this.chartMarketDepth.SaveToFile(MarketDepthSettingsFileName);
+            }
+        }
+
+        private void biResetDefaults2_ItemClick(object sender, ItemClickEventArgs e) {
+            if(File.Exists(MarketDepthSettingsFileName))
+                File.Delete(MarketDepthSettingsFileName);
         }
     }
 }

@@ -46,8 +46,10 @@ namespace CryptoMarketClient {
             base.OnShown(e);
             Exchange.AllowTradeHistory = this.bcAllowTradeHistory.Checked;
             Exchange.OrderBookDepth = Convert.ToInt32(this.beOrderBookDepth.EditValue);
-            TelegramBot.Default.Update();
-            TelegramBot.Default.SendNotification("hello!");
+
+            //TelegramBot.Default.Update();
+            //TelegramBot.Default.SendNotification("hello!");
+
             this.bciAllowDirectXCharts.Checked = SettingsStore.Default.UseDirectXForCharts;
             this.bciAllowDirectXGrid.Checked = SettingsStore.Default.UseDirectXForGrid;
 
@@ -69,7 +71,7 @@ namespace CryptoMarketClient {
                 item.CheckedChanged += OnExchangeItemCheckedChanged;
                 item.LargeGlyph = ExchangeLogoProvider.GetIcon(e);
                 item.Tag = e;
-                this.rpgConnect.ItemLinks.Add(item);
+                this.sbExchanges.ItemLinks.Add(item);
             }    
         }
 
@@ -92,16 +94,29 @@ namespace CryptoMarketClient {
             
             if(item.Checked) {
                 exchange.Connect();
-                item.Caption = exchange.Name + "\n<color=lime>Connected</color>";
-                GetExchangeForm(exchange).Show();
+                item.Caption = exchange.Name + " <color=green>Connected</color>";
+                Form exchangeForm = GetExchangeForm(exchange);
+                exchangeForm.Tag = item;
+                exchangeForm.FormClosed += OnExchangeFormClosed;
+                exchangeForm.Show();
             }
             else {
                 exchange.Disconnect();
                 item.Caption = exchange.Name;
                 if(TickersForms.ContainsKey(exchange)) {
-                    TickersForms[exchange].Hide();
+                    Form exchangeForm = TickersForms[exchange];
+                    exchangeForm.FormClosed -= OnExchangeFormClosed;
+                    if(!exchangeForm.IsDisposed)
+                        exchangeForm.Close();
+                    exchangeForm.Tag = null;
+                    TickersForms.Remove(exchange);
                 }
             }
+        }
+
+        private void OnExchangeFormClosed(object sender, FormClosedEventArgs e) {
+            BarCheckItem item = (BarCheckItem)((Form)sender).Tag;
+            item.Checked = false;
         }
 
         ExchangeCollectionForm exchangesForm;
@@ -559,6 +574,8 @@ namespace CryptoMarketClient {
             m.Strategies.Add(s);
             m.Initialize(new RealtimeStrategyDataProvider());
             m.Start();
+
+            ActiveConnectionsForm.Show();
         }
 
         private void bbCompressAndSend_ItemClick(object sender, ItemClickEventArgs e) {
@@ -594,6 +611,21 @@ namespace CryptoMarketClient {
                 File.Delete(destFile);
             ZipFile.CreateFromDirectory(zipDir, destFile);
             Directory.Delete(zipDir, true);
+        }
+
+        ConnectionForm connectionForm;
+        public ConnectionForm ActiveConnectionsForm {
+            get {
+                if(connectionForm == null || connectionForm.IsDisposed) {
+                    connectionForm = new ConnectionForm();
+                    connectionForm.MdiParent = this;
+                }
+                return connectionForm;
+            }
+        }
+        private void biActiveConnections_ItemClick(object sender, ItemClickEventArgs e) {
+            ActiveConnectionsForm.Show();
+            ActiveConnectionsForm.Activate();
         }
     }
 }

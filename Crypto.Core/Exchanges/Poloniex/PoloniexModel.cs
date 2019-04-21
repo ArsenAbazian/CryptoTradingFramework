@@ -469,7 +469,8 @@ namespace CryptoMarketClient {
                 string[] item = jasks[i];
                 OrderBookEntry e = new OrderBookEntry() { ValueString = item[0], AmountString = item[1] };
                 asks.Add(e);
-                iasks.Insert(0, e);
+                if(iasks != null)
+                    iasks.Insert(0, e);
             }
             ticker.OrderBook.UpdateEntries();
             ticker.OrderBook.RaiseOnChanged(new IncrementalUpdateInfo());

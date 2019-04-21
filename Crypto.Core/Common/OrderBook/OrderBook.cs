@@ -10,11 +10,13 @@ namespace CryptoMarketClient {
     public class OrderBook {
         public const int Depth = 20;
         public static bool AllowOrderBookHistory { get; set; } = false;
+        public static bool AllowInvertedAsks { get; set; } = false;
         public OrderBook(Ticker owner) {
             Owner = owner;
             Bids = CreateOrderBookEntries();
             Asks = CreateOrderBookEntries();
-            AsksInverted = CreateOrderBookEntries();
+            if(AllowInvertedAsks)
+                AsksInverted = CreateOrderBookEntries();
             if(Owner != null)
                 Updates = new IncrementalUpdateQueue(owner.Exchange.CreateIncrementalUpdateDataProvider());
         }
@@ -29,7 +31,8 @@ namespace CryptoMarketClient {
         public void Clear() {
             Bids.Clear();
             Asks.Clear();
-            AsksInverted.Clear();
+            if(AllowInvertedAsks)
+                AsksInverted.Clear();
         }
         protected internal void RaiseOnChanged(IncrementalUpdateInfo info) {
             OrderBookEventArgs e = new OrderBookEventArgs() { Update = info };
@@ -213,10 +216,13 @@ namespace CryptoMarketClient {
                 UpdateEntriesCount--;
             if(UpdateEntriesCount < 0) UpdateEntriesCount = 0;
         }
-        protected int UpdateEntriesCount { get; set; } 
+        protected int UpdateEntriesCount { get; set; }
+        public bool AllowAdditionalCalculations { get; set; } = true;
         public void UpdateEntries() {
             LastUpdateTime = DateTime.Now;
             if(UpdateEntriesCount == 0)
+                return;
+            if(!AllowAdditionalCalculations)
                 return;
             double MaxVolume = 0;
             double vt = 0;
@@ -235,13 +241,15 @@ namespace CryptoMarketClient {
                 e.VolumeTotal = vt;
                 MaxVolume = Math.Max(MaxVolume, e.Volume);
             }
-            double mv = Asks.Count == 0 ? 0: Asks.Last().VolumeTotal;
+            double mv = Asks.Count == 0 ? 0 : Asks.Last().VolumeTotal;
             vt = 0;
-            for(int i = 0; i < AsksInverted.Count; i++) {
-                OrderBookEntry e = AsksInverted[i];
-                e.Volume = e.Value * e.Amount;
-                vt += e.Volume;
-                e.VolumeTotal = mv - vt;
+            if(AllowInvertedAsks) {
+                for(int i = 0; i < AsksInverted.Count; i++) {
+                    OrderBookEntry e = AsksInverted[i];
+                    e.Volume = e.Value * e.Amount;
+                    vt += e.Volume;
+                    e.VolumeTotal = mv - vt;
+                }
             }
             if(MaxVolume == 0)
                 return;
@@ -254,9 +262,11 @@ namespace CryptoMarketClient {
                 OrderBookEntry e = Asks[i];
                 e.VolumePercent = e.Volume * MaxVolume;
             }
-            for(int i = 0; i < AsksInverted.Count; i++) {
-                OrderBookEntry e = AsksInverted[i];
-                e.VolumePercent = e.Volume * MaxVolume;
+            if(AllowInvertedAsks) {
+                for(int i = 0; i < AsksInverted.Count; i++) {
+                    OrderBookEntry e = AsksInverted[i];
+                    e.VolumePercent = e.Volume * MaxVolume;
+                }
             }
         }
         public double BidEnergy { get; set; }
@@ -285,6 +295,18 @@ namespace CryptoMarketClient {
 
             //BidEnergies[BidEnergies.Length - 1] = BidEnergy;
             //AskEnergies[AskEnergies.Length - 1] = AskEnergy;
+        }
+        protected int UpdateCount { get; set; }
+        public void BeginUpdate() {
+            UpdateCount++;
+        }
+        public void EndUpdate() {
+            if(UpdateCount > 0)
+                UpdateCount--;
+            if(UpdateCount > 0)
+                return;
+            UpdateEntries();
+            RaiseOnChanged(new IncrementalUpdateInfo());
         }
 
         protected List<List<OrderBookEntry>> BidsHistory { get; } = new List<List<OrderBookEntry>>();
@@ -345,7 +367,8 @@ namespace CryptoMarketClient {
                 Save();
                 Bids = CreateOrderBookEntries();
                 Asks = CreateOrderBookEntries();
-                AsksInverted = CreateOrderBookEntries();
+                if(AllowInvertedAsks) 
+                    AsksInverted = CreateOrderBookEntries();
             }
         }
 
@@ -470,11 +493,14 @@ namespace CryptoMarketClient {
         public void ApplyIncrementalUpdate(OrderBookEntryType type, string rateString, string amountString) {
             if(type == OrderBookEntryType.Ask) {
                 ApplyIncrementalUpdate(rateString, amountString, Asks, true);
-                ApplyIncrementalUpdate(rateString, amountString, AsksInverted, false);
+                if(AllowInvertedAsks)
+                    ApplyIncrementalUpdate(rateString, amountString, AsksInverted, false);
             }
             else {
                 ApplyIncrementalUpdate(rateString, amountString, Bids, false);
             }
+            if(UpdateCount > 0)
+                return;
             UpdateEntries();
             RaiseOnChanged(new IncrementalUpdateInfo());
         }
@@ -482,12 +508,15 @@ namespace CryptoMarketClient {
         public void ApplyIncrementalUpdate(OrderBookEntryType type, OrderBookUpdateType updateType, long id, string rateString, string amountString) {
             if(type == OrderBookEntryType.Ask) {
                 ApplyIncrementalUpdate(id, updateType, rateString, amountString, Asks, true);
-                ApplyIncrementalUpdate(id, updateType, rateString, amountString, AsksInverted, false);
+                if(AllowInvertedAsks)
+                    ApplyIncrementalUpdate(id, updateType, rateString, amountString, AsksInverted, false);
             }
             else {
                 ApplyIncrementalUpdate(id, updateType, rateString, amountString, Bids, false);
             }
             LastUpdateTime = DateTime.Now;
+            if(UpdateCount > 0)
+                return;
             UpdateEntries();
             RaiseOnChanged(new IncrementalUpdateInfo());
         }

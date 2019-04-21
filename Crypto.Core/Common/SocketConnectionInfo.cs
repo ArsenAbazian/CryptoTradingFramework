@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
@@ -36,10 +37,23 @@ namespace CryptoMarketClient.Common {
 
         public string Address { get; set; }
         public Exchange Exchange { get; set; }
+        [DisplayName("Exchange")]
+        public ExchangeType ExchangeType { get { return Exchange.Type; } }
         public bool IsDelayed(int ms) {
             return (DateTime.Now - LastActiveTime).TotalMilliseconds > ms;
         }
-        public DateTime LastActiveTime { get; set; }
+        DateTime lastActiveTime;
+        public DateTime LastActiveTime {
+            get { return lastActiveTime; }
+            set {
+                if(LastActiveTime == value)
+                    return;
+                lastActiveTime = value;
+            }
+        }
+        public TimeSpan ConnectionTime { get { return LastActiveTime - OpenTime; } }
+        [DisplayName("Connection Lost Count")]
+        public int ConnectionLostCount { get; set; }
         public bool ClosedByUser { get; set; }
         public string Name { get; set; }
         public SocketSubscribeType Type { get; set; }
@@ -71,12 +85,21 @@ namespace CryptoMarketClient.Common {
             }
         }
 
-        public string LastError { get; set; }
+        string lastError;
+        public string LastError {
+            get { return lastError; }
+            set {
+                if(LastError == value)
+                    return;
+                lastError = value;
+            }
+        }
         public CandleStickIntervalInfo KlineInfo { get; set; }
         public bool Reconnecting { get; set; }
 
         public bool IsOpened { get; private set; }
         public bool IsOpening { get; private set; }
+        protected DateTime OpenTime { get; set; }
         public void Open() {
             IsOpening = true;
             CreateSocket();
@@ -88,6 +111,8 @@ namespace CryptoMarketClient.Common {
                 Socket.Open();
             else if(Signal != null)
                 Signal.Connect();
+            if(OpenTime == DateTime.MinValue)
+                OpenTime = DateTime.Now;
             IsOpening = false;
             IsOpened = true;
             LastActiveTime = DateTime.Now;
@@ -97,6 +122,7 @@ namespace CryptoMarketClient.Common {
 
         private void OnSocketMessageReceived(object sender, MessageReceivedEventArgs e) {
             LastActiveTime = DateTime.Now;
+            MessageCount++;
         }
 
         public object Key { get { return Socket != null ? (object)Socket : (object)Signal; } }
@@ -337,6 +363,7 @@ namespace CryptoMarketClient.Common {
             LastActiveTime = DateTime.Now;
         }
 
+        public int MessageCount { get; set; }
         private void SubscribeWebSocketEvents() {
             Socket.MessageReceived += OnSocketMessageReceived;
             Socket.Opened += OnSocketOpened;
@@ -415,6 +442,8 @@ namespace CryptoMarketClient.Common {
         void CreateSocket() {
             if(SocketType == SocketType.WebSocket) {
                 Socket = new WebSocket(Address, "");
+                Socket.EnableAutoSendPing = true;
+                Socket.AutoSendPingInterval = 3000;
                 Socket.Security.EnabledSslProtocols = System.Security.Authentication.SslProtocols.Tls12;
             }
             else {
@@ -428,7 +457,7 @@ namespace CryptoMarketClient.Common {
         public void Reconnect() {
             if(Reconnecting)
                 return;
-
+            ConnectionLostCount++;
             Telemetry.Default.TrackEvent(LogType.Warning, Exchange, Ticker, "reconnecting", Type.ToString());
             Reconnecting = true;
             try {
@@ -480,6 +509,7 @@ namespace CryptoMarketClient.Common {
     }
 
     public class WebSocketSubscribeInfo {
+        public WebSocketSubscribeInfo() { }
         public WebSocketSubscribeInfo(SocketSubscribeType type, Ticker ticker) {
             Type = type;
             Ticker = ticker;

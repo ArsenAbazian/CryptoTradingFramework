@@ -29,6 +29,10 @@ namespace CryptoMarketClient.Exchanges.Bitmex {
 
         public override string BaseWebSocketAdress => "wss://www.bitmex.com/realtime?subscribe=instrument";
 
+        protected override string GetKlineSocketAddress(Ticker ticker) {
+            return string.Empty;
+        }
+
         public override TradingResult Buy(AccountInfo account, Ticker ticker, double rate, double amount) {
             throw new NotImplementedException();
         }
@@ -179,7 +183,8 @@ namespace CryptoMarketClient.Exchanges.Bitmex {
                 entry.ValueString = item[4];
                 entry.AmountString = item[3];
                 if(item[2][0] == 'S') {
-                    iasks.Add(entry);
+                    if(iasks != null)
+                        iasks.Add(entry);
                     asks.Insert(0, entry);
                 }
                 else
@@ -240,10 +245,40 @@ namespace CryptoMarketClient.Exchanges.Bitmex {
             return type;
         }
 
+        protected internal override void OnTradeHistorySocketMessageReceived(object sender, MessageReceivedEventArgs e) {
+            base.OnTradeHistorySocketMessageReceived(sender, e);
+            LastWebSocketRecvTime = DateTime.Now;
+            SocketConnectionInfo info = TradeHistorySockets.FirstOrDefault(c => c.Key == sender);
+            if(info == null)
+                return;
+            Ticker t = info.Ticker;
+
+            JObject obj = JsonConvert.DeserializeObject<JObject>(e.Message);
+            JArray items = obj.Value<JArray>("data");
+            if(items == null)
+                return;
+            foreach(JObject item in items) {
+                TradeInfoItem ti = new TradeInfoItem(null, t);
+                ti.TimeString = item.Value<string>("timestamp");
+                ti.Type = item.Value<string>("side")[0] == 'S' ? TradeType.Sell : TradeType.Buy;
+                ti.AmountString = item.Value<string>("size");
+                ti.RateString = item.Value<string>("price");
+                t.TradeHistory.Insert(0, ti);
+            }
+            
+            if(t.HasTradeHistorySubscribers) {
+                TradeHistoryChangedEventArgs ee = new TradeHistoryChangedEventArgs() { NewItem = t.TradeHistory[0] };
+                t.RaiseTradeHistoryChanged(ee);
+            }
+        }
+
         protected internal override void OnOrderBookSocketMessageReceived(object sender, MessageReceivedEventArgs e) {
             base.OnOrderBookSocketMessageReceived(sender, e);
             LastWebSocketRecvTime = DateTime.Now;
             SocketConnectionInfo info = OrderBookSockets.FirstOrDefault(c => c.Key == sender);
+            if(info == null)
+                return;
+            Ticker t = info.Ticker;
 
             JObject obj = JsonConvert.DeserializeObject<JObject>(e.Message);
             JArray items = obj.Value<JArray>("data");
@@ -251,13 +286,19 @@ namespace CryptoMarketClient.Exchanges.Bitmex {
                 return;
 
             OrderBookUpdateType type = String2UpdateType(obj.Value<string>("action"));
+            if(items.Count > 1000) {
+                t.OrderBook.BeginUpdate();
+            }
             for(int i = 0; i < items.Count; i++) {
                 JObject item = (JObject) items[i];
-                Ticker t = info.Ticker;
+                
                 OrderBookEntryType entryType = item.Value<string>("side")[0] == 'S' ? OrderBookEntryType.Ask : OrderBookEntryType.Bid;
                 string rate = type == OrderBookUpdateType.Add ? item.Value<string>("price") : null;
                 string size = type != OrderBookUpdateType.Remove ? item.Value<string>("size") : null;
                 t.OrderBook.ApplyIncrementalUpdate(entryType, type, item.Value<long>("id"), rate, size);
+            }
+            if(items.Count > 1000) {
+                t.OrderBook.EndUpdate();
             }
         }
 

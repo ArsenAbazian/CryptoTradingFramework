@@ -4,6 +4,7 @@ using CryptoMarketClient.Poloniex;
 using DevExpress.Data.Filtering;
 using DevExpress.Skins;
 using DevExpress.XtraBars;
+using DevExpress.XtraBars.Navigation;
 using DevExpress.XtraEditors;
 using DevExpress.XtraEditors.Repository;
 using DevExpress.XtraGrid;
@@ -115,18 +116,29 @@ namespace CryptoMarketClient {
         protected int BaseCurrencyGroupIndex { get { return 897; } }
         protected virtual void InitializeBaseCurrencies() {
             var groups = Exchange.Tickers.GroupBy(t => t.BaseCurrency);
+            AccordionControlElement groupElement = new AccordionControlElement() { Style = ElementStyle.Group };
+            groupElement.Text = "Markets";
+            this.accordionControl1.Elements.Add(groupElement);
+            groupElement.Expanded = true;
             foreach(var group in groups) {
-                BarCheckItem item = new BarCheckItem();
-                item.Caption = group.Key;
-                item.GroupIndex = BaseCurrencyGroupIndex;
-                item.AllowAllUp = false;
-                item.PaintStyle = BarItemPaintStyle.CaptionGlyph;
-                item.CheckedChanged += OnBaseCurrencyCheckedChanged;
-                this.barManager1.Items.Add(item);
-                this.barBaseCurrency.ItemLinks.Add(item);
+                AccordionControlElement item = new AccordionControlElement() { Style = ElementStyle.Item };
+                item.Text = group.Key;
+                item.Click += OnBaseCurrencyItemClick;
                 if(group.Key == "BTC")
-                    item.Checked = true;
+                    SelectedAccordionItem = item;
+                groupElement.Elements.Add(item);
             }
+            if(SelectedAccordionItem == null)
+                SelectedAccordionItem = groupElement.Elements.Count > 0? groupElement.Elements[0]: null;
+            this.accordionControl1.SelectElement(SelectedAccordionItem);
+            UpdateTickersAccordingBaseCurrency();
+        }
+
+        protected AccordionControlElement SelectedAccordionItem { get; set; }
+        private void OnBaseCurrencyItemClick(object sender, EventArgs e) {
+            SelectedAccordionItem = (AccordionControlElement)sender;
+            this.accordionControl1.SelectElement(SelectedAccordionItem);
+            UpdateTickersAccordingBaseCurrency();
         }
 
         private void OnBaseCurrencyCheckedChanged(object sender, ItemClickEventArgs e) {
@@ -140,8 +152,9 @@ namespace CryptoMarketClient {
         }
 
         protected string GetSelectedBaseCurrency() {
-            BarItemLink link = this.barBaseCurrency.ItemLinks.FirstOrDefault(l => (l is BarCheckItemLink) && ((BarCheckItem)l.Item).Checked);
-            return link.Item.Caption;
+            if(SelectedAccordionItem == null)
+                return string.Empty;
+            return SelectedAccordionItem.Text;
         }
 
         protected override void OnShown(EventArgs e) {

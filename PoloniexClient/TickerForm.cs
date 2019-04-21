@@ -41,12 +41,12 @@ namespace CryptoMarketClient {
         protected override void OnShown(EventArgs e) {
             base.OnShown(e);
             try {
-                if(System.IO.File.Exists("TickerFormWorkspaceDefault.xml")) {
-                    if(this.workspaceManager1.LoadWorkspace("TickerFormDefault", "TickerFormWorkspaceDefault.xml")) {
-                        this.workspaceManager1.ApplyWorkspace("TickerFormDefault");
-                        UpdateDockPanels();
-                    }
-                }
+                //if(System.IO.File.Exists("TickerFormWorkspaceDefault.xml")) {
+                //    if(this.workspaceManager1.LoadWorkspace("TickerFormDefault", "TickerFormWorkspaceDefault.xml")) {
+                //        this.workspaceManager1.ApplyWorkspace("TickerFormDefault");
+                //        UpdateDockPanels();
+                //    }
+                //}
             }
             catch(Exception ee) {
                 Telemetry.Default.TrackException(ee);
@@ -150,9 +150,14 @@ namespace CryptoMarketClient {
         }
         void UpdateTickerInfoBarCore() {
             this.siTime.Caption = DateTime.Now.ToString();
-            this.repositoryItemTrackBar1.Minimum = (int)(Ticker.Hr24Low * 10000000);
-            this.repositoryItemTrackBar1.Maximum = (int)(Ticker.Hr24High * 10000000);
-            this.beHr24HighLow.EditValue = Ticker.Last * 10000000;
+
+            int multiplier = 10000000;
+            if(Ticker.Last >= 1000)
+                multiplier = 1;
+            this.repositoryItemTrackBar1.Minimum = (int)(Ticker.Hr24Low * multiplier);
+            this.repositoryItemTrackBar1.Maximum = (int)(Ticker.Hr24High * multiplier);
+            this.beHr24HighLow.EditValue = Ticker.Last * multiplier;
+
             this.siLast.Caption = "Last Price<br>" + Ticker.LastString;
             this.siBid.Caption = "Highest Bid<br>" + Ticker.HighestBidString;
             this.si24High.Caption = "24h High<br><b>" + Ticker.Hr24High.ToString() + "<b>";
@@ -258,7 +263,7 @@ namespace CryptoMarketClient {
             this.orderBookControl1.RefreshBids();
         }
         void RefreshAskGrid() {
-            this.orderBookControl1.Asks = Ticker.OrderBook.AsksInverted;
+            this.orderBookControl1.Asks = Ticker.OrderBook.Asks;
             this.orderBookControl1.RefreshAsks();
         }
 

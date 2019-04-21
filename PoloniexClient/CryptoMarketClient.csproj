@@ -391,6 +391,12 @@
     <Compile Include="ExchangeCollectionControl.Designer.cs">
       <DependentUpon>ExchangeCollectionControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="SideBySideOrderBookControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SideBySideOrderBookControl.Designer.cs">
+      <DependentUpon>SideBySideOrderBookControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Tests\FastValueConverterTest.cs" />
     <Compile Include="Tests\IncrementalUpdateQueueTests.cs" />
     <Compile Include="Tests\IndicatorsTest.cs" />
@@ -575,6 +581,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ExchangeCollectionControl.resx">
       <DependentUpon>ExchangeCollectionControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SideBySideOrderBookControl.resx">
+      <DependentUpon>SideBySideOrderBookControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="TrailingCollectionControl.resx">
       <DependentUpon>TrailingCollectionControl.cs</DependentUpon>

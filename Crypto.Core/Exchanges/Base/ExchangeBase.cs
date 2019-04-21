@@ -36,7 +36,7 @@ namespace CryptoMarketClient {
             Registered.Add(PoloniexExchange.Default);
             Registered.Add(BittrexExchange.Default);
             Registered.Add(BinanceExchange.Default);
-            //Registered.Add(BitmexExchange.Default);
+            Registered.Add(BitmexExchange.Default);
         }
 
         public Exchange() {
@@ -346,7 +346,7 @@ namespace CryptoMarketClient {
             return cl;
         }
         protected virtual int WebSocketCheckTimerInterval { get { return 5000; } }
-        protected virtual int WebSocketAllowedDelayInterval { get { return 5000; } }
+        protected virtual int WebSocketAllowedDelayInterval { get { return 10000; } }
         protected virtual int OrderBookAllowedDelayInterval { get { return 30000; } }
 
         System.Threading.Timer webSocketCheckTimer;
@@ -601,9 +601,12 @@ namespace CryptoMarketClient {
         
         public abstract List<CandleStickIntervalInfo> GetAllowedCandleStickIntervals();
         
-        protected List<SocketConnectionInfo> OrderBookSockets { get; } = new List<SocketConnectionInfo>();
-        protected List<SocketConnectionInfo> TradeHistorySockets { get; } = new List<SocketConnectionInfo>();
-        protected List<SocketConnectionInfo> KlineSockets { get; } = new List<SocketConnectionInfo>();
+        [XmlIgnore]
+        public List<SocketConnectionInfo> OrderBookSockets { get; } = new List<SocketConnectionInfo>();
+        [XmlIgnore]
+        public List<SocketConnectionInfo> TradeHistorySockets { get; } = new List<SocketConnectionInfo>();
+        [XmlIgnore]
+        public List<SocketConnectionInfo> KlineSockets { get; } = new List<SocketConnectionInfo>();
 
         protected virtual string GetOrderBookSocketAddress(Ticker ticker) { return string.Empty; }
         protected virtual string GetTradeSocketAddress(Ticker ticker) { return string.Empty; }
@@ -691,6 +694,9 @@ namespace CryptoMarketClient {
         }
 
         protected SocketConnectionInfo CreateKlineWebSocket(Ticker ticker) {
+            string adress = GetKlineSocketAddress(ticker);
+            if(string.IsNullOrEmpty(adress))
+                return null;
             return new SocketConnectionInfo(this, ticker, GetKlineSocketAddress(ticker), SocketType.WebSocket, SocketSubscribeType.Kline);
         }
 
@@ -893,6 +899,8 @@ namespace CryptoMarketClient {
 
         protected virtual void StartListenKlineCore(Ticker ticker) {
             SocketConnectionInfo info = CreateKlineWebSocket(ticker);
+            if(info == null)
+                return;
             KlineSockets.Add(info);
             info.Open();
         }

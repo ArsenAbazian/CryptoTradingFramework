@@ -85,7 +85,10 @@
             this.bsiInstruments = new DevExpress.XtraBars.BarSubItem();
             this.bWalletInvestorStatistics = new DevExpress.XtraBars.BarButtonItem();
             this.bsTools = new DevExpress.XtraBars.BarSubItem();
+            this.bsCapture = new DevExpress.XtraBars.BarSubItem();
             this.bbGrabData = new DevExpress.XtraBars.BarButtonItem();
+            this.bbCompressAndSend = new DevExpress.XtraBars.BarButtonItem();
+            this.sbExchanges = new DevExpress.XtraBars.BarSubItem();
             this.ribbonPageCategory1 = new DevExpress.XtraBars.Ribbon.RibbonPageCategory();
             this.ribbonPage2 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPageGroup2 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
@@ -115,8 +118,7 @@
             this.logMessagesControl1 = new CryptoMarketClient.LogMessagesControl();
             this.ribbonPage7 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPage8 = new DevExpress.XtraBars.Ribbon.RibbonPage();
-            this.bbCompressAndSend = new DevExpress.XtraBars.BarButtonItem();
-            this.bsCapture = new DevExpress.XtraBars.BarSubItem();
+            this.biActiveConnections = new DevExpress.XtraBars.BarButtonItem();
             ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemSpinEdit1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemSpinEdit2)).BeginInit();
@@ -179,10 +181,12 @@
             this.bsTools,
             this.bbGrabData,
             this.bbCompressAndSend,
-            this.bsCapture});
+            this.bsCapture,
+            this.sbExchanges,
+            this.biActiveConnections});
             this.ribbonControl1.Location = new System.Drawing.Point(0, 0);
-            this.ribbonControl1.Margin = new System.Windows.Forms.Padding(12);
-            this.ribbonControl1.MaxItemId = 49;
+            this.ribbonControl1.Margin = new System.Windows.Forms.Padding(6);
+            this.ribbonControl1.MaxItemId = 51;
             this.ribbonControl1.MdiMergeStyle = DevExpress.XtraBars.Ribbon.RibbonMdiMergeStyle.Always;
             this.ribbonControl1.Name = "ribbonControl1";
             this.ribbonControl1.PageCategories.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageCategory[] {
@@ -199,7 +203,7 @@
             this.repositoryItemRibbonSearchEdit1});
             this.ribbonControl1.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonControlStyle.Office2013;
             this.ribbonControl1.ShowApplicationButton = DevExpress.Utils.DefaultBoolean.False;
-            this.ribbonControl1.Size = new System.Drawing.Size(2073, 281);
+            this.ribbonControl1.Size = new System.Drawing.Size(965, 143);
             this.ribbonControl1.StatusBar = this.ribbonStatusBar1;
             this.ribbonControl1.Merge += new DevExpress.XtraBars.Ribbon.RibbonMergeEventHandler(this.ribbonControl1_Merge);
             this.ribbonControl1.UnMerge += new DevExpress.XtraBars.Ribbon.RibbonMergeEventHandler(this.ribbonControl1_UnMerge);
@@ -540,8 +544,18 @@
             this.bsTools.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
             new DevExpress.XtraBars.LinkPersistInfo(this.bbShowYourTotalDeposit),
             new DevExpress.XtraBars.LinkPersistInfo(this.btShowApiKeys),
-            new DevExpress.XtraBars.LinkPersistInfo(this.bsCapture)});
+            new DevExpress.XtraBars.LinkPersistInfo(this.bsCapture),
+            new DevExpress.XtraBars.LinkPersistInfo(this.biActiveConnections)});
             this.bsTools.Name = "bsTools";
+            // 
+            // bsCapture
+            // 
+            this.bsCapture.Caption = "Capture Ticker Data";
+            this.bsCapture.Id = 48;
+            this.bsCapture.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
+            new DevExpress.XtraBars.LinkPersistInfo(this.bbGrabData),
+            new DevExpress.XtraBars.LinkPersistInfo(this.bbCompressAndSend)});
+            this.bsCapture.Name = "bsCapture";
             // 
             // bbGrabData
             // 
@@ -550,6 +564,21 @@
             this.bbGrabData.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("bbGrabData.ImageOptions.SvgImage")));
             this.bbGrabData.Name = "bbGrabData";
             this.bbGrabData.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bbGrabData_ItemClick);
+            // 
+            // bbCompressAndSend
+            // 
+            this.bbCompressAndSend.Caption = "Compress && Upload";
+            this.bbCompressAndSend.Id = 47;
+            this.bbCompressAndSend.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("bbCompressAndSend.ImageOptions.SvgImage")));
+            this.bbCompressAndSend.Name = "bbCompressAndSend";
+            this.bbCompressAndSend.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bbCompressAndSend_ItemClick);
+            // 
+            // sbExchanges
+            // 
+            this.sbExchanges.Caption = "Exchanges";
+            this.sbExchanges.Id = 49;
+            this.sbExchanges.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("sbExchanges.ImageOptions.SvgImage")));
+            this.sbExchanges.Name = "sbExchanges";
             // 
             // ribbonPageCategory1
             // 
@@ -603,6 +632,7 @@
             // 
             // rpgConnect
             // 
+            this.rpgConnect.ItemLinks.Add(this.sbExchanges);
             this.rpgConnect.Name = "rpgConnect";
             this.rpgConnect.Text = "Connect";
             // 
@@ -693,11 +723,10 @@
             // ribbonStatusBar1
             // 
             this.ribbonStatusBar1.AutoHeight = true;
-            this.ribbonStatusBar1.Location = new System.Drawing.Point(0, 1036);
-            this.ribbonStatusBar1.Margin = new System.Windows.Forms.Padding(6);
+            this.ribbonStatusBar1.Location = new System.Drawing.Point(0, 540);
             this.ribbonStatusBar1.Name = "ribbonStatusBar1";
             this.ribbonStatusBar1.Ribbon = this.ribbonControl1;
-            this.ribbonStatusBar1.Size = new System.Drawing.Size(2073, 62);
+            this.ribbonStatusBar1.Size = new System.Drawing.Size(965, 31);
             // 
             // documentManager1
             // 
@@ -765,6 +794,7 @@
             // 
             this.logMessagesControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.logMessagesControl1.Location = new System.Drawing.Point(0, 0);
+            this.logMessagesControl1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.logMessagesControl1.Name = "logMessagesControl1";
             this.logMessagesControl1.Size = new System.Drawing.Size(1914, 328);
             this.logMessagesControl1.TabIndex = 0;
@@ -779,33 +809,24 @@
             this.ribbonPage8.Name = "ribbonPage8";
             this.ribbonPage8.Text = "ribbonPage8";
             // 
-            // bbCompressAndSend
+            // biActiveConnections
             // 
-            this.bbCompressAndSend.Caption = "Compress && Upload";
-            this.bbCompressAndSend.Id = 47;
-            this.bbCompressAndSend.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("bbCompressAndSend.ImageOptions.SvgImage")));
-            this.bbCompressAndSend.Name = "bbCompressAndSend";
-            this.bbCompressAndSend.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bbCompressAndSend_ItemClick);
-            // 
-            // bsCapture
-            // 
-            this.bsCapture.Caption = "Capture Ticker Data";
-            this.bsCapture.Id = 48;
-            this.bsCapture.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
-            new DevExpress.XtraBars.LinkPersistInfo(this.bbGrabData),
-            new DevExpress.XtraBars.LinkPersistInfo(this.bbCompressAndSend)});
-            this.bsCapture.Name = "bsCapture";
+            this.biActiveConnections.Caption = "Active Connections";
+            this.biActiveConnections.Id = 50;
+            this.biActiveConnections.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("biActiveConnections.ImageOptions.SvgImage")));
+            this.biActiveConnections.Name = "biActiveConnections";
+            this.biActiveConnections.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.biActiveConnections_ItemClick);
             // 
             // MainForm
             // 
             this.AllowFormGlass = DevExpress.Utils.DefaultBoolean.False;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(2073, 1098);
+            this.ClientSize = new System.Drawing.Size(965, 571);
             this.Controls.Add(this.ribbonStatusBar1);
             this.Controls.Add(this.ribbonControl1);
             this.IsMdiContainer = true;
-            this.Margin = new System.Windows.Forms.Padding(12);
+            this.Margin = new System.Windows.Forms.Padding(6);
             this.Name = "MainForm";
             this.Ribbon = this.ribbonControl1;
             this.StatusBar = this.ribbonStatusBar1;
@@ -903,6 +924,8 @@
         private DevExpress.XtraBars.BarButtonItem bbGrabData;
         private DevExpress.XtraBars.BarSubItem bsCapture;
         private DevExpress.XtraBars.BarButtonItem bbCompressAndSend;
+        private DevExpress.XtraBars.BarSubItem sbExchanges;
+        private DevExpress.XtraBars.BarButtonItem biActiveConnections;
     }
 }
 
