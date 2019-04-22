@@ -42,7 +42,7 @@ namespace CryptoMarketClient {
         public TickerCaptureData CaptureDataHistory { get; } = new TickerCaptureData();
         public void CaptureDataCore(CaptureStreamType stream, CaptureMessageType msgType, string message) {
             CaptureDataHistory.Items.Add(new TickerCaptureDataInfo() { StreamType = stream, MessageType = msgType, Message = message, Time = DateTime.UtcNow });
-            if(CaptureDataHistory.Items.Count % 5000 == 0) {
+            if(CaptureDataHistory.Items.Count % CaptureDataHistory.SaveCount == 0) {
                 SaveCaptureData();
             }
         }

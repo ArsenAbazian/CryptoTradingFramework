@@ -117,31 +117,35 @@
             this.barDockControlTop.Dock = System.Windows.Forms.DockStyle.Top;
             this.barDockControlTop.Location = new System.Drawing.Point(0, 0);
             this.barDockControlTop.Manager = this.barManager1;
-            this.barDockControlTop.Size = new System.Drawing.Size(1314, 60);
+            this.barDockControlTop.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.barDockControlTop.Size = new System.Drawing.Size(657, 31);
             // 
             // barDockControlBottom
             // 
             this.barDockControlBottom.CausesValidation = false;
             this.barDockControlBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.barDockControlBottom.Location = new System.Drawing.Point(0, 832);
+            this.barDockControlBottom.Location = new System.Drawing.Point(0, 433);
             this.barDockControlBottom.Manager = this.barManager1;
-            this.barDockControlBottom.Size = new System.Drawing.Size(1314, 0);
+            this.barDockControlBottom.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.barDockControlBottom.Size = new System.Drawing.Size(657, 0);
             // 
             // barDockControlLeft
             // 
             this.barDockControlLeft.CausesValidation = false;
             this.barDockControlLeft.Dock = System.Windows.Forms.DockStyle.Left;
-            this.barDockControlLeft.Location = new System.Drawing.Point(0, 60);
+            this.barDockControlLeft.Location = new System.Drawing.Point(0, 31);
             this.barDockControlLeft.Manager = this.barManager1;
-            this.barDockControlLeft.Size = new System.Drawing.Size(0, 772);
+            this.barDockControlLeft.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.barDockControlLeft.Size = new System.Drawing.Size(0, 402);
             // 
             // barDockControlRight
             // 
             this.barDockControlRight.CausesValidation = false;
             this.barDockControlRight.Dock = System.Windows.Forms.DockStyle.Right;
-            this.barDockControlRight.Location = new System.Drawing.Point(1314, 60);
+            this.barDockControlRight.Location = new System.Drawing.Point(657, 31);
             this.barDockControlRight.Manager = this.barManager1;
-            this.barDockControlRight.Size = new System.Drawing.Size(0, 772);
+            this.barDockControlRight.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.barDockControlRight.Size = new System.Drawing.Size(0, 402);
             // 
             // tickerInputInfoBindingSource
             // 
@@ -160,15 +164,16 @@
             this.tickersGridControl.DataSource = this.tickerInputInfoBindingSource;
             this.tickersGridControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tickersGridControl.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(0);
-            this.tickersGridControl.Location = new System.Drawing.Point(0, 60);
+            this.tickersGridControl.Location = new System.Drawing.Point(0, 31);
             this.tickersGridControl.MainView = this.gridView1;
+            this.tickersGridControl.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.tickersGridControl.Name = "tickersGridControl";
             this.tickersGridControl.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.cbExchangeTickers,
             this.rpiExchanges,
             this.repositoryItemLookUpEdit1,
             this.repositoryItemButtonEdit1});
-            this.tickersGridControl.Size = new System.Drawing.Size(1314, 772);
+            this.tickersGridControl.Size = new System.Drawing.Size(657, 402);
             this.tickersGridControl.TabIndex = 9;
             this.tickersGridControl.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridView1});
@@ -183,24 +188,26 @@
             this.colUseKline,
             this.colKlineIntervalMin,
             this.colSimulationDataFile});
+            this.gridView1.DetailHeight = 182;
+            this.gridView1.FixedLineWidth = 1;
             this.gridView1.GridControl = this.tickersGridControl;
+            this.gridView1.LevelIndent = 0;
             this.gridView1.Name = "gridView1";
             this.gridView1.OptionsSelection.CheckBoxSelectorField = "SelectedInDependencyArbitrage";
             this.gridView1.OptionsSelection.MultiSelect = true;
             this.gridView1.OptionsSelection.ShowCheckBoxSelectorInColumnHeader = DevExpress.Utils.DefaultBoolean.True;
             this.gridView1.OptionsView.ShowHorizontalLines = DevExpress.Utils.DefaultBoolean.False;
             this.gridView1.OptionsView.ShowVerticalLines = DevExpress.Utils.DefaultBoolean.False;
+            this.gridView1.PreviewIndent = 0;
             this.gridView1.ShowingEditor += new System.ComponentModel.CancelEventHandler(this.gridView1_ShowingEditor);
             // 
             // colExchange
             // 
             this.colExchange.ColumnEdit = this.rpiExchanges;
             this.colExchange.FieldName = "Exchange";
-            this.colExchange.MinWidth = 40;
             this.colExchange.Name = "colExchange";
             this.colExchange.Visible = true;
             this.colExchange.VisibleIndex = 0;
-            this.colExchange.Width = 150;
             // 
             // rpiExchanges
             // 
@@ -214,11 +221,9 @@
             // 
             this.colTicker.ColumnEdit = this.cbExchangeTickers;
             this.colTicker.FieldName = "TickerName";
-            this.colTicker.MinWidth = 40;
             this.colTicker.Name = "colTicker";
             this.colTicker.Visible = true;
             this.colTicker.VisibleIndex = 1;
-            this.colTicker.Width = 150;
             // 
             // cbExchangeTickers
             // 
@@ -263,43 +268,37 @@
             // 
             this.colMarketName.FieldName = "MarketName";
             this.colMarketName.Name = "colMarketName";
+            this.colMarketName.Visible = true;
+            this.colMarketName.VisibleIndex = 1;
             // 
             // colUseOrderBook
             // 
             this.colUseOrderBook.FieldName = "UseOrderBook";
-            this.colUseOrderBook.MinWidth = 40;
             this.colUseOrderBook.Name = "colUseOrderBook";
             this.colUseOrderBook.Visible = true;
             this.colUseOrderBook.VisibleIndex = 2;
-            this.colUseOrderBook.Width = 150;
             // 
             // colUseTradeHistory
             // 
             this.colUseTradeHistory.FieldName = "UseTradeHistory";
-            this.colUseTradeHistory.MinWidth = 40;
             this.colUseTradeHistory.Name = "colUseTradeHistory";
             this.colUseTradeHistory.Visible = true;
             this.colUseTradeHistory.VisibleIndex = 3;
-            this.colUseTradeHistory.Width = 150;
             // 
             // colUseKline
             // 
             this.colUseKline.FieldName = "UseKline";
-            this.colUseKline.MinWidth = 40;
             this.colUseKline.Name = "colUseKline";
             this.colUseKline.Visible = true;
             this.colUseKline.VisibleIndex = 4;
-            this.colUseKline.Width = 150;
             // 
             // colKlineIntervalMin
             // 
             this.colKlineIntervalMin.ColumnEdit = this.repositoryItemLookUpEdit1;
             this.colKlineIntervalMin.FieldName = "KlineIntervalMin";
-            this.colKlineIntervalMin.MinWidth = 40;
             this.colKlineIntervalMin.Name = "colKlineIntervalMin";
             this.colKlineIntervalMin.Visible = true;
             this.colKlineIntervalMin.VisibleIndex = 5;
-            this.colKlineIntervalMin.Width = 150;
             // 
             // repositoryItemLookUpEdit1
             // 
@@ -319,11 +318,9 @@
             // 
             this.colSimulationDataFile.ColumnEdit = this.repositoryItemButtonEdit1;
             this.colSimulationDataFile.FieldName = "SimulationDataFile";
-            this.colSimulationDataFile.MinWidth = 40;
             this.colSimulationDataFile.Name = "colSimulationDataFile";
             this.colSimulationDataFile.Visible = true;
             this.colSimulationDataFile.VisibleIndex = 6;
-            this.colSimulationDataFile.Width = 150;
             // 
             // repositoryItemButtonEdit1
             // 
@@ -337,15 +334,16 @@
             // 
             // CustomStrategyConfigurationControl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.tickersGridControl);
             this.Controls.Add(this.barDockControlLeft);
             this.Controls.Add(this.barDockControlRight);
             this.Controls.Add(this.barDockControlBottom);
             this.Controls.Add(this.barDockControlTop);
+            this.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
             this.Name = "CustomStrategyConfigurationControl";
-            this.Size = new System.Drawing.Size(1314, 832);
+            this.Size = new System.Drawing.Size(657, 433);
             ((System.ComponentModel.ISupportInitialize)(this.barManager1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tickerInputInfoBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.exchangeTickersBindingSource)).EndInit();

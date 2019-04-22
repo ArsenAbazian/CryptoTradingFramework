@@ -15,6 +15,8 @@ namespace CryptoMarketClient.Exchanges.Bitmex {
 
         public override string Name => CurrencyPair;
 
+        public override string MarketName { get => CurrencyPair; set => CurrencyPair = value; }
+
         public override double Fee { get; set; }
 
         public override string HostName => Exchange.Name;

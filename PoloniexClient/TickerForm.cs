@@ -41,12 +41,12 @@ namespace CryptoMarketClient {
         protected override void OnShown(EventArgs e) {
             base.OnShown(e);
             try {
-                //if(System.IO.File.Exists("TickerFormWorkspaceDefault.xml")) {
-                //    if(this.workspaceManager1.LoadWorkspace("TickerFormDefault", "TickerFormWorkspaceDefault.xml")) {
-                //        this.workspaceManager1.ApplyWorkspace("TickerFormDefault");
-                //        UpdateDockPanels();
-                //    }
-                //}
+                if(System.IO.File.Exists("TickerFormWorkspaceDefault.xml")) {
+                    if(this.workspaceManager1.LoadWorkspace("TickerFormDefault", "TickerFormWorkspaceDefault.xml")) {
+                        //this.workspaceManager1.ApplyWorkspace("TickerFormDefault");
+                        //UpdateDockPanels();
+                    }
+                }
             }
             catch(Exception ee) {
                 Telemetry.Default.TrackException(ee);

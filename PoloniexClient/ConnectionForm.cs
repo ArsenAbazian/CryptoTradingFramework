@@ -31,6 +31,7 @@ namespace CryptoMarketClient {
             this.gvConnections.FormatRules.Add(CreateRule(this.colState, SocketConnectionState.Disconnecting, Color.Red));
             this.gvConnections.FormatRules.Add(CreateRule(this.colState, SocketConnectionState.Error, Color.Red));
             this.gvConnections.FormatRules.Add(CreateRule(this.colState, SocketConnectionState.TooLongQue, Color.Red));
+            this.gvConnections.FormatRules.Add(CreateRule(this.colState, SocketConnectionState.Waiting, Color.Orange));
         }
 
         private GridFormatRule CreateRule(GridColumn column, SocketConnectionState state, Color color) {
@@ -88,6 +89,16 @@ namespace CryptoMarketClient {
 
         private void gvConnections_MasterRowGetRelationName(object sender, DevExpress.XtraGrid.Views.Grid.MasterRowGetRelationNameEventArgs e) {
             e.RelationName = "Subscribtions";
+        }
+
+        private void biShowErrors_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
+            SocketConnectionInfo info = (SocketConnectionInfo)this.gvConnections.GetRow(this.gvConnections.FocusedRowHandle);
+            if(info == null)
+                return;
+            using(ConnectionErrorHistoryForm form = new ConnectionErrorHistoryForm()) {
+                form.SocketInfo = info;
+                form.ShowDialog();
+            }
         }
     }
 }

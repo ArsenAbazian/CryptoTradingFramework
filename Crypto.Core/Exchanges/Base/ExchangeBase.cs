@@ -347,7 +347,7 @@ namespace CryptoMarketClient {
         }
         protected virtual int WebSocketCheckTimerInterval { get { return 5000; } }
         protected virtual int WebSocketAllowedDelayInterval { get { return 10000; } }
-        protected virtual int OrderBookAllowedDelayInterval { get { return 30000; } }
+        protected virtual int OrderBookAllowedDelayInterval { get { return 10000; } }
 
         System.Threading.Timer webSocketCheckTimer;
         protected System.Threading.Timer WebSocketCheckTimer {
@@ -371,6 +371,12 @@ namespace CryptoMarketClient {
         void CheckConnection(SocketConnectionInfo info) {
             if(info.Reconnecting)
                 return;
+            if(info.State == SocketConnectionState.Waiting) {
+                if(info.CheckCanReconnectNow()) {
+                    OnConnectionLost(info);
+                    return;
+                }
+            }
             if(!info.IsOpening && !info.IsOpened) {
                 info.Open();
                 return;
@@ -1187,6 +1193,7 @@ namespace CryptoMarketClient {
         Disconnected,
         DelayRecv,
         Error,
-        TooLongQue
+        TooLongQue,
+        Waiting
     }
 }

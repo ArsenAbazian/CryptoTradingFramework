@@ -253,6 +253,9 @@ namespace CryptoMarketClient.Exchanges.Bitmex {
                 return;
             Ticker t = info.Ticker;
 
+            if(t.CaptureData)
+                t.CaptureDataCore(CaptureStreamType.TradeHistory, CaptureMessageType.Incremental, e.Message);
+
             JObject obj = JsonConvert.DeserializeObject<JObject>(e.Message);
             JArray items = obj.Value<JArray>("data");
             if(items == null)
@@ -272,6 +275,40 @@ namespace CryptoMarketClient.Exchanges.Bitmex {
             }
         }
 
+        protected int RemainingConnectionCount { get; set; } = int.MaxValue;
+        protected void ProcessInfoMessage(JObject obj) {
+            JObject limit = obj.Value<JObject>("limit");
+            if(limit != null)
+                RemainingConnectionCount = FastValueConverter.ConvertPositiveInteger(limit.Value<string>("remaining"));
+        }
+
+        protected bool CheckProcessError(SocketConnectionInfo info) {
+            if(info.LastError.Contains("Too Many Requests")) {
+                info.ReconnectAfter(30);
+                return true;
+            }
+            else if(info.LastError.Contains("Forbidden")) {
+                return true;
+            }
+            return false;
+        }
+        protected internal override void OnOrderBookSocketError(object sender, ErrorEventArgs e) {
+            SocketConnectionInfo info = OrderBookSockets.FirstOrDefault(c => c.Key == sender);
+            if(info != null) {
+                if(CheckProcessError(info))
+                    return;
+            }
+            base.OnOrderBookSocketError(sender, e);
+        }
+        protected internal override void OnTradeHistorySocketError(object sender, ErrorEventArgs e) {
+            SocketConnectionInfo info = TradeHistorySockets.FirstOrDefault(c => c.Key == sender);
+            if(info != null) {
+                if(CheckProcessError(info))
+                    return;
+            }
+            base.OnTradeHistorySocketError(sender, e);
+        }
+
         protected internal override void OnOrderBookSocketMessageReceived(object sender, MessageReceivedEventArgs e) {
             base.OnOrderBookSocketMessageReceived(sender, e);
             LastWebSocketRecvTime = DateTime.Now;
@@ -279,6 +316,8 @@ namespace CryptoMarketClient.Exchanges.Bitmex {
             if(info == null)
                 return;
             Ticker t = info.Ticker;
+            if(t.CaptureData)
+                t.CaptureDataCore(CaptureStreamType.OrderBook, CaptureMessageType.Incremental, e.Message);
 
             JObject obj = JsonConvert.DeserializeObject<JObject>(e.Message);
             JArray items = obj.Value<JArray>("data");
@@ -374,7 +413,10 @@ namespace CryptoMarketClient.Exchanges.Bitmex {
         }
 
         protected internal override void ApplyCapturedEvent(Ticker ticker, TickerCaptureDataInfo info) {
-            throw new NotImplementedException();
+            if(info.StreamType == CaptureStreamType.OrderBook)
+                OnOrderBookSocketMessageReceived(this, new MessageReceivedEventArgs(info.Message));
+            else if(info.StreamType == CaptureStreamType.TradeHistory)
+                OnTradeHistorySocketMessageReceived(this, new MessageReceivedEventArgs(info.Message));
         }
     }
 }

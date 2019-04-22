@@ -563,6 +563,9 @@ namespace CryptoMarketClient {
 
         private void bbGrabData_ItemClick(object sender, ItemClickEventArgs e) {
             TickerDataCaptureStrategy s = new TickerDataCaptureStrategy();
+            if(File.Exists("CaptureDataSettings.xml"))
+                s = TickerDataCaptureStrategy.LoadFromFile("CaptureDataSettings.xml");
+
             s.Enabled = true;
             s.DemoMode = false;
             using(TickerCaptureSettingsForm form = new TickerCaptureSettingsForm()) {
@@ -570,6 +573,8 @@ namespace CryptoMarketClient {
                 if(form.ShowDialog() != DialogResult.OK)
                     return;
             }
+            s.FileName = "CaptureDataSettings.xml";
+            s.Save(null);
             StrategiesManager m = new StrategiesManager();
             m.Strategies.Add(s);
             m.Initialize(new RealtimeStrategyDataProvider());
@@ -611,6 +616,7 @@ namespace CryptoMarketClient {
                 File.Delete(destFile);
             ZipFile.CreateFromDirectory(zipDir, destFile);
             Directory.Delete(zipDir, true);
+            XtraMessageBox.Show("Operation Completed");
         }
 
         ConnectionForm connectionForm;

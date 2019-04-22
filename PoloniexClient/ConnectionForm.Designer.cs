@@ -25,8 +25,10 @@ namespace CryptoMarketClient {
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
+            this.components = new System.ComponentModel.Container();
             DevExpress.XtraGrid.GridLevelNode gridLevelNode1 = new DevExpress.XtraGrid.GridLevelNode();
             DevExpress.Sparkline.LineSparklineView lineSparklineView1 = new DevExpress.Sparkline.LineSparklineView();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ConnectionForm));
             this.gvSubscriptions = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.colchannel = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colcommand = new DevExpress.XtraGrid.Columns.GridColumn();
@@ -34,7 +36,7 @@ namespace CryptoMarketClient {
             this.colType1 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.coluserID = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gridControl1 = new DevExpress.XtraGrid.GridControl();
-            this.socketConnectionInfoBindingSource = new System.Windows.Forms.BindingSource();
+            this.socketConnectionInfoBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.gvConnections = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.colUpdateExchangeState = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colUpdateOrderState = new DevExpress.XtraGrid.Columns.GridColumn();
@@ -43,6 +45,7 @@ namespace CryptoMarketClient {
             this.colAddress = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colExchange = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colLastActiveTime = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colConnectionLostCount = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colClosedByUser = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colConnectionTime = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colName = new DevExpress.XtraGrid.Columns.GridColumn();
@@ -63,7 +66,13 @@ namespace CryptoMarketClient {
             this.repositoryItemCheckEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit();
             this.repositoryItemTextEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemTextEdit();
             this.teValueWithChange = new DevExpress.XtraEditors.Repository.RepositoryItemTextEdit();
-            this.colConnectionLostCount = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.barManager1 = new DevExpress.XtraBars.BarManager(this.components);
+            this.bar1 = new DevExpress.XtraBars.Bar();
+            this.biShowErrors = new DevExpress.XtraBars.BarButtonItem();
+            this.barDockControlTop = new DevExpress.XtraBars.BarDockControl();
+            this.barDockControlBottom = new DevExpress.XtraBars.BarDockControl();
+            this.barDockControlLeft = new DevExpress.XtraBars.BarDockControl();
+            this.barDockControlRight = new DevExpress.XtraBars.BarDockControl();
             ((System.ComponentModel.ISupportInitialize)(this.gvSubscriptions)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.socketConnectionInfoBindingSource)).BeginInit();
@@ -72,6 +81,7 @@ namespace CryptoMarketClient {
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemTextEdit1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.teValueWithChange)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.barManager1)).BeginInit();
             this.SuspendLayout();
             // 
             // gvSubscriptions
@@ -145,7 +155,7 @@ namespace CryptoMarketClient {
             gridLevelNode1.RelationName = "Subscribtions";
             this.gridControl1.LevelTree.Nodes.AddRange(new DevExpress.XtraGrid.GridLevelNode[] {
             gridLevelNode1});
-            this.gridControl1.Location = new System.Drawing.Point(0, 0);
+            this.gridControl1.Location = new System.Drawing.Point(0, 60);
             this.gridControl1.MainView = this.gvConnections;
             this.gridControl1.Margin = new System.Windows.Forms.Padding(24, 23, 24, 23);
             this.gridControl1.Name = "gridControl1";
@@ -154,7 +164,7 @@ namespace CryptoMarketClient {
             this.repositoryItemCheckEdit1,
             this.repositoryItemTextEdit1,
             this.teValueWithChange});
-            this.gridControl1.Size = new System.Drawing.Size(1656, 881);
+            this.gridControl1.Size = new System.Drawing.Size(1656, 821);
             this.gridControl1.TabIndex = 1;
             this.gridControl1.UseDirectXPaint = DevExpress.Utils.DefaultBoolean.True;
             this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
@@ -272,6 +282,15 @@ namespace CryptoMarketClient {
             this.colLastActiveTime.Visible = true;
             this.colLastActiveTime.VisibleIndex = 6;
             this.colLastActiveTime.Width = 192;
+            // 
+            // colConnectionLostCount
+            // 
+            this.colConnectionLostCount.FieldName = "ConnectionLostCount";
+            this.colConnectionLostCount.MinWidth = 40;
+            this.colConnectionLostCount.Name = "colConnectionLostCount";
+            this.colConnectionLostCount.Visible = true;
+            this.colConnectionLostCount.VisibleIndex = 7;
+            this.colConnectionLostCount.Width = 183;
             // 
             // colClosedByUser
             // 
@@ -431,14 +450,77 @@ namespace CryptoMarketClient {
             this.teValueWithChange.AutoHeight = false;
             this.teValueWithChange.Name = "teValueWithChange";
             // 
-            // colConnectionLostCount
+            // barManager1
             // 
-            this.colConnectionLostCount.FieldName = "ConnectionLostCount";
-            this.colConnectionLostCount.MinWidth = 40;
-            this.colConnectionLostCount.Name = "colConnectionLostCount";
-            this.colConnectionLostCount.Visible = true;
-            this.colConnectionLostCount.VisibleIndex = 7;
-            this.colConnectionLostCount.Width = 183;
+            this.barManager1.Bars.AddRange(new DevExpress.XtraBars.Bar[] {
+            this.bar1});
+            this.barManager1.DockControls.Add(this.barDockControlTop);
+            this.barManager1.DockControls.Add(this.barDockControlBottom);
+            this.barManager1.DockControls.Add(this.barDockControlLeft);
+            this.barManager1.DockControls.Add(this.barDockControlRight);
+            this.barManager1.Form = this;
+            this.barManager1.Items.AddRange(new DevExpress.XtraBars.BarItem[] {
+            this.biShowErrors});
+            this.barManager1.MaxItemId = 1;
+            // 
+            // bar1
+            // 
+            this.bar1.BarName = "Tools";
+            this.bar1.DockCol = 0;
+            this.bar1.DockRow = 0;
+            this.bar1.DockStyle = DevExpress.XtraBars.BarDockStyle.Top;
+            this.bar1.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
+            new DevExpress.XtraBars.LinkPersistInfo(this.biShowErrors)});
+            this.bar1.OptionsBar.DrawBorder = false;
+            this.bar1.OptionsBar.UseWholeRow = true;
+            this.bar1.Text = "Tools";
+            // 
+            // biShowErrors
+            // 
+            this.biShowErrors.Caption = "Show Connection History";
+            this.biShowErrors.Id = 0;
+            this.biShowErrors.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("biShowErrors.ImageOptions.SvgImage")));
+            this.biShowErrors.ItemAppearance.Hovered.FontStyleDelta = System.Drawing.FontStyle.Bold;
+            this.biShowErrors.ItemAppearance.Hovered.Options.UseFont = true;
+            this.biShowErrors.ItemAppearance.Normal.FontStyleDelta = System.Drawing.FontStyle.Bold;
+            this.biShowErrors.ItemAppearance.Normal.Options.UseFont = true;
+            this.biShowErrors.ItemAppearance.Pressed.FontStyleDelta = System.Drawing.FontStyle.Bold;
+            this.biShowErrors.ItemAppearance.Pressed.Options.UseFont = true;
+            this.biShowErrors.Name = "biShowErrors";
+            this.biShowErrors.PaintStyle = DevExpress.XtraBars.BarItemPaintStyle.CaptionGlyph;
+            this.biShowErrors.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.biShowErrors_ItemClick);
+            // 
+            // barDockControlTop
+            // 
+            this.barDockControlTop.CausesValidation = false;
+            this.barDockControlTop.Dock = System.Windows.Forms.DockStyle.Top;
+            this.barDockControlTop.Location = new System.Drawing.Point(0, 0);
+            this.barDockControlTop.Manager = this.barManager1;
+            this.barDockControlTop.Size = new System.Drawing.Size(1656, 60);
+            // 
+            // barDockControlBottom
+            // 
+            this.barDockControlBottom.CausesValidation = false;
+            this.barDockControlBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.barDockControlBottom.Location = new System.Drawing.Point(0, 881);
+            this.barDockControlBottom.Manager = this.barManager1;
+            this.barDockControlBottom.Size = new System.Drawing.Size(1656, 0);
+            // 
+            // barDockControlLeft
+            // 
+            this.barDockControlLeft.CausesValidation = false;
+            this.barDockControlLeft.Dock = System.Windows.Forms.DockStyle.Left;
+            this.barDockControlLeft.Location = new System.Drawing.Point(0, 60);
+            this.barDockControlLeft.Manager = this.barManager1;
+            this.barDockControlLeft.Size = new System.Drawing.Size(0, 821);
+            // 
+            // barDockControlRight
+            // 
+            this.barDockControlRight.CausesValidation = false;
+            this.barDockControlRight.Dock = System.Windows.Forms.DockStyle.Right;
+            this.barDockControlRight.Location = new System.Drawing.Point(1656, 60);
+            this.barDockControlRight.Manager = this.barManager1;
+            this.barDockControlRight.Size = new System.Drawing.Size(0, 821);
             // 
             // ConnectionForm
             // 
@@ -446,6 +528,10 @@ namespace CryptoMarketClient {
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1656, 881);
             this.Controls.Add(this.gridControl1);
+            this.Controls.Add(this.barDockControlLeft);
+            this.Controls.Add(this.barDockControlRight);
+            this.Controls.Add(this.barDockControlBottom);
+            this.Controls.Add(this.barDockControlTop);
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "ConnectionForm";
             this.Text = "Active Connections";
@@ -457,7 +543,9 @@ namespace CryptoMarketClient {
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemTextEdit1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.teValueWithChange)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.barManager1)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -500,5 +588,12 @@ namespace CryptoMarketClient {
         private DevExpress.XtraGrid.Columns.GridColumn colMessageCount;
         private DevExpress.XtraGrid.Columns.GridColumn colConnectionTime;
         private DevExpress.XtraGrid.Columns.GridColumn colConnectionLostCount;
+        private DevExpress.XtraBars.BarManager barManager1;
+        private DevExpress.XtraBars.Bar bar1;
+        private DevExpress.XtraBars.BarButtonItem biShowErrors;
+        private DevExpress.XtraBars.BarDockControl barDockControlTop;
+        private DevExpress.XtraBars.BarDockControl barDockControlBottom;
+        private DevExpress.XtraBars.BarDockControl barDockControlLeft;
+        private DevExpress.XtraBars.BarDockControl barDockControlRight;
     }
 }

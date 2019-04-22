@@ -343,6 +343,12 @@
     <Compile Include="CombinedBidAskForm.Designer.cs">
       <DependentUpon>CombinedBidAskForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="ConnectionErrorHistoryForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ConnectionErrorHistoryForm.Designer.cs">
+      <DependentUpon>ConnectionErrorHistoryForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="ConnectionForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -557,6 +563,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ArbitrageHistoryForm.resx">
       <DependentUpon>ArbitrageHistoryForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ConnectionErrorHistoryForm.resx">
+      <DependentUpon>ConnectionErrorHistoryForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="LogMessagesControl.resx">
       <DependentUpon>LogMessagesControl.cs</DependentUpon>

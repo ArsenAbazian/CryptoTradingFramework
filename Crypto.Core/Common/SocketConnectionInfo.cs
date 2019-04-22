@@ -83,6 +83,10 @@ namespace CryptoMarketClient.Common {
             if(StateChanged != null) {
                 StateChanged(this, e);
             }
+            if(State == SocketConnectionState.Error)
+                History.Add(new SocketInfoHistoryItem() { Time = DateTime.Now, State = State, Message = LastError });
+            else 
+                History.Add(new SocketInfoHistoryItem() { Time = DateTime.Now, State = State, Message = "State Changed" });
         }
 
         string lastError;
@@ -94,6 +98,9 @@ namespace CryptoMarketClient.Common {
                 lastError = value;
             }
         }
+        
+        public List<SocketInfoHistoryItem> History { get; } = new List<SocketInfoHistoryItem>();
+
         public CandleStickIntervalInfo KlineInfo { get; set; }
         public bool Reconnecting { get; set; }
 
@@ -272,6 +279,16 @@ namespace CryptoMarketClient.Common {
             }
         }
 
+        protected DateTime StartWaitTime { get; set; }
+        protected int WaitSeconds { get; set; }
+        public void ReconnectAfter(int seconds) {
+            StartWaitTime = DateTime.Now;
+            State = SocketConnectionState.Waiting;
+        }
+        public bool CheckCanReconnectNow() {
+            return (DateTime.Now - StartWaitTime).TotalSeconds > WaitSeconds;
+        }
+
         public void Unsubscribe(WebSocketSubscribeInfo info) {
             if(Signal != null)
                 return;
@@ -342,8 +359,8 @@ namespace CryptoMarketClient.Common {
         }
 
         private void OnSignalError(Exception e) {
-            State = SocketConnectionState.Error;
             LastError = e.Message;
+            State = SocketConnectionState.Error;
         }
 
         private void OnSignalStateChanged(Microsoft.AspNet.SignalR.Client.StateChange e) {
@@ -405,8 +422,8 @@ namespace CryptoMarketClient.Common {
         }
 
         private void OnSocketError(object sender, SuperSocket.ClientEngine.ErrorEventArgs e) {
-            State = SocketConnectionState.Error;
             LastError = e.Exception.Message;
+            State = SocketConnectionState.Error;
         }
 
         private void UnsubscribeWebSocketEvents() {
@@ -443,7 +460,7 @@ namespace CryptoMarketClient.Common {
             if(SocketType == SocketType.WebSocket) {
                 Socket = new WebSocket(Address, "");
                 Socket.EnableAutoSendPing = true;
-                Socket.AutoSendPingInterval = 3000;
+                Socket.AutoSendPingInterval = 5;
                 Socket.Security.EnabledSslProtocols = System.Security.Authentication.SslProtocols.Tls12;
             }
             else {
@@ -551,6 +568,12 @@ namespace CryptoMarketClient.Common {
     public enum SocketType {
         WebSocket,
         Signal
+    }
+
+    public class SocketInfoHistoryItem {
+        public DateTime Time { get; set; }
+        public SocketConnectionState State { get; set; }
+        public string Message { get; set; }
     }
 
     public class ConnectionInfoChangedEventArgs : EventArgs {

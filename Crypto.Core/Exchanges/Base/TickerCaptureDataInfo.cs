@@ -32,6 +32,7 @@ namespace Crypto.Core.Exchanges.Base {
         public string TickerName { get; set; }
         public List<TickerCaptureDataInfo> Items { get; set; } = new List<TickerCaptureDataInfo>();
         public string FileName { get; set; }
+        public int SaveCount { get; set; } = 5000;
 
         public static TickerCaptureData FromFile(string fileName) {
             TickerCaptureData res = (TickerCaptureData)SerializationHelper.FromFile(fileName, typeof(TickerCaptureData));
