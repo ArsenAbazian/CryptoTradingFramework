@@ -2,6 +2,7 @@
 using CryptoMarketClient.Strategies;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -17,6 +18,7 @@ namespace Crypto.Core.Strategies.Custom {
         public override void OnEndDeserialize() { }
 
         StrategyInputInfo strategyInfo;
+        [Browsable(false)]
         public StrategyInputInfo StrategyInfo {
             get {
                 if(strategyInfo == null)
@@ -32,12 +34,14 @@ namespace Crypto.Core.Strategies.Custom {
         }
 
         [XmlIgnore]
+        [Browsable(false)]
         public override Ticker Ticker {
             get { return Tickers.Count > 0 ? Tickers[0] : null; }
             set {  }
         }
         
         [XmlIgnore]
+        [Browsable(false)]
         public List<Ticker> Tickers { get; } = new List<Ticker>();
         protected virtual void OnStrategyInfoChanged() {
             if(StrategyInfo != null)

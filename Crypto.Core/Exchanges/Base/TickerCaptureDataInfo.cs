@@ -33,6 +33,7 @@ namespace Crypto.Core.Exchanges.Base {
         public List<TickerCaptureDataInfo> Items { get; set; } = new List<TickerCaptureDataInfo>();
         public string FileName { get; set; }
         public int SaveCount { get; set; } = 5000;
+        
 
         public static TickerCaptureData FromFile(string fileName) {
             TickerCaptureData res = (TickerCaptureData)SerializationHelper.FromFile(fileName, typeof(TickerCaptureData));
@@ -69,7 +70,32 @@ namespace Crypto.Core.Exchanges.Base {
                 Telemetry.Default.TrackException(e);
                 return false;
             }
+            this.enumerator = null;
             return true;
+        }
+
+        protected void ResetItemsEnumerator() {
+            enumerator = null;
+        }
+
+        IEnumerator<TickerCaptureDataInfo> enumerator;
+        protected IEnumerator<TickerCaptureDataInfo> Enumerator {
+            get {
+                if(enumerator == null) {
+                    enumerator = Items.GetEnumerator();
+                    enumerator.MoveNext();
+                }
+                return enumerator;
+            }
+        }
+
+        public TickerCaptureDataInfo CurrentItem {
+            get {
+                return Enumerator.Current;
+            }
+        }
+        public bool MoveNext() {
+            return Enumerator.MoveNext();
         }
     }
 }

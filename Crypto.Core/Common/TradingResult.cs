@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace CryptoMarketClient.Common {
     public class TradingResult {
@@ -28,6 +29,8 @@ namespace CryptoMarketClient.Common {
     }
 
     public class TradeEntry {
+        [XmlIgnore]
+        public Ticker Ticker { get; set; }
         public double Amount { get; set; }
         public DateTime Date { get; set; }
         public double Rate { get; set; }

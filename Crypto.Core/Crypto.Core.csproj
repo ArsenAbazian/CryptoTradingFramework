@@ -215,11 +215,10 @@
     <Compile Include="Indicators\StochasticIndicator.cs" />
     <Compile Include="Indicators\CandlePatternIndicator.cs" />
     <Compile Include="Indicators\WindowIndicator.cs" />
-    <Compile Include="Strategies\Arbitrages\AltBtcUsdt\TriplePairStrategy.cs" />
+    <Compile Include="Strategies\Arbitrages\Statistical\StatisticalArbitrageStrategy.cs" />
+    <Compile Include="Strategies\Arbitrages\TriplePair\TriplePairStrategy.cs" />
     <Compile Include="Strategies\Arbitrages\ArbitrageHistoryHelper.cs" />
     <Compile Include="Strategies\Arbitrages\ArbitrageInfo.cs" />
-    <Compile Include="Strategies\Arbitrages\Dependency\DependencyArbitrageHelper.cs" />
-    <Compile Include="Strategies\Arbitrages\Dependency\DependencyArbitrageInfo.cs" />
     <Compile Include="Common\BalanceBase.cs" />
     <Compile Include="Common\CandleStickChartHelper.cs" />
     <Compile Include="Common\CurrencyStatusHistoryItem.cs" />
@@ -237,8 +236,8 @@
     <Compile Include="Common\SettingsStore.cs" />
     <Compile Include="Common\SimpleJsonParser.cs" />
     <Compile Include="Common\SocketConnectionInfo.cs" />
-    <Compile Include="Strategies\Arbitrages\AltBtcUsdt\StaticArbitrageHelper.cs" />
-    <Compile Include="Strategies\Arbitrages\AltBtcUsdt\StaticArbitrageInfo.cs" />
+    <Compile Include="Strategies\Arbitrages\TriplePair\TriplePairArbitrageHelper.cs" />
+    <Compile Include="Strategies\Arbitrages\TriplePair\TriplePairArbitrageInfo.cs" />
     <Compile Include="Helpers\TelegramBot.cs" />
     <Compile Include="Common\TickerCollection\TickerCollectionHelper.cs" />
     <Compile Include="Common\TickerCollection\TickerCollectionInfo.cs" />

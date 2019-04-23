@@ -81,6 +81,7 @@ namespace CryptoMarketClient.Strategies.Custom {
             base.OnStrategyChanged();
             this.exchangeTickersBindingSource.DataSource = Exchange.GetTickersNameInfo();
             this.tickerInputInfoBindingSource.DataSource = ((CustomTickerStrategy)Strategy).StrategyInfo.Tickers;
+            this.propertyGridControl1.SelectedObject = Strategy;
         }
 
         private void repositoryItemGridLookUpEdit1_EditValueChanged(object sender, EventArgs e) {

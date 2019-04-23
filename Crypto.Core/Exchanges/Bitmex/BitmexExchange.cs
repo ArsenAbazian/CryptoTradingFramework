@@ -10,6 +10,7 @@ using WebSocket4Net;
 using SuperSocket.ClientEngine;
 using CryptoMarketClient.Helpers;
 using Crypto.Core.Exchanges.Base;
+using System.Text;
 
 namespace CryptoMarketClient.Exchanges.Bitmex {
     public class BitmexExchange : Exchange {
@@ -226,7 +227,7 @@ namespace CryptoMarketClient.Exchanges.Bitmex {
             StartListenOrderBook(ticker);
         }
 
-        
+
 
         protected override string GetOrderBookSocketAddress(Ticker ticker) {
             return string.Format("wss://www.bitmex.com/realtime?subscribe=orderBookL2:{0}", ticker.CurrencyPair);
@@ -237,13 +238,18 @@ namespace CryptoMarketClient.Exchanges.Bitmex {
         }
 
         OrderBookUpdateType String2UpdateType(string action) {
-            OrderBookUpdateType type = OrderBookUpdateType.Modify;
             if(action == "insert")
-                type = OrderBookUpdateType.Add;
+                return OrderBookUpdateType.Add;
             if(action == "delete")
-                type = OrderBookUpdateType.Remove;
-            return type;
+                return OrderBookUpdateType.Remove;
+            if(action == "update")
+                return OrderBookUpdateType.Modify;
+            if(action == "partial")
+                return OrderBookUpdateType.RefreshAll;
+            return OrderBookUpdateType.Modify;
         }
+
+        protected override int WebSocketAllowedDelayInterval { get { return 15000; } }
 
         protected internal override void OnTradeHistorySocketMessageReceived(object sender, MessageReceivedEventArgs e) {
             base.OnTradeHistorySocketMessageReceived(sender, e);
@@ -268,7 +274,7 @@ namespace CryptoMarketClient.Exchanges.Bitmex {
                 ti.RateString = item.Value<string>("price");
                 t.TradeHistory.Insert(0, ti);
             }
-            
+
             if(t.HasTradeHistorySubscribers) {
                 TradeHistoryChangedEventArgs ee = new TradeHistoryChangedEventArgs() { NewItem = t.TradeHistory[0] };
                 t.RaiseTradeHistoryChanged(ee);
@@ -309,6 +315,9 @@ namespace CryptoMarketClient.Exchanges.Bitmex {
             base.OnTradeHistorySocketError(sender, e);
         }
 
+        protected string[] UpdateItems = new string[] { "symbol", "id", "side", "size" };
+        protected string[] InsertItems = new string[] { "timestamp", "symbol", "side", "size", "price", "tickDirection", "trdMatchID", "grossValue", "homeNotional", "foreignNotional" };
+        protected string[] DeleteItems = new string[] { "symbol", "id", "side" };
         protected internal override void OnOrderBookSocketMessageReceived(object sender, MessageReceivedEventArgs e) {
             base.OnOrderBookSocketMessageReceived(sender, e);
             LastWebSocketRecvTime = DateTime.Now;
@@ -319,24 +328,60 @@ namespace CryptoMarketClient.Exchanges.Bitmex {
             if(t.CaptureData)
                 t.CaptureDataCore(CaptureStreamType.OrderBook, CaptureMessageType.Incremental, e.Message);
 
+            const string incrementalUpdateStartString = "{\"table\":\"orderBookL2\",\"action\":\"";
+            if(e.Message.StartsWith(incrementalUpdateStartString)) {
+                int index = incrementalUpdateStartString.Length;
+                if(e.Message[index] == 'u') { // update
+                    index = e.Message.IndexOf("[{");
+                    List<string[]> jsItems = JSonHelper.Default.DeserializeArrayOfObjects(Encoding.ASCII.GetBytes(e.Message), ref index, UpdateItems);
+                    foreach(string[] item in jsItems) {
+                        OrderBookEntryType entryType = item[2][0] == 'S' ? OrderBookEntryType.Ask : OrderBookEntryType.Bid;
+                        t.OrderBook.ApplyIncrementalUpdate(entryType, OrderBookUpdateType.Modify, FastValueConverter.ConvertPositiveLong(item[1]), null, item[3]);
+                    }
+                    return;
+                }
+                //else if(e.Message[index] == 'i') { // insert
+                //    index = e.Message.IndexOf("[{");
+                //    List<string[]> jsItems = JSonHelper.Default.DeserializeArrayOfObjects(Encoding.ASCII.GetBytes(e.Message), ref index, InsertItems);
+                //    foreach(string[] item in jsItems) {
+                //        OrderBookEntryType entryType = item[2][0] == 'S' ? OrderBookEntryType.Ask : OrderBookEntryType.Bid;
+                //        t.OrderBook.ApplyIncrementalUpdate(entryType, OrderBookUpdateType.Add, FastValueConverter.ConvertPositiveLong(item[1]), item[4], item[3]);
+                //    }
+                //    return;
+                //}
+                else if(e.Message[index] == 'd') { // delete
+                    index = e.Message.IndexOf("[{");
+                    List<string[]> jsItems = JSonHelper.Default.DeserializeArrayOfObjects(Encoding.ASCII.GetBytes(e.Message), ref index, DeleteItems);
+                    foreach(string[] item in jsItems) {
+                        OrderBookEntryType entryType = item[2][0] == 'S' ? OrderBookEntryType.Ask : OrderBookEntryType.Bid;
+                        t.OrderBook.ApplyIncrementalUpdate(entryType, OrderBookUpdateType.Remove, FastValueConverter.ConvertPositiveLong(item[1]), null, null);
+                    }
+                    return;
+                }
+            }
             JObject obj = JsonConvert.DeserializeObject<JObject>(e.Message);
             JArray items = obj.Value<JArray>("data");
             if(items == null)
                 return;
 
             OrderBookUpdateType type = String2UpdateType(obj.Value<string>("action"));
-            if(items.Count > 1000) {
+            if(type == OrderBookUpdateType.RefreshAll) {
+                t.OrderBook.Clear();
                 t.OrderBook.BeginUpdate();
             }
             for(int i = 0; i < items.Count; i++) {
                 JObject item = (JObject) items[i];
                 
                 OrderBookEntryType entryType = item.Value<string>("side")[0] == 'S' ? OrderBookEntryType.Ask : OrderBookEntryType.Bid;
-                string rate = type == OrderBookUpdateType.Add ? item.Value<string>("price") : null;
-                string size = type != OrderBookUpdateType.Remove ? item.Value<string>("size") : null;
+                string rate = null;
+                if(type == OrderBookUpdateType.Add || type == OrderBookUpdateType.RefreshAll)
+                    rate = item.Value<string>("price");
+                string size = null;
+                if(type != OrderBookUpdateType.Remove)
+                    size = item.Value<string>("size");
                 t.OrderBook.ApplyIncrementalUpdate(entryType, type, item.Value<long>("id"), rate, size);
             }
-            if(items.Count > 1000) {
+            if(type == OrderBookUpdateType.RefreshAll) {
                 t.OrderBook.EndUpdate();
             }
         }
@@ -414,9 +459,9 @@ namespace CryptoMarketClient.Exchanges.Bitmex {
 
         protected internal override void ApplyCapturedEvent(Ticker ticker, TickerCaptureDataInfo info) {
             if(info.StreamType == CaptureStreamType.OrderBook)
-                OnOrderBookSocketMessageReceived(this, new MessageReceivedEventArgs(info.Message));
+                OnOrderBookSocketMessageReceived(OrderBookSockets.FirstOrDefault(s => s.Ticker == ticker).Socket, new MessageReceivedEventArgs(info.Message));
             else if(info.StreamType == CaptureStreamType.TradeHistory)
-                OnTradeHistorySocketMessageReceived(this, new MessageReceivedEventArgs(info.Message));
+                OnTradeHistorySocketMessageReceived(TradeHistorySockets.FirstOrDefault(s => s.Ticker == ticker).Socket, new MessageReceivedEventArgs(info.Message));
         }
     }
 }

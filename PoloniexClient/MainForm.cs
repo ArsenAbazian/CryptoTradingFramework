@@ -496,19 +496,19 @@ namespace CryptoMarketClient {
             }
         }
 
-        DependencyArbitrageForm dependencyArbitrageForm;
-        public DependencyArbitrageForm DependencyArbitrageForm {
-            get {
-                if(dependencyArbitrageForm == null || dependencyArbitrageForm.IsDisposed) {
-                    dependencyArbitrageForm = new DependencyArbitrageForm();
-                    dependencyArbitrageForm.MdiParent = this;
-                }
-                return dependencyArbitrageForm;
-            }
-        }
+        //DependencyArbitrageForm dependencyArbitrageForm;
+        //public DependencyArbitrageForm DependencyArbitrageForm {
+        //    get {
+        //        if(dependencyArbitrageForm == null || dependencyArbitrageForm.IsDisposed) {
+        //            dependencyArbitrageForm = new DependencyArbitrageForm();
+        //            dependencyArbitrageForm.MdiParent = this;
+        //        }
+        //        return dependencyArbitrageForm;
+        //    }
+        //}
         private void barButtonItem5_ItemClick(object sender, ItemClickEventArgs e) {
-            DependencyArbitrageForm.Show();
-            DependencyArbitrageForm.Activate();
+            //DependencyArbitrageForm.Show();
+            //DependencyArbitrageForm.Activate();
         }
 
         private void barButtonItem6_ItemClick(object sender, ItemClickEventArgs e) {

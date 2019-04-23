@@ -231,6 +231,8 @@ namespace CryptoMarketClient.Binance {
             }
 
             else if(e.Message.StartsWith(orderBookStart)) {
+                if(info.Ticker.CaptureData)
+                    info.Ticker.CaptureDataCore(CaptureStreamType.OrderBook, CaptureMessageType.Incremental, e.Message);
                 OnIncrementalOrderBookUpdateRecv(info.Ticker, Encoding.Default.GetBytes(e.Message));
                 return;
             }
@@ -250,6 +252,8 @@ namespace CryptoMarketClient.Binance {
             int startIndex = 0;
             string[] trades = JSonHelper.Default.DeserializeObject(bytes, ref startIndex, TradeItems);
             SocketConnectionInfo info = TradeHistorySockets.FirstOrDefault(c => c.Key == sender);
+            if(info != null && info.Ticker.CaptureData)
+                info.Ticker.CaptureDataCore(CaptureStreamType.TradeHistory, CaptureMessageType.Incremental, e.Message);
             OnTradeHistoryItemRecv(info.Ticker, trades);
         }
         
@@ -657,9 +661,12 @@ namespace CryptoMarketClient.Binance {
             return true;
         }
 
-        void OnUpdateOrderBook(Ticker ticker, byte[] bytes) {
+        internal void OnUpdateOrderBook(Ticker ticker, byte[] bytes) {
             int startIndex = 0;
             string[] updateId = JSonHelper.Default.StartDeserializeObject(bytes, ref startIndex, OrderBookStartItems);
+
+            if(ticker.CaptureData)
+                ticker.CaptureDataCore(CaptureStreamType.OrderBook, CaptureMessageType.Snapshot, ASCIIEncoding.Default.GetString(bytes));
 
             const string bidString = "\"bids\":";
             const string askString = "\"asks\":";

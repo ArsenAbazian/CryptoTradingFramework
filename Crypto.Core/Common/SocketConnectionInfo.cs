@@ -42,13 +42,19 @@ namespace CryptoMarketClient.Common {
         public bool IsDelayed(int ms) {
             return (DateTime.Now - LastActiveTime).TotalMilliseconds > ms;
         }
-        DateTime lastActiveTime;
+        ///DateTime lastActiveTime;
         public DateTime LastActiveTime {
-            get { return lastActiveTime; }
+            get {
+                if(Socket != null)
+                    return Socket.LastActiveTime;
+                if(Signal != null)
+                    return Signal.LastActiveTime;
+                return DateTime.MinValue;
+            }
             set {
-                if(LastActiveTime == value)
-                    return;
-                lastActiveTime = value;
+            //    if(LastActiveTime == value)
+            //        return;
+            //    lastActiveTime = value;
             }
         }
         public TimeSpan ConnectionTime { get { return LastActiveTime - OpenTime; } }
@@ -516,6 +522,11 @@ namespace CryptoMarketClient.Common {
             for(int i = 0; i < Subscribtions.Count; i++) {
                 Subscribtions[i].ClearRef();
             }
+        }
+
+        public void Simulate() {
+            CreateSocket();
+            State = SocketConnectionState.Connected;
         }
     }
 

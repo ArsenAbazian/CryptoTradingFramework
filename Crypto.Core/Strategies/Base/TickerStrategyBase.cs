@@ -254,6 +254,12 @@ namespace CryptoMarketClient.Strategies {
             return res;
         }
 
+        protected TradingResult AddDemoTradingResult(Ticker ticker, double rate, double amount, OrderType type) {
+            TradingResult res = new TradingResult() { Amount = amount, Type = type, Date = DateTime.Now, OrderNumber = -1, Total = rate * amount };
+            res.Trades.Add(new TradeEntry() {Ticker = ticker,  Amount = amount, Date = DateTime.Now, Id = "demo", Rate = rate, Total = rate * amount, Type = type });
+            return res;
+        }
+
         protected virtual TradingResult MarketBuy(double rate, double amount) {
             TradingResult res = null;
             if(!DemoMode) {
@@ -269,6 +275,39 @@ namespace CryptoMarketClient.Strategies {
             Log(LogType.Success, "", rate, amount, StrategyOperation.MarketBuy);
             return res;
         }
+
+        protected virtual TradingResult MarketBuy(Ticker ticker, double rate, double amount) {
+            TradingResult res = null;
+            if(!DemoMode) {
+                res = ticker.Buy(rate, amount);
+                if(res == null)
+                    Log(LogType.Error, "", rate, amount, StrategyOperation.MarketBuy);
+                return res;
+            }
+            else {
+                res = AddDemoTradingResult(ticker, rate, amount, OrderType.Buy);
+            }
+            TradeHistory.Add(res);
+            Log(LogType.Success, ticker.Name, rate, amount, StrategyOperation.MarketBuy);
+            return res;
+        }
+
+        protected virtual TradingResult MarketSell(Ticker ticker, double rate, double amount) {
+            TradingResult res = null;
+            if(!DemoMode) {
+                res = ticker.Sell(rate, amount);
+                if(res == null)
+                    Log(LogType.Error, "", rate, amount, StrategyOperation.MarketSell);
+                return res;
+            }
+            else {
+                res = AddDemoTradingResult(ticker, rate, amount, OrderType.Sell);
+            }
+            TradeHistory.Add(res);
+            Log(LogType.Success, ticker.Name, rate, amount, StrategyOperation.MarketSell);
+            return res;
+        }
+
         protected virtual TradingResult MarketSell(double rate, double amount) {
             TradingResult res = null;
             if(!DemoMode) {

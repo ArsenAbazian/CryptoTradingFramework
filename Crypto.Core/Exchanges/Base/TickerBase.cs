@@ -65,13 +65,20 @@ namespace CryptoMarketClient {
         public void ApplyCapturedEvent(DateTime time) {
             if(CaptureDataHistory.Items.Count == 0)
                 return;
-            while(CaptureDataHistory.Items.Count > 0) {
-                TickerCaptureDataInfo info = CaptureDataHistory.Items[0];
+            while(CaptureDataHistory.CurrentItem != null) {
+                TickerCaptureDataInfo info = CaptureDataHistory.CurrentItem;
                 if(info.Time != time)
                     return;
                 Exchange.ApplyCapturedEvent(this, info);
-                CaptureDataHistory.Items.RemoveAt(0);
+                CaptureDataHistory.MoveNext();
             }
+            //while(CaptureDataHistory.Items.Count > 0) {
+            //    TickerCaptureDataInfo info = CaptureDataHistory.Items[0];
+            //    if(info.Time != time)
+            //        return;
+            //    Exchange.ApplyCapturedEvent(this, info);
+            //    CaptureDataHistory.Items.RemoveAt(0);
+            //}
         }
 
         public bool IsOrderBookSubscribed { get; set; }

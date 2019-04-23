@@ -256,7 +256,8 @@ namespace CryptoMarketClient {
                 if(!WaitUntil(5000, () => { return TickersSocketState == SocketConnectionState.Connected; }))
                     return;
             }
-            TickersSocket.Subscribe(new WebSocketSubscribeInfo(SocketSubscribeType.OrderBook, ticker) { Command = new Common.WebSocketCommandInfo() { channel = ticker.CurrencyPair, command = "subscribe" } });
+            if(!SimulationMode)
+                TickersSocket.Subscribe(new WebSocketSubscribeInfo(SocketSubscribeType.OrderBook, ticker) { Command = new Common.WebSocketCommandInfo() { channel = ticker.CurrencyPair, command = "subscribe" } });
         }
         
         protected override bool IsListeningOrderBook(Ticker ticker) {

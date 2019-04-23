@@ -1,5 +1,5 @@
-﻿using Crypto.Core.Common.Arbitrages;
-using Crypto.Core.Strategies.Arbitrages.AltBtcUsdt;
+﻿using Crypto.Core.Strategies.Arbitrages.AltBtcUsdt;
+using Crypto.Core.Strategies.Arbitrages.Statistical;
 using Crypto.Core.Strategies.Custom;
 using Crypto.Core.Strategies.Signal;
 using Crypto.Core.Strategies.Stupid;

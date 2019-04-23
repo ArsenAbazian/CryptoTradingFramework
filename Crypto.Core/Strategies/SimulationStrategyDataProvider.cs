@@ -14,6 +14,13 @@ namespace Crypto.Core.Strategies {
         bool IStrategyDataProvider.Connect(StrategyInputInfo info) {
             for(int i = 0; i < info.Tickers.Count; i++) {
                 TickerInputInfo ti = info.Tickers[i];
+                ti.Ticker.Exchange.EnterSimulationMode();
+
+                ti.Ticker.Exchange.StartListenTickerStream(ti.Ticker);
+                //ti.Ticker.Exchange.StartListenOrderBook(ti.Ticker);
+                //ti.Ticker.Exchange.StartListenTradeHistory(ti.Ticker);
+                //ti.Ticker.Exchange.StartListenTickerStream(ti.Ticker);
+
                 StrategySimulationData data = GetSimulationData(ti);
                 if(data != null) data.Connected = true;
             }
@@ -32,7 +39,7 @@ namespace Crypto.Core.Strategies {
         }
 
         protected virtual void UpdateTickersOrderBook() {
-            Random r = new Random();
+            Random r = null;
             foreach(StrategySimulationData data in SimulationData.Values) {
                 if(data.UseSimulationFile)
                     continue;
@@ -40,6 +47,8 @@ namespace Crypto.Core.Strategies {
                 if(data.CandleStickData.Count == 0)
                     continue;
                 CandleStickData cd = data.CandleStickData.First();
+                if(r == null)
+                    r = new Random(DateTime.Now.Millisecond);
                 double newBid = cd.Low + (cd.High - cd.Low) * r.NextDouble();
                 data.Ticker.OrderBook.Offset(newBid);
             }
@@ -74,9 +83,9 @@ namespace Crypto.Core.Strategies {
                 if(!s.Connected)
                     continue;
                 if(s.UseSimulationFile) {
-                    if(s.Ticker.CaptureDataHistory.Items.Count == 0)
+                    if(s.Ticker.CaptureDataHistory.CurrentItem == null)
                         continue;
-                    DateTime time = s.Ticker.CaptureDataHistory.Items[0].Time;
+                    DateTime time = s.Ticker.CaptureDataHistory.CurrentItem.Time;
                     if(minTime > time)
                         minTime = time;
                 }
@@ -100,6 +109,7 @@ namespace Crypto.Core.Strategies {
         bool IStrategyDataProvider.Disconnect(StrategyInputInfo info) {
             for(int i = 0; i < info.Tickers.Count; i++) {
                 TickerInputInfo ti = info.Tickers[i];
+                ti.Ticker.Exchange.ExitSimulationMode();
                 StrategySimulationData data = GetSimulationData(ti);
                 if(data != null) data.Connected = false;
             }

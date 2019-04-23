@@ -1,4 +1,5 @@
 ﻿using Crypto.Core.Strategies.Arbitrages.AltBtcUsdt;
+using Crypto.Core.Strategies.Arbitrages.Statistical;
 using Crypto.Core.Strategies.Custom;
 using Crypto.Core.Strategies.Listeners;
 using Crypto.Core.Strategies.Stupid;
@@ -9,6 +10,7 @@ using CryptoMarketClient.Strategies;
 using CryptoMarketClient.Strategies.Stupid;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Reflection;
@@ -28,6 +30,7 @@ namespace Crypto.Core.Strategies {
     [XmlInclude(typeof(TriplePairStrategy))]
     [XmlInclude(typeof(TickerDataCaptureStrategy))]
     [XmlInclude(typeof(MarketMakingStrategy))]
+    [XmlInclude(typeof(StatisticalArbitrageStrategy))]
     //[XmlInclude(typeof())]
     [Serializable]
     public abstract class StrategyBase {
@@ -37,13 +40,16 @@ namespace Crypto.Core.Strategies {
             InitializeDataItems();
         }
 
+        [Browsable(false)]
         public Guid Id { get; set; }
         [XmlIgnore]
+        [Browsable(false)]
         public StrategiesManager Manager { get; set; }
         public bool Enabled { get; set; } = false;
         public bool DemoMode { get; set; } = true;
         public string Description { get; set; }
         public abstract string StateText { get; }
+        [Browsable(false)]
         public double Earned { get; set; }
 
         public long ChatId { get; set; }
@@ -57,12 +63,16 @@ namespace Crypto.Core.Strategies {
 
         public abstract string TypeName { get; }
         public string Name { get; set; }
+        [Browsable(false)]
         public IStrategyDataProvider DataProvider { get { return Manager == null? null: Manager.DataProvider; } }
+        [Browsable(false)]
         public List<StrategyHistoryItem> History { get; } = new List<StrategyHistoryItem>();
+        [Browsable(false)]
         public List<TradingResult> TradeHistory { get; } = new List<TradingResult>();
         public abstract bool SupportSimulation { get; }
 
         [XmlIgnore]
+        [Browsable(false)]
         public List<object> StrategyData { get; } = new List<object>();
 
         [XmlIgnore]
@@ -143,10 +153,14 @@ namespace Crypto.Core.Strategies {
 
         public abstract void OnEndDeserialize();
 
+        [Browsable(false)]
         public double BoughtTotal { get; set; }
+        [Browsable(false)]
         public double SoldTotal { get; set; }
 
+        [Browsable(false)]
         public double MaxActualSellDeposit { get; set; } = 0;
+        [Browsable(false)]
         public double MaxActualBuyDeposit { get; set; } = -1;
 
         protected virtual void Log(LogType logType, string text, double rate, double amount, StrategyOperation operation) {
@@ -155,14 +169,16 @@ namespace Crypto.Core.Strategies {
 
         AccountInfo account;
         [XmlIgnore]
+        [Browsable(false)]
         public AccountInfo Account {
             get {
-                if(account == null || account.Id != AccountId)
+                if((account == null || account.Id != AccountId) && DataProvider != null) 
                     account = DataProvider.GetAccount(AccountId);
                 return account;
             }
         }
         Guid accountId;
+        //[Browsable(false)]
         public Guid AccountId {
             get { return accountId; }
             set {
@@ -189,6 +205,7 @@ namespace Crypto.Core.Strategies {
             MaxActualBuyDeposit = -1;
         }
 
+        [Browsable(false)]
         public string FileName { get; set; }
         public bool Load() { throw new NotImplementedException(); }
         public bool Save() { throw new NotImplementedException(); }

@@ -359,7 +359,9 @@ namespace CryptoMarketClient {
         }
 
         protected void StartSocketTimer() {
-            object item = WebSocketCheckTimer;
+            if(!SimulationMode) {
+                object item = WebSocketCheckTimer;
+            }
         }
 
         void CheckSocketConnectionInfoDelay(List<SocketConnectionInfo> sockets) {
@@ -369,6 +371,8 @@ namespace CryptoMarketClient {
         }
 
         void CheckConnection(SocketConnectionInfo info) {
+            if(SimulationMode)
+                return;
             if(info.Reconnecting)
                 return;
             if(info.State == SocketConnectionState.Waiting) {
@@ -801,7 +805,9 @@ namespace CryptoMarketClient {
                 return;
             }
             TickersSocket = CreateTickersSocket();
-            TickersSocket.Open();
+            if(!SimulationMode) {
+                TickersSocket.Open();
+            }
             TickersSocket.AddRef();
         }
 
@@ -900,7 +906,10 @@ namespace CryptoMarketClient {
         protected virtual void StartListenOrderBookCore(Ticker ticker) {
             SocketConnectionInfo info = CreateOrderBookWebSocket(ticker);
             OrderBookSockets.Add(info);
-            info.Open();
+            if(!SimulationMode)
+                info.Open();
+            else
+                info.Simulate();
         }
 
         protected virtual void StartListenKlineCore(Ticker ticker) {
@@ -908,13 +917,19 @@ namespace CryptoMarketClient {
             if(info == null)
                 return;
             KlineSockets.Add(info);
-            info.Open();
+            if(!SimulationMode)
+                info.Open();
+            else
+                info.Simulate();
         }
 
         protected virtual void StartListenTradeHistoryCore(Ticker ticker) {
             SocketConnectionInfo info = CreateTradesWebSocket(ticker);
             TradeHistorySockets.Add(info);
-            info.Open();
+            if(!SimulationMode)
+                info.Open();
+            else
+                info.Simulate();
         }
 
         public virtual void StartListenOrderBook(Ticker ticker) {
@@ -1154,6 +1169,18 @@ namespace CryptoMarketClient {
             if(info.UseKline)
                 StopListenKline(info.Ticker);
             return true;
+        }
+        
+        protected bool SimulationMode { get; set; }
+        public virtual void EnterSimulationMode() {
+            SimulationMode = true;
+        }
+        public virtual void ExitSimulationMode() {
+            SimulationMode = false;
+            TickersSocket = null;
+            OrderBookSockets.Clear();
+            TradeHistorySockets.Clear();
+            KlineSockets.Clear();
         }
 
         List<CandleStickIntervalInfo> allowedCandleStickIntervals;
