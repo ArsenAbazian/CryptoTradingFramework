@@ -13,8 +13,14 @@ namespace Crypto.Core.Strategies.Listeners {
         [DisplayName("Save To Directory")]
         public string Directory { get; set; }
 
+        [DisplayName("Capture Events Count")]
+        public int CaptureEventsCount { get; set; } = 5000;
+
+        [DisplayName("Capture Data")]
+        public bool CaptureData { get; set; } = true;
+
         public static TickerDataCaptureStrategy LoadFromFile(string fileName) {
-            return (TickerDataCaptureStrategy)SerializationHelper.FromFile(fileName, typeof(TickerDataCaptureStrategy));
+            return (TickerDataCaptureStrategy) SerializationHelper.FromFile(fileName, typeof(TickerDataCaptureStrategy));
         }
 
         public override void Assign(StrategyBase from) {
@@ -23,12 +29,16 @@ namespace Crypto.Core.Strategies.Listeners {
             if(s == null)
                 return;
             Directory = s.Directory;
+            CaptureEventsCount = s.CaptureEventsCount;
         }
         protected override void UpdateTickersList() {
             base.UpdateTickersList();
-            foreach(Ticker t in Tickers) {
+            for(int i = 0; i < Tickers.Count; i++) {
+                Ticker t = Tickers[i];
+                t.CaptureData = CaptureData;
                 t.CaptureDirectory = Directory;
-                t.CaptureData = true;
+                t.CaptureDataHistory.SaveCount = CaptureEventsCount;
+
             }
         }
         protected override void OnTickCore() {
