@@ -63,7 +63,7 @@ namespace CryptoMarketClient.Exchanges.Bitmex {
         }
 
         public override bool GetTickersInfo() {
-            string address = "https://www.bitmex.com/api/v1/instrument?columns=symbol,rootSymbol,quoteCurrency,highPrice,lowPrice,bidPrice,askPrice,lastChangePcnt,hasLiquidity,volume,tickSize&start=0&count=500";
+            string address = "https://www.bitmex.com/api/v1/instrument?columns=typ,symbol,rootSymbol,quoteCurrency,highPrice,lowPrice,bidPrice,askPrice,lastChangePcnt,hasLiquidity,volume,tickSize,takerFee&start=0&count=500";
             string text = string.Empty;
             try {
                 text = GetDownloadString(address);
@@ -83,6 +83,8 @@ namespace CryptoMarketClient.Exchanges.Bitmex {
                 BitmexTicker t = (BitmexTicker)Tickers.FirstOrDefault(tt => tt.CurrencyPair == pair);
                 if(t == null) t = new BitmexTicker(this);
                 t.Index = index;
+                t.ContractTicker = true;
+                t.ContractValue = 1; // 1 USD
                 t.CurrencyPair = pair;
                 t.MarketCurrency = obj.Value<string>("rootSymbol");
                 t.BaseCurrency = obj.Value<string>("quoteCurrency");
@@ -95,6 +97,7 @@ namespace CryptoMarketClient.Exchanges.Bitmex {
                 t.Timestamp = Convert.ToDateTime(obj.Value<string>("timestamp"));
                 t.Change = ToDouble(obj, "lastChangePcnt");
                 t.Volume = ToDouble(obj, "volume24h");
+                t.Fee = ToDouble(obj, "takerFee") * 100;
                 Tickers.Add(t);
                 index++;
             }

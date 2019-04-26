@@ -267,6 +267,18 @@ namespace CryptoMarketClient {
             }
         }
 
+        public double HighestBidInBaseCurrency() {
+            if(ContractTicker)
+                return 1.0;
+            return OrderBook.Bids[0].Value;
+        }
+
+        public double LowestAskInBaseCurrency() {
+            if(ContractTicker)
+                return 1.0;
+            return OrderBook.Asks[0].Value;
+        }
+
         public List<BalanceBase> GetBaseBalances() {
             List<BalanceBase> list = new List<BalanceBase>();
             foreach(var account in Exchange.Accounts) {
@@ -665,6 +677,8 @@ namespace CryptoMarketClient {
 
         public string CaptureDirectory { get; set; }
         public bool CaptureData { get; set; }
+        public virtual bool ContractTicker { get; set; }
+        public virtual double ContractValue { get; set; }
     }
 
     public enum TickerUpdateMode {

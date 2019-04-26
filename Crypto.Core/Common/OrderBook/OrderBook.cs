@@ -202,6 +202,26 @@ namespace CryptoMarketClient {
             }
         }
 
+        public double CalcAskAmount(double maxAsk) {
+            double total = 0;
+            foreach(OrderBookEntry e in Asks) {
+                if(e.Value > maxAsk)
+                    break;
+                total += e.Amount;
+            }
+            return total;
+        }
+
+        public double CalcBidAmount(double minBid) {
+            double total = 0;
+            foreach(OrderBookEntry e in Bids) {
+                if(e.Value < minBid)
+                    break;
+                total += e.Amount;
+            }
+            return total;
+        }
+
         protected internal List<OrderBookEntry> CreateOrderBookEntries() {
             if(!AllowOrderBookHistory) {
                 return new List<OrderBookEntry>(OrderBook.Depth);

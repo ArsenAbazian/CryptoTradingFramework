@@ -25,8 +25,10 @@ namespace Crypto.UI.Forms {
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
+            this.components = new System.ComponentModel.Container();
             this.dataLayoutControl1 = new DevExpress.XtraDataLayout.DataLayoutControl();
             this.DirectoryButtonEdit = new DevExpress.XtraEditors.ButtonEdit();
+            this.bindingSource1 = new System.Windows.Forms.BindingSource(this.components);
             this.sbOk = new DevExpress.XtraEditors.SimpleButton();
             this.simpleButton2 = new DevExpress.XtraEditors.SimpleButton();
             this.Root = new DevExpress.XtraLayout.LayoutControlGroup();
@@ -38,10 +40,10 @@ namespace Crypto.UI.Forms {
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.customStrategyConfigurationControl1 = new CryptoMarketClient.Strategies.Custom.CustomStrategyConfigurationControl();
             this.layoutControlItem3 = new DevExpress.XtraLayout.LayoutControlItem();
-            this.bindingSource1 = new System.Windows.Forms.BindingSource();
             ((System.ComponentModel.ISupportInitialize)(this.dataLayoutControl1)).BeginInit();
             this.dataLayoutControl1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DirectoryButtonEdit.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Root)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ItemForDirectory)).BeginInit();
@@ -49,7 +51,6 @@ namespace Crypto.UI.Forms {
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItem1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem3)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).BeginInit();
             this.SuspendLayout();
             // 
             // dataLayoutControl1
@@ -81,6 +82,10 @@ namespace Crypto.UI.Forms {
             this.DirectoryButtonEdit.StyleController = this.dataLayoutControl1;
             this.DirectoryButtonEdit.TabIndex = 7;
             this.DirectoryButtonEdit.ButtonClick += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.DirectoryButtonEdit_ButtonClick);
+            // 
+            // bindingSource1
+            // 
+            this.bindingSource1.DataSource = typeof(Crypto.Core.Strategies.Listeners.TickerDataCaptureStrategy);
             // 
             // sbOk
             // 
@@ -185,10 +190,6 @@ namespace Crypto.UI.Forms {
             this.layoutControlItem3.TextSize = new System.Drawing.Size(0, 0);
             this.layoutControlItem3.TextVisible = false;
             // 
-            // bindingSource1
-            // 
-            this.bindingSource1.DataSource = typeof(Crypto.Core.Strategies.Listeners.TickerDataCaptureStrategy);
-            // 
             // TickerCaptureSettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
@@ -201,6 +202,7 @@ namespace Crypto.UI.Forms {
             ((System.ComponentModel.ISupportInitialize)(this.dataLayoutControl1)).EndInit();
             this.dataLayoutControl1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.DirectoryButtonEdit.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.Root)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ItemForDirectory)).EndInit();
@@ -208,7 +210,6 @@ namespace Crypto.UI.Forms {
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItem1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem3)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).EndInit();
             this.ResumeLayout(false);
 
         }

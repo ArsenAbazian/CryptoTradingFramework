@@ -2,11 +2,13 @@
 using DevExpress.Skins;
 using DevExpress.Utils;
 using DevExpress.XtraCharts;
+using DevExpress.XtraEditors;
 using DevExpress.XtraGrid;
 using DevExpress.XtraGrid.Columns;
 using DevExpress.XtraGrid.Views.Grid;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -246,25 +248,83 @@ namespace CryptoMarketClient.Strategies {
             }
         }
 
+        private GridFormatRule CreateRule(GridColumn column, bool value, Color foreColor, Color backColor) {
+            GridFormatRule rule = new GridFormatRule();
+            FormatConditionRuleValue cond = new FormatConditionRuleValue();
+
+            cond.Appearance.ForeColor = foreColor;
+            cond.Appearance.BackColor = backColor;
+            cond.Condition = FormatCondition.Equal;
+            cond.Value1 = value;
+
+            rule.Tag = new object();
+            rule.Name = column.FieldName + "Equal";
+            rule.Column = column;
+            rule.ApplyToRow = true;
+            rule.ColumnApplyTo = column;
+            rule.Rule = cond;
+            return rule;
+        }
+
         private void InitializeTable() {
             int index = 0;
+            GridView view = ((GridView)Grid.MainView);
             for(int i = 0; i < Strategy.DataItemInfos.Count; i++) {
                 StrategyDataItemInfo info = Strategy.DataItemInfos[i];
-                if(!info.Visibility.HasFlag(DataVisibility.Table))
-                    continue;
                 GridColumn column = new GridColumn();
-                column.Visible = true;
-                column.VisibleIndex = index;
+                bool isVisible = info.Visibility.HasFlag(DataVisibility.Table);
+                column.Visible = isVisible;
+                if(isVisible)
+                    column.VisibleIndex = index;
                 column.FieldName = info.FieldName;
                 column.DisplayFormat.FormatType = GetFormatType(info.Type);
                 column.DisplayFormat.FormatString = info.FormatString;
                 ((GridView) Grid.MainView).Columns.Add(column);
-                index++;
+                if(isVisible)
+                    index++;
+            }
+            for(int i = 0; i < Strategy.DataItemInfos.Count; i++) {
+                StrategyDataItemInfo info = Strategy.DataItemInfos[i];
+                if(!string.IsNullOrEmpty(info.AnnotationText)) {
+                    ((GridView)Grid.MainView).FormatRules.Add(CreateRule(view.Columns[info.FieldName], true, info.Color, Color.FromArgb(0x20, info.Color)));
+                }
             }
             lock(Strategy.StrategyData) {
                 List<object> data = new List<object>();
                 data.AddRange(Strategy.StrategyData);
                 Grid.DataSource = data;
+            }
+            view.OptionsScrollAnnotations.ShowCustomAnnotations = DefaultBoolean.True;
+            view.CustomScrollAnnotation += OnCustomScrollAnnotations;
+        }
+
+        private void OnCustomScrollAnnotations(object sender, GridCustomScrollAnnotationsEventArgs e) {
+            List<object> items = Strategy.StrategyData;
+            e.Annotations = new List<GridScrollAnnotationInfo>();
+            if(items == null && e.Annotations != null) {
+                e.Annotations.Clear();
+                return;
+            }
+            List<StrategyDataItemInfo> aList = Strategy.DataItemInfos.Where(i => !string.IsNullOrEmpty(i.AnnotationText)).ToList();
+            if(aList.Count == 0)
+                return;
+            List<PropertyInfo> pList = new List<PropertyInfo>();
+            foreach(StrategyDataItemInfo a in aList) {
+                PropertyInfo info = items[0].GetType().GetProperty(a.FieldName, BindingFlags.Instance | BindingFlags.Public);
+                pList.Add(info);
+            }
+            int index = 0;
+            foreach(object item in items) {
+                for(int j = 0; j < aList.Count; j++) {
+                    if(!(bool)pList[j].GetValue(items[index], null))
+                        continue;
+                    GridScrollAnnotationInfo info = new GridScrollAnnotationInfo();
+                    info.Index = index;
+                    info.RowHandle = ((GridView)Grid.MainView).GetRowHandle(index);
+                    info.Color = aList[j].Color;
+                    e.Annotations.Add(info);
+                }
+                index++;
             }
         }
 

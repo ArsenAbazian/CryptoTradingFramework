@@ -23,7 +23,6 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
-            this.components = new System.ComponentModel.Container();
             this.dataLayoutControl1 = new DevExpress.XtraDataLayout.DataLayoutControl();
             this.StarTimeDateEdit = new DevExpress.XtraEditors.DateEdit();
             this.GrabTradeHistoryCheckEdit = new DevExpress.XtraEditors.CheckEdit();
@@ -42,7 +41,7 @@
             this.layoutControlItem3 = new DevExpress.XtraLayout.LayoutControlItem();
             this.emptySpaceItem1 = new DevExpress.XtraLayout.EmptySpaceItem();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-            this.grabDataSettingsBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.grabDataSettingsBindingSource = new System.Windows.Forms.BindingSource();
             ((System.ComponentModel.ISupportInitialize)(this.dataLayoutControl1)).BeginInit();
             this.dataLayoutControl1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.StarTimeDateEdit.Properties.CalendarTimeProperties)).BeginInit();

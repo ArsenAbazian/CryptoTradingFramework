@@ -138,5 +138,33 @@ namespace CryptoMarketClient.Strategies.Custom {
                 ((ButtonEdit)sender).EditValue = null;
             this.gridView1.CloseEditor();
         }
+
+        private void biMoveUp_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
+            TickerInputInfo info = (TickerInputInfo)this.gridView1.GetFocusedRow();
+            if(info == null)
+                return;
+            CustomTickerStrategy s = (CustomTickerStrategy)Strategy;
+            int index = s.StrategyInfo.Tickers.IndexOf(info);
+            if(index < 1)
+                return;
+            index--;
+            s.StrategyInfo.Tickers.Remove(info);
+            s.StrategyInfo.Tickers.Insert(index, info);
+            this.gridView1.RefreshData();
+        }
+
+        private void biMoveDown_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
+            TickerInputInfo info = (TickerInputInfo)this.gridView1.GetFocusedRow();
+            if(info == null)
+                return;
+            CustomTickerStrategy s = (CustomTickerStrategy)Strategy;
+            int index = s.StrategyInfo.Tickers.IndexOf(info);
+            if(index > s.StrategyInfo.Tickers.Count - 2)
+                return;
+            index++;
+            s.StrategyInfo.Tickers.Remove(info);
+            s.StrategyInfo.Tickers.Insert(index, info);
+            this.gridView1.RefreshData();
+        }
     }
 }

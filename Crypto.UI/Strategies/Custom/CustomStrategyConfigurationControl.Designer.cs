@@ -55,6 +55,8 @@
             this.repositoryItemButtonEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemButtonEdit();
             this.sidePanel1 = new DevExpress.XtraEditors.SidePanel();
             this.propertyGridControl1 = new DevExpress.XtraVerticalGrid.PropertyGridControl();
+            this.biMoveUp = new DevExpress.XtraBars.BarButtonItem();
+            this.biMoveDown = new DevExpress.XtraBars.BarButtonItem();
             ((System.ComponentModel.ISupportInitialize)(this.barManager1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tickerInputInfoBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.exchangeTickersBindingSource)).BeginInit();
@@ -81,8 +83,10 @@
             this.barManager1.Form = this;
             this.barManager1.Items.AddRange(new DevExpress.XtraBars.BarItem[] {
             this.biAdd,
-            this.biRemove});
-            this.barManager1.MaxItemId = 2;
+            this.biRemove,
+            this.biMoveUp,
+            this.biMoveDown});
+            this.barManager1.MaxItemId = 4;
             // 
             // bar1
             // 
@@ -92,7 +96,9 @@
             this.bar1.DockStyle = DevExpress.XtraBars.BarDockStyle.Top;
             this.bar1.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
             new DevExpress.XtraBars.LinkPersistInfo(this.biAdd),
-            new DevExpress.XtraBars.LinkPersistInfo(this.biRemove)});
+            new DevExpress.XtraBars.LinkPersistInfo(this.biRemove),
+            new DevExpress.XtraBars.LinkPersistInfo(this.biMoveUp),
+            new DevExpress.XtraBars.LinkPersistInfo(this.biMoveDown)});
             this.bar1.OptionsBar.DrawBorder = false;
             this.bar1.OptionsBar.UseWholeRow = true;
             this.bar1.Text = "Tools";
@@ -121,7 +127,7 @@
             this.barDockControlTop.Dock = System.Windows.Forms.DockStyle.Top;
             this.barDockControlTop.Location = new System.Drawing.Point(0, 0);
             this.barDockControlTop.Manager = this.barManager1;
-            this.barDockControlTop.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.barDockControlTop.Margin = new System.Windows.Forms.Padding(4);
             this.barDockControlTop.Size = new System.Drawing.Size(1314, 60);
             // 
             // barDockControlBottom
@@ -130,7 +136,7 @@
             this.barDockControlBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.barDockControlBottom.Location = new System.Drawing.Point(0, 833);
             this.barDockControlBottom.Manager = this.barManager1;
-            this.barDockControlBottom.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.barDockControlBottom.Margin = new System.Windows.Forms.Padding(4);
             this.barDockControlBottom.Size = new System.Drawing.Size(1314, 0);
             // 
             // barDockControlLeft
@@ -139,7 +145,7 @@
             this.barDockControlLeft.Dock = System.Windows.Forms.DockStyle.Left;
             this.barDockControlLeft.Location = new System.Drawing.Point(0, 60);
             this.barDockControlLeft.Manager = this.barManager1;
-            this.barDockControlLeft.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.barDockControlLeft.Margin = new System.Windows.Forms.Padding(4);
             this.barDockControlLeft.Size = new System.Drawing.Size(0, 773);
             // 
             // barDockControlRight
@@ -148,7 +154,7 @@
             this.barDockControlRight.Dock = System.Windows.Forms.DockStyle.Right;
             this.barDockControlRight.Location = new System.Drawing.Point(1314, 60);
             this.barDockControlRight.Manager = this.barManager1;
-            this.barDockControlRight.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.barDockControlRight.Margin = new System.Windows.Forms.Padding(4);
             this.barDockControlRight.Size = new System.Drawing.Size(0, 773);
             // 
             // tickerInputInfoBindingSource
@@ -170,7 +176,7 @@
             this.tickersGridControl.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(0);
             this.tickersGridControl.Location = new System.Drawing.Point(0, 60);
             this.tickersGridControl.MainView = this.gridView1;
-            this.tickersGridControl.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tickersGridControl.Margin = new System.Windows.Forms.Padding(4);
             this.tickersGridControl.Name = "tickersGridControl";
             this.tickersGridControl.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.cbExchangeTickers,
@@ -368,6 +374,22 @@
             this.propertyGridControl1.Size = new System.Drawing.Size(441, 773);
             this.propertyGridControl1.TabIndex = 0;
             // 
+            // biMoveUp
+            // 
+            this.biMoveUp.Caption = "MoveUp";
+            this.biMoveUp.Id = 2;
+            this.biMoveUp.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("barButtonItem1.ImageOptions.SvgImage")));
+            this.biMoveUp.Name = "biMoveUp";
+            this.biMoveUp.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.biMoveUp_ItemClick);
+            // 
+            // biMoveDown
+            // 
+            this.biMoveDown.Caption = "MoveDown";
+            this.biMoveDown.Id = 3;
+            this.biMoveDown.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("barButtonItem2.ImageOptions.SvgImage")));
+            this.biMoveDown.Name = "biMoveDown";
+            this.biMoveDown.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.biMoveDown_ItemClick);
+            // 
             // CustomStrategyConfigurationControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
@@ -378,7 +400,7 @@
             this.Controls.Add(this.barDockControlRight);
             this.Controls.Add(this.barDockControlBottom);
             this.Controls.Add(this.barDockControlTop);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "CustomStrategyConfigurationControl";
             this.Size = new System.Drawing.Size(1314, 833);
             ((System.ComponentModel.ISupportInitialize)(this.barManager1)).EndInit();
@@ -431,5 +453,7 @@
         private DevExpress.XtraEditors.Repository.RepositoryItemButtonEdit repositoryItemButtonEdit1;
         private DevExpress.XtraEditors.SidePanel sidePanel1;
         private DevExpress.XtraVerticalGrid.PropertyGridControl propertyGridControl1;
+        private DevExpress.XtraBars.BarButtonItem biMoveUp;
+        private DevExpress.XtraBars.BarButtonItem biMoveDown;
     }
 }
