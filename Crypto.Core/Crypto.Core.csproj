@@ -204,6 +204,7 @@
     <Compile Include="Common\TickerNameInfo.cs" />
     <Compile Include="Exchanges\Base\TickerCaptureDataInfo.cs" />
     <Compile Include="Exchanges\Binance\BinanceAccountBalanceInfo.cs" />
+    <Compile Include="Exchanges\Bitmex\BitmexAccountBalanceInfo.cs" />
     <Compile Include="Helpers\SerializationHelper.cs" />
     <Compile Include="Indicators\EmaIndicator.cs" />
     <Compile Include="Indicators\IndicatorBase.cs" />

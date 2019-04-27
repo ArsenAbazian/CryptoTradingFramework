@@ -28,6 +28,17 @@ namespace CryptoMarketClient.Common {
         public Task<string> DownloadStringTaskAsync(string address) {
             return this.GetStringAsync(address);
         }
+        public byte[] UploadString(string address, string content) {
+            var bytes = new ByteArrayContent(Encoding.UTF8.GetBytes(content));
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, address);
+            request.Content = new StringContent(content, Encoding.UTF8, "application/json");
+
+            Task<HttpResponseMessage> t = this.SendAsync(request);
+            t.Wait(10000);
+            Task<byte[]> tt = t.Result.Content.ReadAsByteArrayAsync();
+            tt.Wait(10000);
+            return tt.Result;
+        }
         public byte[] UploadValues(string address, HttpRequestParamsCollection coll) {
             var content = new FormUrlEncodedContent(coll);
             Task<HttpResponseMessage> t = this.PostAsync(address, content);

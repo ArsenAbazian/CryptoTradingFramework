@@ -376,32 +376,33 @@ namespace CryptoMarketClient.Bittrex {
             byte[] bytes = null;
             try {
                 bytes = GetDownloadBytes(address);
+
+                if(bytes == null)
+                    return false;
+
+                int startIndex = 1;
+                if(!JSonHelper.Default.SkipSymbol(bytes, ':', 3, ref startIndex))
+                    return false;
+
+                List<string[]> res = JSonHelper.Default.DeserializeArrayOfObjects(bytes, ref startIndex, new string[] { "MarketCurrency", "BaseCurrency", "MarketCurrencyLong", "BaseCurrencyLong", "MinTradeSize", "MarketName", "IsActive", "IsRestricted", "Created", "Notice", "IsSponsored", "LogoUrl" });
+                for(int i = 0; i < res.Count; i++) {
+                    string[] item = res[i];
+                    BittrexTicker m = new BittrexTicker(this);
+                    m.MarketCurrency = item[0];
+                    m.BaseCurrency = item[1];
+                    m.MarketCurrencyLong = item[2];
+                    m.BaseCurrencyLong = item[3];
+                    m.MinTradeSize = FastValueConverter.Convert(item[4]);
+                    m.MarketName = item[5];
+                    m.IsActive = item[6].Length == 4 ? true : false;
+                    m.Created = Convert.ToDateTime(item[8]).ToLocalTime();
+                    m.LogoUrl = item[11];
+                    m.Index = Tickers.Count;
+                    Tickers.Add(m);
+                }
             }
             catch(Exception) {
                 return false;
-            }
-            if(bytes == null)
-                return false;
-
-            int startIndex = 1;
-            if(!JSonHelper.Default.SkipSymbol(bytes, ':', 3, ref startIndex))
-                return false;
-
-            List<string[]> res = JSonHelper.Default.DeserializeArrayOfObjects(bytes, ref startIndex, new string[] { "MarketCurrency", "BaseCurrency", "MarketCurrencyLong", "BaseCurrencyLong", "MinTradeSize", "MarketName", "IsActive", "IsRestricted", "Created", "Notice", "IsSponsored", "LogoUrl" });
-            for(int i = 0; i < res.Count; i++) {
-                string[] item = res[i];
-                BittrexTicker m = new BittrexTicker(this);
-                m.MarketCurrency = item[0];
-                m.BaseCurrency = item[1];
-                m.MarketCurrencyLong = item[2];
-                m.BaseCurrencyLong = item[3];
-                m.MinTradeSize = FastValueConverter.Convert(item[4]);
-                m.MarketName = item[5];
-                m.IsActive = item[6].Length == 4 ? true : false;
-                m.Created = Convert.ToDateTime(item[8]).ToLocalTime();
-                m.LogoUrl = item[11];
-                m.Index = Tickers.Count;
-                Tickers.Add(m);
             }
             IsInitialized = true;
             return true;

@@ -11,6 +11,9 @@ using SuperSocket.ClientEngine;
 using CryptoMarketClient.Helpers;
 using Crypto.Core.Exchanges.Base;
 using System.Text;
+using Crypto.Core.Exchanges.Bitmex;
+using System.Security.Cryptography;
+using System.Net.Http.Headers;
 
 namespace CryptoMarketClient.Exchanges.Bitmex {
     public class BitmexExchange : Exchange {
@@ -23,6 +26,9 @@ namespace CryptoMarketClient.Exchanges.Bitmex {
             }
         }
 
+        protected internal override HMAC CreateHmac(string secret) {
+            return new HMACSHA256(ASCIIEncoding.Default.GetBytes(secret));
+        }
 
         public override bool AllowCandleStickIncrementalUpdate => false;
 
@@ -59,7 +65,7 @@ namespace CryptoMarketClient.Exchanges.Bitmex {
         }
 
         public override bool GetDeposites(AccountInfo account) {
-            throw new NotImplementedException();
+            return true;
         }
 
         public override bool GetTickersInfo() {
@@ -67,39 +73,40 @@ namespace CryptoMarketClient.Exchanges.Bitmex {
             string text = string.Empty;
             try {
                 text = GetDownloadString(address);
+
+                if(string.IsNullOrEmpty(text))
+                    return false;
+                Tickers.Clear();
+                JArray res = JsonConvert.DeserializeObject<JArray>(text);
+                int index = 0;
+                foreach(JObject obj in res.Children()) {
+                    if(!obj.Value<bool>("hasLiquidity"))
+                        continue;
+                    string pair = obj.Value<string>("symbol");
+                    BitmexTicker t = (BitmexTicker)Tickers.FirstOrDefault(tt => tt.CurrencyPair == pair);
+                    if(t == null) t = new BitmexTicker(this);
+                    t.Index = index;
+                    t.ContractTicker = true;
+                    t.ContractValue = 1; // 1 USD
+                    t.CurrencyPair = pair;
+                    t.MarketCurrency = obj.Value<string>("rootSymbol");
+                    t.BaseCurrency = obj.Value<string>("quoteCurrency");
+                    t.TickSize = ToDouble(obj, "tickSize");
+                    t.Last = ToDouble(obj, "lastPrice");
+                    t.Hr24High = ToDouble(obj, "highPrice");
+                    t.Hr24Low = ToDouble(obj, "lowPrice");
+                    t.HighestBid = ToDouble(obj, "bidPrice");
+                    t.LowestAsk = ToDouble(obj, "askPrice");
+                    t.Timestamp = Convert.ToDateTime(obj.Value<string>("timestamp"));
+                    t.Change = ToDouble(obj, "lastChangePcnt");
+                    t.Volume = ToDouble(obj, "volume24h");
+                    t.Fee = ToDouble(obj, "takerFee") * 100;
+                    Tickers.Add(t);
+                    index++;
+                }
             }
             catch(Exception) {
                 return false;
-            }
-            if(string.IsNullOrEmpty(text))
-                return false;
-            Tickers.Clear();
-            JArray res = JsonConvert.DeserializeObject<JArray>(text);
-            int index = 0;
-            foreach(JObject obj in res.Children()) {
-                if(!obj.Value<bool>("hasLiquidity"))
-                    continue;
-                string pair = obj.Value<string>("symbol");
-                BitmexTicker t = (BitmexTicker)Tickers.FirstOrDefault(tt => tt.CurrencyPair == pair);
-                if(t == null) t = new BitmexTicker(this);
-                t.Index = index;
-                t.ContractTicker = true;
-                t.ContractValue = 1; // 1 USD
-                t.CurrencyPair = pair;
-                t.MarketCurrency = obj.Value<string>("rootSymbol");
-                t.BaseCurrency = obj.Value<string>("quoteCurrency");
-                t.TickSize = ToDouble(obj, "tickSize");
-                t.Last = ToDouble(obj, "lastPrice");
-                t.Hr24High = ToDouble(obj, "highPrice");
-                t.Hr24Low = ToDouble(obj, "lowPrice");
-                t.HighestBid = ToDouble(obj, "bidPrice");
-                t.LowestAsk = ToDouble(obj, "askPrice");
-                t.Timestamp = Convert.ToDateTime(obj.Value<string>("timestamp"));
-                t.Change = ToDouble(obj, "lastChangePcnt");
-                t.Volume = ToDouble(obj, "volume24h");
-                t.Fee = ToDouble(obj, "takerFee") * 100;
-                Tickers.Add(t);
-                index++;
             }
             IsInitialized = true;
             return true;
@@ -118,7 +125,7 @@ namespace CryptoMarketClient.Exchanges.Bitmex {
         }
 
         public override void OnAccountRemoved(AccountInfo info) {
-            throw new NotImplementedException();
+            DefaultAccount = Accounts.FirstOrDefault(a => a.Default);
         }
 
         public override bool ProcessOrderBook(Ticker tickerBase, string text) {
@@ -141,7 +148,47 @@ namespace CryptoMarketClient.Exchanges.Bitmex {
             return true;
         }
 
-        public override bool UpdateBalances(AccountInfo info) {
+        private long GetExpires() {
+            return DateTimeOffset.UtcNow.ToUnixTimeSeconds() + 36000 + 3600; // set expires one hour in the future
+        }
+
+        protected byte[] DownloadPrivateData(AccountInfo account, string verb, string path) {
+            string address = "https://www.bitmex.com" + path;
+
+            string expires = GetExpires().ToString();
+            MyWebClient client = GetWebClient();
+
+            client.Headers.Clear();
+            client.Headers.Add("api-expires", expires);
+            string textToSignature = verb + path + expires;
+            client.Headers.Add("api-signature", account.GetSign(textToSignature));
+            client.Headers.Add("api-key", account.ApiKey);
+
+            try {
+                return client.DownloadData(address);
+            }
+            catch(Exception e) {
+                LogManager.Default.Add(e.ToString());
+                return null;
+            }
+        }
+
+        public override bool UpdateBalances(AccountInfo account) {
+            byte[] data = DownloadPrivateData(account, "GET", "/api/v1/user/wallet");
+            if(data == null)
+                return false;
+            return OnGetBalances(account, data );
+        }
+
+        public bool OnGetBalances(AccountInfo account, byte[] data) {
+            string text = UTF8Encoding.Default.GetString(data);
+            JObject obj = (JObject)JsonConvert.DeserializeObject(text);
+            account.Balances.Clear();
+            BitmexAccountBalanceInfo b = new BitmexAccountBalanceInfo(account);
+            b.Currency = obj.Value<string>("currency");
+            b.Available = obj.Value<double>("amount");
+            b.OnOrders = 0;// obj.Value<double>("locked");
+            account.Balances.Add(b);
             return true;
         }
 
