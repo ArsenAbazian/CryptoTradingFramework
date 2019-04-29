@@ -13,9 +13,9 @@ using CryptoMarketClient.Helpers;
 
 namespace CryptoMarketClient.Common {
     [Serializable]
-    public class TrailingSettings : INotifyPropertyChanged {
-        public TrailingSettings(Ticker ticker) {
-            Enabled = true;
+    public class TradingSettings : INotifyPropertyChanged {
+        public TradingSettings(Ticker ticker) {
+            Enabled = false;
             Ticker = ticker;
         }
 

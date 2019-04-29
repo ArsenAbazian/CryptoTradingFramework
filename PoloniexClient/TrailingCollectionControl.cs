@@ -36,7 +36,7 @@ namespace CryptoMarketClient {
             this.gcTrailings.DataSource = Ticker == null ? null : Ticker.Trailings;
             if(ChartControl != null && Ticker != null) {
                 for(int i = 0; i < Ticker.Trailings.Count; i++) {
-                    TrailingSettings settings = Ticker.Trailings[i];
+                    TradingSettings settings = Ticker.Trailings[i];
                     if(settings.ShowOnChart)
                         ChartControl.AddIndicator(settings);
                 }
@@ -48,13 +48,13 @@ namespace CryptoMarketClient {
                 BeginInvoke(new MethodInvoker(() => this.gvTrailings.RefreshData()));
         }
 
-        protected TrailingSettings CreateNewSettings() {
-            TrailingSettings settings = new TrailingSettings(Ticker);
+        protected TradingSettings CreateNewSettings() {
+            TradingSettings settings = new TradingSettings(Ticker);
             settings.Mode = ActionMode.Notify;
             return settings;
         }
 
-        protected TrailingSettinsForm CreateSettingsForm(TrailingSettings settings) {
+        protected TrailingSettinsForm CreateSettingsForm(TradingSettings settings) {
             TrailingSettinsForm form = new TrailingSettinsForm();
             form.Ticker = Ticker;
             form.Settings = settings;
@@ -66,7 +66,7 @@ namespace CryptoMarketClient {
         }
         
         private void btEdit_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
-            TrailingSettings settings = (TrailingSettings)this.gvTrailings.GetRow(this.gvTrailings.FocusedRowHandle);
+            TradingSettings settings = (TradingSettings)this.gvTrailings.GetRow(this.gvTrailings.FocusedRowHandle);
             TrailingSettinsForm form = CreateSettingsForm(settings);
             form.Mode = EditingMode.Edit;
             form.Accepted += OnTrailingSettingsFormAccepted;
@@ -74,7 +74,7 @@ namespace CryptoMarketClient {
         }
 
         private void btAdd_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
-            TrailingSettings settings = CreateNewSettings();
+            TradingSettings settings = CreateNewSettings();
             TrailingSettinsForm form = new TrailingSettinsForm();
             form.Mode = EditingMode.Add;
             form.Settings = settings;
@@ -105,7 +105,7 @@ namespace CryptoMarketClient {
         private void btRemove_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
             if(XtraMessageBox.Show("Are you shure to remove selected trailing?", "Remove Trailings", MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
                 return;
-            TrailingSettings settings = (TrailingSettings)this.gvTrailings.GetFocusedRow();
+            TradingSettings settings = (TradingSettings)this.gvTrailings.GetFocusedRow();
             if(settings == null)
                 return;
             Ticker.Trailings.Remove(settings);

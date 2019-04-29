@@ -30,6 +30,7 @@
             DevExpress.XtraEditors.FormatConditionRuleValue formatConditionRuleValue2 = new DevExpress.XtraEditors.FormatConditionRuleValue();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(OpenedOrdersForm));
             this.colType = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colDateString = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colValue = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gridControl1 = new DevExpress.XtraGrid.GridControl();
             this.openedOrdersBindingSource = new System.Windows.Forms.BindingSource(this.components);
@@ -41,7 +42,7 @@
             this.colAmount = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colTotal = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colTicker = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.colDateString = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colAccount = new DevExpress.XtraGrid.Columns.GridColumn();
             this.repositoryItemTextEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemTextEdit();
             this.barManager1 = new DevExpress.XtraBars.BarManager(this.components);
             this.bar3 = new DevExpress.XtraBars.Bar();
@@ -56,7 +57,6 @@
             this.barDockControlBottom = new DevExpress.XtraBars.BarDockControl();
             this.barDockControlLeft = new DevExpress.XtraBars.BarDockControl();
             this.barDockControlRight = new DevExpress.XtraBars.BarDockControl();
-            this.colAccount = new DevExpress.XtraGrid.Columns.GridColumn();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.openedOrdersBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).BeginInit();
@@ -67,30 +67,38 @@
             // colType
             // 
             this.colType.FieldName = "Type";
+            this.colType.MinWidth = 10;
             this.colType.Name = "colType";
             this.colType.Visible = true;
             this.colType.VisibleIndex = 1;
-            this.colType.Width = 150;
+            // 
+            // colDateString
+            // 
+            this.colDateString.Caption = "Date";
+            this.colDateString.FieldName = "DateString";
+            this.colDateString.Name = "colDateString";
+            this.colDateString.Visible = true;
+            this.colDateString.VisibleIndex = 0;
             // 
             // colValue
             // 
             this.colValue.FieldName = "Value";
+            this.colValue.MinWidth = 10;
             this.colValue.Name = "colValue";
             this.colValue.OptionsColumn.ReadOnly = true;
-            this.colValue.Width = 150;
             // 
             // gridControl1
             // 
             this.gridControl1.DataSource = this.openedOrdersBindingSource;
             this.gridControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gridControl1.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(2);
-            this.gridControl1.Location = new System.Drawing.Point(0, 72);
+            this.gridControl1.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
+            this.gridControl1.Location = new System.Drawing.Point(0, 37);
             this.gridControl1.MainView = this.gridView1;
-            this.gridControl1.Margin = new System.Windows.Forms.Padding(2);
+            this.gridControl1.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
             this.gridControl1.Name = "gridControl1";
             this.gridControl1.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repositoryItemTextEdit1});
-            this.gridControl1.Size = new System.Drawing.Size(1686, 821);
+            this.gridControl1.Size = new System.Drawing.Size(843, 429);
             this.gridControl1.TabIndex = 1;
             this.gridControl1.UseDirectXPaint = DevExpress.Utils.DefaultBoolean.True;
             this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
@@ -118,8 +126,6 @@
             this.colTicker,
             this.colDateString,
             this.colAccount});
-            this.gridView1.DetailHeight = 673;
-            this.gridView1.FixedLineWidth = 4;
             gridFormatRule1.Column = this.colType;
             gridFormatRule1.ColumnApplyTo = this.colDateString;
             gridFormatRule1.Name = "BuyOrderType";
@@ -144,9 +150,11 @@
             this.gridView1.FormatRules.Add(gridFormatRule2);
             this.gridView1.GridControl = this.gridControl1;
             this.gridView1.GroupCount = 2;
+            this.gridView1.LevelIndent = 0;
             this.gridView1.Name = "gridView1";
             this.gridView1.OptionsBehavior.Editable = false;
             this.gridView1.OptionsView.ShowVerticalLines = DevExpress.Utils.DefaultBoolean.False;
+            this.gridView1.PreviewIndent = 0;
             this.gridView1.SortInfo.AddRange(new DevExpress.XtraGrid.Columns.GridColumnSortInfo[] {
             new DevExpress.XtraGrid.Columns.GridColumnSortInfo(this.colAccount, DevExpress.Data.ColumnSortOrder.Ascending),
             new DevExpress.XtraGrid.Columns.GridColumnSortInfo(this.colTicker, DevExpress.Data.ColumnSortOrder.Ascending)});
@@ -154,70 +162,65 @@
             // colOrderNumber
             // 
             this.colOrderNumber.FieldName = "OrderId";
+            this.colOrderNumber.MinWidth = 10;
             this.colOrderNumber.Name = "colOrderNumber";
             this.colOrderNumber.Visible = true;
             this.colOrderNumber.VisibleIndex = 5;
-            this.colOrderNumber.Width = 150;
             // 
             // colValueString
             // 
             this.colValueString.Caption = "Price";
             this.colValueString.FieldName = "ValueString";
+            this.colValueString.MinWidth = 10;
             this.colValueString.Name = "colValueString";
             this.colValueString.Visible = true;
             this.colValueString.VisibleIndex = 2;
-            this.colValueString.Width = 150;
             // 
             // colAmountString
             // 
             this.colAmountString.Caption = "Amount";
             this.colAmountString.FieldName = "AmountString";
+            this.colAmountString.MinWidth = 10;
             this.colAmountString.Name = "colAmountString";
             this.colAmountString.Visible = true;
             this.colAmountString.VisibleIndex = 3;
-            this.colAmountString.Width = 150;
             // 
             // colTotalString
             // 
             this.colTotalString.Caption = "Total";
             this.colTotalString.FieldName = "TotalString";
+            this.colTotalString.MinWidth = 10;
             this.colTotalString.Name = "colTotalString";
             this.colTotalString.Visible = true;
             this.colTotalString.VisibleIndex = 4;
-            this.colTotalString.Width = 150;
             // 
             // colAmount
             // 
             this.colAmount.FieldName = "Amount";
+            this.colAmount.MinWidth = 10;
             this.colAmount.Name = "colAmount";
             this.colAmount.OptionsColumn.ReadOnly = true;
-            this.colAmount.Width = 150;
             // 
             // colTotal
             // 
             this.colTotal.FieldName = "Total";
+            this.colTotal.MinWidth = 10;
             this.colTotal.Name = "colTotal";
             this.colTotal.OptionsColumn.ReadOnly = true;
-            this.colTotal.Width = 150;
             // 
             // colTicker
             // 
-            this.colTicker.FieldName = "Ticker";
-            this.colTicker.MinWidth = 40;
+            this.colTicker.FieldName = "TickerName";
             this.colTicker.Name = "colTicker";
             this.colTicker.Visible = true;
             this.colTicker.VisibleIndex = 6;
-            this.colTicker.Width = 150;
             // 
-            // colDateString
+            // colAccount
             // 
-            this.colDateString.Caption = "Date";
-            this.colDateString.FieldName = "DateString";
-            this.colDateString.MinWidth = 40;
-            this.colDateString.Name = "colDateString";
-            this.colDateString.Visible = true;
-            this.colDateString.VisibleIndex = 0;
-            this.colDateString.Width = 150;
+            this.colAccount.FieldName = "Account";
+            this.colAccount.Name = "colAccount";
+            this.colAccount.Visible = true;
+            this.colAccount.VisibleIndex = 6;
             // 
             // repositoryItemTextEdit1
             // 
@@ -331,52 +334,46 @@
             this.barDockControlTop.Dock = System.Windows.Forms.DockStyle.Top;
             this.barDockControlTop.Location = new System.Drawing.Point(0, 0);
             this.barDockControlTop.Manager = this.barManager1;
-            this.barDockControlTop.Size = new System.Drawing.Size(1686, 72);
+            this.barDockControlTop.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.barDockControlTop.Size = new System.Drawing.Size(843, 37);
             // 
             // barDockControlBottom
             // 
             this.barDockControlBottom.CausesValidation = false;
             this.barDockControlBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.barDockControlBottom.Location = new System.Drawing.Point(0, 893);
+            this.barDockControlBottom.Location = new System.Drawing.Point(0, 466);
             this.barDockControlBottom.Manager = this.barManager1;
-            this.barDockControlBottom.Size = new System.Drawing.Size(1686, 51);
+            this.barDockControlBottom.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.barDockControlBottom.Size = new System.Drawing.Size(843, 25);
             // 
             // barDockControlLeft
             // 
             this.barDockControlLeft.CausesValidation = false;
             this.barDockControlLeft.Dock = System.Windows.Forms.DockStyle.Left;
-            this.barDockControlLeft.Location = new System.Drawing.Point(0, 72);
+            this.barDockControlLeft.Location = new System.Drawing.Point(0, 37);
             this.barDockControlLeft.Manager = this.barManager1;
-            this.barDockControlLeft.Size = new System.Drawing.Size(0, 821);
+            this.barDockControlLeft.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.barDockControlLeft.Size = new System.Drawing.Size(0, 429);
             // 
             // barDockControlRight
             // 
             this.barDockControlRight.CausesValidation = false;
             this.barDockControlRight.Dock = System.Windows.Forms.DockStyle.Right;
-            this.barDockControlRight.Location = new System.Drawing.Point(1686, 72);
+            this.barDockControlRight.Location = new System.Drawing.Point(843, 37);
             this.barDockControlRight.Manager = this.barManager1;
-            this.barDockControlRight.Size = new System.Drawing.Size(0, 821);
-            // 
-            // colAccount
-            // 
-            this.colAccount.FieldName = "Account";
-            this.colAccount.MinWidth = 40;
-            this.colAccount.Name = "colAccount";
-            this.colAccount.Visible = true;
-            this.colAccount.VisibleIndex = 6;
-            this.colAccount.Width = 150;
+            this.barDockControlRight.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.barDockControlRight.Size = new System.Drawing.Size(0, 429);
             // 
             // OpenedOrdersForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1686, 944);
+            this.ClientSize = new System.Drawing.Size(843, 491);
             this.Controls.Add(this.gridControl1);
             this.Controls.Add(this.barDockControlLeft);
             this.Controls.Add(this.barDockControlRight);
             this.Controls.Add(this.barDockControlBottom);
             this.Controls.Add(this.barDockControlTop);
-            this.Margin = new System.Windows.Forms.Padding(6);
             this.Name = "OpenedOrdersForm";
             this.Text = "Poloniex Opened Orders";
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).EndInit();

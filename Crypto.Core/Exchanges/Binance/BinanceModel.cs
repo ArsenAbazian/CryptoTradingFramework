@@ -40,20 +40,88 @@ namespace CryptoMarketClient.Binance {
             throw new NotImplementedException();
         }
          
-        public override bool GetBalance(AccountInfo info, string currency) {
-            return true;
+        public override bool GetBalance(AccountInfo account, string currency) {
+            string queryString = string.Format("timestamp={0}", GetNonce());
+            string signature = account.GetSign(queryString);
+
+            string address = string.Format("https://binance.com/api/v3/account?{0}&signature={1}", queryString, signature);
+            MyWebClient client = GetWebClient();
+
+            client.Headers.Clear();
+            client.Headers.Add("X-MBX-APIKEY", account.ApiKey);
+
+            try {
+                return OnGetBalances(account, client.UploadValues(address, new HttpRequestParamsCollection()));
+            }
+            catch(Exception e) {
+                LogManager.Default.Add(e.ToString());
+                return false;
+            }
         }
 
         public override bool Withdraw(AccountInfo account, string currency, string adress, string paymentId, double amount) {
             throw new NotImplementedException();
         }
 
+        protected TradingResult MakeTrade(AccountInfo account, Ticker ticker, double rate, double amount, string buySell) {
+            string queryString = string.Format("symbol={0}&side={1}&quantity={2:0.########}&price={3:0.########}&timestamp={4}&type=LIMIT&timeInForce=GTC&recvWindow=5000", 
+                ticker.Name, buySell, amount, rate, GetNonce());
+            string signature = account.GetSign(queryString);
+
+            string address = string.Format("https://api.binance.com/api/v3/order?{0}&signature={1}",
+                queryString, signature);
+            MyWebClient client = GetWebClient();
+
+            client.Headers.Clear();
+            client.Headers.Add("X-MBX-APIKEY", account.ApiKey);
+
+            try {
+                return OnTradeResult(account, ticker, client.UploadValues(address, new HttpRequestParamsCollection()));
+            }
+            catch(Exception e) {
+                LogManager.Default.Add(e.ToString());
+                return null;
+            }
+        }
+
         public override TradingResult Buy(AccountInfo account, Ticker ticker, double rate, double amount) {
-            throw new NotImplementedException();
+            return MakeTrade(account, ticker, rate, amount, "BUY");
+
+        }
+
+        protected TradingResult OnTradeResult(AccountInfo account, Ticker ticker, byte[] data) {
+            if(data == null)
+                return null;
+            string text = Encoding.UTF8.GetString(data);
+            JObject res = JsonConvert.DeserializeObject<JObject>(text);
+            if(res.Value<string>("code") != null) {
+                LogManager.Default.AddError(text);
+                return null;
+            }
+
+            TradingResult tr = new TradingResult();
+            tr.OrderId = res.Value<string>("orderId");
+            tr.Amount = Convert.ToDouble(res.Value<string>("executedQty"));
+            tr.Value= Convert.ToDouble(res.Value<string>("price"));
+            tr.Total = tr.Amount * tr.Value;
+            tr.OrderStatus = res.Value<string>("status");
+            tr.Filled = tr.OrderStatus == "FILLED";
+            JArray fills = res.Value<JArray>("fills");
+            if(fills == null)
+                return tr;
+            foreach(JObject item in fills) {
+                TradeEntry e = new TradeEntry();
+                e.Amount = Convert.ToDouble(item.Value<string>("qty"));
+                e.Rate = Convert.ToDouble(item.Value<string>("price"));
+                e.Fee = Convert.ToDouble(item.Value<string>("comission"));
+                e.FeeAsset = item.Value<string>("commissionAsset");
+                tr.Trades.Add(e);
+            }
+            return tr;
         }
 
         public override TradingResult Sell(AccountInfo account, Ticker ticker, double rate, double amount) {
-            throw new NotImplementedException();
+            return MakeTrade(account, ticker, rate, amount, "SELL");
         }
 
         public override string BaseWebSocketAdress => "wss://stream.binance.com:9443/ws/!ticker@arr";
@@ -155,7 +223,7 @@ namespace CryptoMarketClient.Binance {
             }
             if(ticker.CandleStickPeriodMin != info.Interval.TotalMinutes)
                 return;
-            Debug.WriteLine(item[6] + " " + item[7] + " " + item[8] + " " + item[9]);
+            //Debug.WriteLine(item[6] + " " + item[7] + " " + item[8] + " " + item[9]);
             lock(ticker.CandleStickData) {
                 CandleStickData data = new CandleStickData();
                 data.Time = time;
@@ -397,6 +465,8 @@ namespace CryptoMarketClient.Binance {
                         t.PriceFilter = new TickerFilter() { MinValue = filter.Value<double>("minPrice"), MaxValue = filter.Value<double>("maxPrice"), TickSize = filter.Value<double>("tickSize") };
                     else if(filterType == "LOT_SIZE")
                         t.QuantityFilter = new TickerFilter() { MinValue = filter.Value<double>("minQty"), MaxValue = filter.Value<double>("maxQty"), TickSize = filter.Value<double>("stepSize") };
+                    else if(filterType == "MIN_NOTIONAL")
+                        t.NotionalFilter = new TickerFilter() { MinValue = filter.Value<double>("minNotional"), MaxValue = double.MaxValue };
                 }
             }
             return true;

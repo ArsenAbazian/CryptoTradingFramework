@@ -249,13 +249,13 @@ namespace CryptoMarketClient.Strategies {
         }
 
         protected TradingResult AddDemoTradingResult(double rate, double amount, OrderType type) {
-            TradingResult res = new TradingResult() { Amount = amount, Type = type, Date = DateTime.Now, OrderNumber = -1, Total = rate * amount };
+            TradingResult res = new TradingResult() { Amount = amount, Type = type, Date = DateTime.Now, OrderId = "demo", Total = rate * amount };
             res.Trades.Add(new TradeEntry() { Amount = amount, Date = DateTime.Now, Id = "demo", Rate = rate, Total = rate * amount, Type = type });
             return res;
         }
 
         protected TradingResult AddDemoTradingResult(Ticker ticker, double rate, double amount, OrderType type) {
-            TradingResult res = new TradingResult() { Amount = amount, Type = type, Date = DateTime.Now, OrderNumber = -1, Total = rate * amount };
+            TradingResult res = new TradingResult() { Amount = amount, Type = type, Date = DateTime.Now, OrderId = "demo", Total = rate * amount };
             res.Trades.Add(new TradeEntry() {Ticker = ticker,  Amount = amount, Date = DateTime.Now, Id = "demo", Rate = rate, Total = rate * amount, Type = type });
             return res;
         }

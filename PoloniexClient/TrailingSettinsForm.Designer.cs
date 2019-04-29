@@ -129,7 +129,7 @@
             // 
             // trailingSettingsBindingSource
             // 
-            this.trailingSettingsBindingSource.DataSource = typeof(CryptoMarketClient.Common.TrailingSettings);
+            this.trailingSettingsBindingSource.DataSource = typeof(CryptoMarketClient.Common.TradingSettings);
             // 
             // ceIgnoreStopLoss
             // 

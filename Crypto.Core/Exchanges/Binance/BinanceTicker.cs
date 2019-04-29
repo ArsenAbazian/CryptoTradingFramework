@@ -35,6 +35,8 @@ namespace CryptoMarketClient.Binance {
 
         public override string Name => CurrencyPair;
 
+        public override string MarketName { get { return Name; } set { } }
+
         public override double Fee { get { return 0.1f * 0.01f; } set { } }
         
         public override string HostName => "Binance";

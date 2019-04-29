@@ -1041,7 +1041,7 @@ namespace CryptoMarketClient {
                 return null;
             JObject res = JsonConvert.DeserializeObject<JObject>(text);
             TradingResult tr = new TradingResult();
-            tr.OrderNumber = res.Value<long>("orderNumber");
+            tr.OrderId = res.Value<string>("orderNumber");
             tr.Type = OrderType.Buy;
             JArray array = res.Value<JArray>("resultingTrades");
             string tradeId = string.Empty;

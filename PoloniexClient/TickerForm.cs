@@ -108,7 +108,7 @@ namespace CryptoMarketClient {
         void UpdateBuySellSettings() {
             if(Ticker == null)
                 return;
-            TrailingSettings s = new TrailingSettings(Ticker);
+            TradingSettings s = new TradingSettings(Ticker);
             this.buySettingsControl.Settings = s;
         }
         void OnTickerChanged(Ticker prev) {
@@ -160,8 +160,8 @@ namespace CryptoMarketClient {
 
             this.siLast.Caption = "Last Price<br>" + Ticker.LastString;
             this.siBid.Caption = "Highest Bid<br>" + Ticker.HighestBidString;
-            this.si24High.Caption = "24h High<br><b>" + Ticker.Hr24High.ToString() + "<b>";
-            this.siHr24Low.Caption = "24h Low<br><b>" + Ticker.Hr24Low.ToString() + "<b>";
+            this.si24High.Caption = "24h High<br><b>" + Ticker.Hr24High.ToString("0.########") + "<b>";
+            this.siHr24Low.Caption = "24h Low<br><b>" + Ticker.Hr24Low.ToString("0.########") + "<b>";
             this.siLowestAsk.Caption = "Lowest Ask<br>" + Ticker.LowestAskString;
             this.si24Volume.Caption = "24h Volume<br>" + Ticker.Volume.ToString() + " " + Ticker.BaseCurrency;
         }

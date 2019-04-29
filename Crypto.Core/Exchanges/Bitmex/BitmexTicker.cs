@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace CryptoMarketClient.Exchanges.Bitmex {
     public class BitmexTicker : Ticker {
-        public BitmexTicker(Exchange exchange) : base(exchange) { }
+        public BitmexTicker(Exchange exchange) : base(exchange) {
+            QuantityFilter = new TickerFilter() { MinValue = 1, TickSize = 1 };
+        }
 
         public double TickSize { get; set; }
         public DateTime Timestamp { get; set; }

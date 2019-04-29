@@ -914,7 +914,7 @@
             // 
             // colOrderNumber
             // 
-            this.colOrderNumber.FieldName = "OrderNumber";
+            this.colOrderNumber.FieldName = "OrderId";
             this.colOrderNumber.MinWidth = 10;
             this.colOrderNumber.Name = "colOrderNumber";
             this.colOrderNumber.Width = 37;
@@ -1039,7 +1039,6 @@
             this.buySettingsControl.Name = "buySettingsControl";
             this.buySettingsControl.OperationsProvider = null;
             this.buySettingsControl.Settings = null;
-            this.buySettingsControl.ShowTrailingSettings = true;
             this.buySettingsControl.Size = new System.Drawing.Size(378, 199);
             this.buySettingsControl.TabIndex = 0;
             this.buySettingsControl.Ticker = null;

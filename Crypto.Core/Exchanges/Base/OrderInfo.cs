@@ -13,6 +13,8 @@ namespace CryptoMarketClient.Common {
         }
         public AccountInfo Account { get; set; }
         public Ticker Ticker { get; set; }
+        string tickerName;
+        public string TickerName { get { return Ticker == null ? tickerName : Ticker.Name; } set { tickerName = value; } }
         DateTime? date;
         public DateTime Date {
             get {

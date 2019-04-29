@@ -7,11 +7,14 @@ using System.Xml.Serialization;
 
 namespace CryptoMarketClient.Common {
     public class TradingResult {
-        public long OrderNumber { get; set; }
+        public string OrderId { get; set; }
         public List<TradeEntry> Trades { get; } = new List<TradeEntry>();
         public DateTime Date { get; set; }
         public double Amount { get; set; }
+        public double Value { get; set; }
         public double Total { get; set; }
+        public string OrderStatus { get; set; }
+        public bool Filled { get; set; }
         public OrderType Type { get; set; }
 
         public void Calculate() {
@@ -35,6 +38,8 @@ namespace CryptoMarketClient.Common {
         public DateTime Date { get; set; }
         public double Rate { get; set; }
         public double Total { get; set; }
+        public double Fee { get; set; }
+        public string FeeAsset { get; set; }
         public string Id { get; set; }
         public OrderType Type { get; set; }
     }

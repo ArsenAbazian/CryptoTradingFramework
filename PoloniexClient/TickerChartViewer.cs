@@ -341,7 +341,7 @@ namespace CryptoMarketClient {
         private void barButtonItem3_ItemClick(object sender, ItemClickEventArgs e) {
             UpdateDataFromServer(true);
         }
-        public void AddIndicator(TrailingSettings settings) {
+        public void AddIndicator(TradingSettings settings) {
             if(Ticker == null)
                 return;
             UpdateEvents(null);
@@ -374,7 +374,7 @@ namespace CryptoMarketClient {
             }
         }
 
-        public void RemoveIndicator(TrailingSettings settings) {
+        public void RemoveIndicator(TradingSettings settings) {
             if(Ticker == null)
                 return;
             UpdateEvents(null);

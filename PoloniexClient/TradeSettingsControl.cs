@@ -17,8 +17,6 @@ namespace CryptoMarketClient {
     public partial class TradeSettingsControl : XtraUserControl {
         public TradeSettingsControl() {
             InitializeComponent();
-
-            this.comboBoxEdit1.Properties.Items.AddRange(typeof(TrailingType).GetEnumValues());
         }
 
         bool showTrailingSettings = true;
@@ -28,18 +26,14 @@ namespace CryptoMarketClient {
                 if(ShowTrailingSettings == value)
                     return;
                 this.showTrailingSettings = value;
-                OnShowTrailingSettingsChanged();
             }
-        }
-        void OnShowTrailingSettingsChanged() {
-            this.layoutControlGroup3.Visibility = ShowTrailingSettings ? DevExpress.XtraLayout.Utils.LayoutVisibility.Always : DevExpress.XtraLayout.Utils.LayoutVisibility.Never;
         }
 
         public ITradingResultOperationsProvider OperationsProvider { get; set; }
 
         public Ticker Ticker { get; set; }
-        TrailingSettings settings;
-        public TrailingSettings Settings {
+        TradingSettings settings;
+        public TradingSettings Settings {
             get {
                 return settings;
             }
@@ -60,32 +54,51 @@ namespace CryptoMarketClient {
         protected bool ValidateChildrenCore() {
             return true;
         }
-        private void tradeButton_Click(object sender, EventArgs e) {
-            if (!ValidateChildrenCore()) {
+
+        private void MakeTrade(OrderType type) {
+            if(!ValidateChildrenCore()) {
                 XtraMessageBox.Show("Not all fields are filled!");
                 return;
             }
-            if ((TrailingType)this.comboBoxEdit1.EditValue == TrailingType.Buy) {
-                if (Ticker.Buy(Settings.TradePrice, Settings.Amount) == null) {
-                    XtraMessageBox.Show("Error buying. Please try later again.");
-                    return;
-                }
-            } else {
-                if (Ticker.Sell(Settings.TradePrice, Settings.Amount) == null) {
-                    XtraMessageBox.Show("Error selling. Please try later again.");
+            
+            string validationError = Ticker.ValidateTrade(Settings.TradePrice, Settings.Amount);
+            if(!string.IsNullOrEmpty(validationError)) {
+                XtraMessageBox.Show("Error validating trade. Values will be corrected. Error was: " + validationError);
+
+                double rate = Settings.TradePrice, amount = Settings.Amount;
+                Ticker.CorrectTrade(ref rate, ref amount);
+
+                Settings.TradePrice = rate;
+                Settings.Amount = amount;
+                return;
+            }
+            if(type == OrderType.Buy) {
+                if(Ticker.Buy(Settings.TradePrice, Settings.Amount) == null) {
+                    XtraMessageBox.Show("Error buying. Please try later again. Last Error: " + LogManager.Default.Messages.Last().Text);
                     return;
                 }
             }
-            if (this.checkEdit1.Checked) {
+            else {
+                Settings.Enabled = false;
+                if(Ticker.Sell(Settings.TradePrice, Settings.Amount) == null) {
+                    XtraMessageBox.Show("Error selling. Please try later again." + LogManager.Default.Messages.Last().Text);
+                    return;
+                }
+            }
+            if(Settings.Enabled) {
                 Settings.Date = DateTime.UtcNow;
                 Ticker.Trailings.Add(Settings);
                 Settings.Start();
-                if (OperationsProvider != null)
+                if(OperationsProvider != null)
                     OperationsProvider.ShowTradingResult(Ticker);
                 Ticker.Save();
 
                 XtraMessageBox.Show("Trailing added!");
             }
+        }
+
+        private void OnBuyButtonClick(object sender, EventArgs e) {
+            MakeTrade(OrderType.Buy);
         }
         public void SelectedAskChanged(object sender, FocusedRowChangedEventArgs e) {
             OrderBookEntry entry = (OrderBookEntry)((GridView)sender).GetRow(e.FocusedRowHandle);
@@ -93,26 +106,23 @@ namespace CryptoMarketClient {
         }
 
         private void checkEdit1_CheckedChanged(object sender, EventArgs e) {
-            ItemForTakeProfitPercent.Enabled = ItemForTakeProfitStartPercent.Enabled = ItemForIngoreStopLoss.Enabled = this.checkEdit1.Checked;
-            ItemForStopLossPricePercent.Enabled = ItemForIncrementalStopLoss.Enabled = this.checkEdit1.Checked && !this.ceIgnoreStopLoss.Checked;
+            ItemForTakeProfitPercent.Enabled = ItemForTakeProfitStartPercent.Enabled = ItemForIngoreStopLoss.Enabled = this.checkEdit1.IsOn;
+            ItemForStopLossPricePercent.Enabled = ItemForIncrementalStopLoss.Enabled = this.checkEdit1.IsOn && !this.ceIgnoreStopLoss.IsOn;
         }
 
         private void ceIgnoreStopLoss_CheckedChanged(object sender, EventArgs e) {
-            ItemForIncrementalStopLoss.Enabled = ItemForStopLossPricePercent.Enabled = !this.ceIgnoreStopLoss.Checked && this.checkEdit1.Checked;
+            ItemForIncrementalStopLoss.Enabled = ItemForStopLossPricePercent.Enabled = !this.ceIgnoreStopLoss.IsOn && this.checkEdit1.IsOn;
         }
 
-        private void OnComboBoxEditValueChanged(object sender, System.EventArgs e) {
-            if (!(this.comboBoxEdit1.EditValue is TrailingType))
-                return;
+        private void btnSell_Click(object sender, EventArgs e) {
+            MakeTrade(OrderType.Sell);
+        }
 
-            bool isBuy = (TrailingType)this.comboBoxEdit1.EditValue == TrailingType.Buy;
-            this.btnTrade.Text = isBuy ? "Buy" : "Sell";
-            this.ItemForBuyPrice.Text = isBuy ? "Buy Price" : "Sell Price";
-            this.itemForSpendBTC.Text = isBuy ? "Spend BTC" : "Earn BTC";
-            LayoutVisibility visibility = isBuy ? LayoutVisibility.Always : LayoutVisibility.Never;
-            this.ItemForStopLossPricePercent.Visibility = visibility;
-            this.ItemForIngoreStopLoss.Visibility = visibility;
-            this.ItemForIncrementalStopLoss.Visibility = visibility;
+        private void tbDepositPercent_EditValueChanged(object sender, EventArgs e) {
+            if(Settings.OrderPrice == 0)
+                Settings.TradePrice = Ticker.OrderBook.Bids[0].Value;
+            Settings.Amount = tbDepositPercent.Value / 100.0 * Ticker.BaseCurrencyBalance / Settings.TradePrice;
+            this.layoutControlItem4.Text = tbDepositPercent.Value + "% of Deposit";
         }
     }
 

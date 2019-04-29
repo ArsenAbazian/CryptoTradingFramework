@@ -16,6 +16,6 @@ namespace CryptoMarketClient.Common {
             }
         }
 
-        public BindingList<TrailingSettings> Items { get; } = new BindingList<TrailingSettings>();
+        public BindingList<TradingSettings> Items { get; } = new BindingList<TradingSettings>();
     }
 }

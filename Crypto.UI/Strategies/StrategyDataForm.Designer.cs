@@ -401,7 +401,7 @@ namespace CryptoMarketClient.Strategies {
             // 
             // colOrderNumber
             // 
-            this.colOrderNumber.FieldName = "OrderNumber";
+            this.colOrderNumber.FieldName = "OrderId";
             this.colOrderNumber.MinWidth = 40;
             this.colOrderNumber.Name = "colOrderNumber";
             this.colOrderNumber.Visible = true;

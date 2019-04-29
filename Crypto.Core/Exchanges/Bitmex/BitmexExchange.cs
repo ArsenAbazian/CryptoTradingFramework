@@ -41,7 +41,36 @@ namespace CryptoMarketClient.Exchanges.Bitmex {
         }
 
         public override TradingResult Buy(AccountInfo account, Ticker ticker, double rate, double amount) {
-            throw new NotImplementedException();
+            string data = string.Format("symbol={0}&orderQty={1}&price={2}&ordType=Limit", ticker.MarketName, amount, rate);
+            byte[] bytes = UploadPrivateData(account, "POST", "/api/v1/order", data);
+            if(bytes == null)
+                return null;
+            return OnTradingResult(account, ticker, Encoding.UTF8.GetString(bytes));
+        }
+
+        public TradingResult OnTradingResult(AccountInfo account, Ticker ticker, string text) {
+            try {
+                JObject obj = JsonConvert.DeserializeObject<JObject>(text);
+                JObject error = obj.Value<JObject>("error");
+                if(error != null) {
+                    LogManager.Default.AddError(error.Value<string>("message"));
+                    return null;
+                }
+                TradingResult res = new TradingResult();
+                res.OrderId = obj.Value<string>("orderID");
+                res.Date = Convert.ToDateTime(obj.Value<string>("transactTime"));
+                res.Amount = FastValueConverter.Convert(obj.Value<string>("orderQty"));
+                res.Type = obj.Value<string>("side")[0] == 'B' ? OrderType.Buy : OrderType.Sell;
+                res.Value = FastValueConverter.Convert(obj.Value<string>("price"));
+                res.OrderStatus = obj.Value<string>("ordStatus");
+                res.Filled = res.OrderStatus == "Filled";
+                res.Total = res.Amount;
+                return res;
+            }
+            catch(Exception e) {
+                Telemetry.Default.TrackException(e);
+                return null;
+            }
         }
 
         public override bool Cancel(AccountInfo account, string orderId) {
@@ -133,7 +162,11 @@ namespace CryptoMarketClient.Exchanges.Bitmex {
         }
 
         public override TradingResult Sell(AccountInfo account, Ticker ticker, double rate, double amount) {
-            throw new NotImplementedException();
+            string text = DownloadPrivateString(account, "POST",
+                string.Format("/api/v1/order?symbol={0}&orderQty={1}&price={2}&ordType=Market&side=Sell", ticker.MarketName, amount, rate));
+            if(string.IsNullOrEmpty(text))
+                return null;
+            return OnTradingResult(account, ticker, text);
         }
 
         public override bool SupportWebSocket(WebSocketType type) {
@@ -152,6 +185,24 @@ namespace CryptoMarketClient.Exchanges.Bitmex {
             return DateTimeOffset.UtcNow.ToUnixTimeSeconds() + 36000 + 3600; // set expires one hour in the future
         }
 
+        protected byte[] UploadPrivateData(AccountInfo account, string verb, string path, string data) {
+            string expires = GetExpires().ToString();
+            MyWebClient client = GetWebClient();
+
+            client.Headers.Clear();
+            client.Headers.Add("api-expires", expires);
+            string textToSignature = verb + path + expires + data;
+            client.Headers.Add("api-signature", account.GetSign(textToSignature));
+            client.Headers.Add("api-key", account.ApiKey);
+            try {
+                return client.UploadData("https://www.bitmex.com" + path, data);
+            }
+            catch(Exception e) {
+                LogManager.Default.Add(e.ToString());
+                return null;
+            }
+        }
+
         protected byte[] DownloadPrivateData(AccountInfo account, string verb, string path) {
             string address = "https://www.bitmex.com" + path;
 
@@ -166,6 +217,27 @@ namespace CryptoMarketClient.Exchanges.Bitmex {
 
             try {
                 return client.DownloadData(address);
+            }
+            catch(Exception e) {
+                LogManager.Default.Add(e.ToString());
+                return null;
+            }
+        }
+
+        protected string DownloadPrivateString(AccountInfo account, string verb, string path) {
+            string address = "https://www.bitmex.com" + path;
+
+            string expires = GetExpires().ToString();
+            MyWebClient client = GetWebClient();
+
+            client.Headers.Clear();
+            client.Headers.Add("api-expires", expires);
+            string textToSignature = verb + path + expires;
+            client.Headers.Add("api-signature", account.GetSign(textToSignature));
+            client.Headers.Add("api-key", account.ApiKey);
+
+            try {
+                return Encoding.UTF8.GetString(client.DownloadData(address));
             }
             catch(Exception e) {
                 LogManager.Default.Add(e.ToString());
@@ -197,9 +269,44 @@ namespace CryptoMarketClient.Exchanges.Bitmex {
         }
 
         public override bool UpdateOpenedOrders(AccountInfo account, Ticker ticker) {
+            return UpdateOrdersCore(account, ticker, false);
+        }
+
+        protected virtual bool UpdateOrdersCore(AccountInfo account, Ticker ticker, bool onlyOpened) {
+            string path = "/api/v1/order?reverse=true";
+            if(onlyOpened)
+                path = "/api/v1/order?reverse=true&filter=%7B%22open%22%3A%22true%22%7D"; //{"open":"true"}
+            byte[] data = DownloadPrivateData(account, "GET", path);
+            if(data == null)
+                return false;
+            OnUpdateOpenedOrders(account, ticker, data);
             return true;
         }
 
+        private void OnUpdateOpenedOrders(AccountInfo account, Ticker ticker, byte[] data) {
+            string text = UTF8Encoding.Default.GetString(data);
+            JArray items = (JArray)JsonConvert.DeserializeObject(text);
+            List<OpenedOrderInfo> openedOrders = ticker == null ? account.OpenedOrders : ticker.OpenedOrders;
+            lock(openedOrders) {
+                openedOrders.Clear();
+
+                foreach(JObject item in items) {
+                    string symbol = item.Value<string>("symbol");
+                    OpenedOrderInfo info = new OpenedOrderInfo(account, ticker);
+                    info.OrderId = item.Value<string>("orderId");
+                    info.Type = item.Value<string>("side")[0] == 'B' ? OrderType.Buy : OrderType.Sell;
+                    info.ValueString = item.Value<string>("price");
+                    info.AmountString = item.Value<string>("orderQty");
+                    info.TotalString = info.AmountString;
+                    info.DateString = item.Value<string>("transactTime");
+                    info.TickerName = symbol;
+                    openedOrders.Add(info);
+                }
+            }
+            if(ticker != null)
+                ticker.RaiseOpenedOrdersChanged();
+        }
+        
         string GetOrderBookString(Ticker ticker, int depth) {
             return string.Format("https://www.bitmex.com/api/v1/orderBook/L2?symbol={0}&depth=0", ticker.CurrencyPair);
         }

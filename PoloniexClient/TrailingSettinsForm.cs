@@ -20,8 +20,8 @@ namespace CryptoMarketClient {
             this.cbType.Properties.Items.AddRange(typeof(TrailingType).GetEnumValues());
         }
 
-        TrailingSettings settings;
-        public TrailingSettings Settings {
+        TradingSettings settings;
+        public TradingSettings Settings {
             get { return settings; }
             set {
                 if(Settings == value)

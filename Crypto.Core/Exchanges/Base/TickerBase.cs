@@ -101,6 +101,25 @@ namespace CryptoMarketClient {
 
         public TickerFilter PriceFilter { get; set; }
         public TickerFilter QuantityFilter { get; set; }
+        public TickerFilter NotionalFilter { get; set; }
+        public virtual string ValidateTrade(double rate, double amount) {
+            if(NotionalFilter.MinValue != 0 && NotionalFilter.MinValue > rate * amount)
+                return "NotionalFilter not passed. MinValue = " + NotionalFilter.MinValue + " greater than " + (rate * amount).ToString("0.########") + " (total spent)";
+            return string.Empty;
+        }
+        public virtual void CorrectTrade(ref double rate, ref double amount) {
+            if(NotionalFilter.MinValue != 0) {
+                if(rate * amount < NotionalFilter.MinValue)
+                    amount = NotionalFilter.MinValue / rate;
+            }
+            if(QuantityFilter.MinValue != 0 && QuantityFilter.MinValue > amount) {
+                amount = QuantityFilter.MinValue;
+            }
+            if(QuantityFilter.TickSize != 0) {
+                int value = (int)(amount / QuantityFilter.TickSize);
+                amount = value * QuantityFilter.TickSize;
+            }
+        }
         public Exchange Exchange { get; private set; }
         public int Index { get; set; }
         public virtual string MarketName { get; set; }
@@ -139,7 +158,7 @@ namespace CryptoMarketClient {
             set;
         }
 
-        public List<TrailingSettings> Trailings { get; } = new List<TrailingSettings>();
+        public List<TradingSettings> Trailings { get; } = new List<TradingSettings>();
 
         public List<TradingResult> Trades { get; } = new List<TradingResult>();
         public List<TradeInfoItem> MyTradeHistory { get; } = new List<TradeInfoItem>();
@@ -557,7 +576,7 @@ namespace CryptoMarketClient {
         public void UpdateTrailings() {
             lock(this) {
                 for(int i = 0; i < Trailings.Count; i++) {
-                    TrailingSettings tr = Trailings[i];
+                    TradingSettings tr = Trailings[i];
                     tr.Update();
                 }
             }
