@@ -6,6 +6,7 @@ using Crypto.Core.Strategies.Signal;
 using Crypto.Core.Strategies.Stupid;
 using Crypto.UI.Strategies.Arbitrages;
 using Crypto.UI.Strategies.Custom;
+using Crypto.UI.Strategies.Custom.RedWaterfall;
 using CryptoMarketClient.Strategies.Custom;
 using CryptoMarketClient.Strategies.Stupid;
 using DevExpress.XtraEditors;
@@ -38,6 +39,7 @@ namespace CryptoMarketClient.Strategies {
             Items.Add(new StrategyConfigurationInfo() { StrategyType = typeof(CustomTickerStrategy), ConfigurationFormType = typeof(CustomStrategyConfigurationControl), DataFormType = typeof(Custom.CustomStrategyDataForm) });
             Items.Add(new StrategyConfigurationInfo() { StrategyType = typeof(TriplePairStrategy), ConfigurationFormType = typeof(TriplePairStrategyConfigurationControl), DataFormType = typeof(Custom.CustomStrategyDataForm) });
             Items.Add(new StrategyConfigurationInfo() { StrategyType = typeof(MarketMakingStrategy), ConfigurationFormType = typeof(CustomStrategyConfigurationControl), DataFormType = typeof(Custom.CustomStrategyDataForm) });
+            Items.Add(new StrategyConfigurationInfo() { StrategyType = typeof(RedWaterfallStrategy), ConfigurationFormType = typeof(RedWaterfallConfigurationControl), DataFormType = typeof(RedWaterfallStrategyDataForm) });
             //Items.Add(new StrategyConfigurationInfo() { StrategyType = typeof(WalletInvestorForecastStrategy), ConfigurationFormType = typeof(WalletInvestorStrategyConfigControl), DataFormType = typeof(WalletInvestorDataForm) });
         }
         public void Add(StrategyConfigurationInfo info) {

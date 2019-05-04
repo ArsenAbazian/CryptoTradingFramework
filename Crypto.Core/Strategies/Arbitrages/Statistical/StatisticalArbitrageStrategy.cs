@@ -53,6 +53,7 @@ namespace Crypto.Core.Strategies.Arbitrages.Statistical {
         public double CloseSpread { get { return 0; } set { } }
 
         OrderGridInfo orderGrid;
+        [TypeConverter(typeof(ExpandableObjectConverter))]
         public OrderGridInfo OrderGrid {
             get { return orderGrid; }
             set {

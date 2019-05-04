@@ -284,6 +284,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Strategies\Custom\CustomStrategyDataItemInfo.cs" />
     <Compile Include="Strategies\Custom\CustomTickerStrategyBase.cs" />
+    <Compile Include="Strategies\Custom\RedWaterfallStrategy.cs" />
     <Compile Include="Strategies\Custom\WalletInvestorForecastStrategy.cs" />
     <Compile Include="Strategies\Grid\BaseGridStrategy.cs" />
     <Compile Include="Strategies\IStrategyDataProvider.cs" />

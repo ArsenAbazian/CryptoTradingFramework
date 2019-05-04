@@ -278,6 +278,18 @@
     <Compile Include="Strategies\Custom\InvictusExchange\WalletInvestorStrategyConfigControl.Designer.cs">
       <DependentUpon>WalletInvestorStrategyConfigControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="Strategies\Custom\RedWaterfall\RedWaterfallConfigurationControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Strategies\Custom\RedWaterfall\RedWaterfallConfigurationControl.Designer.cs">
+      <DependentUpon>RedWaterfallConfigurationControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Strategies\Custom\RedWaterfall\RedWaterfallStrategyDataForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Strategies\Custom\RedWaterfall\RedWaterfallStrategyDataForm.Designer.cs">
+      <DependentUpon>RedWaterfallStrategyDataForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Strategies\Signal\MacdTrendStrategyConfigControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
