@@ -50,7 +50,7 @@ namespace CryptoMarketClient {
         }
 
         public void TrackException(Exception e) {
-            LogManager.Default.AddError("exception", e.Message);
+            LogManager.Default.Error("exception", e.Message);
             InnerClient.TrackException(e);
             Task.Run(() => { InnerClient.Flush(); });
         }
@@ -96,17 +96,17 @@ namespace CryptoMarketClient {
         public void Flush() {
             InnerClient.Flush();
         }
-        public void TrackEvent(LogType type, Exchange exchange, Ticker ticker, string text, string description) {
-            string tickerName = ticker == null ? string.Empty : ticker.Name;
-            string exchangeName = exchange == null ? string.Empty : exchange.Type.ToString();
-            TrackEvent(exchange.Type.ToString(), new string[] { "type", type.ToString(), "exchange", exchangeName, "ticker", tickerName, "message", text, "description", description }, true);
-            LogManager.Default.AddMessage(type, exchange, ticker, text, description);
+        public void TrackEvent(LogType type, object owner, string text, string description) {
+            string name = owner == null ? string.Empty : owner.ToString();
+            TrackEvent(name, new string[] { "type", type.ToString(), "owner", name, "message", text, "description", description }, true);
+            LogManager.Default.Add(type, owner, null, text, description);
         }
-        public void TrackEvent(LogType type, Exchange exchange, string connName, string text, string description) {
-            string tickerName = connName;
-            string exchangeName = exchange == null ? string.Empty : exchange.Type.ToString();
-            TrackEvent(exchange.Type.ToString(), new string[] { "type", type.ToString(), "exchange", exchangeName, "ticker", tickerName, "message", text, "description", description }, true);
-            LogManager.Default.AddMessage(type, exchange, connName, text, description);
-        }
+        //public void TrackEvent(LogType type, Exchange exchange, string connName, string text, string description) {
+        //    string tickerName = connName;
+        //    string exchangeName = exchange == null ? string.Empty : exchange.Type.ToString();
+        //    TrackEvent(exchange.Type.ToString(), new string[] { "type", type.ToString(), "exchange", exchangeName, "ticker", tickerName, "message", text, "description", description }, true);
+        //    object obj = ticker == null ? (object)exchange : (object)ticker;
+        //    LogManager.Default.Log(type, obj, null, text, description);
+        //}
     }
 }

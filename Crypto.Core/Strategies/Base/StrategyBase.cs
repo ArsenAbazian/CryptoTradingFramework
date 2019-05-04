@@ -83,6 +83,11 @@ namespace Crypto.Core.Strategies {
             return DataItemInfos.Last();
         }
 
+        protected internal virtual void OnStarted() {
+            LogManager.Default.Add(LogType.Success, this, Name, "started.", "");
+            SendNotification("started.");
+        }
+
         public StrategyDataItemInfo AnnotationItem(string fieldName, string text, Color color, string anchor) {
             var item = DataItem(fieldName);
             item.ChartType = ChartType.Dot;

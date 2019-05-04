@@ -330,28 +330,34 @@ namespace CryptoMarketClient.BitFinex {
 
             List<string[]> items = JSonHelper.Default.DeserializeArrayOfArrays(bytes, ref startIndex, 3);
 
-            ticker.OrderBook.GetNewBidAsks();
-            int bidIndex = 0, askIndex = 0;
-            List<OrderBookEntry> bids = ticker.OrderBook.Bids;
-            List<OrderBookEntry> asks = ticker.OrderBook.Asks;
-            for(int i = 0; i < items.Count; i++) {
-                string[] item = items[i];
-                OrderBookEntry entry = null;
-                if(item[2][0] == '-') {
-                    entry = asks[askIndex];
-                    entry.Amount = -FastValueConverter.Convert(item[2]);
-                    askIndex++;
+            ticker.OrderBook.BeginUpdate();
+            try {
+                ticker.OrderBook.GetNewBidAsks();
+                int bidIndex = 0, askIndex = 0;
+                List<OrderBookEntry> bids = ticker.OrderBook.Bids;
+                List<OrderBookEntry> asks = ticker.OrderBook.Asks;
+                for(int i = 0; i < items.Count; i++) {
+                    string[] item = items[i];
+                    OrderBookEntry entry = null;
+                    if(item[2][0] == '-') {
+                        entry = asks[askIndex];
+                        entry.Amount = -FastValueConverter.Convert(item[2]);
+                        askIndex++;
+                    }
+                    else {
+                        entry = bids[bidIndex];
+                        entry.AmountString = item[2];
+                        bidIndex++;
+                    }
+                    entry.ValueString = item[0];
+                    if(bidIndex >= bids.Count || askIndex >= asks.Count)
+                        break;
                 }
-                else {
-                    entry = bids[bidIndex];
-                    entry.AmountString = item[2];
-                    bidIndex++;
-                }
-                entry.ValueString = item[0];
-                if(bidIndex >= bids.Count || askIndex >= asks.Count)
-                    break;
             }
-            ticker.OrderBook.UpdateEntries();
+            finally {
+                ticker.OrderBook.IsDirty = false;
+                ticker.OrderBook.EndUpdate();
+            }
             return true;
         }
         public void GetOrderBook(BitFinexTicker info, int depth) {
@@ -1017,9 +1023,9 @@ namespace CryptoMarketClient.BitFinex {
             if(res.Value<bool>("success") == false) {
                 string error = res.Value<string>("message");
                 if(error == "ADDRESS_GENERATING")
-                    LogManager.Default.AddWarning("Bittrex: OnGetDeposit fails: " + error + ". Try again later after deposit address generate.", "Currency = " + currency);
+                    LogManager.Default.Warning(this, "OnGetDeposit fails: " + error + ". Try again later after deposit address generate.", "Currency = " + currency);
                 else
-                    LogManager.Default.AddError("Bittrex: OnGetDeposit fails: " + error, "Currency = " + currency);
+                    LogManager.Default.Error(this, "OnGetDeposit fails: " + error, "Currency = " + currency);
                 return null;
             }
             JObject addr = res.Value<JObject>("result");

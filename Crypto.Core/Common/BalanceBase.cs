@@ -21,6 +21,8 @@ namespace CryptoMarketClient.Common {
         double btcValue;
         public double BtcValue {
             get {
+                if(Currency == "BTC")
+                    return Available + OnOrders;
                 if(BtcTicker != null)
                     return BtcTicker.HighestBid * (Available + OnOrders);
                 return btcValue;

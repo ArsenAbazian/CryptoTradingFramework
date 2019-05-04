@@ -194,6 +194,25 @@ namespace CryptoMarketClient {
             return value;
         }
 
+        public static long ConvertPositiveLong(byte[] str, ref int startIndex) {
+            long value = 0;
+            try {
+                int length = str.Length;
+                for(int i = startIndex; i < length; i++) {
+                    byte c = str[i];
+                    if(c == ',') {
+                        startIndex = i;
+                        break;
+                    }
+                    value = (value << 3) + (value << 1) + str[i] - 0x30;
+                }
+            }
+            catch(Exception e) {
+                Telemetry.Default.TrackException(e);
+            }
+            return value;
+        }
+
         public static double Convert(string str) {
             try {
                 if(string.IsNullOrEmpty(str))
@@ -267,6 +286,10 @@ namespace CryptoMarketClient {
                 Telemetry.Default.TrackException(e, new string[,] { { "value", str.ToString() } });
                 return System.Convert.ToDouble(str);
             }
+        }
+
+        public static bool IsDigit(byte v) {
+            return v >= '0' && v <= '9';
         }
     }
 }

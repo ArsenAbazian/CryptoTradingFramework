@@ -1,5 +1,7 @@
 ﻿using Crypto.Core.Strategies.Custom;
 using CryptoMarketClient;
+using CryptoMarketClient.Common;
+using CryptoMarketClient.Helpers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -75,18 +77,34 @@ namespace Crypto.Core.Strategies.Arbitrages.Statistical {
         protected double PrevDeposit { get; set; }
         protected double OpenTopBid { get; set; }
 
+        public override bool Start() {
+            return base.Start();
+        }
+
+        protected string StateTextCore { get; set; }
+        public override string StateText => StateTextCore;
+
         protected override void OnTickCore() {
             base.OnTickCore();
+            
+            double bottomAsk = 0;
+            double topBid = 0;
+            double bottomBid = 0;
+            double topAsk = 0;
 
-            if(Long.OrderBook.Asks.Count == 0 || Short.OrderBook.Bids.Count == 0)
+            if(Long.OrderBookStatus != TickerDataStatus.Actual || Short.OrderBookStatus != TickerDataStatus.Actual) {
+                string longOb = Long.OrderBookStatus == TickerDataStatus.Actual ? "green" : "red";
+                string shortOb = Short.OrderBookStatus == TickerDataStatus.Actual ? "green" : "red";
+                StateTextCore = "<b><color=" + longOb + ">long order book status = " + Long.OrderBookStatus + "</color>    <color=" + shortOb + ">short order book status = " + Short.OrderBookStatus + "</b>";
                 return;
+            }
 
-            double bottomAsk = Long.OrderBook.Asks[0].Value;
-            double topBid = Short.OrderBook.Bids[0].Value;
+            bottomAsk = Long.OrderBook.LowestAsk;
+            topBid = Short.OrderBook.HighestBid;
+            bottomBid = Long.OrderBook.HighestBid;
+            topAsk = Short.OrderBook.LowestAsk;
+
             double spreadToOpen = topBid - bottomAsk;
-
-            double bottomBid = Long.OrderBook.Bids[0].Value;
-            double topAsk = Short.OrderBook.Asks[0].Value;
             double spreadToClose = topAsk - bottomBid;
 
             if(TryOpenMoreDeals(bottomAsk, topBid, spreadToOpen)) {
@@ -102,6 +120,8 @@ namespace Crypto.Core.Strategies.Arbitrages.Statistical {
                 LastItem.ShortPrice = topBid;
                 LastItem.Earned = Earned;
                 StrategyData.Add(LastItem);
+
+                StateTextCore = "<b><color=green>long=" + LastItem.LongPrice.ToString("0.########") + "</color> <color=red> short=" + LastItem.ShortPrice.ToString("0.########") + "</color>  spread = " + LastItem.Spread.ToString("0.00000000") + "  order count = " + OpenedOrders.Count + "</b>";
             }
         }
 
@@ -135,13 +155,16 @@ namespace Crypto.Core.Strategies.Arbitrages.Statistical {
             LastItem = new StatisticalArbitrageHistoryItem();
             LastItem.Time = DateTime.UtcNow;
             LastItem.Earned = Earned;
+            LastItem.LongAmount = finalSellAmount;
             LastItem.LongPrice = bottomBid;
             LastItem.ShortPrice = topAsk;
+            LastItem.ShortAmount = finalBuyAmount;
             LastItem.Close = true;
             StrategyData.Add(LastItem);
 
             if(order.LongAmount <= 0 && order.ShortAmount <= 0)
                 OpenedOrders.Remove(order);
+            OnOrderClosed(LastItem);
 
             return true;
         }
@@ -190,7 +213,35 @@ namespace Crypto.Core.Strategies.Arbitrages.Statistical {
             StrategyData.Add(LastItem);
 
             OpenedOrders.Add(order);
+            OnOrderOpened(LastItem);
+            
             return true;
+        }
+
+        private void OnOrderOpened(StatisticalArbitrageHistoryItem lastItem) {
+            string text = string.Empty;
+            text += "<b>" + Name + "</b> open order:";
+            text += "<pre> buy:       " + lastItem.LongPrice.ToString("0.########") + " am = " + lastItem.LongAmount.ToString("0.########") + "</pre>";
+            text += "<pre> sell:      " + lastItem.ShortPrice.ToString("0.########") + " am = " + lastItem.ShortAmount.ToString("0.########") + "</pre>";
+
+            TelegramBot.Default.SendNotification(text, ChatId);
+            LogManager.Default.Add(LogType.Success, this, null, "open order",
+                "buy " + lastItem.LongPrice.ToString("0.########") + " am = " + lastItem.LongAmount.ToString("0.########") +
+                "    sell" + lastItem.ShortPrice.ToString("0.########") + " am = " + lastItem.ShortAmount.ToString("0.########"));
+        }
+
+        private void OnOrderClosed(StatisticalArbitrageHistoryItem lastItem) {
+            string text = string.Empty;
+            text += "<b>" + Name + "</b> close order:";
+            text += "<pre> buy:       " + lastItem.LongPrice.ToString("0.########") + " am = " + lastItem.LongAmount.ToString("0.########") + "</pre>";
+            text += "<pre> sell:      " + lastItem.ShortPrice.ToString("0.########") + " am = " + lastItem.ShortAmount.ToString("0.########") + "</pre>";
+            text += "<pre> earned:    " + lastItem.Earned.ToString("0.########") + "</pre>";
+
+            TelegramBot.Default.SendNotification(text, ChatId);
+            LogManager.Default.Add(LogType.Success, this, null, "open order",
+                "buy " + lastItem.LongPrice.ToString("0.########") + " am = " + lastItem.LongAmount.ToString("0.########") +
+                "    sell " + lastItem.ShortPrice.ToString("0.########") + " am = " + lastItem.ShortAmount.ToString("0.########") + 
+                "    earned " + lastItem.Earned.ToString("0.########"));
         }
 
         private double CalculateRequiredLongAmount(double sellAmount) {

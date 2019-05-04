@@ -38,10 +38,13 @@ namespace CryptoMarketClient {
             return SerializationHelper.Load(this, GetType());
         }
 
+        public TickerDataStatus OrderBookStatus { get { return OrderBook.IsDirty ? TickerDataStatus.Invalid : TickerDataStatus.Actual; } }
+
         [XmlIgnore]
         public TickerCaptureData CaptureDataHistory { get; } = new TickerCaptureData();
         public void CaptureDataCore(CaptureStreamType stream, CaptureMessageType msgType, string message) {
-            CaptureDataHistory.Items.Add(new TickerCaptureDataInfo() { StreamType = stream, MessageType = msgType, Message = message, Time = DateTime.UtcNow });
+            bool dataValid = stream == CaptureStreamType.OrderBook ? !OrderBook.IsDirty : true;
+            CaptureDataHistory.Items.Add(new TickerCaptureDataInfo() { StreamType = stream, MessageType = msgType, Message = message, Time = DateTime.UtcNow, DataValid = dataValid });
             if(CaptureDataHistory.Items.Count % CaptureDataHistory.SaveCount == 0) {
                 SaveCaptureData();
             }
@@ -69,6 +72,8 @@ namespace CryptoMarketClient {
                 TickerCaptureDataInfo info = CaptureDataHistory.CurrentItem;
                 if(info.Time != time)
                     return;
+                if(info.StreamType == CaptureStreamType.OrderBook)
+                    OrderBook.IsDirty = !info.DataValid;
                 Exchange.ApplyCapturedEvent(this, info);
                 CaptureDataHistory.MoveNext();
             }
@@ -726,4 +731,6 @@ namespace CryptoMarketClient {
     }
 
     public delegate void TradeHistoryChangedEventHandler(object sender, TradeHistoryChangedEventArgs e);
+
+    public enum TickerDataStatus { Invalid, Actual }
 }

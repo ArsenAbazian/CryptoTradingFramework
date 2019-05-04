@@ -25,26 +25,26 @@
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            DevExpress.XtraEditors.Controls.EditorButtonImageOptions editorButtonImageOptions1 = new DevExpress.XtraEditors.Controls.EditorButtonImageOptions();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject1 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject2 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject3 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject4 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.XtraEditors.Controls.EditorButtonImageOptions editorButtonImageOptions2 = new DevExpress.XtraEditors.Controls.EditorButtonImageOptions();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject5 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject6 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject7 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject8 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.XtraEditors.Controls.EditorButtonImageOptions editorButtonImageOptions3 = new DevExpress.XtraEditors.Controls.EditorButtonImageOptions();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject9 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject10 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject11 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject12 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.XtraEditors.Controls.EditorButtonImageOptions editorButtonImageOptions4 = new DevExpress.XtraEditors.Controls.EditorButtonImageOptions();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject13 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject14 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject15 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject16 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.XtraEditors.Controls.EditorButtonImageOptions editorButtonImageOptions5 = new DevExpress.XtraEditors.Controls.EditorButtonImageOptions();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject17 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject18 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject19 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject20 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.XtraEditors.Controls.EditorButtonImageOptions editorButtonImageOptions6 = new DevExpress.XtraEditors.Controls.EditorButtonImageOptions();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject21 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject22 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject23 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject24 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.XtraEditors.Controls.EditorButtonImageOptions editorButtonImageOptions7 = new DevExpress.XtraEditors.Controls.EditorButtonImageOptions();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject25 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject26 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject27 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject28 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.XtraEditors.Controls.EditorButtonImageOptions editorButtonImageOptions8 = new DevExpress.XtraEditors.Controls.EditorButtonImageOptions();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject29 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject30 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject31 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject32 = new DevExpress.Utils.SerializableAppearanceObject();
             this.ribbonControl1 = new DevExpress.XtraBars.Ribbon.RibbonControl();
             this.skinRibbonGalleryBarItem1 = new DevExpress.XtraBars.SkinRibbonGalleryBarItem();
             this.bcPoloniex = new DevExpress.XtraBars.BarCheckItem();
@@ -88,6 +88,8 @@
             this.bsCapture = new DevExpress.XtraBars.BarSubItem();
             this.bbGrabData = new DevExpress.XtraBars.BarButtonItem();
             this.bbCompressAndSend = new DevExpress.XtraBars.BarButtonItem();
+            this.biActiveConnections = new DevExpress.XtraBars.BarButtonItem();
+            this.biCheckTelegram = new DevExpress.XtraBars.BarButtonItem();
             this.sbExchanges = new DevExpress.XtraBars.BarSubItem();
             this.ribbonPageCategory1 = new DevExpress.XtraBars.Ribbon.RibbonPageCategory();
             this.ribbonPage2 = new DevExpress.XtraBars.Ribbon.RibbonPage();
@@ -113,12 +115,11 @@
             this.ribbonPage4 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPage6 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.dockManager1 = new DevExpress.XtraBars.Docking.DockManager(this.components);
-            this.dpLog = new DevExpress.XtraBars.Docking.DockPanel();
-            this.dockPanel1_Container = new DevExpress.XtraBars.Docking.ControlContainer();
-            this.logMessagesControl1 = new CryptoMarketClient.LogMessagesControl();
             this.ribbonPage7 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPage8 = new DevExpress.XtraBars.Ribbon.RibbonPage();
-            this.biActiveConnections = new DevExpress.XtraBars.BarButtonItem();
+            this.dpLog = new DevExpress.XtraBars.Docking.DockPanel();
+            this.controlContainer1 = new DevExpress.XtraBars.Docking.ControlContainer();
+            this.logMessagesControl2 = new CryptoMarketClient.LogMessagesControl();
             ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemSpinEdit1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemSpinEdit2)).BeginInit();
@@ -130,7 +131,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.defaultBarAndDockingController1.Controller)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dockManager1)).BeginInit();
             this.dpLog.SuspendLayout();
-            this.dockPanel1_Container.SuspendLayout();
+            this.controlContainer1.SuspendLayout();
             this.SuspendLayout();
             // 
             // ribbonControl1
@@ -183,10 +184,11 @@
             this.bbCompressAndSend,
             this.bsCapture,
             this.sbExchanges,
-            this.biActiveConnections});
+            this.biActiveConnections,
+            this.biCheckTelegram});
             this.ribbonControl1.Location = new System.Drawing.Point(0, 0);
-            this.ribbonControl1.Margin = new System.Windows.Forms.Padding(6);
-            this.ribbonControl1.MaxItemId = 51;
+            this.ribbonControl1.Margin = new System.Windows.Forms.Padding(12);
+            this.ribbonControl1.MaxItemId = 52;
             this.ribbonControl1.MdiMergeStyle = DevExpress.XtraBars.Ribbon.RibbonMdiMergeStyle.Always;
             this.ribbonControl1.Name = "ribbonControl1";
             this.ribbonControl1.PageCategories.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageCategory[] {
@@ -203,7 +205,7 @@
             this.repositoryItemRibbonSearchEdit1});
             this.ribbonControl1.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonControlStyle.Office2013;
             this.ribbonControl1.ShowApplicationButton = DevExpress.Utils.DefaultBoolean.False;
-            this.ribbonControl1.Size = new System.Drawing.Size(965, 143);
+            this.ribbonControl1.Size = new System.Drawing.Size(1930, 281);
             this.ribbonControl1.StatusBar = this.ribbonStatusBar1;
             this.ribbonControl1.Merge += new DevExpress.XtraBars.Ribbon.RibbonMergeEventHandler(this.ribbonControl1_Merge);
             this.ribbonControl1.UnMerge += new DevExpress.XtraBars.Ribbon.RibbonMergeEventHandler(this.ribbonControl1_UnMerge);
@@ -501,7 +503,7 @@
             // 
             // biLog
             // 
-            this.biLog.Caption = "Log";
+            this.biLog.Caption = "Show Log";
             this.biLog.Id = 41;
             this.biLog.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("biLog.ImageOptions.SvgImage")));
             this.biLog.Name = "biLog";
@@ -523,7 +525,6 @@
             this.bsiInstruments.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
             new DevExpress.XtraBars.LinkPersistInfo(this.bWalletInvestorStatistics),
             new DevExpress.XtraBars.LinkPersistInfo(this.biCalculator),
-            new DevExpress.XtraBars.LinkPersistInfo(this.biLog),
             new DevExpress.XtraBars.LinkPersistInfo(this.bbRegister),
             new DevExpress.XtraBars.LinkPersistInfo(this.barButtonItem4)});
             this.bsiInstruments.Name = "bsiInstruments";
@@ -545,13 +546,16 @@
             new DevExpress.XtraBars.LinkPersistInfo(this.bbShowYourTotalDeposit),
             new DevExpress.XtraBars.LinkPersistInfo(this.btShowApiKeys),
             new DevExpress.XtraBars.LinkPersistInfo(this.bsCapture),
-            new DevExpress.XtraBars.LinkPersistInfo(this.biActiveConnections)});
+            new DevExpress.XtraBars.LinkPersistInfo(this.biActiveConnections),
+            new DevExpress.XtraBars.LinkPersistInfo(this.biLog),
+            new DevExpress.XtraBars.LinkPersistInfo(this.biCheckTelegram)});
             this.bsTools.Name = "bsTools";
             // 
             // bsCapture
             // 
             this.bsCapture.Caption = "Capture Ticker Data";
             this.bsCapture.Id = 48;
+            this.bsCapture.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("bsCapture.ImageOptions.SvgImage")));
             this.bsCapture.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
             new DevExpress.XtraBars.LinkPersistInfo(this.bbGrabData),
             new DevExpress.XtraBars.LinkPersistInfo(this.bbCompressAndSend)});
@@ -572,6 +576,22 @@
             this.bbCompressAndSend.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("bbCompressAndSend.ImageOptions.SvgImage")));
             this.bbCompressAndSend.Name = "bbCompressAndSend";
             this.bbCompressAndSend.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bbCompressAndSend_ItemClick);
+            // 
+            // biActiveConnections
+            // 
+            this.biActiveConnections.Caption = "Active Connections";
+            this.biActiveConnections.Id = 50;
+            this.biActiveConnections.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("biActiveConnections.ImageOptions.SvgImage")));
+            this.biActiveConnections.Name = "biActiveConnections";
+            this.biActiveConnections.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.biActiveConnections_ItemClick);
+            // 
+            // biCheckTelegram
+            // 
+            this.biCheckTelegram.Caption = "Check Telegram Bot";
+            this.biCheckTelegram.Id = 51;
+            this.biCheckTelegram.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("biCheckTelegram.ImageOptions.SvgImage")));
+            this.biCheckTelegram.Name = "biCheckTelegram";
+            this.biCheckTelegram.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.biCheckTelegram_ItemClick);
             // 
             // sbExchanges
             // 
@@ -693,11 +713,11 @@
             this.repositoryItemRibbonSearchEdit2.AllowFocused = false;
             this.repositoryItemRibbonSearchEdit2.AutoHeight = false;
             this.repositoryItemRibbonSearchEdit2.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
-            editorButtonImageOptions1.AllowGlyphSkinning = DevExpress.Utils.DefaultBoolean.True;
-            editorButtonImageOptions1.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("editorButtonImageOptions1.SvgImage")));
+            editorButtonImageOptions5.AllowGlyphSkinning = DevExpress.Utils.DefaultBoolean.True;
+            editorButtonImageOptions5.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("editorButtonImageOptions5.SvgImage")));
             this.repositoryItemRibbonSearchEdit2.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph, "", -1, true, true, true, editorButtonImageOptions1, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject1, serializableAppearanceObject2, serializableAppearanceObject3, serializableAppearanceObject4, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Clear, "", -1, true, false, false, editorButtonImageOptions2, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject5, serializableAppearanceObject6, serializableAppearanceObject7, serializableAppearanceObject8, "", null, null, DevExpress.Utils.ToolTipAnchor.Default)});
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph, "", -1, true, true, true, editorButtonImageOptions5, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject17, serializableAppearanceObject18, serializableAppearanceObject19, serializableAppearanceObject20, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Clear, "", -1, true, false, false, editorButtonImageOptions6, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject21, serializableAppearanceObject22, serializableAppearanceObject23, serializableAppearanceObject24, "", null, null, DevExpress.Utils.ToolTipAnchor.Default)});
             this.repositoryItemRibbonSearchEdit2.Name = "repositoryItemRibbonSearchEdit2";
             this.repositoryItemRibbonSearchEdit2.NullText = "Search";
             // 
@@ -712,21 +732,22 @@
             this.repositoryItemRibbonSearchEdit1.AllowFocused = false;
             this.repositoryItemRibbonSearchEdit1.AutoHeight = false;
             this.repositoryItemRibbonSearchEdit1.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
-            editorButtonImageOptions3.AllowGlyphSkinning = DevExpress.Utils.DefaultBoolean.True;
-            editorButtonImageOptions3.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("editorButtonImageOptions3.SvgImage")));
+            editorButtonImageOptions7.AllowGlyphSkinning = DevExpress.Utils.DefaultBoolean.True;
+            editorButtonImageOptions7.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("editorButtonImageOptions7.SvgImage")));
             this.repositoryItemRibbonSearchEdit1.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph, "", -1, true, true, true, editorButtonImageOptions3, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject9, serializableAppearanceObject10, serializableAppearanceObject11, serializableAppearanceObject12, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Clear, "", -1, true, false, false, editorButtonImageOptions4, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject13, serializableAppearanceObject14, serializableAppearanceObject15, serializableAppearanceObject16, "", null, null, DevExpress.Utils.ToolTipAnchor.Default)});
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph, "", -1, true, true, true, editorButtonImageOptions7, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject25, serializableAppearanceObject26, serializableAppearanceObject27, serializableAppearanceObject28, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Clear, "", -1, true, false, false, editorButtonImageOptions8, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject29, serializableAppearanceObject30, serializableAppearanceObject31, serializableAppearanceObject32, "", null, null, DevExpress.Utils.ToolTipAnchor.Default)});
             this.repositoryItemRibbonSearchEdit1.Name = "repositoryItemRibbonSearchEdit1";
             this.repositoryItemRibbonSearchEdit1.NullText = "Search";
             // 
             // ribbonStatusBar1
             // 
             this.ribbonStatusBar1.AutoHeight = true;
-            this.ribbonStatusBar1.Location = new System.Drawing.Point(0, 540);
+            this.ribbonStatusBar1.Location = new System.Drawing.Point(0, 1036);
+            this.ribbonStatusBar1.Margin = new System.Windows.Forms.Padding(6);
             this.ribbonStatusBar1.Name = "ribbonStatusBar1";
             this.ribbonStatusBar1.Ribbon = this.ribbonControl1;
-            this.ribbonStatusBar1.Size = new System.Drawing.Size(965, 31);
+            this.ribbonStatusBar1.Size = new System.Drawing.Size(1930, 62);
             // 
             // documentManager1
             // 
@@ -768,37 +789,6 @@
             "DevExpress.XtraBars.TabFormControl",
             "DevExpress.XtraBars.FluentDesignSystem.FluentDesignFormControl"});
             // 
-            // dpLog
-            // 
-            this.dpLog.Controls.Add(this.dockPanel1_Container);
-            this.dpLog.Dock = DevExpress.XtraBars.Docking.DockingStyle.Bottom;
-            this.dpLog.ID = new System.Guid("cd4b6f88-5447-48ec-b285-d76f79e87621");
-            this.dpLog.Location = new System.Drawing.Point(0, 653);
-            this.dpLog.Name = "dpLog";
-            this.dpLog.OriginalSize = new System.Drawing.Size(200, 387);
-            this.dpLog.SavedDock = DevExpress.XtraBars.Docking.DockingStyle.Bottom;
-            this.dpLog.SavedIndex = 0;
-            this.dpLog.Size = new System.Drawing.Size(1930, 387);
-            this.dpLog.Text = "Log";
-            this.dpLog.Visibility = DevExpress.XtraBars.Docking.DockVisibility.Hidden;
-            // 
-            // dockPanel1_Container
-            // 
-            this.dockPanel1_Container.Controls.Add(this.logMessagesControl1);
-            this.dockPanel1_Container.Location = new System.Drawing.Point(8, 51);
-            this.dockPanel1_Container.Name = "dockPanel1_Container";
-            this.dockPanel1_Container.Size = new System.Drawing.Size(1914, 328);
-            this.dockPanel1_Container.TabIndex = 0;
-            // 
-            // logMessagesControl1
-            // 
-            this.logMessagesControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.logMessagesControl1.Location = new System.Drawing.Point(0, 0);
-            this.logMessagesControl1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.logMessagesControl1.Name = "logMessagesControl1";
-            this.logMessagesControl1.Size = new System.Drawing.Size(1914, 328);
-            this.logMessagesControl1.TabIndex = 0;
-            // 
             // ribbonPage7
             // 
             this.ribbonPage7.Name = "ribbonPage7";
@@ -809,24 +799,46 @@
             this.ribbonPage8.Name = "ribbonPage8";
             this.ribbonPage8.Text = "ribbonPage8";
             // 
-            // biActiveConnections
+            // dpLog
             // 
-            this.biActiveConnections.Caption = "Active Connections";
-            this.biActiveConnections.Id = 50;
-            this.biActiveConnections.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("biActiveConnections.ImageOptions.SvgImage")));
-            this.biActiveConnections.Name = "biActiveConnections";
-            this.biActiveConnections.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.biActiveConnections_ItemClick);
+            this.dpLog.Controls.Add(this.controlContainer1);
+            this.dpLog.Dock = DevExpress.XtraBars.Docking.DockingStyle.Bottom;
+            this.dpLog.ID = new System.Guid("ab52e2ec-cacf-43f0-968e-9697a64dcdd0");
+            this.dpLog.Location = new System.Drawing.Point(0, 648);
+            this.dpLog.Name = "dpLog";
+            this.dpLog.OriginalSize = new System.Drawing.Size(200, 388);
+            this.dpLog.SavedDock = DevExpress.XtraBars.Docking.DockingStyle.Bottom;
+            this.dpLog.SavedIndex = 0;
+            this.dpLog.Size = new System.Drawing.Size(1930, 388);
+            this.dpLog.Text = "Log";
+            this.dpLog.Visibility = DevExpress.XtraBars.Docking.DockVisibility.Hidden;
+            // 
+            // controlContainer1
+            // 
+            this.controlContainer1.Controls.Add(this.logMessagesControl2);
+            this.controlContainer1.Location = new System.Drawing.Point(8, 51);
+            this.controlContainer1.Name = "controlContainer1";
+            this.controlContainer1.Size = new System.Drawing.Size(1914, 329);
+            this.controlContainer1.TabIndex = 0;
+            // 
+            // logMessagesControl2
+            // 
+            this.logMessagesControl2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.logMessagesControl2.Location = new System.Drawing.Point(0, 0);
+            this.logMessagesControl2.Name = "logMessagesControl2";
+            this.logMessagesControl2.Size = new System.Drawing.Size(1914, 329);
+            this.logMessagesControl2.TabIndex = 0;
             // 
             // MainForm
             // 
             this.AllowFormGlass = DevExpress.Utils.DefaultBoolean.False;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(965, 571);
+            this.ClientSize = new System.Drawing.Size(1930, 1098);
             this.Controls.Add(this.ribbonStatusBar1);
             this.Controls.Add(this.ribbonControl1);
             this.IsMdiContainer = true;
-            this.Margin = new System.Windows.Forms.Padding(6);
+            this.Margin = new System.Windows.Forms.Padding(12);
             this.Name = "MainForm";
             this.Ribbon = this.ribbonControl1;
             this.StatusBar = this.ribbonStatusBar1;
@@ -844,7 +856,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.defaultBarAndDockingController1.Controller)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dockManager1)).EndInit();
             this.dpLog.ResumeLayout(false);
-            this.dockPanel1_Container.ResumeLayout(false);
+            this.controlContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -906,10 +918,7 @@
         private DevExpress.XtraBars.BarButtonItem biFuturesSettings;
         private DevExpress.XtraBars.BarButtonItem biDependencyArbitrageAnalitics;
         private DevExpress.XtraBars.BarButtonItem biLog;
-        private DevExpress.XtraBars.Docking.DockPanel dpLog;
-        private DevExpress.XtraBars.Docking.ControlContainer dockPanel1_Container;
         private DevExpress.XtraBars.Docking.DockManager dockManager1;
-        private LogMessagesControl logMessagesControl1;
         private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup9;
         private DevExpress.XtraBars.BarButtonItem biStrategiesItem;
         private DevExpress.XtraBars.BarSubItem bsiInstruments;
@@ -926,6 +935,10 @@
         private DevExpress.XtraBars.BarButtonItem bbCompressAndSend;
         private DevExpress.XtraBars.BarSubItem sbExchanges;
         private DevExpress.XtraBars.BarButtonItem biActiveConnections;
+        private DevExpress.XtraBars.BarButtonItem biCheckTelegram;
+        private DevExpress.XtraBars.Docking.DockPanel dpLog;
+        private DevExpress.XtraBars.Docking.ControlContainer controlContainer1;
+        private LogMessagesControl logMessagesControl2;
     }
 }
 

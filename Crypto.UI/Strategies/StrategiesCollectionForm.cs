@@ -1,4 +1,5 @@
 ﻿using Crypto.Core.Strategies;
+using CryptoMarketClient.Common;
 using DevExpress.XtraBars;
 using DevExpress.XtraEditors;
 using DevExpress.XtraSplashScreen;
@@ -14,12 +15,13 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace CryptoMarketClient.Strategies {
-    public partial class StrategiesCollectionForm : XtraForm {
+    public partial class StrategiesCollectionForm : XtraForm, ILogVisualizer {
         public StrategiesCollectionForm() {
             Manager = StrategiesManager.Defaut;
             Manager.DataProvider = new RealtimeStrategyDataProvider();
             InitializeComponent();
             InitializeAddStrategiesMenu();
+            LogManager.Default.Visualiser = this;
         }
         
         protected void UpdateStatusText() {
@@ -242,6 +244,27 @@ namespace CryptoMarketClient.Strategies {
             this.siStatus.Caption = "<b>Simulation done.</b>";
             Application.DoEvents();
             StrategyConfigurationManager.Default.ShowData(cloned);
+        }
+
+        private void bcShowLog_CheckedChanged(object sender, ItemClickEventArgs e) {
+            if(this.bcShowLog.Checked)
+                this.dpLogPanel.Visibility = DevExpress.XtraBars.Docking.DockVisibility.Visible;
+            else
+                this.dpLogPanel.Visibility = DevExpress.XtraBars.Docking.DockVisibility.Hidden;
+        }
+
+        void ILogVisualizer.RefreshView() {
+            //if(IsHandleCreated && this.dpLogPanel.Visibility != DevExpress.XtraBars.Docking.DockVisibility.Hidden)
+            //    BeginInvoke(new MethodInvoker(() => {
+            //        this.logMessagesControl.RefreshData();
+            //    }));
+        }
+
+        private void repositoryItemCheckEdit3_EditValueChanged(object sender, EventArgs e) {
+            StrategyBase strategy = (StrategyBase)this.gridView1.GetFocusedRow();
+            strategy.EnableNotifications = ((CheckEdit)sender).Checked;
+            this.gridView1.CloseEditor();
+            Manager.Save();
         }
     }
 }

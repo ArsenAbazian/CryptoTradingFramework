@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -52,6 +53,8 @@ namespace CryptoMarketClient {
         public void Apply() {
             Provider.Update(Ticker, this);
             Applied = true;
+            if(Ticker.OrderBook.IsDirty)
+                Ticker.UpdateOrderBook();
         }
     }
 
@@ -76,8 +79,11 @@ namespace CryptoMarketClient {
             return true;
         }
         public void Apply() {
-            for(int i = 0; i < Count; i++)
+            for(int i = 0; i < Count; i++) {
+                if(Queue[i].Empty)
+                    throw new Exception("Que is empty");
                 Queue[i].Apply();
+            }
             SeqNumber += Count;
             Clear();
         }

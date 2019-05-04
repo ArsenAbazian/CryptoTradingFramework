@@ -457,24 +457,29 @@ namespace CryptoMarketClient {
             startIndex++;
             List<string[]> jbids = JSonHelper.Default.DeserializeArrayOfArrays(bytes, ref startIndex, 2);
 
-            ticker.OrderBook.GetNewBidAsks();
+            ticker.OrderBook.BeginUpdate();
+            try {
+                ticker.OrderBook.GetNewBidAsks();
 
-            List<OrderBookEntry> bids = ticker.OrderBook.Bids;
-            List<OrderBookEntry> asks = ticker.OrderBook.Asks;
-            List<OrderBookEntry> iasks = ticker.OrderBook.AsksInverted;
-            for(int i = 0; i < jbids.Count; i++) {
-                string[] item = jbids[i];
-                bids.Add(new OrderBookEntry() { ValueString = item[0], AmountString = item[1] });
+                List<OrderBookEntry> bids = ticker.OrderBook.Bids;
+                List<OrderBookEntry> asks = ticker.OrderBook.Asks;
+                List<OrderBookEntry> iasks = ticker.OrderBook.AsksInverted;
+                for(int i = 0; i < jbids.Count; i++) {
+                    string[] item = jbids[i];
+                    bids.Add(new OrderBookEntry() { ValueString = item[0], AmountString = item[1] });
+                }
+                for(int i = 0; i < jasks.Count; i++) {
+                    string[] item = jasks[i];
+                    OrderBookEntry e = new OrderBookEntry() { ValueString = item[0], AmountString = item[1] };
+                    asks.Add(e);
+                    if(iasks != null)
+                        iasks.Insert(0, e);
+                }
             }
-            for(int i = 0; i < jasks.Count; i++) {
-                string[] item = jasks[i];
-                OrderBookEntry e = new OrderBookEntry() { ValueString = item[0], AmountString = item[1] };
-                asks.Add(e);
-                if(iasks != null)
-                    iasks.Insert(0, e);
+            finally {
+                ticker.OrderBook.IsDirty = false;
+                ticker.OrderBook.EndUpdate();
             }
-            ticker.OrderBook.UpdateEntries();
-            ticker.OrderBook.RaiseOnChanged(new IncrementalUpdateInfo());
             ticker.RaiseChanged();
             return true;
         }

@@ -419,15 +419,16 @@ namespace CryptoMarketClient {
         }
 
         protected virtual void OnOrderBookConnectionLost(SocketConnectionInfo info, WebSocketSubscribeInfo s) {
-            Telemetry.Default.TrackEvent(LogType.Error, this, s.Ticker, "subscription connection lost", s.Type.ToString());
+            LogManager.Default.Log(LogType.Error, s.Ticker, "subscription connection lost", s.Type.ToString());
+            s.Ticker.OrderBook.IsDirty = true;
             Reconnect(info);
         }
 
         protected virtual void OnConnectionLost(SocketConnectionInfo info) {
-            Telemetry.Default.TrackEvent(LogType.Error, this, info.Ticker, "ticker socket connection lost", info.Type.ToString());
+            LogManager.Default.Log(LogType.Error, info.Ticker, "ticker socket connection lost", info.Type.ToString());
             if(info.Subscribtions.Count > 0) {
                 foreach(var item in info.Subscribtions) {
-                    Telemetry.Default.TrackEvent(LogType.Error, this, item.Ticker, "socket channel subscribtion lost", info.Type.ToString());
+                    LogManager.Default.Log(LogType.Error, item.Ticker, "socket channel subscribtion lost", info.Type.ToString());
                 }
             }
             Reconnect(info);
@@ -451,7 +452,7 @@ namespace CryptoMarketClient {
         }
 
         protected virtual void OnConnectionLost(WebSocket webSocket) {
-            Telemetry.Default.TrackEvent(LogType.Error, this, (Ticker)null, "main socket connection lost", "");
+            LogManager.Default.Log(LogType.Error, this, "main socket connection lost", "");
             TickersSocket.Reconnect();
         }
 
@@ -667,10 +668,10 @@ namespace CryptoMarketClient {
             SocketConnectionInfo info = OrderBookSockets.FirstOrDefault(c => c.Key == sender);
             if(info != null) {
                 info.Ticker.IsOrderBookSubscribed = false;
-                Telemetry.Default.TrackEvent(LogType.Log, this, info.Ticker, "order book socket closed", e.ToString());
+                LogManager.Default.Log(LogType.Log, info.Ticker, "order book socket closed", e.ToString());
             }
             else
-                Telemetry.Default.TrackEvent(LogType.Log, this, (Ticker)null, "order book socket closed", e.ToString());
+                LogManager.Default.Log(LogType.Log, this, "order book socket closed", e.ToString());
         }
 
         protected internal virtual void OnOrderBookSocketOpened(object sender, EventArgs e) {
@@ -678,10 +679,10 @@ namespace CryptoMarketClient {
             if(info != null) {
                 info.Ticker.UpdateOrderBook();
                 info.Ticker.IsOrderBookSubscribed = true;
-                Telemetry.Default.TrackEvent(LogType.Success, this, info.Ticker, "order book socket opened", "");
+                LogManager.Default.Log(LogType.Success, info.Ticker, "order book socket opened", "");
             }
             else
-                Telemetry.Default.TrackEvent(LogType.Success, this, (Ticker)null, "order book socket opened", "");
+                LogManager.Default.Log(LogType.Success, this, "order book socket opened", "");
         }
 
         protected internal virtual void OnOrderBookSocketError(object sender, SuperSocket.ClientEngine.ErrorEventArgs e) {
@@ -689,14 +690,15 @@ namespace CryptoMarketClient {
             if(info != null) {
                 bool isReconnecting = info.Reconnecting;
                 info.Reconnecting = false;
-                Telemetry.Default.TrackEvent(LogType.Error, this, info.Ticker, "order book socket error", e.Exception.Message);
+                info.Ticker.OrderBook.IsDirty = true;
+                LogManager.Default.Log(LogType.Error, info.Ticker, "order book socket error", e.Exception.Message);
                 if(!isReconnecting)
                     Reconnect(info);
                 else
                     info.LastActiveTime = DateTime.Now;
             }
             else
-                Telemetry.Default.TrackEvent(LogType.Error, this, (Ticker)null, "order book socket error", e.Exception.Message);
+                LogManager.Default.Log(LogType.Error, this, "order book socket error", e.Exception.Message);
         }
 
         protected SocketConnectionInfo CreateTradesWebSocket(Ticker ticker) {
@@ -715,14 +717,14 @@ namespace CryptoMarketClient {
         protected internal virtual void OnKlineSocketClosed(object sender, EventArgs e) {
             SocketConnectionInfo info = KlineSockets.FirstOrDefault(c => c.Key == sender);
             if(info != null)
-                Telemetry.Default.TrackEvent(LogType.Log, this, info.Ticker, "kline socket closed", "");
+                LogManager.Default.Log(LogType.Log, info.Ticker, "kline socket closed", "");
             else
-                Telemetry.Default.TrackEvent(LogType.Log, this, "unknown", "kline socket closed", "");
+                LogManager.Default.Log(LogType.Log, this, "kline socket closed", "");
         }
 
         protected internal virtual void OnKlineSocketOpened(object sender, EventArgs e) {
             SocketConnectionInfo info = KlineSockets.FirstOrDefault(c => c.Key == sender);
-            Telemetry.Default.TrackEvent(LogType.Success, this, info.Ticker, "kline socket opened", "");
+            LogManager.Default.Log(LogType.Success, info.Ticker, "kline socket opened", "");
         }
 
         protected internal virtual void OnKlineSocketError(object sender, SuperSocket.ClientEngine.ErrorEventArgs e) {
@@ -730,24 +732,24 @@ namespace CryptoMarketClient {
             if(info != null) {
                 bool isReconnecting = info.Reconnecting;
                 info.Reconnecting = false;
-                Telemetry.Default.TrackEvent(LogType.Error, this, info.Ticker, "kline socket error", e.Exception.Message);
+                LogManager.Default.Log(LogType.Error, info.Ticker, "kline socket error", e.Exception.Message);
                 if(!isReconnecting)
                     info.Reconnect();
                 else
                     info.LastActiveTime = DateTime.Now;
             }
             else
-                Telemetry.Default.TrackEvent(LogType.Error, this, (Ticker)null, "kline socket error", e.Exception.Message);
+                LogManager.Default.Log(LogType.Error, this, "kline socket error", e.Exception.Message);
         }
 
         protected internal virtual void OnTradeHistorySocketOpened(object sender, EventArgs e) {
             SocketConnectionInfo info = TradeHistorySockets.FirstOrDefault(c => c.Key == sender);
             if(info != null) {
                 info.Ticker.TradeHistory.Clear();
-                Telemetry.Default.TrackEvent(LogType.Success, this, info.Ticker, "trade history socket opened", e.ToString());
+                LogManager.Default.Log(LogType.Success, info.Ticker, "trade history socket opened", e.ToString());
             }
             else
-                Telemetry.Default.TrackEvent(LogType.Success, this, (Ticker)null, "trade history socket opened", e.ToString());
+                LogManager.Default.Log(LogType.Success, this, "trade history socket opened", e.ToString());
         }
 
         protected internal virtual void OnTradeHistorySocketError(object sender, SuperSocket.ClientEngine.ErrorEventArgs e) {
@@ -755,13 +757,13 @@ namespace CryptoMarketClient {
             if(info != null) {
                 bool isReconnecting = info.Reconnecting;
                 info.Reconnecting = false;
-                Telemetry.Default.TrackEvent(LogType.Error, this, info.Ticker, "trade history socket error", e.Exception.Message);
+                LogManager.Default.Log(LogType.Error, info.Ticker, "trade history socket error", e.Exception.Message);
                 if(!isReconnecting)
                     info.Reconnect();
                 info.LastActiveTime = DateTime.Now;
             }
             else
-                Telemetry.Default.TrackEvent(LogType.Error, this, (Ticker)null, "trade history socket error", e.Exception.Message);
+                LogManager.Default.Log(LogType.Error, this, "trade history socket error", e.Exception.Message);
         }
 
         protected internal virtual void OnTradeHistorySocketMessageReceived(object sender, MessageReceivedEventArgs e) {
@@ -770,10 +772,10 @@ namespace CryptoMarketClient {
         protected internal virtual void OnTradeHistorySocketClosed(object sender, EventArgs e) {
             SocketConnectionInfo info = TradeHistorySockets.FirstOrDefault(c => c.Key == sender);
             if(info != null) {
-                Telemetry.Default.TrackEvent(LogType.Log, this, info.Ticker, "trade history socket closed", e.ToString());
+                LogManager.Default.Log(LogType.Log, info.Ticker, "trade history socket closed", e.ToString());
             }
             else
-                Telemetry.Default.TrackEvent(LogType.Log, this, (Ticker)null, "trade history socket closed", e.ToString());
+                LogManager.Default.Log(LogType.Log, this, "trade history socket closed", e.ToString());
         }
 
         public SocketConnectionState TickersSocketState {
@@ -815,7 +817,7 @@ namespace CryptoMarketClient {
             StopListenTickersStream(false);
         }
         public virtual void StopListenTickersStream(bool force) {
-            Telemetry.Default.TrackEvent(LogType.Log, this, (Ticker)null, "stop listening tickers stream", "");
+            LogManager.Default.Log(LogType.Log, this, "stop listening tickers stream", "");
             if(TickersSocket == null)
                 return;
             if(force)
@@ -834,17 +836,17 @@ namespace CryptoMarketClient {
         protected internal virtual void OnTickersSocketClosed(object sender, EventArgs e) {
             if(TickersSocket == null)
                 return;
-            Telemetry.Default.TrackEvent(LogType.Log, this, (Ticker)null, "tickers socket closed", "");
+            LogManager.Default.Log(LogType.Log, this, "tickers socket closed", "");
         }
 
         protected internal virtual void OnTickersSocketOpened(object sender, EventArgs e) {
-            Telemetry.Default.TrackEvent(LogType.Success, this, (Ticker)null, "tickers socket opened", "");
+            LogManager.Default.Log(LogType.Success, this, "tickers socket opened", "");
         }
 
         protected internal virtual void OnTickersSocketError(object sender, SuperSocket.ClientEngine.ErrorEventArgs e) {
             bool isReconnecting = TickersSocket.Reconnecting;
             TickersSocket.Reconnecting = false;
-            Telemetry.Default.TrackEvent(LogType.Error, this, (Ticker)null, "tickers socket error", e.Exception.Message);
+            LogManager.Default.Log(LogType.Error, this, "tickers socket error", e.Exception.Message);
             if(!isReconnecting)
                 TickersSocket.Reconnect();
             else
@@ -971,16 +973,16 @@ namespace CryptoMarketClient {
         protected internal abstract IIncrementalUpdateDataProvider CreateIncrementalUpdateDataProvider();
 
         protected internal virtual void OnSignalSocketError(Exception e) {
-            Telemetry.Default.TrackEvent(LogType.Error, this, (Ticker)null, "on socket error", e.Message);
+            LogManager.Default.Log(LogType.Error, this, "on socket error", e.Message);
             TickersSocket.Reconnect();
         }
 
         protected internal virtual void OnSignalConnectionClosed() {
-            Telemetry.Default.TrackEvent(LogType.Log, this, (Ticker)null, "connection closed", "");
+            LogManager.Default.Log(LogType.Log, this, "connection closed", "");
         }
 
         protected internal virtual void OnSignalStateChanged(StateChange e) {
-            LogManager.Default.AddMessage(LogType.Log, this, (Ticker)null, "socket state changed", e.NewState.ToString());
+            LogManager.Default.Log(this, "socket state changed", e.NewState.ToString());
         }
 
         protected internal virtual void OnSignalReceived(string s) {
@@ -994,7 +996,7 @@ namespace CryptoMarketClient {
             }
             if(updates.TooLongQueue) {
                 // call snapshot
-                throw new IndexOutOfRangeException("too long que");
+                //throw new IndexOutOfRangeException("too long que");
             }
         }
         public void UpdateDefaultAccount() {

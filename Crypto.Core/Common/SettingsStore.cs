@@ -1,4 +1,5 @@
 ﻿using Crypto.Core.Helpers;
+using CryptoMarketClient.Helpers;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -32,7 +33,9 @@ namespace CryptoMarketClient.Common {
         public bool Save() {
             return SerializationHelper.Save(this, GetType(), null);
         }
-        public void OnEndDeserialize() { }
+        public void OnEndDeserialize() {
+            TelegramBot.Default.TryAddClient(TelegramBotBroadcastId, TelegramBotActive, TelegramBotRegistrationCode, 0);
+        }
 
         public string TelegramBotRegistrationCode { get; set; }
         private static string GenerateNewRandom() {

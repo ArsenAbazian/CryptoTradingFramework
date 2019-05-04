@@ -26,6 +26,7 @@ namespace Crypto.UI.Strategies.Arbitrages {
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
+            this.components = new System.ComponentModel.Container();
             this.dataLayoutControl1 = new DevExpress.XtraDataLayout.DataLayoutControl();
             this.BaseCurrencyTextEdit = new DevExpress.XtraEditors.TextEdit();
             this.MonitoringCurrenciesTextEdit = new DevExpress.XtraEditors.TextEdit();
@@ -35,7 +36,7 @@ namespace Crypto.UI.Strategies.Arbitrages {
             this.ItemForBaseCurrency = new DevExpress.XtraLayout.LayoutControlItem();
             this.ItemForMonitoringCurrencies = new DevExpress.XtraLayout.LayoutControlItem();
             this.ItemForExchange = new DevExpress.XtraLayout.LayoutControlItem();
-            this.triplePairStrategyBindingSource = new System.Windows.Forms.BindingSource();
+            this.triplePairStrategyBindingSource = new System.Windows.Forms.BindingSource(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.dataLayoutControl1)).BeginInit();
             this.dataLayoutControl1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.BaseCurrencyTextEdit.Properties)).BeginInit();

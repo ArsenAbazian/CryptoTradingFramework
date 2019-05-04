@@ -7,7 +7,11 @@ using CryptoMarketClient.Common;
 
 namespace CryptoMarketClient.Binance {
     public class BinanceTicker : Ticker {
-        public BinanceTicker(BinanceExchange exchange) : base(exchange) { }
+        public BinanceTicker(BinanceExchange exchange) : base(exchange) {
+            // https://github.com/binance-exchange/binance-official-api-docs/blob/master/web-socket-streams.md
+            // Receiving an event that removes a price level that is not in your local order book can happen and is normal.
+            OrderBook.EnableValidationOnRemove = false;
+        }
 
         string currensyPair;
         public override string CurrencyPair {

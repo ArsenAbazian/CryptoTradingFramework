@@ -148,29 +148,29 @@ namespace CryptoMarketClient {
         void ProcessSelectedArbitrageInfo() {
             ShouldProcessArbitrage = false;
             if(SelectedCollection == null) {
-                LogManager.Default.AddWarning("There is no selected arbitrage info. Quit.");
+                LogManager.Default.Warning("There is no selected arbitrage info. Quit.");
                 Invoke(new MethodInvoker(ShowLog));
                 return;
             }
             ArbitrageInfo info = SelectedCollection.Arbitrage;
 
-            LogManager.Default.Add("Update buy on market balance info.", info.LowestAskHost + " - " + info.LowestAskTicker.BaseCurrency);
+            LogManager.Default.Log("Update buy on market balance info.", info.LowestAskHost + " - " + info.LowestAskTicker.BaseCurrency);
             if(!info.LowestAskTicker.UpdateBalance(info.LowestAskTicker.BaseCurrency)) {
-                LogManager.Default.AddError("Failed update buy on market currency balance. Quit.", SelectedCollection.Arbitrage.LowestAskTicker.BaseCurrency);
+                LogManager.Default.Error("Failed update buy on market currency balance. Quit.", SelectedCollection.Arbitrage.LowestAskTicker.BaseCurrency);
                 Invoke(new MethodInvoker(ShowLog));
                 return;
             }
 
-            LogManager.Default.Add("Update buy on market balance info.", info.HighestBidHost + " - " + info.HighestBidTicker.MarketCurrency);
+            LogManager.Default.Log("Update buy on market balance info.", info.HighestBidHost + " - " + info.HighestBidTicker.MarketCurrency);
             if(!info.HighestBidTicker.UpdateBalance(info.HighestBidTicker.MarketCurrency)) {
-                LogManager.Default.AddError("Failed update sell on market currency balance. Quit.", info.HighestBidTicker.MarketCurrency);
+                LogManager.Default.Error("Failed update sell on market currency balance. Quit.", info.HighestBidTicker.MarketCurrency);
                 Invoke(new MethodInvoker(ShowLog));
                 return;
             }
 
-            LogManager.Default.Add("Update arbitrage info values.", SelectedCollection.Name);
+            LogManager.Default.Log("Update arbitrage info values.", SelectedCollection.Name);
             if(!UpdateArbitrageInfoTask(SelectedCollection).Wait(5000)) {
-                LogManager.Default.AddError("Failed arbitrage update info values. Timeout.", SelectedCollection.Name);
+                LogManager.Default.Error("Failed arbitrage update info values. Timeout.", SelectedCollection.Name);
                 Invoke(new MethodInvoker(ShowLog));
                 return;
             }
@@ -179,25 +179,25 @@ namespace CryptoMarketClient {
             info.Calculate();
             info.UpateAmountByBalance();
             if(info.ExpectedProfitUSD - info.MaxProfitUSD > 10)
-                LogManager.Default.AddWarning("Arbitrage amount reduced because of balance not enough.", "New Amount = " + info.Amount.ToString("0.00000000") + ", ProfitUSD = " + info.MaxProfitUSD);
+                LogManager.Default.Warning("Arbitrage amount reduced because of balance not enough.", "New Amount = " + info.Amount.ToString("0.00000000") + ", ProfitUSD = " + info.MaxProfitUSD);
 
             if(info.AvailableProfitUSD <= 20) {
-                LogManager.Default.AddWarning("Arbitrage Profit reduced since last time. Skip trading.", SelectedCollection.Name + " expected " + info.ExpectedProfitUSD + " but after update" + info.MaxProfitUSD);
+                LogManager.Default.Warning("Arbitrage Profit reduced since last time. Skip trading.", SelectedCollection.Name + " expected " + info.ExpectedProfitUSD + " but after update" + info.MaxProfitUSD);
                 Invoke(new MethodInvoker(ShowLog));
                 return;
             }
 
             if(!info.Buy()) {
-                LogManager.Default.AddError("FATAL ERROR! Could not buy!", SelectedCollection.Name);
+                LogManager.Default.Error("FATAL ERROR! Could not buy!", SelectedCollection.Name);
                 return;
             }
             if(!info.Sell()) {
-                LogManager.Default.AddError("FATAL ERROR! Could not sell!", SelectedCollection.Name);
+                LogManager.Default.Error("FATAL ERROR! Could not sell!", SelectedCollection.Name);
                 return;
             }
 
             string successText = "Arbitrage completed!!! Please check your balances." + SelectedCollection.Name + " earned <b>" + info.AvailableProfitUSD + "</b>";
-            LogManager.Default.AddSuccess(successText);
+            LogManager.Default.Success(successText);
             TelegramBot.Default.SendNotification(successText);
             UpdateBalanceNotification = true;
             Invoke(new MethodInvoker(ShowLog));
@@ -392,7 +392,7 @@ namespace CryptoMarketClient {
             Ticker lowest = info.LowestAskTicker;
 
             if(!lowest.UpdateBalance(lowest.BaseCurrency)) {
-                LogManager.Default.AddError("Cant update balance.", lowest.HostName + "-" + lowest.BaseCurrency);
+                LogManager.Default.Error("Cant update balance.", lowest.HostName + "-" + lowest.BaseCurrency);
                 SelectedCollection = null;
                 LogManager.Default.ShowLogForm();
                 return;
@@ -400,11 +400,11 @@ namespace CryptoMarketClient {
 
             double percent = Convert.ToDouble(this.beBuyLowestAsk.EditValue) / 100;
             double buyAmount = lowest.BaseCurrencyBalance * percent;
-            LogManager.Default.Add("Lowest Ask Base Currency Amount = " + buyAmount.ToString("0.00000000"));
+            LogManager.Default.Log("Lowest Ask Base Currency Amount = " + buyAmount.ToString("0.00000000"));
             double amount = buyAmount / info.LowestAsk;
 
             if(info.LowestAskTicker.Buy(info.LowestAsk, amount) == null)
-                LogManager.Default.AddError("Cant buy currency.", "At " + lowest.HostName + "-" + lowest.BaseCurrency + "(" + amount.ToString("0.00000000") + ")" + " for " + lowest.MarketCurrency);
+                LogManager.Default.Error("Cant buy currency.", "At " + lowest.HostName + "-" + lowest.BaseCurrency + "(" + amount.ToString("0.00000000") + ")" + " for " + lowest.MarketCurrency);
 
             SelectedCollection = null;
             LogManager.Default.ShowLogForm();
@@ -419,7 +419,7 @@ namespace CryptoMarketClient {
 
             Ticker highest = info.HighestBidTicker;
             if(!highest.UpdateBalance(highest.MarketCurrency)) {
-                LogManager.Default.AddError("Cant update balance.", highest.HostName + "-" + highest.MarketCurrency);
+                LogManager.Default.Error("Cant update balance.", highest.HostName + "-" + highest.MarketCurrency);
                 SelectedCollection = null;
                 LogManager.Default.ShowLogForm();
                 return;
@@ -427,10 +427,10 @@ namespace CryptoMarketClient {
 
             double percent = Convert.ToDouble(this.beHighestBidSell.EditValue) / 100;
             double amount = highest.MarketCurrencyBalance * percent;
-            LogManager.Default.Add("Highest Bid Market Currency Amount = " + amount.ToString("0.00000000"));
+            LogManager.Default.Log("Highest Bid Market Currency Amount = " + amount.ToString("0.00000000"));
 
             if(info.HighestBidTicker.Sell(info.HighestBid, amount) == null)
-                LogManager.Default.AddError("Cant sell currency.", "At " + highest.HostName + "-" + highest.MarketCurrency + "(" + amount.ToString("0.00000000") + ")" + " for " + highest.BaseCurrency);
+                LogManager.Default.Error("Cant sell currency.", "At " + highest.HostName + "-" + highest.MarketCurrency + "(" + amount.ToString("0.00000000") + ")" + " for " + highest.BaseCurrency);
 
             SelectedCollection = null;
         }
@@ -444,36 +444,36 @@ namespace CryptoMarketClient {
 
             if(forceUpdateBalance || lowest.MarketCurrencyBalance == 0) {
                 if(!lowest.UpdateBalance(lowest.MarketCurrency)) {
-                    if(allowLog) LogManager.Default.AddError("Cant update balance.", lowest.HostName + "-" + lowest.MarketCurrency);
+                    if(allowLog) LogManager.Default.Error("Cant update balance.", lowest.HostName + "-" + lowest.MarketCurrency);
                     if(allowLog) LogManager.Default.ShowLogForm();
                     return false;
                 }
                 if(!highest.UpdateBalance(highest.MarketCurrency)) {
-                    if(allowLog) LogManager.Default.AddError("Cant update balance.", highest.HostName + "-" + highest.MarketCurrency);
+                    if(allowLog) LogManager.Default.Error("Cant update balance.", highest.HostName + "-" + highest.MarketCurrency);
                     if(allowLog) LogManager.Default.ShowLogForm();
                     return false;
                 }
             }
             string highAddress = highest.GetDepositAddress(highest.MarketCurrency);
             if(string.IsNullOrEmpty(highAddress)) {
-                if(allowLog) LogManager.Default.AddError("Cant get deposit address.", highest.HostName + "-" + highest.MarketCurrency);
+                if(allowLog) LogManager.Default.Error("Cant get deposit address.", highest.HostName + "-" + highest.MarketCurrency);
                 if(allowLog) LogManager.Default.ShowLogForm();
                 return false;
             }
 
-            if(allowLog) LogManager.Default.Add("Highest Bid Currency Deposit: " + highAddress);
+            if(allowLog) LogManager.Default.Log("Highest Bid Currency Deposit: " + highAddress);
 
             double amount = lowest.MarketCurrencyBalance;
-            if(allowLog) LogManager.Default.Add("Lowest Ask Currency Amount = " + amount.ToString("0.00000000"));
+            if(allowLog) LogManager.Default.Log("Lowest Ask Currency Amount = " + amount.ToString("0.00000000"));
 
             if(lowest.Withdraw(lowest.MarketCurrency, highAddress, "", amount)) {
                 string text = "Withdraw " + lowest.MarketCurrency + " " + lowest.HostName + " -> " + highest.HostName + " succeded.";
-                if(allowLog) LogManager.Default.AddSuccess(text);
+                if(allowLog) LogManager.Default.Success(text);
                 TelegramBot.Default.SendNotification(text);
                 return true;
             }
             else {
-                if(allowLog) LogManager.Default.AddError("Withdraw " + lowest.MarketCurrency + " " + lowest.HostName + " -> " + highest.HostName + " failed.");
+                if(allowLog) LogManager.Default.Error("Withdraw " + lowest.MarketCurrency + " " + lowest.HostName + " -> " + highest.HostName + " failed.");
                 return false;
             }
         }
@@ -495,13 +495,13 @@ namespace CryptoMarketClient {
             Ticker highest = SelectedCollection.Arbitrage.HighestBidTicker;
 
             if(!lowest.UpdateBalance(lowest.BaseCurrency)) {
-                LogManager.Default.AddError("Cant update balance.", lowest.HostName + "-" + lowest.BaseCurrency);
+                LogManager.Default.Error("Cant update balance.", lowest.HostName + "-" + lowest.BaseCurrency);
                 SelectedCollection = null;
                 LogManager.Default.ShowLogForm();
                 return;
             }
             if(!highest.UpdateBalance(highest.BaseCurrency)) {
-                LogManager.Default.AddError("Cant update balance.", highest.HostName + "-" + highest.BaseCurrency);
+                LogManager.Default.Error("Cant update balance.", highest.HostName + "-" + highest.BaseCurrency);
                 SelectedCollection = null;
                 LogManager.Default.ShowLogForm();
                 return;
@@ -509,7 +509,7 @@ namespace CryptoMarketClient {
 
             string lowAddress = lowest.GetDepositAddress(lowest.BaseCurrency);
             if(string.IsNullOrEmpty(lowAddress)) {
-                LogManager.Default.AddError("Cant get deposit address.", lowest.HostName + "-" + lowest.BaseCurrency);
+                LogManager.Default.Error("Cant get deposit address.", lowest.HostName + "-" + lowest.BaseCurrency);
                 SelectedCollection = null;
                 LogManager.Default.ShowLogForm();
                 return;
@@ -517,17 +517,17 @@ namespace CryptoMarketClient {
 
             string highAddress = highest.GetDepositAddress(highest.BaseCurrency);
             if(string.IsNullOrEmpty(highAddress)) {
-                LogManager.Default.AddError("Cant get deposit address.", highest.HostName + "-" + highest.BaseCurrency);
+                LogManager.Default.Error("Cant get deposit address.", highest.HostName + "-" + highest.BaseCurrency);
                 SelectedCollection = null;
                 LogManager.Default.ShowLogForm();
                 return;
             }
 
-            LogManager.Default.Add("Lowest Ask Base Currency Deposit: " + lowAddress);
-            LogManager.Default.Add("Highest Bid Base Currency Deposit: " + highAddress);
+            LogManager.Default.Log("Lowest Ask Base Currency Deposit: " + lowAddress);
+            LogManager.Default.Log("Highest Bid Base Currency Deposit: " + highAddress);
 
             double amount = highest.BaseCurrencyBalance;
-            LogManager.Default.Add("Highest Bid Base Currency Amount = " + amount.ToString("0.00000000"));
+            LogManager.Default.Log("Highest Bid Base Currency Amount = " + amount.ToString("0.00000000"));
 
             highest.Withdraw(highest.BaseCurrency, lowAddress, "", amount);
 

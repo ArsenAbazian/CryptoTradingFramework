@@ -53,33 +53,64 @@ namespace CryptoMarketClient.Common {
         }
 
         double buyPrice;
-        public double TradePrice {
+        public double BuyPrice {
             get { return buyPrice; }
             set {
-                if (TradePrice == value)
+                if (BuyPrice == value)
                     return;
                 buyPrice = value;
                 OnBuyPriceChanged();
             }
         }
         void OnBuyPriceChanged() {
-            TotalSpendInBaseCurrency = Amount * TradePrice;
+            TotalSpendInBaseCurrency = BuyAmount * BuyPrice;
             RaisePropertyChanged("TradePrice");
         }
         double amount;
-        public double Amount {
+        public double BuyAmount {
             get { return amount; }
             set {
-                if (Amount == value)
+                if (BuyAmount == value)
                     return;
                 amount = value;
                 OnAmountChanged();
             }
         }
         void OnAmountChanged() {
-            TotalSpendInBaseCurrency = Amount * TradePrice;
-            RaisePropertyChanged("Amount");
+            TotalSpendInBaseCurrency = BuyAmount * BuyPrice;
+            RaisePropertyChanged("BuyAmount");
         }
+
+
+        double sellPrice;
+        public double SellPrice {
+            get { return sellPrice; }
+            set {
+                if(SellPrice == value)
+                    return;
+                sellPrice = value;
+                OnSellPriceChanged();
+            }
+        }
+        void OnSellPriceChanged() {
+            TotalSpendInBaseCurrency = SellAmount * BuyPrice;
+            RaisePropertyChanged("BuyPrice");
+        }
+        double sellAmount;
+        public double SellAmount {
+            get { return sellAmount; }
+            set {
+                if(SellAmount == value)
+                    return;
+                sellAmount = value;
+                OnSellAmountChanged();
+            }
+        }
+        void OnSellAmountChanged() {
+            RaisePropertyChanged("SellAmount");
+        }
+
+
         double totalSpendInBaseCurrency;
         public double TotalSpendInBaseCurrency {
             get { return totalSpendInBaseCurrency; }
@@ -95,7 +126,7 @@ namespace CryptoMarketClient.Common {
             if(InTotalSpendInBaseCurrencyChanged)
                 return;
             InTotalSpendInBaseCurrencyChanged = true;
-            Amount = TotalSpendInBaseCurrency / TradePrice;
+            BuyAmount = TotalSpendInBaseCurrency / BuyPrice;
             InTotalSpendInBaseCurrencyChanged = false;
             RaisePropertyChanged("TotalSpendInBaseCurrency");
         }
@@ -105,13 +136,13 @@ namespace CryptoMarketClient.Common {
         public double TakeProfitStartPercent { get; set; } = 20;
         public double TakeProfitPercent { get; set; } = 5;
 
-        public double ActualProfit { get { return ActualPrice - TradePrice; } }
+        public double ActualProfit { get { return ActualPrice - BuyPrice; } }
         public double ActualProfitUSD { get { return UsdTicker == null ? 0 : ActualProfit * UsdTicker.Last; } }
         public double ActualPrice { get; set; }
         public double MaxPrice { get; set; }
         public double MinPrice { get; set; }
         public double OrderPrice { get { return GetOrderPrice(); } }
-        public double TakeProfitStartPrice { get { return TradePrice * (Type == TrailingType.Sell ? 100 + TakeProfitStartPercent : 100 - TakeProfitStartPercent) * 0.01; } }
+        public double TakeProfitStartPrice { get { return BuyPrice * (Type == TrailingType.Sell ? 100 + TakeProfitStartPercent : 100 - TakeProfitStartPercent) * 0.01; } }
         public bool IgnoreStopLoss { get; set; } = false;
 
         public string Name {
@@ -168,7 +199,7 @@ namespace CryptoMarketClient.Common {
                 if (IgnoreStopLoss)
                     return -1;
 
-                double basePrice = EnableIncrementalStopLoss ? MaxPrice : TradePrice;
+                double basePrice = EnableIncrementalStopLoss ? MaxPrice : BuyPrice;
                 return basePrice * (100 - StopLossPricePercent) * 0.01;
             }
         }
@@ -178,7 +209,7 @@ namespace CryptoMarketClient.Common {
                 //TelegramBot.Default.SendNotification(Ticker.Exchange + " - " + Ticker.Name + " - Order done!!");
                 State = TrailingState.Done;
             } else if (Mode == ActionMode.Execute) {
-                TradingResult res = Type == TrailingType.Sell ? Ticker.MarketSell(Amount) : Ticker.MarketBuy(Amount);
+                TradingResult res = Type == TrailingType.Sell ? Ticker.MarketSell(SellAmount) : Ticker.MarketBuy(BuyAmount);
                 if (res != null)
                     State = TrailingState.Done;
                 //else
@@ -200,7 +231,7 @@ namespace CryptoMarketClient.Common {
         public void Start() {
             StartDate = DateTime.Now;
             Ticker.Events.Add(new TickerEvent() {
-                Text = string.Format("Trailing started! bought {0:0.00000000} at price {1:0.00000000}", Amount, TradePrice),
+                Text = string.Format("Trailing started! bought {0:0.00000000} at price {1:0.00000000}", BuyAmount, BuyPrice),
                 Time = Ticker.Time,
                 Current = Ticker.Last
             });
@@ -208,7 +239,7 @@ namespace CryptoMarketClient.Common {
         }
         public void Change() {
             Ticker.Events.Add(new TickerEvent() {
-                Text = string.Format("Trailing changed! New values: amount {0:0.00000000}", Amount),
+                Text = string.Format("Trailing changed! New values: amount {0:0.00000000}", BuyAmount),
                 Time = Ticker.Time,
                 Current = Ticker.Last
             });

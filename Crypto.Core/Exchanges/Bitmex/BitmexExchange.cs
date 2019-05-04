@@ -53,7 +53,7 @@ namespace CryptoMarketClient.Exchanges.Bitmex {
                 JObject obj = JsonConvert.DeserializeObject<JObject>(text);
                 JObject error = obj.Value<JObject>("error");
                 if(error != null) {
-                    LogManager.Default.AddError(error.Value<string>("message"));
+                    LogManager.Default.Error(this, "trade", error.Value<string>("message"));
                     return null;
                 }
                 TradingResult res = new TradingResult();
@@ -198,7 +198,7 @@ namespace CryptoMarketClient.Exchanges.Bitmex {
                 return client.UploadData("https://www.bitmex.com" + path, data);
             }
             catch(Exception e) {
-                LogManager.Default.Add(e.ToString());
+                LogManager.Default.Log(e.ToString());
                 return null;
             }
         }
@@ -219,7 +219,7 @@ namespace CryptoMarketClient.Exchanges.Bitmex {
                 return client.DownloadData(address);
             }
             catch(Exception e) {
-                LogManager.Default.Add(e.ToString());
+                LogManager.Default.Log(e.ToString());
                 return null;
             }
         }
@@ -240,7 +240,7 @@ namespace CryptoMarketClient.Exchanges.Bitmex {
                 return Encoding.UTF8.GetString(client.DownloadData(address));
             }
             catch(Exception e) {
-                LogManager.Default.Add(e.ToString());
+                LogManager.Default.Log(e.ToString());
                 return null;
             }
         }
@@ -331,24 +331,30 @@ namespace CryptoMarketClient.Exchanges.Bitmex {
 
             List<string[]> items = JSonHelper.Default.DeserializeArrayOfObjects(bytes, ref startIndex, OrderBookItems);
 
-            List<OrderBookEntry> bids = ticker.OrderBook.Bids;
-            List<OrderBookEntry> asks = ticker.OrderBook.Asks;
-            List<OrderBookEntry> iasks = ticker.OrderBook.AsksInverted;
-            for(int i = 0; i < items.Count; i++) {
-                string[] item = items[i];
-                OrderBookEntry entry = new OrderBookEntry();
-                entry.Id = FastValueConverter.ConvertPositiveLong(item[1]);
-                entry.ValueString = item[4];
-                entry.AmountString = item[3];
-                if(item[2][0] == 'S') {
-                    if(iasks != null)
-                        iasks.Add(entry);
-                    asks.Insert(0, entry);
+            ticker.OrderBook.BeginUpdate();
+            try {
+                List<OrderBookEntry> bids = ticker.OrderBook.Bids;
+                List<OrderBookEntry> asks = ticker.OrderBook.Asks;
+                List<OrderBookEntry> iasks = ticker.OrderBook.AsksInverted;
+                for(int i = 0; i < items.Count; i++) {
+                    string[] item = items[i];
+                    OrderBookEntry entry = new OrderBookEntry();
+                    entry.Id = FastValueConverter.ConvertPositiveLong(item[1]);
+                    entry.ValueString = item[4];
+                    entry.AmountString = item[3];
+                    if(item[2][0] == 'S') {
+                        if(iasks != null)
+                            iasks.Add(entry);
+                        asks.Insert(0, entry);
+                    }
+                    else
+                        bids.Add(entry);
                 }
-                else
-                    bids.Add(entry);
             }
-            ticker.OrderBook.UpdateEntries();
+            finally {
+                ticker.OrderBook.IsDirty = false;
+                ticker.OrderBook.EndUpdate();
+            }
             return true;
         }
 
@@ -458,6 +464,7 @@ namespace CryptoMarketClient.Exchanges.Bitmex {
         protected internal override void OnOrderBookSocketError(object sender, ErrorEventArgs e) {
             SocketConnectionInfo info = OrderBookSockets.FirstOrDefault(c => c.Key == sender);
             if(info != null) {
+                info.Ticker.OrderBook.IsDirty = true;
                 if(CheckProcessError(info))
                     return;
             }
@@ -522,21 +529,25 @@ namespace CryptoMarketClient.Exchanges.Bitmex {
                 return;
 
             OrderBookUpdateType type = String2UpdateType(obj.Value<string>("action"));
-            if(type == OrderBookUpdateType.RefreshAll) {
-                t.OrderBook.Clear();
-                t.OrderBook.BeginUpdate();
-            }
-            for(int i = 0; i < items.Count; i++) {
-                JObject item = (JObject) items[i];
-                
-                OrderBookEntryType entryType = item.Value<string>("side")[0] == 'S' ? OrderBookEntryType.Ask : OrderBookEntryType.Bid;
-                string rate = null;
-                if(type == OrderBookUpdateType.Add || type == OrderBookUpdateType.RefreshAll)
-                    rate = item.Value<string>("price");
-                string size = null;
-                if(type != OrderBookUpdateType.Remove)
-                    size = item.Value<string>("size");
-                t.OrderBook.ApplyIncrementalUpdate(entryType, type, item.Value<long>("id"), rate, size);
+            lock(t.OrderBook.Bids) {
+                lock(t.OrderBook.Asks) {
+                    if(type == OrderBookUpdateType.RefreshAll) {
+                        t.OrderBook.Clear();
+                        t.OrderBook.BeginUpdate();
+                    }
+                    for(int i = 0; i < items.Count; i++) {
+                        JObject item = (JObject)items[i];
+
+                        OrderBookEntryType entryType = item.Value<string>("side")[0] == 'S' ? OrderBookEntryType.Ask : OrderBookEntryType.Bid;
+                        string rate = null;
+                        if(type == OrderBookUpdateType.Add || type == OrderBookUpdateType.RefreshAll)
+                            rate = item.Value<string>("price");
+                        string size = null;
+                        if(type != OrderBookUpdateType.Remove)
+                            size = item.Value<string>("size");
+                        t.OrderBook.ApplyIncrementalUpdate(entryType, type, item.Value<long>("id"), rate, size);
+                    }
+                }
             }
             if(type == OrderBookUpdateType.RefreshAll) {
                 t.OrderBook.EndUpdate();

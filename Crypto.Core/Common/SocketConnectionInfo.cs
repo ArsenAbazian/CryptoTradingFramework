@@ -42,19 +42,20 @@ namespace CryptoMarketClient.Common {
         public bool IsDelayed(int ms) {
             return (DateTime.Now - LastActiveTime).TotalMilliseconds > ms;
         }
-        ///DateTime lastActiveTime;
+        DateTime lastActiveTime;
         public DateTime LastActiveTime {
             get {
-                if(Socket != null)
-                    return Socket.LastActiveTime;
+                if(Socket != null) {
+                    return lastActiveTime > Socket.LastActiveTime? lastActiveTime: Socket.LastActiveTime;
+                }
                 if(Signal != null)
-                    return Signal.LastActiveTime;
+                    return lastActiveTime > Signal.LastActiveTime? lastActiveTime: Signal.LastActiveTime;
                 return DateTime.MinValue;
             }
             set {
-            //    if(LastActiveTime == value)
-            //        return;
-            //    lastActiveTime = value;
+                if(LastActiveTime == value)
+                    return;
+                lastActiveTime = value;
             }
         }
         public TimeSpan ConnectionTime { get { return LastActiveTime - OpenTime; } }
@@ -91,7 +92,7 @@ namespace CryptoMarketClient.Common {
             }
             if(State == SocketConnectionState.Error)
                 History.Add(new SocketInfoHistoryItem() { Time = DateTime.Now, State = State, Message = LastError });
-            else 
+            else
                 History.Add(new SocketInfoHistoryItem() { Time = DateTime.Now, State = State, Message = "State Changed" });
         }
 
@@ -104,7 +105,7 @@ namespace CryptoMarketClient.Common {
                 lastError = value;
             }
         }
-        
+
         public List<SocketInfoHistoryItem> History { get; } = new List<SocketInfoHistoryItem>();
 
         public CandleStickIntervalInfo KlineInfo { get; set; }
@@ -118,7 +119,7 @@ namespace CryptoMarketClient.Common {
             CreateSocket();
             SubscribeEvents();
 
-            LastActiveTime = DateTime.Now;
+            //LastActiveTime = DateTime.Now;
             State = SocketConnectionState.Connecting;
             if(Socket != null)
                 Socket.Open();
@@ -128,7 +129,7 @@ namespace CryptoMarketClient.Common {
                 OpenTime = DateTime.Now;
             IsOpening = false;
             IsOpened = true;
-            LastActiveTime = DateTime.Now;
+            //LastActiveTime = DateTime.Now;
             if(!Reconnecting)
                 ForceUpdateSubscribtions();
         }
@@ -166,7 +167,7 @@ namespace CryptoMarketClient.Common {
                     Signal.Shutdown();
             }
             catch(Exception e) {
-                Telemetry.Default.TrackEvent(LogType.Error, Exchange, Ticker, "error closing socket", e.Message.ToString());
+                Telemetry.Default.TrackEvent(LogType.Error, Ticker, "error closing socket", e.Message.ToString());
             }
             State = SocketConnectionState.Disconnecting;
             IsOpened = false;
@@ -197,6 +198,7 @@ namespace CryptoMarketClient.Common {
             SubscribeCore(info);
         }
         void SubscribeCore(WebSocketSubscribeInfo info) {
+            object logOwner = info.Ticker == null ? (object)Exchange : (object)info.Ticker;
             if(!info.ShouldUpdateSubscribtion)
                 return;
             if(State != SocketConnectionState.Connected) {
@@ -208,17 +210,17 @@ namespace CryptoMarketClient.Common {
                 if(info.Type == SocketSubscribeType.OrderBook) {
                     info.Ticker.IsOrderBookSubscribed = true;
                     info.Ticker.OrderBook.Clear();
-                    Telemetry.Default.TrackEvent(LogType.Log, Exchange, info.Ticker, "order book channel subscibed", "");
+                    Telemetry.Default.TrackEvent(LogType.Log, logOwner, "order book channel subscibed", "");
                 }
                 else if(info.Type == SocketSubscribeType.TradeHistory) {
                     info.Ticker.IsTradeHistorySubscribed = true;
                     info.Ticker.TradeHistory.Clear();
-                    Telemetry.Default.TrackEvent(LogType.Log, Exchange, info.Ticker, "trade history channel subscibed", "");
+                    Telemetry.Default.TrackEvent(LogType.Log, logOwner, "trade history channel subscibed", "");
                 }
                 else if(info.Type == SocketSubscribeType.Kline) {
                     info.Ticker.IsKlineSubscribed = true;
                     info.Ticker.CandleStickData.Clear();
-                    Telemetry.Default.TrackEvent(LogType.Log, Exchange, info.Ticker, "kline channel subscibed", "");
+                    Telemetry.Default.TrackEvent(LogType.Log, logOwner, "kline channel subscibed", "");
                 }
                 string command = JsonConvert.SerializeObject(info.Command);
                 Debug.WriteLine("send command = " + command);
@@ -227,7 +229,7 @@ namespace CryptoMarketClient.Common {
             else {
                 if(info.Type == SocketSubscribeType.Tickers) {
                     SubscribeToMarketsState(() => {
-                        Telemetry.Default.TrackEvent(LogType.Log, Exchange, info.Ticker, "tickers channel subscibed", "");
+                        Telemetry.Default.TrackEvent(LogType.Log, Exchange, "tickers channel subscibed", "");
                         if(info.AfterConnect != null)
                             info.AfterConnect();
                     });
@@ -236,7 +238,7 @@ namespace CryptoMarketClient.Common {
                     SubscribeToExchangeDeltas(info.Ticker, (t) => {
                         t.IsOrderBookSubscribed = true;
                         QueryExchangeState(t.Name);
-                        Telemetry.Default.TrackEvent(LogType.Log, Exchange, info.Ticker, "order book channel subscibed", "");
+                        Telemetry.Default.TrackEvent(LogType.Log, logOwner, "order book channel subscibed", "");
                         if(info.AfterConnect != null)
                             info.AfterConnect();
                     });
@@ -245,7 +247,7 @@ namespace CryptoMarketClient.Common {
                     SubscribeToExchangeDeltas(info.Ticker, (t) => {
                         t.IsOrderBookSubscribed = true;
                         QueryExchangeState(t.Name);
-                        Telemetry.Default.TrackEvent(LogType.Log, Exchange, info.Ticker, "trade history channel subscibed", "");
+                        Telemetry.Default.TrackEvent(LogType.Log, logOwner, "trade history channel subscibed", "");
                         if(info.AfterConnect != null)
                             info.AfterConnect();
                     });
@@ -254,17 +256,18 @@ namespace CryptoMarketClient.Common {
         }
 
         void UnsubscribeCore(WebSocketSubscribeInfo info) {
+            object logOwner = info.Ticker == null ? (object)Exchange : (object)info.Ticker;
             if(info.Type == SocketSubscribeType.OrderBook) {
                 info.Ticker.IsOrderBookSubscribed = false;
-                Telemetry.Default.TrackEvent(LogType.Log, Exchange, info.Ticker, "order book channel unsubscibed", "");
+                Telemetry.Default.TrackEvent(LogType.Log, logOwner, "order book channel unsubscibed", "");
             }
             else if(info.Type == SocketSubscribeType.TradeHistory) {
                 info.Ticker.IsTradeHistorySubscribed = false;
-                Telemetry.Default.TrackEvent(LogType.Log, Exchange, info.Ticker, "trade history channel unsubscibed", "");
+                Telemetry.Default.TrackEvent(LogType.Log, logOwner, "trade history channel unsubscibed", "");
             }
             else if(info.Type == SocketSubscribeType.Kline) {
                 info.Ticker.IsKlineSubscribed = false;
-                Telemetry.Default.TrackEvent(LogType.Log, Exchange, info.Ticker, "kline channel unsubscibed", "");
+                Telemetry.Default.TrackEvent(LogType.Log, logOwner, "kline channel unsubscibed", "");
             }
 
             if(SocketType == SocketType.WebSocket) {
@@ -333,7 +336,7 @@ namespace CryptoMarketClient.Common {
             else if(SocketType == SocketType.WebSocket)
                 UnsubscribeWebSocketEvents();
         }
-        
+
         private void UnsubscribeSignalEvents() {
             Signal.Received -= OnSignalReceived;
             Signal.StateChanged -= OnSignalStateChanged;
@@ -477,11 +480,12 @@ namespace CryptoMarketClient.Common {
                 Signal.UpdateSummaryState = UpdateSummaryState;
             }
         }
+        protected object LogObject { get { return Ticker != null ? (object)Ticker : Exchange; } }
         public void Reconnect() {
             if(Reconnecting)
                 return;
             ConnectionLostCount++;
-            Telemetry.Default.TrackEvent(LogType.Warning, Exchange, Ticker, "reconnecting", Type.ToString());
+            Telemetry.Default.TrackEvent(LogType.Warning, LogObject, "reconnecting", Type.ToString());
             Reconnecting = true;
             try {
                 Close();
@@ -493,7 +497,7 @@ namespace CryptoMarketClient.Common {
                 ForceUpdateSubscribtions();
             }
             catch(Exception e) {
-                Telemetry.Default.TrackEvent(LogType.Error, Exchange, Ticker, "exception while reconnecting", Type.ToString());
+                Telemetry.Default.TrackEvent(LogType.Error, LogObject, "exception while reconnecting", Type.ToString());
                 Telemetry.Default.TrackException(e);
             }
             finally {
@@ -505,14 +509,14 @@ namespace CryptoMarketClient.Common {
             for(int i = 0; i < Subscribtions.Count; i++) {
                 WebSocketSubscribeInfo info = Subscribtions[i];
                 info.ShouldUpdateSubscribtion = true;
-                Telemetry.Default.TrackEvent(LogType.Warning, Exchange, info.Ticker, "updating subscribtion", info.Type.ToString());
+                Telemetry.Default.TrackEvent(LogType.Warning, LogObject, "updating subscribtion", info.Type.ToString());
                 SubscribeCore(info);
             }
         }
         public void UpdateSubscribtions() {
             for(int i = 0; i < Subscribtions.Count; i++) {
                 WebSocketSubscribeInfo info = Subscribtions[i];
-                Telemetry.Default.TrackEvent(LogType.Warning, Exchange, info.Ticker, "updating subscribtion", info.Type.ToString());
+                Telemetry.Default.TrackEvent(LogType.Warning, LogObject, "updating subscribtion", info.Type.ToString());
                 SubscribeCore(info);
             }
         }

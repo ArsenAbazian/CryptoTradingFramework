@@ -27,27 +27,32 @@ namespace CryptoMarketClient.Exchanges.Bittrex {
             ticker.OnApplyIncrementalUpdate();
         }
         public void ApplySnapshot(JObject jObject, Ticker ticker) {
-            ticker.OrderBook.Clear();
-            OrderBook orderBook = ticker.OrderBook;
+            ticker.OrderBook.BeginUpdate();
+            try {
+                ticker.OrderBook.Clear();
+                OrderBook orderBook = ticker.OrderBook;
 
-            JArray jbids = jObject.Value<JArray>("Z");
-            JArray jasks = jObject.Value<JArray>("S");
+                JArray jbids = jObject.Value<JArray>("Z");
+                JArray jasks = jObject.Value<JArray>("S");
 
-            List<OrderBookEntry> entries = orderBook.Asks;
-            List<OrderBookEntry> entriesInverted = orderBook.AsksInverted;
-            for(int i = 0; i < jasks.Count; i++) {
-                JObject item = (JObject) jasks[i];
-                entries.Add(new OrderBookEntry() { ValueString = item.Value<string>("R"), AmountString = item.Value<string>("Q") });
-                if(entriesInverted != null)
-                    entriesInverted.Insert(0, new OrderBookEntry() { ValueString = item.Value<string>("R"), AmountString = item.Value<string>("Q") });
+                List<OrderBookEntry> entries = orderBook.Asks;
+                List<OrderBookEntry> entriesInverted = orderBook.AsksInverted;
+                for(int i = 0; i < jasks.Count; i++) {
+                    JObject item = (JObject)jasks[i];
+                    entries.Add(new OrderBookEntry() { ValueString = item.Value<string>("R"), AmountString = item.Value<string>("Q") });
+                    if(entriesInverted != null)
+                        entriesInverted.Insert(0, new OrderBookEntry() { ValueString = item.Value<string>("R"), AmountString = item.Value<string>("Q") });
+                }
+                entries = orderBook.Bids;
+                for(int i = 0; i < jbids.Count; i++) {
+                    JObject item = (JObject)jbids[i];
+                    entries.Add(new OrderBookEntry() { ValueString = item.Value<string>("R"), AmountString = item.Value<string>("Q") });
+                }
             }
-            entries = orderBook.Bids;
-            for(int i = 0; i < jbids.Count; i++) {
-                JObject item = (JObject) jbids[i];
-                entries.Add(new OrderBookEntry() { ValueString = item.Value<string>("R"), AmountString = item.Value<string>("Q") });
+            finally {
+                ticker.OrderBook.IsDirty = false;
+                ticker.OrderBook.EndUpdate();
             }
-            orderBook.UpdateEntries();
-            orderBook.RaiseOnChanged(new IncrementalUpdateInfo());
 
             ticker.TradeHistory.Clear();
             JArray jtrades = jObject.Value<JArray>("f");

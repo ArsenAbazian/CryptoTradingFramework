@@ -27,10 +27,10 @@ namespace CryptoMarketClient {
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
             this.dataLayoutControl1 = new DevExpress.XtraDataLayout.DataLayoutControl();
-            this.tbDepositPercent = new DevExpress.XtraEditors.TrackBarControl();
-            this.btnSell = new DevExpress.XtraEditors.SimpleButton();
+            this.tbBaseDeposit = new DevExpress.XtraEditors.TrackBarControl();
             this.btnBuy = new DevExpress.XtraEditors.SimpleButton();
             this.BuyPriceTextEdit = new DevExpress.XtraEditors.TextEdit();
+            this.tradeSettingsBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.AmoutTextEdit = new DevExpress.XtraEditors.TextEdit();
             this.StopLossPricePercentTextEdit = new DevExpress.XtraEditors.TextEdit();
             this.TakeProfitPercentTextEdit = new DevExpress.XtraEditors.TextEdit();
@@ -39,6 +39,10 @@ namespace CryptoMarketClient {
             this.checkEdit1 = new DevExpress.XtraEditors.ToggleSwitch();
             this.ceIgnoreStopLoss = new DevExpress.XtraEditors.ToggleSwitch();
             this.ceIncrementalStopLoss = new DevExpress.XtraEditors.ToggleSwitch();
+            this.textEdit4 = new DevExpress.XtraEditors.TextEdit();
+            this.textEdit3 = new DevExpress.XtraEditors.TextEdit();
+            this.simpleButton2 = new DevExpress.XtraEditors.SimpleButton();
+            this.tbSellDeposit = new DevExpress.XtraEditors.TrackBarControl();
             this.layoutControlGroup1 = new DevExpress.XtraLayout.LayoutControlGroup();
             this.tabbedControlGroup1 = new DevExpress.XtraLayout.TabbedControlGroup();
             this.layoutControlGroup5 = new DevExpress.XtraLayout.LayoutControlGroup();
@@ -46,9 +50,14 @@ namespace CryptoMarketClient {
             this.ItemForAmout = new DevExpress.XtraLayout.LayoutControlItem();
             this.itemForSpendBTC = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItem1 = new DevExpress.XtraLayout.LayoutControlItem();
-            this.layoutControlItem3 = new DevExpress.XtraLayout.LayoutControlItem();
             this.emptySpaceItem1 = new DevExpress.XtraLayout.EmptySpaceItem();
             this.layoutControlItem4 = new DevExpress.XtraLayout.LayoutControlItem();
+            this.layoutControlGroup2 = new DevExpress.XtraLayout.LayoutControlGroup();
+            this.ItemForBuyPrice1 = new DevExpress.XtraLayout.LayoutControlItem();
+            this.ItemForAmout1 = new DevExpress.XtraLayout.LayoutControlItem();
+            this.layoutControlItem6 = new DevExpress.XtraLayout.LayoutControlItem();
+            this.emptySpaceItem2 = new DevExpress.XtraLayout.EmptySpaceItem();
+            this.layoutControlItem7 = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlGroup4 = new DevExpress.XtraLayout.LayoutControlGroup();
             this.ItemForIngoreStopLoss = new DevExpress.XtraLayout.LayoutControlItem();
             this.ItemForIncrementalStopLoss = new DevExpress.XtraLayout.LayoutControlItem();
@@ -57,12 +66,12 @@ namespace CryptoMarketClient {
             this.ItemForTakeProfitPercent = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItem2 = new DevExpress.XtraLayout.LayoutControlItem();
             this.checkEdit2 = new DevExpress.XtraEditors.CheckEdit();
-            this.tralingSettingsBindingSource = new System.Windows.Forms.BindingSource(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.dataLayoutControl1)).BeginInit();
             this.dataLayoutControl1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.tbDepositPercent)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.tbDepositPercent.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tbBaseDeposit)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tbBaseDeposit.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.BuyPriceTextEdit.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tradeSettingsBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.AmoutTextEdit.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.StopLossPricePercentTextEdit.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.TakeProfitPercentTextEdit.Properties)).BeginInit();
@@ -71,6 +80,10 @@ namespace CryptoMarketClient {
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit1.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ceIgnoreStopLoss.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ceIncrementalStopLoss.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.textEdit4.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.textEdit3.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tbSellDeposit)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tbSellDeposit.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tabbedControlGroup1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup5)).BeginInit();
@@ -78,9 +91,14 @@ namespace CryptoMarketClient {
             ((System.ComponentModel.ISupportInitialize)(this.ItemForAmout)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.itemForSpendBTC)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItem1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem4)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ItemForBuyPrice1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ItemForAmout1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem6)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItem2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem7)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup4)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ItemForIngoreStopLoss)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ItemForIncrementalStopLoss)).BeginInit();
@@ -89,15 +107,13 @@ namespace CryptoMarketClient {
             ((System.ComponentModel.ISupportInitialize)(this.ItemForTakeProfitPercent)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit2.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.tralingSettingsBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // dataLayoutControl1
             // 
             this.dataLayoutControl1.Appearance.Control.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.dataLayoutControl1.Appearance.Control.Options.UseFont = true;
-            this.dataLayoutControl1.Controls.Add(this.tbDepositPercent);
-            this.dataLayoutControl1.Controls.Add(this.btnSell);
+            this.dataLayoutControl1.Controls.Add(this.tbBaseDeposit);
             this.dataLayoutControl1.Controls.Add(this.btnBuy);
             this.dataLayoutControl1.Controls.Add(this.BuyPriceTextEdit);
             this.dataLayoutControl1.Controls.Add(this.AmoutTextEdit);
@@ -108,51 +124,42 @@ namespace CryptoMarketClient {
             this.dataLayoutControl1.Controls.Add(this.checkEdit1);
             this.dataLayoutControl1.Controls.Add(this.ceIgnoreStopLoss);
             this.dataLayoutControl1.Controls.Add(this.ceIncrementalStopLoss);
-            this.dataLayoutControl1.DataSource = this.tralingSettingsBindingSource;
+            this.dataLayoutControl1.Controls.Add(this.textEdit4);
+            this.dataLayoutControl1.Controls.Add(this.textEdit3);
+            this.dataLayoutControl1.Controls.Add(this.simpleButton2);
+            this.dataLayoutControl1.Controls.Add(this.tbSellDeposit);
+            this.dataLayoutControl1.DataSource = this.tradeSettingsBindingSource;
             this.dataLayoutControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataLayoutControl1.Location = new System.Drawing.Point(0, 0);
             this.dataLayoutControl1.Margin = new System.Windows.Forms.Padding(6);
             this.dataLayoutControl1.Name = "dataLayoutControl1";
             this.dataLayoutControl1.OptionsCustomizationForm.DesignTimeCustomizationFormPositionAndSize = new System.Drawing.Rectangle(913, 279, 1422, 1222);
             this.dataLayoutControl1.Root = this.layoutControlGroup1;
-            this.dataLayoutControl1.Size = new System.Drawing.Size(1159, 832);
+            this.dataLayoutControl1.Size = new System.Drawing.Size(1160, 833);
             this.dataLayoutControl1.TabIndex = 0;
             this.dataLayoutControl1.Text = "dataLayoutControl1";
             // 
             // tbDepositPercent
             // 
-            this.tbDepositPercent.EditValue = null;
-            this.tbDepositPercent.Location = new System.Drawing.Point(262, 236);
-            this.tbDepositPercent.Margin = new System.Windows.Forms.Padding(6);
-            this.tbDepositPercent.Name = "tbDepositPercent";
-            this.tbDepositPercent.Properties.LabelAppearance.Options.UseTextOptions = true;
-            this.tbDepositPercent.Properties.LabelAppearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
-            this.tbDepositPercent.Properties.Maximum = 100;
-            this.tbDepositPercent.Properties.ShowValueToolTip = true;
-            this.tbDepositPercent.Properties.TickFrequency = 10;
-            this.tbDepositPercent.Properties.TickStyle = System.Windows.Forms.TickStyle.Both;
-            this.tbDepositPercent.Size = new System.Drawing.Size(868, 90);
-            this.tbDepositPercent.StyleController = this.dataLayoutControl1;
-            this.tbDepositPercent.TabIndex = 19;
-            this.tbDepositPercent.EditValueChanged += new System.EventHandler(this.tbDepositPercent_EditValueChanged);
-            // 
-            // btnSell
-            // 
-            this.btnSell.AutoWidthInLayoutControl = true;
-            this.btnSell.Location = new System.Drawing.Point(911, 359);
-            this.btnSell.Margin = new System.Windows.Forms.Padding(6);
-            this.btnSell.Name = "btnSell";
-            this.btnSell.Padding = new System.Windows.Forms.Padding(80, 0, 80, 0);
-            this.btnSell.Size = new System.Drawing.Size(219, 50);
-            this.btnSell.StyleController = this.dataLayoutControl1;
-            this.btnSell.TabIndex = 17;
-            this.btnSell.Text = "Sell";
-            this.btnSell.Click += new System.EventHandler(this.btnSell_Click);
+            this.tbBaseDeposit.EditValue = null;
+            this.tbBaseDeposit.Location = new System.Drawing.Point(262, 236);
+            this.tbBaseDeposit.Margin = new System.Windows.Forms.Padding(6);
+            this.tbBaseDeposit.Name = "tbDepositPercent";
+            this.tbBaseDeposit.Properties.LabelAppearance.Options.UseTextOptions = true;
+            this.tbBaseDeposit.Properties.LabelAppearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
+            this.tbBaseDeposit.Properties.Maximum = 100;
+            this.tbBaseDeposit.Properties.ShowValueToolTip = true;
+            this.tbBaseDeposit.Properties.TickFrequency = 10;
+            this.tbBaseDeposit.Properties.TickStyle = System.Windows.Forms.TickStyle.Both;
+            this.tbBaseDeposit.Size = new System.Drawing.Size(869, 90);
+            this.tbBaseDeposit.StyleController = this.dataLayoutControl1;
+            this.tbBaseDeposit.TabIndex = 19;
+            this.tbBaseDeposit.EditValueChanged += new System.EventHandler(this.tbDepositPercent_EditValueChanged);
             // 
             // btnBuy
             // 
             this.btnBuy.AutoWidthInLayoutControl = true;
-            this.btnBuy.Location = new System.Drawing.Point(681, 359);
+            this.btnBuy.Location = new System.Drawing.Point(905, 359);
             this.btnBuy.Margin = new System.Windows.Forms.Padding(6);
             this.btnBuy.Name = "btnBuy";
             this.btnBuy.Padding = new System.Windows.Forms.Padding(80, 0, 80, 0);
@@ -164,7 +171,7 @@ namespace CryptoMarketClient {
             // 
             // BuyPriceTextEdit
             // 
-            this.BuyPriceTextEdit.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.tralingSettingsBindingSource, "TradePrice", true));
+            this.BuyPriceTextEdit.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.tradeSettingsBindingSource, "BuyPrice", true));
             this.BuyPriceTextEdit.Location = new System.Drawing.Point(262, 68);
             this.BuyPriceTextEdit.Margin = new System.Windows.Forms.Padding(6);
             this.BuyPriceTextEdit.Name = "BuyPriceTextEdit";
@@ -176,13 +183,17 @@ namespace CryptoMarketClient {
             this.BuyPriceTextEdit.Properties.Mask.EditMask = "f8";
             this.BuyPriceTextEdit.Properties.Mask.MaskType = DevExpress.XtraEditors.Mask.MaskType.Numeric;
             this.BuyPriceTextEdit.Properties.Mask.UseMaskAsDisplayFormat = true;
-            this.BuyPriceTextEdit.Size = new System.Drawing.Size(868, 52);
+            this.BuyPriceTextEdit.Size = new System.Drawing.Size(869, 52);
             this.BuyPriceTextEdit.StyleController = this.dataLayoutControl1;
             this.BuyPriceTextEdit.TabIndex = 4;
             // 
+            // tradeSettingsBindingSource
+            // 
+            this.tradeSettingsBindingSource.DataSource = typeof(CryptoMarketClient.Common.TradingSettings);
+            // 
             // AmoutTextEdit
             // 
-            this.AmoutTextEdit.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.tralingSettingsBindingSource, "Amount", true));
+            this.AmoutTextEdit.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.tradeSettingsBindingSource, "BuyAmount", true));
             this.AmoutTextEdit.Location = new System.Drawing.Point(262, 124);
             this.AmoutTextEdit.Margin = new System.Windows.Forms.Padding(6);
             this.AmoutTextEdit.Name = "AmoutTextEdit";
@@ -194,13 +205,13 @@ namespace CryptoMarketClient {
             this.AmoutTextEdit.Properties.Mask.EditMask = "f8";
             this.AmoutTextEdit.Properties.Mask.MaskType = DevExpress.XtraEditors.Mask.MaskType.Numeric;
             this.AmoutTextEdit.Properties.Mask.UseMaskAsDisplayFormat = true;
-            this.AmoutTextEdit.Size = new System.Drawing.Size(868, 52);
+            this.AmoutTextEdit.Size = new System.Drawing.Size(869, 52);
             this.AmoutTextEdit.StyleController = this.dataLayoutControl1;
             this.AmoutTextEdit.TabIndex = 5;
             // 
             // StopLossPricePercentTextEdit
             // 
-            this.StopLossPricePercentTextEdit.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.tralingSettingsBindingSource, "StopLossPricePercent", true));
+            this.StopLossPricePercentTextEdit.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.tradeSettingsBindingSource, "StopLossPricePercent", true));
             this.StopLossPricePercentTextEdit.Enabled = false;
             this.StopLossPricePercentTextEdit.Location = new System.Drawing.Point(262, 248);
             this.StopLossPricePercentTextEdit.Margin = new System.Windows.Forms.Padding(6);
@@ -210,13 +221,13 @@ namespace CryptoMarketClient {
             this.StopLossPricePercentTextEdit.Properties.Mask.EditMask = "P";
             this.StopLossPricePercentTextEdit.Properties.Mask.MaskType = DevExpress.XtraEditors.Mask.MaskType.Numeric;
             this.StopLossPricePercentTextEdit.Properties.Mask.UseMaskAsDisplayFormat = true;
-            this.StopLossPricePercentTextEdit.Size = new System.Drawing.Size(868, 52);
+            this.StopLossPricePercentTextEdit.Size = new System.Drawing.Size(869, 52);
             this.StopLossPricePercentTextEdit.StyleController = this.dataLayoutControl1;
             this.StopLossPricePercentTextEdit.TabIndex = 6;
             // 
             // TakeProfitPercentTextEdit
             // 
-            this.TakeProfitPercentTextEdit.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.tralingSettingsBindingSource, "TakeProfitPercent", true));
+            this.TakeProfitPercentTextEdit.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.tradeSettingsBindingSource, "TakeProfitPercent", true));
             this.TakeProfitPercentTextEdit.Enabled = false;
             this.TakeProfitPercentTextEdit.Location = new System.Drawing.Point(262, 360);
             this.TakeProfitPercentTextEdit.Margin = new System.Windows.Forms.Padding(6);
@@ -228,13 +239,13 @@ namespace CryptoMarketClient {
             this.TakeProfitPercentTextEdit.Properties.Mask.EditMask = "P";
             this.TakeProfitPercentTextEdit.Properties.Mask.MaskType = DevExpress.XtraEditors.Mask.MaskType.Numeric;
             this.TakeProfitPercentTextEdit.Properties.Mask.UseMaskAsDisplayFormat = true;
-            this.TakeProfitPercentTextEdit.Size = new System.Drawing.Size(868, 52);
+            this.TakeProfitPercentTextEdit.Size = new System.Drawing.Size(869, 52);
             this.TakeProfitPercentTextEdit.StyleController = this.dataLayoutControl1;
             this.TakeProfitPercentTextEdit.TabIndex = 8;
             // 
             // TakeProfitStartPercentTextEdit
             // 
-            this.TakeProfitStartPercentTextEdit.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.tralingSettingsBindingSource, "TakeProfitStartPercent", true));
+            this.TakeProfitStartPercentTextEdit.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.tradeSettingsBindingSource, "TakeProfitStartPercent", true));
             this.TakeProfitStartPercentTextEdit.Enabled = false;
             this.TakeProfitStartPercentTextEdit.Location = new System.Drawing.Point(262, 304);
             this.TakeProfitStartPercentTextEdit.Margin = new System.Windows.Forms.Padding(6);
@@ -246,13 +257,13 @@ namespace CryptoMarketClient {
             this.TakeProfitStartPercentTextEdit.Properties.Mask.EditMask = "P";
             this.TakeProfitStartPercentTextEdit.Properties.Mask.MaskType = DevExpress.XtraEditors.Mask.MaskType.Numeric;
             this.TakeProfitStartPercentTextEdit.Properties.Mask.UseMaskAsDisplayFormat = true;
-            this.TakeProfitStartPercentTextEdit.Size = new System.Drawing.Size(868, 52);
+            this.TakeProfitStartPercentTextEdit.Size = new System.Drawing.Size(869, 52);
             this.TakeProfitStartPercentTextEdit.StyleController = this.dataLayoutControl1;
             this.TakeProfitStartPercentTextEdit.TabIndex = 7;
             // 
             // textEdit1
             // 
-            this.textEdit1.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.tralingSettingsBindingSource, "TotalSpendInBaseCurrency", true));
+            this.textEdit1.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.tradeSettingsBindingSource, "TotalSpendInBaseCurrency", true));
             this.textEdit1.Location = new System.Drawing.Point(262, 180);
             this.textEdit1.Margin = new System.Windows.Forms.Padding(6);
             this.textEdit1.Name = "textEdit1";
@@ -262,13 +273,13 @@ namespace CryptoMarketClient {
             this.textEdit1.Properties.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.textEdit1.Properties.Mask.EditMask = "f8";
             this.textEdit1.Properties.Mask.MaskType = DevExpress.XtraEditors.Mask.MaskType.Numeric;
-            this.textEdit1.Size = new System.Drawing.Size(868, 52);
+            this.textEdit1.Size = new System.Drawing.Size(869, 52);
             this.textEdit1.StyleController = this.dataLayoutControl1;
             this.textEdit1.TabIndex = 10;
             // 
             // checkEdit1
             // 
-            this.checkEdit1.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.tralingSettingsBindingSource, "Enabled", true));
+            this.checkEdit1.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.tradeSettingsBindingSource, "Enabled", true));
             this.checkEdit1.Location = new System.Drawing.Point(262, 68);
             this.checkEdit1.Margin = new System.Windows.Forms.Padding(6);
             this.checkEdit1.Name = "checkEdit1";
@@ -276,13 +287,13 @@ namespace CryptoMarketClient {
             this.checkEdit1.Properties.OffText = "Off";
             this.checkEdit1.Properties.OnText = "On";
             this.checkEdit1.Properties.ShowText = false;
-            this.checkEdit1.Size = new System.Drawing.Size(868, 56);
+            this.checkEdit1.Size = new System.Drawing.Size(869, 56);
             this.checkEdit1.StyleController = this.dataLayoutControl1;
             this.checkEdit1.TabIndex = 18;
             // 
             // ceIgnoreStopLoss
             // 
-            this.ceIgnoreStopLoss.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.tralingSettingsBindingSource, "IgnoreStopLoss", true));
+            this.ceIgnoreStopLoss.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.tradeSettingsBindingSource, "IgnoreStopLoss", true));
             this.ceIgnoreStopLoss.Location = new System.Drawing.Point(262, 128);
             this.ceIgnoreStopLoss.Margin = new System.Windows.Forms.Padding(6);
             this.ceIgnoreStopLoss.Name = "ceIgnoreStopLoss";
@@ -290,13 +301,13 @@ namespace CryptoMarketClient {
             this.ceIgnoreStopLoss.Properties.OffText = "Off";
             this.ceIgnoreStopLoss.Properties.OnText = "On";
             this.ceIgnoreStopLoss.Properties.ShowText = false;
-            this.ceIgnoreStopLoss.Size = new System.Drawing.Size(868, 56);
+            this.ceIgnoreStopLoss.Size = new System.Drawing.Size(869, 56);
             this.ceIgnoreStopLoss.StyleController = this.dataLayoutControl1;
             this.ceIgnoreStopLoss.TabIndex = 12;
             // 
             // ceIncrementalStopLoss
             // 
-            this.ceIncrementalStopLoss.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.tralingSettingsBindingSource, "EnableIncrementalStopLoss", true));
+            this.ceIncrementalStopLoss.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.tradeSettingsBindingSource, "EnableIncrementalStopLoss", true));
             this.ceIncrementalStopLoss.Location = new System.Drawing.Point(262, 188);
             this.ceIncrementalStopLoss.Margin = new System.Windows.Forms.Padding(6);
             this.ceIncrementalStopLoss.Name = "ceIncrementalStopLoss";
@@ -304,9 +315,75 @@ namespace CryptoMarketClient {
             this.ceIncrementalStopLoss.Properties.OffText = "Off";
             this.ceIncrementalStopLoss.Properties.OnText = "On";
             this.ceIncrementalStopLoss.Properties.ShowText = false;
-            this.ceIncrementalStopLoss.Size = new System.Drawing.Size(868, 56);
+            this.ceIncrementalStopLoss.Size = new System.Drawing.Size(869, 56);
             this.ceIncrementalStopLoss.StyleController = this.dataLayoutControl1;
             this.ceIncrementalStopLoss.TabIndex = 13;
+            // 
+            // textEdit4
+            // 
+            this.textEdit4.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.tradeSettingsBindingSource, "SellPrice", true));
+            this.textEdit4.Location = new System.Drawing.Point(268, 74);
+            this.textEdit4.Margin = new System.Windows.Forms.Padding(6);
+            this.textEdit4.Name = "textEdit4";
+            this.textEdit4.Properties.AllowNullInput = DevExpress.Utils.DefaultBoolean.False;
+            this.textEdit4.Properties.Appearance.Options.UseTextOptions = true;
+            this.textEdit4.Properties.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Far;
+            this.textEdit4.Properties.DisplayFormat.FormatString = "0.00000000";
+            this.textEdit4.Properties.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+            this.textEdit4.Properties.Mask.EditMask = "f8";
+            this.textEdit4.Properties.Mask.MaskType = DevExpress.XtraEditors.Mask.MaskType.Numeric;
+            this.textEdit4.Properties.Mask.UseMaskAsDisplayFormat = true;
+            this.textEdit4.Size = new System.Drawing.Size(857, 52);
+            this.textEdit4.StyleController = this.dataLayoutControl1;
+            this.textEdit4.TabIndex = 4;
+            // 
+            // textEdit3
+            // 
+            this.textEdit3.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.tradeSettingsBindingSource, "SellAmount", true));
+            this.textEdit3.Location = new System.Drawing.Point(268, 142);
+            this.textEdit3.Margin = new System.Windows.Forms.Padding(6);
+            this.textEdit3.Name = "textEdit3";
+            this.textEdit3.Properties.AllowNullInput = DevExpress.Utils.DefaultBoolean.False;
+            this.textEdit3.Properties.Appearance.Options.UseTextOptions = true;
+            this.textEdit3.Properties.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Far;
+            this.textEdit3.Properties.DisplayFormat.FormatString = "0.00000000";
+            this.textEdit3.Properties.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+            this.textEdit3.Properties.Mask.EditMask = "f8";
+            this.textEdit3.Properties.Mask.MaskType = DevExpress.XtraEditors.Mask.MaskType.Numeric;
+            this.textEdit3.Properties.Mask.UseMaskAsDisplayFormat = true;
+            this.textEdit3.Size = new System.Drawing.Size(857, 52);
+            this.textEdit3.StyleController = this.dataLayoutControl1;
+            this.textEdit3.TabIndex = 5;
+            // 
+            // simpleButton2
+            // 
+            this.simpleButton2.AutoWidthInLayoutControl = true;
+            this.simpleButton2.Location = new System.Drawing.Point(910, 368);
+            this.simpleButton2.Margin = new System.Windows.Forms.Padding(6);
+            this.simpleButton2.Name = "simpleButton2";
+            this.simpleButton2.Padding = new System.Windows.Forms.Padding(80, 0, 80, 0);
+            this.simpleButton2.Size = new System.Drawing.Size(219, 50);
+            this.simpleButton2.StyleController = this.dataLayoutControl1;
+            this.simpleButton2.TabIndex = 17;
+            this.simpleButton2.Text = "Sell";
+            this.simpleButton2.Click += new System.EventHandler(this.btnSell_Click);
+            // 
+            // trackBarControl1
+            // 
+            this.tbSellDeposit.EditValue = null;
+            this.tbSellDeposit.Location = new System.Drawing.Point(268, 210);
+            this.tbSellDeposit.Margin = new System.Windows.Forms.Padding(6);
+            this.tbSellDeposit.Name = "trackBarControl1";
+            this.tbSellDeposit.Properties.LabelAppearance.Options.UseTextOptions = true;
+            this.tbSellDeposit.Properties.LabelAppearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
+            this.tbSellDeposit.Properties.Maximum = 100;
+            this.tbSellDeposit.Properties.ShowValueToolTip = true;
+            this.tbSellDeposit.Properties.TickFrequency = 10;
+            this.tbSellDeposit.Properties.TickStyle = System.Windows.Forms.TickStyle.Both;
+            this.tbSellDeposit.Size = new System.Drawing.Size(857, 90);
+            this.tbSellDeposit.StyleController = this.dataLayoutControl1;
+            this.tbSellDeposit.TabIndex = 19;
+            this.tbSellDeposit.EditValueChanged += new System.EventHandler(this.trackBarControl1_EditValueChanged);
             // 
             // layoutControlGroup1
             // 
@@ -316,7 +393,7 @@ namespace CryptoMarketClient {
             this.tabbedControlGroup1});
             this.layoutControlGroup1.Name = "Root";
             this.layoutControlGroup1.OptionsItemText.TextToControlDistance = 6;
-            this.layoutControlGroup1.Size = new System.Drawing.Size(1159, 832);
+            this.layoutControlGroup1.Size = new System.Drawing.Size(1160, 833);
             this.layoutControlGroup1.TextVisible = false;
             // 
             // tabbedControlGroup1
@@ -324,9 +401,10 @@ namespace CryptoMarketClient {
             this.tabbedControlGroup1.Location = new System.Drawing.Point(0, 0);
             this.tabbedControlGroup1.Name = "tabbedControlGroup1";
             this.tabbedControlGroup1.SelectedTabPage = this.layoutControlGroup5;
-            this.tabbedControlGroup1.Size = new System.Drawing.Size(1139, 812);
+            this.tabbedControlGroup1.Size = new System.Drawing.Size(1140, 813);
             this.tabbedControlGroup1.TabPages.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
             this.layoutControlGroup5,
+            this.layoutControlGroup2,
             this.layoutControlGroup4});
             // 
             // layoutControlGroup5
@@ -336,20 +414,19 @@ namespace CryptoMarketClient {
             this.ItemForAmout,
             this.itemForSpendBTC,
             this.layoutControlItem1,
-            this.layoutControlItem3,
             this.emptySpaceItem1,
             this.layoutControlItem4});
             this.layoutControlGroup5.Location = new System.Drawing.Point(0, 0);
             this.layoutControlGroup5.Name = "layoutControlGroup5";
-            this.layoutControlGroup5.Size = new System.Drawing.Size(1109, 739);
-            this.layoutControlGroup5.Text = "Buy/Sell";
+            this.layoutControlGroup5.Size = new System.Drawing.Size(1110, 740);
+            this.layoutControlGroup5.Text = "Buy";
             // 
             // ItemForBuyPrice
             // 
             this.ItemForBuyPrice.Control = this.BuyPriceTextEdit;
             this.ItemForBuyPrice.Location = new System.Drawing.Point(0, 0);
             this.ItemForBuyPrice.Name = "ItemForBuyPrice";
-            this.ItemForBuyPrice.Size = new System.Drawing.Size(1109, 56);
+            this.ItemForBuyPrice.Size = new System.Drawing.Size(1110, 56);
             this.ItemForBuyPrice.Text = "Price";
             this.ItemForBuyPrice.TextSize = new System.Drawing.Size(231, 25);
             // 
@@ -358,7 +435,7 @@ namespace CryptoMarketClient {
             this.ItemForAmout.Control = this.AmoutTextEdit;
             this.ItemForAmout.Location = new System.Drawing.Point(0, 56);
             this.ItemForAmout.Name = "ItemForAmout";
-            this.ItemForAmout.Size = new System.Drawing.Size(1109, 56);
+            this.ItemForAmout.Size = new System.Drawing.Size(1110, 56);
             this.ItemForAmout.Text = "Amout";
             this.ItemForAmout.TextSize = new System.Drawing.Size(231, 25);
             // 
@@ -367,46 +444,105 @@ namespace CryptoMarketClient {
             this.itemForSpendBTC.Control = this.textEdit1;
             this.itemForSpendBTC.Location = new System.Drawing.Point(0, 112);
             this.itemForSpendBTC.Name = "itemForSpendBTC";
-            this.itemForSpendBTC.Size = new System.Drawing.Size(1109, 56);
+            this.itemForSpendBTC.Size = new System.Drawing.Size(1110, 56);
             this.itemForSpendBTC.Text = "Spend in Base";
             this.itemForSpendBTC.TextSize = new System.Drawing.Size(231, 25);
             // 
             // layoutControlItem1
             // 
             this.layoutControlItem1.Control = this.btnBuy;
-            this.layoutControlItem1.Location = new System.Drawing.Point(650, 262);
+            this.layoutControlItem1.Location = new System.Drawing.Point(874, 262);
             this.layoutControlItem1.Name = "layoutControlItem1";
             this.layoutControlItem1.Padding = new DevExpress.XtraLayout.Utils.Padding(8, 8, 31, 8);
-            this.layoutControlItem1.Size = new System.Drawing.Size(236, 477);
+            this.layoutControlItem1.Size = new System.Drawing.Size(236, 478);
             this.layoutControlItem1.TextSize = new System.Drawing.Size(0, 0);
             this.layoutControlItem1.TextVisible = false;
-            // 
-            // layoutControlItem3
-            // 
-            this.layoutControlItem3.Control = this.btnSell;
-            this.layoutControlItem3.Location = new System.Drawing.Point(886, 262);
-            this.layoutControlItem3.Name = "layoutControlItem3";
-            this.layoutControlItem3.Padding = new DevExpress.XtraLayout.Utils.Padding(2, 2, 31, 2);
-            this.layoutControlItem3.Size = new System.Drawing.Size(223, 477);
-            this.layoutControlItem3.TextSize = new System.Drawing.Size(0, 0);
-            this.layoutControlItem3.TextVisible = false;
             // 
             // emptySpaceItem1
             // 
             this.emptySpaceItem1.AllowHotTrack = false;
             this.emptySpaceItem1.Location = new System.Drawing.Point(0, 262);
             this.emptySpaceItem1.Name = "emptySpaceItem1";
-            this.emptySpaceItem1.Size = new System.Drawing.Size(650, 477);
+            this.emptySpaceItem1.Size = new System.Drawing.Size(874, 478);
             this.emptySpaceItem1.TextSize = new System.Drawing.Size(0, 0);
             // 
             // layoutControlItem4
             // 
-            this.layoutControlItem4.Control = this.tbDepositPercent;
+            this.layoutControlItem4.Control = this.tbBaseDeposit;
             this.layoutControlItem4.Location = new System.Drawing.Point(0, 168);
             this.layoutControlItem4.Name = "layoutControlItem4";
-            this.layoutControlItem4.Size = new System.Drawing.Size(1109, 94);
+            this.layoutControlItem4.Size = new System.Drawing.Size(1110, 94);
             this.layoutControlItem4.Text = "% of Deposit";
             this.layoutControlItem4.TextSize = new System.Drawing.Size(231, 25);
+            // 
+            // layoutControlGroup2
+            // 
+            this.layoutControlGroup2.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
+            this.ItemForBuyPrice1,
+            this.ItemForAmout1,
+            this.layoutControlItem6,
+            this.emptySpaceItem2,
+            this.layoutControlItem7});
+            this.layoutControlGroup2.Location = new System.Drawing.Point(0, 0);
+            this.layoutControlGroup2.Name = "layoutControlGroup2";
+            this.layoutControlGroup2.Size = new System.Drawing.Size(1110, 740);
+            this.layoutControlGroup2.Text = "Sell";
+            // 
+            // ItemForBuyPrice1
+            // 
+            this.ItemForBuyPrice1.Control = this.textEdit4;
+            this.ItemForBuyPrice1.CustomizationFormText = "Price";
+            this.ItemForBuyPrice1.Location = new System.Drawing.Point(0, 0);
+            this.ItemForBuyPrice1.Name = "ItemForBuyPrice1";
+            this.ItemForBuyPrice1.Padding = new DevExpress.XtraLayout.Utils.Padding(8, 8, 8, 8);
+            this.ItemForBuyPrice1.Size = new System.Drawing.Size(1110, 68);
+            this.ItemForBuyPrice1.Text = "Price";
+            this.ItemForBuyPrice1.TextSize = new System.Drawing.Size(231, 25);
+            // 
+            // ItemForAmout1
+            // 
+            this.ItemForAmout1.Control = this.textEdit3;
+            this.ItemForAmout1.CustomizationFormText = "Amout";
+            this.ItemForAmout1.Location = new System.Drawing.Point(0, 68);
+            this.ItemForAmout1.Name = "ItemForAmout1";
+            this.ItemForAmout1.Padding = new DevExpress.XtraLayout.Utils.Padding(8, 8, 8, 8);
+            this.ItemForAmout1.Size = new System.Drawing.Size(1110, 68);
+            this.ItemForAmout1.Text = "Amout";
+            this.ItemForAmout1.TextSize = new System.Drawing.Size(231, 25);
+            // 
+            // layoutControlItem6
+            // 
+            this.layoutControlItem6.Control = this.simpleButton2;
+            this.layoutControlItem6.CustomizationFormText = "layoutControlItem3";
+            this.layoutControlItem6.Location = new System.Drawing.Point(883, 242);
+            this.layoutControlItem6.Name = "layoutControlItem6";
+            this.layoutControlItem6.Padding = new DevExpress.XtraLayout.Utils.Padding(4, 4, 60, 4);
+            this.layoutControlItem6.Size = new System.Drawing.Size(227, 498);
+            this.layoutControlItem6.Text = "layoutControlItem3";
+            this.layoutControlItem6.TextSize = new System.Drawing.Size(0, 0);
+            this.layoutControlItem6.TextVisible = false;
+            // 
+            // emptySpaceItem2
+            // 
+            this.emptySpaceItem2.AllowHotTrack = false;
+            this.emptySpaceItem2.CustomizationFormText = "emptySpaceItem1";
+            this.emptySpaceItem2.Location = new System.Drawing.Point(0, 242);
+            this.emptySpaceItem2.Name = "emptySpaceItem2";
+            this.emptySpaceItem2.Padding = new DevExpress.XtraLayout.Utils.Padding(8, 8, 8, 8);
+            this.emptySpaceItem2.Size = new System.Drawing.Size(883, 498);
+            this.emptySpaceItem2.Text = "emptySpaceItem1";
+            this.emptySpaceItem2.TextSize = new System.Drawing.Size(0, 0);
+            // 
+            // layoutControlItem7
+            // 
+            this.layoutControlItem7.Control = this.tbSellDeposit;
+            this.layoutControlItem7.CustomizationFormText = "% of Deposit";
+            this.layoutControlItem7.Location = new System.Drawing.Point(0, 136);
+            this.layoutControlItem7.Name = "layoutControlItem7";
+            this.layoutControlItem7.Padding = new DevExpress.XtraLayout.Utils.Padding(8, 8, 8, 8);
+            this.layoutControlItem7.Size = new System.Drawing.Size(1110, 106);
+            this.layoutControlItem7.Text = "% of Deposit";
+            this.layoutControlItem7.TextSize = new System.Drawing.Size(231, 25);
             // 
             // layoutControlGroup4
             // 
@@ -419,7 +555,7 @@ namespace CryptoMarketClient {
             this.layoutControlItem2});
             this.layoutControlGroup4.Location = new System.Drawing.Point(0, 0);
             this.layoutControlGroup4.Name = "layoutControlGroup4";
-            this.layoutControlGroup4.Size = new System.Drawing.Size(1109, 739);
+            this.layoutControlGroup4.Size = new System.Drawing.Size(1110, 740);
             this.layoutControlGroup4.Text = "Trailing";
             // 
             // ItemForIngoreStopLoss
@@ -427,7 +563,7 @@ namespace CryptoMarketClient {
             this.ItemForIngoreStopLoss.Control = this.ceIgnoreStopLoss;
             this.ItemForIngoreStopLoss.Location = new System.Drawing.Point(0, 60);
             this.ItemForIngoreStopLoss.Name = "ItemForIngoreStopLoss";
-            this.ItemForIngoreStopLoss.Size = new System.Drawing.Size(1109, 60);
+            this.ItemForIngoreStopLoss.Size = new System.Drawing.Size(1110, 60);
             this.ItemForIngoreStopLoss.Text = "Ignore Stop Loss";
             this.ItemForIngoreStopLoss.TextSize = new System.Drawing.Size(231, 25);
             // 
@@ -436,7 +572,7 @@ namespace CryptoMarketClient {
             this.ItemForIncrementalStopLoss.Control = this.ceIncrementalStopLoss;
             this.ItemForIncrementalStopLoss.Location = new System.Drawing.Point(0, 120);
             this.ItemForIncrementalStopLoss.Name = "ItemForIncrementalStopLoss";
-            this.ItemForIncrementalStopLoss.Size = new System.Drawing.Size(1109, 60);
+            this.ItemForIncrementalStopLoss.Size = new System.Drawing.Size(1110, 60);
             this.ItemForIncrementalStopLoss.Text = "Incremental Stop Loss";
             this.ItemForIncrementalStopLoss.TextSize = new System.Drawing.Size(231, 25);
             // 
@@ -446,7 +582,7 @@ namespace CryptoMarketClient {
             this.ItemForStopLossPricePercent.Enabled = false;
             this.ItemForStopLossPricePercent.Location = new System.Drawing.Point(0, 180);
             this.ItemForStopLossPricePercent.Name = "ItemForStopLossPricePercent";
-            this.ItemForStopLossPricePercent.Size = new System.Drawing.Size(1109, 56);
+            this.ItemForStopLossPricePercent.Size = new System.Drawing.Size(1110, 56);
             this.ItemForStopLossPricePercent.Text = "Stop Loss Price Percent";
             this.ItemForStopLossPricePercent.TextSize = new System.Drawing.Size(231, 25);
             // 
@@ -456,7 +592,7 @@ namespace CryptoMarketClient {
             this.ItemForTakeProfitStartPercent.Enabled = false;
             this.ItemForTakeProfitStartPercent.Location = new System.Drawing.Point(0, 236);
             this.ItemForTakeProfitStartPercent.Name = "ItemForTakeProfitStartPercent";
-            this.ItemForTakeProfitStartPercent.Size = new System.Drawing.Size(1109, 56);
+            this.ItemForTakeProfitStartPercent.Size = new System.Drawing.Size(1110, 56);
             this.ItemForTakeProfitStartPercent.Text = "Take Profit Start Percent";
             this.ItemForTakeProfitStartPercent.TextSize = new System.Drawing.Size(231, 25);
             // 
@@ -466,7 +602,7 @@ namespace CryptoMarketClient {
             this.ItemForTakeProfitPercent.Enabled = false;
             this.ItemForTakeProfitPercent.Location = new System.Drawing.Point(0, 292);
             this.ItemForTakeProfitPercent.Name = "ItemForTakeProfitPercent";
-            this.ItemForTakeProfitPercent.Size = new System.Drawing.Size(1109, 447);
+            this.ItemForTakeProfitPercent.Size = new System.Drawing.Size(1110, 448);
             this.ItemForTakeProfitPercent.Text = "Take Profit Percent";
             this.ItemForTakeProfitPercent.TextSize = new System.Drawing.Size(231, 25);
             // 
@@ -475,7 +611,7 @@ namespace CryptoMarketClient {
             this.layoutControlItem2.Control = this.checkEdit1;
             this.layoutControlItem2.Location = new System.Drawing.Point(0, 0);
             this.layoutControlItem2.Name = "layoutControlItem2";
-            this.layoutControlItem2.Size = new System.Drawing.Size(1109, 60);
+            this.layoutControlItem2.Size = new System.Drawing.Size(1110, 60);
             this.layoutControlItem2.Text = "Enable Trailing";
             this.layoutControlItem2.TextSize = new System.Drawing.Size(231, 25);
             // 
@@ -486,10 +622,6 @@ namespace CryptoMarketClient {
             this.checkEdit2.Size = new System.Drawing.Size(75, 38);
             this.checkEdit2.TabIndex = 0;
             // 
-            // tralingSettingsBindingSource
-            // 
-            this.tralingSettingsBindingSource.DataSource = typeof(CryptoMarketClient.Common.TradingSettings);
-            // 
             // TradeSettingsControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
@@ -497,12 +629,13 @@ namespace CryptoMarketClient {
             this.Controls.Add(this.dataLayoutControl1);
             this.Margin = new System.Windows.Forms.Padding(6);
             this.Name = "TradeSettingsControl";
-            this.Size = new System.Drawing.Size(1159, 832);
+            this.Size = new System.Drawing.Size(1160, 833);
             ((System.ComponentModel.ISupportInitialize)(this.dataLayoutControl1)).EndInit();
             this.dataLayoutControl1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.tbDepositPercent.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.tbDepositPercent)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tbBaseDeposit.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tbBaseDeposit)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.BuyPriceTextEdit.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tradeSettingsBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.AmoutTextEdit.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.StopLossPricePercentTextEdit.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.TakeProfitPercentTextEdit.Properties)).EndInit();
@@ -511,6 +644,10 @@ namespace CryptoMarketClient {
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit1.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ceIgnoreStopLoss.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ceIncrementalStopLoss.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.textEdit4.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.textEdit3.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tbSellDeposit.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tbSellDeposit)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tabbedControlGroup1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup5)).EndInit();
@@ -518,9 +655,14 @@ namespace CryptoMarketClient {
             ((System.ComponentModel.ISupportInitialize)(this.ItemForAmout)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.itemForSpendBTC)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItem1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem4)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ItemForBuyPrice1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ItemForAmout1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem6)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItem2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem7)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup4)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ItemForIngoreStopLoss)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ItemForIncrementalStopLoss)).EndInit();
@@ -529,14 +671,13 @@ namespace CryptoMarketClient {
             ((System.ComponentModel.ISupportInitialize)(this.ItemForTakeProfitPercent)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit2.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.tralingSettingsBindingSource)).EndInit();
             this.ResumeLayout(false);
 
         }
         #endregion
 
         private DevExpress.XtraDataLayout.DataLayoutControl dataLayoutControl1;
-        private System.Windows.Forms.BindingSource tralingSettingsBindingSource;
+        private System.Windows.Forms.BindingSource tradeSettingsBindingSource;
         private DevExpress.XtraLayout.LayoutControlGroup layoutControlGroup1;
         private DevExpress.XtraEditors.TextEdit BuyPriceTextEdit;
         private DevExpress.XtraEditors.TextEdit AmoutTextEdit;
@@ -546,14 +687,12 @@ namespace CryptoMarketClient {
         private DevExpress.XtraEditors.SimpleButton btnBuy;
         private DevExpress.XtraEditors.TextEdit textEdit1;
         private DevExpress.XtraEditors.CheckEdit checkEdit2;
-        private DevExpress.XtraEditors.SimpleButton btnSell;
         private DevExpress.XtraLayout.TabbedControlGroup tabbedControlGroup1;
         private DevExpress.XtraLayout.LayoutControlGroup layoutControlGroup5;
         private DevExpress.XtraLayout.LayoutControlItem ItemForBuyPrice;
         private DevExpress.XtraLayout.LayoutControlItem ItemForAmout;
         private DevExpress.XtraLayout.LayoutControlItem itemForSpendBTC;
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItem1;
-        private DevExpress.XtraLayout.LayoutControlItem layoutControlItem3;
         private DevExpress.XtraLayout.EmptySpaceItem emptySpaceItem1;
         private DevExpress.XtraLayout.LayoutControlGroup layoutControlGroup4;
         private DevExpress.XtraLayout.LayoutControlItem ItemForIngoreStopLoss;
@@ -565,7 +704,17 @@ namespace CryptoMarketClient {
         private DevExpress.XtraEditors.ToggleSwitch checkEdit1;
         private DevExpress.XtraEditors.ToggleSwitch ceIgnoreStopLoss;
         private DevExpress.XtraEditors.ToggleSwitch ceIncrementalStopLoss;
-        private DevExpress.XtraEditors.TrackBarControl tbDepositPercent;
+        private DevExpress.XtraEditors.TrackBarControl tbBaseDeposit;
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItem4;
+        private DevExpress.XtraEditors.TextEdit textEdit4;
+        private DevExpress.XtraEditors.TextEdit textEdit3;
+        private DevExpress.XtraEditors.SimpleButton simpleButton2;
+        private DevExpress.XtraEditors.TrackBarControl tbSellDeposit;
+        private DevExpress.XtraLayout.LayoutControlGroup layoutControlGroup2;
+        private DevExpress.XtraLayout.LayoutControlItem ItemForBuyPrice1;
+        private DevExpress.XtraLayout.LayoutControlItem ItemForAmout1;
+        private DevExpress.XtraLayout.LayoutControlItem layoutControlItem6;
+        private DevExpress.XtraLayout.EmptySpaceItem emptySpaceItem2;
+        private DevExpress.XtraLayout.LayoutControlItem layoutControlItem7;
     }
 }

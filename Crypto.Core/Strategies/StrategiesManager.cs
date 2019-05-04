@@ -86,8 +86,11 @@ namespace Crypto.Core.Strategies {
                 return true;
             bool res = true;
             foreach(StrategyBase s in Strategies)
-                if(s.Enabled)
+                if(s.Enabled) {
                     res &= s.Start();
+                    if(res)
+                        s.OnStarted();
+                }
             if(res) {
                 StopThread = false;
                 RunThread = new Thread(() => {

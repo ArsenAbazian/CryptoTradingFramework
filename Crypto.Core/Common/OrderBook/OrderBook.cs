@@ -17,6 +17,8 @@ namespace CryptoMarketClient {
             Asks = CreateOrderBookEntries();
             if(AllowInvertedAsks)
                 AsksInverted = CreateOrderBookEntries();
+            IsDirty = true;
+            EnableValidationOnRemove = true;
             if(Owner != null)
                 Updates = new IncrementalUpdateQueue(owner.Exchange.CreateIncrementalUpdateDataProvider());
         }
@@ -204,20 +206,24 @@ namespace CryptoMarketClient {
 
         public double CalcAskAmount(double maxAsk) {
             double total = 0;
-            foreach(OrderBookEntry e in Asks) {
-                if(e.Value > maxAsk)
-                    break;
-                total += e.Amount;
+            lock(Asks) {
+                foreach(OrderBookEntry e in Asks) {
+                    if(e.Value > maxAsk)
+                        break;
+                    total += e.Amount;
+                }
             }
             return total;
         }
 
         public double CalcBidAmount(double minBid) {
             double total = 0;
-            foreach(OrderBookEntry e in Bids) {
-                if(e.Value < minBid)
-                    break;
-                total += e.Amount;
+            lock(Bids) {
+                foreach(OrderBookEntry e in Bids) {
+                    if(e.Value < minBid)
+                        break;
+                    total += e.Amount;
+                }
             }
             return total;
         }
@@ -238,8 +244,14 @@ namespace CryptoMarketClient {
         }
         protected int UpdateEntriesCount { get; set; }
         public bool AllowAdditionalCalculations { get; set; } = true;
+        public double HighestBid { get; set; }
+        public double LowestAsk { get; set; }
+        public bool Updating { get { return UpdateCount > 0; } }
+
         public void UpdateEntries() {
             LastUpdateTime = DateTime.Now;
+            HighestBid = Bids[0].Value;
+            LowestAsk = Asks[0].Value;
             if(UpdateEntriesCount == 0)
                 return;
             if(!AllowAdditionalCalculations)
@@ -398,6 +410,7 @@ namespace CryptoMarketClient {
             return false;
         }
 
+        public bool IsDirty { get; set; }
         protected void ApplyIncrementalUpdate(long id, OrderBookUpdateType type, string rateString, string amountString, List<OrderBookEntry> list, bool ascending) {
             
             int index = 0;
@@ -409,8 +422,8 @@ namespace CryptoMarketClient {
                         return;
                     }
                 }
-                Telemetry.Default.TrackEvent("entry_not_found", new string[,] { { "id", id.ToString() }, { "action", "remove" } }, true);
-                //throw new DllNotFoundException("entry not found -> with value " + value + " and amount " + amount);
+                if(EnableValidationOnRemove)
+                    IsDirty = true;
                 return;
             }
             double amount = FastValueConverter.Convert(amountString);
@@ -422,8 +435,8 @@ namespace CryptoMarketClient {
                         return;
                     }
                 }
-                Telemetry.Default.TrackEvent("entry_not_found", new string[,] { { "id", id.ToString() }, { "action", "mofidy" } }, true);
-                //throw new DllNotFoundException("entry not found -> with value " + value + " and amount " + amount);
+                if(EnableValidationOnRemove)
+                    IsDirty = true;
                 return;
             }
             double value = FastValueConverter.Convert(rateString);
@@ -454,9 +467,6 @@ namespace CryptoMarketClient {
         }
         protected void ApplyIncrementalUpdate(string rateString, string amountString, List<OrderBookEntry> list, bool ascending) {
             double value = FastValueConverter.Convert(rateString);
-            double value2 = Convert.ToDouble(rateString);
-            if(!IsEqual(value, value2))
-                throw new Exception();
             double amount = FastValueConverter.Convert(amountString);
             int index = 0;
             if(amount == 0) {
@@ -467,16 +477,15 @@ namespace CryptoMarketClient {
                         return;
                     }
                 }
-                Telemetry.Default.TrackEvent("entry_not_found", new string[,] { { "value", value.ToString() }, { "action", "remove" } }, true);
-                //throw new DllNotFoundException("entry not found -> with value " + value + " and amount " + amount);
+                if(EnableValidationOnRemove)
+                    IsDirty = true;
+                return;
             }
             if(ascending) {
                 for(int i = 0; i < list.Count; i++) {
                     OrderBookEntry e = list[i];
                     if(IsEqual(e.Value, value)) {
                         e.AmountString = amountString;
-                        //if(!e.ValueString.StartsWith(rateString))
-                        //    throw new DllNotFoundException();
                         return;
                     }
                     if(e.Value > value) {
@@ -492,8 +501,6 @@ namespace CryptoMarketClient {
                     OrderBookEntry e = list[i];
                     if(IsEqual(e.Value, value)) {
                         e.AmountString = amountString;
-                        //if(!e.ValueString.StartsWith(rateString))
-                        //    throw new DllNotFoundException();
                         return;
                     }
                     if(e.Value < value) {
@@ -509,6 +516,7 @@ namespace CryptoMarketClient {
         }
 
         public DateTime LastUpdateTime { get; set; }
+        public bool EnableValidationOnRemove { get; internal set; }
 
         public void ApplyIncrementalUpdate(OrderBookEntryType type, string rateString, string amountString) {
             if(type == OrderBookEntryType.Ask) {
@@ -527,12 +535,19 @@ namespace CryptoMarketClient {
 
         public void ApplyIncrementalUpdate(OrderBookEntryType type, OrderBookUpdateType updateType, long id, string rateString, string amountString) {
             if(type == OrderBookEntryType.Ask) {
-                ApplyIncrementalUpdate(id, updateType, rateString, amountString, Asks, true);
-                if(AllowInvertedAsks)
-                    ApplyIncrementalUpdate(id, updateType, rateString, amountString, AsksInverted, false);
+                lock(Asks) {
+                    ApplyIncrementalUpdate(id, updateType, rateString, amountString, Asks, true);
+                }
+                if(AllowInvertedAsks) {
+                    lock(AsksInverted) {
+                        ApplyIncrementalUpdate(id, updateType, rateString, amountString, AsksInverted, false);
+                    }
+                }
             }
             else {
-                ApplyIncrementalUpdate(id, updateType, rateString, amountString, Bids, false);
+                lock(Bids) {
+                    ApplyIncrementalUpdate(id, updateType, rateString, amountString, Bids, false);
+                }
             }
             LastUpdateTime = DateTime.Now;
             if(UpdateCount > 0)

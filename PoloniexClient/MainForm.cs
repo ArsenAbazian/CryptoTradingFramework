@@ -47,13 +47,12 @@ namespace CryptoMarketClient {
             Exchange.AllowTradeHistory = this.bcAllowTradeHistory.Checked;
             Exchange.OrderBookDepth = Convert.ToInt32(this.beOrderBookDepth.EditValue);
 
-            //TelegramBot.Default.Update();
-            //TelegramBot.Default.SendNotification("hello!");
+            TelegramBot.Default.Update();
+            TelegramBot.Default.SendNotification("application started!", SettingsStore.Default.TelegramBotBroadcastId);
 
             this.bciAllowDirectXCharts.Checked = SettingsStore.Default.UseDirectXForCharts;
             this.bciAllowDirectXGrid.Checked = SettingsStore.Default.UseDirectXForGrid;
 
-            //SplashScreenManager.ShowDefaultWaitForm("Loading crypto icons...");
             BittrexExchange.Default.GetTickersInfo(); // for icons
             //Exchange.BuildIconsDataBase(BittrexExchange.Default.Tickers.Select(t => new string[] { t.MarketCurrency, t.LogoUrl }), false);
             //SplashScreenManager.CloseDefaultWaitForm();
@@ -288,6 +287,7 @@ namespace CryptoMarketClient {
 
         private void bbShowYourTotalDeposit_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
             AccountBalancesForm form = new AccountBalancesForm();
+            form.MdiParent = this;
             form.Exchanges.Add(PoloniexExchange.Default);
             form.Exchanges.Add(BittrexExchange.Default);
             form.Exchanges.Add(BinanceExchange.Default);
@@ -532,13 +532,7 @@ namespace CryptoMarketClient {
         }
 
         private void biLog_ItemClick(object sender, ItemClickEventArgs e) {
-            DockPanel panel = this.dockManager1.Panels["LogPanel"];
-            if(panel != null)
-                return;
-            panel = new DockPanel();
-            panel.Controls.Add(new LogMessagesControl());
-            panel.Dock = DockingStyle.Bottom;
-            panel.Visibility = DockVisibility.Visible;
+            dpLog.Visibility = DockVisibility.Visible;
         }
 
         StrategiesCollectionForm strategiesForm;
@@ -632,6 +626,11 @@ namespace CryptoMarketClient {
         private void biActiveConnections_ItemClick(object sender, ItemClickEventArgs e) {
             ActiveConnectionsForm.Show();
             ActiveConnectionsForm.Activate();
+        }
+
+        private void biCheckTelegram_ItemClick(object sender, ItemClickEventArgs e) {
+            TelegramBot.Default.SendNotification("I am alive!", SettingsStore.Default.TelegramBotBroadcastId);
+            XtraMessageBox.Show("Sent 'I am alive!' message. Please check your mobile client.");
         }
     }
 }

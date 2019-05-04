@@ -14,6 +14,7 @@ namespace Crypto.Core.Exchanges.Base {
         public CaptureMessageType MessageType { get; set; }
         public DateTime Time { get; set; }
         public string Message { get; set; }
+        public bool DataValid { get; set; }
     }
 
     public enum CaptureStreamType {

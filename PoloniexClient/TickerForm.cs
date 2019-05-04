@@ -300,13 +300,13 @@ namespace CryptoMarketClient {
         }
 
         private void orderBookControl1_SelectedAskRowChanged(object sender, SelectedOrderBookEntryChangedEventArgs e) {
-            this.buySettingsControl.Settings.TradePrice = e.Entry.Value;
-            this.buySettingsControl.Settings.Amount = e.Entry.Amount;
+            this.buySettingsControl.Settings.BuyPrice = e.Entry.Value;
+            this.buySettingsControl.Settings.BuyAmount = e.Entry.Amount;
         }
 
         private void orderBookControl1_SelectedBidRowChanged(object sender, SelectedOrderBookEntryChangedEventArgs e) {
-            this.buySettingsControl.Settings.TradePrice = e.Entry.Value;
-            this.buySettingsControl.Settings.Amount = e.Entry.Amount;
+            this.buySettingsControl.Settings.SellPrice = e.Entry.Value;
+            this.buySettingsControl.Settings.SellAmount = e.Entry.Amount;
         }
 
         private void dockManager1_ActivePanelChanged(object sender, ActivePanelChangedEventArgs e) {

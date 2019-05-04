@@ -46,7 +46,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\x64\Debug\</OutputPath>
+    <OutputPath>..\Bin\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DebugType>full</DebugType>
@@ -89,6 +89,7 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Accessibility" />
     <Reference Include="Castle.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <HintPath>..\packages\Castle.Core.4.3.1\lib\net45\Castle.Core.dll</HintPath>
     </Reference>
@@ -269,6 +270,7 @@
     <Reference Include="System.Runtime.Remoting" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Runtime.Serialization.Formatters.Soap" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Security.Cryptography.Algorithms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Security.Cryptography.Algorithms.4.3.1\lib\net46\System.Security.Cryptography.Algorithms.dll</HintPath>
       <Private>True</Private>
@@ -360,12 +362,6 @@
     </Compile>
     <Compile Include="ExchangeCollectionForm.Designer.cs">
       <DependentUpon>ExchangeCollectionForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="LogMessagesControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="LogMessagesControl.Designer.cs">
-      <DependentUpon>LogMessagesControl.cs</DependentUpon>
     </Compile>
     <Compile Include="OpenedOrdersForm.cs">
       <SubType>Form</SubType>
@@ -566,9 +562,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ConnectionErrorHistoryForm.resx">
       <DependentUpon>ConnectionErrorHistoryForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="LogMessagesControl.resx">
-      <DependentUpon>LogMessagesControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="OpenedOrdersForm.resx">
       <DependentUpon>OpenedOrdersForm.cs</DependentUpon>

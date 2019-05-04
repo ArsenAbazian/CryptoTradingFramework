@@ -36,32 +36,39 @@ namespace CryptoMarketClient.Common {
         
         void UpdateBalances() {
             foreach(Exchange e in Exchanges) {
+                this.bsInfo.Caption = "<color=green><b>Updating "+ e.Name + "</color></b>";
                 if(!e.IsConnected)
                     e.Connect();
                 if(!e.UpdateAllAccountsBalances()) {
                     this.bsInfo.Caption = "<color=red><b>UpdateBalances failed.</color></b>";
                     return;
                 }
-                if(!e.GetAllAccountsDeposites()) {
-                    this.bsInfo.Caption = "<color=red><b>GetDeposites failed</color></b>";
-                    return;
+                if(this.bcDeposites.Checked) {
+                    if(!e.GetAllAccountsDeposites()) {
+                        this.bsInfo.Caption = "<color=red><b>GetDeposites failed</color></b>";
+                        return;
+                    }
                 }
                 this.bsInfo.Caption = "";
                 if(!IsHandleCreated || IsDisposed)
                     return;
-
-                BeginInvoke(new MethodInvoker(() => {
-                    if(!this.gridControl1.IsHandleCreated || this.gridControl1.IsDisposed)
-                        return;
-                    if(this.poloniexAccountBalanceInfoBindingSource.DataSource is Type) {
-                        this.poloniexAccountBalanceInfoBindingSource.DataSource = e.GetAllBalances();
-                        this.gridView1.ExpandAllGroups();
-                    }
-                    else {
-                        this.gridView1.RefreshData();
-                    }
-                }));
             }
+
+            BeginInvoke(new MethodInvoker(() => {
+                if(!this.gridControl1.IsHandleCreated || this.gridControl1.IsDisposed)
+                    return;
+                if(this.poloniexAccountBalanceInfoBindingSource.DataSource is Type) {
+                    List<BalanceBase> total = new List<BalanceBase>();
+                    foreach(Exchange ee in Exchanges)
+                        total.AddRange(ee.GetAllBalances());
+                    this.poloniexAccountBalanceInfoBindingSource.DataSource = total;
+                    UpdateFilter();
+                    this.gridView1.ExpandAllGroups();
+                }
+                else {
+                    this.gridView1.RefreshData();
+                }
+            }));
         }
 
         protected void UpdateFilter() {

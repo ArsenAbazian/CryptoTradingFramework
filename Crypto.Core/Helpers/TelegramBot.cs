@@ -31,7 +31,11 @@ namespace CryptoMarketClient.Helpers {
             return Guid.NewGuid().ToString().Replace("-", "");
         }
         public TelegramBot() {
-            var proxy = new HttpToSocks5Proxy("185.36.191.39", 1240, "userid22AQ", "Ld9jCIH");
+            var proxy = new HttpToSocks5Proxy("142.93.108.135", 1080, "sockuser", "boogieperets");
+
+            WebClient cl = new WebClient();
+            cl.Proxy = proxy;
+            
             proxy.ResolveHostnamesLocally = true;
             InnerClient = new Telegram.Bot.TelegramBotClient("410447550:AAGz1QRPgdoh5tuddcMleFYI9Ttw-Ytn9Fs", proxy);
         }
@@ -81,7 +85,9 @@ namespace CryptoMarketClient.Helpers {
             return r;
         }
         public void Update() {
-            InnerClient.GetMeAsync().ContinueWith(u => Debug.WriteLine(u.Result.Username));
+            InnerClient.GetMeAsync().ContinueWith(u => {
+                Debug.Write(u.Result.Username);
+            });
             InnerClient.GetUpdatesAsync().ContinueWith(task => {
                 if(!string.IsNullOrEmpty(RegistrationCode)) {
                     if(task.IsFaulted) {
@@ -102,7 +108,7 @@ namespace CryptoMarketClient.Helpers {
         public void SendNotification(string text, long chatId) {
             TelegramClientInfo client = null;
             Clients.TryGetValue(chatId, out client);
-            if(client == null)
+            if(client == null || !client.Enabled)
                 return;
 
             InnerClient.SendTextMessageAsync(client.ChatId, text, Telegram.Bot.Types.Enums.ParseMode.Html);

@@ -75,19 +75,19 @@ namespace CryptoMarketClient.Bittrex {
         public override void StopListenOrderBook(Ticker ticker) {
             base.StopListenOrderBook(ticker);
             TickersSocket.Unsubscribe(new WebSocketSubscribeInfo(SocketSubscribeType.OrderBook, ticker));
-            LogManager.Default.AddWarning(this, ticker, "unsubscribe method not supported by bittrex", "");
+            LogManager.Default.Warning(ticker, "unsubscribe method not supported by bittrex", "");
         }
 
         public override void StopListenTradeHistory(Ticker ticker) {
             base.StopListenTradeHistory(ticker);
             TickersSocket.Unsubscribe(new WebSocketSubscribeInfo(SocketSubscribeType.TradeHistory, ticker));
-            LogManager.Default.AddWarning(this, ticker, "unsubscribe method not supported by bittrex", "");
+            LogManager.Default.Warning(ticker, "unsubscribe method not supported by bittrex", "");
         }
 
         public override void StopListenKline(Ticker ticker) {
             base.StopListenKline(ticker);
             TickersSocket.Unsubscribe(new WebSocketSubscribeInfo(SocketSubscribeType.Kline, ticker));
-            LogManager.Default.AddWarning(this, ticker, "unsubscribe method not supported by bittrex", "");
+            LogManager.Default.Warning(ticker, "unsubscribe method not supported by bittrex", "");
         }
 
         protected override void StartListenTradeHistoryCore(Ticker ticker) {
@@ -100,7 +100,7 @@ namespace CryptoMarketClient.Bittrex {
         }
 
         protected override void StartListenKlineCore(Ticker ticker) {
-            Telemetry.Default.TrackEvent(LogType.Log, this, ticker, "kline channel not implemented", "");
+            Telemetry.Default.TrackEvent(LogType.Log, ticker, "kline channel not implemented", "");
         }
 
         protected override void StartListenOrderBookCore(Ticker ticker) {
@@ -594,32 +594,38 @@ namespace CryptoMarketClient.Bittrex {
             if(asks == null)
                 return true;
 
-            ticker.OrderBook.GetNewBidAsks();
-            int index = 0;
-            List<OrderBookEntry> list = ticker.OrderBook.Bids;
-            for(int i = 0; i < bids.Count; i++) {
-                string[] item = bids[i];
-                OrderBookEntry entry = new OrderBookEntry();
-                list.Add(entry);
-                entry.ValueString = item[1];
-                entry.AmountString = item[0];
-                index++;
-                if(index >= depth)
-                    break;
+            ticker.OrderBook.BeginUpdate();
+            try {
+                ticker.OrderBook.GetNewBidAsks();
+                int index = 0;
+                List<OrderBookEntry> list = ticker.OrderBook.Bids;
+                for(int i = 0; i < bids.Count; i++) {
+                    string[] item = bids[i];
+                    OrderBookEntry entry = new OrderBookEntry();
+                    list.Add(entry);
+                    entry.ValueString = item[1];
+                    entry.AmountString = item[0];
+                    index++;
+                    if(index >= depth)
+                        break;
+                }
+                index = 0;
+                list = ticker.OrderBook.Asks;
+                for(int i = 0; i < asks.Count; i++) {
+                    string[] item = asks[i];
+                    OrderBookEntry entry = new OrderBookEntry();
+                    list.Add(entry);
+                    entry.ValueString = item[1];
+                    entry.AmountString = item[0];
+                    index++;
+                    if(index >= depth)
+                        break;
+                }
             }
-            index = 0;
-            list = ticker.OrderBook.Asks;
-            for(int i = 0; i < asks.Count; i++) {
-                string[] item = asks[i];
-                OrderBookEntry entry = new OrderBookEntry();
-                list.Add(entry);
-                entry.ValueString = item[1];
-                entry.AmountString = item[0];
-                index++;
-                if(index >= depth)
-                    break;
+            finally {
+                ticker.OrderBook.IsDirty = false;
+                ticker.OrderBook.EndUpdate();
             }
-            ticker.OrderBook.UpdateEntries();
             return true;
         }
         public void GetOrderBook(BittrexTicker info, int depth) {
@@ -1310,9 +1316,9 @@ namespace CryptoMarketClient.Bittrex {
             if(res.Value<bool>("success") == false) {
                 string error = res.Value<string>("message");
                 if(error == "ADDRESS_GENERATING")
-                    LogManager.Default.AddWarning("Bittrex: OnGetDeposit fails: " + error + ". Try again later after deposit address generate.", "Currency = " + currency);
+                    LogManager.Default.Warning(this, "OnGetDeposit fails: " + error + ". Try again later after deposit address generate.", "Currency = " + currency);
                 else
-                    LogManager.Default.AddError("Bittrex: OnGetDeposit fails: " + error, "Currency = " + currency);
+                    LogManager.Default.Error(this, "OnGetDeposit fails: " + error, "Currency = " + currency);
                 return null;
             }
             JObject addr = res.Value<JObject>("result");

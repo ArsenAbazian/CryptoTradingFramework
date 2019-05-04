@@ -45,7 +45,7 @@ namespace CryptoMarketClient {
             }
         }
         void OnSettingsChanged() {
-            this.tralingSettingsBindingSource.DataSource = Settings;
+            this.tradeSettingsBindingSource.DataSource = Settings;
             if(Settings.Ticker != null) {
                 itemForSpendBTC.Text = "Total " + Settings.Ticker.BaseCurrency;
             }
@@ -60,27 +60,45 @@ namespace CryptoMarketClient {
                 XtraMessageBox.Show("Not all fields are filled!");
                 return;
             }
-            
-            string validationError = Ticker.ValidateTrade(Settings.TradePrice, Settings.Amount);
+
+            string validationError = string.Empty;
+            if(type == OrderType.Buy)
+                validationError = Ticker.ValidateTrade(Settings.BuyPrice, Settings.BuyAmount);
+            else 
+                validationError = Ticker.ValidateTrade(Settings.SellPrice, Settings.SellAmount);
             if(!string.IsNullOrEmpty(validationError)) {
                 XtraMessageBox.Show("Error validating trade. Values will be corrected. Error was: " + validationError);
 
-                double rate = Settings.TradePrice, amount = Settings.Amount;
+                double rate = 0;
+                double amount = 0;
+                if(type == OrderType.Buy) {
+                    rate = Settings.BuyPrice;
+                    amount = Settings.BuyAmount;
+                }
+                else {
+                    rate = Settings.SellPrice;
+                    amount = Settings.SellAmount;
+                }
                 Ticker.CorrectTrade(ref rate, ref amount);
-
-                Settings.TradePrice = rate;
-                Settings.Amount = amount;
+                if(type == OrderType.Buy) {
+                    Settings.BuyPrice = rate;
+                    Settings.BuyAmount = amount;
+                }
+                else {
+                    Settings.SellPrice = rate;
+                    Settings.SellAmount = amount;
+                }
                 return;
             }
             if(type == OrderType.Buy) {
-                if(Ticker.Buy(Settings.TradePrice, Settings.Amount) == null) {
+                if(Ticker.Buy(Settings.BuyPrice, Settings.BuyAmount) == null) {
                     XtraMessageBox.Show("Error buying. Please try later again. Last Error: " + LogManager.Default.Messages.Last().Text);
                     return;
                 }
             }
             else {
                 Settings.Enabled = false;
-                if(Ticker.Sell(Settings.TradePrice, Settings.Amount) == null) {
+                if(Ticker.Sell(Settings.BuyPrice, Settings.SellAmount) == null) {
                     XtraMessageBox.Show("Error selling. Please try later again." + LogManager.Default.Messages.Last().Text);
                     return;
                 }
@@ -119,10 +137,15 @@ namespace CryptoMarketClient {
         }
 
         private void tbDepositPercent_EditValueChanged(object sender, EventArgs e) {
-            if(Settings.OrderPrice == 0)
-                Settings.TradePrice = Ticker.OrderBook.Bids[0].Value;
-            Settings.Amount = tbDepositPercent.Value / 100.0 * Ticker.BaseCurrencyBalance / Settings.TradePrice;
-            this.layoutControlItem4.Text = tbDepositPercent.Value + "% of Deposit";
+            Settings.BuyPrice = Ticker.OrderBook.Asks[0].Value;
+            Settings.BuyAmount = tbBaseDeposit.Value / 100.0 * Ticker.BaseCurrencyBalance / Settings.BuyPrice;
+            this.layoutControlItem4.Text = tbBaseDeposit.Value + "% of Deposit";
+        }
+
+        private void trackBarControl1_EditValueChanged(object sender, EventArgs e) {
+            Settings.SellPrice = Ticker.OrderBook.Bids[0].Value;
+            Settings.SellAmount = this.tbSellDeposit.Value / 100.0 * Ticker.MarketCurrencyBalance;
+            this.layoutControlItem7.Text = tbBaseDeposit.Value + "% of Deposit";
         }
     }
 

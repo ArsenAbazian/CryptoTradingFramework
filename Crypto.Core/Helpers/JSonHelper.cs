@@ -275,6 +275,10 @@ namespace CryptoMarketClient.Helpers {
             return res;
         }
 
+        public long ReadPositiveInteger(byte[] bytes, ref int startIndex) {
+            return FastValueConverter.ConvertPositiveLong(bytes, ref startIndex);
+        }
+
         public class JsonPropertyArrayOfObjects {
             public string Property { get; set; }
             public List<string[]> Items { get; set; }

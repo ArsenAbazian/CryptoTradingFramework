@@ -24,29 +24,34 @@ namespace CryptoMarketClient.Exchanges.Poloniex {
             ticker.OnApplyIncrementalUpdate();
         }
         public void ApplySnapshot(JObject jObject, Ticker ticker) {
-            ticker.OrderBook.Clear();
-            OrderBook orderBook = ticker.OrderBook;
-            JArray ob = jObject.Value<JArray>("orderBook");
-            JObject asks = ob[0].Value<JObject>();
-            JObject bids = ob[1].Value<JObject>();
+            ticker.OrderBook.BeginUpdate();
+            try {
+                OrderBook orderBook = ticker.OrderBook;
+                ticker.OrderBook.Clear();
+                JArray ob = jObject.Value<JArray>("orderBook");
+                JObject asks = ob[0].Value<JObject>();
+                JObject bids = ob[1].Value<JObject>();
 
-            List<OrderBookEntry> entries = orderBook.Asks;
-            List<OrderBookEntry> entriesInverted = orderBook.AsksInverted;
-            lock(entries) {
-                foreach(JProperty item in asks.Children()) {
-                    entries.Add(new OrderBookEntry() { ValueString = item.Name, AmountString = item.Value.Value<string>() });
-                    if(entriesInverted != null)
-                        entriesInverted.Insert(0, new OrderBookEntry() { ValueString = item.Name, AmountString = item.Value.Value<string>() });
+                List<OrderBookEntry> entries = orderBook.Asks;
+                List<OrderBookEntry> entriesInverted = orderBook.AsksInverted;
+                lock(entries) {
+                    foreach(JProperty item in asks.Children()) {
+                        entries.Add(new OrderBookEntry() { ValueString = item.Name, AmountString = item.Value.Value<string>() });
+                        if(entriesInverted != null)
+                            entriesInverted.Insert(0, new OrderBookEntry() { ValueString = item.Name, AmountString = item.Value.Value<string>() });
+                    }
+                }
+                entries = orderBook.Bids;
+                lock(entries) {
+                    foreach(JProperty item in bids.Children()) {
+                        entries.Add(new OrderBookEntry() { ValueString = item.Name, AmountString = item.Value.Value<string>() });
+                    }
                 }
             }
-            entries = orderBook.Bids;
-            lock(entries) {
-                foreach(JProperty item in bids.Children()) {
-                    entries.Add(new OrderBookEntry() { ValueString = item.Name, AmountString = item.Value.Value<string>() });
-                }
+            finally {
+                ticker.OrderBook.IsDirty = false;
+                ticker.OrderBook.EndUpdate();
             }
-            orderBook.UpdateEntries();
-            orderBook.RaiseOnChanged(new IncrementalUpdateInfo());
         }
     }
 }

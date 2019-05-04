@@ -20,42 +20,65 @@ namespace CryptoMarketClient.Common {
         }
 
         public BindingList<LogMessage> Messages { get; } = new BindingList<LogMessage>();
-        public void AddMessage(LogType type, Exchange exchange, Ticker ticker, string message, string description) {
-            string tickerName = ticker == null ? string.Empty : ticker.Name;
-            AddMessage(type, exchange, tickerName, message, description);
+        public void Log(string message) {
+            Add(LogType.Log, null, null, message, null);
         }
-        public void AddMessage(LogType type, Exchange exchange, string name, string message, string description) {
-            string tickerName = name;
+        public void Success(string message) {
+            Add(LogType.Success, null, null, message, null);
+        }
+        public void Log(string message, string description) {
+            Add(LogType.Log, null, null, message, description);
+        }
+        public void Error(string message) {
+            Add(LogType.Error, null, null, message, null);
+        }
+        public void Warning(string message, string description) {
+            Add(LogType.Warning, null, null, message, description);
+        }
+        public void Warning(string message) {
+            Add(LogType.Warning, null, null, message, null);
+        }
+        public void Error(object owner, string message, string description) {
+            Add(LogType.Error, owner, null, message, description);
+        }
+        public void Warning(object owner, string message, string description) {
+            Add(LogType.Warning, owner, null, message, description);
+        }
+        public void Log(object owner, string message, string description) {
+            Add(LogType.Log, owner, null, message, description);
+        }
+        public void Error(string message, string description) {
+            Add(LogType.Error, null, null, message, description);
+        }
+        public void Add(string message) {
+            Add(LogType.Log, null, null, message, null);
+        }
+        public void Add(LogType type, object owner, string name, string message, string description) {
             Messages.Add(new LogMessage() {
                 Type = type,
-                Exchange = exchange == null ? string.Empty : exchange.Type.ToString(),
-                Ticker = tickerName,
+                Owner = owner,
+                Name = name,
                 Text = message,
                 Description = description,
                 Time = DateTime.UtcNow
             });
             RefreshVisual();
         }
-        public void Add(string message) { AddMessage(LogType.Log, null, (Ticker)null, message, ""); }
-        public void Add(Exchange exchange, Ticker ticker, string message) { AddMessage(LogType.Log, exchange, ticker, message, ""); }
-        public void Add(string message, string description) { AddMessage(LogType.Log, null, (Ticker)null, message, description); }
-        public void Add(Exchange exchange, Ticker ticker, string message, string description) { AddMessage(LogType.Log, exchange, ticker, message, description); }
-        public void AddWarning(Exchange exchange, Ticker ticker, string message) { AddMessage(LogType.Warning, exchange, ticker, message, ""); }
-        public void AddWarning(string message) { AddWarning(null, null, message); }
-        public void AddWarning(string message, string description) { AddWarning(null, null, message, description); }
-        public void AddWarning(Exchange exchange, Ticker ticker, string message, string description) { AddMessage(LogType.Warning, exchange, ticker, message, description); }
-        public void AddError(string message) { AddMessage(LogType.Error, null, (Ticker)null, message, ""); }
-        public void AddError(string message, string description) { AddError(null, null, message, description); }
-        public void AddError(Exchange exchange, Ticker ticker, string message) { AddMessage(LogType.Error, exchange, ticker, message, ""); }
-        public void AddError(Exchange exchange, Ticker ticker, string message, string description) { AddMessage(LogType.Error, exchange, ticker, message, description); }
-        public void AddSuccess(string message) { AddMessage(LogType.Success, null, (Ticker)null, message, ""); }
-        public void AddSuccess(Exchange exchange, Ticker ticker, string message) { AddMessage(LogType.Success, exchange, ticker, message, ""); }
-        public void AddSuccess(Exchange exchange, Ticker ticker, string message, string description) { AddMessage(LogType.Success, exchange, ticker, message, description); }
-        protected virtual void RefreshVisual() {
 
+        public ILogVisualizer Visualiser { get; set; }
+        protected virtual void RefreshVisual() {
+            if(Visualiser != null)
+                Visualiser.RefreshView();
         }
-        public virtual void ShowLogForm() {
-            throw new NotImplementedException();
+
+        public virtual void ShowLogForm() { }
+
+        public void Log(LogType log, object owner, string message, string description) {
+            Add(LogType.Log, owner, null, message, description);
         }
+    }
+
+    public interface ILogVisualizer {
+        void RefreshView();
     }
 }

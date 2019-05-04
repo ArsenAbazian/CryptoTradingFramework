@@ -107,7 +107,7 @@ namespace CryptoMarketClient.Exchanges.Bittrex {
                 if(UpdateExchangeState != null)
                     UpdateExchangeState(SignalSocketCommand.QueryExchangeState, marketName, s.Result);
                 else
-                    Telemetry.Default.TrackEvent(LogType.Warning, null, marketName, "UpdateExchangeState == null", "");
+                    Telemetry.Default.TrackEvent(LogType.Warning, marketName, "signal socket", "UpdateExchangeState == null");
             });
         }
 

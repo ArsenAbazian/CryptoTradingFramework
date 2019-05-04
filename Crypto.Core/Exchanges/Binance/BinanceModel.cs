@@ -54,7 +54,7 @@ namespace CryptoMarketClient.Binance {
                 return OnGetBalances(account, client.UploadValues(address, new HttpRequestParamsCollection()));
             }
             catch(Exception e) {
-                LogManager.Default.Add(e.ToString());
+                LogManager.Default.Log(e.ToString());
                 return false;
             }
         }
@@ -79,7 +79,7 @@ namespace CryptoMarketClient.Binance {
                 return OnTradeResult(account, ticker, client.UploadValues(address, new HttpRequestParamsCollection()));
             }
             catch(Exception e) {
-                LogManager.Default.Add(e.ToString());
+                LogManager.Default.Log(e.ToString());
                 return null;
             }
         }
@@ -95,7 +95,7 @@ namespace CryptoMarketClient.Binance {
             string text = Encoding.UTF8.GetString(data);
             JObject res = JsonConvert.DeserializeObject<JObject>(text);
             if(res.Value<string>("code") != null) {
-                LogManager.Default.AddError(text);
+                LogManager.Default.Error(this, "trade", text);
                 return null;
             }
 
@@ -186,7 +186,7 @@ namespace CryptoMarketClient.Binance {
         }
 
         protected internal override void OnKlineSocketMessageReceived(object sender, MessageReceivedEventArgs e) {
-            Debug.WriteLine(e.Message);
+            //Debug.WriteLine(e.Message);
             byte[] bytes = Encoding.Default.GetBytes(e.Message);
             int startIndex = 0;
             string[] startItems = JSonHelper.Default.StartDeserializeObject(bytes, ref startIndex, KlineStartItems);
@@ -247,7 +247,7 @@ namespace CryptoMarketClient.Binance {
         //}
 
         protected override string GetOrderBookSocketAddress(Ticker ticker) {
-            return "wss://stream.binance.com:9443/ws/" + ticker.Name.ToLower() + "@depth5";
+            return "wss://stream.binance.com:9443/ws/" + ticker.Name.ToLower() + "@depth";
         }
 
         protected override string GetTradeSocketAddress(Ticker ticker) {
@@ -260,23 +260,34 @@ namespace CryptoMarketClient.Binance {
 
         void OnIncrementalOrderBookUpdateRecv(Ticker ticker, byte[] bytes) {
             int startIndex = 0;
-            string[] updateId = JSonHelper.Default.StartDeserializeObject(bytes, ref startIndex, OrderBookStartItems);
 
-            long seqNumber = FastValueConverter.ConvertPositiveLong(updateId[0]);
-            if(seqNumber <= ticker.OrderBook.Updates.SeqNumber)
+            JSonHelper.Default.SkipSymbol(bytes, ':', 4, ref startIndex);
+            long startId = JSonHelper.Default.ReadPositiveInteger(bytes, ref startIndex);
+            JSonHelper.Default.SkipSymbol(bytes, ':', 1, ref startIndex);
+            long endId = JSonHelper.Default.ReadPositiveInteger(bytes, ref startIndex);
+            startIndex++;
+
+            if(endId < ticker.OrderBook.Updates.SeqNumber)
                 return;
+            if(startId > ticker.OrderBook.Updates.SeqNumber) {
+                ticker.UpdateOrderBook();
+                return;
+            }
 
-            const string bidString = "\"bids\":";
-            const string askString = "\"asks\":";
+            // https://github.com/binance-exchange/binance-official-api-docs/blob/master/web-socket-streams.md
+            // Receiving an event that removes a price level that is not in your local order book can happen and is normal.
+            ticker.OrderBook.EnableValidationOnRemove = false;
 
-            startIndex += bidString.Length + 1;
-            List<string[]> jbids = JSonHelper.Default.DeserializeArrayOfArrays(bytes, ref startIndex, 3);
-            startIndex += askString.Length + 1;
-            List<string[]> jasks = JSonHelper.Default.DeserializeArrayOfArrays(bytes, ref startIndex, 3);
+            JSonHelper.Default.SkipSymbol(bytes, ':', 1, ref startIndex);
+            List<string[]> jbids = JSonHelper.Default.DeserializeArrayOfArrays(bytes, ref startIndex, 2);
+            JSonHelper.Default.SkipSymbol(bytes, ':', 1, ref startIndex);
+            List<string[]> jasks = JSonHelper.Default.DeserializeArrayOfArrays(bytes, ref startIndex, 2);
 
             long hackedNextSeqNumber = ticker.OrderBook.Updates.SeqNumber;
             ticker.OrderBook.Updates.Push(hackedNextSeqNumber, ticker, jbids, jasks, null);
             OnIncrementalUpdateRecv(ticker.OrderBook.Updates);
+            if(ticker.OrderBook.Updates.Count == 0)
+                ticker.OrderBook.Updates.Clear(endId + 1);
         }
 
         protected internal override void OnOrderBookSocketMessageReceived(object sender, MessageReceivedEventArgs e) {
@@ -292,7 +303,7 @@ namespace CryptoMarketClient.Binance {
             if(info == null)
                 return;
             const string hour24TickerStart = "[{\"e\"";
-            const string orderBookStart = "{\"lastUpdateId\"";
+            const string orderBookStart = "{\"e\":\"depthUpdate\"";
             if(e.Message.StartsWith(hour24TickerStart)) {
                 OnTickersSocketMessageReceived(sender, e);
                 return;
@@ -655,7 +666,7 @@ namespace CryptoMarketClient.Binance {
                 return FastValueConverter.ConvertPositiveLong(client.DownloadString(adress));
             }
             catch(Exception e) {
-                LogManager.Default.Add(e.ToString());
+                LogManager.Default.Log(e.ToString());
                 return (long)(DateTime.UtcNow - epoch).TotalMilliseconds;
             }
         }
@@ -674,7 +685,7 @@ namespace CryptoMarketClient.Binance {
                 return OnGetBalances(account, client.UploadValues(address, new HttpRequestParamsCollection()));
             }
             catch(Exception e) {
-                LogManager.Default.Add(e.ToString());
+                LogManager.Default.Log(e.ToString());
                 return false;
             }
         }
@@ -682,6 +693,10 @@ namespace CryptoMarketClient.Binance {
         public bool OnGetBalances(AccountInfo account, byte[] data) {
             string text = UTF8Encoding.Default.GetString(data);
             JObject root = (JObject)JsonConvert.DeserializeObject(text);
+            if(root.Value<string>("code") != null) {
+                LogManager.Default.Error(this, "error on get balance", text);
+                return false;
+            }
             JArray balances = root.Value<JArray>("balances");
             if(balances == null)
                 return false;
@@ -742,32 +757,37 @@ namespace CryptoMarketClient.Binance {
             const string askString = "\"asks\":";
 
             startIndex += bidString.Length + 1;
-            List<string[]> jbids = JSonHelper.Default.DeserializeArrayOfArrays(bytes, ref startIndex, 3);
+            List<string[]> jbids = JSonHelper.Default.DeserializeArrayOfArrays(bytes, ref startIndex, 2);
             startIndex += askString.Length + 1;
-            List<string[]> jasks = JSonHelper.Default.DeserializeArrayOfArrays(bytes, ref startIndex, 3);
+            List<string[]> jasks = JSonHelper.Default.DeserializeArrayOfArrays(bytes, ref startIndex, 2);
 
-            List<OrderBookEntry> bids = ticker.OrderBook.Bids;
-            List<OrderBookEntry> asks = ticker.OrderBook.Asks;
-            List<OrderBookEntry> iasks = ticker.OrderBook.AsksInverted;
+            ticker.OrderBook.BeginUpdate();
+            try {
+                List<OrderBookEntry> bids = ticker.OrderBook.Bids;
+                List<OrderBookEntry> asks = ticker.OrderBook.Asks;
+                List<OrderBookEntry> iasks = ticker.OrderBook.AsksInverted;
 
-            bids.Clear();
-            asks.Clear();
-            if(iasks != null)
-                iasks.Clear();
-            for(int i = 0; i < jbids.Count; i++) {
-                string[] item = jbids[i];
-                bids.Add(new OrderBookEntry() { ValueString = item[0], AmountString = item[1] });
-            }
-            for(int i = 0; i < jasks.Count; i++) {
-                string[] item = jasks[i];
-                OrderBookEntry e = new OrderBookEntry() { ValueString = item[0], AmountString = item[1] };
-                asks.Add(e);
+                bids.Clear();
+                asks.Clear();
                 if(iasks != null)
-                iasks.Insert(0, e);
+                    iasks.Clear();
+                for(int i = 0; i < jbids.Count; i++) {
+                    string[] item = jbids[i];
+                    bids.Add(new OrderBookEntry() { ValueString = item[0], AmountString = item[1] });
+                }
+                for(int i = 0; i < jasks.Count; i++) {
+                    string[] item = jasks[i];
+                    OrderBookEntry e = new OrderBookEntry() { ValueString = item[0], AmountString = item[1] };
+                    asks.Add(e);
+                    if(iasks != null)
+                        iasks.Insert(0, e);
+                }
+                ticker.OrderBook.Updates.Clear(FastValueConverter.ConvertPositiveLong(updateId[0]) + 1);
             }
-            ticker.OrderBook.Updates.Clear(FastValueConverter.ConvertPositiveLong(updateId[0]) + 1);
-            ticker.OrderBook.UpdateEntries();
-            ticker.OrderBook.RaiseOnChanged(new IncrementalUpdateInfo());
+            finally {
+                ticker.OrderBook.IsDirty = false;
+                ticker.OrderBook.EndUpdate();
+            }
             ticker.RaiseChanged();
         }
 
