@@ -31,6 +31,7 @@ namespace Crypto.Core.Strategies {
     [XmlInclude(typeof(TickerDataCaptureStrategy))]
     [XmlInclude(typeof(MarketMakingStrategy))]
     [XmlInclude(typeof(StatisticalArbitrageStrategy))]
+    [XmlInclude(typeof(RedWaterfallStrategy))]
     //[XmlInclude(typeof())]
     [Serializable]
     public abstract class StrategyBase {
@@ -79,7 +80,7 @@ namespace Crypto.Core.Strategies {
         public List<StrategyDataItemInfo> DataItemInfos { get; } = new List<StrategyDataItemInfo>();
 
         public StrategyDataItemInfo CandleStickItem() {
-            DataItemInfos.Add(new StrategyDataItemInfo() { ChartType = ChartType.CandleStick });
+            DataItemInfos.Add(new StrategyDataItemInfo() { ChartType = ChartType.CandleStick, Visibility = DataVisibility.Chart });
             return DataItemInfos.Last();
         }
 

@@ -206,6 +206,7 @@
     <Compile Include="Exchanges\Binance\BinanceAccountBalanceInfo.cs" />
     <Compile Include="Exchanges\Bitmex\BitmexAccountBalanceInfo.cs" />
     <Compile Include="Helpers\SerializationHelper.cs" />
+    <Compile Include="Indicators\AtrIndicator.cs" />
     <Compile Include="Indicators\EmaIndicator.cs" />
     <Compile Include="Indicators\IndicatorBase.cs" />
     <Compile Include="Indicators\MacdIndicator.cs" />
@@ -215,6 +216,7 @@
     <Compile Include="Indicators\SingleValueIndicator.cs" />
     <Compile Include="Indicators\StochasticIndicator.cs" />
     <Compile Include="Indicators\CandlePatternIndicator.cs" />
+    <Compile Include="Indicators\SupportResistanceIndicator.cs" />
     <Compile Include="Indicators\WindowIndicator.cs" />
     <Compile Include="Strategies\Arbitrages\Statistical\StatisticalArbitrageStrategy.cs" />
     <Compile Include="Strategies\Arbitrages\TriplePair\TriplePairStrategy.cs" />

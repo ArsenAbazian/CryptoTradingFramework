@@ -1,4 +1,5 @@
-﻿using CryptoMarketClient;
+﻿using Crypto.Core.Helpers;
+using CryptoMarketClient;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -170,6 +171,11 @@ namespace Crypto.Core.Strategies {
         }
 
         protected virtual List<CandleStickData> DownloadCandleStickData(TickerInputInfo info) {
+            CachedCandleStickData savedData = new CachedCandleStickData() { Exchange = info.Exchange, TickerName = info.TickerName, IntervalMin = info.KlineIntervalMin };
+            CachedCandleStickData cachedData = CachedCandleStickData.FromFile(CachedCandleStickData.Directory + "\\" + ((ISupportSerialization)savedData).FileName);
+            if(cachedData != null)
+                return cachedData.Items;
+
             DateTime start = DateTime.UtcNow;
             int intervalInSeconds = info.KlineIntervalMin * 60;
             int candleStickCount = 10000;
@@ -186,6 +192,9 @@ namespace Crypto.Core.Strategies {
                 Thread.Sleep(300);
                 start = start.AddSeconds(intervalInSeconds * deltaCount);
             }
+            cachedData = savedData;
+            cachedData.Items = res;
+            cachedData.Save();
             return res;   
         }
 
@@ -206,5 +215,29 @@ namespace Crypto.Core.Strategies {
         public ExchangeInputInfo ExchangeInfo { get; set; }
         public TickerInputInfo TickerInfo { get; set; }
         public bool UseSimulationFile { get; set; }
+    }
+
+    [Serializable]
+    public class CachedCandleStickData : ISupportSerialization {
+        public static string Directory { get { return "SimulationData\\CandleStickData"; } }
+        public static CachedCandleStickData FromFile(string fileName) {
+            return (CachedCandleStickData)SerializationHelper.FromFile(fileName, typeof(CachedCandleStickData));
+        }
+
+        void ISupportSerialization.OnEndDeserialize() {
+            
+        }
+
+        public bool Save() {
+            return SerializationHelper.Save(this, typeof(CachedCandleStickData), Directory);
+        }
+
+        string ISupportSerialization.FileName { get { return Exchange.ToString() + "_" + TickerName.ToString() + "_" + IntervalMin.ToString() + "_CandleStickData.xml"; } set { } }
+
+        public List<CandleStickData> Items { get; set; } = new List<CandleStickData>();
+        public ExchangeType Exchange { get; set; }
+        public string TickerName { get; set; }
+        public int IntervalMin { get; set; }
+        
     }
 }
