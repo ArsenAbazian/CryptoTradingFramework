@@ -102,6 +102,10 @@ namespace Crypto.Core.Strategies {
                         DataProvider.OnTick();
                         foreach(var s in Strategies) {
                             s.OnTick();
+                            if(s.PanicMode) {
+                                Stop();
+                                return;
+                            }
                         }
                     }
                 });

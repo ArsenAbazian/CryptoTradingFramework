@@ -72,13 +72,14 @@ namespace Crypto.Core.Helpers {
 
         public static bool Save(ISupportSerialization obj, Type t, string path) {
             string fullName = string.IsNullOrEmpty(path)? obj.FileName: path + "\\" + obj.FileName;
+            string tmpFile = fullName + ".tmp";
             if(!string.IsNullOrEmpty(path) && !Directory.Exists(path))
                 Directory.CreateDirectory(path);
             if(string.IsNullOrEmpty(obj.FileName))
                 return false;
             try {
                 XmlSerializer formatter = new XmlSerializer(t);
-                using(FileStream fs = new FileStream(fullName, FileMode.Create)) {
+                using(FileStream fs = new FileStream(tmpFile, FileMode.Create)) {
                     formatter.Serialize(fs, obj);
                 }
             }
@@ -86,6 +87,9 @@ namespace Crypto.Core.Helpers {
                 Telemetry.Default.TrackException(e);
                 return false;
             }
+            if(File.Exists(fullName))
+                File.Delete(fullName);
+            File.Move(tmpFile, fullName);
             return true;
         }
     }

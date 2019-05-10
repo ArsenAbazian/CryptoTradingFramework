@@ -77,10 +77,12 @@ namespace CryptoMarketClient.Strategies {
             this.bar1 = new DevExpress.XtraBars.Bar();
             this.biCustomize = new DevExpress.XtraBars.BarButtonItem();
             this.biReset = new DevExpress.XtraBars.BarButtonItem();
+            this.bsPanes = new DevExpress.XtraBars.BarSubItem();
             this.barDockControlTop = new DevExpress.XtraBars.BarDockControl();
             this.barDockControlBottom = new DevExpress.XtraBars.BarDockControl();
             this.barDockControlLeft = new DevExpress.XtraBars.BarDockControl();
             this.barDockControlRight = new DevExpress.XtraBars.BarDockControl();
+            this.bsIndex = new DevExpress.XtraBars.BarStaticItem();
             ((System.ComponentModel.ISupportInitialize)(this.tpChart)).BeginInit();
             this.tpChart.SuspendLayout();
             this.tpData.SuspendLayout();
@@ -490,8 +492,10 @@ namespace CryptoMarketClient.Strategies {
             series1.View = lineSeriesView1;
             this.chartControl.SeriesSerializable = new DevExpress.XtraCharts.Series[] {
         series1};
+            this.chartControl.SeriesTemplate.SeriesColorizer = null;
             this.chartControl.Size = new System.Drawing.Size(1420, 928);
             this.chartControl.TabIndex = 3;
+            this.chartControl.MouseMove += new System.Windows.Forms.MouseEventHandler(this.chartControl_MouseMove);
             // 
             // standaloneBarDockControl1
             // 
@@ -516,8 +520,10 @@ namespace CryptoMarketClient.Strategies {
             this.barManager1.Form = this;
             this.barManager1.Items.AddRange(new DevExpress.XtraBars.BarItem[] {
             this.biCustomize,
-            this.biReset});
-            this.barManager1.MaxItemId = 2;
+            this.biReset,
+            this.bsPanes,
+            this.bsIndex});
+            this.barManager1.MaxItemId = 4;
             // 
             // bar1
             // 
@@ -534,7 +540,9 @@ namespace CryptoMarketClient.Strategies {
             this.bar1.FloatLocation = new System.Drawing.Point(722, 393);
             this.bar1.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
             new DevExpress.XtraBars.LinkPersistInfo(this.biCustomize),
-            new DevExpress.XtraBars.LinkPersistInfo(this.biReset)});
+            new DevExpress.XtraBars.LinkPersistInfo(this.biReset),
+            new DevExpress.XtraBars.LinkPersistInfo(this.bsPanes),
+            new DevExpress.XtraBars.LinkPersistInfo(this.bsIndex)});
             this.bar1.OptionsBar.DrawBorder = false;
             this.bar1.OptionsBar.UseWholeRow = true;
             this.bar1.StandaloneBarDockControl = this.standaloneBarDockControl1;
@@ -557,6 +565,13 @@ namespace CryptoMarketClient.Strategies {
             this.biReset.Name = "biReset";
             this.biReset.PaintStyle = DevExpress.XtraBars.BarItemPaintStyle.CaptionGlyph;
             this.biReset.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.biReset_ItemClick);
+            // 
+            // bsPanes
+            // 
+            this.bsPanes.Caption = "Panes";
+            this.bsPanes.Id = 2;
+            this.bsPanes.Name = "bsPanes";
+            this.bsPanes.GetItemData += new System.EventHandler(this.bsPanes_GetItemData);
             // 
             // barDockControlTop
             // 
@@ -589,6 +604,13 @@ namespace CryptoMarketClient.Strategies {
             this.barDockControlRight.Location = new System.Drawing.Point(1432, 0);
             this.barDockControlRight.Manager = this.barManager1;
             this.barDockControlRight.Size = new System.Drawing.Size(0, 1043);
+            // 
+            // bsIndex
+            // 
+            this.bsIndex.Alignment = DevExpress.XtraBars.BarItemLinkAlignment.Right;
+            this.bsIndex.Caption = "DataItem Index";
+            this.bsIndex.Id = 3;
+            this.bsIndex.Name = "bsIndex";
             // 
             // StrategyDataForm
             // 
@@ -683,5 +705,7 @@ namespace CryptoMarketClient.Strategies {
         private BarDockControl barDockControlRight;
         private BarButtonItem biCustomize;
         private BarButtonItem biReset;
+        private BarSubItem bsPanes;
+        private BarStaticItem bsIndex;
     }
 }

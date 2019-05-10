@@ -84,6 +84,10 @@ namespace Crypto.Core.Strategies {
             return DataItemInfos.Last();
         }
 
+        [XmlIgnore]
+        public bool PanicMode { get; protected set; }
+        public void Break() { PanicMode = true; }
+
         protected internal virtual void OnStarted() {
             LogManager.Default.Add(LogType.Success, this, Name, "started.", "");
             SendNotification("started.");

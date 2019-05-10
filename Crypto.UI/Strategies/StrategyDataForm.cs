@@ -1,4 +1,5 @@
 ﻿using Crypto.Core.Strategies;
+using DevExpress.XtraBars;
 using DevExpress.XtraCharts;
 using DevExpress.XtraCharts.Designer;
 using DevExpress.XtraEditors;
@@ -143,6 +144,41 @@ namespace CryptoMarketClient.Strategies {
         private void biReset_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
             if(File.Exists(ChartSettingsFileName))
                 File.Delete(ChartSettingsFileName);
+        }
+
+        private void bsPanes_GetItemData(object sender, EventArgs e) {
+            if(this.bsPanes.ItemLinks.Count != 0)
+                return;
+            XYDiagram dg = (XYDiagram)this.chartControl.Diagram;
+            foreach(XYDiagramPane item in dg.Panes) {
+                BarCheckItem ch = new BarCheckItem(this.barManager1) { Caption = item.Name, Checked = item.Visibility== ChartElementVisibility.Visible };
+                ch.Tag = item;
+                ch.CheckedChanged += OnPaneCheckedChanged;
+                this.bsPanes.ItemLinks.Add(ch);
+            }
+        }
+
+        private void OnPaneCheckedChanged(object sender, ItemClickEventArgs e) {
+            XYDiagramPane item = (XYDiagramPane)e.Item.Tag;
+            item.Visibility = ((BarCheckItem)e.Item).Checked ? ChartElementVisibility.Visible : ChartElementVisibility.Hidden;
+        }
+
+        private void chartControl_MouseMove(object sender, MouseEventArgs e) {
+            ChartHitInfo info = this.chartControl.CalcHitInfo(e.Location);
+            try {
+                if(info.SeriesPoint != null) {
+                    DateTime dt = info.SeriesPoint.DateTimeArgument;
+                    PropertyInfo pi = Strategy.StrategyData[0].GetType().GetProperty("Time", BindingFlags.Instance | BindingFlags.Public);
+                    int index = Strategy.StrategyData.FindIndex(d => object.Equals(pi.GetValue(d), dt));
+                    this.bsIndex.Caption = "Index = " + index;
+                }
+                else {
+                    this.bsIndex.Caption = "";
+                }
+            }
+            catch(Exception) {
+
+            }
         }
     }
 }

@@ -14,12 +14,32 @@ namespace Crypto.Core.Strategies {
         public int GraphWidth { get; set; } = 1;
         public ChartType ChartType { get; set; } = ChartType.Line;
         public int PanelIndex { get; set; } = 0;
-        public string AnnotationText { get; set; }
+        string name;
+        public string Name { get { return string.IsNullOrEmpty(name) ? FieldName : name; } set { name = value; } }
+        string annotationText;
+        public string AnnotationText {
+            get { return annotationText; }
+            set {
+                annotationText = value;
+                HasAnnotationStringFormat = !string.IsNullOrEmpty(value) && annotationText.Contains('{');
+            }
+        }
+        public bool HasAnnotationStringFormat { get; private set; }
         public string AnnotationAnchorField { get; set; }
         public DataVisibility Visibility { get; set; } = DataVisibility.Both;
         public bool UseCustomTimeUnit { get; set; } = false;
         public StrategyDateTimeMeasureUnit TimeUnit { get; set; }
         public int TimeUnitMeasureMultiplier { get; set; } = 1;
+        string dataSourcePath;
+        public string DataSourcePath {
+            get { return dataSourcePath; }
+            set {
+                dataSourcePath = value;
+                if(!string.IsNullOrEmpty(dataSourcePath))
+                    Visibility = DataVisibility.Chart;
+            }
+        }
+        public object DataSource { get; set; }
     }
 
     public enum ChartType { CandleStick, Line, Area, Bar, Dot, Annotation, StepLine }

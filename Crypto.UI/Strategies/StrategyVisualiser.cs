@@ -21,8 +21,31 @@ namespace CryptoMarketClient.Strategies {
             Chart = chart;
             Strategy = strategy;
 
+            UpdateDataSource(strategy);
             InitializeTable();
             InitializeChart();
+        }
+
+        private void UpdateDataSource(StrategyBase strategy) {
+            foreach(var item in strategy.DataItemInfos) {
+                if(!string.IsNullOrEmpty(item.DataSourcePath)) {
+                    item.DataSource = GetBindingValue(item.DataSourcePath, Strategy);
+                }
+            }
+        }
+
+        private object GetBindingValue(string dataSourcePath, object root) {
+            string[] props = dataSourcePath.Split('.');
+            object res = root;
+            for(int i = 0; i < props.Length;i++) {
+                PropertyInfo pInfo = res.GetType().GetProperty(props[i], BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+                if(pInfo == null)
+                    return null;
+                res = pInfo.GetValue(res, null);
+                if(res == null)
+                    break;
+            }
+            return res;
         }
 
         public ChartControl Chart { get; private set; }
@@ -80,12 +103,41 @@ namespace CryptoMarketClient.Strategies {
             return res;
         }
 
+        string GetFormattedText(string annotationText, object obj) {
+            StringBuilder b = new StringBuilder();
+            int index = annotationText.IndexOf('{');
+            b.Append(annotationText.Substring(0, index));
+            while(true) {
+                int newIndex = annotationText.IndexOf('{', index);
+                if(newIndex == -1) {
+                    b.Append(annotationText.Substring(index));
+                    break;
+                }
+                b.Append(annotationText.Substring(index, newIndex - index));
+                index = newIndex;
+                int end = annotationText.IndexOf('}', index);
+                string path = annotationText.Substring(index + 1, end - index - 1);
+                string[] items = path.Split(':');
+                string formatString = items.Length > 1 ? items[1] : null;
+                if(formatString == null)
+                    formatString = "{0}";
+                else
+                    formatString = "{0:" + items[1] + "}";
+                object value = GetBindingValue(items[0], obj);
+                b.Append(string.Format(formatString, value));
+                index = end + 1;
+            }
+            return b.ToString();
+        }
         private void CreateAnnotations(StrategyDataItemInfo info) {
             if(Strategy.StrategyData.Count == 0)
                 return;
             PropertyInfo pInfo = Strategy.StrategyData[0].GetType().GetProperty(info.FieldName, BindingFlags.Instance | BindingFlags.Public);
             PropertyInfo pAnchor = Strategy.StrategyData[0].GetType().GetProperty(info.AnnotationAnchorField, BindingFlags.Instance | BindingFlags.Public);
             PropertyInfo pTime = Strategy.StrategyData[0].GetType().GetProperty("Time", BindingFlags.Instance | BindingFlags.Public);
+            XYDiagramPaneBase pane = ((XYDiagram)Chart.Diagram).DefaultPane;
+            if(info.PanelIndex != 0)
+                pane = ((XYDiagram)Chart.Diagram).Panes[info.PanelIndex];
 
             int index = 0;
 
@@ -102,10 +154,15 @@ namespace CryptoMarketClient.Strategies {
                 double yValue = (double) pAnchor.GetValue(obj);
                 //SeriesPoint pt = new SeriesPoint(time, new double[] { yValue });
                 //s.Points.Add(pt);
-                TextAnnotation annotation = ((XYDiagram) Chart.Diagram).DefaultPane.Annotations.AddTextAnnotation(info.FieldName, info.AnnotationText);
+                string annotationText = info.AnnotationText;
+                if(info.HasAnnotationStringFormat)
+                    annotationText = GetFormattedText(annotationText, obj);
+
+                TextAnnotation annotation = pane.Annotations.AddTextAnnotation(info.FieldName + "InPane" + info.PanelIndex, annotationText);
                 PaneAnchorPoint point = new PaneAnchorPoint();
                 point.AxisXCoordinate.AxisValue = time;
                 point.AxisYCoordinate.AxisValue = yValue;
+                point.Pane = pane;
                 annotation.AnchorPoint = point;
                 annotation.ShapeKind = ShapeKind.Rectangle;
                 //TextAnnotation annotation = pt.Annotations.AddTextAnnotation(info.FieldName, info.AnnotationText);
@@ -139,9 +196,16 @@ namespace CryptoMarketClient.Strategies {
             view.Color = info.Color;
             view.PointMarkerOptions.Size = info.GraphWidth == 1 ? view.PointMarkerOptions.Size : (int)(info.GraphWidth * DpiProvider.Default.DpiScaleFactor);
             s.View = view;
-            if(Strategy.StrategyData != null && Strategy.StrategyData.Count > 0)
-                s.DataSource = Strategy.StrategyData;
+            s.DataSource = GetDataSource(info);
             return s;
+        }
+
+        private object GetDataSource(StrategyDataItemInfo info) {
+            if(info.DataSource != null)
+                return info.DataSource;
+            if(Strategy.StrategyData != null && Strategy.StrategyData.Count > 0)
+                return Strategy.StrategyData;
+            return null;
         }
 
         protected virtual Series CreateAreaSeries(StrategyDataItemInfo info) {
@@ -154,8 +218,7 @@ namespace CryptoMarketClient.Strategies {
             AreaSeriesView view = new AreaSeriesView();
             view.Color = info.Color;
             s.View = view;
-            if(Strategy.StrategyData != null && Strategy.StrategyData.Count > 0)
-                s.DataSource = Strategy.StrategyData;
+            s.DataSource = GetDataSource(info);
             return s;
         }
 
@@ -170,8 +233,7 @@ namespace CryptoMarketClient.Strategies {
             view.Color = info.Color;
             view.BarWidth = info.GraphWidth == 1 ? view.BarWidth : (int)(info.GraphWidth * DpiProvider.Default.DpiScaleFactor);
             s.View = view;
-            if(Strategy.StrategyData != null && Strategy.StrategyData.Count > 0)
-                s.DataSource = Strategy.StrategyData;
+            s.DataSource = GetDataSource(info);
             return s;
         }
 
@@ -186,8 +248,7 @@ namespace CryptoMarketClient.Strategies {
             view.Color = info.Color;
             view.LineStyle.Thickness = (int)(info.GraphWidth * DpiProvider.Default.DpiScaleFactor);
             s.View = view;
-            if(Strategy.StrategyData != null && Strategy.StrategyData.Count > 0)
-                s.DataSource = Strategy.StrategyData;
+            s.DataSource = GetDataSource(info);
             return s;
         }
 
@@ -227,8 +288,7 @@ namespace CryptoMarketClient.Strategies {
             }
 
             s.View = view;
-            if(Strategy.StrategyData != null && Strategy.StrategyData.Count > 0)
-                s.DataSource = Strategy.StrategyData;
+            s.DataSource = GetDataSource(info);
             return s;
         }
 
@@ -239,7 +299,7 @@ namespace CryptoMarketClient.Strategies {
                 SecondaryAxisY axis = new SecondaryAxisY();
                 axis.Assign(diagram.AxisY);
                 diagram.SecondaryAxesY.Add(axis);
-                XYDiagramPane pane = new XYDiagramPane();
+                XYDiagramPane pane = new XYDiagramPane() { Name = info.Name };
                 diagram.Panes.Add(pane);
 
                 //diagram.AxisY.SetVisibilityInPane(false, pane);
@@ -258,7 +318,7 @@ namespace CryptoMarketClient.Strategies {
             cond.Value1 = value;
 
             rule.Tag = new object();
-            rule.Name = column.FieldName + "Equal";
+            rule.Name = column.FieldName + "Equal" + rule.GetHashCode();
             rule.Column = column;
             rule.ApplyToRow = true;
             rule.ColumnApplyTo = column;
