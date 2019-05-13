@@ -1,5 +1,6 @@
 ﻿using Crypto.Core.Strategies.Arbitrages.AltBtcUsdt;
 using Crypto.Core.Strategies.Arbitrages.Statistical;
+using Crypto.Core.Strategies.Base;
 using Crypto.Core.Strategies.Custom;
 using Crypto.Core.Strategies.Listeners;
 using Crypto.Core.Strategies.Stupid;
@@ -34,7 +35,8 @@ namespace Crypto.Core.Strategies {
     [XmlInclude(typeof(RedWaterfallStrategy))]
     //[XmlInclude(typeof())]
     [Serializable]
-    public abstract class StrategyBase {
+    [InputParameterObject]
+    public abstract class StrategyBase : IStrategyDataItemInfoOwner {
         public StrategyBase() {
             Id = Guid.NewGuid();
             FileName = Id.ToString();
@@ -53,6 +55,7 @@ namespace Crypto.Core.Strategies {
         [Browsable(false)]
         public double Earned { get; set; }
 
+        [Browsable(false)]
         public long ChatId { get; set; }
         public bool EnableNotifications { get; set; }
 
@@ -75,8 +78,10 @@ namespace Crypto.Core.Strategies {
         [XmlIgnore]
         [Browsable(false)]
         public List<object> StrategyData { get; } = new List<object>();
-
         [XmlIgnore]
+        List<object> IStrategyDataItemInfoOwner.Items { get { return StrategyData; } }
+
+        [XmlIgnore, Browsable(false)]
         public List<StrategyDataItemInfo> DataItemInfos { get; } = new List<StrategyDataItemInfo>();
 
         public StrategyDataItemInfo CandleStickItem() {
@@ -279,5 +284,31 @@ namespace Crypto.Core.Strategies {
             if(MaxAllowedDeposit == 0)
                 list.Add(new StrategyValidationError() { DataObject = this, Description = "Max allowed deposit not specified.", PropertyName = "MaxAllowedDeposit", Value = "0" });
         }
+
+        [TypeConverter(typeof(ExpandableObjectConverter))]
+        public List<InputParameterInfo> ParametersToOptimize { get; } = new List<InputParameterInfo>();
+       
+    }
+
+    public class InputParameterAttribute : Attribute {
+        public InputParameterAttribute() {
+            IsInput = true;
+        }
+    
+        public InputParameterAttribute(bool isInput) {
+            IsInput = isInput;
+        }
+        public bool IsInput { get; private set; }
+    }
+
+    public class InputParameterObjectAttribute : Attribute {
+        public InputParameterObjectAttribute() {
+            IsInput = true;
+        }
+
+        public InputParameterObjectAttribute(bool isInput) {
+            IsInput = isInput;
+        }
+        public bool IsInput { get; private set; }
     }
 }

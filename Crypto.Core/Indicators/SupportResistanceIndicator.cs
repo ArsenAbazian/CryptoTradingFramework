@@ -1,4 +1,5 @@
-﻿using CryptoMarketClient;
+﻿using Crypto.Core.Strategies;
+using CryptoMarketClient;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -11,11 +12,14 @@ namespace Crypto.Core.Indicators {
         public BindingList<SRValue> Support { get; } = new BindingList<SRValue>();
         public BindingList<SRValue> Resistance { get; } = new BindingList<SRValue>();
 
+        [InputParameter]
         public int Range { get; set; } = 3;
+        [InputParameter]
         public int ClasterizationRange { get; set; } = 24;
+        [InputParameter]
         public double ThresoldPerc { get; set; } = 0.6;
         public override void OnUpdateValue(int index) {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
         public override TimeBaseValue Calculate(int forIndex) {
             if(forIndex < Length)

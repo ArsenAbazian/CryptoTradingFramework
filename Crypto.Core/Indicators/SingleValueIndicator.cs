@@ -112,6 +112,84 @@ namespace Crypto.Core.Indicators {
                 Result.Add(Calculate(i));
             }
         }
+
+        public double MathExp { get; set; }
+        public double Deviation { get; set; }
+
+        public double CalculateMath() {
+            double sum = 0;
+            foreach(var item in Result) {
+                if(double.IsNaN(item.Value))
+                    continue;
+                sum += item.Value;
+            }
+            MathExp = sum / Result.Count;
+            return MathExp;
+        }
+
+        public double CalculateDev() {
+            double sum = 0;
+            foreach(var item in Result) {
+                if(double.IsNaN(item.Value))
+                    continue;
+                double sub = item.Value - MathExp;
+                sum += sub * sub;
+            }
+            sum /= Result.Count;
+            Deviation = System.Math.Sqrt(sum);
+            return Deviation;
+        }
+
+        protected double CalcMin() {
+            double min = double.MaxValue;
+            foreach(var item in Result) {
+                if(double.IsNaN(item.Value))
+                    continue;
+                min = Math.Min(min, item.Value);
+            }
+            return min;
+        }
+
+        protected double CalcMax() {
+            double max = double.MinValue;
+            foreach(var item in Result) {
+                if(double.IsNaN(item.Value))
+                    continue;
+                max = Math.Max(max, item.Value);
+            }
+            return max;
+        }
+
+        public ArgumentValue[] CalcHistogramm(int count) {
+            double minX = CalcMin();
+            double maxX = CalcMax();
+            double step = (maxX - minX) / count;
+
+            minX = ((int)(minX / step)) * step;
+            maxX = ((int)(maxX / step + 0.5)) * step;
+
+            count = (int)((maxX - minX) / step);
+            ArgumentValue[] res = new ArgumentValue[count + 1];
+            for(int i = 0; i < count + 1; i++) {
+                res[i] = new ArgumentValue() { X = minX + i * step };
+            }
+            foreach(var item in Result) {
+                if(double.IsNaN(item.Value))
+                    continue;
+                int index = (int)((item.Value - minX) / step + 0.5);
+                res[index].Y += 1.0;
+            }
+            double del = 100.0 / Result.Count;
+            for(int i = 0; i < count; i++) {
+                res[i].Y *= del;
+            }
+            return res;
+        }
+    }
+
+    public class ArgumentValue {
+        public double X { get; set; }
+        public double Y { get; set; }
     }
 
     public class IndicatorValue : TimeBaseValue {

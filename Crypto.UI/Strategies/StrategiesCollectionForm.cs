@@ -1,4 +1,5 @@
 ﻿using Crypto.Core.Strategies;
+using Crypto.UI.Strategies;
 using CryptoMarketClient.Common;
 using DevExpress.XtraBars;
 using DevExpress.XtraEditors;
@@ -265,6 +266,14 @@ namespace CryptoMarketClient.Strategies {
             strategy.EnableNotifications = ((CheckEdit)sender).Checked;
             this.gridView1.CloseEditor();
             Manager.Save();
+        }
+
+        private void biOptimizeParams_ItemClick(object sender, ItemClickEventArgs e) {
+            using(ParamsConfigurationForm form = new ParamsConfigurationForm()) {
+                form.Strategy = (StrategyBase)this.gridView1.GetFocusedRow();
+                if(form.ShowDialog() != DialogResult.OK)
+                    return;
+            }
         }
     }
 }

@@ -1,9 +1,13 @@
 ﻿using Crypto.Core.Strategies;
+using CryptoMarketClient.Strategies;
 using DevExpress.XtraBars;
 using DevExpress.XtraCharts;
 using DevExpress.XtraCharts.Designer;
 using DevExpress.XtraEditors;
+using DevExpress.XtraGrid;
 using DevExpress.XtraGrid.Views.Grid;
+using DevExpress.XtraGrid.Views.Grid.ViewInfo;
+using DevExpress.XtraTab;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,42 +20,36 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace CryptoMarketClient.Strategies {
-    public partial class StrategyDataForm : XtraForm {
-        public StrategyDataForm() {
+namespace CryptoMarketClient.Helpers {
+    public partial class DataForm : XtraForm {
+        public DataForm() {
             InitializeComponent();
-            this.chartControl.UseDirectXPaint = true;
         }
 
-        StrategyBase strategy;
-        public StrategyBase Strategy {
-            get { return strategy; }
+        IStrategyDataItemInfoOwner visual;
+        public IStrategyDataItemInfoOwner Visual {
+            get { return visual; }
             set {
-                if(Strategy == value)
+                if(Visual == value)
                     return;
-                strategy = value;
-                OnStrategyChanged();
+                visual = value;
+                OnVisualChanged();
             }
         }
 
-        protected virtual void OnStrategyChanged() {
-            this.strategyHistoryItemBindingSource.DataSource = Strategy.History;
-            this.tradingResultBindingSource.DataSource = Strategy.TradeHistory;
-            Text = Strategy.Name + " - Data";
+        protected virtual void OnVisualChanged() {
+            Text = Visual.Name + " - Data";
             StrategyDataVisualiser visualizer = new StrategyDataVisualiser();
-            visualizer.Visualize(Strategy, this.gcData, this.chartControl);
+            visualizer.Visualize(Visual, this.gcData, this.chartControl);
+
             if(File.Exists(ChartSettingsFileName)) {
                 DetachePoints();
                 this.chartControl.LoadFromFile(ChartSettingsFileName);
                 AttachPoints();
             }
-        }
+            if(this.chartControl.Series.Count == 0)
+                this.tpChartPage.Visible = false;
 
-        private void gridView1_RowStyle(object sender, DevExpress.XtraGrid.Views.Grid.RowStyleEventArgs e) {
-            if(this.gridView1.FocusedRowHandle != e.RowHandle)
-                return;
-            e.Appearance.BackColor = Color.FromArgb(0x10, this.gridView1.PaintAppearance.FocusedRow.BackColor);
-            e.HighPriority = true;
         }
 
         private void gridControl1_Click(object sender, EventArgs e) {
@@ -59,44 +57,10 @@ namespace CryptoMarketClient.Strategies {
         }
 
         private void gvData_RowStyle(object sender, DevExpress.XtraGrid.Views.Grid.RowStyleEventArgs e) {
-            if(this.gridView1.FocusedRowHandle != e.RowHandle)
+            if(this.gvData.FocusedRowHandle != e.RowHandle)
                 return;
-            e.Appearance.BackColor = Color.FromArgb(0x10, this.gridView1.PaintAppearance.FocusedRow.BackColor);
+            e.Appearance.BackColor = Color.FromArgb(0x10, this.gvData.PaintAppearance.FocusedRow.BackColor);
             e.HighPriority = true;
-        }
-
-        private void gvData_CustomScrollAnnotation(object sender, DevExpress.XtraGrid.Views.Grid.GridCustomScrollAnnotationsEventArgs e) {
-            List<object> st = Strategy.StrategyData as List<object>;
-            if(st.Count == 0)
-                return;
-            PropertyInfo pBuy = st[0].GetType().GetProperty("BuySignal", BindingFlags.Public | BindingFlags.Instance);
-            PropertyInfo pSell = st[0].GetType().GetProperty("SellSignal", BindingFlags.Public | BindingFlags.Instance);
-
-            if(pBuy == null || pSell == null)
-                return;
-
-            e.Annotations = new List<GridScrollAnnotationInfo>();
-            if(st == null && e.Annotations != null) {
-                e.Annotations.Clear();
-                return;
-            }
-            for(int i = 0; i < st.Count; i++) {
-                if((bool)pBuy.GetValue(st[i])) {
-                    GridScrollAnnotationInfo info = new GridScrollAnnotationInfo();
-                    info.Index = i;
-                    info.RowHandle = this.gridView1.GetRowHandle(i);
-                    info.Color = Color.Green;
-                    e.Annotations.Add(info);
-                }
-
-                if((bool)pSell.GetValue(st[i])) {
-                    GridScrollAnnotationInfo info = new GridScrollAnnotationInfo();
-                    info.Index = i;
-                    info.RowHandle = this.gridView1.GetRowHandle(i);
-                    info.Color = Color.Red;
-                    e.Annotations.Add(info);
-                }
-            }
         }
 
         protected Dictionary<Series, SeriesPoint[]> DetachedPoints { get; set; } 
@@ -135,7 +99,7 @@ namespace CryptoMarketClient.Strategies {
         }
 
         protected string SettingsFolder { get { return "StrategiesSettings"; } }
-        protected string ChartSettingsFileName { get { return SettingsFolder + "\\Chart_" + Strategy.Id.ToString() + ".xml"; } }
+        protected string ChartSettingsFileName { get { return SettingsFolder + "\\Chart_" + Visual.GetType().Name + ".xml"; } }
         private void CheckCreateSettingsFolder() {
             if(!Directory.Exists(SettingsFolder))
                 Directory.CreateDirectory(SettingsFolder);
@@ -150,6 +114,8 @@ namespace CryptoMarketClient.Strategies {
             if(this.bsPanes.ItemLinks.Count != 0)
                 return;
             XYDiagram dg = (XYDiagram)this.chartControl.Diagram;
+            if(dg == null)
+                return;
             foreach(XYDiagramPane item in dg.Panes) {
                 BarCheckItem ch = new BarCheckItem(this.barManager1) { Caption = item.Name, Checked = item.Visibility== ChartElementVisibility.Visible };
                 ch.Tag = item;
@@ -168,8 +134,8 @@ namespace CryptoMarketClient.Strategies {
             try {
                 if(info.SeriesPoint != null) {
                     DateTime dt = info.SeriesPoint.DateTimeArgument;
-                    PropertyInfo pi = Strategy.StrategyData[0].GetType().GetProperty("Time", BindingFlags.Instance | BindingFlags.Public);
-                    int index = Strategy.StrategyData.FindIndex(d => object.Equals(pi.GetValue(d), dt));
+                    PropertyInfo pi = Visual.Items[0].GetType().GetProperty("Time", BindingFlags.Instance | BindingFlags.Public);
+                    int index = Visual.Items.FindIndex(d => object.Equals(pi.GetValue(d), dt));
                     this.bsIndex.Caption = "Index = " + index;
                 }
                 else {
@@ -179,6 +145,42 @@ namespace CryptoMarketClient.Strategies {
             catch(Exception) {
 
             }
+        }
+
+        private void gvData_DoubleClick(object sender, EventArgs e) {
+            if(this.gvData.FocusedRowHandle != GridControl.InvalidRowHandle && this.gvData.FocusedColumn != null) {
+                StrategyDataItemInfo info = (StrategyDataItemInfo)this.gvData.FocusedColumn.Tag;
+                if(info.DetailInfo != null)
+                    info = info.DetailInfo;
+                if(info.Type != DataType.ChartData)
+                    return;
+                info.Value = gvData.GetFocusedRow();
+                ChartControl chart = new ChartControl() { Dock = DockStyle.Fill };
+
+                chart.BeginInit();
+                XYDiagram dia = new XYDiagram();
+                chart.Diagram = dia;
+
+                StrategyDataVisualiser visualiser = new StrategyDataVisualiser();
+                XtraTabPage page = new XtraTabPage();
+                page.Text = info.Name;
+                page.Controls.Add(chart);
+                visualiser.Visualize(info, null, chart);
+                chart.EndInit();
+
+                this.tabControl.TabPages.Add(page);
+            }
+        }
+
+        private void InitializeComponent() {
+            this.SuspendLayout();
+            // 
+            // DataForm
+            // 
+            this.ClientSize = new System.Drawing.Size(785, 465);
+            this.Name = "DataForm";
+            this.ResumeLayout(false);
+
         }
     }
 }

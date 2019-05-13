@@ -146,6 +146,8 @@ namespace CryptoMarketClient {
         }
         public static void UpdateVolumes(IList<CandleStickData> candles, List<TradeInfoItem> trades, int period) {
             CandleStickData saved = null;
+            if(trades == null)
+                return;
             for(int i = 0; i < trades.Count; i++) {
                 var trade = trades[i];
                 if(saved == null || saved.Time > trade.Time || saved.Time.AddMinutes(period) <= saved.Time) {

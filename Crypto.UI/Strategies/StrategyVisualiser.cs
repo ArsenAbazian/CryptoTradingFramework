@@ -1,8 +1,11 @@
-﻿using Crypto.Core.Strategies;
+﻿using Crypto.Core.Indicators;
+using Crypto.Core.Strategies;
 using DevExpress.Skins;
+using DevExpress.Sparkline;
 using DevExpress.Utils;
 using DevExpress.XtraCharts;
 using DevExpress.XtraEditors;
+using DevExpress.XtraEditors.Repository;
 using DevExpress.XtraGrid;
 using DevExpress.XtraGrid.Columns;
 using DevExpress.XtraGrid.Views.Grid;
@@ -15,21 +18,22 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace CryptoMarketClient.Strategies {
-    public class StrategyVisualizer {
-        public void Visualize(StrategyBase strategy, GridControl grid, ChartControl chart) {
+    public class StrategyDataVisualiser {
+        public void Visualize(IStrategyDataItemInfoOwner strategy, GridControl grid, ChartControl chart) {
             Grid = grid;
             Chart = chart;
-            Strategy = strategy;
+            Visual = strategy;
 
-            UpdateDataSource(strategy);
+            UpdateDataSource();
             InitializeTable();
             InitializeChart();
         }
 
-        private void UpdateDataSource(StrategyBase strategy) {
-            foreach(var item in strategy.DataItemInfos) {
+        private void UpdateDataSource() {
+            foreach(var item in Visual.DataItemInfos) {
                 if(!string.IsNullOrEmpty(item.DataSourcePath)) {
-                    item.DataSource = GetBindingValue(item.DataSourcePath, Strategy);
+                    object root = item.Value == null ? Visual : item.Value;
+                    item.DataSource = GetBindingValue(item.DataSourcePath, root);
                 }
             }
         }
@@ -48,13 +52,16 @@ namespace CryptoMarketClient.Strategies {
             return res;
         }
 
-        public ChartControl Chart { get; private set; }
-        public GridControl Grid { get; private set; }
-        public StrategyBase Strategy { get; private set; }
+        public ChartControl Chart { get; set; }
+        public GridControl Grid { get; set; }
+        public IStrategyDataItemInfoOwner Visual { get; private set; }
 
         protected virtual void InitializeChart() {
-            for(int i = 0; i < Strategy.DataItemInfos.Count; i++) {
-                StrategyDataItemInfo info = Strategy.DataItemInfos[i];
+            if(Chart == null)
+                return;
+            bool shouldRemoveDefaultSeries = Chart.Series.Count > 0;
+            for(int i = 0; i < Visual.DataItemInfos.Count; i++) {
+                StrategyDataItemInfo info = Visual.DataItemInfos[i];
                 if(!info.Visibility.HasFlag(DataVisibility.Chart))
                     continue;
                 if(info.ChartType == ChartType.Annotation)
@@ -62,9 +69,10 @@ namespace CryptoMarketClient.Strategies {
                 Series s = CreateSeries(info);
                 Chart.Series.Add(s);
             }
-            Chart.Series.RemoveAt(0);
-            for(int i = 0; i < Strategy.DataItemInfos.Count; i++) {
-                StrategyDataItemInfo info = Strategy.DataItemInfos[i];
+            if(shouldRemoveDefaultSeries)
+                Chart.Series.RemoveAt(0);
+            for(int i = 0; i < Visual.DataItemInfos.Count; i++) {
+                StrategyDataItemInfo info = Visual.DataItemInfos[i];
                 if(!info.Visibility.HasFlag(DataVisibility.Chart))
                     continue;
                 if(info.ChartType != ChartType.Annotation)
@@ -72,7 +80,7 @@ namespace CryptoMarketClient.Strategies {
                 CreateAnnotations(info);
             }
 
-            StrategyDataItemInfo di = Strategy.DataItemInfos.FirstOrDefault(i => i.Type == DataType.DateTime && i.FieldName == "Time");
+            StrategyDataItemInfo di = Visual.DataItemInfos.FirstOrDefault(i => i.Type == DataType.DateTime && i.FieldName == "Time");
             if(di != null) {
                 if(di.UseCustomTimeUnit) {
                     ((XYDiagram)Chart.Diagram).AxisX.DateTimeScaleOptions.MeasureUnit = (DateTimeMeasureUnit)Enum.Parse(typeof(DateTimeMeasureUnit), di.TimeUnit.ToString());
@@ -130,11 +138,11 @@ namespace CryptoMarketClient.Strategies {
             return b.ToString();
         }
         private void CreateAnnotations(StrategyDataItemInfo info) {
-            if(Strategy.StrategyData.Count == 0)
+            if(Visual.Items.Count == 0)
                 return;
-            PropertyInfo pInfo = Strategy.StrategyData[0].GetType().GetProperty(info.FieldName, BindingFlags.Instance | BindingFlags.Public);
-            PropertyInfo pAnchor = Strategy.StrategyData[0].GetType().GetProperty(info.AnnotationAnchorField, BindingFlags.Instance | BindingFlags.Public);
-            PropertyInfo pTime = Strategy.StrategyData[0].GetType().GetProperty("Time", BindingFlags.Instance | BindingFlags.Public);
+            PropertyInfo pInfo = Visual.Items[0].GetType().GetProperty(info.FieldName, BindingFlags.Instance | BindingFlags.Public);
+            PropertyInfo pAnchor = Visual.Items[0].GetType().GetProperty(info.AnnotationAnchorField, BindingFlags.Instance | BindingFlags.Public);
+            PropertyInfo pTime = Visual.Items[0].GetType().GetProperty("Time", BindingFlags.Instance | BindingFlags.Public);
             XYDiagramPaneBase pane = ((XYDiagram)Chart.Diagram).DefaultPane;
             if(info.PanelIndex != 0)
                 pane = ((XYDiagram)Chart.Diagram).Panes[info.PanelIndex];
@@ -143,8 +151,8 @@ namespace CryptoMarketClient.Strategies {
 
             //Series s = CreatePointSeries(info);
             //s.DataSource = null;
-            for(int i = 0; i < Strategy.StrategyData.Count; i++) {
-                object obj = Strategy.StrategyData[i];
+            for(int i = 0; i < Visual.Items.Count; i++) {
+                object obj = Visual.Items[i];
                 bool value = (bool) pInfo.GetValue(obj);
                 if(!value) {
                     index++;
@@ -176,7 +184,7 @@ namespace CryptoMarketClient.Strategies {
         protected virtual Series CreateAnnotationSeriesCore(StrategyDataItemInfo info) {
             Series s = new Series();
             s.Name = info.FieldName;
-            s.ArgumentDataMember = "Time";
+            s.ArgumentDataMember = GetArgumentDataMember(info);
             s.ValueDataMembers.AddRange(info.FieldName);
             s.ValueScaleType = ScaleType.Numerical;
             PointSeriesView view = new PointSeriesView();
@@ -189,7 +197,7 @@ namespace CryptoMarketClient.Strategies {
         protected virtual Series CreatePointSeries(StrategyDataItemInfo info) {
             Series s = new Series();
             s.Name = info.FieldName;
-            s.ArgumentDataMember = "Time";
+            s.ArgumentDataMember = GetArgumentDataMember(info);
             s.ValueDataMembers.AddRange(info.FieldName);
             s.ValueScaleType = ScaleType.Numerical;
             PointSeriesView view = new PointSeriesView();
@@ -203,15 +211,19 @@ namespace CryptoMarketClient.Strategies {
         private object GetDataSource(StrategyDataItemInfo info) {
             if(info.DataSource != null)
                 return info.DataSource;
-            if(Strategy.StrategyData != null && Strategy.StrategyData.Count > 0)
-                return Strategy.StrategyData;
+            if(Visual.Items != null && Visual.Items.Count > 0)
+                return Visual.Items;
             return null;
+        }
+
+        protected string GetArgumentDataMember(StrategyDataItemInfo info) {
+            return string.IsNullOrEmpty(info.ArgumentDataMember) ? "Time" : info.ArgumentDataMember;
         }
 
         protected virtual Series CreateAreaSeries(StrategyDataItemInfo info) {
             Series s = new Series();
             s.Name = info.FieldName;
-            s.ArgumentDataMember = "Time";
+            s.ArgumentDataMember = GetArgumentDataMember(info);
             s.ValueDataMembers.AddRange(info.FieldName);
             s.ValueScaleType = ScaleType.Numerical;
             s.ShowInLegend = true;
@@ -225,7 +237,7 @@ namespace CryptoMarketClient.Strategies {
         protected virtual Series CreateBarSeries(StrategyDataItemInfo info) {
             Series s = new Series();
             s.Name = info.FieldName;
-            s.ArgumentDataMember = "Time";
+            s.ArgumentDataMember = GetArgumentDataMember(info);
             s.ValueDataMembers.AddRange(info.FieldName);
             s.ValueScaleType = ScaleType.Numerical;
             s.ShowInLegend = true;
@@ -240,7 +252,7 @@ namespace CryptoMarketClient.Strategies {
         private Series CreateLineSeries(StrategyDataItemInfo info) {
             Series s = new Series();
             s.Name = info.FieldName;
-            s.ArgumentDataMember = "Time";
+            s.ArgumentDataMember = GetArgumentDataMember(info);
             s.ValueDataMembers.AddRange(info.FieldName);
             s.ValueScaleType = ScaleType.Numerical;
             s.ShowInLegend = true;
@@ -272,11 +284,11 @@ namespace CryptoMarketClient.Strategies {
             view.LineThickness = (int)(1 * DpiProvider.Default.DpiScaleFactor);
             view.LevelLineLength = 0.25;
             
-            if(Strategy.StrategyData.Count == 0)
+            if(Visual.Items.Count == 0)
                 ((XYDiagram)Chart.Diagram).AxisX.DateTimeScaleOptions.MeasureUnitMultiplier = 30;
             else {
-                object data1 = Strategy.StrategyData[1];
-                object data0 = Strategy.StrategyData[0];
+                object data1 = Visual.Items[1];
+                object data0 = Visual.Items[0];
                 PropertyInfo pi = data1.GetType().GetProperty("Time", BindingFlags.Public | BindingFlags.Instance);
                 if(pi == null)
                     ((XYDiagram)Chart.Diagram).AxisX.DateTimeScaleOptions.MeasureUnitMultiplier = 30;
@@ -294,6 +306,8 @@ namespace CryptoMarketClient.Strategies {
 
         private void CheckAddPanel(StrategyDataItemInfo info) {
             XYDiagram diagram = (XYDiagram)Chart.Diagram;
+            if(diagram == null)
+                return;
             diagram.AxisY.WholeRange.AlwaysShowZeroLevel = false;
             while(diagram.Panes.Count <= info.PanelIndex - 1) {
                 SecondaryAxisY axis = new SecondaryAxisY();
@@ -301,10 +315,6 @@ namespace CryptoMarketClient.Strategies {
                 diagram.SecondaryAxesY.Add(axis);
                 XYDiagramPane pane = new XYDiagramPane() { Name = info.Name };
                 diagram.Panes.Add(pane);
-
-                //diagram.AxisY.SetVisibilityInPane(false, pane);
-                //axis.SetVisibilityInPane(false, diagram.DefaultPane);
-                //axis.SetVisibilityInPane(true, pane);
             }
         }
 
@@ -327,15 +337,24 @@ namespace CryptoMarketClient.Strategies {
         }
 
         private void InitializeTable() {
+            if(Grid == null)
+                return;
             int index = 0;
+            object first = Visual.Items.Count > 0 ? Visual.Items[0] : null;
             GridView view = ((GridView)Grid.MainView);
-            for(int i = 0; i < Strategy.DataItemInfos.Count; i++) {
-                StrategyDataItemInfo info = Strategy.DataItemInfos[i];
+            for(int i = 0; i < Visual.DataItemInfos.Count; i++) {
+                StrategyDataItemInfo info = Visual.DataItemInfos[i];
                 GridColumn column = new GridColumn();
+                column.Tag = info;
                 bool isVisible = info.Visibility.HasFlag(DataVisibility.Table);
                 column.Visible = isVisible;
                 if(isVisible)
                     column.VisibleIndex = index;
+                RepositoryItem editor = CreateEditor(first, info);
+                if(editor != null) {
+                    Grid.RepositoryItems.Add(editor);
+                    column.ColumnEdit = editor;
+                }
                 column.FieldName = info.FieldName;
                 column.DisplayFormat.FormatType = GetFormatType(info.Type);
                 column.DisplayFormat.FormatString = info.FormatString;
@@ -343,29 +362,58 @@ namespace CryptoMarketClient.Strategies {
                 if(isVisible)
                     index++;
             }
-            for(int i = 0; i < Strategy.DataItemInfos.Count; i++) {
-                StrategyDataItemInfo info = Strategy.DataItemInfos[i];
+            for(int i = 0; i < Visual.DataItemInfos.Count; i++) {
+                StrategyDataItemInfo info = Visual.DataItemInfos[i];
                 if(!string.IsNullOrEmpty(info.AnnotationText)) {
                     ((GridView)Grid.MainView).FormatRules.Add(CreateRule(view.Columns[info.FieldName], true, info.Color, Color.FromArgb(0x20, info.Color)));
                 }
             }
-            lock(Strategy.StrategyData) {
+            lock(Visual.Items) {
                 List<object> data = new List<object>();
-                data.AddRange(Strategy.StrategyData);
+                data.AddRange(Visual.Items);
                 Grid.DataSource = data;
             }
             view.OptionsScrollAnnotations.ShowCustomAnnotations = DefaultBoolean.True;
             view.CustomScrollAnnotation += OnCustomScrollAnnotations;
         }
 
+        protected RepositoryItem CreateEditor(object first, StrategyDataItemInfo info) {
+            if(first == null)
+                return null;
+            if(info.FieldName == null)
+                return null;
+            PropertyInfo pi = first.GetType().GetProperty(info.FieldName, BindingFlags.Instance | BindingFlags.Public);
+            if(pi == null)
+                return null;
+            object value = pi.GetValue(first);
+            if(value is bool) {
+                RepositoryItemCheckEdit res = new RepositoryItemCheckEdit();
+                res.CheckBoxOptions.Style = DevExpress.XtraEditors.Controls.CheckBoxStyle.SvgStar2;
+                return res;
+            }
+            if(value is double[]) {
+                RepositoryItemSparklineEdit res = new RepositoryItemSparklineEdit();
+                res.View = new AreaSparklineView() {
+                    AreaOpacity = 30,
+                    HighlightStartPoint = false,
+                    HighlightEndPoint = false,
+                    HighlightMaxPoint = true,
+                    HighlightMinPoint = false,
+                    HighlightNegativePoints = false
+                };
+                return res;
+            }
+            return null;
+        }
+
         private void OnCustomScrollAnnotations(object sender, GridCustomScrollAnnotationsEventArgs e) {
-            List<object> items = Strategy.StrategyData;
+            List<object> items = Visual.Items;
             e.Annotations = new List<GridScrollAnnotationInfo>();
             if(items == null && e.Annotations != null) {
                 e.Annotations.Clear();
                 return;
             }
-            List<StrategyDataItemInfo> aList = Strategy.DataItemInfos.Where(i => !string.IsNullOrEmpty(i.AnnotationText)).ToList();
+            List<StrategyDataItemInfo> aList = Visual.DataItemInfos.Where(i => !string.IsNullOrEmpty(i.AnnotationText)).ToList();
             if(aList.Count == 0)
                 return;
             List<PropertyInfo> pList = new List<PropertyInfo>();

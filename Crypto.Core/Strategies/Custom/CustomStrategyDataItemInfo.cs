@@ -6,7 +6,15 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Crypto.Core.Strategies {
-    public class StrategyDataItemInfo {
+    public interface IStrategyDataItemInfoOwner {
+        string Name { get; }
+        List<StrategyDataItemInfo> DataItemInfos { get; }
+        List<object> Items { get; }
+    }
+
+    public class StrategyDataItemInfo : IStrategyDataItemInfoOwner {
+        public StrategyDataItemInfo DetailInfo { get; set; }
+
         public string FieldName { get; set; }
         public DataType Type { get; set; } = DataType.Numeric;
         public string FormatString { get; set; } = string.Empty;
@@ -24,6 +32,7 @@ namespace Crypto.Core.Strategies {
                 HasAnnotationStringFormat = !string.IsNullOrEmpty(value) && annotationText.Contains('{');
             }
         }
+        public string ArgumentDataMember { get; set; }
         public bool HasAnnotationStringFormat { get; private set; }
         public string AnnotationAnchorField { get; set; }
         public DataVisibility Visibility { get; set; } = DataVisibility.Both;
@@ -40,10 +49,24 @@ namespace Crypto.Core.Strategies {
             }
         }
         public object DataSource { get; set; }
+
+        List<StrategyDataItemInfo> list;
+        List<StrategyDataItemInfo> IStrategyDataItemInfoOwner.DataItemInfos {
+            get {
+                if(list == null) {
+                    list = new List<StrategyDataItemInfo>();
+                    list.Add(this);
+                }
+                return list;
+            }
+        }
+
+        public object Value { get; set; }
+        public List<object> Items { get; set; }
     }
 
     public enum ChartType { CandleStick, Line, Area, Bar, Dot, Annotation, StepLine }
-    public enum DataType { DateTime, Numeric }
+    public enum DataType { DateTime, Numeric, ChartData }
     [Flags]
     public enum DataVisibility { None, Table, Chart, Both = Table | Chart }
 

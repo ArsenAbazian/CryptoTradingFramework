@@ -632,5 +632,25 @@ namespace CryptoMarketClient {
             TelegramBot.Default.SendNotification("I am alive!", SettingsStore.Default.TelegramBotBroadcastId);
             XtraMessageBox.Show("Sent 'I am alive!' message. Please check your mobile client.");
         }
+
+        private void bbCalculateAtr_ItemClick(object sender, ItemClickEventArgs e) {
+            this.dpLog.Visibility = DockVisibility.Visible;
+            Application.DoEvents();
+            TickersVolatilityInfo info = new TickersVolatilityInfo() {
+                Exchange = PoloniexExchange.Default,
+                BaseCurrencies = new string[] { "BTC", "ETH" },
+                CandleStickPeriodMin = 30
+            };
+            info.TickerAdded += (d, ee) => {
+                Application.DoEvents();
+            };
+            if(!info.Calculate()) {
+                XtraMessageBox.Show("Error calculating volatility");
+                return;
+            }
+            DataVisualiserForm form = new DataVisualiserForm();
+            form.Visual = info;
+            form.Show();
+        }
     }
 }

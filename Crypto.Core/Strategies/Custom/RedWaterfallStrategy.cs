@@ -57,9 +57,13 @@ namespace Crypto.Core.Strategies.Custom {
         //    OrderGrid = info;
         //}
 
+        [InputParameter]
         public double MinBreakPercent { get; set; } = 120;
+        [InputParameter]
         public int MinSupportPower { get; set; } = 5;
+        [InputParameter]
         public int MinSupportLength { get; set; } = 8;
+        [InputParameter]
         public double MinAtrValue { get; set; } = 30;
         protected SupportResistanceIndicator SRIndicator { get; private set; }
         protected AtrIndicator AtrIndicator { get; private set; }
@@ -83,6 +87,7 @@ namespace Crypto.Core.Strategies.Custom {
             SRValue lastResistance = GetLastResistance();
             SRValue lastSupport = GetLastSupport();
             if(lastSupport != null & lastResistance != null) {
+                item.SRSpread = lastResistance.Value - lastSupport.Value;
                 item.ResIndex = lastResistance.Index;
                 item.SupIndex = lastSupport.Index;
                 double breakDelta = item.Close - lastSupport.Value;
@@ -141,8 +146,8 @@ namespace Crypto.Core.Strategies.Custom {
             //StrategyDataItemInfo sup = DataItem("SupportLength"); sup.Color = System.Drawing.Color.Green; sup.ChartType = ChartType.Bar; sup.PanelIndex = 1;
 
             StrategyDataItemInfo atr = DataItem("Atr"); atr.Name = "Atr Indicator"; atr.Color = System.Drawing.Color.Red; atr.ChartType = ChartType.Line; atr.PanelIndex = 1;
-            StrategyDataItemInfo resValue = DataItem("Value"); resValue.DataSourcePath = "SRIndicator.Resistance"; resValue.Color = Color.Red; resValue.ChartType = ChartType.StepLine;
-            StrategyDataItemInfo supValue = DataItem("Value"); supValue.DataSourcePath = "SRIndicator.Support"; supValue.Color = Color.Blue; supValue.ChartType = ChartType.StepLine;
+            StrategyDataItemInfo resValue = DataItem("Value"); resValue.DataSourcePath = "SRIndicator.Resistance"; resValue.Color = Color.FromArgb(0x40, Color.Red); resValue.ChartType = ChartType.StepLine;
+            StrategyDataItemInfo supValue = DataItem("Value"); supValue.DataSourcePath = "SRIndicator.Support"; supValue.Color = Color.FromArgb(0x40, Color.Blue); supValue.ChartType = ChartType.StepLine;
 
             //AnnotationItem("Support", "Support", System.Drawing.Color.Green, "SRLevel");
             //AnnotationItem("Resistance", "Resistance", System.Drawing.Color.Red, "SRLevel");
@@ -158,6 +163,7 @@ namespace Crypto.Core.Strategies.Custom {
             DataItem("CloseLength").Visibility = DataVisibility.Table;
 
             br = AnnotationItem("Break", "Break", System.Drawing.Color.Blue, "Atr"); br.PanelIndex = 1; br.Visibility = DataVisibility.Chart; br.AnnotationText = "Br"; //"Br={BreakPercent:0.00} Closed={Closed} CloseStickCount={CloseLength}";
+            StrategyDataItemInfo sp = DataItem("SRSpread"); sp.Color = Color.FromArgb(0x20, Color.Green); sp.ChartType = ChartType.Area; sp.PanelIndex = 3;
         }
 
         protected List<RedWaterfallDataItem> PostProcessItems { get; } = new List<RedWaterfallDataItem>();
@@ -211,6 +217,11 @@ namespace Crypto.Core.Strategies.Custom {
             Range = st.Range;
             ClasterizationRange = st.ClasterizationRange;
             ThresoldPerc = st.ThresoldPerc;
+            MinAtrValue = st.MinAtrValue;
+            MinBreakPercent = st.MinBreakPercent;
+            MinSupportLength = st.MinSupportLength;
+            MinSupportPower = st.MinSupportPower;
+
         }
 
         public int Range { get; set; } = 3;
@@ -260,11 +271,13 @@ namespace Crypto.Core.Strategies.Custom {
 
         public double SRLevel { get { return SRValue == null ? 0 : SRValue.Value; } }
         public bool Break { get; set; }
+        public bool BreakUp { get; set; }
         public int ResIndex { get; set; }
         public int SupIndex { get; set; }
 
         public int CloseLength { get; set; }
         public bool Closed { get; set; }
+        public double SRSpread { get; internal set; }
     }
 
     public class RedWaterfallOpenedOrder {

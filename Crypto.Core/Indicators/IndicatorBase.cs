@@ -1,4 +1,5 @@
-﻿using CryptoMarketClient;
+﻿using Crypto.Core.Strategies;
+using CryptoMarketClient;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -7,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Crypto.Core.Indicators {
+    [InputParameterObject]
     public class IndicatorBase {
         Ticker ticker;
         public Ticker Ticker {
