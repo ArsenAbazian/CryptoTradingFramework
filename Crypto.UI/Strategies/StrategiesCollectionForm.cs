@@ -221,7 +221,7 @@ namespace CryptoMarketClient.Strategies {
             manager.Strategies.Add(cloned);
 
             this.siStatus.Caption = "<b>Loading data from exchanges...</b>";
-            IOverlaySplashScreenHandle handle = SplashScreenManager.ShowOverlayForm(this);
+            IOverlaySplashScreenHandle handle = SplashScreenManager.ShowOverlayForm(gridControl1);
             Application.DoEvents();
             manager.Initialize(new SimulationStrategyDataProvider());
             if(!manager.Start()) {
@@ -269,11 +269,56 @@ namespace CryptoMarketClient.Strategies {
         }
 
         private void biOptimizeParams_ItemClick(object sender, ItemClickEventArgs e) {
+            StrategyBase strategy = (StrategyBase)this.gridView1.GetFocusedRow();
+            if(strategy == null) {
+                XtraMessageBox.Show("No strategy selected.");
+                return;
+            }
+
+            if(!strategy.SupportSimulation) {
+                XtraMessageBox.Show("This strategy does not support simulation.");
+                return;
+            }
+
             using(ParamsConfigurationForm form = new ParamsConfigurationForm()) {
-                form.Strategy = (StrategyBase)this.gridView1.GetFocusedRow();
+                form.Strategy = strategy;
                 if(form.ShowDialog() != DialogResult.OK)
                     return;
+
             }
+
+            StrategiesManager manager = new StrategiesManager();
+            StrategyBase cloned = strategy.Clone();
+            cloned.OptimizationParametersInitialized = false;
+            cloned.OptimizationMode = true;
+            cloned.DemoMode = true;
+            manager.Strategies.Add(cloned);
+
+            //this.siStatus.Caption = "<b>Loading data from exchanges...</b>";
+            //IOverlaySplashScreenHandle handle = SplashScreenManager.ShowOverlayForm(gridControl1);
+            //Application.DoEvents();
+            //manager.Initialize(new SimulationStrategyDataProvider());
+            //if(!manager.Start()) {
+            //    XtraMessageBox.Show("Error starting simulation! Please check log messages");
+            //    return;
+            //}
+            //this.siStatus.Caption = "<b>Running simulation...</b>";
+            //Application.DoEvents();
+
+            //Stopwatch timer = new Stopwatch();
+            //timer.Start();
+            //int elapsedSeconds = 0;
+            //while(manager.Running) {
+            //    if(timer.ElapsedMilliseconds / 1000 > elapsedSeconds) {
+            //        elapsedSeconds = (int)(timer.ElapsedMilliseconds / 1000);
+            //        this.siStatus.Caption = string.Format("<b>Running simulation... {0} sec</b>", elapsedSeconds);
+            //        Application.DoEvents();
+            //    }
+            //}
+            //SplashScreenManager.CloseOverlayForm(handle);
+            //this.siStatus.Caption = "<b>Simulation done.</b>";
+            //Application.DoEvents();
+            //StrategyConfigurationManager.Default.ShowData(cloned);
         }
     }
 }

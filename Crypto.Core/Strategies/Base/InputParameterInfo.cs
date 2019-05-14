@@ -18,6 +18,50 @@ namespace Crypto.Core.Strategies.Base {
         public object CurrentValueCore { get; set; }
         public string StartValue { get; set; }
         public string CurrentValue { get { return Convert.ToString(CurrentValueCore); } }
+
+        public virtual object Clone() {
+            InputParameterInfo res = new InputParameterInfo();
+            res.Assign(this);
+            return res;
+        }
+
+        public virtual void Assign(InputParameterInfo from) {
+            FieldName = from.FieldName;
+            StartValueCore = from.StartValueCore;
+            CurrentValueCore = from.CurrentValueCore;
+            StartValue = from.StartValue;
+        }
+
+        public void InitializeStartValue() {
+            StartValueCore = PropertyInfo.GetValue(Owner, null);
+            CurrentValueCore = StartValueCore;
+        }
+
+        public void ApplyValue() {
+            PropertyInfo.SetValue(Owner, CurrentValueCore);
+        }
+    }
+
+    [Serializable]
+    public class OutputParameterInfo : InputParameterInfo {
+        public OutputParameterOptimizationMode Optimization { get; set; }
+        public override object Clone() {
+            OutputParameterInfo res = new OutputParameterInfo();
+            res.Assign(this);
+            return res;
+        }
+        public virtual void Assign(OutputParameterInfo from) {
+            FieldName = from.FieldName;
+            StartValueCore = from.StartValueCore;
+            CurrentValueCore = from.CurrentValueCore;
+            StartValue = from.StartValue;
+            Optimization = from.Optimization;
+        }
+    }
+
+    public enum OutputParameterOptimizationMode {
+        Maximize,
+        Minimize
     }
 
     public class InputParameterNode {
@@ -55,10 +99,18 @@ namespace Crypto.Core.Strategies.Base {
     }
 
     public static class InputParametersHelper {
-        public static List<InputParameterNode> GetNodes(object owner) {
+        public static List<InputParameterNode> GetInputNodes(object owner) {
             List<InputParameterNode> res = new List<InputParameterNode>();
             InputParameterNode node = new InputParameterNode() { Owner = owner, Name = owner.GetType().Name, OwnerType = owner.GetType() };
-            GetNodesCore(node);
+            GetNodesCore(node, false);
+            FillNodes(res, node);
+            return res;
+        }
+
+        public static List<InputParameterNode> GetOutputNodes(object owner) {
+            List<InputParameterNode> res = new List<InputParameterNode>();
+            InputParameterNode node = new InputParameterNode() { Owner = owner, Name = owner.GetType().Name, OwnerType = owner.GetType() };
+            GetNodesCore(node, true);
             FillNodes(res, node);
             return res;
         }
@@ -69,21 +121,21 @@ namespace Crypto.Core.Strategies.Base {
                 FillNodes(res, item);
         }
 
-        private static void GetNodesCore(InputParameterNode parent) {
-            if(parent.OwnerType.GetCustomAttribute<InputParameterObjectAttribute>() == null ||
-                    !parent.OwnerType.GetCustomAttribute<InputParameterObjectAttribute>().IsInput)
+        private static void GetNodesCore(InputParameterNode parent, bool isOutput) {
+            if(parent.OwnerType.GetCustomAttribute<ParameterObjectAttribute>() == null ||
+                    !parent.OwnerType.GetCustomAttribute<ParameterObjectAttribute>().IsInput)
                 return;
             if(parent.Property != null) {
                 if(parent.Property.PropertyType.IsValueType)
                     return;
             }
-            InputParameterAttribute parentAttr = parent.Owner.GetType().GetCustomAttribute<InputParameterAttribute>();
-            if(parentAttr != null && parentAttr.IsInput)
-                parent.IsInputObject = true;
 
             PropertyInfo[] props = parent.Owner.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
             List<PropertyInfo> filtered = props.ToList();
-            filtered = filtered.Where(p => p.GetCustomAttribute<InputParameterAttribute>() != null && p.GetCustomAttribute<InputParameterAttribute>().IsInput).ToList();
+            if(!isOutput)
+                filtered = filtered.Where(p => p.GetCustomAttribute<InputParameterAttribute>() != null && p.GetCustomAttribute<InputParameterAttribute>().IsInput).ToList();
+            else
+                filtered = filtered.Where(p => p.GetCustomAttribute<OutputParameterAttribute>() != null && p.GetCustomAttribute<OutputParameterAttribute>().IsOutput).ToList();
             foreach(PropertyInfo pInfo in filtered) {
                 InputParameterNode child = new InputParameterNode();
                 child.Name = pInfo.Name;
@@ -93,7 +145,7 @@ namespace Crypto.Core.Strategies.Base {
                 child.Property = pInfo;
 
                 if(pInfo.PropertyType.IsClass) {
-                    GetNodesCore(child);
+                    GetNodesCore(child, isOutput);
                     if(child.Children.Count > 0)
                         parent.Children.Add(child);
                 }

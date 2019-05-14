@@ -65,6 +65,8 @@ namespace CryptoMarketClient.Strategies {
             this.colEnableNotifications = new DevExpress.XtraGrid.Columns.GridColumn();
             this.repositoryItemCheckEdit3 = new DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit();
             this.behaviorManager1 = new DevExpress.Utils.Behaviors.BehaviorManager(this.components);
+            this.beSimulationProgress = new DevExpress.XtraBars.BarEditItem();
+            this.repositoryItemProgressBar1 = new DevExpress.XtraEditors.Repository.RepositoryItemProgressBar();
             ((System.ComponentModel.ISupportInitialize)(this.barManager1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dockManager1)).BeginInit();
             this.dpLogPanel.SuspendLayout();
@@ -78,6 +80,7 @@ namespace CryptoMarketClient.Strategies {
             ((System.ComponentModel.ISupportInitialize)(this.riTextEditState)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.behaviorManager1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemProgressBar1)).BeginInit();
             this.SuspendLayout();
             // 
             // barManager1
@@ -102,14 +105,17 @@ namespace CryptoMarketClient.Strategies {
             this.btShowData,
             this.biSimulation,
             this.bcShowLog,
-            this.biOptimizeParams});
-            this.barManager1.MaxItemId = 12;
+            this.biOptimizeParams,
+            this.beSimulationProgress});
+            this.barManager1.MaxItemId = 14;
             this.barManager1.OptionsStubGlyphs.AllowStubGlyphs = DevExpress.Utils.DefaultBoolean.True;
             this.barManager1.OptionsStubGlyphs.CaseMode = DevExpress.Utils.Drawing.GlyphTextCaseMode.UpperCase;
             this.barManager1.OptionsStubGlyphs.CornerRadius = 3;
             this.barManager1.OptionsStubGlyphs.Font = new System.Drawing.Font("Segoe UI", 12F);
             this.barManager1.OptionsStubGlyphs.LetterCount = DevExpress.Utils.Drawing.GlyphTextSymbolCount.Two;
             this.barManager1.OptionsStubGlyphs.UseFont = true;
+            this.barManager1.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
+            this.repositoryItemProgressBar1});
             // 
             // bar1
             // 
@@ -215,7 +221,7 @@ namespace CryptoMarketClient.Strategies {
             // 
             this.biOptimizeParams.Caption = "Optimize Params";
             this.biOptimizeParams.Id = 11;
-            this.biOptimizeParams.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("barButtonItem1.ImageOptions.SvgImage")));
+            this.biOptimizeParams.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("biOptimizeParams.ImageOptions.SvgImage")));
             this.biOptimizeParams.ItemAppearance.Normal.ForeColor = DevExpress.LookAndFeel.DXSkinColors.ForeColors.Question;
             this.biOptimizeParams.ItemAppearance.Normal.Options.UseForeColor = true;
             this.biOptimizeParams.Name = "biOptimizeParams";
@@ -249,7 +255,8 @@ namespace CryptoMarketClient.Strategies {
             this.bar3.DockRow = 0;
             this.bar3.DockStyle = DevExpress.XtraBars.BarDockStyle.Bottom;
             this.bar3.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
-            new DevExpress.XtraBars.LinkPersistInfo(this.siStatus)});
+            new DevExpress.XtraBars.LinkPersistInfo(this.siStatus),
+            new DevExpress.XtraBars.LinkPersistInfo(DevExpress.XtraBars.BarLinkUserDefines.Width, this.beSimulationProgress, "", false, true, true, 210)});
             this.bar3.OptionsBar.AllowQuickCustomization = false;
             this.bar3.OptionsBar.DrawDragBorder = false;
             this.bar3.OptionsBar.UseWholeRow = true;
@@ -498,6 +505,17 @@ namespace CryptoMarketClient.Strategies {
             this.repositoryItemCheckEdit3.Name = "repositoryItemCheckEdit3";
             this.repositoryItemCheckEdit3.EditValueChanged += new System.EventHandler(this.repositoryItemCheckEdit3_EditValueChanged);
             // 
+            // beSimulationProgress
+            // 
+            this.beSimulationProgress.Caption = "barEditItem1";
+            this.beSimulationProgress.Edit = this.repositoryItemProgressBar1;
+            this.beSimulationProgress.Id = 13;
+            this.beSimulationProgress.Name = "beSimulationProgress";
+            // 
+            // repositoryItemProgressBar1
+            // 
+            this.repositoryItemProgressBar1.Name = "repositoryItemProgressBar1";
+            // 
             // StrategiesCollectionForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
@@ -523,6 +541,7 @@ namespace CryptoMarketClient.Strategies {
             ((System.ComponentModel.ISupportInitialize)(this.riTextEditState)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.behaviorManager1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemProgressBar1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -567,5 +586,7 @@ namespace CryptoMarketClient.Strategies {
         private DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit repositoryItemCheckEdit3;
         private DevExpress.XtraEditors.Repository.RepositoryItemTextEdit riTextEditState;
         private BarButtonItem biOptimizeParams;
+        private BarEditItem beSimulationProgress;
+        private DevExpress.XtraEditors.Repository.RepositoryItemProgressBar repositoryItemProgressBar1;
     }
 }

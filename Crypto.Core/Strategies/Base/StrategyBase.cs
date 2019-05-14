@@ -1,4 +1,5 @@
-﻿using Crypto.Core.Strategies.Arbitrages.AltBtcUsdt;
+﻿using Crypto.Core.Helpers;
+using Crypto.Core.Strategies.Arbitrages.AltBtcUsdt;
 using Crypto.Core.Strategies.Arbitrages.Statistical;
 using Crypto.Core.Strategies.Base;
 using Crypto.Core.Strategies.Custom;
@@ -35,7 +36,7 @@ namespace Crypto.Core.Strategies {
     [XmlInclude(typeof(RedWaterfallStrategy))]
     //[XmlInclude(typeof())]
     [Serializable]
-    [InputParameterObject]
+    [ParameterObjectAttribute]
     public abstract class StrategyBase : IStrategyDataItemInfoOwner {
         public StrategyBase() {
             Id = Guid.NewGuid();
@@ -50,9 +51,14 @@ namespace Crypto.Core.Strategies {
         public StrategiesManager Manager { get; set; }
         public bool Enabled { get; set; } = false;
         public bool DemoMode { get; set; } = true;
+        [XmlIgnore]
+        public bool OptimizationMode { get; set; }
+        [XmlIgnore]
+        public bool OptimizationParametersInitialized { get; set; }
         public string Description { get; set; }
         public abstract string StateText { get; }
         [Browsable(false)]
+        [OutputParameter]
         public double Earned { get; set; }
 
         [Browsable(false)]
@@ -93,7 +99,25 @@ namespace Crypto.Core.Strategies {
         public bool PanicMode { get; protected set; }
         public void Break() { PanicMode = true; }
 
+        protected virtual void ApplyParametersToOptimize() {
+            foreach(InputParameterInfo info in ParametersToOptimize) {
+                info.ApplyValue();
+            }
+        }
+        protected virtual void CheckParametersToOptimize() {
+            if(OptimizationMode) {
+                if(!OptimizationParametersInitialized)
+                    InitializeParametersToOptimize();
+                else {
+                    ApplyParametersToOptimize();
+                    ClearOutputParameter();
+                }
+                OptimizationParametersInitialized = true;
+            }
+        }
+
         protected internal virtual void OnStarted() {
+            CheckParametersToOptimize();
             LogManager.Default.Add(LogType.Success, this, Name, "started.", "");
             SendNotification("started.");
         }
@@ -247,6 +271,32 @@ namespace Crypto.Core.Strategies {
             AccountId = from.AccountId;
             MaxAllowedDeposit = from.MaxAllowedDeposit;
             ChatId = from.ChatId;
+
+            ParametersToOptimize.Clear();
+            foreach(var item in from.ParametersToOptimize)
+                ParametersToOptimize.Add((InputParameterInfo)item.Clone());
+            OutputParameter = null;
+            if(from.OutputParameter != null)
+                OutputParameter = (OutputParameterInfo)from.OutputParameter.Clone();
+        }
+
+        public virtual void InitializeParametersToOptimize() {
+            foreach(InputParameterInfo info in ParametersToOptimize) {
+                Initialize(info);
+            }
+            if(OutputParameter != null)
+                Initialize(OutputParameter);
+        }
+
+        public virtual void ClearOutputParameter() {
+            if(OutputParameter != null)
+                Initialize(OutputParameter);
+        }
+
+        protected virtual void Initialize(InputParameterInfo info) {
+            info.Owner = BindingHelper.GetBindingOwner(info.FieldName, this);
+            info.PropertyInfo = BindingHelper.GetPropertyInfo(info.FieldName, this);
+            info.InitializeStartValue();
         }
 
         protected string GetTrimmedString(string value) {
@@ -287,7 +337,9 @@ namespace Crypto.Core.Strategies {
 
         [TypeConverter(typeof(ExpandableObjectConverter))]
         public List<InputParameterInfo> ParametersToOptimize { get; } = new List<InputParameterInfo>();
-       
+
+        [TypeConverter(typeof(ExpandableObjectConverter))]
+        public OutputParameterInfo OutputParameter { get; set; }
     }
 
     public class InputParameterAttribute : Attribute {
@@ -301,12 +353,23 @@ namespace Crypto.Core.Strategies {
         public bool IsInput { get; private set; }
     }
 
-    public class InputParameterObjectAttribute : Attribute {
-        public InputParameterObjectAttribute() {
+    public class OutputParameterAttribute : Attribute {
+        public OutputParameterAttribute() {
+            IsOutput = true;
+        }
+
+        public OutputParameterAttribute(bool isOutput) {
+            IsOutput = isOutput;
+        }
+        public bool IsOutput { get; private set; }
+    }
+
+    public class ParameterObjectAttribute : Attribute {
+        public ParameterObjectAttribute() {
             IsInput = true;
         }
 
-        public InputParameterObjectAttribute(bool isInput) {
+        public ParameterObjectAttribute(bool isInput) {
             IsInput = isInput;
         }
         public bool IsInput { get; private set; }

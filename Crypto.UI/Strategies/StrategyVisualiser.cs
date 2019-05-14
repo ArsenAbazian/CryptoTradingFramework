@@ -1,4 +1,5 @@
-﻿using Crypto.Core.Indicators;
+﻿using Crypto.Core.Helpers;
+using Crypto.Core.Indicators;
 using Crypto.Core.Strategies;
 using DevExpress.Skins;
 using DevExpress.Sparkline;
@@ -33,23 +34,9 @@ namespace CryptoMarketClient.Strategies {
             foreach(var item in Visual.DataItemInfos) {
                 if(!string.IsNullOrEmpty(item.DataSourcePath)) {
                     object root = item.Value == null ? Visual : item.Value;
-                    item.DataSource = GetBindingValue(item.DataSourcePath, root);
+                    item.DataSource = BindingHelper.GetBindingValue(item.DataSourcePath, root);
                 }
             }
-        }
-
-        private object GetBindingValue(string dataSourcePath, object root) {
-            string[] props = dataSourcePath.Split('.');
-            object res = root;
-            for(int i = 0; i < props.Length;i++) {
-                PropertyInfo pInfo = res.GetType().GetProperty(props[i], BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-                if(pInfo == null)
-                    return null;
-                res = pInfo.GetValue(res, null);
-                if(res == null)
-                    break;
-            }
-            return res;
         }
 
         public ChartControl Chart { get; set; }
@@ -131,7 +118,7 @@ namespace CryptoMarketClient.Strategies {
                     formatString = "{0}";
                 else
                     formatString = "{0:" + items[1] + "}";
-                object value = GetBindingValue(items[0], obj);
+                object value = BindingHelper.GetBindingValue(items[0], obj);
                 b.Append(string.Format(formatString, value));
                 index = end + 1;
             }

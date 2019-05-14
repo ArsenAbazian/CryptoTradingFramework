@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Crypto.Core.Indicators {
-    [InputParameterObject]
+    [ParameterObjectAttribute]
     public class IndicatorBase {
         Ticker ticker;
         public Ticker Ticker {
