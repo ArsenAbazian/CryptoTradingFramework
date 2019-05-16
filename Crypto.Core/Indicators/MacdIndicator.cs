@@ -53,17 +53,17 @@ namespace Crypto.Core.Indicators {
 
             if(forIndex < SlowLength) {
                 IndicatorValue nullValue = new IndicatorValue() { Time = GetTime(forIndex), Value = double.NaN, Source = GetValueBySource(forIndex) };
-                Result.Add(nullValue);
+                Result.Push(nullValue);
                 SignalMaIndicator.Result.Add(SignalMaIndicator.Calculate(forIndex));
-                Result.Remove(nullValue);
+                Result.Pop();
                 return nullValue;
             }
             
             IndicatorValue value = new IndicatorValue() { Time = GetTime(forIndex), Value = ((IndicatorValue)FastEmaIndicator.Result[forIndex]).Value - ((IndicatorValue)SlowEmaIndicator.Result[forIndex]).Value, Source = GetValueBySource(forIndex) };
-            Result.Add(value);
+            Result.Push(value);
             IndicatorValue signal = (IndicatorValue)SignalMaIndicator.Calculate(forIndex);
             SignalMaIndicator.Result.Add(signal);
-            Result.Remove(value);
+            Result.Pop();
             return value;
         }
 

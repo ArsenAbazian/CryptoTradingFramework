@@ -1,4 +1,5 @@
-﻿using Crypto.Core.Strategies;
+﻿using Crypto.Core.Helpers;
+using Crypto.Core.Strategies;
 using CryptoMarketClient;
 using System;
 using System.Collections.Generic;
@@ -24,8 +25,8 @@ namespace Crypto.Core.Indicators {
 
         public bool SuppressUpdateOnDataChanged { get; set; }
 
-        BindingList<TimeBaseValue> data;
-        public BindingList<TimeBaseValue> InputData {
+        ResizeableArray<TimeBaseValue> data;
+        public ResizeableArray<TimeBaseValue> InputData {
             get { return data; }
             set {
                 if(InputData == value)

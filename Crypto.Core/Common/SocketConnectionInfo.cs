@@ -73,7 +73,7 @@ namespace CryptoMarketClient.Common {
         SocketConnectionState state = SocketConnectionState.None;
         public SocketConnectionState State {
             get { return state; }
-            protected set {
+            private set {
                 if(State == value)
                     return;
                 SocketConnectionState prev = State;

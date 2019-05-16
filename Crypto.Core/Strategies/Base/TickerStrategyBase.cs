@@ -96,6 +96,7 @@ namespace CryptoMarketClient.Strategies {
                 return;
 
             BoughtTotal += res.Total;
+            Earned -= res.Total + CalcFee(res.Total);
             MaxActualBuyDeposit -= res.Total + CalcFee(res.Total);
             MaxActualSellDeposit += res.Amount;
         }
@@ -111,6 +112,7 @@ namespace CryptoMarketClient.Strategies {
                 return;
 
             SoldTotal += res.Amount;
+            Earned += res.Total - CalcFee(res.Total);
             MaxActualBuyDeposit += res.Total;
             MaxActualSellDeposit -= res.Amount + CalcFee(res.Total);
         }

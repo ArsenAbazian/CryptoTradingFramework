@@ -18,6 +18,8 @@ namespace Crypto.Core.Strategies.Base {
         public object CurrentValueCore { get; set; }
         public string StartValue { get; set; }
         public string CurrentValue { get { return Convert.ToString(CurrentValueCore); } }
+        public object MinValueCore { get; set; }
+        public object MaxValueCore { get; set; }
 
         public virtual object Clone() {
             InputParameterInfo res = new InputParameterInfo();
@@ -30,6 +32,8 @@ namespace Crypto.Core.Strategies.Base {
             StartValueCore = from.StartValueCore;
             CurrentValueCore = from.CurrentValueCore;
             StartValue = from.StartValue;
+            MinValueCore = from.MinValueCore;
+            MaxValueCore = from.MaxValueCore;
         }
 
         public void InitializeStartValue() {
@@ -38,7 +42,14 @@ namespace Crypto.Core.Strategies.Base {
         }
 
         public void ApplyValue() {
-            PropertyInfo.SetValue(Owner, CurrentValueCore);
+            if(PropertyInfo.PropertyType == typeof(int))
+                PropertyInfo.SetValue(Owner, Convert.ToInt32(CurrentValueCore));
+            if(PropertyInfo.PropertyType == typeof(float))
+                PropertyInfo.SetValue(Owner, Convert.ToSingle(CurrentValueCore));
+            if(PropertyInfo.PropertyType == typeof(double))
+                PropertyInfo.SetValue(Owner, Convert.ToDouble(CurrentValueCore));
+            if(PropertyInfo.PropertyType == typeof(long))
+                PropertyInfo.SetValue(Owner, Convert.ToInt64(CurrentValueCore));
         }
     }
 
@@ -56,6 +67,9 @@ namespace Crypto.Core.Strategies.Base {
             CurrentValueCore = from.CurrentValueCore;
             StartValue = from.StartValue;
             Optimization = from.Optimization;
+        }
+        public void GetValue() {
+            CurrentValueCore = PropertyInfo.GetValue(Owner);
         }
     }
 
@@ -76,6 +90,8 @@ namespace Crypto.Core.Strategies.Base {
         public InputParameterNode Parent { get; set; }
         public string Name { get; set; }
         public bool Selected { get; set; }
+        public object MinValue { get; set; }
+        public object MaxValue { get; set; }
         string fullName;
         public string FullName {
             get {
@@ -137,12 +153,17 @@ namespace Crypto.Core.Strategies.Base {
             else
                 filtered = filtered.Where(p => p.GetCustomAttribute<OutputParameterAttribute>() != null && p.GetCustomAttribute<OutputParameterAttribute>().IsOutput).ToList();
             foreach(PropertyInfo pInfo in filtered) {
+                InputParameterAttribute attr = pInfo.GetCustomAttribute<InputParameterAttribute>();
                 InputParameterNode child = new InputParameterNode();
                 child.Name = pInfo.Name;
                 child.Parent = parent;
                 child.Owner = pInfo.GetValue(parent.Owner);
                 child.OwnerType = pInfo.DeclaringType;
                 child.Property = pInfo;
+                if(attr != null) {
+                    child.MinValue = attr.MinValue;
+                    child.MaxValue = attr.MaxValue;
+                }
 
                 if(pInfo.PropertyType.IsClass) {
                     GetNodesCore(child, isOutput);

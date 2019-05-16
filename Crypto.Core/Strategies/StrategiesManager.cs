@@ -23,6 +23,11 @@ namespace Crypto.Core.Strategies {
             }
         }
 
+        public StrategiesManager() { }
+        public StrategiesManager(IStrategyDataProvider provider) {
+            DataProvider = provider;
+        }
+
         public List<StrategyBase> Strategies { get; } = new List<StrategyBase>();
         [XmlIgnore]
         public IStrategyDataProvider DataProvider { get; set; }
@@ -32,6 +37,7 @@ namespace Crypto.Core.Strategies {
         public bool Initialize(IStrategyDataProvider dataProvider) {
             DataProvider = dataProvider;
             bool res = true;
+            DataProvider.Reset();
             foreach(StrategyBase s in Strategies) {
                 s.Manager = this;
                 if(s.Enabled) {

@@ -78,6 +78,12 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Accessibility" />
+    <Reference Include="cs-moea, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\cs-moea.1.0.2\lib\net452\Release\cs-moea.dll</HintPath>
+    </Reference>
+    <Reference Include="cs-statistics, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\cs-moea.1.0.2\lib\net452\Release\cs-statistics.dll</HintPath>
+    </Reference>
     <Reference Include="DevExpress.Charts.v19.1.Core, Version=19.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\2019.1\Bin\Framework4\DevExpress.Charts.v19.1.Core.dll</HintPath>
@@ -369,6 +375,7 @@
     <Compile Include="Strategies\StrategyDataForm.Designer.cs">
       <DependentUpon>StrategyDataForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Strategies\StrategyOptimizationManager.cs" />
     <Compile Include="Strategies\StrategySpecificConfigurationControlBase.cs">
       <SubType>UserControl</SubType>
     </Compile>

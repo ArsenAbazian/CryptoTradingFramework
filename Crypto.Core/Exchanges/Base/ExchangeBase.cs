@@ -382,11 +382,17 @@ namespace CryptoMarketClient {
                 }
             }
             if(!info.IsOpening && !info.IsOpened) {
-                info.Open();
+                if(SimulationMode)
+                    info.Simulate();
+                else 
+                    info.Open();
                 return;
             }          
             if(info.State == SocketConnectionState.Error) {
-                info.Open();
+                if(SimulationMode)
+                    info.Simulate();
+                else
+                    info.Open();
                 return;
             }
             if((DateTime.Now - info.LastActiveTime).TotalMilliseconds >= WebSocketAllowedDelayInterval) {
@@ -807,9 +813,10 @@ namespace CryptoMarketClient {
                 return;
             }
             TickersSocket = CreateTickersSocket();
-            if(!SimulationMode) {
+            if(!SimulationMode)
                 TickersSocket.Open();
-            }
+            else
+                TickersSocket.Simulate();
             TickersSocket.AddRef();
         }
 

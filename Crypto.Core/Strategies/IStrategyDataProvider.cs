@@ -15,5 +15,6 @@ namespace Crypto.Core.Strategies {
         void OnTick();
         bool IsFinished { get; }
         DateTime CurrentTime { get; }
+        void Reset();
     }
 }

@@ -1,4 +1,5 @@
-﻿using Crypto.Core.Helpers;
+﻿using Crypto.Core.Exchanges.Base;
+using Crypto.Core.Helpers;
 using CryptoMarketClient;
 using System;
 using System.Collections.Generic;
@@ -10,13 +11,21 @@ using System.Threading.Tasks;
 
 namespace Crypto.Core.Strategies {
     public class SimulationStrategyDataProvider : IStrategyDataProvider {
+        public SimulationStrategyDataProvider() {
+            StartTime = DateTime.MaxValue;
+            EndTime = DateTime.MinValue;
+        }
+
         bool IStrategyDataProvider.IsFinished { get { return FinishedCore; } }
         protected bool FinishedCore { get; set; }
         bool IStrategyDataProvider.Connect(StrategyInputInfo info) {
             for(int i = 0; i < info.Tickers.Count; i++) {
                 TickerInputInfo ti = info.Tickers[i];
-                ti.Ticker.Exchange.EnterSimulationMode();
 
+                ti.Ticker.CandleStickData.Clear();
+                ti.Ticker.TradeHistory.Clear();
+
+                ti.Ticker.Exchange.EnterSimulationMode();
                 ti.Ticker.Exchange.StartListenTickerStream(ti.Ticker);
                 //ti.Ticker.Exchange.StartListenOrderBook(ti.Ticker);
                 //ti.Ticker.Exchange.StartListenTradeHistory(ti.Ticker);
@@ -24,10 +33,24 @@ namespace Crypto.Core.Strategies {
 
                 StrategySimulationData data = GetSimulationData(ti);
                 if(data != null) data.Connected = true;
+                StartTime = MinTime(StartTime, data.GetStartTime());
+                EndTime = MaxTime(EndTime, data.GetEndTime());
             }
+            LastTime = StartTime;
             return true;
         }
 
+        public DateTime MaxTime(DateTime tm1, DateTime tm2) {
+            return tm1 > tm2 ? tm1 : tm2;
+        }
+
+        public DateTime MinTime(DateTime tm1, DateTime tm2) {
+            return tm1 < tm2 ? tm1 : tm2;
+        }
+
+        public DateTime StartTime { get; private set; }
+        public DateTime EndTime { get; private set; }
+        public double SimulationProgress { get; set; } = 0.0;
         public DateTime LastTime { get; private set; } = DateTime.Now;
         DateTime IStrategyDataProvider.CurrentTime { get { return LastTime; } }
         void IStrategyDataProvider.OnTick() {
@@ -37,6 +60,7 @@ namespace Crypto.Core.Strategies {
             UpdateTickersOrderBook();
             SendEventsWithTime(nextTime);
             LastTime = nextTime;
+            SimulationProgress = (LastTime - StartTime).TotalMilliseconds / (EndTime - StartTime).TotalMilliseconds;
         }
 
         protected virtual void UpdateTickersOrderBook() {
@@ -131,6 +155,13 @@ namespace Crypto.Core.Strategies {
             return e;
         }
 
+        void IStrategyDataProvider.Reset() {
+            StartTime = DateTime.MaxValue;
+            EndTime = DateTime.MinValue;
+            FinishedCore = false;
+            SimulationProgress = 0.0;
+        }
+
         bool IStrategyDataProvider.InitializeDataFor(StrategyBase s) {
             StrategyInputInfo info = s.CreateInputInfo();
             for(int i = 0; i < info.Tickers.Count; i++) {
@@ -141,15 +172,21 @@ namespace Crypto.Core.Strategies {
                 ti.Ticker = e.GetTicker(ti.TickerName);
                 if(ti.Ticker == null)
                     return false;
-                StrategySimulationData data = new StrategySimulationData() { Ticker = ti.Ticker, Exchange = e, Strategy = s, TickerInfo = ti };
+                StrategySimulationData data = null;
+                SimulationData.TryGetValue(ti.Ticker, out data);
+                if(data == null)
+                    data = new StrategySimulationData() { Ticker = ti.Ticker, Exchange = e, Strategy = s, TickerInfo = ti };
                 if(!string.IsNullOrEmpty(ti.SimulationDataFile)) {
                     data.UseSimulationFile = true;
                     if(!ti.Ticker.CaptureDataHistory.Load(ti.SimulationDataFile))
                         return false;
+                    data.CaptureDataHistory = ti.Ticker.CaptureDataHistory;
                 }
                 else {
                     if(ti.UseKline) {
-                        data.CandleStickData = DownloadCandleStickData(ti);
+                        if(data.LoadedCandleStickData == null)
+                            data.LoadedCandleStickData = DownloadCandleStickData(ti);
+                        data.CopyCandleSticksFromLoaded();
                         if(data.CandleStickData.Count == 0)
                             return false;
                     }
@@ -157,7 +194,8 @@ namespace Crypto.Core.Strategies {
                     if(data.OrderBook == null)
                         return false;
                 }
-                SimulationData.Add(ti.Ticker, data);
+                if(!SimulationData.ContainsKey(ti.Ticker))
+                    SimulationData.Add(ti.Ticker, data);
             }
             return true;
         }
@@ -210,11 +248,47 @@ namespace Crypto.Core.Strategies {
         public Exchange Exchange { get; set; }
         public Ticker Ticker { get; set; }
         public StrategyBase Strategy { get; set; }
+        public List<CandleStickData> LoadedCandleStickData { get; set; }
         public List<CandleStickData> CandleStickData { get; set; }
         public OrderBook OrderBook { get; set; }
         public ExchangeInputInfo ExchangeInfo { get; set; }
         public TickerInputInfo TickerInfo { get; set; }
         public bool UseSimulationFile { get; set; }
+        public TickerCaptureData CaptureDataHistory { get; internal set; }
+
+        public bool CopyCandleSticksFromLoaded() {
+            if(LoadedCandleStickData == null)
+                return false;
+            CandleStickData = new List<CryptoMarketClient.CandleStickData>();
+            CandleStickData.AddRange(LoadedCandleStickData);
+            return true;
+        }
+
+        public DateTime MaxTime(DateTime tm1, DateTime tm2) {
+            return tm1 > tm2 ? tm1 : tm2;
+        }
+
+        public DateTime MinTime(DateTime tm1, DateTime tm2) {
+            return tm1 < tm2 ? tm1 : tm2;
+        }
+
+        public DateTime GetStartTime() {
+            DateTime start = DateTime.MaxValue;
+            if(CaptureDataHistory != null)
+                start = MinTime(start, CaptureDataHistory.Items.First().Time);
+            if(CandleStickData != null)
+                start = MinTime(start, CandleStickData.First().Time);
+            return start;
+        }
+
+        public DateTime GetEndTime() {
+            DateTime end = DateTime.MinValue;
+            if(CaptureDataHistory != null)
+                end = MaxTime(end, CaptureDataHistory.Items.Last().Time);
+            if(CandleStickData != null)
+                end = MaxTime(end, CandleStickData.Last().Time);
+            return end;
+        }
     }
 
     [Serializable]

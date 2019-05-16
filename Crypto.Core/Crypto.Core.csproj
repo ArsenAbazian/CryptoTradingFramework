@@ -207,6 +207,7 @@
     <Compile Include="Exchanges\Bitmex\BitmexAccountBalanceInfo.cs" />
     <Compile Include="Helpers\BindingHelper.cs" />
     <Compile Include="Helpers\SerializationHelper.cs" />
+    <Compile Include="Helpers\Stack.cs" />
     <Compile Include="Helpers\TickersVolatilityInfo.cs" />
     <Compile Include="Helpers\Utils.cs" />
     <Compile Include="Indicators\AtrIndicator.cs" />

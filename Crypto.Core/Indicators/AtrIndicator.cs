@@ -1,4 +1,5 @@
-﻿using CryptoMarketClient;
+﻿using Crypto.Core.Helpers;
+using CryptoMarketClient;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 namespace Crypto.Core.Indicators {
     public class AtrIndicator : WindowIndicator {
         public MaIndicator MaIndicator { get; private set; }
-        protected BindingList<TimeBaseValue> ResultCore { get; } = new BindingList<TimeBaseValue>();
+        protected ResizeableArray<TimeBaseValue> ResultCore { get; } = new ResizeableArray<TimeBaseValue>();
 
         public override void OnUpdateValue(int index) {
             base.OnUpdateValue(index);

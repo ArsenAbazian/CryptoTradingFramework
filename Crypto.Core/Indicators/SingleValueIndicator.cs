@@ -1,4 +1,5 @@
-﻿using CryptoMarketClient;
+﻿using Crypto.Core.Helpers;
+using CryptoMarketClient;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 namespace Crypto.Core.Indicators {
     public class SingleValueIndicator : IndicatorBase {
 
-        public BindingList<TimeBaseValue> Result { get; } = new BindingList<TimeBaseValue>();
+        public ResizeableArray<TimeBaseValue> Result { get; } = new ResizeableArray<TimeBaseValue>();
 
         protected virtual void OnValueChanged() {
             throw new NotImplementedException();

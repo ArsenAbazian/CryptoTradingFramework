@@ -9,9 +9,13 @@ namespace CryptoMarketClient {
     public class OrderBookEntry {
         public string valueString;
         public string ValueString {
-            get { return valueString; }
+            get {
+                if(valueString == null)
+                    valueString = Value.ToString("0.00000000");
+                return valueString;
+            }
             set {
-                if(ValueString == value)
+                if(this.valueString == value)
                     return;
                 this.valueString = value;
                 this.valueCalculated = false;
@@ -20,9 +24,13 @@ namespace CryptoMarketClient {
         public long Id { get; set; }
         public string amountString;
         public string AmountString {
-            get { return amountString; }
+            get {
+                if(amountString == null)
+                    amountString = amount.ToString("0.00000000");
+                return amountString;
+            }
             set {
-                if(AmountString == value)
+                if(this.amountString == value)
                     return;
                 amountString = value;
                 this.amountCalculated = false;
@@ -32,7 +40,7 @@ namespace CryptoMarketClient {
         bool valueCalculated, amountCalculated;
         public double Value {
             get {
-                if(!valueCalculated) {
+                if(!valueCalculated && valueString != null) {
                     if(string.IsNullOrEmpty(ValueString))
                         return valueCore;
                     valueCore = FastValueConverter.Convert(ValueString);
@@ -42,11 +50,12 @@ namespace CryptoMarketClient {
             }
             set {
                 valueCore = value;
+                valueString = null;
             }
         }
         public double Amount {
             get {
-                if(!amountCalculated) {
+                if(!amountCalculated && amountString != null) {
                     if(string.IsNullOrEmpty(AmountString))
                         return amount;
                     amountCalculated = true;
@@ -56,7 +65,8 @@ namespace CryptoMarketClient {
             }
             set {
                 amount = value;
-                AmountString = amount.ToString("0.00000000");
+                amountString = null;
+                //AmountString = amount.ToString("0.00000000");
             }
         }
         public double Volume { get; set; }

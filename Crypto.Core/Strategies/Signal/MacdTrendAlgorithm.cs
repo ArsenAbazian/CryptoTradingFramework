@@ -10,9 +10,13 @@ using System.Xml.Serialization;
 
 namespace Crypto.Core.Strategies.Signal {
     public class MacdTrendStrategy : TickerStrategyBase {
+        [InputParameter(15.0, 36.0)]
         public int SlowEmaLength { get; set; } = 26;
+        [InputParameter(10.0, 14.0)]
         public int FastEmaLength { get; set; } = 12;
+        [InputParameter(1.0, 10.0)]
         public int SignalLength { get; set; } = 9;
+        [InputParameter(0.0, 0.01)]
         public double Tolerance { get; set; } = 0.0025;
 
         public override string StateText => State.ToString();
@@ -44,7 +48,7 @@ namespace Crypto.Core.Strategies.Signal {
             CandleStickIntervalMin = st.CandleStickIntervalMin;
         }
 
-        protected int LastCount = -1;
+        protected int LastCount = 0;
 
         string GetNotificationString(string coreText) {
             string result = string.Format(Name + "[" + GetType() + "]: {0}<br>fast {1} {2:0.###}<br>slow {3} {4:0.###}<br>signal {5} {6:0.###}<br>",

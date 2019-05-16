@@ -36,7 +36,7 @@ namespace Crypto.Core.Strategies {
     [XmlInclude(typeof(RedWaterfallStrategy))]
     //[XmlInclude(typeof())]
     [Serializable]
-    [ParameterObjectAttribute]
+    [ParameterObject]
     public abstract class StrategyBase : IStrategyDataItemInfoOwner {
         public StrategyBase() {
             Id = Guid.NewGuid();
@@ -61,7 +61,6 @@ namespace Crypto.Core.Strategies {
         [OutputParameter]
         public double Earned { get; set; }
 
-        [Browsable(false)]
         public long ChatId { get; set; }
         public bool EnableNotifications { get; set; }
 
@@ -286,6 +285,7 @@ namespace Crypto.Core.Strategies {
             }
             if(OutputParameter != null)
                 Initialize(OutputParameter);
+            OptimizationParametersInitialized = true;
         }
 
         public virtual void ClearOutputParameter() {
@@ -296,6 +296,11 @@ namespace Crypto.Core.Strategies {
         protected virtual void Initialize(InputParameterInfo info) {
             info.Owner = BindingHelper.GetBindingOwner(info.FieldName, this);
             info.PropertyInfo = BindingHelper.GetPropertyInfo(info.FieldName, this);
+            InputParameterAttribute attr = info.PropertyInfo.GetCustomAttribute<InputParameterAttribute>();
+            if(attr != null) {
+                if(info.MinValueCore == null) info.MinValueCore = attr.MinValue;
+                if(info.MaxValueCore == null) info.MaxValueCore = attr.MaxValue;
+            }
             info.InitializeStartValue();
         }
 
@@ -350,7 +355,21 @@ namespace Crypto.Core.Strategies {
         public InputParameterAttribute(bool isInput) {
             IsInput = isInput;
         }
+        public InputParameterAttribute(int minValue, int maxValue) : this(true) {
+            MinValue = minValue;
+            MaxValue = maxValue;
+        }
+        public InputParameterAttribute(float minValue, float maxValue) : this(true) {
+            MinValue = minValue;
+            MaxValue = maxValue;
+        }
+        public InputParameterAttribute(double minValue, double maxValue) : this(true) {
+            MinValue = minValue;
+            MaxValue = maxValue;
+        }
         public bool IsInput { get; private set; }
+        public object MinValue { get; set; }
+        public object MaxValue { get; set; }
     }
 
     public class OutputParameterAttribute : Attribute {

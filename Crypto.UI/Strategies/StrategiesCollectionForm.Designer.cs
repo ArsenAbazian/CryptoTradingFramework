@@ -41,6 +41,8 @@ namespace CryptoMarketClient.Strategies {
             this.bcShowLog = new DevExpress.XtraBars.BarCheckItem();
             this.bar3 = new DevExpress.XtraBars.Bar();
             this.siStatus = new DevExpress.XtraBars.BarStaticItem();
+            this.beSimulationProgress = new DevExpress.XtraBars.BarEditItem();
+            this.repositoryItemProgressBar1 = new DevExpress.XtraEditors.Repository.RepositoryItemProgressBar();
             this.barDockControlTop = new DevExpress.XtraBars.BarDockControl();
             this.barDockControlBottom = new DevExpress.XtraBars.BarDockControl();
             this.barDockControlLeft = new DevExpress.XtraBars.BarDockControl();
@@ -65,9 +67,8 @@ namespace CryptoMarketClient.Strategies {
             this.colEnableNotifications = new DevExpress.XtraGrid.Columns.GridColumn();
             this.repositoryItemCheckEdit3 = new DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit();
             this.behaviorManager1 = new DevExpress.Utils.Behaviors.BehaviorManager(this.components);
-            this.beSimulationProgress = new DevExpress.XtraBars.BarEditItem();
-            this.repositoryItemProgressBar1 = new DevExpress.XtraEditors.Repository.RepositoryItemProgressBar();
             ((System.ComponentModel.ISupportInitialize)(this.barManager1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemProgressBar1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dockManager1)).BeginInit();
             this.dpLogPanel.SuspendLayout();
             this.dockPanel1_Container.SuspendLayout();
@@ -80,7 +81,6 @@ namespace CryptoMarketClient.Strategies {
             ((System.ComponentModel.ISupportInitialize)(this.riTextEditState)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.behaviorManager1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemProgressBar1)).BeginInit();
             this.SuspendLayout();
             // 
             // barManager1
@@ -271,6 +271,21 @@ namespace CryptoMarketClient.Strategies {
             this.siStatus.ItemAppearance.Normal.ForeColor = DevExpress.LookAndFeel.DXSkinColors.ForeColors.Information;
             this.siStatus.ItemAppearance.Normal.Options.UseForeColor = true;
             this.siStatus.Name = "siStatus";
+            // 
+            // beSimulationProgress
+            // 
+            this.beSimulationProgress.AutoFillWidth = true;
+            this.beSimulationProgress.Caption = "barEditItem1";
+            this.beSimulationProgress.Edit = this.repositoryItemProgressBar1;
+            this.beSimulationProgress.Id = 13;
+            this.beSimulationProgress.Name = "beSimulationProgress";
+            this.beSimulationProgress.Visibility = DevExpress.XtraBars.BarItemVisibility.Never;
+            // 
+            // repositoryItemProgressBar1
+            // 
+            this.repositoryItemProgressBar1.Maximum = 100000;
+            this.repositoryItemProgressBar1.Name = "repositoryItemProgressBar1";
+            this.repositoryItemProgressBar1.ShowTitle = true;
             // 
             // barDockControlTop
             // 
@@ -505,17 +520,6 @@ namespace CryptoMarketClient.Strategies {
             this.repositoryItemCheckEdit3.Name = "repositoryItemCheckEdit3";
             this.repositoryItemCheckEdit3.EditValueChanged += new System.EventHandler(this.repositoryItemCheckEdit3_EditValueChanged);
             // 
-            // beSimulationProgress
-            // 
-            this.beSimulationProgress.Caption = "barEditItem1";
-            this.beSimulationProgress.Edit = this.repositoryItemProgressBar1;
-            this.beSimulationProgress.Id = 13;
-            this.beSimulationProgress.Name = "beSimulationProgress";
-            // 
-            // repositoryItemProgressBar1
-            // 
-            this.repositoryItemProgressBar1.Name = "repositoryItemProgressBar1";
-            // 
             // StrategiesCollectionForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
@@ -529,6 +533,7 @@ namespace CryptoMarketClient.Strategies {
             this.Name = "StrategiesCollectionForm";
             this.Text = "Active Strategies";
             ((System.ComponentModel.ISupportInitialize)(this.barManager1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemProgressBar1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dockManager1)).EndInit();
             this.dpLogPanel.ResumeLayout(false);
             this.dockPanel1_Container.ResumeLayout(false);
@@ -541,7 +546,6 @@ namespace CryptoMarketClient.Strategies {
             ((System.ComponentModel.ISupportInitialize)(this.riTextEditState)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.behaviorManager1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemProgressBar1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

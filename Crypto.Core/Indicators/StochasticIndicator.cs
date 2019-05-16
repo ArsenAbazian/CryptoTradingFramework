@@ -63,10 +63,10 @@ namespace Crypto.Core.Indicators {
             IndicatorValue ma = null;
             if(forIndex < Length) {
                 StochasticValue nullValue = new StochasticValue() { Time = GetTime(forIndex), K = double.NaN, D = double.NaN, Source = GetValueBySource(forIndex) };
-                Result.Add(nullValue);
+                Result.Push(nullValue);
                 ma = (IndicatorValue)MaIndicator.Calculate(forIndex);
                 MaIndicator.Result.Add(ma);
-                Result.Remove(nullValue);
+                Result.Pop();
                 return nullValue;
             }
 
@@ -77,11 +77,11 @@ namespace Crypto.Core.Indicators {
                 D = 0,
                 Source = GetValueBySource(forIndex)
             };
-            Result.Add(res);
+            Result.Push(res);
             ma = (IndicatorValue)MaIndicator.Calculate(forIndex);
             MaIndicator.Result.Add(ma);
             res.D = ma.Value;
-            Result.Remove(res);
+            Result.Pop();
 
             return res;
         }
