@@ -28,8 +28,8 @@
             DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit repositoryItemCheckEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit();
             DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit repositoryItemCheckEdit2 = new DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit();
             this.macdTrendStrategyBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            ((System.ComponentModel.ISupportInitialize)(this.tpChart)).BeginInit();
-            this.tpChart.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tabControl)).BeginInit();
+            this.tabControl.SuspendLayout();
             this.tpData.SuspendLayout();
             this.tpChartPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gcData)).BeginInit();
@@ -42,8 +42,8 @@
             // 
             // tpChart
             // 
-            this.tpChart.SelectedTabPage = this.tpData;
-            this.tpChart.Size = new System.Drawing.Size(1367, 1004);
+            this.tabControl.SelectedTabPage = this.tpData;
+            this.tabControl.Size = new System.Drawing.Size(1367, 1004);
             // 
             // tpData
             // 
@@ -77,8 +77,8 @@
             this.ClientSize = new System.Drawing.Size(1367, 1004);
             this.Name = "MacdTrendStrategyDataForm";
             this.Text = "TripleRsiStrategyDataForm";
-            ((System.ComponentModel.ISupportInitialize)(this.tpChart)).EndInit();
-            this.tpChart.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.tabControl)).EndInit();
+            this.tabControl.ResumeLayout(false);
             this.tpData.ResumeLayout(false);
             this.tpChartPage.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(repositoryItemTextEdit1)).EndInit();

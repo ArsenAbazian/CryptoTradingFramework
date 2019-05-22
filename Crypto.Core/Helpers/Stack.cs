@@ -1,7 +1,9 @@
 ﻿using Crypto.Core.Indicators;
+using CryptoMarketClient;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +14,23 @@ namespace Crypto.Core.Helpers {
             Items = new T[32];
         }
 
+        event ListChangedEventHandler listChanged;
+        public event ListChangedEventHandler ListChanged {
+            add {
+                for(int i = 0; i < Count; i++)
+                    SubscribeEvents(Items[i]);
+                AllowNotifyPropertyChanged = true;
+                listChanged += value;
+            }
+            remove {
+                listChanged -= value;
+            }
+        }
+        protected void RaiseListChanged(ListChangedEventArgs e) {
+            if(listChanged != null)
+                listChanged(this, e);
+        }
+
         public int Count { get; private set; }
         public T[] Items { get; private set; }
         
@@ -20,10 +39,60 @@ namespace Crypto.Core.Helpers {
                 Resize();
             Items[Count] = item;
             Count++;
+            OnInsert(item, Count - 1);
+            
+        }
+
+        public bool AllowNotifyPropertyChanged { get; set; }
+        public bool SearchFromEnd { get; set; } = true;
+
+        private void SubscribeEvents(object item) {
+            if(!AllowNotifyPropertyChanged)
+                return;
+            if(item is INotifyPropertyChanged) {
+                ((INotifyPropertyChanged)item).PropertyChanged -= OnItemPropertyChanged;
+                ((INotifyPropertyChanged)item).PropertyChanged += OnItemPropertyChanged;
+            }
+        }
+
+        private void UnsubscribeEvents(object item) {
+            if(!AllowNotifyPropertyChanged)
+                return;
+            if(item is INotifyPropertyChanged)
+                ((INotifyPropertyChanged)item).PropertyChanged -= OnItemPropertyChanged;
+        }
+
+        private void OnInsert(T item, int index) {
+            RaiseListChanged(new ListChangedEventArgs(ListChangedType.ItemAdded, index));
+            SubscribeEvents(item);   
+        }
+
+        protected virtual void OnItemPropertyChanged(object sender, PropertyChangedEventArgs e) {
+            int index = GetItemIndex((T)sender, SearchFromEnd);
+            RaiseListChanged(new ListChangedEventArgs(ListChangedType.ItemChanged, index));
+        }
+
+        protected int GetItemIndex(T item, bool searchFromEnd) {
+            if(searchFromEnd) {
+                for(int i = Count - 1; i >= 0; i--) {
+                    if(object.Equals(Items[i], item))
+                        return i;
+                }
+            }
+            else {
+                for(int i = 0; i < Count; i++) {
+                    if(object.Equals(Items[i], item))
+                        return i;
+                }
+            }
+            return -1;
         }
 
         public void Clear() {
+            for(int i = 0; i < Count; i++)
+                UnsubscribeEvents(Items[i]);
             Count = 0;
+            RaiseListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
         }
 
         public void Insert(int index, T item) {
@@ -40,6 +109,7 @@ namespace Crypto.Core.Helpers {
             }
             Items[index] = item;
             Count++;
+            OnInsert(item, index);
         }
         
         public void RemoveAt(int index) {
@@ -48,6 +118,7 @@ namespace Crypto.Core.Helpers {
             for(int i = index; i < Count - 1; i++) {
                 Items[i] = Items[i + 1];
             }
+            RaiseListChanged(new ListChangedEventArgs(ListChangedType.ItemDeleted, index));
             Count--;
         }
 
@@ -81,8 +152,20 @@ namespace Crypto.Core.Helpers {
 
         bool ICollection<T>.IsReadOnly => false;
 
-        T IList<T>.this[int index] { get => Items[index]; set => Items[index] = value; }
-        public T this[int index] { get => Items[index]; set => Items[index] = value; }
+        T IList<T>.this[int index] {
+            get { return Items[index]; }
+            set {
+                Items[index] = value;
+                RaiseListChanged(new ListChangedEventArgs(ListChangedType.ItemChanged, index));
+            }
+        }
+        public T this[int index] {
+            get { return Items[index]; }
+            set {
+                Items[index] = value;
+                RaiseListChanged(new ListChangedEventArgs(ListChangedType.ItemChanged, index));
+            }
+        }
 
         public int IndexOf(T item) {
             for(int i = 0; i < Count; i++) {
@@ -117,11 +200,8 @@ namespace Crypto.Core.Helpers {
         }
 
         void ICollection<T>.CopyTo(T[] array, int arrayIndex) {
-            throw new NotImplementedException();
-            //int length = Math.Min(array.Length - arrayIndex, Count);
-            //for(int i = 0; i < length; i++) {
-            //    array[i] = Items[i + arrayIndex];
-            //}
+            for(int i = 0; i < Count; i++)
+                array[i + arrayIndex] = Items[i];
         }
 
         bool ICollection<T>.Remove(T item) {
@@ -133,6 +213,13 @@ namespace Crypto.Core.Helpers {
         public void Pop() {
             if(Count > 0)
                 Count--;
+        }
+
+        public T Last() { return Items[Count - 1]; }
+        public void AddRange(ResizeableArray<T> data) {
+            for(int i = 0; i < data.Count; i++) {
+                Add(data.Items[i]);
+            }
         }
     }
 

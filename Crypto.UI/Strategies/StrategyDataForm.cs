@@ -1,4 +1,5 @@
-﻿using Crypto.Core.Strategies;
+﻿using Crypto.Core.Helpers;
+using Crypto.Core.Strategies;
 using DevExpress.XtraBars;
 using DevExpress.XtraCharts;
 using DevExpress.XtraCharts.Designer;
@@ -48,9 +49,9 @@ namespace CryptoMarketClient.Strategies {
         }
 
         private void gridView1_RowStyle(object sender, DevExpress.XtraGrid.Views.Grid.RowStyleEventArgs e) {
-            if(this.gridView1.FocusedRowHandle != e.RowHandle)
+            if(this.gvEvent.FocusedRowHandle != e.RowHandle)
                 return;
-            e.Appearance.BackColor = Color.FromArgb(0x10, this.gridView1.PaintAppearance.FocusedRow.BackColor);
+            e.Appearance.BackColor = Color.FromArgb(0x10, this.gvEvent.PaintAppearance.FocusedRow.BackColor);
             e.HighPriority = true;
         }
 
@@ -59,14 +60,14 @@ namespace CryptoMarketClient.Strategies {
         }
 
         private void gvData_RowStyle(object sender, DevExpress.XtraGrid.Views.Grid.RowStyleEventArgs e) {
-            if(this.gridView1.FocusedRowHandle != e.RowHandle)
+            if(this.gvEvent.FocusedRowHandle != e.RowHandle)
                 return;
-            e.Appearance.BackColor = Color.FromArgb(0x10, this.gridView1.PaintAppearance.FocusedRow.BackColor);
+            e.Appearance.BackColor = Color.FromArgb(0x10, this.gvEvent.PaintAppearance.FocusedRow.BackColor);
             e.HighPriority = true;
         }
 
         private void gvData_CustomScrollAnnotation(object sender, DevExpress.XtraGrid.Views.Grid.GridCustomScrollAnnotationsEventArgs e) {
-            List<object> st = Strategy.StrategyData as List<object>;
+            ResizeableArray<object> st = Strategy.StrategyData as ResizeableArray<object>;
             if(st.Count == 0)
                 return;
             PropertyInfo pBuy = st[0].GetType().GetProperty("BuySignal", BindingFlags.Public | BindingFlags.Instance);
@@ -84,7 +85,7 @@ namespace CryptoMarketClient.Strategies {
                 if((bool)pBuy.GetValue(st[i])) {
                     GridScrollAnnotationInfo info = new GridScrollAnnotationInfo();
                     info.Index = i;
-                    info.RowHandle = this.gridView1.GetRowHandle(i);
+                    info.RowHandle = this.gvEvent.GetRowHandle(i);
                     info.Color = Color.Green;
                     e.Annotations.Add(info);
                 }
@@ -92,7 +93,7 @@ namespace CryptoMarketClient.Strategies {
                 if((bool)pSell.GetValue(st[i])) {
                     GridScrollAnnotationInfo info = new GridScrollAnnotationInfo();
                     info.Index = i;
-                    info.RowHandle = this.gridView1.GetRowHandle(i);
+                    info.RowHandle = this.gvEvent.GetRowHandle(i);
                     info.Color = Color.Red;
                     e.Annotations.Add(info);
                 }
@@ -164,13 +165,38 @@ namespace CryptoMarketClient.Strategies {
         }
 
         private void chartControl_MouseMove(object sender, MouseEventArgs e) {
-            ChartHitInfo info = this.chartControl.CalcHitInfo(e.Location);
+            
+        }
+
+        private void gcData_DoubleClick(object sender, EventArgs e) {
+            object item = this.gvData.GetFocusedRow();
+            PropertyInfo pInfo = item.GetType().GetProperty("Time", BindingFlags.Public | BindingFlags.Instance);
+            if(pInfo == null)
+                return;
+            
+            DateTime prevMin = (DateTime)((XYDiagram)this.chartControl.Diagram).AxisX.VisualRange.MinValue;
+            DateTime prevMax = (DateTime)((XYDiagram)this.chartControl.Diagram).AxisX.VisualRange.MaxValue;
+            TimeSpan viewPort2 = new TimeSpan((prevMax - prevMin).Ticks / 2);
+            DateTime newMin = (DateTime)pInfo.GetValue(item) - viewPort2;
+            TimeSpan delta = newMin - prevMin;
+            DateTime newMax = prevMax + delta;
+
+            ((XYDiagram)this.chartControl.Diagram).AxisX.VisualRange.MinValue = newMin;
+            ((XYDiagram)this.chartControl.Diagram).AxisX.VisualRange.MaxValue = newMax;
+        }
+
+        private void chartControl_DoubleClick(object sender, EventArgs e) {
+            Point loc = this.chartControl.PointToClient(Control.MousePosition);
+            ChartHitInfo info = this.chartControl.CalcHitInfo(loc);
             try {
                 if(info.SeriesPoint != null) {
                     DateTime dt = info.SeriesPoint.DateTimeArgument;
                     PropertyInfo pi = Strategy.StrategyData[0].GetType().GetProperty("Time", BindingFlags.Instance | BindingFlags.Public);
-                    int index = Strategy.StrategyData.FindIndex(d => object.Equals(pi.GetValue(d), dt));
-                    this.bsIndex.Caption = "Index = " + index;
+                    object item = Strategy.StrategyData.FirstOrDefault(d => object.Equals(pi.GetValue(d), dt));
+                    if(item != null) {
+                        int index = Strategy.StrategyData.IndexOf(item);
+                        this.gvData.FocusedRowHandle = this.gvData.GetRowHandle(index);
+                    }
                 }
                 else {
                     this.bsIndex.Caption = "";

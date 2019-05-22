@@ -10,13 +10,13 @@ using System.Xml.Serialization;
 
 namespace Crypto.Core.Strategies.Signal {
     public class MacdTrendStrategy : TickerStrategyBase {
-        [InputParameter(15.0, 36.0)]
+        [InputParameter(15, 36, 1)]
         public int SlowEmaLength { get; set; } = 26;
-        [InputParameter(10.0, 14.0)]
+        [InputParameter(10, 14, 1)]
         public int FastEmaLength { get; set; } = 12;
-        [InputParameter(1.0, 10.0)]
+        [InputParameter(4, 10, 1)]
         public int SignalLength { get; set; } = 9;
-        [InputParameter(0.0, 0.01)]
+        [InputParameter(0.0, 0.01, 0.0005)]
         public double Tolerance { get; set; } = 0.0025;
 
         public override string StateText => State.ToString();

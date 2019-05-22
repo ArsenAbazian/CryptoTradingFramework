@@ -147,15 +147,40 @@ namespace CryptoMarketClient {
         }
 
         public void Assign(OrderBook orderBook) {
-            Bids.Clear();
-            Asks.Clear();
-            for(int i = 0; i < orderBook.Bids.Count; i++) {
-                var entry = orderBook.Bids[i];
-                this.Bids.Add(new OrderBookEntry() { Amount = entry.Amount, Value = entry.Value });
+            AssignArrays(Bids, orderBook.Bids);
+            AssignArrays(Asks, orderBook.Asks);
+            //Bids.Clear();
+            //Asks.Clear();
+            //for(int i = 0; i < orderBook.Bids.Count; i++) {
+            //    var entry = orderBook.Bids[i];
+            //    this.Bids.Add(new OrderBookEntry() { Amount = entry.Amount, Value = entry.Value });
+            //}
+            //for(int i = 0; i < orderBook.Asks.Count; i++) {
+            //    var entry = orderBook.Asks[i];
+            //    this.Asks.Add(new OrderBookEntry() { Amount = entry.Amount, Value = entry.Value });
+            //}
+        }
+
+        protected void AssignArrays(List<OrderBookEntry> dest, List<OrderBookEntry> src) {
+            int minCount = Math.Min(dest.Count, src.Count);
+            int addCount = src.Count - dest.Count;
+
+            if(addCount < 0) {
+                addCount = -addCount;
+                while(addCount > 0) {
+                    dest.RemoveAt(0);
+                    addCount--;
+                }
             }
-            for(int i = 0; i < orderBook.Asks.Count; i++) {
-                var entry = orderBook.Asks[i];
-                this.Asks.Add(new OrderBookEntry() { Amount = entry.Amount, Value = entry.Value });
+
+            var den  = dest.GetEnumerator();
+            var sen = src.GetEnumerator();
+            while(sen.MoveNext() && den.MoveNext()) {
+                den.Current.Amount = sen.Current.Amount;
+                den.Current.Value = sen.Current.Value;
+            }
+            for(int i = 0; i < addCount; i++, sen.MoveNext()) {
+                dest.Add(new OrderBookEntry() { Amount = sen.Current.Amount, Value = sen.Current.Value });
             }
         }
 
@@ -393,8 +418,11 @@ namespace CryptoMarketClient {
             }
         }
         public void GetNewBidAsks() {
-            if(!AllowOrderBookHistory)
+            if(!AllowOrderBookHistory) {
+                Bids.Clear();
+                Asks.Clear();
                 return;
+            }
             lock(OrderBookAllocator.Pool) {
                 Save();
                 Bids = CreateOrderBookEntries();

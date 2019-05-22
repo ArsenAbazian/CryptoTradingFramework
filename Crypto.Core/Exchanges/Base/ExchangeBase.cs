@@ -574,8 +574,8 @@ namespace CryptoMarketClient {
         public abstract TradingResult Buy(AccountInfo account, Ticker ticker, double rate, double amount);
         public abstract TradingResult Sell(AccountInfo account, Ticker ticker, double rate, double amount);
         public abstract bool Cancel(AccountInfo account, string orderId);
-        public virtual BindingList<CandleStickData> GetCandleStickData(Ticker ticker, int candleStickPeriodMin, DateTime start, long periodInSeconds) {
-            return new BindingList<CandleStickData>();
+        public virtual ResizeableArray<CandleStickData> GetCandleStickData(Ticker ticker, int candleStickPeriodMin, DateTime start, long periodInSeconds) {
+            return new ResizeableArray<CandleStickData>();
         }
         public abstract bool Withdraw(AccountInfo account, string currency, string adress, string paymentId, double amount);
         public abstract bool UpdateAccountTrades(AccountInfo account, Ticker ticker);

@@ -64,7 +64,10 @@ namespace CryptoMarketClient.Strategies {
         private void biStop_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
             if(XtraMessageBox.Show("Do you really want to stop active strategies?", "Stopping", MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
                 return;
-            if(!Manager.Stop()) {
+            if(CurrentAlgorithm != null) {
+                CurrentAlgorithm.IsTerminated = true;
+            }
+            else if(!Manager.Stop()) {
                 XtraMessageBox.Show("There are troubles stopping strategies manager. Check log for detailed information.");
                 return;
             }
@@ -283,6 +286,8 @@ namespace CryptoMarketClient.Strategies {
             Manager.Save();
         }
 
+        protected StrategyOptimizationManager CurrentOpimizationManager { get; set; }
+        protected SimpleOptimizationAlgorithm CurrentAlgorithm { get; set; }
         private void biOptimizeParams_ItemClick(object sender, ItemClickEventArgs e) {
             Stopped = false;
             StrategyBase strategy = (StrategyBase)this.gridView1.GetFocusedRow();
@@ -303,21 +308,18 @@ namespace CryptoMarketClient.Strategies {
 
             }
 
-            //StrategiesManager manager = new StrategiesManager();
-
-            //StrategyBase cloned = strategy.Clone();
-            //manager.Strategies.Add(cloned);
-
             this.siStatus.Caption = "<b>Loading data from exchanges...</b>";
-            IOverlaySplashScreenHandle handle = SplashScreenManager.ShowOverlayForm(gridControl1);
+            //IOverlaySplashScreenHandle handle = SplashScreenManager.ShowOverlayForm(gridControl1);
             Application.DoEvents();
             
             this.beSimulationProgress.EditValue = 0;
             this.beSimulationProgress.Visibility = BarItemVisibility.Always;
-            //int iterationIndex = 1;
             
             StrategyOptimizationManager optManager = new StrategyOptimizationManager(strategy);
-            NSGAII algorithm = new NSGAII(optManager);
+            CurrentOpimizationManager = optManager;
+            //NSGAII algorithm = new NSGAII(optManager);
+            SimpleOptimizationAlgorithm algorithm = new SimpleOptimizationAlgorithm(optManager);
+            CurrentAlgorithm = algorithm;
             optManager.Error += (d, ee) => {
                 XtraMessageBox.Show("Error cannot initialize strategies manager");
                 throw new Exception("Error");
@@ -333,44 +335,13 @@ namespace CryptoMarketClient.Strategies {
 
             while(!Stopped && !algorithm.IsTerminated) {
                 algorithm.Evolve();
-                //if(!manager.Initialize(dataProvider)) {
-                //    XtraMessageBox.Show("Error cannot initialize strategies manager");
-                //    return;
-                //}
-                //if(!manager.Start()) {
-                //    XtraMessageBox.Show("Error starting optimization! Please check log messages");
-                //    return;
-                //}
-
-                //this.siStatus.Caption = string.Format("<b>Running optimization iteration {0} ...</b>", iterationIndex);
-                //this.beSimulationProgress.EditValue = 0;
-                //Application.DoEvents();
-
-                //Stopwatch timer = new Stopwatch();
-                //timer.Start();
-                //int elapsedSeconds = 0;
-                //double progress = 0;
-                //while(manager.Running) {
-                //    this.beSimulationProgress.EditValue = (int)dataProvider.SimulationProgress * this.repositoryItemProgressBar1.Maximum;
-                //    if(timer.ElapsedMilliseconds / 1000 > elapsedSeconds) {
-                //        elapsedSeconds = (int)(timer.ElapsedMilliseconds / 1000);
-                //        this.siStatus.Caption = string.Format("<b>Running optimization iteration {0}... {1} sec</b>", iterationIndex, elapsedSeconds);
-                //        Application.DoEvents();
-                //    }
-                //    if((dataProvider.SimulationProgress - progress) >= 0.05) {
-                //        progress = dataProvider.SimulationProgress;
-                //        Application.DoEvents();
-                //    }
-                //}
-                LogManager.Default.Add(string.Format("Current Generation: {0}", algorithm.CurrentGeneration));
-                LogManager.Default.Add(string.Format("Size of Archive: {0}", algorithm.NondominatedArchiveSize));
-                //iterationIndex++;
             }
-            SplashScreenManager.CloseOverlayForm(handle);
+            //SplashScreenManager.CloseOverlayForm(handle);
             this.beSimulationProgress.Visibility = BarItemVisibility.Never;
             this.siStatus.Caption = "<b>Optimization done.</b>";
             Application.DoEvents();
-            //StrategyConfigurationManager.Default.ShowData(cloned);
+            CurrentOpimizationManager = null;
+            CurrentAlgorithm = null;
         }
     }
 }

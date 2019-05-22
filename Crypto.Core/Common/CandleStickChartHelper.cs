@@ -1,4 +1,5 @@
-﻿using Crypto.Core.Indicators;
+﻿using Crypto.Core.Helpers;
+using Crypto.Core.Indicators;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -13,6 +14,18 @@ namespace CryptoMarketClient {
         }
 
         public CandleStickData Prev { get; set; }
+        public void Assign(CandleStickData data) {
+            this.open = data.Open;
+            this.close = data.Close;
+            this.high = data.High;
+            this.low = data.Low;
+            this.Time = data.Time;
+            this.Value = data.Value;
+            this.weightedAverage = data.WeightedAverage;
+            this.volume = data.volume;
+            this.sellVolume = data.sellVolume;
+            this.buyVolume = data.buyVolume;
+        }
 
         double open;
         public double Open {
@@ -136,7 +149,7 @@ namespace CryptoMarketClient {
     }
 
     public static class CandleStickChartHelper {
-        public static void InitializeVolumes(IList<CandleStickData> candles, List<TradeInfoItem> trades, int period) {
+        public static void InitializeVolumes(ResizeableArray<CandleStickData> candles, List<TradeInfoItem> trades, int period) {
             for(int i = 0; i < candles.Count; i++) {
                 CandleStickData data = candles[i];
                 data.BuyVolume = 0;
@@ -144,7 +157,7 @@ namespace CryptoMarketClient {
             }
             UpdateVolumes(candles, trades, period);
         }
-        public static void UpdateVolumes(IList<CandleStickData> candles, List<TradeInfoItem> trades, int period) {
+        public static void UpdateVolumes(ResizeableArray<CandleStickData> candles, List<TradeInfoItem> trades, int period) {
             CandleStickData saved = null;
             if(trades == null)
                 return;
@@ -172,7 +185,7 @@ namespace CryptoMarketClient {
                 candle.SellVolume += trade.Amount;
             candle.BuySellVolume = candle.BuyVolume - candle.SellVolume;
         }
-        public static void UpdateVolumes(BindingList<CandleStickData> candles, TradeInfoItem trade, int period) {
+        public static void UpdateVolumes(ResizeableArray<CandleStickData> candles, TradeInfoItem trade, int period) {
             if(candles.Count == 0)
                 return;
             CandleStickData saved = candles.Last();

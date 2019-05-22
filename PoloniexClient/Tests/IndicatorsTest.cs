@@ -1,4 +1,5 @@
-﻿using Crypto.Core.Indicators;
+﻿using Crypto.Core.Helpers;
+using Crypto.Core.Indicators;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -10,8 +11,8 @@ using System.Threading.Tasks;
 namespace CryptoMarketClient.Tests {
     [TestFixture]
     public class IndicatorsTest {
-        BindingList<CandleStickData> GetCandleSticks(int count) {
-            BindingList<CandleStickData> list = new BindingList<CandleStickData>();
+        ResizeableArray<CandleStickData> GetCandleSticks(int count) {
+            ResizeableArray<CandleStickData> list = new ResizeableArray<CandleStickData>();
             DateTime now = DateTime.UtcNow;
             DateTime start = now.AddMinutes(-count);
             Random r = new Random();

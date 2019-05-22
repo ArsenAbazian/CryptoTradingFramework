@@ -291,7 +291,8 @@
     <Compile Include="Strategies\Base\InputParameterInfo.cs" />
     <Compile Include="Strategies\Custom\CustomStrategyDataItemInfo.cs" />
     <Compile Include="Strategies\Custom\CustomTickerStrategyBase.cs" />
-    <Compile Include="Strategies\Custom\RedWaterfallStrategy.cs" />
+    <Compile Include="Strategies\Custom\SupportResistanceBased.cs" />
+    <Compile Include="Strategies\Custom\SupportResistanceSimpleBreaks.cs" />
     <Compile Include="Strategies\Custom\WalletInvestorForecastStrategy.cs" />
     <Compile Include="Strategies\Grid\BaseGridStrategy.cs" />
     <Compile Include="Strategies\IStrategyDataProvider.cs" />

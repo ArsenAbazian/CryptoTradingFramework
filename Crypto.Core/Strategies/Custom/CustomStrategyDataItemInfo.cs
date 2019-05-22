@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Crypto.Core.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace Crypto.Core.Strategies {
     public interface IStrategyDataItemInfoOwner {
         string Name { get; }
         List<StrategyDataItemInfo> DataItemInfos { get; }
-        List<object> Items { get; }
+        ResizeableArray<object> Items { get; }
     }
 
     public class StrategyDataItemInfo : IStrategyDataItemInfoOwner {
@@ -62,7 +63,7 @@ namespace Crypto.Core.Strategies {
         }
 
         public object Value { get; set; }
-        public List<object> Items { get; set; }
+        public ResizeableArray<object> Items { get; set; }
     }
 
     public enum ChartType { CandleStick, Line, Area, Bar, Dot, Annotation, StepLine }

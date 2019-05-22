@@ -15,6 +15,7 @@ using CryptoMarketClient.Helpers;
 using System.Security.Cryptography;
 using Crypto.Core.Exchanges.Binance;
 using Crypto.Core.Exchanges.Base;
+using Crypto.Core.Helpers;
 
 namespace CryptoMarketClient.Binance {
     public class BinanceExchange : Exchange {
@@ -519,7 +520,7 @@ namespace CryptoMarketClient.Binance {
             return list;
         }
 
-        public override BindingList<CandleStickData> GetCandleStickData(Ticker ticker, int candleStickPeriodMin, DateTime startUtc, long periodInSeconds) {
+        public override ResizeableArray<CandleStickData> GetCandleStickData(Ticker ticker, int candleStickPeriodMin, DateTime startUtc, long periodInSeconds) {
             //startUtc = startUtc.ToUniversalTime();
             long startSec = (long)(startUtc.Subtract(epoch)).TotalSeconds;
             long end = startSec + periodInSeconds;
@@ -545,7 +546,7 @@ namespace CryptoMarketClient.Binance {
 
             DateTime startTime = epoch;
 
-            BindingList<CandleStickData> list = new BindingList<CandleStickData>();
+            ResizeableArray<CandleStickData> list = new ResizeableArray<CandleStickData>();
             int startIndex = 0;
             List<string[]> res = JSonHelper.Default.DeserializeArrayOfArrays(bytes, ref startIndex, 12);
             if(res == null) return list;

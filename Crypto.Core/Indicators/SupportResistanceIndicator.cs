@@ -1,4 +1,5 @@
-﻿using Crypto.Core.Strategies;
+﻿using Crypto.Core.Helpers;
+using Crypto.Core.Strategies;
 using CryptoMarketClient;
 using System;
 using System.Collections.Generic;
@@ -9,8 +10,8 @@ using System.Threading.Tasks;
 
 namespace Crypto.Core.Indicators {
     public class SupportResistanceIndicator : WindowIndicator {
-        public BindingList<SRValue> Support { get; } = new BindingList<SRValue>();
-        public BindingList<SRValue> Resistance { get; } = new BindingList<SRValue>();
+        public ResizeableArray<SRValue> Support { get; } = new ResizeableArray<SRValue>();
+        public ResizeableArray<SRValue> Resistance { get; } = new ResizeableArray<SRValue>();
 
         [InputParameter]
         public int Range { get; set; } = 3;
@@ -63,8 +64,20 @@ namespace Crypto.Core.Indicators {
             return Support.Count > 0 ? Support.Last() : null;
         }
 
-        protected bool HasSameLevel(SRValue lastItem, SRValue newItem) {
+        public bool HasSameLevel(SRValue lastItem, SRValue newItem) {
             return Math.Abs(newItem.Value - lastItem.Average) / lastItem.Average < (ThresoldPerc * 0.01);
+        }
+
+        public bool BelongsSameResistanceLevel(SRValue res) {
+            return Resistance.Last() == res;
+            //for(int i = Resistance.Count - 1; i >= 0; i --)
+        }
+
+        public bool HasSameResistanceLevel(double value) {
+            if(Resistance.Count == 0)
+                return false;
+            SRValue lastItem = Resistance.Last();
+            return Math.Abs(value - lastItem.Average) / lastItem.Average < (ThresoldPerc * 0.01);
         }
 
         private bool UpdateResistance(SRValue value) {

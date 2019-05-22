@@ -18,7 +18,7 @@ namespace Crypto.Core.Helpers {
         public int HistogrammBarCount { get; set; } = 40;
 
         public List<StrategyDataItemInfo> DataItemInfos { get; } = new List<StrategyDataItemInfo>();
-        public List<object> Items { get; private set; } = new List<object>();
+        public ResizeableArray<object> Items { get; private set; } = new ResizeableArray<object>();
         public List<TickerVolatilityInfo> Result { get; private set; } = new List<TickerVolatilityInfo>();
         public string Name { get { return "Tickers ATR"; } }
 
@@ -90,13 +90,16 @@ namespace Crypto.Core.Helpers {
             foreach(string baseCurr in BaseCurrencies) {
                 List<Ticker> tickers = Exchange.Tickers.Where(t => t.BaseCurrency == baseCurr && (MarketCurrencies == null || MarketCurrencies.Contains(t.MarketCurrency))).ToList();
                 foreach(Ticker ticker in tickers) {
-                    List<CandleStickData> data = Utils.DownloadCandleStickData(ticker, CandleStickPeriodMin);
+                    ResizeableArray<CandleStickData> data = Utils.DownloadCandleStickData(ticker, CandleStickPeriodMin);
                     if(data == null) {
                         LogManager.Default.Error("Cannot download candlesticks for " + ticker.Name);
                         continue;
                     }
                     LogManager.Default.Success("Downloaded candlesticks for " + ticker.Name);
-                    data.ForEach(i => ticker.CandleStickData.Add(i));
+                    ticker.CandleStickData.AddRange(data);
+                    //foreach(var t in data)
+                    //    ticker.CandleStickData.Add(t);
+                    //data.ForEach(i => ticker.CandleStickData.Add(i));
                     TickerVolatilityInfo info = new TickerVolatilityInfo() { Ticker = ticker };
                     info.Calculate();
                     info.CalculateMath();

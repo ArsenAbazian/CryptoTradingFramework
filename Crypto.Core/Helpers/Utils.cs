@@ -16,7 +16,7 @@ namespace Crypto.Core.Helpers {
             foreach(string baseCurr in baseCurrFilter) {
                 List<Ticker> tickers = e.Tickers.Where(t => t.BaseCurrency == baseCurr && (marketCurrency == null || marketCurrency.Contains(t.MarketCurrency))).ToList();
                 foreach(Ticker ticker in tickers) {
-                    List<CandleStickData> data = DownloadCandleStickData(ticker, candleStickPeriodMin);
+                    ResizeableArray<CandleStickData> data = DownloadCandleStickData(ticker, candleStickPeriodMin);
                     if(data == null)
                         return false;
                 }
@@ -24,11 +24,11 @@ namespace Crypto.Core.Helpers {
             return true;
         }
 
-        public static List<CandleStickData> DownloadCandleStickData(Ticker ticker, int candleStickPeriodMin) {
+        public static ResizeableArray<CandleStickData> DownloadCandleStickData(Ticker ticker, int candleStickPeriodMin) {
             return DownloadCandleStickData(new TickerInputInfo() { Exchange = ticker.Exchange.Type, Ticker = ticker, TickerName = ticker.Name,  KlineIntervalMin = candleStickPeriodMin });
         }
 
-        public static List<CandleStickData> DownloadCandleStickData(TickerInputInfo info) {
+        public static ResizeableArray<CandleStickData> DownloadCandleStickData(TickerInputInfo info) {
             CachedCandleStickData savedData = new CachedCandleStickData() { Exchange = info.Exchange, TickerName = info.TickerName, IntervalMin = info.KlineIntervalMin };
             CachedCandleStickData cachedData = CachedCandleStickData.FromFile(CachedCandleStickData.Directory + "\\" + ((ISupportSerialization)savedData).FileName);
             if(cachedData != null)
@@ -38,12 +38,12 @@ namespace Crypto.Core.Helpers {
             int intervalInSeconds = info.KlineIntervalMin * 60;
             int candleStickCount = 10000;
             start = start.AddSeconds(-intervalInSeconds * candleStickCount);
-            List<CandleStickData> res = new List<CandleStickData>();
-            List<BindingList<CandleStickData>> splitData = new List<BindingList<CandleStickData>>();
+            ResizeableArray<CandleStickData> res = new ResizeableArray<CandleStickData>();
+            List<ResizeableArray<CandleStickData>> splitData = new List<ResizeableArray<CandleStickData>>();
             int deltaCount = 500;
 
             for(int i = 0; i < candleStickCount / deltaCount; i++) {
-                BindingList<CandleStickData> data = info.Ticker.GetCandleStickData(info.KlineIntervalMin, start, intervalInSeconds * deltaCount);
+                ResizeableArray<CandleStickData> data = info.Ticker.GetCandleStickData(info.KlineIntervalMin, start, intervalInSeconds * deltaCount);
                 if(data == null || data.Count == 0)
                     continue;
                 res.AddRange(data);

@@ -20,6 +20,7 @@ namespace Crypto.Core.Strategies.Base {
         public string CurrentValue { get { return Convert.ToString(CurrentValueCore); } }
         public object MinValueCore { get; set; }
         public object MaxValueCore { get; set; }
+        public object ChangeCore { get; set; }
 
         public virtual object Clone() {
             InputParameterInfo res = new InputParameterInfo();
@@ -34,6 +35,7 @@ namespace Crypto.Core.Strategies.Base {
             StartValue = from.StartValue;
             MinValueCore = from.MinValueCore;
             MaxValueCore = from.MaxValueCore;
+            ChangeCore = from.ChangeCore;
         }
 
         public void InitializeStartValue() {
@@ -92,6 +94,7 @@ namespace Crypto.Core.Strategies.Base {
         public bool Selected { get; set; }
         public object MinValue { get; set; }
         public object MaxValue { get; set; }
+        public object Change { get; set; }
         string fullName;
         public string FullName {
             get {
@@ -163,6 +166,7 @@ namespace Crypto.Core.Strategies.Base {
                 if(attr != null) {
                     child.MinValue = attr.MinValue;
                     child.MaxValue = attr.MaxValue;
+                    child.Change = attr.Change;
                 }
 
                 if(pInfo.PropertyType.IsClass) {

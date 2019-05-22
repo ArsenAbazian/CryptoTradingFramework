@@ -31,8 +31,8 @@
             this.repositoryItemCheckEdit6 = new DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit();
             this.xtraTabPage1 = new DevExpress.XtraTab.XtraTabPage();
             this.walletInvestorItemsControl1 = new CryptoMarketClient.Forms.Instruments.WalletInvestorItemsControl();
-            ((System.ComponentModel.ISupportInitialize)(this.tpChart)).BeginInit();
-            this.tpChart.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tabControl)).BeginInit();
+            this.tabControl.SuspendLayout();
             this.tpData.SuspendLayout();
             this.tpChartPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gcData)).BeginInit();
@@ -48,13 +48,13 @@
             // 
             // tpChart
             // 
-            this.tpChart.TabPages.AddRange(new DevExpress.XtraTab.XtraTabPage[] {
+            this.tabControl.TabPages.AddRange(new DevExpress.XtraTab.XtraTabPage[] {
             this.xtraTabPage1});
-            this.tpChart.Controls.SetChildIndex(this.xtraTabPage1, 0);
-            this.tpChart.Controls.SetChildIndex(this.tpChartPage, 0);
-            this.tpChart.Controls.SetChildIndex(this.tpTradeHistory, 0);
-            this.tpChart.Controls.SetChildIndex(this.tpEvents, 0);
-            this.tpChart.Controls.SetChildIndex(this.tpData, 0);
+            this.tabControl.Controls.SetChildIndex(this.xtraTabPage1, 0);
+            this.tabControl.Controls.SetChildIndex(this.tpChartPage, 0);
+            this.tabControl.Controls.SetChildIndex(this.tpTradeHistory, 0);
+            this.tabControl.Controls.SetChildIndex(this.tpEvents, 0);
+            this.tabControl.Controls.SetChildIndex(this.tpData, 0);
             // 
             // gcData
             // 
@@ -119,8 +119,8 @@
             this.ClientSize = new System.Drawing.Size(1432, 1043);
             this.Name = "WalletInvestorDataForm";
             this.Text = "WalletInvestorDataForm";
-            ((System.ComponentModel.ISupportInitialize)(this.tpChart)).EndInit();
-            this.tpChart.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.tabControl)).EndInit();
+            this.tabControl.ResumeLayout(false);
             this.tpData.ResumeLayout(false);
             this.tpChartPage.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(repositoryItemTextEdit1)).EndInit();

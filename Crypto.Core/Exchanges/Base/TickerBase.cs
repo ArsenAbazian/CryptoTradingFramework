@@ -172,14 +172,14 @@ namespace CryptoMarketClient {
         public List<TradeInfoItem> TradeHistory { get; } = new List<TradeInfoItem>();
         public BindingList<TradeStatisticsItem> TradeStatistic { get; } = new BindingList<TradeStatisticsItem>();
 
-        BindingList<CandleStickData> candleStickData;
+        ResizeableArray<CandleStickData> candleStickData;
         protected void OnCandleStickDataItemsChanged(object sender, ListChangedEventArgs e) {
             RaiseCandleStickChanged(e);
         }
-        public BindingList<CandleStickData> CandleStickData {
+        public ResizeableArray<CandleStickData> CandleStickData {
             get {
                 if(candleStickData == null) {
-                    candleStickData = new BindingList<CryptoMarketClient.CandleStickData>();
+                    candleStickData = new ResizeableArray<CryptoMarketClient.CandleStickData>();
                     candleStickData.ListChanged += OnCandleStickDataItemsChanged;
                 }
                 return candleStickData;
@@ -572,7 +572,7 @@ namespace CryptoMarketClient {
                 return;
             MarketCurrencyStatusHistory.Add(new CurrencyStatusHistoryItem() { Enabled = MarketCurrencyEnabled, Time = DateTime.UtcNow });
         }
-        public BindingList<CandleStickData> GetCandleStickData(int candleStickPeriodMin, DateTime start, int periodInSeconds) {
+        public ResizeableArray<CandleStickData> GetCandleStickData(int candleStickPeriodMin, DateTime start, int periodInSeconds) {
             return Exchange.GetCandleStickData(this, candleStickPeriodMin, start, periodInSeconds);
         }
         public virtual bool UpdateMyTrades() {

@@ -14,6 +14,7 @@ using System.Windows.Forms;
 using WebSocket4Net;
 using CryptoMarketClient.Helpers;
 using Crypto.Core.Exchanges.Base;
+using Crypto.Core.Helpers;
 
 namespace CryptoMarketClient.BitFinex {
     public class BitFinexExchange : Exchange {
@@ -86,7 +87,7 @@ namespace CryptoMarketClient.BitFinex {
                 return "day";
             return "fiveMin";
         }
-        public override BindingList<CandleStickData> GetCandleStickData(Ticker ticker, int candleStickPeriodMin, DateTime start, long periodInSeconds) {
+        public override ResizeableArray<CandleStickData> GetCandleStickData(Ticker ticker, int candleStickPeriodMin, DateTime start, long periodInSeconds) {
             long startSec = (long)(start.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
             long end = startSec + periodInSeconds;
 
@@ -102,7 +103,7 @@ namespace CryptoMarketClient.BitFinex {
             if(bytes == null || bytes.Length == 0)
                 return null;
 
-            BindingList<CandleStickData> list = new BindingList<CandleStickData>();
+            ResizeableArray<CandleStickData> list = new ResizeableArray<CandleStickData>();
 
             int startIndex = 1;
             if(!JSonHelper.Default.SkipSymbol(bytes, ':', 3, ref startIndex))

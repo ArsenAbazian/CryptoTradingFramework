@@ -394,7 +394,7 @@ namespace CryptoMarketClient.Strategies {
         }
 
         private void OnCustomScrollAnnotations(object sender, GridCustomScrollAnnotationsEventArgs e) {
-            List<object> items = Visual.Items;
+            ResizeableArray<object> items = Visual.Items;
             e.Annotations = new List<GridScrollAnnotationInfo>();
             if(items == null && e.Annotations != null) {
                 e.Annotations.Clear();

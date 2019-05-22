@@ -8,10 +8,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
+using CryptoMarketClient.Common;
+using System.Xml.Serialization;
+using Crypto.Core.Helpers;
 
 namespace Crypto.Core.Strategies.Custom {
-    public class RedWaterfallStrategy : CustomTickerStrategy {
-        public override string TypeName => "Red Waterfall";
+    public class SupportResistanceBasedStrategy : CustomTickerStrategy {
+        public override string TypeName => "SR Based";
 
         protected override void OnTickCore() {
             ProcessTicker(Ticker);
@@ -27,24 +30,24 @@ namespace Crypto.Core.Strategies.Custom {
             return res;
         }
 
-        public List<RedWaterfallOpenedOrder> OpenedOrders { get; } = new List<RedWaterfallOpenedOrder>();
+        public ResizeableArray<OpenPositionInfo> OpenedOrders { get; } = new ResizeableArray<OpenPositionInfo>();
 
-        OrderGridInfo orderGrid;
-        [TypeConverter(typeof(ExpandableObjectConverter))]
-        public OrderGridInfo OrderGrid {
-            get { return orderGrid; }
-            set {
-                if(orderGrid == value)
-                    return;
-                orderGrid = value;
-                OnOrderGridChanged();
-            }
-        }
+        //OrderGridInfo orderGrid;
+        //[TypeConverter(typeof(ExpandableObjectConverter))]
+        //public OrderGridInfo OrderGrid {
+        //    get { return orderGrid; }
+        //    set {
+        //        if(orderGrid == value)
+        //            return;
+        //        orderGrid = value;
+        //        OnOrderGridChanged();
+        //    }
+        //}
 
-        protected virtual void OnOrderGridChanged() {
-            //if(OrderGrid == null || OrderGrid.Start.Value == 0)
-            //    InitializeOrderGrid();
-        }
+        //protected virtual void OnOrderGridChanged() {
+        //    //if(OrderGrid == null || OrderGrid.Start.Value == 0)
+        //    //    InitializeOrderGrid();
+        //}
 
         //protected virtual void InitializeOrderGrid() {
         //    OrderGridInfo info = new OrderGridInfo();
@@ -71,18 +74,19 @@ namespace Crypto.Core.Strategies.Custom {
         protected int LastCount { get; set; } = -1;
         protected RedWaterfallDataItem LastBreak { get; set; }
         protected List<RedWaterfallDataItem> Breaks { get; } = new List<RedWaterfallDataItem>();
-        private void ProcessTicker(Ticker ticker) {
-            if(LastCount == SRIndicator.Result.Count)
-                return;
+        protected virtual void ProcessTicker(Ticker ticker) {
+            if(SRIndicator.Result.Count > 2 && LastCount != SRIndicator.Result.Count) {
+                LastCount = SRIndicator.Result.Count;
+                int index = LastCount - 2; // save finished candlestick
+                AddStrategyData();
+            }
+            ProcessTickerCore();
+        }
 
-            LastCount = SRIndicator.Result.Count;
-            int index = LastCount - 1;
-
-            AddStrategyData();
+        protected int SimulationStartItemsCount { get { return 100; } }
+        protected virtual void ProcessTickerCore() {
             RedWaterfallDataItem item = StrategyData.Count > 0 ? (RedWaterfallDataItem)StrategyData.Last() : null;
-            if(item == null)
-                return;
-            if(Ticker.CandleStickData.Count < 2000) /// need back data for simulation
+            if(Ticker.CandleStickData.Count < SimulationStartItemsCount) /// need back data for simulation
                 return;
             SRValue lastResistance = GetLastResistance();
             SRValue lastSupport = GetLastSupport();
@@ -109,15 +113,15 @@ namespace Crypto.Core.Strategies.Custom {
                     }
                 }
             }
-            foreach(RedWaterfallDataItem bItem in Breaks) {
-                if((item.Close - bItem.Close) >= (bItem.BreakSupportLevel - bItem.Close) * 0.8) {
-                    bItem.CloseLength = item.Index - bItem.Index;
-                    bItem.Closed = true;
-                }
-            }
+            //foreach(RedWaterfallDataItem bItem in Breaks) {
+            //    if((item.Close - bItem.Close) >= (bItem.BreakSupportLevel - bItem.Close) * 0.8) {
+            //        bItem.CloseLength = item.Index - bItem.Index;
+            //        bItem.Closed = true;
+            //    }
+            //}
 
             //if(IsRedWaterfallDetected(ticker)) {
-                
+
             //}
         }
 
@@ -139,22 +143,25 @@ namespace Crypto.Core.Strategies.Custom {
         }
 
         protected override void InitializeDataItems() {
+            DataItem("Index").Visibility = DataVisibility.Table;
             TimeItem("Time");
             CandleStickItem();
 
             //StrategyDataItemInfo res = DataItem("ResistanceLength"); res.Color = System.Drawing.Color.Red; res.ChartType = ChartType.Bar; res.PanelIndex = 1;
             //StrategyDataItemInfo sup = DataItem("SupportLength"); sup.Color = System.Drawing.Color.Green; sup.ChartType = ChartType.Bar; sup.PanelIndex = 1;
-
+            
             StrategyDataItemInfo atr = DataItem("Atr"); atr.Name = "Atr Indicator"; atr.Color = System.Drawing.Color.Red; atr.ChartType = ChartType.Line; atr.PanelIndex = 1;
             StrategyDataItemInfo resValue = DataItem("Value"); resValue.DataSourcePath = "SRIndicator.Resistance"; resValue.Color = Color.FromArgb(0x40, Color.Red); resValue.ChartType = ChartType.StepLine;
             StrategyDataItemInfo supValue = DataItem("Value"); supValue.DataSourcePath = "SRIndicator.Support"; supValue.Color = Color.FromArgb(0x40, Color.Blue); supValue.ChartType = ChartType.StepLine;
 
             //AnnotationItem("Support", "Support", System.Drawing.Color.Green, "SRLevel");
             //AnnotationItem("Resistance", "Resistance", System.Drawing.Color.Red, "SRLevel");
-            StrategyDataItemInfo br = AnnotationItem("Break", "Break", System.Drawing.Color.Blue, "Close"); br.Visibility = DataVisibility.Both; br.AnnotationText = "Br"; //"Br={BreakPercent:0.00} Closed={Closed} CloseStickCount={CloseLength}";
+            StrategyDataItemInfo br = AnnotationItem("Break", "Break", System.Drawing.Color.Blue, "Value"); br.Visibility = DataVisibility.Both; br.AnnotationText = "Br"; //"Br={BreakPercent:0.00} Closed={Closed} CloseStickCount={CloseLength}";
             StrategyDataItemInfo bp = DataItem("BreakPercent"); bp.Color = Color.Green; bp.ChartType = ChartType.Bar; bp.PanelIndex = 2;
 
-            
+            StrategyDataItemInfo cl = AnnotationItem("ClosedOrder", "Closed", System.Drawing.Color.Green, "Value"); cl.Visibility = DataVisibility.Both; cl.AnnotationText = "Cl"; //"Br={BreakPercent:0.00} Closed={Closed} CloseStickCount={CloseLength}";
+
+
             //StrategyDataItemInfo sc = DataItem("SupportChange", Color.FromArgb(0x40, Color.Green), 1); sc.PanelIndex = 4; sc.ChartType = ChartType.Area;
             //StrategyDataItemInfo rc = DataItem("ResistanceChange", Color.FromArgb(0x40, Color.Red), 1); rc.PanelIndex = 4; rc.ChartType = ChartType.Area;
             //StrategyDataItemInfo bp2 = DataItem("BreakPercent2"); bp2.Color = Color.FromArgb(0x20, Color.Green);  bp2.ChartType = ChartType.Area; bp2.PanelIndex = 5;
@@ -163,21 +170,22 @@ namespace Crypto.Core.Strategies.Custom {
             DataItem("CloseLength").Visibility = DataVisibility.Table;
 
             br = AnnotationItem("Break", "Break", System.Drawing.Color.Blue, "Atr"); br.PanelIndex = 1; br.Visibility = DataVisibility.Chart; br.AnnotationText = "Br"; //"Br={BreakPercent:0.00} Closed={Closed} CloseStickCount={CloseLength}";
+
             StrategyDataItemInfo sp = DataItem("SRSpread"); sp.Color = Color.FromArgb(0x20, Color.Green); sp.ChartType = ChartType.Area; sp.PanelIndex = 3;
+            var ear = DataItem("Earned", Color.Green);
+            ear.PanelIndex = 4;
         }
 
         protected List<RedWaterfallDataItem> PostProcessItems { get; } = new List<RedWaterfallDataItem>();
-        private void AddStrategyData() {
-            if(Ticker.CandleStickData.Count == 0)
-                return;
+        private RedWaterfallDataItem AddStrategyData() {
+            if(Ticker.CandleStickData.Count < SimulationStartItemsCount) /// need back data for simulation
+                return null;
             RedWaterfallDataItem item = new RedWaterfallDataItem();
-            CandleStickData data = Ticker.CandleStickData.Last();
-            item.Time = data.Time;
-            item.Open = data.Open;
-            item.Close = data.Close;
-            item.Low = data.Low;
-            item.High = data.High;
-            item.Atr = AtrIndicator.Result.Last().Value;
+            item.Earned = Earned;
+            item.Candle = Ticker.CandleStickData[Ticker.CandleStickData.Count - 2];
+            item.Atr = AtrIndicator.Result[AtrIndicator.Result.Count - 2].Value;
+            if(double.IsNaN(item.Atr))
+                throw new Exception();
             item.Index = StrategyData.Count;
             StrategyData.Add(item);
 
@@ -186,10 +194,11 @@ namespace Crypto.Core.Strategies.Custom {
                 PostProcessItems.RemoveAt(0);
             SRValue sr = (SRValue)SRIndicator.Result.Last();
             if(sr.Type == SupResType.None)
-                return;
+                return null;
             RedWaterfallDataItem srItem = PostProcessItems.FirstOrDefault(i => i.Time == sr.Time);
             if(srItem != null)
                 srItem.SRValue = sr;
+            return srItem;
         }
 
         private bool IsRedWaterfallDetected(Ticker ticker) {
@@ -202,16 +211,16 @@ namespace Crypto.Core.Strategies.Custom {
             CandleStickData l1 = ticker.CandleStickData[index - 2];
             CandleStickData l0 = ticker.CandleStickData[index - 3];
 
-            if(l3.Close < l3.Open && l3.Open <= l2.Close && l2.Close < l2.Open && l2.Open <= l1.Close && l1.Close < l1.Open) {
-                StrategyData.Add(new RedWaterfallDataItem() { Time = l3.Time, StartPrice = l0.High, EndPrice = l3.Close, RedWaterfall = true });
-                return true;
-            }
+            //if(l3.Close < l3.Open && l3.Open <= l2.Close && l2.Close < l2.Open && l2.Open <= l1.Close && l1.Close < l1.Open) {
+            //    StrategyData.Add(new RedWaterfallDataItem() { Time = l3.Time, StartPrice = l0.High, EndPrice = l3.Close, RedWaterfall = true });
+            //    return true;
+            //}
             return false;
         }
 
         public override void Assign(StrategyBase from) {
             base.Assign(from);
-            RedWaterfallStrategy st = from as RedWaterfallStrategy;
+            SupportResistanceBasedStrategy st = from as SupportResistanceBasedStrategy;
             if(st == null)
                 return;
             Range = st.Range;
@@ -239,11 +248,12 @@ namespace Crypto.Core.Strategies.Custom {
     }
 
     public class RedWaterfallDataItem {
-        public DateTime Time { get; set; }
-        public double Open { get; set; }
-        public double Close { get; set; }
-        public double High { get; set; }
-        public double Low { get; set; }
+        public DateTime Time { get { return Candle.Time; } }
+        public double Open { get { return Candle.Open; } }
+        public double Close { get { return Candle.Close; } }
+        public double High { get { return Candle.High; } }
+        public double Low { get { return Candle.Low; } }
+        public CandleStickData Candle { get; set; }
         public bool RedWaterfall { get; set; }
         public double StartPrice { get; set; }
         public double Spread { get { return StartPrice - EndPrice; } }
@@ -271,18 +281,55 @@ namespace Crypto.Core.Strategies.Custom {
 
         public double SRLevel { get { return SRValue == null ? 0 : SRValue.Value; } }
         public bool Break { get; set; }
+        public double Value { get; set; }
         public bool BreakUp { get; set; }
         public int ResIndex { get; set; }
         public int SupIndex { get; set; }
 
         public int CloseLength { get; set; }
         public bool Closed { get; set; }
+        public bool ClosedOrder { get; set; }
         public double SRSpread { get; internal set; }
+        public object BreakValue { get; internal set; }
+        public double Earned { get; set; }
     }
 
-    public class RedWaterfallOpenedOrder {
+    public class OpenPositionInfo {
+        public OrderType Type { get; set; }
         public string MarketName { get; set; }
-        public double Value { get; set; }
+        public double StopLossPercent { get; set; } = 5;
+        public double OpenValue { get; set; }
+        public double CloseValue { get; set; }
+        double currentValue;
+        public double CurrentValue {
+            get { return currentValue; }
+            set {
+                if(CurrentValue == value)
+                    return;
+                currentValue = value;
+                UpdateStopLoss();
+            }
+        }
+        public double Earned { get; set; }
+        public double Spent { get; set; }
+        public double StopLoss { get; set; }
         public double Amount { get; set; }
+        public double Total { get; set; }
+        [XmlIgnore]
+        public object Tag { get; set; }
+        [XmlIgnore]
+        public object Tag2 { get; set; }
+
+        public void UpdateStopLoss() {
+            double newStopLoss = CurrentValue * (100 - StopLossPercent) * 0.01;
+            StopLoss = Math.Max(newStopLoss, StopLoss);
+        }
+    }
+
+    public class OpenPositionTrailingHistoryItem {
+        public DateTime Time { get; set; }
+        public double Current { get; set; }
+        public double NextClose { get; set; }
+        public double StopLoss { get; set; }
     }
 }

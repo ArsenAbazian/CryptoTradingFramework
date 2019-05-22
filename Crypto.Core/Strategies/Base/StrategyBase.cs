@@ -33,7 +33,8 @@ namespace Crypto.Core.Strategies {
     [XmlInclude(typeof(TickerDataCaptureStrategy))]
     [XmlInclude(typeof(MarketMakingStrategy))]
     [XmlInclude(typeof(StatisticalArbitrageStrategy))]
-    [XmlInclude(typeof(RedWaterfallStrategy))]
+    [XmlInclude(typeof(SupportResistanceBasedStrategy))]
+    [XmlInclude(typeof(SupportResistanceSimpleBreaks))]
     //[XmlInclude(typeof())]
     [Serializable]
     [ParameterObject]
@@ -82,9 +83,9 @@ namespace Crypto.Core.Strategies {
 
         [XmlIgnore]
         [Browsable(false)]
-        public List<object> StrategyData { get; } = new List<object>();
+        public ResizeableArray<object> StrategyData { get; } = new ResizeableArray<object>();
         [XmlIgnore]
-        List<object> IStrategyDataItemInfoOwner.Items { get { return StrategyData; } }
+        ResizeableArray<object> IStrategyDataItemInfoOwner.Items { get { return StrategyData; } }
 
         [XmlIgnore, Browsable(false)]
         public List<StrategyDataItemInfo> DataItemInfos { get; } = new List<StrategyDataItemInfo>();
@@ -300,6 +301,7 @@ namespace Crypto.Core.Strategies {
             if(attr != null) {
                 if(info.MinValueCore == null) info.MinValueCore = attr.MinValue;
                 if(info.MaxValueCore == null) info.MaxValueCore = attr.MaxValue;
+                if(info.ChangeCore == null) info.ChangeCore = attr.Change;
             }
             info.InitializeStartValue();
         }
@@ -355,21 +357,30 @@ namespace Crypto.Core.Strategies {
         public InputParameterAttribute(bool isInput) {
             IsInput = isInput;
         }
-        public InputParameterAttribute(int minValue, int maxValue) : this(true) {
+        public InputParameterAttribute(int minValue, int maxValue, int change) : this(true) {
             MinValue = minValue;
             MaxValue = maxValue;
+            Change = change;
         }
-        public InputParameterAttribute(float minValue, float maxValue) : this(true) {
+        public InputParameterAttribute(long minValue, long maxValue, long change) : this(true) {
             MinValue = minValue;
             MaxValue = maxValue;
+            Change = change;
         }
-        public InputParameterAttribute(double minValue, double maxValue) : this(true) {
+        public InputParameterAttribute(float minValue, float maxValue, float change) : this(true) {
             MinValue = minValue;
             MaxValue = maxValue;
+            Change = change;
+        }
+        public InputParameterAttribute(double minValue, double maxValue, double change) : this(true) {
+            MinValue = minValue;
+            MaxValue = maxValue;
+            Change = change;
         }
         public bool IsInput { get; private set; }
         public object MinValue { get; set; }
         public object MaxValue { get; set; }
+        public object Change { get; set; }
     }
 
     public class OutputParameterAttribute : Attribute {

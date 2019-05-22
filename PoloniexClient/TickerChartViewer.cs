@@ -19,6 +19,7 @@ using DevExpress.XtraSplashScreen;
 using DevExpress.Data;
 using DevExpress.XtraCharts.Designer;
 using System.IO;
+using Crypto.Core.Helpers;
 
 namespace CryptoMarketClient {
     public partial class TickerChartViewer : XtraUserControl {
@@ -408,7 +409,7 @@ namespace CryptoMarketClient {
             if(!inBackgroundThread) {
                 try {
                     int seconds = CalculateTotalIntervalInSeconds();
-                    BindingList<CandleStickData> data = Ticker.GetCandleStickData(Ticker.CandleStickPeriodMin, date.AddSeconds(-seconds), seconds);
+                    ResizeableArray<CandleStickData> data = Ticker.GetCandleStickData(Ticker.CandleStickPeriodMin, date.AddSeconds(-seconds), seconds);
                     if(data != null) {
                         UpdateCandleStickData(data);
 
@@ -426,13 +427,13 @@ namespace CryptoMarketClient {
             UpdateCandleStickThread = new Thread(() => {
                 try {
                     int seconds = CalculateTotalIntervalInSeconds();
-                    BindingList<CandleStickData> data = Ticker.GetCandleStickData(Ticker.CandleStickPeriodMin, date.AddSeconds(-seconds), seconds);
+                    ResizeableArray<CandleStickData> data = Ticker.GetCandleStickData(Ticker.CandleStickPeriodMin, date.AddSeconds(-seconds), seconds);
                     if(data != null) {
                         lock(Ticker.CandleStickData) {
                             UpdateCandleStickData(data);
                         }
 
-                        BeginInvoke(new Action<BindingList<CandleStickData>>((d) => {
+                        BeginInvoke(new Action<ResizeableArray<CandleStickData>>((d) => {
                             UpdateChartSeries(d);
                             this.isCandleSticksUpdate = false;
                         }), new object[] { data });
@@ -461,13 +462,13 @@ namespace CryptoMarketClient {
             }
         }
 
-        void UpdateChartSeries(BindingList<CandleStickData> data) {
+        void UpdateChartSeries(ResizeableArray<CandleStickData> data) {
             this.chartControl1.Series["Current"].DataSource = new RealTimeSource() { DataSource = data };
             this.chartControl1.Series["Volume"].DataSource = new RealTimeSource() { DataSource = data };
             this.chartControl1.Series["BuySellVolume"].DataSource = new RealTimeSource() { DataSource = data };
         }
 
-        void UpdateCandleStickData(BindingList<CandleStickData> data) {
+        void UpdateCandleStickData(ResizeableArray<CandleStickData> data) {
             for(int i = 0; i < Ticker.CandleStickData.Count; i++) {
                 data.Add(Ticker.CandleStickData[i]);
             }

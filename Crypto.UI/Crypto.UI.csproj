@@ -284,18 +284,6 @@
     <Compile Include="Strategies\Custom\CustomStrategyConfigurationControl.Designer.cs">
       <DependentUpon>CustomStrategyConfigurationControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Strategies\Custom\CustomStrategyDataForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Strategies\Custom\CustomStrategyDataForm.Designer.cs">
-      <DependentUpon>CustomStrategyDataForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Strategies\Custom\InvictusExchange\WalletInvestorDataForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Strategies\Custom\InvictusExchange\WalletInvestorDataForm.Designer.cs">
-      <DependentUpon>WalletInvestorDataForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Strategies\Custom\InvictusExchange\WalletInvestorStrategyConfigControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -326,12 +314,6 @@
     <Compile Include="Strategies\Signal\MacdTrendStrategyConfigControl.Designer.cs">
       <DependentUpon>MacdTrendStrategyConfigControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Strategies\Signal\MacdTrendStrategyDataForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Strategies\Signal\MacdTrendStrategyDataForm.Designer.cs">
-      <DependentUpon>MacdTrendStrategyDataForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Strategies\Signal\SignalNotificationConfigControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -349,12 +331,6 @@
     </Compile>
     <Compile Include="Strategies\Signal\TripleRsiStrategyConfigControl.Designer.cs">
       <DependentUpon>TripleRsiStrategyConfigControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Strategies\Signal\TripleRsiStrategyDataForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Strategies\Signal\TripleRsiStrategyDataForm.Designer.cs">
-      <DependentUpon>TripleRsiStrategyDataForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Strategies\StrategiesCollectionForm.cs">
       <SubType>Form</SubType>
@@ -445,12 +421,6 @@
     <EmbeddedResource Include="Strategies\Custom\CustomStrategyConfigurationControl.resx">
       <DependentUpon>CustomStrategyConfigurationControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Strategies\Custom\CustomStrategyDataForm.resx">
-      <DependentUpon>CustomStrategyDataForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Strategies\Custom\InvictusExchange\WalletInvestorDataForm.resx">
-      <DependentUpon>WalletInvestorDataForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Strategies\Custom\InvictusExchange\WalletInvestorStrategyConfigControl.resx">
       <DependentUpon>WalletInvestorStrategyConfigControl.cs</DependentUpon>
     </EmbeddedResource>
@@ -460,9 +430,6 @@
     <EmbeddedResource Include="Strategies\Signal\MacdTrendStrategyConfigControl.resx">
       <DependentUpon>MacdTrendStrategyConfigControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Strategies\Signal\MacdTrendStrategyDataForm.resx">
-      <DependentUpon>MacdTrendStrategyDataForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Strategies\Signal\SignalNotificationConfigControl.resx">
       <DependentUpon>SignalNotificationConfigControl.cs</DependentUpon>
     </EmbeddedResource>
@@ -471,9 +438,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Strategies\Signal\TripleRsiStrategyConfigControl.resx">
       <DependentUpon>TripleRsiStrategyConfigControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Strategies\Signal\TripleRsiStrategyDataForm.resx">
-      <DependentUpon>TripleRsiStrategyDataForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Strategies\StrategiesCollectionForm.resx">
       <DependentUpon>StrategiesCollectionForm.cs</DependentUpon>

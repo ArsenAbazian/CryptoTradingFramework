@@ -14,6 +14,9 @@ namespace Crypto.Core.Indicators {
 
         public override void OnUpdateValue(int index) {
             base.OnUpdateValue(index);
+            if(index < Length) {
+                return;
+            }
             double value = CalculateCore(index);
             ((IndicatorValue)ResultCore[index]).Value = value;
             IndicatorValue signal = (IndicatorValue)MaIndicator.Calculate(index);

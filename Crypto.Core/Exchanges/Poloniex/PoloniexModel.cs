@@ -18,6 +18,7 @@ using SuperSocket.ClientEngine;
 using WebSocket4Net;
 using System.Net.Sockets;
 using Crypto.Core.Exchanges.Base;
+using Crypto.Core.Helpers;
 
 namespace CryptoMarketClient {
     public class PoloniexExchange : Exchange {
@@ -296,7 +297,7 @@ namespace CryptoMarketClient {
             return null;
         }
 
-        public override BindingList<CandleStickData> GetCandleStickData(Ticker ticker, int candleStickPeriodMin, DateTime start, long periodInSeconds) {
+        public override ResizeableArray<CandleStickData> GetCandleStickData(Ticker ticker, int candleStickPeriodMin, DateTime start, long periodInSeconds) {
             long startSec = (long)(start.Subtract(epoch)).TotalSeconds;
             long end = startSec + periodInSeconds;
 
@@ -314,7 +315,7 @@ namespace CryptoMarketClient {
 
             DateTime startTime = new DateTime(1970, 1, 1);
 
-            BindingList<CandleStickData> list = new BindingList<CandleStickData>();
+            ResizeableArray<CandleStickData> list = new ResizeableArray<CandleStickData>();
             int startIndex = 0;
             List<string[]> res = JSonHelper.Default.DeserializeArrayOfObjects(bytes, ref startIndex, new string[] { "date", "high", "low", "open", "close", "volume", "quoteVolume", "weightedAverage" });
             if(res == null) return list;

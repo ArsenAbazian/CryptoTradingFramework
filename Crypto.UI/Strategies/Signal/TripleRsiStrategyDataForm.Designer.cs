@@ -40,8 +40,8 @@
             this.repositoryItemTextEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemTextEdit();
             this.repositoryItemCheckEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit();
             this.repositoryItemCheckEdit2 = new DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit();
-            ((System.ComponentModel.ISupportInitialize)(this.tpChart)).BeginInit();
-            this.tpChart.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tabControl)).BeginInit();
+            this.tabControl.SuspendLayout();
             this.tpData.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tripleRsiStrategyHistoryItemBindingSource)).BeginInit();
@@ -53,7 +53,7 @@
             // 
             // xtraTabControl1
             // 
-            this.tpChart.Size = new System.Drawing.Size(1367, 1004);
+            this.tabControl.Size = new System.Drawing.Size(1367, 1004);
             // 
             // tpData
             // 
@@ -192,8 +192,8 @@
             this.ClientSize = new System.Drawing.Size(1367, 1004);
             this.Name = "TripleRsiStrategyDataForm";
             this.Text = "TripleRsiStrategyDataForm";
-            ((System.ComponentModel.ISupportInitialize)(this.tpChart)).EndInit();
-            this.tpChart.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.tabControl)).EndInit();
+            this.tabControl.ResumeLayout(false);
             this.tpData.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tripleRsiStrategyHistoryItemBindingSource)).EndInit();

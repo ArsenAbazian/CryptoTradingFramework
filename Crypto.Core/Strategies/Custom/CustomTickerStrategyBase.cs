@@ -36,8 +36,7 @@ namespace Crypto.Core.Strategies.Custom {
         [XmlIgnore]
         [Browsable(false)]
         public override Ticker Ticker {
-            get { return Tickers.Count > 0 ? Tickers[0] : null; }
-            set {  }
+            get; set;
         }
         
         [XmlIgnore]
@@ -78,6 +77,7 @@ namespace Crypto.Core.Strategies.Custom {
             for(int i = 0; i < StrategyInfo.Tickers.Count; i++) {
                 Tickers.Add(StrategyInfo.Tickers[i].Ticker);
             }
+            Ticker = Tickers.Count > 0 ? Tickers[0] : null;
         }
 
         protected override bool InitializeTicker() {

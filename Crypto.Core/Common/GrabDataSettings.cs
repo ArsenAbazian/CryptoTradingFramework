@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Crypto.Core.Helpers;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -15,7 +16,7 @@ namespace CryptoMarketClient.Common {
         public Ticker Ticker { get; set; }
         public string FileName { get { return DirectoryName + "\\" + Ticker.Name.ToLower() + ".xml"; } }
         [XmlArray("CandleStickData"), XmlArrayItem(typeof(CandleStickData), ElementName = "CandleStickData")]
-        public BindingList<CandleStickData> CandleStickData { get; set; }
+        public ResizeableArray<CandleStickData> CandleStickData { get; set; }
         [XmlArray("TradeData"), XmlArrayItem(typeof(TradeInfoItem), ElementName = "TradeHistoryItem")]
         public List<TradeInfoItem> TradeData { get; set; }
     }
