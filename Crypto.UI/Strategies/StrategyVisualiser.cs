@@ -32,9 +32,11 @@ namespace CryptoMarketClient.Strategies {
 
         private void UpdateDataSource() {
             foreach(var item in Visual.DataItemInfos) {
-                if(!string.IsNullOrEmpty(item.DataSourcePath)) {
+                if(!string.IsNullOrEmpty(item.BindingSource)) {
                     object root = item.Value == null ? Visual : item.Value;
-                    item.DataSource = BindingHelper.GetBindingValue(item.DataSourcePath, root);
+                    if(item.BindingRoot != null)
+                        root = item.BindingRoot;
+                    item.DataSource = BindingHelper.GetBindingValue(item.BindingSource, root);
                 }
             }
         }

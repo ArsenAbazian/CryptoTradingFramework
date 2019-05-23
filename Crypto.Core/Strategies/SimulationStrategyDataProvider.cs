@@ -185,7 +185,8 @@ namespace Crypto.Core.Strategies {
         }
 
         protected OrderBook DownloadOrderBook(TickerInputInfo ti) {
-            if(!ti.Ticker.UpdateOrderBook())
+            int orderBookDepth = ti.OrderBookDepth == 0 ? OrderBook.Depth : ti.OrderBookDepth;
+            if(!ti.Ticker.UpdateOrderBook(orderBookDepth))
                 return null;
             OrderBook ob = new OrderBook(null);
             ob.Assign(ti.Ticker.OrderBook);

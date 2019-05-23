@@ -727,7 +727,7 @@ namespace CryptoMarketClient.Binance {
             //throw new NotImplementedException();
         }
 
-        public override bool UpdateArbitrageOrderBook(Ticker ticker, int depth) {
+        public override bool UpdateOrderBook(Ticker ticker, int depth) {
             string address = string.Format("https://api.binance.com/api/v1/depth?symbol={0}&limit={1}",
                 Uri.EscapeDataString(ticker.CurrencyPair), depth);
             byte[] bytes = ((Ticker)ticker).DownloadBytes(address);

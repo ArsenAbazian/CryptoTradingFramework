@@ -433,7 +433,7 @@ namespace CryptoMarketClient {
             }
             return true;
         }
-        public override bool UpdateArbitrageOrderBook(Ticker ticker, int depth) {
+        public override bool UpdateOrderBook(Ticker ticker, int depth) {
             string address = GetOrderBookString(ticker, depth);
             byte[] data = ((Ticker)ticker).DownloadBytes(address);
             return OnUpdateOrderBook(ticker, data);

@@ -559,7 +559,7 @@ namespace CryptoMarketClient {
             return res;
         }
         public abstract bool UpdateOrderBook(Ticker tickerBase);
-        public abstract bool UpdateArbitrageOrderBook(Ticker tickerBase, int depth);
+        public abstract bool UpdateOrderBook(Ticker tickerBase, int depth);
         public abstract bool ProcessOrderBook(Ticker tickerBase, string text);
         public abstract bool UpdateTicker(Ticker tickerBase);
         public abstract bool UpdateTrades(Ticker tickerBase);

@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace Crypto.Core.Indicators {
     public class StochasticIndicator : WindowIndicator {
@@ -31,8 +32,20 @@ namespace Crypto.Core.Indicators {
             }
         }
 
+        public override void Assign(IndicatorBase ind) {
+            base.Assign(ind);
+            StochasticIndicator si = ind as StochasticIndicator;
+            if(si != null) {
+                SmoothK = si.SmoothK;
+                SmoothD = si.SmoothD;
+            }
+        }
+
+        [XmlIgnore]
         public MinMaxIndicator MinIndicator { get; private set; }
+        [XmlIgnore]
         public MinMaxIndicator MaxIndicator { get; private set; }
+        [XmlIgnore]
         public MaIndicator MaIndicator { get; private set; }
 
         public override void Calculate() {

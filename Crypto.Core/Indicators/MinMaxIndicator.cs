@@ -19,6 +19,14 @@ namespace Crypto.Core.Indicators {
             }
         }
 
+        public override void Assign(IndicatorBase ind) {
+            base.Assign(ind);
+            MinMaxIndicator mima = ind as MinMaxIndicator;
+            if(mima != null) {
+                Mode = mima.Mode;
+            }
+        }
+
         public override TimeBaseValue Calculate(int forIndex) {
             if(forIndex < Length)
                 return new IndicatorValue() { Time = GetTime(forIndex), Value = double.NaN, Source = GetValueBySource(forIndex) };

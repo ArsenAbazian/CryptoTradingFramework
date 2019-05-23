@@ -16,8 +16,18 @@ namespace Crypto.Core.Indicators {
                 if(Length == value)
                     return;
                 length = value;
-                OnPropertiesChanged();
+                OnLenghtChanged();
             }
+        }
+        protected virtual void OnLenghtChanged() {
+            OnPropertiesChanged();
+        }
+
+        public override void Assign(IndicatorBase ind) {
+            base.Assign(ind);
+            WindowIndicator wi = ind as WindowIndicator;
+            if(wi != null)
+                Length = wi.Length;
         }
     }
 }

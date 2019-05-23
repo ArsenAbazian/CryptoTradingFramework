@@ -310,7 +310,7 @@ namespace CryptoMarketClient.Exchanges.Bitmex {
         string GetOrderBookString(Ticker ticker, int depth) {
             return string.Format("https://www.bitmex.com/api/v1/orderBook/L2?symbol={0}&depth=0", ticker.CurrencyPair);
         }
-        public override bool UpdateArbitrageOrderBook(Ticker tickerBase, int depth) {
+        public override bool UpdateOrderBook(Ticker tickerBase, int depth) {
             throw new NotImplementedException();
         }
         public override bool UpdateOrderBook(Ticker ticker) {

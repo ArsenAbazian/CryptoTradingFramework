@@ -7,6 +7,15 @@ using System.Threading.Tasks;
 namespace Crypto.Core.Indicators {
     public class RsiIndicator : WindowIndicator {
         public double Tolerance { get; set; }
+
+        public override void Assign(IndicatorBase ind) {
+            base.Assign(ind);
+            RsiIndicator rsi = ind as RsiIndicator;
+            if(rsi != null) {
+                Tolerance = rsi.Tolerance;
+            }
+        }
+
         public double Calculate(IEnumerable<double> closePrices) {
             var prices = closePrices as double[] ?? closePrices.ToArray();
 

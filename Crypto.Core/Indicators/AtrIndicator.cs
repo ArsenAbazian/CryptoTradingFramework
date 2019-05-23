@@ -6,9 +6,11 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace Crypto.Core.Indicators {
     public class AtrIndicator : WindowIndicator {
+        [XmlIgnore]
         public MaIndicator MaIndicator { get; private set; }
         protected ResizeableArray<TimeBaseValue> ResultCore { get; } = new ResizeableArray<TimeBaseValue>();
 

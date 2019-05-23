@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 namespace Crypto.Core.Indicators {
     public class MaIndicator : WindowIndicator {
 
-        protected override void OnInputHistoryChanged() {
-            base.OnInputHistoryChanged();
+        protected override void OnInputDataChanged() {
+            base.OnInputDataChanged();
             Source = IndicatorSource.Value;
         }
 

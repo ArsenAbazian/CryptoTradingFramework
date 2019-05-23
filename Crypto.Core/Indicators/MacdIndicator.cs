@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
+using Crypto.Core.Helpers;
+using Crypto.Core.Strategies;
 using CryptoMarketClient;
 
 namespace Crypto.Core.Indicators {
@@ -32,10 +36,27 @@ namespace Crypto.Core.Indicators {
             }
         }
 
-        public BindingList<IndicatorValue> HistorySig { get; } = new BindingList<IndicatorValue>();
+        public override void Assign(IndicatorBase ind) {
+            base.Assign(ind);
+            MacdIndicator mai = ind as MacdIndicator;
+            if(mai != null) {
+                FastLength = mai.FastLength;
+                SlowLength = mai.SlowLength;
+            }
+        }
 
+        public Color FastEmaColor { get; set; } = Color.Blue;
+        public Color SlowEmaColor { get; set; } = Color.Red;
+        public Color SignalColor { get; set; } = Color.Green;
+
+        [XmlIgnore]
+        public ResizeableArray<IndicatorValue> HistorySig { get; } = new ResizeableArray<IndicatorValue>();
+
+        [XmlIgnore]
         public EmaIndicator FastEmaIndicator { get; private set; }
+        [XmlIgnore]
         public EmaIndicator SlowEmaIndicator { get; private set; }
+        [XmlIgnore]
         public MaIndicator SignalMaIndicator { get; private set; }
 
         public override void OnUpdateValue(int index) {
@@ -47,7 +68,45 @@ namespace Crypto.Core.Indicators {
             ((IndicatorValue)SignalMaIndicator.Result[index]).Value = signal.Value;
         }
 
+        public override void AddVisualInfo(List<StrategyDataItemInfo> items) {
+            int index = items.Max(i => i.PanelIndex) + 1;
+
+            StrategyDataItemInfo info = new StrategyDataItemInfo() {
+                DataSource = Result,
+                FieldName = "Value",
+                Color = FastEmaColor,
+                ChartType = ChartType.Line
+            };
+
+            info.PanelIndex = index;
+            items.Add(info);
+
+            StrategyDataItemInfo info2 = new StrategyDataItemInfo() {
+                BindingSource = "SignalMaIndicator.Result",
+                BindingRoot = this,
+                FieldName = "Value",
+                Color = SlowEmaColor,
+                ChartType = ChartType.Line
+            };
+
+            info2.PanelIndex = index;
+            items.Add(info2);
+        }
+
+        protected void CheckCreateInnerIndicators() {
+            if(FastEmaIndicator != null)
+                return;
+            EmaIndicator emaFast = new EmaIndicator() { Ticker = Ticker, Length = FastLength, SuppressUpdateOnDataChanged = true };
+            EmaIndicator emaSlow = new EmaIndicator() { Ticker = Ticker, Length = SlowLength, SuppressUpdateOnDataChanged = true };
+            MaIndicator ma = new MaIndicator() { Length = Length, InputData = Result, SuppressUpdateOnDataChanged = true };
+            FastEmaIndicator = emaFast;
+            SlowEmaIndicator = emaSlow;
+            SignalMaIndicator = ma;
+        }
+
         public override TimeBaseValue Calculate(int forIndex) {
+            CheckCreateInnerIndicators();
+
             FastEmaIndicator.Result.Add(FastEmaIndicator.Calculate(forIndex));
             SlowEmaIndicator.Result.Add(SlowEmaIndicator.Calculate(forIndex));
 

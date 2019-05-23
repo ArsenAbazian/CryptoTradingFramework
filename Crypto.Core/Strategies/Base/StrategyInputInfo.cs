@@ -42,8 +42,10 @@ namespace Crypto.Core.Strategies {
 
     [Serializable]
     public class TickerInputInfo : ICloneable {
-        public TickerInputInfo() { }
-        public TickerInputInfo(string currencyPair, bool needOrderBook, bool needTradeHistory, bool needKline) {
+        public TickerInputInfo() {
+            OrderBookDepth = OrderBook.Depth;
+        }
+        public TickerInputInfo(string currencyPair, bool needOrderBook, bool needTradeHistory, bool needKline) : this() {
             TickerName = currencyPair;
             UseOrderBook = needOrderBook;
             UseTradeHistory = needTradeHistory;
@@ -54,6 +56,7 @@ namespace Crypto.Core.Strategies {
         public Ticker Ticker { get; set; }
         public string TickerName { get; set; }
         public bool UseOrderBook { get; set; }
+        public int OrderBookDepth { get; set; }
         public bool UseTradeHistory { get; set; }
         public bool UseKline { get; set; }
         public int KlineIntervalMin { get; set; }
@@ -68,7 +71,8 @@ namespace Crypto.Core.Strategies {
                 UseTradeHistory = this.UseTradeHistory,
                 UseKline = this.UseKline,
                 KlineIntervalMin = this.KlineIntervalMin,
-                SimulationDataFile = this.SimulationDataFile
+                SimulationDataFile = this.SimulationDataFile,
+                OrderBookDepth = this.OrderBookDepth
             };
         }
     }

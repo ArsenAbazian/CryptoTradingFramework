@@ -1,16 +1,34 @@
 ﻿using Crypto.Core.Helpers;
+using Crypto.Core.Strategies;
 using CryptoMarketClient;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace Crypto.Core.Indicators {
     public class SingleValueIndicator : IndicatorBase {
 
+        [XmlIgnore]
         public ResizeableArray<TimeBaseValue> Result { get; } = new ResizeableArray<TimeBaseValue>();
+
+        public Color ChartColor { get; set; } = Color.Green;
+
+        public override void AddVisualInfo(List<StrategyDataItemInfo> items) {
+            StrategyDataItemInfo info = new StrategyDataItemInfo() {
+                DataSource = Result,
+                FieldName = "Value",
+                Color = ChartColor,
+                ChartType = ChartType.Line};
+            if(UseOwnChart) {
+                info.PanelIndex = items.Max(i => i.PanelIndex) + 1;
+            }
+            items.Add(info);
+        }
 
         protected virtual void OnValueChanged() {
             throw new NotImplementedException();
@@ -30,6 +48,13 @@ namespace Crypto.Core.Indicators {
                 source = value;
                 OnPropertiesChanged();
             }
+        }
+
+        public override void Assign(IndicatorBase ind) {
+            base.Assign(ind);
+            SingleValueIndicator svi = ind as SingleValueIndicator;
+            if(svi != null)
+                Source = svi.Source;
         }
 
         protected override void OnTickerChanged(Ticker prev, Ticker current) {
@@ -93,6 +118,7 @@ namespace Crypto.Core.Indicators {
             get { return Source == IndicatorSource.Close || Source == IndicatorSource.Open || Source == IndicatorSource.Low || Source == IndicatorSource.High; }
         }
 
+        [XmlIgnore]
         public int Count {
             get {
                 if(UseCandleStickData) {
@@ -114,7 +140,9 @@ namespace Crypto.Core.Indicators {
             }
         }
 
+        [XmlIgnore]
         public double MathExp { get; set; }
+        [XmlIgnore]
         public double Deviation { get; set; }
 
         public double CalculateMath() {

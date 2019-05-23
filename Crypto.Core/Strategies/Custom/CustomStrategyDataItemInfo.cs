@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace Crypto.Core.Strategies {
     public interface IStrategyDataItemInfoOwner {
@@ -40,8 +41,10 @@ namespace Crypto.Core.Strategies {
         public bool UseCustomTimeUnit { get; set; } = false;
         public StrategyDateTimeMeasureUnit TimeUnit { get; set; }
         public int TimeUnitMeasureMultiplier { get; set; } = 1;
+        [XmlIgnore]
+        public object BindingRoot { get; set; }
         string dataSourcePath;
-        public string DataSourcePath {
+        public string BindingSource {
             get { return dataSourcePath; }
             set {
                 dataSourcePath = value;

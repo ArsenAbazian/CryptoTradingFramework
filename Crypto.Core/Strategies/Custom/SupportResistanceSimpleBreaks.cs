@@ -10,6 +10,10 @@ using System.Threading.Tasks;
 namespace Crypto.Core.Strategies.Custom {
     public class SupportResistanceSimpleBreaks : SupportResistanceBasedStrategy {
 
+        public SupportResistanceSimpleBreaks() {
+            //Indicators.Add(new MacdIndicator() { DataSourcePath = "Ticker", UseOwnChart = true });
+        }
+
         protected SRValue LastResistance { get; private set; }
         protected SRValue LastSupport { get; private set; }
         [InputParameter(10, 300, 1)]

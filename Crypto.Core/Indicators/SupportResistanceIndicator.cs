@@ -7,10 +7,13 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace Crypto.Core.Indicators {
     public class SupportResistanceIndicator : WindowIndicator {
+        [XmlIgnore]
         public ResizeableArray<SRValue> Support { get; } = new ResizeableArray<SRValue>();
+        [XmlIgnore]
         public ResizeableArray<SRValue> Resistance { get; } = new ResizeableArray<SRValue>();
 
         [InputParameter]
@@ -19,6 +22,17 @@ namespace Crypto.Core.Indicators {
         public int ClasterizationRange { get; set; } = 24;
         [InputParameter]
         public double ThresoldPerc { get; set; } = 0.6;
+
+        public override void Assign(IndicatorBase ind) {
+            base.Assign(ind);
+            SupportResistanceIndicator sr = ind as SupportResistanceIndicator;
+            if(sr != null) {
+                Range = sr.Range;
+                ClasterizationRange = sr.ClasterizationRange;
+                ThresoldPerc = sr.ThresoldPerc;
+            }
+        }
+
         public override void OnUpdateValue(int index) {
             //throw new NotImplementedException();
         }

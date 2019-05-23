@@ -10,7 +10,13 @@ namespace Crypto.Core.Indicators {
         protected override void OnPropertiesChanged() {
             base.OnPropertiesChanged();
         }
+
         protected double Koeff { get; set; }
+
+        protected override void OnLenghtChanged() {
+            Koeff = 2.0 / (Length + 1.0);
+            base.OnLenghtChanged();
+        }
         public override void Calculate() {
             Koeff = 2.0 / (Length + 1.0);
             base.Calculate();

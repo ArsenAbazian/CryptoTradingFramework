@@ -31,35 +31,7 @@ namespace Crypto.Core.Strategies.Custom {
         }
 
         public ResizeableArray<OpenPositionInfo> OpenedOrders { get; } = new ResizeableArray<OpenPositionInfo>();
-
-        //OrderGridInfo orderGrid;
-        //[TypeConverter(typeof(ExpandableObjectConverter))]
-        //public OrderGridInfo OrderGrid {
-        //    get { return orderGrid; }
-        //    set {
-        //        if(orderGrid == value)
-        //            return;
-        //        orderGrid = value;
-        //        OnOrderGridChanged();
-        //    }
-        //}
-
-        //protected virtual void OnOrderGridChanged() {
-        //    //if(OrderGrid == null || OrderGrid.Start.Value == 0)
-        //    //    InitializeOrderGrid();
-        //}
-
-        //protected virtual void InitializeOrderGrid() {
-        //    OrderGridInfo info = new OrderGridInfo();
-        //    info.Start.Value = 10;
-        //    info.Start.AmountPercent = 1;
-        //    info.End.Value = 20;
-        //    info.End.AmountPercent = 2;
-        //    info.ZoneCount = 1;
-        //    info.Normalize();
-        //    OrderGrid = info;
-        //}
-
+        
         [InputParameter]
         public double MinBreakPercent { get; set; } = 120;
         [InputParameter]
@@ -150,14 +122,14 @@ namespace Crypto.Core.Strategies.Custom {
             //StrategyDataItemInfo res = DataItem("ResistanceLength"); res.Color = System.Drawing.Color.Red; res.ChartType = ChartType.Bar; res.PanelIndex = 1;
             //StrategyDataItemInfo sup = DataItem("SupportLength"); sup.Color = System.Drawing.Color.Green; sup.ChartType = ChartType.Bar; sup.PanelIndex = 1;
             
-            StrategyDataItemInfo atr = DataItem("Atr"); atr.Name = "Atr Indicator"; atr.Color = System.Drawing.Color.Red; atr.ChartType = ChartType.Line; atr.PanelIndex = 1;
-            StrategyDataItemInfo resValue = DataItem("Value"); resValue.DataSourcePath = "SRIndicator.Resistance"; resValue.Color = Color.FromArgb(0x40, Color.Red); resValue.ChartType = ChartType.StepLine;
-            StrategyDataItemInfo supValue = DataItem("Value"); supValue.DataSourcePath = "SRIndicator.Support"; supValue.Color = Color.FromArgb(0x40, Color.Blue); supValue.ChartType = ChartType.StepLine;
+            //StrategyDataItemInfo atr = DataItem("Atr"); atr.Name = "Atr Indicator"; atr.Color = System.Drawing.Color.Red; atr.ChartType = ChartType.Line; atr.PanelIndex = 1;
+            StrategyDataItemInfo resValue = DataItem("Value"); resValue.BindingSource = "SRIndicator.Resistance"; resValue.Color = Color.FromArgb(0x40, Color.Red); resValue.ChartType = ChartType.StepLine;
+            StrategyDataItemInfo supValue = DataItem("Value"); supValue.BindingSource = "SRIndicator.Support"; supValue.Color = Color.FromArgb(0x40, Color.Blue); supValue.ChartType = ChartType.StepLine;
 
             //AnnotationItem("Support", "Support", System.Drawing.Color.Green, "SRLevel");
             //AnnotationItem("Resistance", "Resistance", System.Drawing.Color.Red, "SRLevel");
             StrategyDataItemInfo br = AnnotationItem("Break", "Break", System.Drawing.Color.Blue, "Value"); br.Visibility = DataVisibility.Both; br.AnnotationText = "Br"; //"Br={BreakPercent:0.00} Closed={Closed} CloseStickCount={CloseLength}";
-            StrategyDataItemInfo bp = DataItem("BreakPercent"); bp.Color = Color.Green; bp.ChartType = ChartType.Bar; bp.PanelIndex = 2;
+            //StrategyDataItemInfo bp = DataItem("BreakPercent"); bp.Color = Color.Green; bp.ChartType = ChartType.Bar; bp.PanelIndex = 2;
 
             StrategyDataItemInfo cl = AnnotationItem("ClosedOrder", "Closed", System.Drawing.Color.Green, "Value"); cl.Visibility = DataVisibility.Both; cl.AnnotationText = "Cl"; //"Br={BreakPercent:0.00} Closed={Closed} CloseStickCount={CloseLength}";
 
@@ -169,11 +141,11 @@ namespace Crypto.Core.Strategies.Custom {
             DataItem("Closed").Visibility = DataVisibility.Table;
             DataItem("CloseLength").Visibility = DataVisibility.Table;
 
-            br = AnnotationItem("Break", "Break", System.Drawing.Color.Blue, "Atr"); br.PanelIndex = 1; br.Visibility = DataVisibility.Chart; br.AnnotationText = "Br"; //"Br={BreakPercent:0.00} Closed={Closed} CloseStickCount={CloseLength}";
+            //br = AnnotationItem("Break", "Break", System.Drawing.Color.Blue, "Atr"); br.PanelIndex = 1; br.Visibility = DataVisibility.Chart; br.AnnotationText = "Br"; //"Br={BreakPercent:0.00} Closed={Closed} CloseStickCount={CloseLength}";
 
-            StrategyDataItemInfo sp = DataItem("SRSpread"); sp.Color = Color.FromArgb(0x20, Color.Green); sp.ChartType = ChartType.Area; sp.PanelIndex = 3;
+            //StrategyDataItemInfo sp = DataItem("SRSpread"); sp.Color = Color.FromArgb(0x20, Color.Green); sp.ChartType = ChartType.Area; sp.PanelIndex = 3;
             var ear = DataItem("Earned", Color.Green);
-            ear.PanelIndex = 4;
+            ear.PanelIndex = 1;
         }
 
         protected List<RedWaterfallDataItem> PostProcessItems { get; } = new List<RedWaterfallDataItem>();

@@ -558,7 +558,7 @@ namespace CryptoMarketClient.Bittrex {
             }
             return true;
         }
-        public override bool UpdateArbitrageOrderBook(Ticker info, int depth) {
+        public override bool UpdateOrderBook(Ticker info, int depth) {
             string address = GetOrderBookString(info, depth);
             byte[] data = GetDownloadBytes(address);
             if(data == null)
@@ -575,7 +575,7 @@ namespace CryptoMarketClient.Bittrex {
             return UpdateOrderBook(info, data, true, depth);
         }
         public override bool UpdateOrderBook(Ticker tickerBase) {
-            return UpdateArbitrageOrderBook(tickerBase, OrderBook.Depth);
+            return UpdateOrderBook(tickerBase, OrderBook.Depth);
         }
         public bool UpdateOrderBook(Ticker ticker, byte[] bytes, bool raiseChanged, int depth) {
             if(bytes == null)

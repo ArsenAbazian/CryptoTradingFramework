@@ -29,6 +29,8 @@
             this.bar1 = new DevExpress.XtraBars.Bar();
             this.biAdd = new DevExpress.XtraBars.BarButtonItem();
             this.biRemove = new DevExpress.XtraBars.BarButtonItem();
+            this.biMoveUp = new DevExpress.XtraBars.BarButtonItem();
+            this.biMoveDown = new DevExpress.XtraBars.BarButtonItem();
             this.barDockControlTop = new DevExpress.XtraBars.BarDockControl();
             this.barDockControlBottom = new DevExpress.XtraBars.BarDockControl();
             this.barDockControlLeft = new DevExpress.XtraBars.BarDockControl();
@@ -47,6 +49,8 @@
             this.colBaseCurrency = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colMarketName = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colUseOrderBook = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colOrderBookDepth = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.repositoryItemSpinEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemSpinEdit();
             this.colUseTradeHistory = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colUseKline = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colKlineIntervalMin = new DevExpress.XtraGrid.Columns.GridColumn();
@@ -55,8 +59,6 @@
             this.repositoryItemButtonEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemButtonEdit();
             this.sidePanel1 = new DevExpress.XtraEditors.SidePanel();
             this.propertyGridControl1 = new DevExpress.XtraVerticalGrid.PropertyGridControl();
-            this.biMoveUp = new DevExpress.XtraBars.BarButtonItem();
-            this.biMoveDown = new DevExpress.XtraBars.BarButtonItem();
             ((System.ComponentModel.ISupportInitialize)(this.barManager1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tickerInputInfoBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.exchangeTickersBindingSource)).BeginInit();
@@ -66,6 +68,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.rpiExchanges)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cbExchangeTickers)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemGridLookUpEdit1View)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemSpinEdit1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemLookUpEdit1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemButtonEdit1)).BeginInit();
             this.sidePanel1.SuspendLayout();
@@ -120,6 +123,22 @@
             this.biRemove.Name = "biRemove";
             this.biRemove.PaintStyle = DevExpress.XtraBars.BarItemPaintStyle.CaptionGlyph;
             this.biRemove.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.biRemove_ItemClick);
+            // 
+            // biMoveUp
+            // 
+            this.biMoveUp.Caption = "MoveUp";
+            this.biMoveUp.Id = 2;
+            this.biMoveUp.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("biMoveUp.ImageOptions.SvgImage")));
+            this.biMoveUp.Name = "biMoveUp";
+            this.biMoveUp.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.biMoveUp_ItemClick);
+            // 
+            // biMoveDown
+            // 
+            this.biMoveDown.Caption = "MoveDown";
+            this.biMoveDown.Id = 3;
+            this.biMoveDown.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("biMoveDown.ImageOptions.SvgImage")));
+            this.biMoveDown.Name = "biMoveDown";
+            this.biMoveDown.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.biMoveDown_ItemClick);
             // 
             // barDockControlTop
             // 
@@ -182,7 +201,8 @@
             this.cbExchangeTickers,
             this.rpiExchanges,
             this.repositoryItemLookUpEdit1,
-            this.repositoryItemButtonEdit1});
+            this.repositoryItemButtonEdit1,
+            this.repositoryItemSpinEdit1});
             this.tickersGridControl.Size = new System.Drawing.Size(871, 773);
             this.tickersGridControl.TabIndex = 9;
             this.tickersGridControl.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
@@ -194,6 +214,7 @@
             this.colExchange,
             this.colTicker,
             this.colUseOrderBook,
+            this.colOrderBookDepth,
             this.colUseTradeHistory,
             this.colUseKline,
             this.colKlineIntervalMin,
@@ -292,13 +313,36 @@
             this.colUseOrderBook.VisibleIndex = 2;
             this.colUseOrderBook.Width = 150;
             // 
+            // colOrderBookDepth
+            // 
+            this.colOrderBookDepth.ColumnEdit = this.repositoryItemSpinEdit1;
+            this.colOrderBookDepth.FieldName = "OrderBookDepth";
+            this.colOrderBookDepth.MinWidth = 40;
+            this.colOrderBookDepth.Name = "colOrderBookDepth";
+            this.colOrderBookDepth.Visible = true;
+            this.colOrderBookDepth.VisibleIndex = 3;
+            this.colOrderBookDepth.Width = 150;
+            // 
+            // repositoryItemSpinEdit1
+            // 
+            this.repositoryItemSpinEdit1.AutoHeight = false;
+            this.repositoryItemSpinEdit1.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.repositoryItemSpinEdit1.EditFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+            this.repositoryItemSpinEdit1.MaxValue = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+            this.repositoryItemSpinEdit1.Name = "repositoryItemSpinEdit1";
+            // 
             // colUseTradeHistory
             // 
             this.colUseTradeHistory.FieldName = "UseTradeHistory";
             this.colUseTradeHistory.MinWidth = 40;
             this.colUseTradeHistory.Name = "colUseTradeHistory";
             this.colUseTradeHistory.Visible = true;
-            this.colUseTradeHistory.VisibleIndex = 3;
+            this.colUseTradeHistory.VisibleIndex = 4;
             this.colUseTradeHistory.Width = 150;
             // 
             // colUseKline
@@ -307,7 +351,7 @@
             this.colUseKline.MinWidth = 40;
             this.colUseKline.Name = "colUseKline";
             this.colUseKline.Visible = true;
-            this.colUseKline.VisibleIndex = 4;
+            this.colUseKline.VisibleIndex = 5;
             this.colUseKline.Width = 150;
             // 
             // colKlineIntervalMin
@@ -317,7 +361,7 @@
             this.colKlineIntervalMin.MinWidth = 40;
             this.colKlineIntervalMin.Name = "colKlineIntervalMin";
             this.colKlineIntervalMin.Visible = true;
-            this.colKlineIntervalMin.VisibleIndex = 5;
+            this.colKlineIntervalMin.VisibleIndex = 6;
             this.colKlineIntervalMin.Width = 150;
             // 
             // repositoryItemLookUpEdit1
@@ -341,7 +385,7 @@
             this.colSimulationDataFile.MinWidth = 40;
             this.colSimulationDataFile.Name = "colSimulationDataFile";
             this.colSimulationDataFile.Visible = true;
-            this.colSimulationDataFile.VisibleIndex = 6;
+            this.colSimulationDataFile.VisibleIndex = 7;
             this.colSimulationDataFile.Width = 150;
             // 
             // repositoryItemButtonEdit1
@@ -374,22 +418,6 @@
             this.propertyGridControl1.Size = new System.Drawing.Size(441, 773);
             this.propertyGridControl1.TabIndex = 0;
             // 
-            // biMoveUp
-            // 
-            this.biMoveUp.Caption = "MoveUp";
-            this.biMoveUp.Id = 2;
-            this.biMoveUp.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("barButtonItem1.ImageOptions.SvgImage")));
-            this.biMoveUp.Name = "biMoveUp";
-            this.biMoveUp.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.biMoveUp_ItemClick);
-            // 
-            // biMoveDown
-            // 
-            this.biMoveDown.Caption = "MoveDown";
-            this.biMoveDown.Id = 3;
-            this.biMoveDown.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("barButtonItem2.ImageOptions.SvgImage")));
-            this.biMoveDown.Name = "biMoveDown";
-            this.biMoveDown.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.biMoveDown_ItemClick);
-            // 
             // CustomStrategyConfigurationControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
@@ -412,6 +440,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.rpiExchanges)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cbExchangeTickers)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemGridLookUpEdit1View)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemSpinEdit1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemLookUpEdit1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemButtonEdit1)).EndInit();
             this.sidePanel1.ResumeLayout(false);
@@ -455,5 +484,7 @@
         private DevExpress.XtraVerticalGrid.PropertyGridControl propertyGridControl1;
         private DevExpress.XtraBars.BarButtonItem biMoveUp;
         private DevExpress.XtraBars.BarButtonItem biMoveDown;
+        private DevExpress.XtraGrid.Columns.GridColumn colOrderBookDepth;
+        private DevExpress.XtraEditors.Repository.RepositoryItemSpinEdit repositoryItemSpinEdit1;
     }
 }

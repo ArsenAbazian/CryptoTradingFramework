@@ -27,7 +27,7 @@ namespace Crypto.Core.Helpers {
             DataItem("MathExp").Visibility = DataVisibility.Table;
             DataItem("Deviation").Visibility = DataVisibility.Table;
 
-            StrategyDataItemInfo hist = DataItem("Y"); hist.ArgumentDataMember = "X"; hist.Type = DataType.ChartData; hist.DataSourcePath = "Histogramm"; hist.Color = Color.FromArgb(0x40, Color.Green); hist.ChartType = ChartType.Area;
+            StrategyDataItemInfo hist = DataItem("Y"); hist.ArgumentDataMember = "X"; hist.Type = DataType.ChartData; hist.BindingSource = "Histogramm"; hist.Color = Color.FromArgb(0x40, Color.Green); hist.ChartType = ChartType.Area;
             StrategyDataItemInfo dhist = DataItem("HistogrammDouble"); dhist.Visibility = DataVisibility.Table; dhist.DetailInfo = hist;
             DataItemInfos.Remove(hist);
         }

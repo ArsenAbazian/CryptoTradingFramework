@@ -1,4 +1,6 @@
-﻿using CryptoMarketClient;
+﻿using Crypto.Core.Helpers;
+using Crypto.Core.Indicators;
+using CryptoMarketClient;
 using CryptoMarketClient.Strategies;
 using System;
 using System.Collections.Generic;
@@ -33,6 +35,8 @@ namespace Crypto.Core.Strategies.Custom {
             }
         }
 
+        public List<IndicatorBase> Indicators { get; } = new List<IndicatorBase>();
+
         [XmlIgnore]
         [Browsable(false)]
         public override Ticker Ticker {
@@ -54,6 +58,10 @@ namespace Crypto.Core.Strategies.Custom {
             if(st == null)
                 return;
             StrategyInfo.Assign(st.StrategyInfo);
+            Indicators.Clear();
+            foreach(IndicatorBase indicator in st.Indicators) {
+                Indicators.Add(indicator.Clone());
+            }
         }
 
         protected override void CheckTickerSpecified(List<StrategyValidationError> list) {
@@ -67,9 +75,25 @@ namespace Crypto.Core.Strategies.Custom {
 
         public override bool Start() {
             bool res = base.Start();
-            if(res)
+            if(res) {
                 UpdateTickersList();
+                UpdateIndicatorsDataSource();
+                UpdateIndicatorsDataItems();
+            }
             return res;
+        }
+
+        protected virtual void UpdateIndicatorsDataItems() {
+            foreach(IndicatorBase indicator in Indicators) {
+                int max = DataItemInfos.Max(i => i.PanelIndex);
+                indicator.AddVisualInfo(DataItemInfos);
+            }
+        }
+
+        protected virtual void UpdateIndicatorsDataSource() {
+            foreach(IndicatorBase indicator in Indicators) {
+                indicator.DataSource = BindingHelper.GetBindingValue(indicator.DataSourcePath, this);
+            }
         }
 
         protected virtual void UpdateTickersList() {
