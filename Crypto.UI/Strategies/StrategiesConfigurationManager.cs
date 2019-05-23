@@ -34,7 +34,7 @@ namespace CryptoMarketClient.Strategies {
             Items.Add(new StrategyConfigurationInfo() { StrategyType = typeof(SimpleBuyLowSellHighStrategy), ConfigurationFormType = typeof(SimpleBuyLowSellHighConfigControl) });
             Items.Add(new StrategyConfigurationInfo() { StrategyType = typeof(StatisticalArbitrageStrategy), ConfigurationFormType = typeof(CustomStrategyConfigurationControl), DataFormType = typeof(StrategyDataForm) });
             Items.Add(new StrategyConfigurationInfo() { StrategyType = typeof(SignalNotificationStrategy), ConfigurationFormType = typeof(Signal.SignalNotificationConfigControl), DataFormType = typeof(Signal.SignalNotificationDataForm) });
-            Items.Add(new StrategyConfigurationInfo() { StrategyType = typeof(TripleRsiIndicatorStrategy), ConfigurationFormType = typeof(Signal.TripleRsiStrategyConfigControl), DataFormType = typeof(StrategyDataForm) });
+            Items.Add(new StrategyConfigurationInfo() { StrategyType = typeof(TripleRsiIndicatorStrategy), ConfigurationFormType = typeof(CustomStrategyConfigurationControl), DataFormType = typeof(StrategyDataForm) });
             Items.Add(new StrategyConfigurationInfo() { StrategyType = typeof(MacdTrendStrategy), ConfigurationFormType = typeof(Signal.MacdTrendStrategyConfigControl), DataFormType = typeof(StrategyDataForm) });
             Items.Add(new StrategyConfigurationInfo() { StrategyType = typeof(CustomTickerStrategy), ConfigurationFormType = typeof(CustomStrategyConfigurationControl), DataFormType = typeof(StrategyDataForm) });
             Items.Add(new StrategyConfigurationInfo() { StrategyType = typeof(TriplePairStrategy), ConfigurationFormType = typeof(TriplePairStrategyConfigurationControl), DataFormType = typeof(StrategyDataForm) });

@@ -24,11 +24,7 @@ namespace Crypto.Core.Strategies.Custom {
         public double MinResistanceBreakValue { get; set; } = 70;
         [InputParameter(0.01, 2, 0.01)]
         public double MinResistanceBreakSpreadPercent { get; set; } = 0.5;
-        [InputParameter(1, 30, 0.1)]
-        public double MinProfitPercent { get; set; } = 3;
-        [InputParameter(1, 10, 0.5)]
-        public double TrailingStopLossPercent { get; set; } = 5;
-
+        
         public override void Assign(StrategyBase from) {
             base.Assign(from);
             SupportResistanceSimpleBreaks ss = (SupportResistanceSimpleBreaks)from;
@@ -71,54 +67,14 @@ namespace Crypto.Core.Strategies.Custom {
             return false;
         }
 
-        protected void CheckCloseLongPositions() {
-            bool terminate = false;
-            while(!terminate) {
-                terminate = true;
-                foreach(OpenPositionInfo info in OpenedOrders) {
-                    if(ShouldContinueTrailing(info))
-                        continue;
-                    if(ShouldCloseLongPosition(info)) {
-                        CloseLongPosition(info);
-                        terminate = false;
-                        break;
-                    }
-                }
-            }
-        }
-
-        protected bool ShouldContinueTrailing(OpenPositionInfo info) {
-            if(info.Type != OrderType.Buy)
-                return false;
-            double currentBid = Ticker.OrderBook.Bids[0].Value;
-            info.CurrentValue = currentBid;
-            if(currentBid >= info.CloseValue) {
-                info.CloseValue = 1.01 * Ticker.OrderBook.Bids[0].Value;
-                return true;
-            }
-            return false;
-        }
-
-        protected bool ShouldCloseLongPosition(OpenPositionInfo info) {
-            if(info.Type != OrderType.Buy)
-                return false;
-            double currentBid = Ticker.OrderBook.Bids[0].Value;
-            if(currentBid < info.StopLoss && currentBid >= info.OpenValue * 1.01) // 3% down
-                return true;
-            return false;
-        }
-
-        protected void OpenShortPosition(double value) {
-            throw new NotImplementedException();
-        }
-
-        protected void OpenLongPosition(double value) {
+        protected override void OpenLongPosition(double value) {
             TradingResult res = MarketBuy(value, MaxAllowedDeposit * 0.2 / value); // 10 percent per deal
             RedWaterfallDataItem last = (RedWaterfallDataItem)StrategyData.Last();
             if(res != null) {
                 double spent = res.Total + CalcFee(res.Total);
                 OpenedOrders.Add(new OpenPositionInfo() {
                     Type = OrderType.Buy,
+                    AllowTrailing = true,
                     Spent = spent,
                     StopLossPercent = TrailingStopLossPercent,
                     OpenValue = res.Value,
@@ -133,7 +89,7 @@ namespace Crypto.Core.Strategies.Custom {
             }
         }
 
-        protected void CloseLongPosition(OpenPositionInfo info) {
+        protected override void CloseLongPosition(OpenPositionInfo info) {
             TradingResult res = MarketSell(Ticker.OrderBook.Bids[0].Value, info.Amount);
             if(res != null) {
                 double earned = res.Total - CalcFee(res.Total);

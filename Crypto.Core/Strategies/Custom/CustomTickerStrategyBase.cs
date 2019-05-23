@@ -1,6 +1,7 @@
 ﻿using Crypto.Core.Helpers;
 using Crypto.Core.Indicators;
 using CryptoMarketClient;
+using CryptoMarketClient.Common;
 using CryptoMarketClient.Strategies;
 using System;
 using System.Collections.Generic;
@@ -35,7 +36,13 @@ namespace Crypto.Core.Strategies.Custom {
             }
         }
 
+        [InputParameter(1, 30, 0.1)]
+        public double MinProfitPercent { get; set; } = 3;
+        [InputParameter(1, 10, 0.5)]
+        public double TrailingStopLossPercent { get; set; } = 5;
+
         public List<IndicatorBase> Indicators { get; } = new List<IndicatorBase>();
+        public ResizeableArray<OpenPositionInfo> OpenedOrders { get; } = new ResizeableArray<OpenPositionInfo>();
 
         [XmlIgnore]
         [Browsable(false)]
@@ -67,6 +74,96 @@ namespace Crypto.Core.Strategies.Custom {
         protected override void CheckTickerSpecified(List<StrategyValidationError> list) {
             if(StrategyInfo.Tickers.Count == 0)
                 list.Add(new StrategyValidationError() { DataObject = this, Description = string.Format("Should be added at least one ticker.", ""), PropertyName = "StrategyInfo.Tickers", Value = "" });
+        }
+
+        protected void CheckCloseLongPositions() {
+            bool terminate = false;
+            while(!terminate) {
+                terminate = true;
+                foreach(OpenPositionInfo info in OpenedOrders) {
+                    if(ShouldContinueTrailing(info))
+                        continue;
+                    if(ShouldCloseLongPosition(info)) {
+                        CloseLongPosition(info);
+                        terminate = false;
+                        break;
+                    }
+                }
+            }
+        }
+
+        protected bool ShouldCloseLongPosition(OpenPositionInfo info) {
+            if(info.Type != OrderType.Buy)
+                return false;
+            double currentBid = Ticker.OrderBook.Bids[0].Value;
+            if(!info.AllowTrailing) {
+                if(currentBid > info.CloseValue)
+                    return true;
+            }
+            if(currentBid < info.StopLoss && currentBid >= info.OpenValue * 1.01) // 3% down
+                return true;
+            return false;
+        }
+
+        protected virtual bool ShouldContinueTrailing(OpenPositionInfo info) {
+            double currentBid = Ticker.OrderBook.Bids[0].Value;
+            info.CurrentValue = currentBid;
+
+            if(info.Type != OrderType.Buy || !info.AllowTrailing)
+                return false;
+            if(currentBid >= info.CloseValue) {
+                info.CloseValue = 1.01 * Ticker.OrderBook.Bids[0].Value;
+                return true;
+            }
+            return false;
+        }
+
+
+        protected void OpenShortPosition(double value) {
+            throw new NotImplementedException();
+        }
+
+        protected virtual void OpenLongPosition(double value) {
+            //TradingResult res = MarketBuy(value, MaxAllowedDeposit * 0.2 / value); // 10 percent per deal
+            //RedWaterfallDataItem last = (RedWaterfallDataItem)StrategyData.Last();
+            //if(res != null) {
+            //    double spent = res.Total + CalcFee(res.Total);
+            //    OpenedOrders.Add(new OpenPositionInfo() {
+            //        Type = OrderType.Buy,
+            //        AllowTrailing = true,
+            //        Spent = spent,
+            //        StopLossPercent = TrailingStopLossPercent,
+            //        OpenValue = res.Value,
+            //        Amount = res.Amount,
+            //        Total = res.Total,
+            //        CloseValue = value + value * MinProfitPercent / 100,
+            //        Tag = StrategyData.Last(),
+            //        Tag2 = SRIndicator.Resistance.Last()
+            //    });
+            //    OpenedOrders.Last().CurrentValue = res.Value;
+            //    MaxAllowedDeposit -= spent;
+            //}
+        }
+
+        protected virtual void CloseLongPosition(OpenPositionInfo info) {
+            //TradingResult res = MarketSell(Ticker.OrderBook.Bids[0].Value, info.Amount);
+            //if(res != null) {
+            //    double earned = res.Total - CalcFee(res.Total);
+            //    MaxAllowedDeposit += earned;
+            //    info.Earned += earned;
+            //    info.Amount -= res.Amount;
+            //    info.Total -= res.Total;
+            //    RedWaterfallDataItem item = (RedWaterfallDataItem)info.Tag;
+            //    item.Closed = true;
+            //    item.CloseLength = ((RedWaterfallDataItem)StrategyData.Last()).Index - item.Index;
+            //    RedWaterfallDataItem last = (RedWaterfallDataItem)StrategyData.Last();
+            //    if(info.Amount < 0.000001) {
+            //        OpenedOrders.Remove(info);
+            //        Earned += info.Earned - info.Spent;
+            //    }
+            //    last.ClosedOrder = true;
+            //    last.Value = Ticker.OrderBook.Bids[0].Value;
+            //}
         }
 
         public override StrategyInputInfo CreateInputInfo() {

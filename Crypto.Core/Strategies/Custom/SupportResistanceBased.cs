@@ -29,8 +29,6 @@ namespace Crypto.Core.Strategies.Custom {
             }
             return res;
         }
-
-        public ResizeableArray<OpenPositionInfo> OpenedOrders { get; } = new ResizeableArray<OpenPositionInfo>();
         
         [InputParameter]
         public double MinBreakPercent { get; set; } = 120;
@@ -268,6 +266,7 @@ namespace Crypto.Core.Strategies.Custom {
 
     public class OpenPositionInfo {
         public OrderType Type { get; set; }
+        public bool AllowTrailing { get; set; }
         public string MarketName { get; set; }
         public double StopLossPercent { get; set; } = 5;
         public double OpenValue { get; set; }

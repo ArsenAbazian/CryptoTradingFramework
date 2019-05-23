@@ -1,23 +1,38 @@
 ﻿using Crypto.Core.Indicators;
+using Crypto.Core.Strategies.Custom;
+using CryptoMarketClient;
 using CryptoMarketClient.Common;
 using CryptoMarketClient.Helpers;
 using CryptoMarketClient.Strategies;
 using CryptoMarketClient.Strategies.Stupid;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 namespace Crypto.Core.Strategies.Signal {
-    public class TripleRsiIndicatorStrategy : TickerStrategyBase {
-        public int RsiLengthFast { get; set; } = 5;
-        public int RsiLengthMiddle { get; set; } = 14;
-        public int RsiLengthSlow { get; set; } = 21;
+    public class TripleRsiIndicatorStrategy : CustomTickerStrategy {
+        public int RsiLengthFast { get; set; } = 2;
+        public int RsiLengthMiddle { get; set; } = 7;
+        public int RsiLengthSlow { get; set; } = 14;
 
-        public int RsiLowLevel { get; set; } = 80;
-        public int RsiHighLevel { get; set; } = 20;
+        [InputParameter(1, 30, 1)]
+        public int RsiFastBottom { get; set; } = 10;
+        [InputParameter(70, 100, 1)]
+        public int RsiFastTop { get; set; } = 90;
+
+        [InputParameter(1, 30, 1)]
+        public int RsiMiddleBottom { get; set; } = 20;
+        [InputParameter(70, 190, 1)]
+        public int RsiMiddleTop { get; set; } = 80;
+
+        [InputParameter(1, 40, 1)]
+        public int RsiSlowBottom { get; set; } = 30;
+        [InputParameter(60, 100, 1)]
+        public int RsiSlowTop { get; set; } = 70;
 
         public override string StateText => State.ToString();
         public override string TypeName => "Triple Rsi Strategy";
@@ -37,9 +52,9 @@ namespace Crypto.Core.Strategies.Signal {
 
         }
 
-        public override TickerInputInfo CreateTickerInputInfo() {
-            return new TickerInputInfo() { Exchange = TickerInfo.Exchange, TickerName = TickerInfo.Ticker, UseOrderBook = true, UseTradeHistory = false, UseKline = true, KlineIntervalMin = CandleStickIntervalMin, Ticker = Ticker };
-        }
+        //public override TickerInputInfo CreateTickerInputInfo() {
+        //    return new TickerInputInfo() { Exchange = TickerInfo.Exchange, TickerName = TickerInfo.Ticker, UseOrderBook = true, UseTradeHistory = false, UseKline = true, KlineIntervalMin = CandleStickIntervalMin, Ticker = Ticker };
+        //}
 
         public override void Assign(StrategyBase from) {
             base.Assign(from);
@@ -50,8 +65,16 @@ namespace Crypto.Core.Strategies.Signal {
             RsiLengthFast = st.RsiLengthFast;
             RsiLengthMiddle = st.RsiLengthMiddle;
             RsiLengthSlow = st.RsiLengthSlow;
-            RsiLowLevel = st.RsiLowLevel;
-            RsiHighLevel = st.RsiHighLevel;
+
+            RsiFastBottom = st.RsiFastBottom;
+            RsiFastTop = st.RsiFastTop;
+
+            RsiMiddleBottom = st.RsiMiddleBottom;
+            RsiMiddleTop = st.RsiMiddleTop;
+
+            RsiSlowBottom = st.RsiSlowBottom;
+            RsiSlowTop = st.RsiSlowTop;
+
             CandleStickIntervalMin = st.CandleStickIntervalMin;
         }
 
@@ -70,36 +93,106 @@ namespace Crypto.Core.Strategies.Signal {
         }
 
         protected override void OnTickCore() {
-            if(LastCount == RsiSlowIndicator.Result.Count)
+            if(LastCount == Ticker.CandleStickData.Count)
                 return;
-
-            LastCount = RsiSlowIndicator.Result.Count;
+            LastCount = Ticker.CandleStickData.Count;
             int index = LastCount - 1;
-            if(index < RsiFastIndicator.Result.Count) return;
+            AddStrategyData();
+
+            if(index < RsiSlowIndicator.Length) return;
             // check for buy
-            if(TimeToBuy(RsiFastIndicator.Result[index].Value, RsiMiddleIndicator.Result[index].Value, RsiSlowIndicator.Result[index].Value)) {
-                if(State == BuySellStrategyState.WaitingForBuy) {
-                    SendNotification(GetNotificationString("time to buy"));
-                    Buy();
-
-                    if(!CanBuyMore) {
-                        State = BuySellStrategyState.WaitingForSell;
-                        return;
-                    }
-                }
+            if(TimeToBuy(RsiFastIndicator.Result.Last().Value, RsiMiddleIndicator.Result.Last().Value, RsiSlowIndicator.Result.Last().Value)) {
+                if(AlreadyOpenedPosition())
+                    return;
+                SendNotification(GetNotificationString("time to buy"));
+                OpenLongPosition(Ticker.OrderBook.Asks[0].Value);
+                //Buy();
+                ((TripleRsiStrategyData)StrategyData.Last()).Buy = true;
+                ((TripleRsiStrategyData)StrategyData.Last()).Value = Ticker.OrderBook.Asks[0].Value;
             }
+            CheckCloseLongPositions();
             // check for sell
-            else if(TimeToSell(RsiFastIndicator.Result[index].Value, RsiMiddleIndicator.Result[index].Value, RsiSlowIndicator.Result[index].Value)) {
-                if(State == BuySellStrategyState.WaitingForSell) {
-                    SendNotification(GetNotificationString("time to sell"));
-                    Sell();
+            //else if(TimeToSell(RsiFastIndicator.Result.Last().Value, RsiMiddleIndicator.Result.Last().Value, RsiSlowIndicator.Result.Last().Value)) {
+            //    if(State == BuySellStrategyState.WaitingForSell) {
+            //        SendNotification(GetNotificationString("time to sell"));
+            //        Sell();
+            //        ((TripleRsiStrategyData)StrategyData.Last()).Sell = true;
+            //        ((TripleRsiStrategyData)StrategyData.Last()).Value = Ticker.OrderBook.Bids[0].Value;
+            //        if(!CanSellMore) {
+            //            State = BuySellStrategyState.WaitingForBuy;
+            //            return;
+            //        }
+            //    }
+            //}
+        }
 
-                    if(!CanSellMore) {
-                        State = BuySellStrategyState.WaitingForBuy;
-                        return;
-                    }
-                }
+        protected bool AlreadyOpenedPosition() {
+            if(OpenedOrders.Count == 0)
+                return false;
+            if(OpenedOrders.Last().CurrentValue > OpenedOrders.Last().StopLoss)
+                return true;
+            if(OpenedOrders.Last().Tag == StrategyData.Last())
+                return true;
+            return false;
+        }
+
+        protected override void OpenLongPosition(double value) {
+            TradingResult res = MarketBuy(value, MaxAllowedDeposit * 0.2 / value); // 10 percent per deal
+            TripleRsiStrategyData last = (TripleRsiStrategyData)StrategyData.Last();
+            if(res != null) {
+                double spent = res.Total + CalcFee(res.Total);
+                OpenedOrders.Add(new OpenPositionInfo() {
+                    Type = OrderType.Buy,
+                    AllowTrailing = true,
+                    Spent = spent,
+                    StopLossPercent = TrailingStopLossPercent,
+                    OpenValue = res.Value,
+                    Amount = res.Amount,
+                    Total = res.Total,
+                    CloseValue = value + value * MinProfitPercent / 100,
+                    Tag = StrategyData.Last(),
+                });
+                OpenedOrders.Last().CurrentValue = res.Value;
+                MaxAllowedDeposit -= spent;
             }
+        }
+
+        protected override void CloseLongPosition(OpenPositionInfo info) {
+            TradingResult res = MarketSell(Ticker.OrderBook.Bids[0].Value, info.Amount);
+            if(res != null) {
+                double earned = res.Total - CalcFee(res.Total);
+                MaxAllowedDeposit += earned;
+                info.Earned += earned;
+                info.Amount -= res.Amount;
+                info.Total -= res.Total;
+                TripleRsiStrategyData item = (TripleRsiStrategyData)info.Tag;
+                //item.Closed = true;
+                //item.CloseLength = ((TripleRsiStrategyData)StrategyData.Last()).Index - item.Index;
+                TripleRsiStrategyData last = (TripleRsiStrategyData)StrategyData.Last();
+                if(info.Amount < 0.000001) {
+                    OpenedOrders.Remove(info);
+                    Earned += info.Earned - info.Spent;
+                }
+                //last.ClosedOrder = true;
+                last.Value = Ticker.OrderBook.Bids[0].Value;
+            }
+        }
+
+        protected override void InitializeDataItems() {
+            CandleStickItem();
+            AnnotationItem("Buy", "Buy", Color.Green, "Value");
+            AnnotationItem("Sell", "Sell", Color.Red, "Value");
+            StrategyDataItemInfo rsiFast = DataItem("Value"); rsiFast.PanelIndex = 1; rsiFast.Color = System.Drawing.Color.Green; rsiFast.BindingRoot = this; rsiFast.BindingSource = "RsiFastIndicator.Result";
+            StrategyDataItemInfo rsiMiddle = DataItem("Value"); rsiMiddle.PanelIndex = 2; rsiMiddle.Color = System.Drawing.Color.Green; rsiMiddle.BindingRoot = this; rsiMiddle.BindingSource = "RsiMiddleIndicator.Result";
+            StrategyDataItemInfo rsiSlow = DataItem("Value"); rsiSlow.PanelIndex = 3; rsiSlow.Color = System.Drawing.Color.Green; rsiSlow.BindingRoot = this; rsiSlow.BindingSource = "RsiSlowIndicator.Result";
+            StrategyDataItemInfo earned = DataItem("Earned"); earned.PanelIndex = 4; earned.Color = Color.FromArgb(0x40, Color.Green);
+        }
+
+        private void AddStrategyData() {
+            TripleRsiStrategyData item = new TripleRsiStrategyData();
+            item.Candle = Ticker.CandleStickData.Last();
+            item.Earned = Earned;
+            StrategyData.Add(item);
         }
 
         public override bool Start() {
@@ -119,18 +212,25 @@ namespace Crypto.Core.Strategies.Signal {
             return true;
         }
         public bool TimeToBuy(double rsiFast, double rsiMiddle, double rsiSlow) {
-            return rsiFast < RsiLowLevel && rsiMiddle < RsiLowLevel && rsiSlow < RsiLowLevel;
+            return rsiFast < RsiFastBottom && rsiMiddle < RsiMiddleBottom && rsiSlow < RsiSlowBottom;
         }
 
         public bool TimeToSell(double rsiFast, double rsiMiddle, double rsiSlow) {
-            return rsiFast > RsiHighLevel && rsiMiddle > RsiHighLevel && rsiSlow > RsiHighLevel;
+            return rsiFast > RsiFastTop && rsiMiddle > RsiMiddleTop && rsiSlow > RsiSlowTop;
         }
+    }
 
-        public override List<StrategyValidationError> Validate() {
-            List<StrategyValidationError> list = base.Validate();
-            if(RsiLowLevel >= RsiHighLevel)
-                list.Add(new StrategyValidationError() { DataObject = this, PropertyName = "RsiLowLevel", Value = RsiLowLevel.ToString(), Description = "RsiLowLevel should be lower than RsiHighLievel" });
-            return list;
-        }
+    public class TripleRsiStrategyData {
+        public DateTime Time { get { return Candle.Time; } }
+        public double Open { get { return Candle.Open; } }
+        public double Close { get { return Candle.Close; } }
+        public double High { get { return Candle.High; } }
+        public double Low { get { return Candle.Low; } }
+        public double Value { get; set; }
+        public CandleStickData Candle { get; set; }
+
+        public bool Buy { get; set; }
+        public bool Sell { get; set; }
+        public double Earned { get; set; }
     }
 }

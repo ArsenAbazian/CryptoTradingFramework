@@ -69,7 +69,7 @@ namespace Crypto.Core.Strategies.Arbitrages.Statistical {
                 InitializeOrderGrid();
         }
 
-        public List<StatisticalArbitrageOrderInfo> OpenedOrders { get; } = new List<StatisticalArbitrageOrderInfo>();
+        //public List<StatisticalArbitrageOrderInfo> OpenedOrders { get; } = new List<StatisticalArbitrageOrderInfo>();
 
         public double MinProfitInBaseCurrency { get; set; } = 1;
 
@@ -163,8 +163,8 @@ namespace Crypto.Core.Strategies.Arbitrages.Statistical {
             LastItem.Close = true;
             StrategyData.Add(LastItem);
 
-            if(order.LongAmount <= 0 && order.ShortAmount <= 0)
-                OpenedOrders.Remove(order);
+            //if(order.LongAmount <= 0 && order.ShortAmount <= 0)
+            //    OpenedOrders.Remove(order);
             OnOrderClosed(LastItem);
 
             return true;
@@ -213,7 +213,7 @@ namespace Crypto.Core.Strategies.Arbitrages.Statistical {
             LastItem.Open = true;
             StrategyData.Add(LastItem);
 
-            OpenedOrders.Add(order);
+            //OpenedOrders.Add(order);
             OnOrderOpened(LastItem);
             
             return true;
@@ -267,10 +267,10 @@ namespace Crypto.Core.Strategies.Arbitrages.Statistical {
 
         protected virtual StatisticalArbitrageOrderInfo GetOpenedOrderWithMaxSpread() {
             StatisticalArbitrageOrderInfo maxItem = null;
-            foreach(StatisticalArbitrageOrderInfo item in OpenedOrders) {
-                if(maxItem == null || maxItem.Spread < item.Spread)
-                    maxItem = item;
-            }
+            //foreach(StatisticalArbitrageOrderInfo item in OpenedOrders) {
+            //    if(maxItem == null || maxItem.Spread < item.Spread)
+            //        maxItem = item;
+            //}
             return maxItem;
         }
 
@@ -293,13 +293,13 @@ namespace Crypto.Core.Strategies.Arbitrages.Statistical {
         private double GetRemainAmountForZoneInBaseCurrency(int zoneIndex) {
             double percent = OrderGrid.GetAmountInPc(zoneIndex);
             double maxAmount = MaxAllowedDeposit * percent / 100;
-            foreach(var order in OpenedOrders) {
-                if(order.ZoneIndex != zoneIndex)
-                    continue;
-                maxAmount -= order.SpentDeposit;
-                if(maxAmount <= 0)
-                    return 0;
-            }
+            //foreach(var order in OpenedOrders) {
+            //    if(order.ZoneIndex != zoneIndex)
+            //        continue;
+            //    maxAmount -= order.SpentDeposit;
+            //    if(maxAmount <= 0)
+            //        return 0;
+            //}
             return maxAmount;
         }
 
