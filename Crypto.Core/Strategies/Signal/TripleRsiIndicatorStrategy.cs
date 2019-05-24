@@ -105,10 +105,7 @@ namespace Crypto.Core.Strategies.Signal {
                 if(AlreadyOpenedPosition())
                     return;
                 SendNotification(GetNotificationString("time to buy"));
-                OpenLongPosition(Ticker.OrderBook.Asks[0].Value);
-                //Buy();
-                ((TripleRsiStrategyData)StrategyData.Last()).Buy = true;
-                ((TripleRsiStrategyData)StrategyData.Last()).Value = Ticker.OrderBook.Asks[0].Value;
+                OpenLongPosition(Ticker.OrderBook.Asks[0].Value, MaxAllowedDeposit * 0.2 / Ticker.OrderBook.Asks[0].Value);
             }
             CheckCloseLongPositions();
             // check for sell
@@ -129,36 +126,48 @@ namespace Crypto.Core.Strategies.Signal {
         protected bool AlreadyOpenedPosition() {
             if(OpenedOrders.Count == 0)
                 return false;
-            if(OpenedOrders.Last().CurrentValue > OpenedOrders.Last().StopLoss)
+            OpenPositionInfo lastOrder = OpenedOrders.Last();
+            TripleRsiStrategyData lastBuy = (TripleRsiStrategyData)OpenedOrders.Last().Tag;
+            TripleRsiStrategyData last = (TripleRsiStrategyData)StrategyData.Last();
+            if(lastOrder.CurrentValue > lastOrder.StopLoss && last.Index - lastBuy.Index < 7)
                 return true;
             if(OpenedOrders.Last().Tag == StrategyData.Last())
                 return true;
             return false;
         }
 
-        protected override void OpenLongPosition(double value) {
-            TradingResult res = MarketBuy(value, MaxAllowedDeposit * 0.2 / value); // 10 percent per deal
+        protected override void OnOpenLongPosition(OpenPositionInfo info) {
+            info.AllowTrailing = true;
             TripleRsiStrategyData last = (TripleRsiStrategyData)StrategyData.Last();
-            if(res != null) {
-                double spent = res.Total + CalcFee(res.Total);
-                OpenedOrders.Add(new OpenPositionInfo() {
-                    Type = OrderType.Buy,
-                    AllowTrailing = true,
-                    Spent = spent,
-                    StopLossPercent = TrailingStopLossPercent,
-                    OpenValue = res.Value,
-                    Amount = res.Amount,
-                    Total = res.Total,
-                    CloseValue = value + value * MinProfitPercent / 100,
-                    Tag = StrategyData.Last(),
-                });
-                OpenedOrders.Last().CurrentValue = res.Value;
-                MaxAllowedDeposit -= spent;
-            }
+            last.Buy = true;
+            last.Value = info.CurrentValue;
+
+            //TradingResult res = MarketBuy(value, MaxAllowedDeposit * 0.2 / value); // 10 percent per deal
+            //TripleRsiStrategyData last = (TripleRsiStrategyData)StrategyData.Last();
+            //if(res != null) {
+            //    double spent = res.Total + CalcFee(res.Total);
+            //    OpenedOrders.Add(new OpenPositionInfo() {
+            //        Type = OrderType.Buy,
+            //        AllowTrailing = true,
+            //        Spent = spent,
+            //        StopLossPercent = TrailingStopLossPercent,
+            //        OpenValue = res.Value,
+            //        Amount = res.Amount,
+            //        Total = res.Total,
+            //        CloseValue = value + value * MinProfitPercent / 100,
+            //        Tag = StrategyData.Last(),
+            //    });
+            //    OrdersHistory.Add(OpenedOrders.Last());
+            //    OpenedOrders.Last().CurrentValue = res.Value;
+            //    MaxAllowedDeposit -= spent;
+            //    last.Buy = true;
+            //    last.Value = Ticker.OrderBook.Asks[0].Value;
+            //}
         }
 
         protected override void CloseLongPosition(OpenPositionInfo info) {
-            TradingResult res = MarketSell(Ticker.OrderBook.Bids[0].Value, info.Amount);
+            info.CurrentValue = Ticker.OrderBook.Bids[0].Value;
+            TradingResult res = MarketSell(info.CurrentValue, info.Amount);
             if(res != null) {
                 double earned = res.Total - CalcFee(res.Total);
                 MaxAllowedDeposit += earned;
@@ -166,30 +175,31 @@ namespace Crypto.Core.Strategies.Signal {
                 info.Amount -= res.Amount;
                 info.Total -= res.Total;
                 TripleRsiStrategyData item = (TripleRsiStrategyData)info.Tag;
-                //item.Closed = true;
-                //item.CloseLength = ((TripleRsiStrategyData)StrategyData.Last()).Index - item.Index;
                 TripleRsiStrategyData last = (TripleRsiStrategyData)StrategyData.Last();
                 if(info.Amount < 0.000001) {
                     OpenedOrders.Remove(info);
                     Earned += info.Earned - info.Spent;
                 }
-                //last.ClosedOrder = true;
+                last.Sell = true;
                 last.Value = Ticker.OrderBook.Bids[0].Value;
+                //last.SellInfo = string.Format("b={0} s={1} d={2} p={3}", info.OpenValue, info.CurrentValue, info.CurrentValue - info.OpenValue, (info.CurrentValue - info.OpenValue) / info.OpenValue * 100);
+                item.SellInfo = string.Format("b={0} s={1} d={2} p={3}", info.OpenValue, info.CurrentValue, info.CurrentValue - info.OpenValue, (info.CurrentValue - info.OpenValue) / info.OpenValue * 100);
             }
         }
 
         protected override void InitializeDataItems() {
             CandleStickItem();
-            AnnotationItem("Buy", "Buy", Color.Green, "Value");
+            AnnotationItem("Buy", "Buy", Color.Green, "Value").AnnotationText = "{SellInfo}";
             AnnotationItem("Sell", "Sell", Color.Red, "Value");
-            StrategyDataItemInfo rsiFast = DataItem("Value"); rsiFast.PanelIndex = 1; rsiFast.Color = System.Drawing.Color.Green; rsiFast.BindingRoot = this; rsiFast.BindingSource = "RsiFastIndicator.Result";
-            StrategyDataItemInfo rsiMiddle = DataItem("Value"); rsiMiddle.PanelIndex = 2; rsiMiddle.Color = System.Drawing.Color.Green; rsiMiddle.BindingRoot = this; rsiMiddle.BindingSource = "RsiMiddleIndicator.Result";
-            StrategyDataItemInfo rsiSlow = DataItem("Value"); rsiSlow.PanelIndex = 3; rsiSlow.Color = System.Drawing.Color.Green; rsiSlow.BindingRoot = this; rsiSlow.BindingSource = "RsiSlowIndicator.Result";
-            StrategyDataItemInfo earned = DataItem("Earned"); earned.PanelIndex = 4; earned.Color = Color.FromArgb(0x40, Color.Green);
+            StrategyDataItemInfo rsiFast = DataItem("Value"); rsiFast.PanelIndex = 1; rsiFast.Color = System.Drawing.Color.Red; rsiFast.BindingRoot = this; rsiFast.BindingSource = "RsiFastIndicator.Result";
+            StrategyDataItemInfo rsiMiddle = DataItem("Value"); rsiMiddle.PanelIndex = 1; rsiMiddle.Color = System.Drawing.Color.Green; rsiMiddle.BindingRoot = this; rsiMiddle.BindingSource = "RsiMiddleIndicator.Result";
+            StrategyDataItemInfo rsiSlow = DataItem("Value"); rsiSlow.PanelIndex = 1; rsiSlow.Color = System.Drawing.Color.Blue; rsiSlow.BindingRoot = this; rsiSlow.BindingSource = "RsiSlowIndicator.Result";
+            StrategyDataItemInfo earned = DataItem("Earned"); earned.PanelIndex = 2; earned.Color = Color.FromArgb(0x40, Color.Green);
         }
 
         private void AddStrategyData() {
             TripleRsiStrategyData item = new TripleRsiStrategyData();
+            item.Index = StrategyData.Count;
             item.Candle = Ticker.CandleStickData.Last();
             item.Earned = Earned;
             StrategyData.Add(item);
@@ -227,10 +237,12 @@ namespace Crypto.Core.Strategies.Signal {
         public double High { get { return Candle.High; } }
         public double Low { get { return Candle.Low; } }
         public double Value { get; set; }
+        public int Index { get; set; }
         public CandleStickData Candle { get; set; }
 
         public bool Buy { get; set; }
         public bool Sell { get; set; }
+        public string SellInfo { get; set; }
         public double Earned { get; set; }
     }
 }

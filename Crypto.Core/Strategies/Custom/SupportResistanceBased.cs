@@ -142,12 +142,13 @@ namespace Crypto.Core.Strategies.Custom {
             //br = AnnotationItem("Break", "Break", System.Drawing.Color.Blue, "Atr"); br.PanelIndex = 1; br.Visibility = DataVisibility.Chart; br.AnnotationText = "Br"; //"Br={BreakPercent:0.00} Closed={Closed} CloseStickCount={CloseLength}";
 
             //StrategyDataItemInfo sp = DataItem("SRSpread"); sp.Color = Color.FromArgb(0x20, Color.Green); sp.ChartType = ChartType.Area; sp.PanelIndex = 3;
+            DataItem("Profit", Color.Green).Visibility = DataVisibility.Table;
             var ear = DataItem("Earned", Color.Green);
             ear.PanelIndex = 1;
         }
 
         protected List<RedWaterfallDataItem> PostProcessItems { get; } = new List<RedWaterfallDataItem>();
-        private RedWaterfallDataItem AddStrategyData() {
+        protected virtual RedWaterfallDataItem AddStrategyData() {
             if(Ticker.CandleStickData.Count < SimulationStartItemsCount) /// need back data for simulation
                 return null;
             RedWaterfallDataItem item = new RedWaterfallDataItem();
@@ -259,9 +260,12 @@ namespace Crypto.Core.Strategies.Custom {
         public int CloseLength { get; set; }
         public bool Closed { get; set; }
         public bool ClosedOrder { get; set; }
+        public double Profit { get; set; }
         public double SRSpread { get; internal set; }
         public object BreakValue { get; internal set; }
         public double Earned { get; set; }
+        public string Mark { get; set; }
+        public double PercentChangeFromSupport { get; set; }
     }
 
     public class OpenPositionInfo {
@@ -290,6 +294,7 @@ namespace Crypto.Core.Strategies.Custom {
         public object Tag { get; set; }
         [XmlIgnore]
         public object Tag2 { get; set; }
+        public string Mark { get; set; }
 
         public void UpdateStopLoss() {
             double newStopLoss = CurrentValue * (100 - StopLossPercent) * 0.01;

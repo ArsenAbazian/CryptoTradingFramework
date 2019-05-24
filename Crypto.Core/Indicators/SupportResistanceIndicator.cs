@@ -87,6 +87,11 @@ namespace Crypto.Core.Indicators {
             //for(int i = Resistance.Count - 1; i >= 0; i --)
         }
 
+        public bool BelongsSameSupportLevel(SRValue res) {
+            return Support.Last() == res;
+            //for(int i = Resistance.Count - 1; i >= 0; i --)
+        }
+
         public bool HasSameResistanceLevel(double value) {
             if(Resistance.Count == 0)
                 return false;

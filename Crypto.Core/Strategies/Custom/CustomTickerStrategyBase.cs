@@ -43,6 +43,7 @@ namespace Crypto.Core.Strategies.Custom {
 
         public List<IndicatorBase> Indicators { get; } = new List<IndicatorBase>();
         public ResizeableArray<OpenPositionInfo> OpenedOrders { get; } = new ResizeableArray<OpenPositionInfo>();
+        public ResizeableArray<OpenPositionInfo> OrdersHistory { get; } = new ResizeableArray<OpenPositionInfo>();
 
         [XmlIgnore]
         [Browsable(false)]
@@ -123,26 +124,38 @@ namespace Crypto.Core.Strategies.Custom {
             throw new NotImplementedException();
         }
 
-        protected virtual void OpenLongPosition(double value) {
-            //TradingResult res = MarketBuy(value, MaxAllowedDeposit * 0.2 / value); // 10 percent per deal
-            //RedWaterfallDataItem last = (RedWaterfallDataItem)StrategyData.Last();
-            //if(res != null) {
-            //    double spent = res.Total + CalcFee(res.Total);
-            //    OpenedOrders.Add(new OpenPositionInfo() {
-            //        Type = OrderType.Buy,
-            //        AllowTrailing = true,
-            //        Spent = spent,
-            //        StopLossPercent = TrailingStopLossPercent,
-            //        OpenValue = res.Value,
-            //        Amount = res.Amount,
-            //        Total = res.Total,
-            //        CloseValue = value + value * MinProfitPercent / 100,
-            //        Tag = StrategyData.Last(),
-            //        Tag2 = SRIndicator.Resistance.Last()
-            //    });
-            //    OpenedOrders.Last().CurrentValue = res.Value;
-            //    MaxAllowedDeposit -= spent;
-            //}
+        protected virtual void OpenLongPosition(double value, double amount) {
+            OpenLongPosition(value, amount, false);
+        }
+
+        protected virtual OpenPositionInfo OpenLongPosition(double value, double amount, bool allowTrailing) {
+            TradingResult res = MarketBuy(value, amount);
+            if(res == null)
+                return null;
+            OpenPositionInfo info = new OpenPositionInfo() {
+                Type = OrderType.Buy,
+                Spent = res.Total + CalcFee(res.Total),
+                AllowTrailing = allowTrailing,
+                StopLossPercent = TrailingStopLossPercent,
+                OpenValue = res.Value,
+                Amount = res.Amount,
+                Total = res.Total,
+                CloseValue = value + value * MinProfitPercent / 100,
+                CurrentValue = res.Value,
+                Tag = StrategyData.Last()
+            };
+
+            OpenedOrders.Add(info);
+            OrdersHistory.Add(info);
+
+            OnOpenLongPosition(info);
+            MaxAllowedDeposit -= info.Spent;
+
+            return info;
+        }
+
+        protected virtual void OnOpenLongPosition(OpenPositionInfo info) {
+            
         }
 
         protected virtual void CloseLongPosition(OpenPositionInfo info) {
