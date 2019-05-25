@@ -166,7 +166,7 @@ namespace Crypto.Core.Strategies.Signal {
         }
 
         protected override void CloseLongPosition(OpenPositionInfo info) {
-            info.CurrentValue = Ticker.OrderBook.Bids[0].Value;
+            info.UpdateCurrentValue(DataProvider.CurrentTime, Ticker.OrderBook.Bids[0].Value);
             TradingResult res = MarketSell(info.CurrentValue, info.Amount);
             if(res != null) {
                 double earned = res.Total - CalcFee(res.Total);
@@ -178,6 +178,7 @@ namespace Crypto.Core.Strategies.Signal {
                 TripleRsiStrategyData last = (TripleRsiStrategyData)StrategyData.Last();
                 if(info.Amount < 0.000001) {
                     OpenedOrders.Remove(info);
+                    info.CloseTime = DataProvider.CurrentTime;
                     Earned += info.Earned - info.Spent;
                 }
                 last.Sell = true;

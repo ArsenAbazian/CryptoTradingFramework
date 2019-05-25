@@ -269,24 +269,90 @@ namespace Crypto.Core.Strategies.Custom {
     }
 
     public class OpenPositionInfo {
+        public DateTime Time { get; set; }
+        public DateTime CloseTime { get; set; }
+        public TimeSpan Length { get { return CloseTime - Time; } }
+
+        public bool AllowHistory { get; set; } = false;
+        public TimeSpan AggregationTime { get; set; } = new TimeSpan(0, 0, 30); 
+
         public OrderType Type { get; set; }
         public bool AllowTrailing { get; set; }
         public string MarketName { get; set; }
         public double StopLossPercent { get; set; } = 5;
         public double OpenValue { get; set; }
         public double CloseValue { get; set; }
+        public double Change { get { return (CloseValue - OpenValue) / OpenValue * 100; } }
         double currentValue;
+        public void UpdateCurrentValue(DateTime time, double value) {
+            if(CurrentValue == value)
+                return;
+            currentValue = value;
+            UpdateStopLoss();
+            OnCurrentValueChanged(time, value);
+        }
         public double CurrentValue {
             get { return currentValue; }
-            set {
-                if(CurrentValue == value)
-                    return;
-                currentValue = value;
-                UpdateStopLoss();
+            //set {
+            //    if(CurrentValue == value)
+            //        return;
+            //    currentValue = value;
+            //    UpdateStopLoss();
+            //    OnCurrentValueChanged();
+            //}
+        }
+
+        public void OnCurrentValueChanged(DateTime time, double value) {
+            if(!AllowHistory)
+                return;
+            DateTime lastValueTime = DateTime.MinValue;
+            if(ValueHistory.Count > 0)
+                lastValueTime = ValueHistory.Last().Time;
+            if(time - lastValueTime > AggregationTime)
+                ValueHistory.Add(new TimeBaseValue() { Time = time, Value = value });
+            DateTime stopLossTime = DateTime.MinValue;
+            if(StopLossHistory.Count > 0)
+                stopLossTime = StopLossHistory.Last().Time;
+            if(time - stopLossTime > AggregationTime)
+                StopLossHistory.Add(new TimeBaseValue() { Time = time, Value = StopLoss });
+        }
+
+        public ResizeableArray<TimeBaseValue> ValueHistory { get; } = new ResizeableArray<TimeBaseValue>();
+        public ResizeableArray<TimeBaseValue> StopLossHistory { get; } = new ResizeableArray<TimeBaseValue>();
+
+        protected double[] PreviewFromHistory(ResizeableArray<TimeBaseValue> history) {
+            if(history.Count == 0)
+                return new double[0];
+            int count = Math.Min(50, history.Count);
+            int delta = Math.Max(1, history.Count / count);
+            double[] data = new double[count];
+            for(int i = 0, j = 0; i < count && j < history.Count; i++, j += delta) {
+                data[i] = history[j].Value;
+            }
+            return data;
+        }
+
+        double[] valuePreview;
+        public double[] ValuePreview {
+            get {
+                if(valuePreview == null)
+                    valuePreview = PreviewFromHistory(ValueHistory);
+                return valuePreview;
             }
         }
+
+        double[] stopLossPreview;
+        public double[] StopLossPreview {
+            get {
+                if(stopLossPreview == null)
+                    stopLossPreview = PreviewFromHistory(StopLossHistory);
+                return stopLossPreview;
+            }
+        }
+
         public double Earned { get; set; }
         public double Spent { get; set; }
+        public double Profit { get { return Earned - Spent; } }
         public double StopLoss { get; set; }
         public double Amount { get; set; }
         public double Total { get; set; }
@@ -299,6 +365,55 @@ namespace Crypto.Core.Strategies.Custom {
         public void UpdateStopLoss() {
             double newStopLoss = CurrentValue * (100 - StopLossPercent) * 0.01;
             StopLoss = Math.Max(newStopLoss, StopLoss);
+        }
+    }
+
+    public class OpenPositionVisualDataProvider : IStrategyDataItemInfoOwner {
+        public OpenPositionVisualDataProvider(ResizeableArray<OpenPositionInfo> items) {
+            Items = items;
+            InitializeDataItemInfos();
+        }
+
+        protected virtual void InitializeDataItemInfos() {
+            StrategyDataItemInfo.TimeItem(DataItemInfos, "Time").Visibility = DataVisibility.Table;
+            StrategyDataItemInfo.TimeItem(DataItemInfos, "CloseTime").Visibility = DataVisibility.Table;
+            StrategyDataItemInfo.TimeSpanItem(DataItemInfos, "Length").Visibility = DataVisibility.Table;
+            StrategyDataItemInfo.TimeItem(DataItemInfos, "Mark").Visibility = DataVisibility.Table;
+            StrategyDataItemInfo.EnumItem(DataItemInfos, "Type").Visibility = DataVisibility.Table;
+            StrategyDataItemInfo.DataItem(DataItemInfos, "OpenValue").Visibility = DataVisibility.Table;
+            StrategyDataItemInfo.DataItem(DataItemInfos, "CloseValue").Visibility = DataVisibility.Table;
+            StrategyDataItemInfo.DataItem(DataItemInfos, "Change").Visibility = DataVisibility.Table;
+            StrategyDataItemInfo.DataItem(DataItemInfos, "StopLoss").Visibility = DataVisibility.Table;
+            StrategyDataItemInfo.DataItem(DataItemInfos, "Spent").Visibility = DataVisibility.Table;
+            StrategyDataItemInfo.DataItem(DataItemInfos, "Earned").Visibility = DataVisibility.Table;
+            StrategyDataItemInfo.DataItem(DataItemInfos, "Profit").Visibility = DataVisibility.Table;
+
+            var vp = StrategyDataItemInfo.DataItem(DataItemInfos, "ValuePreview"); vp.Visibility = DataVisibility.Table;
+            var sp = StrategyDataItemInfo.DataItem(DataItemInfos, "StopLossPreview"); sp.Visibility = DataVisibility.Table;
+
+            var vh = StrategyDataItemInfo.DataItem(DataItemInfos, "Value"); vh.Visibility = DataVisibility.Chart; vh.Type = DataType.ChartData; vh.Color = Color.Green; vh.BindingSource = "ValueHistory";
+            var sh = StrategyDataItemInfo.DataItem(DataItemInfos, "Value"); sh.Visibility = DataVisibility.Chart; sh.Type = DataType.ChartData; sh.Color = Color.Red; sh.BindingSource = "StopLossHistory";
+
+            vp.DetailInfo = vh;
+            sp.DetailInfo = sh;
+        }
+
+        public List<StrategyDataItemInfo> DataItemInfos { get; } = new List<StrategyDataItemInfo>();
+
+        public ResizeableArray<OpenPositionInfo> Items { get; private set; }
+
+        string IStrategyDataItemInfoOwner.Name => "Opened Positions";
+
+        List<StrategyDataItemInfo> IStrategyDataItemInfoOwner.DataItemInfos => DataItemInfos;
+
+        ResizeableArray<object> IStrategyDataItemInfoOwner.Items {
+            get {
+                ResizeableArray<object> res = new ResizeableArray<object>();
+                for(int i = 0; i < Items.Count; i++) {
+                    res.Add(Items[i]);
+                }
+                return res;
+            }
         }
     }
 

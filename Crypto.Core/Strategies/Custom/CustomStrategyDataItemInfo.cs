@@ -15,6 +15,46 @@ namespace Crypto.Core.Strategies {
     }
 
     public class StrategyDataItemInfo : IStrategyDataItemInfoOwner {
+        public static StrategyDataItemInfo TimeItem(List<StrategyDataItemInfo> dataItemInfos, string fieldName) {
+            dataItemInfos.Add( new StrategyDataItemInfo() { FieldName = fieldName, Visibility = DataVisibility.Table, Type = DataType.DateTime, FormatString = "dd.MM.yyyy hh:mm" });
+            return dataItemInfos.Last();
+        }
+
+        public static StrategyDataItemInfo TimeSpanItem(List<StrategyDataItemInfo> dataItemInfos, string fieldName) {
+            dataItemInfos.Add(new StrategyDataItemInfo() { FieldName = fieldName, Visibility = DataVisibility.Table, Type = DataType.DateTime });
+            return dataItemInfos.Last();
+        }
+
+        public static StrategyDataItemInfo DataItem(List<StrategyDataItemInfo> dataItemInfos, string fieldName) {
+            dataItemInfos.Add(new StrategyDataItemInfo() { FieldName = fieldName });
+            return dataItemInfos.Last();
+        }
+
+        public static StrategyDataItemInfo DataItem(List<StrategyDataItemInfo> dataItemInfos, string fieldName, string formatString) {
+            dataItemInfos.Add(new StrategyDataItemInfo() { FieldName = fieldName, FormatString = formatString });
+            return dataItemInfos.Last();
+        }
+
+        public static StrategyDataItemInfo EnumItem(List<StrategyDataItemInfo> dataItemInfos, string fieldName) {
+            dataItemInfos.Add(new StrategyDataItemInfo() { FieldName = fieldName, Visibility = DataVisibility.Table });
+            return dataItemInfos.Last();
+        }
+
+        public static StrategyDataItemInfo DataItem(List<StrategyDataItemInfo> dataItemInfos, string fieldName, string formatString, Color color) {
+            dataItemInfos.Add(new StrategyDataItemInfo() { FieldName = fieldName, FormatString = formatString, Color = color });
+            return dataItemInfos.Last();
+        }
+
+        public static StrategyDataItemInfo DataItem(List<StrategyDataItemInfo> dataItemInfos, string fieldName, Color color) {
+            dataItemInfos.Add(new StrategyDataItemInfo() { FieldName = fieldName, Color = color });
+            return dataItemInfos.Last();
+        }
+
+        public static StrategyDataItemInfo DataItem(List<StrategyDataItemInfo> dataItemInfos, string fieldName, Color color, int width) {
+            dataItemInfos.Add(new StrategyDataItemInfo() { FieldName = fieldName, Color = color, GraphWidth = width });
+            return dataItemInfos.Last();
+        }
+
         public StrategyDataItemInfo DetailInfo { get; set; }
 
         public string FieldName { get; set; }

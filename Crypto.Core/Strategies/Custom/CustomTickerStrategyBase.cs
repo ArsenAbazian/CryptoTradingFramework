@@ -42,9 +42,7 @@ namespace Crypto.Core.Strategies.Custom {
         public double TrailingStopLossPercent { get; set; } = 5;
 
         public List<IndicatorBase> Indicators { get; } = new List<IndicatorBase>();
-        public ResizeableArray<OpenPositionInfo> OpenedOrders { get; } = new ResizeableArray<OpenPositionInfo>();
-        public ResizeableArray<OpenPositionInfo> OrdersHistory { get; } = new ResizeableArray<OpenPositionInfo>();
-
+        
         [XmlIgnore]
         [Browsable(false)]
         public override Ticker Ticker {
@@ -108,7 +106,7 @@ namespace Crypto.Core.Strategies.Custom {
 
         protected virtual bool ShouldContinueTrailing(OpenPositionInfo info) {
             double currentBid = Ticker.OrderBook.Bids[0].Value;
-            info.CurrentValue = currentBid;
+            info.UpdateCurrentValue(DataProvider.CurrentTime, currentBid);
 
             if(info.Type != OrderType.Buy || !info.AllowTrailing)
                 return false;
@@ -125,7 +123,9 @@ namespace Crypto.Core.Strategies.Custom {
         }
 
         protected virtual void OpenLongPosition(double value, double amount) {
-            OpenLongPosition(value, amount, false);
+            OpenPositionInfo info = OpenLongPosition(value, amount, false);
+            if(info != null)
+                info.AllowHistory = DataProvider is SimulationStrategyDataProvider;
         }
 
         protected virtual OpenPositionInfo OpenLongPosition(double value, double amount, bool allowTrailing) {
@@ -133,17 +133,19 @@ namespace Crypto.Core.Strategies.Custom {
             if(res == null)
                 return null;
             OpenPositionInfo info = new OpenPositionInfo() {
+                Time = DataProvider.CurrentTime,
                 Type = OrderType.Buy,
                 Spent = res.Total + CalcFee(res.Total),
                 AllowTrailing = allowTrailing,
                 StopLossPercent = TrailingStopLossPercent,
                 OpenValue = res.Value,
                 Amount = res.Amount,
+                AllowHistory = (DataProvider is SimulationStrategyDataProvider),
                 Total = res.Total,
                 CloseValue = value + value * MinProfitPercent / 100,
-                CurrentValue = res.Value,
                 Tag = StrategyData.Last()
             };
+            info.UpdateCurrentValue(DataProvider.CurrentTime, res.Value);
 
             OpenedOrders.Add(info);
             OrdersHistory.Add(info);

@@ -66,7 +66,6 @@ namespace Crypto.Core.Strategies.Custom {
                 double spread2 = lr2.Value - ls2.Value;
                 double pc = (lastAsk - ls2.Value) / spread2;
                 item.PercentChangeFromSupport = Math.Min(item.PercentChangeFromSupport, pc);
-
                 if(spread2 > ls2.Value * 0.01 && pc > 0 && pc < 0.1 && ls.Length > 20) { // minimal spread
                     if(!AlreadyOpenedPosition()) {
                         OpenPositionInfo info = OpenLongPosition(lastAsk, MaxAllowedDeposit * 0.2 / lastAsk, false);
@@ -93,6 +92,8 @@ namespace Crypto.Core.Strategies.Custom {
 
             StrategyDataItemInfo resValue = DataItem("Value"); resValue.BindingSource = "SRIndicator2.Resistance"; resValue.Color = Color.FromArgb(0x40, Color.Magenta); resValue.ChartType = ChartType.StepLine;
             StrategyDataItemInfo supValue = DataItem("Value"); supValue.BindingSource = "SRIndicator2.Support"; supValue.Color = Color.FromArgb(0x40, Color.Green); supValue.ChartType = ChartType.StepLine;
+            AnnotationItem("Mark", null, Color.Green, "Value");
+            DataItemInfos.Remove(DataItemInfos.FirstOrDefault(i => i.FieldName == "Break"));
         }
 
         public int NextDataItemPanel() {
@@ -141,12 +142,14 @@ namespace Crypto.Core.Strategies.Custom {
                 info.Earned += earned;
                 info.Amount -= res.Amount;
                 info.Total -= res.Total;
+                info.CloseValue = res.Value;
                 RedWaterfallDataItem item = (RedWaterfallDataItem)info.Tag;
                 item.Closed = true;
                 item.CloseLength = ((RedWaterfallDataItem)StrategyData.Last()).Index - item.Index;
                 RedWaterfallDataItem last = (RedWaterfallDataItem)StrategyData.Last();
                 if(info.Amount < 0.000001) {
                     OpenedOrders.Remove(info);
+                    info.CloseTime = DataProvider.CurrentTime;
                     Earned += info.Earned - info.Spent;
                 }
                 last.ClosedOrder = true;

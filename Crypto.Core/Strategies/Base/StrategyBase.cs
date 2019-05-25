@@ -95,6 +95,9 @@ namespace Crypto.Core.Strategies {
             return DataItemInfos.Last();
         }
 
+        public ResizeableArray<OpenPositionInfo> OpenedOrders { get; } = new ResizeableArray<OpenPositionInfo>();
+        public ResizeableArray<OpenPositionInfo> OrdersHistory { get; } = new ResizeableArray<OpenPositionInfo>();
+
         [XmlIgnore]
         public bool PanicMode { get; protected set; }
         public void Break() { PanicMode = true; }

@@ -29,7 +29,7 @@ namespace CryptoMarketClient.Strategies {
             InitializeTable();
             InitializeChart();
         }
-
+        
         private void UpdateDataSource() {
             foreach(var item in Visual.DataItemInfos) {
                 if(!string.IsNullOrEmpty(item.BindingSource)) {
@@ -142,16 +142,18 @@ namespace CryptoMarketClient.Strategies {
             //s.DataSource = null;
             for(int i = 0; i < Visual.Items.Count; i++) {
                 object obj = Visual.Items[i];
-                bool value = (bool) pInfo.GetValue(obj);
-                if(!value) {
+                object value = pInfo.GetValue(obj);
+                if(value == null) {
+                    index++;
+                    continue;
+                }
+                if(value is bool && !((bool)value)) {
                     index++;
                     continue;
                 }
                 DateTime time = (DateTime) pTime.GetValue(obj);
                 double yValue = (double) pAnchor.GetValue(obj);
-                //SeriesPoint pt = new SeriesPoint(time, new double[] { yValue });
-                //s.Points.Add(pt);
-                string annotationText = info.AnnotationText;
+                string annotationText = value is string? Convert.ToString(value): info.AnnotationText;
                 if(info.HasAnnotationStringFormat)
                     annotationText = GetFormattedText(annotationText, obj);
 
@@ -162,12 +164,9 @@ namespace CryptoMarketClient.Strategies {
                 point.Pane = pane;
                 annotation.AnchorPoint = point;
                 annotation.ShapeKind = ShapeKind.Rectangle;
-                //TextAnnotation annotation = pt.Annotations.AddTextAnnotation(info.FieldName, info.AnnotationText);
-                //annotation.Text = info.AnnotationText;
                 annotation.ShapeKind = ShapeKind.Rectangle;
                 index++;
             }
-            //Chart.Series.Add(s);
         }
 
         protected virtual Series CreateAnnotationSeriesCore(StrategyDataItemInfo info) {
@@ -380,13 +379,23 @@ namespace CryptoMarketClient.Strategies {
                 res.CheckBoxOptions.Style = DevExpress.XtraEditors.Controls.CheckBoxStyle.SvgStar2;
                 return res;
             }
+            double[] doubleData = null;
+            if(value is ResizeableArray<TimeBaseValue>) {
+                ResizeableArray<TimeBaseValue> data = (ResizeableArray<TimeBaseValue>)value;
+                doubleData = new double[Math.Min(data.Count, 50)];
+                for(int i = 0; i < doubleData.Length; i++)
+                    doubleData[i] = data[i].Value;
+            }
             if(value is double[]) {
+                doubleData = (double[])value;
+            }
+            if(doubleData != null) {
                 RepositoryItemSparklineEdit res = new RepositoryItemSparklineEdit();
                 res.View = new AreaSparklineView() {
                     AreaOpacity = 30,
                     HighlightStartPoint = false,
                     HighlightEndPoint = false,
-                    HighlightMaxPoint = true,
+                    HighlightMaxPoint = false,
                     HighlightMinPoint = false,
                     HighlightNegativePoints = false
                 };
@@ -413,7 +422,10 @@ namespace CryptoMarketClient.Strategies {
             int index = 0;
             foreach(object item in items) {
                 for(int j = 0; j < aList.Count; j++) {
-                    if(!(bool)pList[j].GetValue(items[index], null))
+                    object value = pList[j].GetValue(items[index], null);
+                    if(value is bool && !((bool)value))
+                        continue;
+                    if(value == null)
                         continue;
                     GridScrollAnnotationInfo info = new GridScrollAnnotationInfo();
                     info.Index = index;

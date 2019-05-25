@@ -1,9 +1,12 @@
 ﻿using Crypto.Core.Helpers;
 using Crypto.Core.Strategies;
+using Crypto.Core.Strategies.Custom;
+using Crypto.UI.Forms;
 using DevExpress.XtraBars;
 using DevExpress.XtraCharts;
 using DevExpress.XtraCharts.Designer;
 using DevExpress.XtraEditors;
+using DevExpress.XtraGrid;
 using DevExpress.XtraGrid.Views.Grid;
 using System;
 using System.Collections.Generic;
@@ -41,6 +44,10 @@ namespace CryptoMarketClient.Strategies {
             Text = Strategy.Name + " - Data";
             StrategyDataVisualiser visualizer = new StrategyDataVisualiser();
             visualizer.Visualize(Strategy, this.gcData, this.chartControl);
+
+            StrategyDataVisualiser visualizer2 = new StrategyDataVisualiser();
+            visualizer2.Visualize(new OpenPositionVisualDataProvider(Strategy.OrdersHistory), this.gcPositions, null);
+
             if(File.Exists(ChartSettingsFileName)) {
                 DetachePoints();
                 this.chartControl.LoadFromFile(ChartSettingsFileName);
@@ -57,6 +64,50 @@ namespace CryptoMarketClient.Strategies {
 
         private void gridControl1_Click(object sender, EventArgs e) {
 
+        }
+
+        private void ShowChartForm(IStrategyDataItemInfoOwner visual) {
+            XtraForm form = new XtraForm();
+            Crypto.UI.Forms.ChartDataControl control = new Crypto.UI.Forms.ChartDataControl();
+            control.Dock = DockStyle.Fill;
+            control.Visual = visual;
+            form.Controls.Add(control);
+            StrategyDataVisualiser visualiser = new StrategyDataVisualiser();
+            visualiser.Visualize(visual, null, control.Chart);
+
+            form.Text = visual.Name + " - Data Chart";
+            //form.MdiParent = this;
+            //form.WindowState = FormWindowState.Maximized;
+            form.Show();
+        }
+
+        private void ShowTableForm(IStrategyDataItemInfoOwner visual) {
+            XtraForm form = new XtraForm();
+            GridDataControl control = new GridDataControl();
+            control.Grid.DoubleClick += OnGridControlDoubleClick;
+            control.Dock = DockStyle.Fill;
+            form.Controls.Add(control);
+            StrategyDataVisualiser visualiser = new StrategyDataVisualiser();
+            visualiser.Visualize(visual, control.Grid, null);
+
+            form.Text = visual.Name + " - Data Table";
+            //form.MdiParent = this;
+            //form.WindowState = FormWindowState.Maximized;
+            form.Show();
+        }
+
+        private void OnGridControlDoubleClick(object sender, EventArgs e) {
+            GridControl grid = (GridControl)sender;
+            GridView view = (GridView)grid.MainView;
+            if(view.FocusedRowHandle != GridControl.InvalidRowHandle && view.FocusedColumn != null) {
+                StrategyDataItemInfo info = (StrategyDataItemInfo)view.FocusedColumn.Tag;
+                if(info.DetailInfo != null)
+                    info = info.DetailInfo;
+                if(info.Type != DataType.ChartData)
+                    return;
+                info.Value = view.GetFocusedRow();
+                ShowChartForm(info);
+            }
         }
 
         private void gvData_RowStyle(object sender, DevExpress.XtraGrid.Views.Grid.RowStyleEventArgs e) {
