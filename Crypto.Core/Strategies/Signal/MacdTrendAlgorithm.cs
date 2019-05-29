@@ -79,10 +79,10 @@ namespace Crypto.Core.Strategies.Signal {
         protected override void InitializeDataItems() {
             TimeItem("Time");
             CandleStickItem();
-            DataItem("Macd", "0.########", System.Drawing.Color.Blue).PanelIndex = 1;
+            DataItem("Macd", "0.########", System.Drawing.Color.Blue).PanelName = "MACD";
             DataItem("EmaFast", "0.########", System.Drawing.Color.Pink).Visibility = DataVisibility.Table;
             DataItem("EmaSlow", "0.########", System.Drawing.Color.Green).Visibility = DataVisibility.Table;
-            DataItem("Signal", "0.########", System.Drawing.Color.Red).PanelIndex = 1;
+            DataItem("Signal", "0.########", System.Drawing.Color.Red).PanelName = "MACD";
             DataItem("Delta", "0.########").Visibility = DataVisibility.Table;
             AnnotationItem("BuySignal", "Buy", System.Drawing.Color.Green, "Low");
             AnnotationItem("SellSignal", "Sell", System.Drawing.Color.Red, "High");

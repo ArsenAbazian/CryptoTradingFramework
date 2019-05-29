@@ -1,4 +1,5 @@
-﻿using Crypto.Core.Helpers;
+﻿using Crypto.Core.Common;
+using Crypto.Core.Helpers;
 using Crypto.Core.Strategies.Arbitrages.AltBtcUsdt;
 using Crypto.Core.Strategies.Arbitrages.Statistical;
 using Crypto.Core.Strategies.Base;

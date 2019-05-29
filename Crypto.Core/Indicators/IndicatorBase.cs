@@ -104,7 +104,7 @@ namespace Crypto.Core.Indicators {
             return res;
         }
 
-        public virtual void AddVisualInfo(List<StrategyDataItemInfo> items) {
+        public virtual void AddVisualInfo(List<StrategyDataItemInfo> items, string panelName) {
         }
     }
 }

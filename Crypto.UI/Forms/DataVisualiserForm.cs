@@ -99,7 +99,7 @@ namespace Crypto.UI.Forms {
                 StrategyDataItemInfo info = (StrategyDataItemInfo)view.FocusedColumn.Tag;
                 if(info.DetailInfo != null)
                     info = info.DetailInfo;
-                if(info.Type != DataType.ChartData)
+                if(info.IsChartData)
                     return;
                 info.Value = view.GetFocusedRow();
                 ShowChartForm(info);

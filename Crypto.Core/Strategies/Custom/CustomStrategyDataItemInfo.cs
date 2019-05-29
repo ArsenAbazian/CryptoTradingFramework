@@ -14,7 +14,14 @@ namespace Crypto.Core.Strategies {
         ResizeableArray<object> Items { get; }
     }
 
+    public class SdiConstantLine {
+        public string FieldName { get; set; }
+        public string Title { get; set; }
+        public object Value { get; set; }
+    }
+
     public class StrategyDataItemInfo : IStrategyDataItemInfoOwner {
+        #region static helper methods
         public static StrategyDataItemInfo TimeItem(List<StrategyDataItemInfo> dataItemInfos, string fieldName) {
             dataItemInfos.Add( new StrategyDataItemInfo() { FieldName = fieldName, Visibility = DataVisibility.Table, Type = DataType.DateTime, FormatString = "dd.MM.yyyy hh:mm" });
             return dataItemInfos.Last();
@@ -55,15 +62,29 @@ namespace Crypto.Core.Strategies {
             return dataItemInfos.Last();
         }
 
+        public static StrategyDataItemInfo HistogrammItem(List<StrategyDataItemInfo> dataItemInfos, double clasterizationWidth, string fieldName, Color color) {
+            dataItemInfos.Add(new StrategyDataItemInfo() { FieldName = fieldName, Color = color, Type = DataType.HistogrammData, OwnChart = true, Visibility = DataVisibility.Chart, ClasterizationWidth = clasterizationWidth });
+            StrategyDataItemInfo info = dataItemInfos.Last();
+            return info;
+        }
+        #endregion
+
         public StrategyDataItemInfo DetailInfo { get; set; }
 
+        [XmlIgnore]
+        public List<SdiConstantLine> XLines { get; } = new List<SdiConstantLine>();
+        [XmlIgnore]
+        public List<SdiConstantLine> YLines { get; } = new List<SdiConstantLine>();
+
+        public bool OwnChart { get; set; }
         public string FieldName { get; set; }
         public DataType Type { get; set; } = DataType.Numeric;
         public string FormatString { get; set; } = string.Empty;
         public Color Color { get; set; } = Color.Blue;
         public int GraphWidth { get; set; } = 1;
         public ChartType ChartType { get; set; } = ChartType.Line;
-        public int PanelIndex { get; set; } = 0;
+        public double ClasterizationWidth { get; set; }
+        public string PanelName { get; set; } = "Default";
         string name;
         public string Name { get { return string.IsNullOrEmpty(name) ? FieldName : name; } set { name = value; } }
         string annotationText;
@@ -74,6 +95,7 @@ namespace Crypto.Core.Strategies {
                 HasAnnotationStringFormat = !string.IsNullOrEmpty(value) && annotationText.Contains('{');
             }
         }
+        public ArgumentScaleType ArgumentScaleType { get; set; } = ArgumentScaleType.DateTime;
         public string ArgumentDataMember { get; set; }
         public bool HasAnnotationStringFormat { get; private set; }
         public string AnnotationAnchorField { get; set; }
@@ -94,12 +116,14 @@ namespace Crypto.Core.Strategies {
         }
         public object DataSource { get; set; }
 
+        public List<StrategyDataItemInfo> Children { get; set; } = new List<StrategyDataItemInfo>();
         List<StrategyDataItemInfo> list;
         List<StrategyDataItemInfo> IStrategyDataItemInfoOwner.DataItemInfos {
             get {
                 if(list == null) {
                     list = new List<StrategyDataItemInfo>();
                     list.Add(this);
+                    list.AddRange(Children);
                 }
                 return list;
             }
@@ -107,10 +131,11 @@ namespace Crypto.Core.Strategies {
 
         public object Value { get; set; }
         public ResizeableArray<object> Items { get; set; }
+        public bool IsChartData { get { return Type == DataType.ChartData || Type == DataType.HistogrammData; } }
     }
 
-    public enum ChartType { CandleStick, Line, Area, Bar, Dot, Annotation, StepLine }
-    public enum DataType { DateTime, Numeric, ChartData }
+    public enum ChartType { CandleStick, Line, Area, Bar, Dot, Annotation, StepLine, ConstantX, ConstantY }
+    public enum DataType { DateTime, Numeric, ChartData, HistogrammData }
     [Flags]
     public enum DataVisibility { None, Table, Chart, Both = Table | Chart }
 
@@ -124,5 +149,10 @@ namespace Crypto.Core.Strategies {
         Month = 6,
         Quarter = 7,
         Year = 8
+    }
+
+    public enum ArgumentScaleType {
+        Numerical = 1,
+        DateTime = 2
     }
 }

@@ -28,19 +28,16 @@ namespace CryptoMarketClient.Strategies {
         /// </summary>
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
+            DevExpress.XtraGrid.GridFormatRule gridFormatRule5 = new DevExpress.XtraGrid.GridFormatRule();
+            DevExpress.XtraEditors.FormatConditionRuleValue formatConditionRuleValue5 = new DevExpress.XtraEditors.FormatConditionRuleValue();
+            DevExpress.XtraGrid.GridFormatRule gridFormatRule6 = new DevExpress.XtraGrid.GridFormatRule();
+            DevExpress.XtraEditors.FormatConditionRuleValue formatConditionRuleValue6 = new DevExpress.XtraEditors.FormatConditionRuleValue();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(StrategyDataForm));
             DevExpress.XtraGrid.GridFormatRule gridFormatRule1 = new DevExpress.XtraGrid.GridFormatRule();
             DevExpress.XtraEditors.FormatConditionRuleValue formatConditionRuleValue1 = new DevExpress.XtraEditors.FormatConditionRuleValue();
             DevExpress.XtraGrid.GridFormatRule gridFormatRule2 = new DevExpress.XtraGrid.GridFormatRule();
             DevExpress.XtraEditors.FormatConditionRuleValue formatConditionRuleValue2 = new DevExpress.XtraEditors.FormatConditionRuleValue();
-            DevExpress.XtraCharts.XYDiagram xyDiagram1 = new DevExpress.XtraCharts.XYDiagram();
-            DevExpress.XtraCharts.Series series1 = new DevExpress.XtraCharts.Series();
-            DevExpress.XtraCharts.LineSeriesView lineSeriesView1 = new DevExpress.XtraCharts.LineSeriesView();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(StrategyDataForm));
-            DevExpress.XtraGrid.GridFormatRule gridFormatRule3 = new DevExpress.XtraGrid.GridFormatRule();
-            DevExpress.XtraEditors.FormatConditionRuleValue formatConditionRuleValue3 = new DevExpress.XtraEditors.FormatConditionRuleValue();
-            DevExpress.XtraGrid.GridFormatRule gridFormatRule4 = new DevExpress.XtraGrid.GridFormatRule();
-            DevExpress.XtraEditors.FormatConditionRuleValue formatConditionRuleValue4 = new DevExpress.XtraEditors.FormatConditionRuleValue();
-            DevExpress.XtraBars.Docking2010.Views.Tabbed.DockingContainer dockingContainer1 = new DevExpress.XtraBars.Docking2010.Views.Tabbed.DockingContainer();
+            DevExpress.XtraBars.Docking2010.Views.Tabbed.DockingContainer dockingContainer2 = new DevExpress.XtraBars.Docking2010.Views.Tabbed.DockingContainer();
             this.colType1 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.documentGroup1 = new DevExpress.XtraBars.Docking2010.Views.Tabbed.DocumentGroup(this.components);
             this.document1 = new DevExpress.XtraBars.Docking2010.Views.Tabbed.Document(this.components);
@@ -77,8 +74,6 @@ namespace CryptoMarketClient.Strategies {
             this.repositoryItemTextEdit2 = new DevExpress.XtraEditors.Repository.RepositoryItemTextEdit();
             this.repositoryItemCheckEdit3 = new DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit();
             this.repositoryItemCheckEdit4 = new DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit();
-            this.chartControl = new DevExpress.XtraCharts.ChartControl();
-            this.standaloneBarDockControl1 = new DevExpress.XtraBars.StandaloneBarDockControl();
             this.barManager1 = new DevExpress.XtraBars.BarManager(this.components);
             this.bar1 = new DevExpress.XtraBars.Bar();
             this.biCustomize = new DevExpress.XtraBars.BarButtonItem();
@@ -98,7 +93,6 @@ namespace CryptoMarketClient.Strategies {
             this.dockPanel3_Container = new DevExpress.XtraBars.Docking.ControlContainer();
             this.dpChart = new DevExpress.XtraBars.Docking.DockPanel();
             this.dockPanel4_Container = new DevExpress.XtraBars.Docking.ControlContainer();
-            this.pcChart = new DevExpress.XtraEditors.PanelControl();
             this.dockPanel1 = new DevExpress.XtraBars.Docking.DockPanel();
             this.controlContainer1 = new DevExpress.XtraBars.Docking.ControlContainer();
             this.gcPositions = new DevExpress.XtraGrid.GridControl();
@@ -108,6 +102,7 @@ namespace CryptoMarketClient.Strategies {
             this.repositoryItemCheckEdit8 = new DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit();
             this.documentManager1 = new DevExpress.XtraBars.Docking2010.DocumentManager(this.components);
             this.tabbedView1 = new DevExpress.XtraBars.Docking2010.Views.Tabbed.TabbedView(this.components);
+            this.chartDataControl1 = new Crypto.UI.Forms.ChartDataControl();
             ((System.ComponentModel.ISupportInitialize)(this.documentGroup1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.document1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.document5)).BeginInit();
@@ -131,10 +126,6 @@ namespace CryptoMarketClient.Strategies {
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemTextEdit2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit4)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.chartControl)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(xyDiagram1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(series1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(lineSeriesView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.barManager1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dockManager1)).BeginInit();
             this.dpData.SuspendLayout();
@@ -145,8 +136,6 @@ namespace CryptoMarketClient.Strategies {
             this.dockPanel3_Container.SuspendLayout();
             this.dpChart.SuspendLayout();
             this.dockPanel4_Container.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pcChart)).BeginInit();
-            this.pcChart.SuspendLayout();
             this.dockPanel1.SuspendLayout();
             this.controlContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gcPositions)).BeginInit();
@@ -200,7 +189,7 @@ namespace CryptoMarketClient.Strategies {
             // 
             this.document2.Caption = "Chart";
             this.document2.ControlName = "dpChart";
-            this.document2.FloatLocation = new System.Drawing.Point(245, 366);
+            this.document2.FloatLocation = new System.Drawing.Point(407, 351);
             this.document2.FloatSize = new System.Drawing.Size(200, 200);
             this.document2.Properties.AllowClose = DevExpress.Utils.DefaultBoolean.True;
             this.document2.Properties.AllowFloat = DevExpress.Utils.DefaultBoolean.True;
@@ -442,22 +431,22 @@ namespace CryptoMarketClient.Strategies {
             this.colTotal,
             this.colType1});
             this.gvTradeHistory.FocusRectStyle = DevExpress.XtraGrid.Views.Grid.DrawFocusRectStyle.RowFocus;
-            gridFormatRule1.ApplyToRow = true;
-            gridFormatRule1.Column = this.colType1;
-            gridFormatRule1.Name = "Buy";
-            formatConditionRuleValue1.Condition = DevExpress.XtraEditors.FormatCondition.Equal;
-            formatConditionRuleValue1.PredefinedName = "Green Fill";
-            formatConditionRuleValue1.Value1 = CryptoMarketClient.Common.OrderType.Buy;
-            gridFormatRule1.Rule = formatConditionRuleValue1;
-            gridFormatRule2.ApplyToRow = true;
-            gridFormatRule2.Column = this.colType1;
-            gridFormatRule2.Name = "Sell";
-            formatConditionRuleValue2.Condition = DevExpress.XtraEditors.FormatCondition.Equal;
-            formatConditionRuleValue2.PredefinedName = "Red Fill";
-            formatConditionRuleValue2.Value1 = CryptoMarketClient.Common.OrderType.Sell;
-            gridFormatRule2.Rule = formatConditionRuleValue2;
-            this.gvTradeHistory.FormatRules.Add(gridFormatRule1);
-            this.gvTradeHistory.FormatRules.Add(gridFormatRule2);
+            gridFormatRule5.ApplyToRow = true;
+            gridFormatRule5.Column = this.colType1;
+            gridFormatRule5.Name = "Buy";
+            formatConditionRuleValue5.Condition = DevExpress.XtraEditors.FormatCondition.Equal;
+            formatConditionRuleValue5.PredefinedName = "Green Fill";
+            formatConditionRuleValue5.Value1 = CryptoMarketClient.Common.OrderType.Buy;
+            gridFormatRule5.Rule = formatConditionRuleValue5;
+            gridFormatRule6.ApplyToRow = true;
+            gridFormatRule6.Column = this.colType1;
+            gridFormatRule6.Name = "Sell";
+            formatConditionRuleValue6.Condition = DevExpress.XtraEditors.FormatCondition.Equal;
+            formatConditionRuleValue6.PredefinedName = "Red Fill";
+            formatConditionRuleValue6.Value1 = CryptoMarketClient.Common.OrderType.Sell;
+            gridFormatRule6.Rule = formatConditionRuleValue6;
+            this.gvTradeHistory.FormatRules.Add(gridFormatRule5);
+            this.gvTradeHistory.FormatRules.Add(gridFormatRule6);
             this.gvTradeHistory.GridControl = this.gcTradeHistory;
             this.gvTradeHistory.Name = "gvTradeHistory";
             this.gvTradeHistory.OptionsBehavior.Editable = false;
@@ -529,48 +518,6 @@ namespace CryptoMarketClient.Strategies {
             this.repositoryItemCheckEdit4.AutoHeight = false;
             this.repositoryItemCheckEdit4.Name = "repositoryItemCheckEdit4";
             // 
-            // chartControl
-            // 
-            xyDiagram1.AxisX.DateTimeScaleOptions.AggregateFunction = DevExpress.XtraCharts.AggregateFunction.None;
-            xyDiagram1.AxisX.DateTimeScaleOptions.MeasureUnit = DevExpress.XtraCharts.DateTimeMeasureUnit.Minute;
-            xyDiagram1.AxisX.Label.TextPattern = "{A:h:mm d.MM}";
-            xyDiagram1.AxisX.VisibleInPanesSerializable = "-1";
-            xyDiagram1.AxisY.Alignment = DevExpress.XtraCharts.AxisAlignment.Far;
-            xyDiagram1.AxisY.Label.TextPattern = "{V:f8}";
-            xyDiagram1.AxisY.VisibleInPanesSerializable = "-1";
-            xyDiagram1.AxisY.WholeRange.AlwaysShowZeroLevel = false;
-            xyDiagram1.DependentAxesYRange = DevExpress.Utils.DefaultBoolean.True;
-            xyDiagram1.EnableAxisXScrolling = true;
-            xyDiagram1.EnableAxisXZooming = true;
-            this.chartControl.Diagram = xyDiagram1;
-            this.chartControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chartControl.Legend.AlignmentHorizontal = DevExpress.XtraCharts.LegendAlignmentHorizontal.Left;
-            this.chartControl.Legend.Name = "Default Legend";
-            this.chartControl.Legend.Visibility = DevExpress.Utils.DefaultBoolean.False;
-            this.chartControl.Location = new System.Drawing.Point(3, 63);
-            this.chartControl.Name = "chartControl";
-            series1.ArgumentScaleType = DevExpress.XtraCharts.ScaleType.DateTime;
-            series1.Name = "Series 1";
-            series1.View = lineSeriesView1;
-            this.chartControl.SeriesSerializable = new DevExpress.XtraCharts.Series[] {
-        series1};
-            this.chartControl.SeriesTemplate.SeriesColorizer = null;
-            this.chartControl.Size = new System.Drawing.Size(2550, 1001);
-            this.chartControl.TabIndex = 3;
-            this.chartControl.DoubleClick += new System.EventHandler(this.chartControl_DoubleClick);
-            this.chartControl.MouseMove += new System.Windows.Forms.MouseEventHandler(this.chartControl_MouseMove);
-            // 
-            // standaloneBarDockControl1
-            // 
-            this.standaloneBarDockControl1.AutoSize = true;
-            this.standaloneBarDockControl1.CausesValidation = false;
-            this.standaloneBarDockControl1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.standaloneBarDockControl1.Location = new System.Drawing.Point(3, 3);
-            this.standaloneBarDockControl1.Manager = this.barManager1;
-            this.standaloneBarDockControl1.Name = "standaloneBarDockControl1";
-            this.standaloneBarDockControl1.Size = new System.Drawing.Size(2550, 60);
-            this.standaloneBarDockControl1.Text = "standaloneBarDockControl1";
-            // 
             // barManager1
             // 
             this.barManager1.Bars.AddRange(new DevExpress.XtraBars.Bar[] {
@@ -579,7 +526,6 @@ namespace CryptoMarketClient.Strategies {
             this.barManager1.DockControls.Add(this.barDockControlBottom);
             this.barManager1.DockControls.Add(this.barDockControlLeft);
             this.barManager1.DockControls.Add(this.barDockControlRight);
-            this.barManager1.DockControls.Add(this.standaloneBarDockControl1);
             this.barManager1.DockManager = this.dockManager1;
             this.barManager1.Form = this;
             this.barManager1.Items.AddRange(new DevExpress.XtraBars.BarItem[] {
@@ -609,7 +555,6 @@ namespace CryptoMarketClient.Strategies {
             new DevExpress.XtraBars.LinkPersistInfo(this.bsIndex)});
             this.bar1.OptionsBar.DrawBorder = false;
             this.bar1.OptionsBar.UseWholeRow = true;
-            this.bar1.StandaloneBarDockControl = this.standaloneBarDockControl1;
             this.bar1.Text = "Tools";
             // 
             // biCustomize
@@ -764,7 +709,7 @@ namespace CryptoMarketClient.Strategies {
             // 
             this.dpChart.Controls.Add(this.dockPanel4_Container);
             this.dpChart.DockedAsTabbedDocument = true;
-            this.dpChart.FloatLocation = new System.Drawing.Point(245, 366);
+            this.dpChart.FloatLocation = new System.Drawing.Point(407, 351);
             this.dpChart.ID = new System.Guid("4120d400-8988-43ba-8082-1de410d4eec4");
             this.dpChart.Name = "dpChart";
             this.dpChart.OriginalSize = new System.Drawing.Size(428, 200);
@@ -774,21 +719,11 @@ namespace CryptoMarketClient.Strategies {
             // 
             // dockPanel4_Container
             // 
-            this.dockPanel4_Container.Controls.Add(this.pcChart);
+            this.dockPanel4_Container.Controls.Add(this.chartDataControl1);
             this.dockPanel4_Container.Location = new System.Drawing.Point(0, 0);
             this.dockPanel4_Container.Name = "dockPanel4_Container";
             this.dockPanel4_Container.Size = new System.Drawing.Size(2556, 1067);
             this.dockPanel4_Container.TabIndex = 0;
-            // 
-            // pcChart
-            // 
-            this.pcChart.Controls.Add(this.chartControl);
-            this.pcChart.Controls.Add(this.standaloneBarDockControl1);
-            this.pcChart.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pcChart.Location = new System.Drawing.Point(0, 0);
-            this.pcChart.Name = "pcChart";
-            this.pcChart.Size = new System.Drawing.Size(2556, 1067);
-            this.pcChart.TabIndex = 10;
             // 
             // dockPanel1
             // 
@@ -830,20 +765,20 @@ namespace CryptoMarketClient.Strategies {
             // 
             this.gvPositions.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
             this.gvPositions.FocusRectStyle = DevExpress.XtraGrid.Views.Grid.DrawFocusRectStyle.RowFocus;
-            gridFormatRule3.ApplyToRow = true;
-            gridFormatRule3.Name = "Buy";
-            formatConditionRuleValue3.Condition = DevExpress.XtraEditors.FormatCondition.Equal;
-            formatConditionRuleValue3.PredefinedName = "Green Fill";
-            formatConditionRuleValue3.Value1 = CryptoMarketClient.Common.OrderType.Buy;
-            gridFormatRule3.Rule = formatConditionRuleValue3;
-            gridFormatRule4.ApplyToRow = true;
-            gridFormatRule4.Name = "Sell";
-            formatConditionRuleValue4.Condition = DevExpress.XtraEditors.FormatCondition.Equal;
-            formatConditionRuleValue4.PredefinedName = "Red Fill";
-            formatConditionRuleValue4.Value1 = CryptoMarketClient.Common.OrderType.Sell;
-            gridFormatRule4.Rule = formatConditionRuleValue4;
-            this.gvPositions.FormatRules.Add(gridFormatRule3);
-            this.gvPositions.FormatRules.Add(gridFormatRule4);
+            gridFormatRule1.ApplyToRow = true;
+            gridFormatRule1.Name = "Buy";
+            formatConditionRuleValue1.Condition = DevExpress.XtraEditors.FormatCondition.Equal;
+            formatConditionRuleValue1.PredefinedName = "Green Fill";
+            formatConditionRuleValue1.Value1 = CryptoMarketClient.Common.OrderType.Buy;
+            gridFormatRule1.Rule = formatConditionRuleValue1;
+            gridFormatRule2.ApplyToRow = true;
+            gridFormatRule2.Name = "Sell";
+            formatConditionRuleValue2.Condition = DevExpress.XtraEditors.FormatCondition.Equal;
+            formatConditionRuleValue2.PredefinedName = "Red Fill";
+            formatConditionRuleValue2.Value1 = CryptoMarketClient.Common.OrderType.Sell;
+            gridFormatRule2.Rule = formatConditionRuleValue2;
+            this.gvPositions.FormatRules.Add(gridFormatRule1);
+            this.gvPositions.FormatRules.Add(gridFormatRule2);
             this.gvPositions.GridControl = this.gcPositions;
             this.gvPositions.Name = "gvPositions";
             this.gvPositions.OptionsBehavior.Editable = false;
@@ -887,11 +822,20 @@ namespace CryptoMarketClient.Strategies {
             this.document3,
             this.document4,
             this.document1,
-            this.document2,
-            this.document5});
-            dockingContainer1.Element = this.documentGroup1;
+            this.document5,
+            this.document2});
+            dockingContainer2.Element = this.documentGroup1;
             this.tabbedView1.RootContainer.Nodes.AddRange(new DevExpress.XtraBars.Docking2010.Views.Tabbed.DockingContainer[] {
-            dockingContainer1});
+            dockingContainer2});
+            // 
+            // chartDataControl1
+            // 
+            this.chartDataControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.chartDataControl1.Location = new System.Drawing.Point(0, 0);
+            this.chartDataControl1.Margin = new System.Windows.Forms.Padding(6);
+            this.chartDataControl1.Name = "chartDataControl1";
+            this.chartDataControl1.Size = new System.Drawing.Size(2556, 1067);
+            this.chartDataControl1.TabIndex = 0;
             // 
             // StrategyDataForm
             // 
@@ -927,10 +871,6 @@ namespace CryptoMarketClient.Strategies {
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemTextEdit2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit4)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(xyDiagram1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(lineSeriesView1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(series1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.chartControl)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.barManager1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dockManager1)).EndInit();
             this.dpData.ResumeLayout(false);
@@ -941,9 +881,6 @@ namespace CryptoMarketClient.Strategies {
             this.dockPanel3_Container.ResumeLayout(false);
             this.dpChart.ResumeLayout(false);
             this.dockPanel4_Container.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pcChart)).EndInit();
-            this.pcChart.ResumeLayout(false);
-            this.pcChart.PerformLayout();
             this.dockPanel1.ResumeLayout(false);
             this.controlContainer1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.gcPositions)).EndInit();
@@ -989,8 +926,6 @@ namespace CryptoMarketClient.Strategies {
         private DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit repositoryItemCheckEdit5;
         private DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit repositoryItemCheckEdit6;
         public DevExpress.XtraGrid.GridControl gcData;
-        public ChartControl chartControl;
-        private StandaloneBarDockControl standaloneBarDockControl1;
         private BarManager barManager1;
         private Bar bar1;
         private BarDockControl barDockControlTop;
@@ -1001,7 +936,6 @@ namespace CryptoMarketClient.Strategies {
         private BarButtonItem biReset;
         private BarSubItem bsPanes;
         private BarStaticItem bsIndex;
-        private DevExpress.XtraEditors.PanelControl pcChart;
         private DevExpress.XtraBars.Docking.DockManager dockManager1;
         private DevExpress.XtraBars.Docking.DockPanel dpChart;
         private DevExpress.XtraBars.Docking.ControlContainer dockPanel4_Container;
@@ -1026,5 +960,6 @@ namespace CryptoMarketClient.Strategies {
         private DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit repositoryItemCheckEdit7;
         private DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit repositoryItemCheckEdit8;
         private DevExpress.XtraBars.Docking2010.Views.Tabbed.Document document5;
+        private Crypto.UI.Forms.ChartDataControl chartDataControl1;
     }
 }

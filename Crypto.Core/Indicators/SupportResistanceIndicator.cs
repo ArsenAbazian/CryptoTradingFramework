@@ -78,6 +78,17 @@ namespace Crypto.Core.Indicators {
             return Support.Count > 0 ? Support.Last() : null;
         }
 
+        public double GetLastMinSupport(int countFromLast) {
+            double value = double.MaxValue;
+            for(int i = 0; i < countFromLast; i++) {
+                int index = Support.Count - 1 - i;
+                if(index < 0)
+                    break;
+                value = Math.Min(value, Support[index].Value);
+            }
+            return value;
+        }
+
         public bool HasSameLevel(SRValue lastItem, SRValue newItem) {
             return Math.Abs(newItem.Value - lastItem.Average) / lastItem.Average < (ThresoldPerc * 0.01);
         }

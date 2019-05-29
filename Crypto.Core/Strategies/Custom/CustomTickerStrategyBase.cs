@@ -1,4 +1,5 @@
-﻿using Crypto.Core.Helpers;
+﻿using Crypto.Core.Common;
+using Crypto.Core.Helpers;
 using Crypto.Core.Indicators;
 using CryptoMarketClient;
 using CryptoMarketClient.Common;
@@ -38,8 +39,18 @@ namespace Crypto.Core.Strategies.Custom {
 
         [InputParameter(1, 30, 0.1)]
         public double MinProfitPercent { get; set; } = 3;
+
+        public bool AllowTrailing { get; set; }
         [InputParameter(1, 10, 0.5)]
         public double TrailingStopLossPercent { get; set; } = 5;
+        [InputParameter(1, 1000, 0.5)]
+        public double TrailingStopLossAbsoluteValue { get; set; } = 70;
+
+        public bool AllowDAC { get; set; } = true;
+        [InputParameter(1, 50, 0.1)]
+        public double DACStartDownPercent { get; set; } = 1;
+        [InputParameter(1, 50, 0.1)]
+        public double DACMinSpreadPercent { get; set; } = 3;
 
         public List<IndicatorBase> Indicators { get; } = new List<IndicatorBase>();
         
@@ -75,11 +86,13 @@ namespace Crypto.Core.Strategies.Custom {
                 list.Add(new StrategyValidationError() { DataObject = this, Description = string.Format("Should be added at least one ticker.", ""), PropertyName = "StrategyInfo.Tickers", Value = "" });
         }
 
-        protected void CheckCloseLongPositions() {
+        protected void ProcessLongPositions() {
             bool terminate = false;
             while(!terminate) {
                 terminate = true;
                 foreach(OpenPositionInfo info in OpenedOrders) {
+                    if(ProcessDAC(info))
+                        continue;
                     if(ShouldContinueTrailing(info))
                         continue;
                     if(ShouldCloseLongPosition(info)) {
@@ -91,7 +104,28 @@ namespace Crypto.Core.Strategies.Custom {
             }
         }
 
-        protected bool ShouldCloseLongPosition(OpenPositionInfo info) {
+        protected virtual bool ProcessDAC(OpenPositionInfo info) {
+            if(!info.AllowDAC || info.Type != OrderType.Buy)
+                return false;
+            double highBid = Ticker.OrderBook.Bids[0].Value;
+            if(highBid >= info.DACInfo.Start.Value)
+                return false;
+            int zoneIndex = info.DACInfo.GetZoneIndex(info.CurrentValue);
+            if(zoneIndex == -1 || info.DACInfo.IsExecuted(zoneIndex))
+                return false;
+            double amount = info.DACTotalAmount * info.DACInfo.GetAmountInPc(zoneIndex) / 100;
+            OpenPositionInfo dacPos = OpenLongPosition(highBid, amount, true);
+            if(dacPos != null) {
+                dacPos.AllowDAC = false;
+                RedWaterfallDataItem item = (RedWaterfallDataItem)StrategyData.Last();
+                info.DACInfo.Executed[zoneIndex] = true;
+                dacPos.CloseValue = 2 * CalcFee(dacPos.Total) + dacPos.OpenValue * 0.01; // 1% profit at least
+                item.Mark = dacPos.Mark = "DAC " + zoneIndex;
+            }
+            return true;
+        }
+
+        protected virtual bool ShouldCloseLongPosition(OpenPositionInfo info) {
             if(info.Type != OrderType.Buy)
                 return false;
             double currentBid = Ticker.OrderBook.Bids[0].Value;
@@ -99,7 +133,7 @@ namespace Crypto.Core.Strategies.Custom {
                 if(currentBid > info.CloseValue)
                     return true;
             }
-            if(currentBid < info.StopLoss && currentBid >= info.OpenValue * 1.01) // 3% down
+            if(currentBid < info.StopLoss && currentBid >= info.OpenValue * 1.01) // 1% down
                 return true;
             return false;
         }
@@ -197,8 +231,7 @@ namespace Crypto.Core.Strategies.Custom {
 
         protected virtual void UpdateIndicatorsDataItems() {
             foreach(IndicatorBase indicator in Indicators) {
-                int max = DataItemInfos.Max(i => i.PanelIndex);
-                indicator.AddVisualInfo(DataItemInfos);
+                indicator.AddVisualInfo(DataItemInfos, "Indicator " + indicator.Name);
             }
         }
 

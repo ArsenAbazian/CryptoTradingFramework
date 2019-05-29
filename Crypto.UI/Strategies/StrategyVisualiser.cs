@@ -32,8 +32,8 @@ namespace CryptoMarketClient.Strategies {
         
         private void UpdateDataSource() {
             foreach(var item in Visual.DataItemInfos) {
+                object root = item.Value == null ? Visual : item.Value;
                 if(!string.IsNullOrEmpty(item.BindingSource)) {
-                    object root = item.Value == null ? Visual : item.Value;
                     if(item.BindingRoot != null)
                         root = item.BindingRoot;
                     item.DataSource = BindingHelper.GetBindingValue(item.BindingSource, root);
@@ -41,8 +41,16 @@ namespace CryptoMarketClient.Strategies {
             }
         }
 
+        public event DataControlProvideEventHandler GetControl;
+        protected void RaiseGetControl(DataControlProvideEventArgs e) {
+            if(GetControl == null)
+                return;
+            GetControl(this, e);
+        }
+
         public ChartControl Chart { get; set; }
         public GridControl Grid { get; set; }
+        public bool SkipSeparateItems { get; set; } = true;
         public IStrategyDataItemInfoOwner Visual { get; private set; }
 
         protected virtual void InitializeChart() {
@@ -51,11 +59,17 @@ namespace CryptoMarketClient.Strategies {
             bool shouldRemoveDefaultSeries = Chart.Series.Count > 0;
             for(int i = 0; i < Visual.DataItemInfos.Count; i++) {
                 StrategyDataItemInfo info = Visual.DataItemInfos[i];
+                if(SkipSeparateItems && info.OwnChart)
+                    continue;
+                if(info.Type == DataType.HistogrammData)
+                    info = CreateHistogrammDetailItem(info);
                 if(!info.Visibility.HasFlag(DataVisibility.Chart))
                     continue;
                 if(info.ChartType == ChartType.Annotation)
                     continue;
                 Series s = CreateSeries(info);
+                if(s == null)
+                    continue;
                 Chart.Series.Add(s);
             }
             if(shouldRemoveDefaultSeries)
@@ -76,10 +90,97 @@ namespace CryptoMarketClient.Strategies {
                     ((XYDiagram)Chart.Diagram).AxisX.DateTimeScaleOptions.MeasureUnitMultiplier = di.TimeUnitMeasureMultiplier;
                 }
             }
+
+            for(int i = 0; i < Visual.DataItemInfos.Count; i++) {
+                StrategyDataItemInfo info = Visual.DataItemInfos[i];
+                if(SkipSeparateItems && info.OwnChart) {
+                    if(info.Type == DataType.HistogrammData)
+                        info = CreateHistogrammDetailItem(info);
+                    DataControlProvideEventArgs e = new DataControlProvideEventArgs() { DataItem = info };
+                    RaiseGetControl(e);
+                }
+            }
+
+            if(Chart.Series[0].ArgumentScaleType == ScaleType.Numerical)
+                ((XYDiagram)Chart.Diagram).AxisX.Label.TextPattern = "{A}";
+            else
+                ((XYDiagram)Chart.Diagram).AxisX.Label.TextPattern = "{A:dd.MM hh:mm:ss}";
         }
+
+        private StrategyDataItemInfo CreateHistogrammDetailItem(StrategyDataItemInfo info) {
+            object ds = info.DataSource == null ? Visual.Items : info.DataSource;
+            StrategyDataItemInfo detail = new StrategyDataItemInfo();
+            detail.ChartType = info.ChartType;
+            detail.Color = info.Color;
+            detail.FieldName = "Y";
+            detail.ArgumentScaleType = ArgumentScaleType.Numerical;
+            detail.ArgumentDataMember = "X";
+            detail.FormatString = info.FormatString;
+            detail.GraphWidth = info.GraphWidth;
+            detail.Name = info.Name;
+            detail.PanelName = info.PanelName;
+            detail.Type = DataType.Numeric;
+            detail.DataSource = HistogrammCalculator.Calculate(ds, info.FieldName, info.ClasterizationWidth);
+            return detail;
+        }
+
+        protected virtual void CreateConstantLines(StrategyDataItemInfo info) {
+            XYDiagram dg = (XYDiagram)Chart.Diagram;
+            XYDiagramPaneBase pane = CheckAddPanel(info);
+            Axis axis = null;
+
+            if(info.PanelName == "Default") {
+                axis = info.ChartType == ChartType.ConstantX? (Axis)dg.AxisX: (Axis)dg.AxisY;
+            }
+            else {
+                if(info.ChartType == ChartType.ConstantX)
+                    axis = dg.SecondaryAxesX[info.PanelName];
+                else
+                    axis = dg.SecondaryAxesY[info.PanelName];
+            }
+            if(axis == null)
+                return;
+
+            if(axis != null) {
+                System.Collections.IEnumerable en = info.DataSource as System.Collections.IEnumerable;
+                if(en != null) {
+                    PropertyInfo pi = null;
+                    foreach(object item in en) {
+                        if(pi == null) pi = item.GetType().GetProperty(info.FieldName, BindingFlags.Instance | BindingFlags.Public);
+                        double value = Convert.ToDouble(pi.GetValue(item));
+                        axis.ConstantLines.Add(new ConstantLine() { AxisValue = value, Color = info.Color, Name = item.ToString() });
+                    }
+                }
+                else {
+                    object value = info.DataSource == null ? info.Value : info.DataSource;
+                    if(value != null)
+                        axis.ConstantLines.Add(new ConstantLine() { AxisValue = value, Color = info.Color, Name = info.Name });
+                }
+                if(info.ChartType == ChartType.ConstantY) {
+                    this.Chart.AxisWholeRangeChanged -= OnYAxisWholeRangeChanged;
+                    this.Chart.AxisWholeRangeChanged += OnYAxisWholeRangeChanged;
+                }
+            }
+        }
+
+        private void OnYAxisWholeRangeChanged(object sender, AxisRangeChangedEventArgs e) {
+            if(e.Axis is AxisY) {
+                if(((AxisY)e.Axis).ConstantLines.Count == 0)
+                    return;
+                double min = Convert.ToDouble(((AxisY)e.Axis).ConstantLines.Min( a => a.AxisValue));
+                double minAxis = Convert.ToDouble(e.Axis.WholeRange.MinValue);
+                if(min < minAxis)
+                    e.Axis.WholeRange.MinValue = min;
+            }
+        }
+
         protected virtual Series CreateSeries(StrategyDataItemInfo info) {
             CheckAddPanel(info);
             Series res = null;
+            if(info.ChartType == ChartType.ConstantX || info.ChartType == ChartType.ConstantY) {
+                CreateConstantLines(info);
+                return null;
+            }
             if(info.ChartType == ChartType.CandleStick)
                 res = CreateCandleStickSeries(info);
             if(info.ChartType == ChartType.Line || info.ChartType == ChartType.StepLine)
@@ -92,9 +193,12 @@ namespace CryptoMarketClient.Strategies {
                 res = CreatePointSeries(info);
 
             XYDiagramSeriesViewBase view = (XYDiagramSeriesViewBase)res.View;
-            if(info.PanelIndex > 0) {
-                view.Pane = ((XYDiagram2D)Chart.Diagram).Panes[info.PanelIndex - 1];
-                view.AxisY = ((XYDiagram)Chart.Diagram).SecondaryAxesY[info.PanelIndex - 1];
+            if(info.PanelName != "Default") {
+                view.Pane = ((XYDiagram)Chart.Diagram).Panes[info.PanelName];
+                view.AxisY = ((XYDiagram)Chart.Diagram).SecondaryAxesY[info.PanelName];
+            }
+            else {
+                
             }
             
             return res;
@@ -133,8 +237,8 @@ namespace CryptoMarketClient.Strategies {
             PropertyInfo pAnchor = Visual.Items[0].GetType().GetProperty(info.AnnotationAnchorField, BindingFlags.Instance | BindingFlags.Public);
             PropertyInfo pTime = Visual.Items[0].GetType().GetProperty("Time", BindingFlags.Instance | BindingFlags.Public);
             XYDiagramPaneBase pane = ((XYDiagram)Chart.Diagram).DefaultPane;
-            if(info.PanelIndex != 0)
-                pane = ((XYDiagram)Chart.Diagram).Panes[info.PanelIndex];
+            if(info.PanelName != "Default")
+                pane = ((XYDiagram)Chart.Diagram).Panes[info.PanelName];
 
             int index = 0;
 
@@ -157,7 +261,8 @@ namespace CryptoMarketClient.Strategies {
                 if(info.HasAnnotationStringFormat)
                     annotationText = GetFormattedText(annotationText, obj);
 
-                TextAnnotation annotation = pane.Annotations.AddTextAnnotation(info.FieldName + "InPane" + info.PanelIndex, annotationText);
+                TextAnnotation annotation = pane.Annotations.AddTextAnnotation(info.FieldName + "InPane" + info.PanelName, annotationText);
+                annotation.Tag = obj;
                 PaneAnchorPoint point = new PaneAnchorPoint();
                 point.AxisXCoordinate.AxisValue = time;
                 point.AxisYCoordinate.AxisValue = yValue;
@@ -186,6 +291,7 @@ namespace CryptoMarketClient.Strategies {
             Series s = new Series();
             s.Name = info.FieldName;
             s.ArgumentDataMember = GetArgumentDataMember(info);
+            s.ArgumentScaleType = GetArgumentScaleType(info);
             s.ValueDataMembers.AddRange(info.FieldName);
             s.ValueScaleType = ScaleType.Numerical;
             PointSeriesView view = new PointSeriesView();
@@ -208,10 +314,20 @@ namespace CryptoMarketClient.Strategies {
             return string.IsNullOrEmpty(info.ArgumentDataMember) ? "Time" : info.ArgumentDataMember;
         }
 
+        ScaleType GetArgumentScaleType(StrategyDataItemInfo info) {
+            switch(info.ArgumentScaleType) {
+                case ArgumentScaleType.DateTime:
+                    return ScaleType.DateTime;
+                case ArgumentScaleType.Numerical:
+                    return ScaleType.Numerical;
+            }
+            return ScaleType.DateTime;
+        }
         protected virtual Series CreateAreaSeries(StrategyDataItemInfo info) {
             Series s = new Series();
             s.Name = info.FieldName;
             s.ArgumentDataMember = GetArgumentDataMember(info);
+            s.ArgumentScaleType = GetArgumentScaleType(info);
             s.ValueDataMembers.AddRange(info.FieldName);
             s.ValueScaleType = ScaleType.Numerical;
             s.ShowInLegend = true;
@@ -226,6 +342,7 @@ namespace CryptoMarketClient.Strategies {
             Series s = new Series();
             s.Name = info.FieldName;
             s.ArgumentDataMember = GetArgumentDataMember(info);
+            s.ArgumentScaleType = GetArgumentScaleType(info);
             s.ValueDataMembers.AddRange(info.FieldName);
             s.ValueScaleType = ScaleType.Numerical;
             s.ShowInLegend = true;
@@ -241,6 +358,7 @@ namespace CryptoMarketClient.Strategies {
             Series s = new Series();
             s.Name = info.FieldName;
             s.ArgumentDataMember = GetArgumentDataMember(info);
+            s.ArgumentScaleType = GetArgumentScaleType(info);
             s.ValueDataMembers.AddRange(info.FieldName);
             s.ValueScaleType = ScaleType.Numerical;
             s.ShowInLegend = true;
@@ -292,18 +410,23 @@ namespace CryptoMarketClient.Strategies {
             return s;
         }
 
-        private void CheckAddPanel(StrategyDataItemInfo info) {
+        private XYDiagramPaneBase CheckAddPanel(StrategyDataItemInfo info) {
             XYDiagram diagram = (XYDiagram)Chart.Diagram;
             if(diagram == null)
-                return;
+                return null;
             diagram.AxisY.WholeRange.AlwaysShowZeroLevel = false;
-            while(diagram.Panes.Count <= info.PanelIndex - 1) {
-                SecondaryAxisY axis = new SecondaryAxisY();
-                axis.Assign(diagram.AxisY);
-                diagram.SecondaryAxesY.Add(axis);
-                XYDiagramPane pane = new XYDiagramPane() { Name = info.Name };
-                diagram.Panes.Add(pane);
-            }
+            if(info.PanelName == "Default")
+                return diagram.DefaultPane;
+            if(diagram.Panes[info.PanelName] != null)
+                return diagram.Panes[info.PanelName];
+
+            SecondaryAxisY axis = new SecondaryAxisY();
+            axis.Assign(diagram.AxisY);
+            axis.Name = info.PanelName;
+            diagram.SecondaryAxesY.Add(axis);
+            XYDiagramPane pane = new XYDiagramPane() { Name = info.PanelName };
+            diagram.Panes.Add(pane);
+            return pane;
         }
 
         private GridFormatRule CreateRule(GridColumn column, bool value, Color foreColor, Color backColor) {
@@ -444,5 +567,13 @@ namespace CryptoMarketClient.Strategies {
                 return FormatType.DateTime;
             return FormatType.Numeric;
         }
+    }
+
+    public delegate void DataControlProvideEventHandler(object sender, DataControlProvideEventArgs e);
+        
+    public class DataControlProvideEventArgs : EventArgs {
+        public StrategyDataItemInfo DataItem { get; set; }
+        public ChartControl Chart { get; set; }
+        public GridControl Grid { get; set; }
     }
 }

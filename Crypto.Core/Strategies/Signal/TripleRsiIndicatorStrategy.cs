@@ -1,4 +1,5 @@
-﻿using Crypto.Core.Indicators;
+﻿using Crypto.Core.Common;
+using Crypto.Core.Indicators;
 using Crypto.Core.Strategies.Custom;
 using CryptoMarketClient;
 using CryptoMarketClient.Common;
@@ -107,7 +108,7 @@ namespace Crypto.Core.Strategies.Signal {
                 SendNotification(GetNotificationString("time to buy"));
                 OpenLongPosition(Ticker.OrderBook.Asks[0].Value, MaxAllowedDeposit * 0.2 / Ticker.OrderBook.Asks[0].Value);
             }
-            CheckCloseLongPositions();
+            ProcessLongPositions();
             // check for sell
             //else if(TimeToSell(RsiFastIndicator.Result.Last().Value, RsiMiddleIndicator.Result.Last().Value, RsiSlowIndicator.Result.Last().Value)) {
             //    if(State == BuySellStrategyState.WaitingForSell) {
@@ -192,10 +193,10 @@ namespace Crypto.Core.Strategies.Signal {
             CandleStickItem();
             AnnotationItem("Buy", "Buy", Color.Green, "Value").AnnotationText = "{SellInfo}";
             AnnotationItem("Sell", "Sell", Color.Red, "Value");
-            StrategyDataItemInfo rsiFast = DataItem("Value"); rsiFast.PanelIndex = 1; rsiFast.Color = System.Drawing.Color.Red; rsiFast.BindingRoot = this; rsiFast.BindingSource = "RsiFastIndicator.Result";
-            StrategyDataItemInfo rsiMiddle = DataItem("Value"); rsiMiddle.PanelIndex = 1; rsiMiddle.Color = System.Drawing.Color.Green; rsiMiddle.BindingRoot = this; rsiMiddle.BindingSource = "RsiMiddleIndicator.Result";
-            StrategyDataItemInfo rsiSlow = DataItem("Value"); rsiSlow.PanelIndex = 1; rsiSlow.Color = System.Drawing.Color.Blue; rsiSlow.BindingRoot = this; rsiSlow.BindingSource = "RsiSlowIndicator.Result";
-            StrategyDataItemInfo earned = DataItem("Earned"); earned.PanelIndex = 2; earned.Color = Color.FromArgb(0x40, Color.Green);
+            StrategyDataItemInfo rsiFast = DataItem("Value"); rsiFast.PanelName = "Rsi"; rsiFast.Color = System.Drawing.Color.Red; rsiFast.BindingRoot = this; rsiFast.BindingSource = "RsiFastIndicator.Result";
+            StrategyDataItemInfo rsiMiddle = DataItem("Value"); rsiMiddle.PanelName = "Rsi"; rsiMiddle.Color = System.Drawing.Color.Green; rsiMiddle.BindingRoot = this; rsiMiddle.BindingSource = "RsiMiddleIndicator.Result";
+            StrategyDataItemInfo rsiSlow = DataItem("Value"); rsiSlow.PanelName = "Rsi"; rsiSlow.Color = System.Drawing.Color.Blue; rsiSlow.BindingRoot = this; rsiSlow.BindingSource = "RsiSlowIndicator.Result";
+            StrategyDataItemInfo earned = DataItem("Earned"); earned.PanelName = "Earned"; earned.Color = Color.FromArgb(0x40, Color.Green);
         }
 
         private void AddStrategyData() {

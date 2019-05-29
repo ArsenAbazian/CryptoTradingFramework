@@ -14,6 +14,8 @@ using System.IO;
 using DevExpress.XtraBars;
 using System.Reflection;
 using Crypto.Core.Strategies;
+using Crypto.Core.Strategies.Custom;
+using DevExpress.Utils;
 
 namespace Crypto.UI.Forms {
     public partial class ChartDataControl : XtraUserControl {
@@ -88,6 +90,36 @@ namespace Crypto.UI.Forms {
             }
         }
 
+        private void bsSeries_GetItemData(object sender, EventArgs e) {
+            if(this.bsSeries.ItemLinks.Count != 0)
+                return;
+            XYDiagram dg = (XYDiagram)this.chartControl.Diagram;
+            if(dg == null)
+                return;
+            List<XYDiagramPaneBase> panes = new List<XYDiagramPaneBase>();
+            panes.Add(dg.DefaultPane);
+            foreach(XYDiagramPaneBase pane in dg.Panes)
+                panes.Add(pane);
+            foreach(XYDiagramPaneBase item in panes) {
+                BarSubItem paneMenu = new BarSubItem(this.barManager1, item.Name);
+                this.bsSeries.ItemLinks.Add(paneMenu);
+                foreach(Series s in this.chartControl.Series) {
+                    XYDiagramSeriesViewBase v = (XYDiagramSeriesViewBase)s.View;
+                    if(v.Pane != item)
+                        continue;
+
+                    BarCheckItem ch = new BarCheckItem(this.barManager1) { Caption = s.Name, Checked = true };
+                    ch.Tag = s;
+                    ch.CheckedChanged += OnSeriesCheckedChanged;
+                    paneMenu.ItemLinks.Add(ch);
+                }
+            }
+        }
+
+        private void OnSeriesCheckedChanged(object sender, ItemClickEventArgs e) {
+            Series s = (Series)e.Item.Tag;
+            s.Visible = ((BarCheckItem)sender).Checked;
+        }
         private void OnPaneCheckedChanged(object sender, ItemClickEventArgs e) {
             XYDiagramPane item = (XYDiagramPane)e.Item.Tag;
             item.Visibility = ((BarCheckItem)e.Item).Checked ? ChartElementVisibility.Visible : ChartElementVisibility.Hidden;
@@ -98,16 +130,19 @@ namespace Crypto.UI.Forms {
         }
 
         private void chartControl_MouseMove(object sender, MouseEventArgs e) {
-            //ChartHitInfo info = this.chartControl.CalcHitInfo(e.Location);
+            //ChartHitInfo info = this.chartControl.CalcHitInfo(e.Location, false);
             //try {
-            //    if(info.SeriesPoint != null) {
-            //        DateTime dt = info.SeriesPoint.DateTimeArgument;
-            //        PropertyInfo pi = Visual.Items[0].GetType().GetProperty("Time", BindingFlags.Instance | BindingFlags.Public);
-            //        int index = Visual.Items.FindIndex(d => object.Equals(pi.GetValue(d), dt));
-            //        this.bsIndex.Caption = "Index = " + index;
+            //    if(info.InAnnotation) {
+            //        IDetailInfoProvider detailProvider = info.Annotation.Tag as IDetailInfoProvider;
+            //        ToolTipControllerShowEventArgs sa = new ToolTipControllerShowEventArgs();
+            //        sa.AllowHtmlText = DefaultBoolean.True;
+            //        sa.ToolTipType = ToolTipType.SuperTip;
+            //        sa.Appearance.TextOptions.WordWrap = WordWrap.Wrap;
+            //        sa.ToolTip = detailProvider.DetailString;
+            //        sa.SelectedObject = detailProvider;
+            //        ToolTipController.DefaultController.ShowHint(sa);
             //    }
             //    else {
-            //        this.bsIndex.Caption = "";
             //    }
             //}
             //catch(Exception) {

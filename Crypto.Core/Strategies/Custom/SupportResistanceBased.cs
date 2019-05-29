@@ -11,6 +11,8 @@ using System.Drawing;
 using CryptoMarketClient.Common;
 using System.Xml.Serialization;
 using Crypto.Core.Helpers;
+using Crypto.Core.Common.OrderGrid;
+using Crypto.Core.Common;
 
 namespace Crypto.Core.Strategies.Custom {
     public class SupportResistanceBasedStrategy : CustomTickerStrategy {
@@ -127,7 +129,7 @@ namespace Crypto.Core.Strategies.Custom {
             //AnnotationItem("Support", "Support", System.Drawing.Color.Green, "SRLevel");
             //AnnotationItem("Resistance", "Resistance", System.Drawing.Color.Red, "SRLevel");
             StrategyDataItemInfo br = AnnotationItem("Break", "Break", System.Drawing.Color.Blue, "Value"); br.Visibility = DataVisibility.Both; br.AnnotationText = "Br"; //"Br={BreakPercent:0.00} Closed={Closed} CloseStickCount={CloseLength}";
-            //StrategyDataItemInfo bp = DataItem("BreakPercent"); bp.Color = Color.Green; bp.ChartType = ChartType.Bar; bp.PanelIndex = 2;
+            //StrategyDataItemInfo bp = DataItem("BreakPercent"); bp.Color = Color.Green; bp.ChartType = ChartType.Bar; bp.PanelName = "BreakPercent";
 
             StrategyDataItemInfo cl = AnnotationItem("ClosedOrder", "Closed", System.Drawing.Color.Green, "Value"); cl.Visibility = DataVisibility.Both; cl.AnnotationText = "Cl"; //"Br={BreakPercent:0.00} Closed={Closed} CloseStickCount={CloseLength}";
 
@@ -144,19 +146,17 @@ namespace Crypto.Core.Strategies.Custom {
             //StrategyDataItemInfo sp = DataItem("SRSpread"); sp.Color = Color.FromArgb(0x20, Color.Green); sp.ChartType = ChartType.Area; sp.PanelIndex = 3;
             DataItem("Profit", Color.Green).Visibility = DataVisibility.Table;
             var ear = DataItem("Earned", Color.Green);
-            ear.PanelIndex = 1;
+            ear.PanelName = "Earned";
         }
 
         protected List<RedWaterfallDataItem> PostProcessItems { get; } = new List<RedWaterfallDataItem>();
         protected virtual RedWaterfallDataItem AddStrategyData() {
-            if(Ticker.CandleStickData.Count < SimulationStartItemsCount) /// need back data for simulation
-                return null;
             RedWaterfallDataItem item = new RedWaterfallDataItem();
             item.Earned = Earned;
             item.Candle = Ticker.CandleStickData[Ticker.CandleStickData.Count - 2];
             item.Atr = AtrIndicator.Result[AtrIndicator.Result.Count - 2].Value;
-            if(double.IsNaN(item.Atr))
-                throw new Exception();
+            //if(double.IsNaN(item.Atr))
+            //    throw new Exception();
             item.Index = StrategyData.Count;
             StrategyData.Add(item);
 
@@ -218,7 +218,11 @@ namespace Crypto.Core.Strategies.Custom {
         }
     }
 
-    public class RedWaterfallDataItem {
+    public interface IDetailInfoProvider {
+        string DetailString { get; }
+    }
+
+    public class RedWaterfallDataItem : IDetailInfoProvider {
         public DateTime Time { get { return Candle.Time; } }
         public double Open { get { return Candle.Open; } }
         public double Close { get { return Candle.Close; } }
@@ -265,162 +269,38 @@ namespace Crypto.Core.Strategies.Custom {
         public object BreakValue { get; internal set; }
         public double Earned { get; set; }
         public string Mark { get; set; }
-        public double PercentChangeFromSupport { get; set; }
-    }
 
-    public class OpenPositionInfo {
-        public DateTime Time { get; set; }
-        public DateTime CloseTime { get; set; }
-        public TimeSpan Length { get { return CloseTime - Time; } }
-
-        public bool AllowHistory { get; set; } = false;
-        public TimeSpan AggregationTime { get; set; } = new TimeSpan(0, 0, 30); 
-
-        public OrderType Type { get; set; }
-        public bool AllowTrailing { get; set; }
-        public string MarketName { get; set; }
-        public double StopLossPercent { get; set; } = 5;
-        public double OpenValue { get; set; }
-        public double CloseValue { get; set; }
-        public double Change { get { return (CloseValue - OpenValue) / OpenValue * 100; } }
-        double currentValue;
-        public void UpdateCurrentValue(DateTime time, double value) {
-            if(CurrentValue == value)
-                return;
-            currentValue = value;
-            UpdateStopLoss();
-            OnCurrentValueChanged(time, value);
-        }
-        public double CurrentValue {
-            get { return currentValue; }
-            //set {
-            //    if(CurrentValue == value)
-            //        return;
-            //    currentValue = value;
-            //    UpdateStopLoss();
-            //    OnCurrentValueChanged();
-            //}
-        }
-
-        public void OnCurrentValueChanged(DateTime time, double value) {
-            if(!AllowHistory)
-                return;
-            DateTime lastValueTime = DateTime.MinValue;
-            if(ValueHistory.Count > 0)
-                lastValueTime = ValueHistory.Last().Time;
-            if(time - lastValueTime > AggregationTime)
-                ValueHistory.Add(new TimeBaseValue() { Time = time, Value = value });
-            DateTime stopLossTime = DateTime.MinValue;
-            if(StopLossHistory.Count > 0)
-                stopLossTime = StopLossHistory.Last().Time;
-            if(time - stopLossTime > AggregationTime)
-                StopLossHistory.Add(new TimeBaseValue() { Time = time, Value = StopLoss });
-        }
-
-        public ResizeableArray<TimeBaseValue> ValueHistory { get; } = new ResizeableArray<TimeBaseValue>();
-        public ResizeableArray<TimeBaseValue> StopLossHistory { get; } = new ResizeableArray<TimeBaseValue>();
-
-        protected double[] PreviewFromHistory(ResizeableArray<TimeBaseValue> history) {
-            if(history.Count == 0)
-                return new double[0];
-            int count = Math.Min(50, history.Count);
-            int delta = Math.Max(1, history.Count / count);
-            double[] data = new double[count];
-            for(int i = 0, j = 0; i < count && j < history.Count; i++, j += delta) {
-                data[i] = history[j].Value;
-            }
-            return data;
-        }
-
-        double[] valuePreview;
-        public double[] ValuePreview {
+        List<OpenPositionInfo> closedPositions;
+        public List<OpenPositionInfo> ClosedPositions {
             get {
-                if(valuePreview == null)
-                    valuePreview = PreviewFromHistory(ValueHistory);
-                return valuePreview;
+                if(closedPositions == null)
+                    closedPositions = new List<OpenPositionInfo>();
+                return closedPositions;
             }
         }
 
-        double[] stopLossPreview;
-        public double[] StopLossPreview {
+        public string DetailString {
             get {
-                if(stopLossPreview == null)
-                    stopLossPreview = PreviewFromHistory(StopLossHistory);
-                return stopLossPreview;
-            }
-        }
-
-        public double Earned { get; set; }
-        public double Spent { get; set; }
-        public double Profit { get { return Earned - Spent; } }
-        public double StopLoss { get; set; }
-        public double Amount { get; set; }
-        public double Total { get; set; }
-        [XmlIgnore]
-        public object Tag { get; set; }
-        [XmlIgnore]
-        public object Tag2 { get; set; }
-        public string Mark { get; set; }
-
-        public void UpdateStopLoss() {
-            double newStopLoss = CurrentValue * (100 - StopLossPercent) * 0.01;
-            StopLoss = Math.Max(newStopLoss, StopLoss);
-        }
-    }
-
-    public class OpenPositionVisualDataProvider : IStrategyDataItemInfoOwner {
-        public OpenPositionVisualDataProvider(ResizeableArray<OpenPositionInfo> items) {
-            Items = items;
-            InitializeDataItemInfos();
-        }
-
-        protected virtual void InitializeDataItemInfos() {
-            StrategyDataItemInfo.TimeItem(DataItemInfos, "Time").Visibility = DataVisibility.Table;
-            StrategyDataItemInfo.TimeItem(DataItemInfos, "CloseTime").Visibility = DataVisibility.Table;
-            StrategyDataItemInfo.TimeSpanItem(DataItemInfos, "Length").Visibility = DataVisibility.Table;
-            StrategyDataItemInfo.TimeItem(DataItemInfos, "Mark").Visibility = DataVisibility.Table;
-            StrategyDataItemInfo.EnumItem(DataItemInfos, "Type").Visibility = DataVisibility.Table;
-            StrategyDataItemInfo.DataItem(DataItemInfos, "OpenValue").Visibility = DataVisibility.Table;
-            StrategyDataItemInfo.DataItem(DataItemInfos, "CloseValue").Visibility = DataVisibility.Table;
-            StrategyDataItemInfo.DataItem(DataItemInfos, "Change").Visibility = DataVisibility.Table;
-            StrategyDataItemInfo.DataItem(DataItemInfos, "StopLoss").Visibility = DataVisibility.Table;
-            StrategyDataItemInfo.DataItem(DataItemInfos, "Spent").Visibility = DataVisibility.Table;
-            StrategyDataItemInfo.DataItem(DataItemInfos, "Earned").Visibility = DataVisibility.Table;
-            StrategyDataItemInfo.DataItem(DataItemInfos, "Profit").Visibility = DataVisibility.Table;
-
-            var vp = StrategyDataItemInfo.DataItem(DataItemInfos, "ValuePreview"); vp.Visibility = DataVisibility.Table;
-            var sp = StrategyDataItemInfo.DataItem(DataItemInfos, "StopLossPreview"); sp.Visibility = DataVisibility.Table;
-
-            var vh = StrategyDataItemInfo.DataItem(DataItemInfos, "Value"); vh.Visibility = DataVisibility.Chart; vh.Type = DataType.ChartData; vh.Color = Color.Green; vh.BindingSource = "ValueHistory";
-            var sh = StrategyDataItemInfo.DataItem(DataItemInfos, "Value"); sh.Visibility = DataVisibility.Chart; sh.Type = DataType.ChartData; sh.Color = Color.Red; sh.BindingSource = "StopLossHistory";
-
-            vp.DetailInfo = vh;
-            sp.DetailInfo = sh;
-        }
-
-        public List<StrategyDataItemInfo> DataItemInfos { get; } = new List<StrategyDataItemInfo>();
-
-        public ResizeableArray<OpenPositionInfo> Items { get; private set; }
-
-        string IStrategyDataItemInfoOwner.Name => "Opened Positions";
-
-        List<StrategyDataItemInfo> IStrategyDataItemInfoOwner.DataItemInfos => DataItemInfos;
-
-        ResizeableArray<object> IStrategyDataItemInfoOwner.Items {
-            get {
-                ResizeableArray<object> res = new ResizeableArray<object>();
-                for(int i = 0; i < Items.Count; i++) {
-                    res.Add(Items[i]);
+                StringBuilder b = new StringBuilder();
+                foreach(OpenPositionInfo info in ClosedPositions) {
+                    b.Append(info.ToHtmlString());
+                    b.AppendLine();
                 }
-                return res;
+                return b.ToString();
             }
         }
+
+        public double PercentChangeFromSupport { get; set; }
+        public double SpreadBaseResistance { get; internal set; }
     }
 
-    public class OpenPositionTrailingHistoryItem {
-        public DateTime Time { get; set; }
-        public double Current { get; set; }
-        public double NextClose { get; set; }
+    public class TrailingInfo {
+        public bool Activated { get; set; }
+        public double StartValue { get; set; }
+        public double CurrentValue { get; set; }
+        public double CloseValue { get; set; }
+        public double StopLossPercent { get; set; }
+        public double StopLossDelta { get; set; }
         public double StopLoss { get; set; }
     }
 }

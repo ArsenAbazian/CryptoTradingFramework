@@ -1,4 +1,5 @@
-﻿using Crypto.Core.Helpers;
+﻿using Crypto.Core.Common;
+using Crypto.Core.Helpers;
 using Crypto.Core.Indicators;
 using CryptoMarketClient.Common;
 using System;
@@ -41,6 +42,33 @@ namespace Crypto.Core.Strategies.Custom {
             MinResistanceBreakPercent = ss.MinResistanceBreakPercent;
             MinProfitPercent = ss.MinProfitPercent;
         }
+        protected virtual void OpenBreakUpPosition(double value) {
+            OpenPositionInfo info = OpenLongPosition(value, MaxAllowedDeposit * 0.2 / value, AllowTrailing);
+            RedWaterfallDataItem item = (RedWaterfallDataItem)StrategyData.Last();
+            if(info != null) item.Mark = info.Mark = "BreakUp";
+        }
+        protected virtual void OpenPingPongPosition(double value, double resistance, double support) {
+            OpenPositionInfo info = OpenLongPosition(value, MaxAllowedDeposit * 0.2 / value, false);
+            if(info == null)
+                return;
+            info.Tag2 = SRIndicator.Support.Last();
+            double spread = resistance - support;
+            info.CloseValue = resistance - spread * 0.1;
+            RedWaterfallDataItem item = (RedWaterfallDataItem)StrategyData.Last();
+            item.Mark = info.Mark = "PingPong";
+
+            if(AllowDAC) {
+                double dacStart = value * (100.0 - DACStartDownPercent) / 100.0;
+                double dacEnd = SRIndicator2.GetLastMinSupport(5);
+                if(dacEnd > dacStart)
+                    dacEnd = dacStart - (SRIndicator2.Resistance.Last().Value - SRIndicator2.Support.Last().Value);
+                if((dacStart - dacEnd) / dacEnd < DACMinSpreadPercent)  // below one percent
+                    dacEnd = dacStart - dacStart * DACMinSpreadPercent / 100;
+
+                info.AllowDAC = true;
+                info.InitializeDAC(dacStart, dacEnd, info.Amount, 3);
+            }
+        }
         protected override void ProcessTickerCore() {
             RedWaterfallDataItem item = StrategyData.Count > 0 ? (RedWaterfallDataItem)StrategyData.Last() : null;
             if(Ticker.CandleStickData.Count < SimulationStartItemsCount) /// need back data for simulation
@@ -53,11 +81,12 @@ namespace Crypto.Core.Strategies.Custom {
             double lastAsk = Ticker.OrderBook.Asks[0].Value;
             double spread = (lastAsk - lr.Value);
             item.BreakPercent = spread / item.SRSpread * 100;
-            
+            item.SpreadBaseResistance = spread;
+            item.SRSpread = lr.Value - ls.Value;
+
             if(spread > MinResistanceBreakValue && spread < MinResistanceBreakValue + 100) { // to high 
                 if(!AlreadyOpenedPosition()) {
-                    OpenPositionInfo info = OpenLongPosition(lastAsk, MaxAllowedDeposit * 0.2 / lastAsk, true);
-                    if(info != null) item.Mark = info.Mark = "Break";
+                    OpenBreakUpPosition(lastAsk);
                 }
             }
             else {
@@ -68,16 +97,11 @@ namespace Crypto.Core.Strategies.Custom {
                 item.PercentChangeFromSupport = Math.Min(item.PercentChangeFromSupport, pc);
                 if(spread2 > ls2.Value * 0.01 && pc > 0 && pc < 0.1 && ls.Length > 20) { // minimal spread
                     if(!AlreadyOpenedPosition()) {
-                        OpenPositionInfo info = OpenLongPosition(lastAsk, MaxAllowedDeposit * 0.2 / lastAsk, false);
-                        if(info != null) {
-                            info.Tag2 = SRIndicator.Support.Last();
-                            info.CloseValue = lr2.Value - spread * 0.1;
-                            item.Mark = info.Mark = "PingPong";
-                        }
+                        OpenPingPongPosition(lastAsk, lr2.Value, ls2.Value);
                     }
                 }
             }
-            CheckCloseLongPositions();
+            ProcessLongPositions();
             item.Earned = Earned;
 
             return;
@@ -87,17 +111,17 @@ namespace Crypto.Core.Strategies.Custom {
             base.InitializeDataItems();
             DataItem("Mark").Visibility = DataVisibility.Table;
             StrategyDataItemInfo info = DataItem("PercentChangeFromSupport");
-            info.PanelIndex = NextDataItemPanel();
+            info.PanelName = "PcChangeFromSupport";
             info.Color = Color.FromArgb(0x40, Color.Green);
 
             StrategyDataItemInfo resValue = DataItem("Value"); resValue.BindingSource = "SRIndicator2.Resistance"; resValue.Color = Color.FromArgb(0x40, Color.Magenta); resValue.ChartType = ChartType.StepLine;
             StrategyDataItemInfo supValue = DataItem("Value"); supValue.BindingSource = "SRIndicator2.Support"; supValue.Color = Color.FromArgb(0x40, Color.Green); supValue.ChartType = ChartType.StepLine;
             AnnotationItem("Mark", null, Color.Green, "Value");
             DataItemInfos.Remove(DataItemInfos.FirstOrDefault(i => i.FieldName == "Break"));
-        }
 
-        public int NextDataItemPanel() {
-            return DataItemInfos.Max(i => i.PanelIndex) + 1;
+            StrategyDataItemInfo bp = DataItem("SpreadBaseResistance"); bp.Color = Color.Green; bp.ChartType = ChartType.Bar; bp.PanelName = "BreakPercent";
+            StrategyDataItemInfo spread = DataItem("SRSpread"); spread.Color = Color.Red; spread.ChartType = ChartType.Bar; spread.PanelName = "BreakPercent";
+            StrategyDataItemInfo.HistogrammItem(DataItemInfos, 1, "SpreadBaseResistance", Color.Green).ChartType = ChartType.Bar;
         }
 
         protected bool AlreadyOpenedPosition() {
@@ -129,8 +153,8 @@ namespace Crypto.Core.Strategies.Custom {
         
         protected override RedWaterfallDataItem AddStrategyData() {
             RedWaterfallDataItem item = base.AddStrategyData();
-            if(item != null)
-                item.PercentChangeFromSupport = Ticker.OrderBook.Asks[0].Value - SRIndicator.Support.Last().Value; // big value
+            if(item != null && SRIndicator2.Support.Count > 0)
+                item.PercentChangeFromSupport = Ticker.OrderBook.Asks[0].Value - SRIndicator2.Support.Last().Value; // big value
             return item;
         }
 
@@ -149,12 +173,14 @@ namespace Crypto.Core.Strategies.Custom {
                 RedWaterfallDataItem last = (RedWaterfallDataItem)StrategyData.Last();
                 if(info.Amount < 0.000001) {
                     OpenedOrders.Remove(info);
+                    last.ClosedPositions.Add(info);
                     info.CloseTime = DataProvider.CurrentTime;
                     Earned += info.Earned - info.Spent;
                 }
                 last.ClosedOrder = true;
                 last.Value = Ticker.OrderBook.Bids[0].Value;
                 item.Profit = earned - info.Spent;
+                last.Mark = "Close " + info.Mark;
             }
         }
     }

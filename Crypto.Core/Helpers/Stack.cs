@@ -14,6 +14,10 @@ namespace Crypto.Core.Helpers {
             Items = new T[32];
         }
 
+        public ResizeableArray(int count) {
+            Items = new T[count];
+        }
+
         event ListChangedEventHandler listChanged;
         public event ListChangedEventHandler ListChanged {
             add {

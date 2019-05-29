@@ -18,14 +18,14 @@ namespace Crypto.Core.Indicators {
 
         public Color ChartColor { get; set; } = Color.Green;
 
-        public override void AddVisualInfo(List<StrategyDataItemInfo> items) {
+        public override void AddVisualInfo(List<StrategyDataItemInfo> items, string panelName) {
             StrategyDataItemInfo info = new StrategyDataItemInfo() {
                 DataSource = Result,
                 FieldName = "Value",
                 Color = ChartColor,
                 ChartType = ChartType.Line};
             if(UseOwnChart) {
-                info.PanelIndex = items.Max(i => i.PanelIndex) + 1;
+                info.PanelName = panelName;
             }
             items.Add(info);
         }
@@ -190,37 +190,10 @@ namespace Crypto.Core.Indicators {
         }
 
         public ArgumentValue[] CalcHistogramm(int count) {
-            double minX = CalcMin();
-            double maxX = CalcMax();
-            double step = (maxX - minX) / count;
-
-            minX = ((int)(minX / step)) * step;
-            maxX = ((int)(maxX / step + 0.5)) * step;
-
-            count = (int)((maxX - minX) / step);
-            ArgumentValue[] res = new ArgumentValue[count + 1];
-            for(int i = 0; i < count + 1; i++) {
-                res[i] = new ArgumentValue() { X = minX + i * step };
-            }
-            foreach(var item in Result) {
-                if(double.IsNaN(item.Value))
-                    continue;
-                int index = (int)((item.Value - minX) / step + 0.5);
-                res[index].Y += 1.0;
-            }
-            double del = 100.0 / Result.Count;
-            for(int i = 0; i < count; i++) {
-                res[i].Y *= del;
-            }
-            return res;
+            return HistogrammCalculator.Calculate(Result, count);
         }
     }
-
-    public class ArgumentValue {
-        public double X { get; set; }
-        public double Y { get; set; }
-    }
-
+    
     public class IndicatorValue : TimeBaseValue {
         
     }

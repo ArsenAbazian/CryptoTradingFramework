@@ -1,8 +1,11 @@
-﻿using Crypto.Core.Helpers;
+﻿using Crypto.Core.Common;
+using Crypto.Core.Helpers;
 using Crypto.Core.Strategies;
 using Crypto.Core.Strategies.Custom;
 using Crypto.UI.Forms;
+using DevExpress.Utils;
 using DevExpress.XtraBars;
+using DevExpress.XtraBars.Docking;
 using DevExpress.XtraCharts;
 using DevExpress.XtraCharts.Designer;
 using DevExpress.XtraEditors;
@@ -24,7 +27,6 @@ namespace CryptoMarketClient.Strategies {
     public partial class StrategyDataForm : XtraForm {
         public StrategyDataForm() {
             InitializeComponent();
-            this.chartControl.UseDirectXPaint = true;
         }
 
         StrategyBase strategy;
@@ -43,16 +45,24 @@ namespace CryptoMarketClient.Strategies {
             this.tradingResultBindingSource.DataSource = Strategy.TradeHistory;
             Text = Strategy.Name + " - Data";
             StrategyDataVisualiser visualizer = new StrategyDataVisualiser();
-            visualizer.Visualize(Strategy, this.gcData, this.chartControl);
+            visualizer.GetControl += OnVisulizerGetControl;
+            visualizer.Visualize(Strategy, this.gcData, this.chartDataControl1.Chart);
+            visualizer.GetControl -= OnVisulizerGetControl;
 
             StrategyDataVisualiser visualizer2 = new StrategyDataVisualiser();
+            visualizer2.GetControl += OnVisulizerGetControl;
             visualizer2.Visualize(new OpenPositionVisualDataProvider(Strategy.OrdersHistory), this.gcPositions, null);
+            visualizer2.GetControl += OnVisulizerGetControl;
 
             if(File.Exists(ChartSettingsFileName)) {
                 DetachePoints();
-                this.chartControl.LoadFromFile(ChartSettingsFileName);
+                this.chartDataControl1.Chart.LoadFromFile(ChartSettingsFileName);
                 AttachPoints();
             }
+        }
+
+        private void OnVisulizerGetControl(object sender, DataControlProvideEventArgs e) {
+            ShowChartForm(e.DataItem, new StrategyDataVisualiser() { SkipSeparateItems = false }, false);
         }
 
         private void gridView1_RowStyle(object sender, DevExpress.XtraGrid.Views.Grid.RowStyleEventArgs e) {
@@ -66,19 +76,28 @@ namespace CryptoMarketClient.Strategies {
 
         }
 
-        private void ShowChartForm(IStrategyDataItemInfoOwner visual) {
-            XtraForm form = new XtraForm();
+        private ChartControl ShowChartForm(IStrategyDataItemInfoOwner visual, StrategyDataVisualiser visualiser, bool showInSeparateForm) {
             Crypto.UI.Forms.ChartDataControl control = new Crypto.UI.Forms.ChartDataControl();
             control.Dock = DockStyle.Fill;
             control.Visual = visual;
-            form.Controls.Add(control);
-            StrategyDataVisualiser visualiser = new StrategyDataVisualiser();
+            
             visualiser.Visualize(visual, null, control.Chart);
 
-            form.Text = visual.Name + " - Data Chart";
-            //form.MdiParent = this;
-            //form.WindowState = FormWindowState.Maximized;
-            form.Show();
+            if(showInSeparateForm) {
+                XtraForm form = new XtraForm();
+                form.Text = visual.Name;
+                form.Controls.Add(control);
+                form.Show();
+                return control.Chart;
+            }
+            DockPanel panel = new DockPanel();
+            panel.DockedAsTabbedDocument = true;
+            panel.ID = Guid.NewGuid();
+            panel.Text = visual.Name + " - Data Chart";
+            panel.Controls.Add(control);
+            this.dockManager1.RootPanels.AddRange(new DockPanel[] { panel });
+            panel.Show();
+            return control.Chart;
         }
 
         private void ShowTableForm(IStrategyDataItemInfoOwner visual) {
@@ -103,10 +122,15 @@ namespace CryptoMarketClient.Strategies {
                 StrategyDataItemInfo info = (StrategyDataItemInfo)view.FocusedColumn.Tag;
                 if(info.DetailInfo != null)
                     info = info.DetailInfo;
-                if(info.Type != DataType.ChartData)
+                if(!info.IsChartData)
                     return;
                 info.Value = view.GetFocusedRow();
-                ShowChartForm(info);
+                info.BindingRoot = info.Value;
+                foreach(var child in info.Children) {
+                    if(child.BindingRoot == null)
+                        child.BindingRoot = info.Value;
+                }
+                ShowChartForm(info, new StrategyDataVisualiser(), true);
             }
         }
 
@@ -154,19 +178,19 @@ namespace CryptoMarketClient.Strategies {
         protected Dictionary<Series, SeriesPoint[]> DetachedPoints { get; set; } 
 
         private void biCustomize_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
-            ChartDesigner designer = new ChartDesigner(this.chartControl);
+            ChartDesigner designer = new ChartDesigner(this.chartDataControl1.Chart);
             if(designer.ShowDialog() == DialogResult.OK) {
                 CheckCreateSettingsFolder();
                 DetachePoints();
-                this.chartControl.SaveToFile(ChartSettingsFileName);
+                this.chartDataControl1.Chart.SaveToFile(ChartSettingsFileName);
                 AttachPoints();
             }
         }
 
         private void DetachePoints() {
             DetachedPoints = new Dictionary<Series, SeriesPoint[]>();
-            for(int i = 0; i < this.chartControl.Series.Count; i++) {
-                Series s = this.chartControl.Series[i];
+            for(int i = 0; i < this.chartDataControl1.Chart.Series.Count; i++) {
+                Series s = this.chartDataControl1.Chart.Series[i];
                 if(s.DataSource == null && s.Points.Count > 0) {
                     SeriesPoint[] list = new SeriesPoint[s.Points.Count];
                     int index = 0;
@@ -201,7 +225,7 @@ namespace CryptoMarketClient.Strategies {
         private void bsPanes_GetItemData(object sender, EventArgs e) {
             if(this.bsPanes.ItemLinks.Count != 0)
                 return;
-            XYDiagram dg = (XYDiagram)this.chartControl.Diagram;
+            XYDiagram dg = (XYDiagram)this.chartDataControl1.Chart.Diagram;
             foreach(XYDiagramPane item in dg.Panes) {
                 BarCheckItem ch = new BarCheckItem(this.barManager1) { Caption = item.Name, Checked = item.Visibility== ChartElementVisibility.Visible };
                 ch.Tag = item;
@@ -214,31 +238,27 @@ namespace CryptoMarketClient.Strategies {
             XYDiagramPane item = (XYDiagramPane)e.Item.Tag;
             item.Visibility = ((BarCheckItem)e.Item).Checked ? ChartElementVisibility.Visible : ChartElementVisibility.Hidden;
         }
-
-        private void chartControl_MouseMove(object sender, MouseEventArgs e) {
-            
-        }
-
+        
         private void gcData_DoubleClick(object sender, EventArgs e) {
             object item = this.gvData.GetFocusedRow();
             PropertyInfo pInfo = item.GetType().GetProperty("Time", BindingFlags.Public | BindingFlags.Instance);
             if(pInfo == null)
                 return;
             
-            DateTime prevMin = (DateTime)((XYDiagram)this.chartControl.Diagram).AxisX.VisualRange.MinValue;
-            DateTime prevMax = (DateTime)((XYDiagram)this.chartControl.Diagram).AxisX.VisualRange.MaxValue;
+            DateTime prevMin = (DateTime)((XYDiagram)this.chartDataControl1.Chart.Diagram).AxisX.VisualRange.MinValue;
+            DateTime prevMax = (DateTime)((XYDiagram)this.chartDataControl1.Chart.Diagram).AxisX.VisualRange.MaxValue;
             TimeSpan viewPort2 = new TimeSpan((prevMax - prevMin).Ticks / 2);
             DateTime newMin = (DateTime)pInfo.GetValue(item) - viewPort2;
             TimeSpan delta = newMin - prevMin;
             DateTime newMax = prevMax + delta;
 
-            ((XYDiagram)this.chartControl.Diagram).AxisX.VisualRange.MinValue = newMin;
-            ((XYDiagram)this.chartControl.Diagram).AxisX.VisualRange.MaxValue = newMax;
+            ((XYDiagram)this.chartDataControl1.Chart.Diagram).AxisX.VisualRange.MinValue = newMin;
+            ((XYDiagram)this.chartDataControl1.Chart.Diagram).AxisX.VisualRange.MaxValue = newMax;
         }
 
         private void chartControl_DoubleClick(object sender, EventArgs e) {
-            Point loc = this.chartControl.PointToClient(Control.MousePosition);
-            ChartHitInfo info = this.chartControl.CalcHitInfo(loc);
+            Point loc = this.chartDataControl1.Chart.PointToClient(Control.MousePosition);
+            ChartHitInfo info = this.chartDataControl1.Chart.CalcHitInfo(loc);
             try {
                 if(info.SeriesPoint != null) {
                     DateTime dt = info.SeriesPoint.DateTimeArgument;

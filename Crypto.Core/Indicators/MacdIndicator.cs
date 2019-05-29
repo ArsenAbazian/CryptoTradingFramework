@@ -68,9 +68,7 @@ namespace Crypto.Core.Indicators {
             ((IndicatorValue)SignalMaIndicator.Result[index]).Value = signal.Value;
         }
 
-        public override void AddVisualInfo(List<StrategyDataItemInfo> items) {
-            int index = items.Max(i => i.PanelIndex) + 1;
-
+        public override void AddVisualInfo(List<StrategyDataItemInfo> items, string panelName) {
             StrategyDataItemInfo info = new StrategyDataItemInfo() {
                 DataSource = Result,
                 FieldName = "Value",
@@ -78,7 +76,7 @@ namespace Crypto.Core.Indicators {
                 ChartType = ChartType.Line
             };
 
-            info.PanelIndex = index;
+            info.PanelName = "MACD";
             items.Add(info);
 
             StrategyDataItemInfo info2 = new StrategyDataItemInfo() {
@@ -89,7 +87,7 @@ namespace Crypto.Core.Indicators {
                 ChartType = ChartType.Line
             };
 
-            info2.PanelIndex = index;
+            info2.PanelName = panelName;
             items.Add(info2);
         }
 

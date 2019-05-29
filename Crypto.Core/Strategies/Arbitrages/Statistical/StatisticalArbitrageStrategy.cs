@@ -1,4 +1,6 @@
-﻿using Crypto.Core.Strategies.Custom;
+﻿using Crypto.Core.Common.OrderGrid;
+using Crypto.Core.Helpers;
+using Crypto.Core.Strategies.Custom;
 using CryptoMarketClient;
 using CryptoMarketClient.Common;
 using CryptoMarketClient.Helpers;
@@ -9,6 +11,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace Crypto.Core.Strategies.Arbitrages.Statistical {
     public class StatisticalArbitrageStrategy : CustomTickerStrategy {
@@ -22,7 +25,7 @@ namespace Crypto.Core.Strategies.Arbitrages.Statistical {
             info.Start.AmountPercent = 1;
             info.End.Value = 20;
             info.End.AmountPercent = 2;
-            info.ZoneCount = 1;
+            info.LineCount = 1;
             info.Normalize();
             OrderGrid = info;
         }
@@ -309,10 +312,10 @@ namespace Crypto.Core.Strategies.Arbitrages.Statistical {
             info.TimeUnitMeasureMultiplier = 1;
             DataItem("LongPrice").Color = Exchange.AskColor;
             DataItem("ShortPrice").Color = Exchange.BidColor;
-            DataItem("Spread").PanelIndex = 1;
+            DataItem("Spread").PanelName = "Spread";
             StrategyDataItemInfo earned = DataItem("Earned");
             earned.FormatString = "0.########";
-            earned.PanelIndex = 1; earned.Color = Color.FromArgb(0x20, Exchange.BidColor); earned.ChartType = ChartType.Area;
+            earned.PanelName = "Earned"; earned.Color = Color.FromArgb(0x20, Exchange.BidColor); earned.ChartType = ChartType.Area;
             AnnotationItem("Open", "Open", Exchange.BidColor, "LongPrice");
             AnnotationItem("Close", "Close", Exchange.AskColor, "ShortPrice");
         }
@@ -337,73 +340,7 @@ namespace Crypto.Core.Strategies.Arbitrages.Statistical {
         public bool Open { get; set; }
         public bool Close { get; set; }
     }
-
-    [Serializable]
-    public class OrderGridItemInfo {
-        public double Value { get; set; }
-        public double AmountPercent { get; set; }
-
-        public void Assign(OrderGridItemInfo item) {
-            Value = item.Value;
-            AmountPercent = item.AmountPercent;
-        }
-    }
-
-    [Serializable]
-    public class OrderGridInfo {
-        public OrderGridItemInfo Start { get; set; } = new OrderGridItemInfo();
-        public OrderGridItemInfo End { get; set; } = new OrderGridItemInfo();
-        int zoneCount = 1;
-        public int ZoneCount {
-            get { return zoneCount; }
-            set {
-                if(value < 1)
-                    value = 1;
-                if(ZoneCount == value)
-                    return;
-                zoneCount = value;
-            }
-        }
-        public virtual int GetZoneIndex(double value) {
-            if(value > End.Value)
-                return ZoneCount;
-            if(value < Start.Value)
-                return -1;
-            double r = Start.Value;
-            double d = (End.Value - Start.Value) / ZoneCount;
-            for(int i = 0; i < ZoneCount + 1; i++) {
-                if(r > value)
-                    return i - 1;
-                r += d;
-            }
-            return -1;
-        }
-        public virtual double GetAmountInPc(double value) {
-            int index = GetZoneIndex(value);
-            return Start.AmountPercent + (End.AmountPercent - Start.AmountPercent) / ZoneCount * index;
-        }
-        public virtual double GetAmountInPc(int zoneIndex) {
-            return Start.AmountPercent + (End.AmountPercent - Start.AmountPercent) / ZoneCount * zoneIndex;
-        }
-
-        public virtual void Assign(OrderGridInfo info) {
-            Start.Assign(info.Start);
-            End.Assign(info.End);
-            ZoneCount = info.ZoneCount;
-        }
-
-        public void Normalize() {
-            double sum = 0;
-
-            for(int i = 0; i <= ZoneCount; i++) {
-                double val = Start.AmountPercent + i * (End.AmountPercent - Start.AmountPercent) / ZoneCount;
-                sum += val;
-            }
-            Start.AmountPercent = Start.AmountPercent / sum * 100;
-            End.AmountPercent = End.AmountPercent / sum * 100;
-        }
-    }
-
+    
     [Serializable]
     public class StatisticalArbitrageOrderInfo {
         public double ShortAmount { get; set; }

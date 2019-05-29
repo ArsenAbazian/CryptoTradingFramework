@@ -34,9 +34,9 @@ namespace Crypto.Core.Strategies.Stupid {
             StrategyDataItemInfo time = TimeItem("Time"); time.UseCustomTimeUnit = true; time.TimeUnit = StrategyDateTimeMeasureUnit.Millisecond; time.TimeUnitMeasureMultiplier = 1;
             StrategyDataItemInfo bid = DataItem("Bid"); bid.ChartType = ChartType.Line; bid.Color = Exchange.BidColor;
             StrategyDataItemInfo ask = DataItem("Ask"); ask.ChartType = ChartType.Line; ask.Color = Exchange.AskColor;
-            StrategyDataItemInfo bidv = DataItem("BidVolume"); bidv.ChartType = ChartType.Area; bidv.Color = System.Drawing.Color.FromArgb(30, Exchange.BidColor); bidv.PanelIndex = 2;
-            StrategyDataItemInfo askv = DataItem("AskVolume"); askv.ChartType = ChartType.Area; askv.Color = System.Drawing.Color.FromArgb(30, Exchange.AskColor); askv.PanelIndex = 2;
-            DataItem("Spread").PanelIndex = 1;
+            StrategyDataItemInfo bidv = DataItem("BidVolume"); bidv.ChartType = ChartType.Area; bidv.Color = System.Drawing.Color.FromArgb(30, Exchange.BidColor); bidv.PanelName = "Volumes";
+            StrategyDataItemInfo askv = DataItem("AskVolume"); askv.ChartType = ChartType.Area; askv.Color = System.Drawing.Color.FromArgb(30, Exchange.AskColor); askv.PanelName = "Volumes";
+            DataItem("Spread").PanelName = "Spread";
         }
     }
 
