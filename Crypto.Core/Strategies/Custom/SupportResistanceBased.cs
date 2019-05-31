@@ -44,8 +44,8 @@ namespace Crypto.Core.Strategies.Custom {
         protected AtrIndicator AtrIndicator { get; private set; }
 
         protected int LastCount { get; set; } = -1;
-        protected RedWaterfallDataItem LastBreak { get; set; }
-        protected List<RedWaterfallDataItem> Breaks { get; } = new List<RedWaterfallDataItem>();
+        protected CombinedStrategyDataItem LastBreak { get; set; }
+        protected List<CombinedStrategyDataItem> Breaks { get; } = new List<CombinedStrategyDataItem>();
         protected virtual void ProcessTicker(Ticker ticker) {
             if(SRIndicator.Result.Count > 2 && LastCount != SRIndicator.Result.Count) {
                 LastCount = SRIndicator.Result.Count;
@@ -57,7 +57,7 @@ namespace Crypto.Core.Strategies.Custom {
 
         protected int SimulationStartItemsCount { get { return 100; } }
         protected virtual void ProcessTickerCore() {
-            RedWaterfallDataItem item = StrategyData.Count > 0 ? (RedWaterfallDataItem)StrategyData.Last() : null;
+            CombinedStrategyDataItem item = StrategyData.Count > 0 ? (CombinedStrategyDataItem)StrategyData.Last() : null;
             if(Ticker.CandleStickData.Count < SimulationStartItemsCount) /// need back data for simulation
                 return;
             SRValue lastResistance = GetLastResistance();
@@ -69,7 +69,7 @@ namespace Crypto.Core.Strategies.Custom {
                 double breakDelta = item.Close - lastSupport.Value;
                 double range = lastResistance.Value - lastSupport.Value;
                 item.BreakPercent = (-breakDelta) / range * 100;
-                item.BreakPercent2 = (item.BreakPercent - ((RedWaterfallDataItem)StrategyData[StrategyData.Count - 2]).BreakPercent);
+                item.BreakPercent2 = (item.BreakPercent - ((CombinedStrategyDataItem)StrategyData[StrategyData.Count - 2]).BreakPercent);
                 if(Math.Abs(lastSupport.Value - lastResistance.Value) / lastSupport.Value < 0.003) {
                     item.BreakPercent = 0;
                     item.BreakPercent2 = 0;
@@ -149,9 +149,9 @@ namespace Crypto.Core.Strategies.Custom {
             ear.PanelName = "Earned";
         }
 
-        protected List<RedWaterfallDataItem> PostProcessItems { get; } = new List<RedWaterfallDataItem>();
-        protected virtual RedWaterfallDataItem AddStrategyData() {
-            RedWaterfallDataItem item = new RedWaterfallDataItem();
+        protected List<CombinedStrategyDataItem> PostProcessItems { get; } = new List<CombinedStrategyDataItem>();
+        protected virtual CombinedStrategyDataItem AddStrategyData() {
+            CombinedStrategyDataItem item = new CombinedStrategyDataItem();
             item.Earned = Earned;
             item.Candle = Ticker.CandleStickData[Ticker.CandleStickData.Count - 2];
             item.Atr = AtrIndicator.Result[AtrIndicator.Result.Count - 2].Value;
@@ -166,7 +166,7 @@ namespace Crypto.Core.Strategies.Custom {
             SRValue sr = (SRValue)SRIndicator.Result.Last();
             if(sr.Type == SupResType.None)
                 return null;
-            RedWaterfallDataItem srItem = PostProcessItems.FirstOrDefault(i => i.Time == sr.Time);
+            CombinedStrategyDataItem srItem = PostProcessItems.FirstOrDefault(i => i.Time == sr.Time);
             if(srItem != null)
                 srItem.SRValue = sr;
             return srItem;
@@ -222,7 +222,11 @@ namespace Crypto.Core.Strategies.Custom {
         string DetailString { get; }
     }
 
-    public class RedWaterfallDataItem : IDetailInfoProvider {
+    public interface ILinkedObjectProvider {
+        object GetLinkedObject();
+    }
+
+    public class CombinedStrategyDataItem : IDetailInfoProvider, ILinkedObjectProvider {
         public DateTime Time { get { return Candle.Time; } }
         public double Open { get { return Candle.Open; } }
         public double Close { get { return Candle.Close; } }
@@ -270,7 +274,11 @@ namespace Crypto.Core.Strategies.Custom {
         public double Earned { get; set; }
         public string Mark { get; set; }
 
+        [XmlIgnore]
+        public OpenPositionInfo OpenedPosition { get; set; }
+
         List<OpenPositionInfo> closedPositions;
+        [XmlIgnore]
         public List<OpenPositionInfo> ClosedPositions {
             get {
                 if(closedPositions == null)
@@ -292,6 +300,14 @@ namespace Crypto.Core.Strategies.Custom {
 
         public double PercentChangeFromSupport { get; set; }
         public double SpreadBaseResistance { get; internal set; }
+
+        object ILinkedObjectProvider.GetLinkedObject() {
+            if(OpenedPosition != null)
+                return OpenedPosition;
+            if(ClosedPositions.Count > 0)
+                return ClosedPositions[0];
+            return null;
+        }
     }
 
     public class TrailingInfo {

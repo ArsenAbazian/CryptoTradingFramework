@@ -44,7 +44,7 @@ namespace Crypto.UI.Forms {
             int tableItemCount = Visual.DataItemInfos.Count(i => i.Visibility == DataVisibility.Both || i.Visibility == DataVisibility.Table);
             int chartItemCount = Visual.DataItemInfos.Count(i => i.Visibility == DataVisibility.Both || i.Visibility == DataVisibility.Chart); ;
 
-            StrategyDataVisualiser visualizer = new StrategyDataVisualiser();
+            StrategyDataVisualiser visualizer = new StrategyDataVisualiser(Visual);
             if(tableItemCount > 0)
                 ShowTableForm(Visual);
             if(chartItemCount > 0)
@@ -68,8 +68,8 @@ namespace Crypto.UI.Forms {
             control.Dock = DockStyle.Fill;
             control.Visual = visual;
             form.Controls.Add(control);
-            StrategyDataVisualiser visualiser = new StrategyDataVisualiser();
-            visualiser.Visualize(visual, null, control.Chart);
+            StrategyDataVisualiser visualiser = new StrategyDataVisualiser(visual);
+            visualiser.Visualize(control.Chart);
 
             form.Text = visual.Name + " - Data Chart";
             form.MdiParent = this;
@@ -83,8 +83,8 @@ namespace Crypto.UI.Forms {
             control.Grid.DoubleClick += OnGridControlDoubleClick;
             control.Dock = DockStyle.Fill;
             form.Controls.Add(control);
-            StrategyDataVisualiser visualiser = new StrategyDataVisualiser();
-            visualiser.Visualize(visual, control.Grid, null);
+            StrategyDataVisualiser visualiser = new StrategyDataVisualiser(visual);
+            visualiser.Visualize(control.Grid);
 
             form.Text = visual.Name + " - Data Table";
             form.MdiParent = this;

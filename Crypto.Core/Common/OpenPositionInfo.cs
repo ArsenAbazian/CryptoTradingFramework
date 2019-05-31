@@ -13,6 +13,14 @@ using System.Xml.Serialization;
 
 namespace Crypto.Core.Common {
     public class OpenPositionInfo {
+        public OpenPositionInfo() {
+            ID = Guid.NewGuid();
+            ParentID = Guid.Empty;
+        }
+
+        public Guid ID { get; set; }
+        public Guid ParentID { get; set; }
+
         public DateTime Time { get; set; }
         public DateTime CloseTime { get; set; }
         public TimeSpan Length { get { return CloseTime - Time; } }
@@ -132,14 +140,14 @@ namespace Crypto.Core.Common {
 
         public string ToHtmlString() {
             StringBuilder b = new StringBuilder();
-            b.Append("amount: <b>" + Amount.ToString("0.########") + "<b>");
-            b.Append("open price: <b>" + OpenValue.ToString("0.########") + "<b>");
-            b.Append("close price: <b>" + CloseValue.ToString("0.########") + "<b>");
-            b.Append("stoploss: <b>" + StopLoss.ToString("0.########") + "<b>");
-            b.Append("change: <b>" + Change.ToString("0.##") + "%<b>");
-            b.Append("spent: <b>" + Spent.ToString("0.########") + "<b>");
-            b.Append("earned: <b>" + Earned.ToString("0.########") + "<b>");
-            b.Append("profit: <b>" + Profit.ToString("0.########") + "<b>");
+            b.Append("amount: <b>" + Amount.ToString("0.########") + "<b><br>");
+            b.Append("open price: <b>" + OpenValue.ToString("0.########") + "<b><br>");
+            b.Append("close price: <b>" + CloseValue.ToString("0.########") + "<b><br>");
+            b.Append("stoploss: <b>" + StopLoss.ToString("0.########") + "<b><br>");
+            b.Append("change: <b>" + Change.ToString("0.##") + "%<b><br>");
+            b.Append("spent: <b>" + Spent.ToString("0.########") + "<b><br>");
+            b.Append("earned: <b>" + Earned.ToString("0.########") + "<b><br>");
+            b.Append("profit: <b>" + Profit.ToString("0.########") + "<b><br>");
             return b.ToString();
         }
     }

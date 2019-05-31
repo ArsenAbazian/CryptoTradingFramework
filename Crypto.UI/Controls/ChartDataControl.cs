@@ -129,25 +129,92 @@ namespace Crypto.UI.Forms {
 
         }
 
-        private void chartControl_MouseMove(object sender, MouseEventArgs e) {
-            //ChartHitInfo info = this.chartControl.CalcHitInfo(e.Location, false);
-            //try {
-            //    if(info.InAnnotation) {
-            //        IDetailInfoProvider detailProvider = info.Annotation.Tag as IDetailInfoProvider;
-            //        ToolTipControllerShowEventArgs sa = new ToolTipControllerShowEventArgs();
-            //        sa.AllowHtmlText = DefaultBoolean.True;
-            //        sa.ToolTipType = ToolTipType.SuperTip;
-            //        sa.Appearance.TextOptions.WordWrap = WordWrap.Wrap;
-            //        sa.ToolTip = detailProvider.DetailString;
-            //        sa.SelectedObject = detailProvider;
-            //        ToolTipController.DefaultController.ShowHint(sa);
-            //    }
-            //    else {
-            //    }
-            //}
-            //catch(Exception) {
+        Annotation GetHoveredAnnotation(Point mouseLocation) {
+            foreach(Annotation annotation in Chart.AnnotationRepository) {
+                PaneAnchorPoint anchorPoint = (PaneAnchorPoint)annotation.AnchorPoint;
+                XYDiagram diagram = ((XYDiagram)Chart.Diagram);
+                DateTime argument = (DateTime)anchorPoint.AxisXCoordinate.AxisValue;
+                if((DateTime)diagram.AxisX.VisualRange.MaxValue < argument || (DateTime)diagram.AxisX.VisualRange.MinValue > argument)
+                    continue;
+                ControlCoordinates coords = diagram.DiagramToPoint((DateTime)anchorPoint.AxisXCoordinate.AxisValue,
+                    (double)anchorPoint.AxisYCoordinate.AxisValue,
+                    anchorPoint.AxisXCoordinate.Axis, anchorPoint.AxisYCoordinate.Axis, anchorPoint.Pane);
+                if(coords.Visibility == ControlCoordinatesVisibility.Visible) {
+                    RelativePosition position = (RelativePosition)annotation.ShapePosition;
+                    Point center = new Point((int)(coords.Point.X + Math.Cos(position.Angle) * position.ConnectorLength),
+                        (int)(coords.Point.Y - Math.Sin(position.Angle) * position.ConnectorLength));
+                    int diffX = Math.Abs(center.X - mouseLocation.X);
+                    int diffY = Math.Abs(center.Y - mouseLocation.Y);
+                    if(diffX <= annotation.Width / 2 && diffY <= annotation.Height / 2)
+                        return annotation;
+                }
+            }
+            return null;
+        }
 
-            //}
+        Annotation selectedAnnotation;
+        protected Annotation SelectedAnnotation {
+            get { return selectedAnnotation; }
+            set {
+                if(SelectedAnnotation == value)
+                    return;
+                Annotation prev = SelectedAnnotation;
+                selectedAnnotation = value;
+                OnSelectedAnnotationChanged(prev, SelectedAnnotation);
+            }
+        }
+
+        protected XYDiagram Diagram { get { return ((XYDiagram)this.chartControl.Diagram); } }
+
+        List<XYDiagramPaneBase> GetPanes() {
+            List<XYDiagramPaneBase> list = new List<XYDiagramPaneBase>();
+            list.Add(Diagram.DefaultPane);
+            foreach(XYDiagramPaneBase pane in Diagram.Panes)
+                list.Add(pane);
+            return list;
+        }
+
+        private void chartControl_MouseMove(object sender, MouseEventArgs e) {
+        }
+        Color backColor = Color.Empty;
+        protected void SelectAnnotationWithTag(ILinkedObjectProvider linkedProvider) {
+            object link = linkedProvider == null ? null : linkedProvider.GetLinkedObject();
+            List<XYDiagramPaneBase> panes = GetPanes();
+            foreach(XYDiagramPaneBase pane in panes) {
+                foreach(Annotation ann in Diagram.DefaultPane.Annotations) {
+                    ILinkedObjectProvider obj = ann.Tag as ILinkedObjectProvider;
+                    if(obj != null && obj.GetLinkedObject() == link) {
+                        ann.BackColor = Color.FromArgb(0x20, Color.Green);
+                    }
+                    else
+                        ann.BackColor = backColor;
+                }
+            }
+        }
+
+        protected virtual void OnSelectedAnnotationChanged(Annotation prev, Annotation curr) {
+            object tag = curr == null ? null : curr.Tag;
+            if(backColor == Color.Empty && curr != null)
+                backColor = curr.BackColor;
+            SelectAnnotationWithTag((ILinkedObjectProvider)tag);
+        }
+
+        private void chartControl_MouseDown(object sender, MouseEventArgs e) {
+            SelectedAnnotation = GetHoveredAnnotation(e.Location);
+            if(SelectedAnnotation == null)
+                return;
+            IDetailInfoProvider detailProvider = SelectedAnnotation.Tag as IDetailInfoProvider;
+            ToolTipControllerShowEventArgs sa = new ToolTipControllerShowEventArgs();
+            sa.AllowHtmlText = DefaultBoolean.True;
+            sa.ToolTipType = ToolTipType.SuperTip;
+            sa.Appearance.TextOptions.WordWrap = WordWrap.Wrap;
+            sa.ToolTip = detailProvider.DetailString;
+            sa.SelectedObject = detailProvider;
+            ToolTipController.DefaultController.ShowHint(sa);
+        }
+        private void chartControl_DoubleClick(object sender, EventArgs e) {
+            if(SelectedAnnotation != null) {
+            }
         }
     }
 }

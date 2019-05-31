@@ -55,32 +55,32 @@ namespace CryptoMarketClient {
                     }
                 }
 
-                foreach(Exchange exchange in UpdateHelper.Exchanges) {
-                    for(int i = 0; i < 3; i++) {
-                        if(exchange.UpdateDefaultAccountBalances())
-                            break;
-                    }
-                }
+                //foreach(Exchange exchange in UpdateHelper.Exchanges) {
+                //    for(int i = 0; i < 3; i++) {
+                //        if(exchange.UpdateDefaultAccountBalances())
+                //            break;
+                //    }
+                //}
 
-                if(UpdateBalanceNotification) {
-                    UpdateBalanceNotification = false;
-                    foreach(Exchange exchange in UpdateHelper.Exchanges) {
-                        foreach(BalanceBase info in exchange.DefaultAccount.Balances) {
-                            TelegramBot.Default.SendNotification(exchange.Name + " balance " + info.Currency + " = <b>" + info.Available.ToString("0.00000000") + "</b>");
-                        }
-                    }
+                //if(UpdateBalanceNotification) {
+                //    UpdateBalanceNotification = false;
+                //    foreach(Exchange exchange in UpdateHelper.Exchanges) {
+                //        foreach(BalanceBase info in exchange.DefaultAccount.Balances) {
+                //            TelegramBot.Default.SendNotification(exchange.Name + " balance " + info.Currency + " = <b>" + info.Available.ToString("0.00000000") + "</b>");
+                //        }
+                //    }
 
-                    foreach(Exchange exchange in UpdateHelper.Exchanges) {
-                        foreach(BalanceBase info in exchange.DefaultAccount.Balances) {
-                            if(info.DepositChanged > 0.05) {
-                                TelegramBot.Default.SendNotification(exchange.Name + " deposit changed: " + info.Currency + " = " + info.Available);
-                            }
-                        }
-                    }
-                }
-                for(int i = 0; i < ArbitrageList.Count; i++) {
-                    ArbitrageList[i].CalcTotalBalance();
-                }
+                //    foreach(Exchange exchange in UpdateHelper.Exchanges) {
+                //        foreach(BalanceBase info in exchange.DefaultAccount.Balances) {
+                //            if(info.DepositChanged > 0.05) {
+                //                TelegramBot.Default.SendNotification(exchange.Name + " deposit changed: " + info.Currency + " = " + info.Available);
+                //            }
+                //        }
+                //    }
+                //}
+                //for(int i = 0; i < ArbitrageList.Count; i++) {
+                //    ArbitrageList[i].CalcTotalBalance();
+                //}
                 for(int ii = 0; ii < ArbitrageList.Count; ii++) {
                     var coll = ArbitrageList[ii];
                     for(int i = 0; i < coll.Count; i++) {

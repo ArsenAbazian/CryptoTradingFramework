@@ -10,6 +10,9 @@ using DevExpress.XtraEditors.Repository;
 using DevExpress.XtraGrid;
 using DevExpress.XtraGrid.Columns;
 using DevExpress.XtraGrid.Views.Grid;
+using DevExpress.XtraTreeList;
+using DevExpress.XtraTreeList.Columns;
+using DevExpress.XtraTreeList.StyleFormatConditions;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -20,16 +23,26 @@ using System.Threading.Tasks;
 
 namespace CryptoMarketClient.Strategies {
     public class StrategyDataVisualiser {
-        public void Visualize(IStrategyDataItemInfoOwner strategy, GridControl grid, ChartControl chart) {
-            Grid = grid;
-            Chart = chart;
+        public StrategyDataVisualiser(IStrategyDataItemInfoOwner strategy) {
             Visual = strategy;
-
             UpdateDataSource();
+        }
+
+        public void Visualize(GridControl grid) {
+            Grid = grid;
             InitializeTable();
+        }
+
+        public void Visualize(ChartControl chart) {
+            Chart = chart;
             InitializeChart();
         }
-        
+
+        public void Visualise(TreeList treeList) {
+            TreeList = treeList;
+            InitializeTreeList();
+        }
+
         private void UpdateDataSource() {
             foreach(var item in Visual.DataItemInfos) {
                 object root = item.Value == null ? Visual : item.Value;
@@ -50,6 +63,7 @@ namespace CryptoMarketClient.Strategies {
 
         public ChartControl Chart { get; set; }
         public GridControl Grid { get; set; }
+        public TreeList TreeList { get; set; }
         public bool SkipSeparateItems { get; set; } = true;
         public IStrategyDataItemInfoOwner Visual { get; private set; }
 
@@ -349,6 +363,9 @@ namespace CryptoMarketClient.Strategies {
             SideBySideBarSeriesView view = new SideBySideBarSeriesView();
             view.Color = info.Color;
             view.BarWidth = info.GraphWidth == 1 ? view.BarWidth : (int)(info.GraphWidth * DpiProvider.Default.DpiScaleFactor);
+            //view.EqualBarWidth = true;
+            view.FillStyle.FillMode = FillMode.Solid;
+            view.Border.Visibility = DefaultBoolean.False;
             s.View = view;
             s.DataSource = GetDataSource(info);
             return s;
@@ -447,6 +464,64 @@ namespace CryptoMarketClient.Strategies {
             return rule;
         }
 
+        private TreeListFormatRule CreateRule(TreeListColumn column, bool value, Color foreColor, Color backColor) {
+            TreeListFormatRule rule = new TreeListFormatRule();
+            FormatConditionRuleValue cond = new FormatConditionRuleValue();
+
+            cond.Appearance.ForeColor = foreColor;
+            cond.Appearance.BackColor = backColor;
+            cond.Condition = FormatCondition.Equal;
+            cond.Value1 = value;
+
+            rule.Tag = new object();
+            rule.Name = column.FieldName + "Equal" + rule.GetHashCode();
+            rule.Column = column;
+            rule.ApplyToRow = true;
+            rule.ColumnApplyTo = column;
+            rule.Rule = cond;
+            return rule;
+        }
+
+        private void InitializeTreeList() {
+            if(Grid == null)
+                return;
+            int index = 0;
+            object first = Visual.Items.Count > 0 ? Visual.Items[0] : null;
+            for(int i = 0; i < Visual.DataItemInfos.Count; i++) {
+                StrategyDataItemInfo info = Visual.DataItemInfos[i];
+                TreeListColumn column = new TreeListColumn();
+                column.Tag = info;
+                bool isVisible = info.Visibility.HasFlag(DataVisibility.Table);
+                column.Visible = isVisible;
+                if(isVisible)
+                    column.VisibleIndex = index;
+                RepositoryItem editor = CreateEditor(first, info);
+                if(editor != null) {
+                    Grid.RepositoryItems.Add(editor);
+                    column.ColumnEdit = editor;
+                }
+                column.FieldName = info.FieldName;
+                column.Format.FormatType = GetFormatType(info.Type);
+                column.Format.FormatString = info.FormatString;
+                TreeList.Columns.Add(column);
+                if(isVisible)
+                    index++;
+            }
+            for(int i = 0; i < Visual.DataItemInfos.Count; i++) {
+                StrategyDataItemInfo info = Visual.DataItemInfos[i];
+                if(!string.IsNullOrEmpty(info.AnnotationText)) {
+                    TreeList.FormatRules.Add(CreateRule(TreeList.Columns[info.FieldName], true, info.Color, Color.FromArgb(0x20, info.Color)));
+                }
+            }
+            lock(Visual.Items) {
+                List<object> data = new List<object>();
+                data.AddRange(Visual.Items);
+                Grid.DataSource = data;
+            }
+            TreeList.OptionsScrollAnnotations.ShowCustomAnnotations = DefaultBoolean.True;
+            TreeList.CustomScrollAnnotation += OnCustomScrollAnnotations;
+        }
+
         private void InitializeTable() {
             if(Grid == null)
                 return;
@@ -525,6 +600,38 @@ namespace CryptoMarketClient.Strategies {
                 return res;
             }
             return null;
+        }
+
+        private void OnCustomScrollAnnotations(object sender, TreeListCustomScrollAnnotationsEventArgs e) {
+            ResizeableArray<object> items = Visual.Items;
+            e.Annotations = new List<TreeListScrollAnnotationInfo>();
+            if(items == null && e.Annotations != null) {
+                e.Annotations.Clear();
+                return;
+            }
+            List<StrategyDataItemInfo> aList = Visual.DataItemInfos.Where(i => !string.IsNullOrEmpty(i.AnnotationText)).ToList();
+            if(aList.Count == 0)
+                return;
+            List<PropertyInfo> pList = new List<PropertyInfo>();
+            foreach(StrategyDataItemInfo a in aList) {
+                PropertyInfo info = items[0].GetType().GetProperty(a.FieldName, BindingFlags.Instance | BindingFlags.Public);
+                pList.Add(info);
+            }
+            int index = 0;
+            foreach(object item in items) {
+                for(int j = 0; j < aList.Count; j++) {
+                    object value = pList[j].GetValue(items[index], null);
+                    if(value is bool && !((bool)value))
+                        continue;
+                    if(value == null)
+                        continue;
+                    TreeListScrollAnnotationInfo info = new TreeListScrollAnnotationInfo();
+                    info.Node = TreeList.GetNodeByVisibleIndex(index);
+                    info.Color = aList[j].Color;
+                    e.Annotations.Add(info);
+                }
+                index++;
+            }
         }
 
         private void OnCustomScrollAnnotations(object sender, GridCustomScrollAnnotationsEventArgs e) {

@@ -180,6 +180,8 @@
             // 
             // chartControl
             // 
+            this.chartControl.AutoLayout = false;
+            this.chartControl.CacheToMemory = true;
             xyDiagram1.AxisX.DateTimeScaleOptions.AggregateFunction = DevExpress.XtraCharts.AggregateFunction.None;
             xyDiagram1.AxisX.DateTimeScaleOptions.MeasureUnit = DevExpress.XtraCharts.DateTimeMeasureUnit.Minute;
             xyDiagram1.AxisX.Label.TextPattern = "{A:h:mm d.MM}";
@@ -199,7 +201,6 @@
             this.chartControl.Location = new System.Drawing.Point(0, 60);
             this.chartControl.Margin = new System.Windows.Forms.Padding(4);
             this.chartControl.Name = "chartControl";
-            this.chartControl.RuntimeHitTesting = true;
             series1.ArgumentScaleType = DevExpress.XtraCharts.ScaleType.DateTime;
             series1.Name = "Series 1";
             series1.View = lineSeriesView1;
@@ -208,6 +209,8 @@
             this.chartControl.SeriesTemplate.SeriesColorizer = null;
             this.chartControl.Size = new System.Drawing.Size(1570, 836);
             this.chartControl.TabIndex = 6;
+            this.chartControl.DoubleClick += new System.EventHandler(this.chartControl_DoubleClick);
+            this.chartControl.MouseDown += new System.Windows.Forms.MouseEventHandler(this.chartControl_MouseDown);
             this.chartControl.MouseMove += new System.Windows.Forms.MouseEventHandler(this.chartControl_MouseMove);
             // 
             // ChartDataControl

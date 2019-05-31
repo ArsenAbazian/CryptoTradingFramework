@@ -44,14 +44,15 @@ namespace CryptoMarketClient.Strategies {
             this.strategyHistoryItemBindingSource.DataSource = Strategy.History;
             this.tradingResultBindingSource.DataSource = Strategy.TradeHistory;
             Text = Strategy.Name + " - Data";
-            StrategyDataVisualiser visualizer = new StrategyDataVisualiser();
+            StrategyDataVisualiser visualizer = new StrategyDataVisualiser(Strategy);
             visualizer.GetControl += OnVisulizerGetControl;
-            visualizer.Visualize(Strategy, this.gcData, this.chartDataControl1.Chart);
+            visualizer.Visualize(this.gcData);
+            visualizer.Visualize(this.chartDataControl1.Chart);
             visualizer.GetControl -= OnVisulizerGetControl;
 
-            StrategyDataVisualiser visualizer2 = new StrategyDataVisualiser();
+            StrategyDataVisualiser visualizer2 = new StrategyDataVisualiser(new OpenPositionVisualDataProvider(Strategy.OrdersHistory));
             visualizer2.GetControl += OnVisulizerGetControl;
-            visualizer2.Visualize(new OpenPositionVisualDataProvider(Strategy.OrdersHistory), this.gcPositions, null);
+            visualizer2.Visualize(this.gcPositions);
             visualizer2.GetControl += OnVisulizerGetControl;
 
             if(File.Exists(ChartSettingsFileName)) {
@@ -62,7 +63,8 @@ namespace CryptoMarketClient.Strategies {
         }
 
         private void OnVisulizerGetControl(object sender, DataControlProvideEventArgs e) {
-            ShowChartForm(e.DataItem, new StrategyDataVisualiser() { SkipSeparateItems = false }, false);
+            StrategyDataVisualiser visualizer = new StrategyDataVisualiser(e.DataItem) { SkipSeparateItems = false };
+            ShowChartForm(e.DataItem, visualizer, false);
         }
 
         private void gridView1_RowStyle(object sender, DevExpress.XtraGrid.Views.Grid.RowStyleEventArgs e) {
@@ -81,7 +83,7 @@ namespace CryptoMarketClient.Strategies {
             control.Dock = DockStyle.Fill;
             control.Visual = visual;
             
-            visualiser.Visualize(visual, null, control.Chart);
+            visualiser.Visualize(control.Chart);
 
             if(showInSeparateForm) {
                 XtraForm form = new XtraForm();
@@ -106,8 +108,8 @@ namespace CryptoMarketClient.Strategies {
             control.Grid.DoubleClick += OnGridControlDoubleClick;
             control.Dock = DockStyle.Fill;
             form.Controls.Add(control);
-            StrategyDataVisualiser visualiser = new StrategyDataVisualiser();
-            visualiser.Visualize(visual, control.Grid, null);
+            StrategyDataVisualiser visualiser = new StrategyDataVisualiser(visual);
+            visualiser.Visualize(control.Grid);
 
             form.Text = visual.Name + " - Data Table";
             //form.MdiParent = this;
@@ -130,7 +132,7 @@ namespace CryptoMarketClient.Strategies {
                     if(child.BindingRoot == null)
                         child.BindingRoot = info.Value;
                 }
-                ShowChartForm(info, new StrategyDataVisualiser(), true);
+                ShowChartForm(info, new StrategyDataVisualiser(info), true);
             }
         }
 

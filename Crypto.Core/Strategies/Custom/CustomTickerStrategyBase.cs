@@ -117,9 +117,10 @@ namespace Crypto.Core.Strategies.Custom {
             OpenPositionInfo dacPos = OpenLongPosition(highBid, amount, true);
             if(dacPos != null) {
                 dacPos.AllowDAC = false;
-                RedWaterfallDataItem item = (RedWaterfallDataItem)StrategyData.Last();
+                dacPos.ParentID = info.ID;
+                CombinedStrategyDataItem item = (CombinedStrategyDataItem)StrategyData.Last();
                 info.DACInfo.Executed[zoneIndex] = true;
-                dacPos.CloseValue = 2 * CalcFee(dacPos.Total) + dacPos.OpenValue * 0.01; // 1% profit at least
+                dacPos.CloseValue = info.CloseValue;// 2 * CalcFee(dacPos.Total) + dacPos.OpenValue * 0.01; // 1% profit at least
                 item.Mark = dacPos.Mark = "DAC " + zoneIndex;
             }
             return true;
@@ -186,6 +187,9 @@ namespace Crypto.Core.Strategies.Custom {
 
             OnOpenLongPosition(info);
             MaxAllowedDeposit -= info.Spent;
+
+            CombinedStrategyDataItem item = (CombinedStrategyDataItem)StrategyData.Last();
+            item.OpenedPosition = info;
 
             return info;
         }
