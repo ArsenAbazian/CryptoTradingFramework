@@ -21,6 +21,7 @@ namespace Crypto.Core.Common {
         public Guid ID { get; set; }
         public Guid ParentID { get; set; }
 
+        public int DataItemIndex { get; set; }
         public DateTime Time { get; set; }
         public DateTime CloseTime { get; set; }
         public TimeSpan Length { get { return CloseTime - Time; } }
@@ -159,10 +160,10 @@ namespace Crypto.Core.Common {
         }
 
         protected virtual void InitializeDataItemInfos() {
-            StrategyDataItemInfo.TimeItem(DataItemInfos, "Time").Visibility = DataVisibility.Table;
-            StrategyDataItemInfo.TimeItem(DataItemInfos, "CloseTime").Visibility = DataVisibility.Table;
-            StrategyDataItemInfo.TimeSpanItem(DataItemInfos, "Length").Visibility = DataVisibility.Table;
             StrategyDataItemInfo.TimeItem(DataItemInfos, "Mark").Visibility = DataVisibility.Table;
+            StrategyDataItemInfo.TimeItem(DataItemInfos, "Time").Visibility = DataVisibility.Table;
+            //StrategyDataItemInfo.TimeItem(DataItemInfos, "CloseTime").Visibility = DataVisibility.Table;
+            StrategyDataItemInfo.TimeSpanItem(DataItemInfos, "Length").Visibility = DataVisibility.Table;
             StrategyDataItemInfo.EnumItem(DataItemInfos, "Type").Visibility = DataVisibility.Table;
             StrategyDataItemInfo.DataItem(DataItemInfos, "OpenValue").Visibility = DataVisibility.Table;
             StrategyDataItemInfo.DataItem(DataItemInfos, "CloseValue").Visibility = DataVisibility.Table;

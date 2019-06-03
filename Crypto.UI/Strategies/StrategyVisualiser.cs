@@ -38,7 +38,7 @@ namespace CryptoMarketClient.Strategies {
             InitializeChart();
         }
 
-        public void Visualise(TreeList treeList) {
+        public void Visualize(TreeList treeList) {
             TreeList = treeList;
             InitializeTreeList();
         }
@@ -271,9 +271,11 @@ namespace CryptoMarketClient.Strategies {
                 }
                 DateTime time = (DateTime) pTime.GetValue(obj);
                 double yValue = (double) pAnchor.GetValue(obj);
-                string annotationText = value is string? Convert.ToString(value): info.AnnotationText;
+                string annotationText = string.Empty;
                 if(info.HasAnnotationStringFormat)
-                    annotationText = GetFormattedText(annotationText, obj);
+                    annotationText = GetFormattedText(info.AnnotationText, obj);
+                else
+                    annotationText = Convert.ToString(value);
 
                 TextAnnotation annotation = pane.Annotations.AddTextAnnotation(info.FieldName + "InPane" + info.PanelName, annotationText);
                 annotation.Tag = obj;
@@ -483,7 +485,7 @@ namespace CryptoMarketClient.Strategies {
         }
 
         private void InitializeTreeList() {
-            if(Grid == null)
+            if(TreeList == null)
                 return;
             int index = 0;
             object first = Visual.Items.Count > 0 ? Visual.Items[0] : null;
@@ -497,7 +499,7 @@ namespace CryptoMarketClient.Strategies {
                     column.VisibleIndex = index;
                 RepositoryItem editor = CreateEditor(first, info);
                 if(editor != null) {
-                    Grid.RepositoryItems.Add(editor);
+                    TreeList.RepositoryItems.Add(editor);
                     column.ColumnEdit = editor;
                 }
                 column.FieldName = info.FieldName;
@@ -516,7 +518,7 @@ namespace CryptoMarketClient.Strategies {
             lock(Visual.Items) {
                 List<object> data = new List<object>();
                 data.AddRange(Visual.Items);
-                Grid.DataSource = data;
+                TreeList.DataSource = data;
             }
             TreeList.OptionsScrollAnnotations.ShowCustomAnnotations = DefaultBoolean.True;
             TreeList.CustomScrollAnnotation += OnCustomScrollAnnotations;

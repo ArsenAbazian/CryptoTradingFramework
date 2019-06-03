@@ -52,7 +52,7 @@ namespace CryptoMarketClient.Strategies {
 
             StrategyDataVisualiser visualizer2 = new StrategyDataVisualiser(new OpenPositionVisualDataProvider(Strategy.OrdersHistory));
             visualizer2.GetControl += OnVisulizerGetControl;
-            visualizer2.Visualize(this.gcPositions);
+            visualizer2.Visualize(this.tcPosition);
             visualizer2.GetControl += OnVisulizerGetControl;
 
             if(File.Exists(ChartSettingsFileName)) {
@@ -129,8 +129,7 @@ namespace CryptoMarketClient.Strategies {
                 info.Value = view.GetFocusedRow();
                 info.BindingRoot = info.Value;
                 foreach(var child in info.Children) {
-                    if(child.BindingRoot == null)
-                        child.BindingRoot = info.Value;
+                    child.BindingRoot = info.Value;
                 }
                 ShowChartForm(info, new StrategyDataVisualiser(info), true);
             }
@@ -277,6 +276,22 @@ namespace CryptoMarketClient.Strategies {
             }
             catch(Exception) {
 
+            }
+        }
+
+        private void tcPosition_DoubleClick(object sender, EventArgs e) {
+            if(this.tcPosition.FocusedNode != null) {
+                StrategyDataItemInfo info = (StrategyDataItemInfo)tcPosition.FocusedColumn.Tag;
+                if(info.DetailInfo != null)
+                    info = info.DetailInfo;
+                if(!info.IsChartData)
+                    return;
+                info.Value = tcPosition.GetFocusedRow();
+                info.BindingRoot = info.Value;
+                foreach(var child in info.Children) {
+                    child.BindingRoot = info.Value;
+                }
+                ShowChartForm(info, new StrategyDataVisualiser(info), true);
             }
         }
     }

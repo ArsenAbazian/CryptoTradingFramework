@@ -106,7 +106,7 @@ namespace Crypto.Core.Strategies.Signal {
                 if(AlreadyOpenedPosition())
                     return;
                 SendNotification(GetNotificationString("time to buy"));
-                OpenLongPosition(Ticker.OrderBook.Asks[0].Value, MaxAllowedDeposit * 0.2 / Ticker.OrderBook.Asks[0].Value);
+                OpenLongPosition("3RSI", Ticker.OrderBook.Asks[0].Value, MaxAllowedDeposit * 0.2 / Ticker.OrderBook.Asks[0].Value);
             }
             ProcessLongPositions();
             // check for sell
@@ -175,6 +175,7 @@ namespace Crypto.Core.Strategies.Signal {
                 info.Earned += earned;
                 info.Amount -= res.Amount;
                 info.Total -= res.Total;
+                info.UpdateCurrentValue(DataProvider.CurrentTime, res.Value);
                 TripleRsiStrategyData item = (TripleRsiStrategyData)info.Tag;
                 TripleRsiStrategyData last = (TripleRsiStrategyData)StrategyData.Last();
                 if(info.Amount < 0.000001) {

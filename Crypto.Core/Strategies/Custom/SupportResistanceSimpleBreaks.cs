@@ -20,6 +20,8 @@ namespace Crypto.Core.Strategies.Custom {
         protected SRValue LastSupport { get; private set; }
         [InputParameter(10, 300, 1)]
         public double MinSupportBreakPercent { get; set; } = 15;
+        [InputParameter(10, 1000, 1)]
+        public double MinSupportBreakValue { get; set; } = 200;
         [InputParameter(1, 10, 1)]
         public double MinResistanceBreakPercent { get; set; } = 5;
         [InputParameter(0, 1000, 1)]
@@ -43,50 +45,64 @@ namespace Crypto.Core.Strategies.Custom {
             MinProfitPercent = ss.MinProfitPercent;
         }
         protected virtual void OpenBreakUpPosition(double value) {
-            OpenPositionInfo info = OpenLongPosition(value, MaxAllowedDeposit * 0.2 / value, AllowTrailing);
+            OpenPositionInfo info = OpenLongPosition("BU", value, MaxAllowedDeposit * 0.2 / value, AllowTrailing);
             CombinedStrategyDataItem item = (CombinedStrategyDataItem)StrategyData.Last();
-            if(info != null) item.Mark = info.Mark = "BreakUp";
+            if(info != null) item.Mark = info.Mark;
+            if(AllowDAC) {
+                InitializeDac(info);
+            }
         }
         protected virtual void OpenPingPongPosition(double value, double resistance, double support) {
-            OpenPositionInfo info = OpenLongPosition(value, MaxAllowedDeposit * 0.2 / value, false);
+            OpenPositionInfo info = OpenLongPosition("PP", value, MaxAllowedDeposit * 0.2 / value, false);
             if(info == null)
                 return;
             info.Tag2 = SRIndicator.Support.Last();
             double spread = resistance - support;
             info.CloseValue = resistance - spread * 0.1;
             CombinedStrategyDataItem item = (CombinedStrategyDataItem)StrategyData.Last();
-            item.Mark = info.Mark = "PingPong";
+            item.Mark = info.Mark;
 
             if(AllowDAC) {
-                double dacStart = value * (100.0 - DACStartDownPercent) / 100.0;
-                double dacEnd = SRIndicator2.GetLastMinSupport(5);
-                if(dacEnd > dacStart)
-                    dacEnd = dacStart - (SRIndicator2.Resistance.Last().Value - SRIndicator2.Support.Last().Value);
-                if((dacStart - dacEnd) / dacEnd < DACMinSpreadPercent)  // below one percent
-                    dacEnd = dacStart - dacStart * DACMinSpreadPercent / 100;
-
-                info.AllowDAC = true;
-                info.InitializeDAC(dacStart, dacEnd, info.Amount, 3);
+                InitializeDac(info);
             }
+        }
+        protected void InitializeDac(OpenPositionInfo info) {
+            double value = info.OpenValue;
+            double dacStart = value * (100.0 - DACStartDownPercent) / 100.0;
+            double dacEnd = SRIndicator2.GetLastMinSupport(5);
+            if(dacEnd > dacStart)
+                dacEnd = dacStart - (SRIndicator2.Resistance.Last().Value - SRIndicator2.Support.Last().Value);
+            if((dacStart - dacEnd) / dacEnd < DACMinSpreadPercent)  // below one percent
+                dacEnd = dacStart - dacStart * DACMinSpreadPercent / 100;
+
+            info.AllowDAC = true;
+            info.InitializeDAC(dacStart, dacEnd, info.Amount, 3);
         }
         protected override void ProcessTickerCore() {
             CombinedStrategyDataItem item = StrategyData.Count > 0 ? (CombinedStrategyDataItem)StrategyData.Last() : null;
             if(Ticker.CandleStickData.Count < SimulationStartItemsCount) /// need back data for simulation
                 return;
-            if(item == null || item.Break) // processed
+            if(item == null || !string.IsNullOrEmpty(item.Mark)) // processed
                 return;
             SRValue lr = SRIndicator.Resistance.Last();
             SRValue ls = SRIndicator.Support.Last();
             item.SRSpread = lr.Value - ls.Value;
             double lastAsk = Ticker.OrderBook.Asks[0].Value;
-            double spread = (lastAsk - lr.Value);
-            item.BreakPercent = spread / item.SRSpread * 100;
-            item.SpreadBaseResistance = spread;
+            double spreadFromResistance = (lastAsk - lr.Value);
+            double spreadFromSupport = (ls.Value - lastAsk);
+
+            item.BreakPercent = spreadFromResistance / item.SRSpread * 100;
+            item.SpreadBaseResistance = spreadFromResistance;
             item.SRSpread = lr.Value - ls.Value;
 
-            if(spread > MinResistanceBreakValue && spread < MinResistanceBreakValue + 100) { // to high 
-                if(!AlreadyOpenedPosition()) {
+            if(spreadFromResistance > MinResistanceBreakValue && spreadFromResistance < MinResistanceBreakValue + 100) { // to high 
+                if(!AlreadyOpenedBreakUpPosition()) {
                     OpenBreakUpPosition(lastAsk);
+                }
+            }
+            else if(spreadFromSupport > MinSupportBreakValue) { // to low
+                if(!AlreadyOpenedBreakDownPosition()) {
+                    OpenBreakDownPosition(lastAsk);
                 }
             }
             else {
@@ -96,7 +112,7 @@ namespace Crypto.Core.Strategies.Custom {
                 double pc = (lastAsk - ls2.Value) / spread2;
                 item.PercentChangeFromSupport = Math.Min(item.PercentChangeFromSupport, pc);
                 if(spread2 > ls2.Value * 0.01 && pc > 0 && pc < 0.1 && ls.Length > 20) { // minimal spread
-                    if(!AlreadyOpenedPosition()) {
+                    if(!AlreadyOpenedPingPongPosition()) {
                         OpenPingPongPosition(lastAsk, lr2.Value, ls2.Value);
                     }
                 }
@@ -107,6 +123,26 @@ namespace Crypto.Core.Strategies.Custom {
             return;
         }
 
+        private void OpenBreakDownPosition(double value) {
+            OpenPositionInfo info = OpenLongPosition("RW", value, MaxAllowedDeposit * 0.2 / value, AllowTrailing);
+            CombinedStrategyDataItem item = (CombinedStrategyDataItem)StrategyData.Last();
+            if(info != null) item.Mark = info.Mark;
+            if(AllowDAC)
+                InitializeDac(info);
+        }
+
+        private bool AlreadyOpenedBreakDownPosition() {
+            if(OpenedOrders.Count > 0 && OpenedOrders.Last().CurrentValue > OpenedOrders.Last().StopLoss)
+                return true;
+            foreach(OpenPositionInfo info in OpenedOrders) {
+                if(info.Mark != "RW")
+                    continue;
+                SRValue res = (SRValue)info.Tag2;
+                if(info.Type == OrderType.Buy && SRIndicator.BelongsSameSupportLevel(res))
+                    return true;
+            }
+            return false;
+        }
         protected override void InitializeDataItems() {
             base.InitializeDataItems();
             DataItem("Mark").Visibility = DataVisibility.Table;
@@ -116,7 +152,7 @@ namespace Crypto.Core.Strategies.Custom {
 
             StrategyDataItemInfo resValue = DataItem("Value"); resValue.BindingSource = "SRIndicator2.Resistance"; resValue.Color = Color.FromArgb(0x40, Color.Magenta); resValue.ChartType = ChartType.StepLine;
             StrategyDataItemInfo supValue = DataItem("Value"); supValue.BindingSource = "SRIndicator2.Support"; supValue.Color = Color.FromArgb(0x40, Color.Green); supValue.ChartType = ChartType.StepLine;
-            AnnotationItem("Mark", null, Color.Green, "Value");
+            AnnotationItem("Mark", null, Color.Green, "Value").AnnotationText = "{Mark}-{Index}";
             DataItemInfos.Remove(DataItemInfos.FirstOrDefault(i => i.FieldName == "Break"));
 
             StrategyDataItemInfo bp = DataItem("SpreadBaseResistance"); bp.Color = Color.Green; bp.ChartType = ChartType.Bar; bp.PanelName = "BreakPercent";
@@ -124,30 +160,43 @@ namespace Crypto.Core.Strategies.Custom {
             StrategyDataItemInfo.HistogrammItem(DataItemInfos, 1, "SpreadBaseResistance", Color.Green).ChartType = ChartType.Bar;
         }
 
-        protected bool AlreadyOpenedPosition() {
+        protected bool AlreadyOpenedPingPongPosition() {
             if(OpenedOrders.Count > 0 && OpenedOrders.Last().CurrentValue > OpenedOrders.Last().StopLoss)
                 return true;
+            CombinedStrategyDataItem last = (CombinedStrategyDataItem)StrategyData.Last();
             foreach(OpenPositionInfo info in OpenedOrders) {
-                if(info.Mark == "PingPong") {
-                    SRValue res = (SRValue)info.Tag2;
-                    if(info.Type == OrderType.Buy && SRIndicator2.BelongsSameSupportLevel(res))
-                        return true;
-                }
-                else {
-                    SRValue res = (SRValue)info.Tag2;
-                    if(info.Type == OrderType.Buy && SRIndicator.BelongsSameResistanceLevel(res))
-                        return true;
-                }
+                if(info.Mark != "PP")
+                    continue;
+                SRValue res = (SRValue)info.Tag2;
+                if(info.Type == OrderType.Buy && (SRIndicator2.BelongsSameSupportLevel(res) || last.Index - info.DataItemIndex < 5))
+                    return true;
+            }
+            return false;
+        }
+
+        protected bool AlreadyOpenedBreakUpPosition() {
+            if(OpenedOrders.Count > 0 && OpenedOrders.Last().CurrentValue > OpenedOrders.Last().StopLoss)
+                return true;
+            CombinedStrategyDataItem last = (CombinedStrategyDataItem)StrategyData.Last();
+            foreach(OpenPositionInfo info in OpenedOrders) {
+                if(info.Mark != "BU")
+                    continue;
+                SRValue res = (SRValue)info.Tag2;
+                if(info.Type == OrderType.Buy && SRIndicator.BelongsSameResistanceLevel(res))
+                    return true;
             }
             return false;
         }
 
         protected override void OnOpenLongPosition(OpenPositionInfo info) {
             info.Tag = StrategyData.Last();
-            info.Tag2 = SRIndicator.Resistance.Last();
-            //info.AllowTrailing = true;
+            if(info.Mark == "BU" || info.Mark == "PP") {
+                info.Tag2 = SRIndicator.Resistance.Last();
+            }
+            else if(info.Mark == "RW") {
+                info.Tag2 = SRIndicator.Support.Last();
+            }
             CombinedStrategyDataItem item = (CombinedStrategyDataItem)StrategyData.Last();
-            item.Break = true;
             item.Value = info.CurrentValue;
         }
         
@@ -163,6 +212,7 @@ namespace Crypto.Core.Strategies.Custom {
             if(res != null) {
                 double earned = res.Total - CalcFee(res.Total);
                 MaxAllowedDeposit += earned;
+                info.UpdateCurrentValue(DataProvider.CurrentTime, res.Value);
                 info.Earned += earned;
                 info.Amount -= res.Amount;
                 info.Total -= res.Total;

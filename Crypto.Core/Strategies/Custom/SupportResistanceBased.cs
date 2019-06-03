@@ -145,8 +145,7 @@ namespace Crypto.Core.Strategies.Custom {
 
             //StrategyDataItemInfo sp = DataItem("SRSpread"); sp.Color = Color.FromArgb(0x20, Color.Green); sp.ChartType = ChartType.Area; sp.PanelIndex = 3;
             DataItem("Profit", Color.Green).Visibility = DataVisibility.Table;
-            var ear = DataItem("Earned", Color.Green);
-            ear.PanelName = "Earned";
+            var ear = DataItem("Earned", Color.FromArgb(0x30, Color.LightBlue)); ear.PanelName = "Earned"; ear.ChartType = ChartType.Area;
         }
 
         protected List<CombinedStrategyDataItem> PostProcessItems { get; } = new List<CombinedStrategyDataItem>();
