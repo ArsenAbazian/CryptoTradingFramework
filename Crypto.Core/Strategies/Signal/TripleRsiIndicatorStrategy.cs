@@ -106,8 +106,9 @@ namespace Crypto.Core.Strategies.Signal {
                 if(AlreadyOpenedPosition())
                     return;
                 SendNotification(GetNotificationString("time to buy"));
-                OpenLongPosition("3RSI", Ticker.OrderBook.Asks[0].Value, MaxAllowedDeposit * 0.2 / Ticker.OrderBook.Asks[0].Value);
+                OpenLongPosition("3RSI", Ticker.OrderBook.Asks[0].Value, MaxAllowedDeposit * 0.2 / Ticker.OrderBook.Asks[0].Value, 10);
             }
+            ProcessDelayedPositions();
             ProcessLongPositions();
             // check for sell
             //else if(TimeToSell(RsiFastIndicator.Result.Last().Value, RsiMiddleIndicator.Result.Last().Value, RsiSlowIndicator.Result.Last().Value)) {

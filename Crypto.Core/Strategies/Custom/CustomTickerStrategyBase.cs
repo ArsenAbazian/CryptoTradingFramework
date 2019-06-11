@@ -36,23 +36,7 @@ namespace Crypto.Core.Strategies.Custom {
                 OnStrategyInfoChanged();
             }
         }
-
-        [InputParameter(1, 30, 0.1)]
-        public double MinProfitPercent { get; set; } = 3;
-
-        public bool AllowTrailing { get; set; }
-        [InputParameter(1, 10, 0.5)]
-        public double TrailingStopLossPercent { get; set; } = 5;
-        [InputParameter(1, 1000, 0.5)]
-        public double TrailingStopLossAbsoluteValue { get; set; } = 40;
-
-        public bool AllowDAC { get; set; } = true;
-        [InputParameter(1, 50, 0.1)]
-        public double DACStartDownPercent { get; set; } = 1;
-        [InputParameter(1, 50, 0.1)]
-        public double DACMinSpreadPercent { get; set; } = 3;
-        public double MinDepositAllowedInBaseCurrency { get; set; } = 100;
-
+        
         public List<IndicatorBase> Indicators { get; } = new List<IndicatorBase>();
         
         [XmlIgnore]
@@ -87,10 +71,38 @@ namespace Crypto.Core.Strategies.Custom {
                 list.Add(new StrategyValidationError() { DataObject = this, Description = string.Format("Should be added at least one ticker.", ""), PropertyName = "StrategyInfo.Tickers", Value = "" });
         }
 
+        protected void ProcessDelayedPositions() {
+            double lowestAsk = Ticker.OrderBook.Asks[0].Value;
+            bool continueCheck = true;
+            while(continueCheck) {
+                continueCheck = false;
+                foreach(DelayedPositionInfo info in DelayedPositions) {
+                    if(info.Type == OrderType.Buy) {
+                        if(StrategyData.Count - 1 - info.DataItemIndex > info.LiveTimeLength) {
+                            DelayedPositions.Remove(info);
+                            continueCheck = true;
+                            break;
+                        }
+                        if(lowestAsk <= info.Price) {
+                            OpenDelayedPosition(info);
+                            continueCheck = true;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        protected virtual void OpenDelayedPosition(DelayedPositionInfo info) {
+            DelayedPositions.Remove(info);
+        }
+
         protected void ProcessLongPositions() {
             bool terminate = false;
             while(!terminate) {
                 terminate = true;
+                foreach(OpenPositionInfo info in OpenedOrders)
+                    info.UpdateCurrentValue(DataProvider.CurrentTime, Ticker.OrderBook.Bids[0].Value);
                 foreach(OpenPositionInfo info in OpenedOrders) {
                     if(ProcessDAC(info))
                         continue;
@@ -115,7 +127,8 @@ namespace Crypto.Core.Strategies.Custom {
             if(zoneIndex == -1 || info.DACInfo.IsExecuted(zoneIndex))
                 return false;
             double amount = info.DACTotalAmount * info.DACInfo.GetAmountInPc(zoneIndex) / 100;
-            OpenPositionInfo dacPos = OpenLongPosition("DAC " + zoneIndex, highBid, amount, true, false);
+            double lowAsk = Ticker.OrderBook.Asks[0].Value;
+            OpenPositionInfo dacPos = OpenLongPosition("DAC " + zoneIndex, lowAsk, amount, true, false, info.StopLossPercent, info.MinProfitPercent);
             if(dacPos != null) {
                 dacPos.AllowDAC = false;
                 dacPos.ParentID = info.ID;
@@ -160,18 +173,30 @@ namespace Crypto.Core.Strategies.Custom {
             throw new NotImplementedException();
         }
 
-        protected virtual void OpenLongPosition(string mark, double value, double amount) {
-            OpenPositionInfo info = OpenLongPosition(mark, value, amount, false);
+        protected virtual void OpenLongPosition(string mark, double value, double amount, double minProfitPc) {
+            OpenPositionInfo info = OpenLongPosition(mark, value, amount, false, 0, minProfitPc);
             if(info != null)
                 info.AllowHistory = DataProvider is SimulationStrategyDataProvider;
         }
 
-        protected virtual OpenPositionInfo OpenLongPosition(string mark, double value, double amount, bool allowTrailing) {
-            return OpenLongPosition(mark, value, amount, allowTrailing, true);
+        protected virtual OpenPositionInfo OpenLongPosition(string mark, double value, double amount, bool allowTrailing, double trailingStopLossPc, double minProfitPc) {
+            return OpenLongPosition(mark, value, amount, allowTrailing, true, trailingStopLossPc, minProfitPc);
         }
 
-        protected virtual OpenPositionInfo OpenLongPosition(string mark, double value, double amount, bool allowTrailing, bool checkForMinValue) {
-            if(checkForMinValue && value * amount < MinDepositAllowedInBaseCurrency)
+        protected virtual DelayedPositionInfo AddDelayedPosition(string mark, double value, double amount, int liveTimeLength) {
+            if(1.05 * value * amount > MaxAllowedDeposit)
+                return null;
+            DelayedPositionInfo info = new DelayedPositionInfo() { Time = DataProvider.CurrentTime, Type = OrderType.Buy, Mark = mark, Amount = amount, Price = value, LiveTimeLength = liveTimeLength, DataItemIndex = StrategyData.Count - 1 };
+            DelayedPositions.Add(info);
+            return info;
+        }
+
+        public double MinDepositForOpenPosition { get; set; } = 100;
+
+        protected virtual OpenPositionInfo OpenLongPosition(string mark, double value, double amount, bool allowTrailing, bool checkForMinValue, double trailingStopLossPc, double minProfitPc) {
+            if(1.05 * value * amount > MaxAllowedDeposit)
+                return null;
+            if(checkForMinValue && value * amount < MinDepositForOpenPosition)
                 return null;
             TradingResult res = MarketBuy(value, amount);
             if(res == null)
@@ -182,13 +207,15 @@ namespace Crypto.Core.Strategies.Custom {
                 Type = OrderType.Buy,
                 Spent = res.Total + CalcFee(res.Total),
                 AllowTrailing = allowTrailing,
-                StopLossPercent = TrailingStopLossPercent,
+                StopLossPercent = trailingStopLossPc,
                 OpenValue = res.Value,
+                OpenAmount = res.Amount,
                 Amount = res.Amount,
                 Mark = mark,
                 AllowHistory = (DataProvider is SimulationStrategyDataProvider),
                 Total = res.Total,
-                CloseValue = value + value * MinProfitPercent / 100,
+                MinProfitPercent  = minProfitPc,
+                CloseValue = value *(1 + minProfitPc * 0.01),
                 Tag = StrategyData.Last()
             };
             info.UpdateCurrentValue(DataProvider.CurrentTime, res.Value);
@@ -200,7 +227,8 @@ namespace Crypto.Core.Strategies.Custom {
             MaxAllowedDeposit -= info.Spent;
 
             CombinedStrategyDataItem item = (CombinedStrategyDataItem)StrategyData.Last();
-            item.OpenedPosition = info;
+            item.OpenedPositions.Add(info);
+            item.Mark = mark;
 
             return info;
         }

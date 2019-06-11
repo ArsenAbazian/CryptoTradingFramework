@@ -1,5 +1,6 @@
 ﻿using Crypto.Core.Strategies;
 using CryptoMarketClient.Helpers;
+using DevExpress.XtraDataLayout;
 using DevExpress.XtraEditors;
 using DevExpress.XtraEditors.DXErrorProvider;
 using DevExpress.XtraLayout;
@@ -156,5 +157,21 @@ namespace CryptoMarketClient.Strategies {
                 XtraMessageBox.Show("Telegram Bot Registered!");
             }));
         }
+    }
+
+    public class MyLayoutControl : DataLayoutControl {
+        public MyLayoutControl() {
+        }
+        protected override void OnPaintBackground(PaintEventArgs e) {
+            base.OnPaintBackground(e);
+        }
+        protected override void OnPaint(PaintEventArgs e) {
+            base.OnPaint(e);
+        }
+        //protected override void CreateLayoutControl(LayoutControlRoles role, bool fAllowUseSplitters, bool fAllowUseTabbedGroup, bool createFast) {
+        //    base.CreateLayoutControl(role, fAllowUseSplitters, fAllowUseTabbedGroup, createFast);
+        //    SetStyle(ControlStyles.SupportsTransparentBackColor, false);
+        //    SetStyle(ControlStyles.AllPaintingInWmPaint, true);
+        //}
     }
 }

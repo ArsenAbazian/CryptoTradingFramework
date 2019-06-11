@@ -1,6 +1,7 @@
 ﻿using Crypto.Core.Exchanges.Base;
 using Crypto.Core.Helpers;
 using CryptoMarketClient;
+using CryptoMarketClient.Common;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -51,6 +52,8 @@ namespace Crypto.Core.Strategies {
         public DateTime StartTime { get; private set; }
         public DateTime EndTime { get; private set; }
         public double SimulationProgress { get; set; } = 0.0;
+        public double DownloadProgress { get; set; } = 0.0;
+        public event EventHandler DownloadProgressChanged;
         public DateTime LastTime { get; private set; } = DateTime.Now;
         DateTime IStrategyDataProvider.CurrentTime { get { return LastTime; } }
         void IStrategyDataProvider.OnTick() {
@@ -196,22 +199,49 @@ namespace Crypto.Core.Strategies {
         protected virtual ResizeableArray<CandleStickData> DownloadCandleStickData(TickerInputInfo info) {
             CachedCandleStickData savedData = new CachedCandleStickData() { Exchange = info.Exchange, TickerName = info.TickerName, IntervalMin = info.KlineIntervalMin };
             CachedCandleStickData cachedData = CachedCandleStickData.FromFile(CachedCandleStickData.Directory + "\\" + ((ISupportSerialization)savedData).FileName);
-            if(cachedData != null)
-                return cachedData.Items;
+            if(cachedData != null) {
+                // outdated
+                if(SettingsStore.Default.SimulationSettings.StartTime.Date == cachedData.Items[0].Time.Date)
+                    return cachedData.Items;
+            }
 
-            DateTime start = DateTime.UtcNow;
+            DateTime start = DateTime.UtcNow.Date;
             int intervalInSeconds = info.KlineIntervalMin * 60;
-            int candleStickCount = 10000;
-            start = start.AddSeconds(-intervalInSeconds * candleStickCount);
+            //int candleStickCount = 10000;
+            start = start.AddDays(-SettingsStore.Default.SimulationSettings.KLineHistoryIntervalDays);// .AddSeconds(-intervalInSeconds * candleStickCount);
             ResizeableArray<CandleStickData> res = new ResizeableArray<CandleStickData>();
-            List<ResizeableArray<CandleStickData>> splitData = new List<ResizeableArray<CandleStickData>>();
+            //List<ResizeableArray<CandleStickData>> splitData = new List<ResizeableArray<CandleStickData>>();
             int deltaCount = 500;
+            long minCount = (long)(SettingsStore.Default.SimulationSettings.KLineHistoryIntervalDays) * 24 * 60;
+            long candleStickCount = minCount / info.KlineIntervalMin;
+            long pageCount = candleStickCount / deltaCount;
+            int pageIndex = 0;
+            DownloadProgress = 0.0;
 
-            for(int i = 0; i < candleStickCount / deltaCount; i++) {
+            if(!info.Ticker.Exchange.SupportCandleSticksRange) {
                 ResizeableArray<CandleStickData> data = info.Ticker.GetCandleStickData(info.KlineIntervalMin, start, intervalInSeconds * deltaCount);
-                if(data == null || data.Count == 0)
+                if(data == null)
+                    return null;
+                DownloadProgress = 100;
+                RaiseDownloadProgressChanged();
+
+                cachedData = savedData;
+                cachedData.Items = data;
+                cachedData.Save();
+                return data;
+            }
+
+            //for(int i = 0; i < candleStickCount / deltaCount; i++) {
+            while(start.Date < DateTime.Now.Date) { 
+                ResizeableArray<CandleStickData> data = info.Ticker.GetCandleStickData(info.KlineIntervalMin, start, intervalInSeconds * deltaCount);
+                if(data == null || data.Count == 0) {
+                    start = start.AddSeconds(intervalInSeconds * deltaCount);
                     continue;
+                }
                 res.AddRange(data);
+                pageIndex++;
+                DownloadProgress = pageIndex * 100 / pageCount;
+                RaiseDownloadProgressChanged();
                 Thread.Sleep(300);
                 start = start.AddSeconds(intervalInSeconds * deltaCount);
             }
@@ -219,6 +249,11 @@ namespace Crypto.Core.Strategies {
             cachedData.Items = res;
             cachedData.Save();
             return res;   
+        }
+
+        private void RaiseDownloadProgressChanged() {
+            if(DownloadProgressChanged != null)
+                DownloadProgressChanged(this, EventArgs.Empty);
         }
 
         protected Dictionary<Ticker, StrategySimulationData> SimulationData { get; } = new Dictionary<Ticker, StrategySimulationData>();
@@ -367,5 +402,19 @@ namespace Crypto.Core.Strategies {
         public string TickerName { get; set; }
         public int IntervalMin { get; set; }
         
+    }
+
+    public class SimulationSettings {
+        public DateTime StartTime { get { return DateTime.UtcNow.Date.AddDays(-KLineHistoryIntervalDays); } }
+        public int KLineHistoryIntervalDays { get; set; } = 30;
+
+        public void Assign(SimulationSettings st) {
+            KLineHistoryIntervalDays = st.KLineHistoryIntervalDays;
+        }
+        public SimulationSettings Clone() {
+            SimulationSettings res = new SimulationSettings();
+            res.Assign(this);
+            return res;
+        }
     }
 }

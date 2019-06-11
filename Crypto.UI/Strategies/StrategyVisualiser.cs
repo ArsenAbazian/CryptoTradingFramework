@@ -1,6 +1,7 @@
 ﻿using Crypto.Core.Helpers;
 using Crypto.Core.Indicators;
 using Crypto.Core.Strategies;
+using DevExpress.LookAndFeel;
 using DevExpress.Skins;
 using DevExpress.Sparkline;
 using DevExpress.Utils;
@@ -51,6 +52,8 @@ namespace CryptoMarketClient.Strategies {
                         root = item.BindingRoot;
                     item.DataSource = BindingHelper.GetBindingValue(item.BindingSource, root);
                 }
+                else
+                    item.DataSource = Visual.Items;
             }
         }
 
@@ -73,7 +76,7 @@ namespace CryptoMarketClient.Strategies {
             bool shouldRemoveDefaultSeries = Chart.Series.Count > 0;
             for(int i = 0; i < Visual.DataItemInfos.Count; i++) {
                 StrategyDataItemInfo info = Visual.DataItemInfos[i];
-                if(SkipSeparateItems && info.OwnChart)
+                if(SkipSeparateItems && info.SeparateWindow)
                     continue;
                 if(info.Type == DataType.HistogrammData)
                     info = CreateHistogrammDetailItem(info);
@@ -97,28 +100,19 @@ namespace CryptoMarketClient.Strategies {
                 CreateAnnotations(info);
             }
 
-            StrategyDataItemInfo di = Visual.DataItemInfos.FirstOrDefault(i => i.Type == DataType.DateTime && i.FieldName == "Time");
-            if(di != null) {
-                if(di.UseCustomTimeUnit) {
-                    ((XYDiagram)Chart.Diagram).AxisX.DateTimeScaleOptions.MeasureUnit = (DateTimeMeasureUnit)Enum.Parse(typeof(DateTimeMeasureUnit), di.TimeUnit.ToString());
-                    ((XYDiagram)Chart.Diagram).AxisX.DateTimeScaleOptions.MeasureUnitMultiplier = di.TimeUnitMeasureMultiplier;
-                }
-            }
-
+            CheckInitializeTimeAxis();
+            
             for(int i = 0; i < Visual.DataItemInfos.Count; i++) {
                 StrategyDataItemInfo info = Visual.DataItemInfos[i];
-                if(SkipSeparateItems && info.OwnChart) {
+                if(SkipSeparateItems && info.SeparateWindow) {
                     if(info.Type == DataType.HistogrammData)
                         info = CreateHistogrammDetailItem(info);
+                    if(info.Items == null)
+                        info.Items = Visual.Items;
                     DataControlProvideEventArgs e = new DataControlProvideEventArgs() { DataItem = info };
                     RaiseGetControl(e);
                 }
             }
-
-            if(Chart.Series[0].ArgumentScaleType == ScaleType.Numerical)
-                ((XYDiagram)Chart.Diagram).AxisX.Label.TextPattern = "{A}";
-            else
-                ((XYDiagram)Chart.Diagram).AxisX.Label.TextPattern = "{A:dd.MM hh:mm:ss}";
         }
 
         private StrategyDataItemInfo CreateHistogrammDetailItem(StrategyDataItemInfo info) {
@@ -162,13 +156,13 @@ namespace CryptoMarketClient.Strategies {
                     foreach(object item in en) {
                         if(pi == null) pi = item.GetType().GetProperty(info.FieldName, BindingFlags.Instance | BindingFlags.Public);
                         double value = Convert.ToDouble(pi.GetValue(item));
-                        axis.ConstantLines.Add(new ConstantLine() { AxisValue = value, Color = info.Color, Name = item.ToString() });
+                        axis.ConstantLines.Add(new ConstantLine() { AxisValue = value, Color = info.Color, Name = item.ToString(), ShowInLegend = false });
                     }
                 }
                 else {
                     object value = info.DataSource == null ? info.Value : info.DataSource;
                     if(value != null)
-                        axis.ConstantLines.Add(new ConstantLine() { AxisValue = value, Color = info.Color, Name = info.Name });
+                        axis.ConstantLines.Add(new ConstantLine() { AxisValue = value, Color = info.Color, Name = info.Name, ShowInLegend = false });
                 }
                 if(info.ChartType == ChartType.ConstantY) {
                     this.Chart.AxisWholeRangeChanged -= OnYAxisWholeRangeChanged;
@@ -209,7 +203,8 @@ namespace CryptoMarketClient.Strategies {
             XYDiagramSeriesViewBase view = (XYDiagramSeriesViewBase)res.View;
             if(info.PanelName != "Default") {
                 view.Pane = ((XYDiagram)Chart.Diagram).Panes[info.PanelName];
-                view.AxisY = ((XYDiagram)Chart.Diagram).SecondaryAxesY[info.PanelName];
+                view.AxisY = ((XYDiagram)Chart.Diagram).SecondaryAxesY[info.AxisYName];
+                res.Legend = Chart.Legends[info.PanelName];
             }
             else {
                 
@@ -256,8 +251,8 @@ namespace CryptoMarketClient.Strategies {
 
             int index = 0;
 
-            //Series s = CreatePointSeries(info);
-            //s.DataSource = null;
+            ResizeableArray<TextAnnotation> res = new ResizeableArray<TextAnnotation>();
+            info.DataSource = res;
             for(int i = 0; i < Visual.Items.Count; i++) {
                 object obj = Visual.Items[i];
                 object value = pInfo.GetValue(obj);
@@ -278,7 +273,14 @@ namespace CryptoMarketClient.Strategies {
                     annotationText = Convert.ToString(value);
 
                 TextAnnotation annotation = pane.Annotations.AddTextAnnotation(info.FieldName + "InPane" + info.PanelName, annotationText);
+                res.Add(annotation);
                 annotation.Tag = obj;
+                annotation.ConnectorStyle = AnnotationConnectorStyle.Line;
+                annotation.ShapeKind = ShapeKind.Rectangle;
+                annotation.Font = new Font("Segoe UI", 6);
+                ((RelativePosition)annotation.ShapePosition).Angle = 180;
+                ((RelativePosition)annotation.ShapePosition).ConnectorLength = 70;
+                
                 PaneAnchorPoint point = new PaneAnchorPoint();
                 point.AxisXCoordinate.AxisValue = time;
                 point.AxisYCoordinate.AxisValue = yValue;
@@ -401,32 +403,77 @@ namespace CryptoMarketClient.Strategies {
             view.LineThickness = (int)(info.GraphWidth * DpiProvider.Default.DpiScaleFactor);
             view.LevelLineLength = 0.25;
             view.ReductionOptions.ColorMode = ReductionColorMode.OpenToCloseValue;
-            view.ReductionOptions.FillMode = CandleStickFillMode.FilledOnReduction;
-            
+            view.ReductionOptions.FillMode = CandleStickFillMode.AlwaysFilled;
+            view.Color = DXSkinColors.ForeColors.Information;
+            view.ReductionOptions.Color = DXSkinColors.ForeColors.Critical;
+
             view.ReductionOptions.Level = StockLevel.Open;
             view.ReductionOptions.Visible = true;
             view.AggregateFunction = SeriesAggregateFunction.None;
             view.LineThickness = (int)(1 * DpiProvider.Default.DpiScaleFactor);
             view.LevelLineLength = 0.25;
             
-            if(Visual.Items.Count == 0)
+            s.View = view;
+            s.CrosshairLabelPattern = "O={OV}\nH={HV}\nL={LV}\nC={CV}";
+            s.DataSource = GetDataSource(info);
+            return s;
+        }
+
+        private void CheckInitializeTimeAxis() {
+            int totalMinutes = 30;
+            DateTime first = DateTime.MinValue;
+            DateTime last = DateTime.MaxValue;
+
+            ((XYDiagram)Chart.Diagram).AxisX.DateTimeScaleOptions.MeasureUnit = DateTimeMeasureUnit.Minute;
+            if(Visual.Items == null || Visual.Items.Count == 0)
                 ((XYDiagram)Chart.Diagram).AxisX.DateTimeScaleOptions.MeasureUnitMultiplier = 30;
             else {
                 object data1 = Visual.Items[1];
                 object data0 = Visual.Items[0];
+                object dataLast = Visual.Items.Last();
                 PropertyInfo pi = data1.GetType().GetProperty("Time", BindingFlags.Public | BindingFlags.Instance);
-                if(pi == null)
-                    ((XYDiagram)Chart.Diagram).AxisX.DateTimeScaleOptions.MeasureUnitMultiplier = 30;
-                else {
+                if(pi != null) {
                     DateTime time1 = (DateTime)pi.GetValue(data1);
                     DateTime time0 = (DateTime)pi.GetValue(data0);
-                    ((XYDiagram)Chart.Diagram).AxisX.DateTimeScaleOptions.MeasureUnitMultiplier = (int)((time1 - time0).TotalMinutes);
+                    first = time1;
+                    last = (DateTime)pi.GetValue(dataLast);
+                    totalMinutes = (int)((time1 - time0).TotalMinutes);
                 }
             }
 
-            s.View = view;
-            s.DataSource = GetDataSource(info);
-            return s;
+            StrategyDataItemInfo di = Visual.DataItemInfos.FirstOrDefault(i => i.Type == DataType.DateTime && i.FieldName == "Time");
+            if(di != null) {
+                if(di.UseCustomTimeUnit) {
+                    ((XYDiagram)Chart.Diagram).AxisX.DateTimeScaleOptions.MeasureUnit = (DateTimeMeasureUnit)Enum.Parse(typeof(DateTimeMeasureUnit), di.TimeUnit.ToString());
+                    ((XYDiagram)Chart.Diagram).AxisX.DateTimeScaleOptions.MeasureUnitMultiplier = di.TimeUnitMeasureMultiplier;
+                }
+            }
+
+            ((XYDiagram)Chart.Diagram).AxisX.DateTimeScaleOptions.MeasureUnitMultiplier = totalMinutes;
+            ((XYDiagram)Chart.Diagram).AxisX.Label.ResolveOverlappingOptions.AllowRotate = false;
+            ((XYDiagram)Chart.Diagram).AxisX.Label.ResolveOverlappingOptions.AllowStagger = false;
+
+            ((XYDiagram)Chart.Diagram).AxisX.LabelVisibilityMode = AxisLabelVisibilityMode.AutoGeneratedAndCustom;
+            if(first != DateTime.MinValue) {
+                DateTime current = first.Date;
+                while(current <= last) {
+                    ConstantLine constantLine = new ConstantLine(current.ToShortDateString(), current) { Color = Color.LightGray, ShowInLegend = false };
+                    constantLine.Title.Visible = false;
+                    ((XYDiagram)Chart.Diagram).AxisX.ConstantLines.Add(constantLine);
+                    ((XYDiagram)Chart.Diagram).AxisX.CustomLabels.Add(new CustomAxisLabel(current.ToShortDateString(), current));
+                    current = current.AddDays(1);
+                }
+            }
+
+            StrategyDataItemInfo time = Visual.DataItemInfos.FirstOrDefault(i => i.Name == "Time");
+            string datePattern = "{A:dd.MM hh:mm:ss}";
+            if(time != null && !string.IsNullOrEmpty(time.LabelPattern))
+                datePattern = "{A:" + time.LabelPattern + "}";
+
+            if(Chart.Series[0].ArgumentScaleType == ScaleType.Numerical)
+                ((XYDiagram)Chart.Diagram).AxisX.Label.TextPattern = "{A}";
+            else
+                ((XYDiagram)Chart.Diagram).AxisX.Label.TextPattern = datePattern;
         }
 
         private XYDiagramPaneBase CheckAddPanel(StrategyDataItemInfo info) {
@@ -436,15 +483,25 @@ namespace CryptoMarketClient.Strategies {
             diagram.AxisY.WholeRange.AlwaysShowZeroLevel = false;
             if(info.PanelName == "Default")
                 return diagram.DefaultPane;
+            XYDiagramPane pane = null;
             if(diagram.Panes[info.PanelName] != null)
-                return diagram.Panes[info.PanelName];
+                pane = diagram.Panes[info.PanelName];
 
-            SecondaryAxisY axis = new SecondaryAxisY();
-            axis.Assign(diagram.AxisY);
-            axis.Name = info.PanelName;
-            diagram.SecondaryAxesY.Add(axis);
-            XYDiagramPane pane = new XYDiagramPane() { Name = info.PanelName };
-            diagram.Panes.Add(pane);
+            if(pane == null || info.Reversed) {
+                SecondaryAxisY axis = new SecondaryAxisY();
+                axis.Assign(diagram.AxisY);
+                axis.Name = info.AxisYName; 
+                axis.Reverse = info.Reversed;
+                diagram.SecondaryAxesY.Add(axis);
+            }
+            if(pane == null) {
+                pane = new XYDiagramPane() { Name = info.PanelName };
+                diagram.Panes.Add(pane);
+                Legend l = new Legend();
+                l.Assign(Chart.Legend); l.Name = info.PanelName;
+                l.DockTarget = pane;
+                Chart.Legends.Add(l);
+            }
             return pane;
         }
 

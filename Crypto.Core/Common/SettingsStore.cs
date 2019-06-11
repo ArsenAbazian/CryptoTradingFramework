@@ -1,4 +1,5 @@
 ﻿using Crypto.Core.Helpers;
+using Crypto.Core.Strategies;
 using CryptoMarketClient.Helpers;
 using System;
 using System.Collections.Generic;
@@ -47,6 +48,8 @@ namespace CryptoMarketClient.Common {
             return r;
         }
 
+        public SimulationSettings SimulationSettings { get; set; }
+
         public string GetTelegramBotRegistrationCode() {
             TelegramBotRegistrationCode = GenerateNewRandom();
             return TelegramBotRegistrationCode;
@@ -69,6 +72,8 @@ namespace CryptoMarketClient.Common {
             Binance = false;
             BitFinex = false;
             Bitmex = false;
+
+            SimulationSettings = new SimulationSettings() { KLineHistoryIntervalDays = 30 };
         }
         
         public string SelectedThemeName {

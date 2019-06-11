@@ -27,6 +27,11 @@ namespace CryptoMarketClient.Bittrex {
             }
         }
 
+        public BittrexExchange() {
+            RequestRate = new List<RateLimit>();
+            RequestRate.Add(new RateLimit() { Limit = 25, Interval = TimeSpan.TicksPerMinute });
+        }
+
         protected internal override IIncrementalUpdateDataProvider CreateIncrementalUpdateDataProvider() {
             return new BittrexIncrementalUpdateDataProvider();
         }
@@ -289,6 +294,7 @@ namespace CryptoMarketClient.Bittrex {
                 return "day";
             return "fiveMin";
         }
+        public override bool SupportCandleSticksRange { get { return false; } }
         public override ResizeableArray<CandleStickData> GetCandleStickData(Ticker ticker, int candleStickPeriodMin, DateTime start, long periodInSeconds) {
             long startSec = (long)(start.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
             long end = startSec + periodInSeconds;
@@ -1329,7 +1335,7 @@ namespace CryptoMarketClient.Bittrex {
         }
 
         string GetNonce() {
-           return ((DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds).ToString();
+           return ((long)((DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds)).ToString();
         }
         protected internal override void ApplyCapturedEvent(Ticker ticker, TickerCaptureDataInfo info) {
             throw new NotImplementedException();

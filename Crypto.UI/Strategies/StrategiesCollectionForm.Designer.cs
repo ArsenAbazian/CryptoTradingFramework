@@ -39,6 +39,7 @@ namespace CryptoMarketClient.Strategies {
             this.biOptimizeParams = new DevExpress.XtraBars.BarButtonItem();
             this.btShowData = new DevExpress.XtraBars.BarButtonItem();
             this.bcShowLog = new DevExpress.XtraBars.BarCheckItem();
+            this.biSettings = new DevExpress.XtraBars.BarButtonItem();
             this.bar3 = new DevExpress.XtraBars.Bar();
             this.siStatus = new DevExpress.XtraBars.BarStaticItem();
             this.beSimulationProgress = new DevExpress.XtraBars.BarEditItem();
@@ -106,8 +107,9 @@ namespace CryptoMarketClient.Strategies {
             this.biSimulation,
             this.bcShowLog,
             this.biOptimizeParams,
-            this.beSimulationProgress});
-            this.barManager1.MaxItemId = 14;
+            this.beSimulationProgress,
+            this.biSettings});
+            this.barManager1.MaxItemId = 15;
             this.barManager1.OptionsStubGlyphs.AllowStubGlyphs = DevExpress.Utils.DefaultBoolean.True;
             this.barManager1.OptionsStubGlyphs.CaseMode = DevExpress.Utils.Drawing.GlyphTextCaseMode.UpperCase;
             this.barManager1.OptionsStubGlyphs.CornerRadius = 3;
@@ -138,7 +140,8 @@ namespace CryptoMarketClient.Strategies {
             new DevExpress.XtraBars.LinkPersistInfo(this.biSimulation),
             new DevExpress.XtraBars.LinkPersistInfo(this.biOptimizeParams),
             new DevExpress.XtraBars.LinkPersistInfo(this.btShowData, true),
-            new DevExpress.XtraBars.LinkPersistInfo(this.bcShowLog)});
+            new DevExpress.XtraBars.LinkPersistInfo(this.bcShowLog),
+            new DevExpress.XtraBars.LinkPersistInfo(this.biSettings)});
             this.bar1.OptionsBar.DrawBorder = false;
             this.bar1.OptionsBar.UseWholeRow = true;
             this.bar1.Text = "Tools";
@@ -246,6 +249,15 @@ namespace CryptoMarketClient.Strategies {
             this.bcShowLog.Name = "bcShowLog";
             this.bcShowLog.PaintStyle = DevExpress.XtraBars.BarItemPaintStyle.CaptionGlyph;
             this.bcShowLog.CheckedChanged += new DevExpress.XtraBars.ItemClickEventHandler(this.bcShowLog_CheckedChanged);
+            // 
+            // biSettings
+            // 
+            this.biSettings.Alignment = DevExpress.XtraBars.BarItemLinkAlignment.Right;
+            this.biSettings.Caption = "Settings";
+            this.biSettings.Id = 14;
+            this.biSettings.Name = "biSettings";
+            this.biSettings.PaintStyle = DevExpress.XtraBars.BarItemPaintStyle.CaptionGlyph;
+            this.biSettings.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.biSettings_ItemClick);
             // 
             // bar3
             // 
@@ -592,5 +604,6 @@ namespace CryptoMarketClient.Strategies {
         private BarButtonItem biOptimizeParams;
         private BarEditItem beSimulationProgress;
         private DevExpress.XtraEditors.Repository.RepositoryItemProgressBar repositoryItemProgressBar1;
+        private BarButtonItem biSettings;
     }
 }

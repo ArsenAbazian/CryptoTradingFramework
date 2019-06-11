@@ -63,7 +63,7 @@ namespace Crypto.Core.Strategies {
         }
 
         public static StrategyDataItemInfo HistogrammItem(List<StrategyDataItemInfo> dataItemInfos, double clasterizationWidth, string fieldName, Color color) {
-            dataItemInfos.Add(new StrategyDataItemInfo() { FieldName = fieldName, Color = color, Type = DataType.HistogrammData, OwnChart = true, Visibility = DataVisibility.Chart, ClasterizationWidth = clasterizationWidth });
+            dataItemInfos.Add(new StrategyDataItemInfo() { FieldName = fieldName, Color = color, Type = DataType.HistogrammData, SeparateWindow = true, Visibility = DataVisibility.Chart, ClasterizationWidth = clasterizationWidth });
             StrategyDataItemInfo info = dataItemInfos.Last();
             return info;
         }
@@ -76,10 +76,11 @@ namespace Crypto.Core.Strategies {
         [XmlIgnore]
         public List<SdiConstantLine> YLines { get; } = new List<SdiConstantLine>();
 
-        public bool OwnChart { get; set; }
+        public bool SeparateWindow { get; set; }
         public string FieldName { get; set; }
         public DataType Type { get; set; } = DataType.Numeric;
         public string FormatString { get; set; } = string.Empty;
+        public string LabelPattern { get; set; } = string.Empty;
         public Color Color { get; set; } = Color.Blue;
         public int GraphWidth { get; set; } = 1;
         public ChartType ChartType { get; set; } = ChartType.Line;
@@ -132,6 +133,14 @@ namespace Crypto.Core.Strategies {
         public object Value { get; set; }
         public ResizeableArray<object> Items { get; set; }
         public bool IsChartData { get { return Type == DataType.ChartData || Type == DataType.HistogrammData; } }
+        public bool Reversed { get; internal set; }
+        public string AxisYName {
+            get {
+                if(Reversed)
+                    return PanelName + "Reversed";
+                return PanelName;
+            }
+        }
     }
 
     public enum ChartType { CandleStick, Line, Area, Bar, Dot, Annotation, StepLine, ConstantX, ConstantY }

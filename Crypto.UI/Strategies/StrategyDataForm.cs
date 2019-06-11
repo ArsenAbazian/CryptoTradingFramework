@@ -41,6 +41,7 @@ namespace CryptoMarketClient.Strategies {
         }
 
         protected virtual void OnStrategyChanged() {
+            this.chartDataControl1.AnnotationDoubleClick += OnChartAnnotationDoubleClick;
             this.strategyHistoryItemBindingSource.DataSource = Strategy.History;
             this.tradingResultBindingSource.DataSource = Strategy.TradeHistory;
             Text = Strategy.Name + " - Data";
@@ -48,6 +49,7 @@ namespace CryptoMarketClient.Strategies {
             visualizer.GetControl += OnVisulizerGetControl;
             visualizer.Visualize(this.gcData);
             visualizer.Visualize(this.chartDataControl1.Chart);
+            this.chartDataControl1.Visual = Strategy;
             visualizer.GetControl -= OnVisulizerGetControl;
 
             StrategyDataVisualiser visualizer2 = new StrategyDataVisualiser(new OpenPositionVisualDataProvider(Strategy.OrdersHistory));
@@ -82,7 +84,8 @@ namespace CryptoMarketClient.Strategies {
             Crypto.UI.Forms.ChartDataControl control = new Crypto.UI.Forms.ChartDataControl();
             control.Dock = DockStyle.Fill;
             control.Visual = visual;
-            
+            control.AnnotationDoubleClick += OnChartAnnotationDoubleClick;
+
             visualiser.Visualize(control.Chart);
 
             if(showInSeparateForm) {
@@ -97,9 +100,26 @@ namespace CryptoMarketClient.Strategies {
             panel.ID = Guid.NewGuid();
             panel.Text = visual.Name + " - Data Chart";
             panel.Controls.Add(control);
+            panel.Size = new Size((int)(Size.Width * 0.8), (int)(Size.Height * 0.8));
             this.dockManager1.RootPanels.AddRange(new DockPanel[] { panel });
             panel.Show();
             return control.Chart;
+        }
+
+        private void OnChartAnnotationDoubleClick(object sender, EventArgs e) {
+            TextAnnotation a = sender as TextAnnotation;
+            if(a == null)
+                return;
+            IOpenedPositionsProvider provider = a.Tag as IOpenedPositionsProvider;
+            if(provider == null || provider.OpenedPositions.Count == 0)
+                return;
+
+            OpenPositionVisualDataProvider dp = new OpenPositionVisualDataProvider(provider.OpenedPositions);
+
+            var item = dp.DataItemInfos.FirstOrDefault(di => di.Name == "History");
+            item.Value = provider.OpenedPositions[0];
+            item.Children.ForEach(c => c.Value = item.Value);
+            ShowChartForm(item, new StrategyDataVisualiser(item), true);
         }
 
         private void ShowTableForm(IStrategyDataItemInfoOwner visual) {
@@ -124,8 +144,11 @@ namespace CryptoMarketClient.Strategies {
                 StrategyDataItemInfo info = (StrategyDataItemInfo)view.FocusedColumn.Tag;
                 if(info.DetailInfo != null)
                     info = info.DetailInfo;
-                if(!info.IsChartData)
+                if(!info.IsChartData) {
+                    object item = view.GetFocusedRow();
+                    this.chartDataControl1.NavigateTo(item);
                     return;
+                }
                 info.Value = view.GetFocusedRow();
                 info.BindingRoot = info.Value;
                 foreach(var child in info.Children) {
@@ -242,19 +265,7 @@ namespace CryptoMarketClient.Strategies {
         
         private void gcData_DoubleClick(object sender, EventArgs e) {
             object item = this.gvData.GetFocusedRow();
-            PropertyInfo pInfo = item.GetType().GetProperty("Time", BindingFlags.Public | BindingFlags.Instance);
-            if(pInfo == null)
-                return;
-            
-            DateTime prevMin = (DateTime)((XYDiagram)this.chartDataControl1.Chart.Diagram).AxisX.VisualRange.MinValue;
-            DateTime prevMax = (DateTime)((XYDiagram)this.chartDataControl1.Chart.Diagram).AxisX.VisualRange.MaxValue;
-            TimeSpan viewPort2 = new TimeSpan((prevMax - prevMin).Ticks / 2);
-            DateTime newMin = (DateTime)pInfo.GetValue(item) - viewPort2;
-            TimeSpan delta = newMin - prevMin;
-            DateTime newMax = prevMax + delta;
-
-            ((XYDiagram)this.chartDataControl1.Chart.Diagram).AxisX.VisualRange.MinValue = newMin;
-            ((XYDiagram)this.chartDataControl1.Chart.Diagram).AxisX.VisualRange.MaxValue = newMax;
+            this.chartDataControl1.NavigateTo(item);
         }
 
         private void chartControl_DoubleClick(object sender, EventArgs e) {
@@ -279,13 +290,16 @@ namespace CryptoMarketClient.Strategies {
             }
         }
 
-        private void tcPosition_DoubleClick(object sender, EventArgs e) {
+        private void OnTreeListDoubleClick(object sender, EventArgs e) {
             if(this.tcPosition.FocusedNode != null) {
                 StrategyDataItemInfo info = (StrategyDataItemInfo)tcPosition.FocusedColumn.Tag;
                 if(info.DetailInfo != null)
                     info = info.DetailInfo;
-                if(!info.IsChartData)
+                if(!info.IsChartData) {
+                    object item = tcPosition.GetFocusedRow();
+                    this.chartDataControl1.NavigateTo(item);
                     return;
+                }
                 info.Value = tcPosition.GetFocusedRow();
                 info.BindingRoot = info.Value;
                 foreach(var child in info.Children) {

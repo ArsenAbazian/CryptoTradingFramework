@@ -82,14 +82,15 @@ namespace Crypto.Core.Helpers {
                 using(FileStream fs = new FileStream(tmpFile, FileMode.Create)) {
                     formatter.Serialize(fs, obj);
                 }
+                if(File.Exists(fullName))
+                    File.Delete(fullName);
+                File.Move(tmpFile, fullName);
             }
             catch(Exception e) {
                 Telemetry.Default.TrackException(e);
                 return false;
             }
-            if(File.Exists(fullName))
-                File.Delete(fullName);
-            File.Move(tmpFile, fullName);
+            
             return true;
         }
     }

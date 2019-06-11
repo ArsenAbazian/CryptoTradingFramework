@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,10 +14,13 @@ namespace CryptoMarketClient.Strategies {
     public abstract class TickerStrategyBase  : StrategyBase {
         public TickerStrategyBase() {
         }
-        
+
+        [Browsable(false)]
         public double BuyLevel { get; set; }
+        [Browsable(false)]
         public double SellLevel { get; set; }
-        public int CandleStickIntervalMin { get; set; }
+        [Browsable(false)]
+        public virtual int CandleStickIntervalMin { get; set; }
 
         protected virtual OrderBookEntry GetAvailableToBuy(double maxBuy) {
             OrderBookEntry res = new OrderBookEntry();
@@ -72,6 +76,7 @@ namespace CryptoMarketClient.Strategies {
         }
 
         BuySellStrategyState state;
+        [Browsable(false)]
         public BuySellStrategyState State {
             get { return state; }
             set {
@@ -142,6 +147,7 @@ namespace CryptoMarketClient.Strategies {
         }
 
         double maxActualDeposit = -1;
+        [Browsable(false)]
         public double MaxActualDeposit {
             get {
                 if(maxActualDeposit < 0)
@@ -152,9 +158,11 @@ namespace CryptoMarketClient.Strategies {
         public double ApplyFee(double deposit) { 
             return (100.0 - Ticker.Fee) / 100.0 * deposit;
         }
+        [Browsable(false)]
         public bool CanBuyMore {
             get { return MaxActualBuyDeposit > 0.001; }
         }
+        [Browsable(false)]
         public bool CanSellMore {
             get { return MaxActualSellDeposit > 0.001; }
         }

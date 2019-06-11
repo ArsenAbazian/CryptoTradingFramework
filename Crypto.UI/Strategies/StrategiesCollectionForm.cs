@@ -232,7 +232,13 @@ namespace CryptoMarketClient.Strategies {
             IOverlaySplashScreenHandle handle = SplashScreenManager.ShowOverlayForm(gridControl1);
             Application.DoEvents();
             SimulationStrategyDataProvider dataProvider = new SimulationStrategyDataProvider();
+            dataProvider.DownloadProgressChanged += OnSimulationProviderDownloadProgressChanged;
+
+            this.beSimulationProgress.EditValue = 0;
+            this.beSimulationProgress.Visibility = BarItemVisibility.Always;
+
             manager.Initialize(dataProvider);
+            dataProvider.DownloadProgressChanged -= OnSimulationProviderDownloadProgressChanged;
             if(!manager.Start()) {
                 XtraMessageBox.Show("Error starting simulation! Please check log messages");
                 return;
@@ -263,6 +269,11 @@ namespace CryptoMarketClient.Strategies {
             this.siStatus.Caption = "<b>Simulation done.</b>";
             Application.DoEvents();
             StrategyConfigurationManager.Default.ShowData(cloned);
+        }
+
+        private void OnSimulationProviderDownloadProgressChanged(object sender, EventArgs e) {
+            this.beSimulationProgress.EditValue = (int)(((SimulationStrategyDataProvider)sender).DownloadProgress / 100.0 * this.repositoryItemProgressBar1.Maximum);
+            Application.DoEvents();
         }
 
         private void bcShowLog_CheckedChanged(object sender, ItemClickEventArgs e) {
@@ -342,6 +353,16 @@ namespace CryptoMarketClient.Strategies {
             Application.DoEvents();
             CurrentOpimizationManager = null;
             CurrentAlgorithm = null;
+        }
+
+        private void biSettings_ItemClick(object sender, ItemClickEventArgs e) {
+            using(SimulationSettingsForm form = new SimulationSettingsForm()) {
+                form.Settings =  SettingsStore.Default.SimulationSettings.Clone();
+                if(form.ShowDialog() != DialogResult.OK)
+                    return;
+                SettingsStore.Default.SimulationSettings.Assign(form.Settings);
+                SettingsStore.Default.Save();
+            }
         }
     }
 }

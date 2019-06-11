@@ -9,11 +9,18 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
 using Crypto.Core.Strategies;
+using DevExpress.Skins;
 
 namespace CryptoMarketClient.Strategies {
     public partial class StrategySpecificConfigurationControlBase : XtraUserControl {
         public StrategySpecificConfigurationControlBase() {
             InitializeComponent();
+            BackColor = Color.White;
+        }
+
+        bool ShouldSerializeBackColor() { return false; }
+        public override Color BackColor {
+            get => CommonSkins.GetSkin(LookAndFeel.ActiveLookAndFeel).GetSystemColor(SystemColors.Control);
         }
 
         StrategyBase strategy;

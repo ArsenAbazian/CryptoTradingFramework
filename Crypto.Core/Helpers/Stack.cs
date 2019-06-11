@@ -9,7 +9,11 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Crypto.Core.Helpers {
-    public class ResizeableArray<T> : IEnumerable<T>, IList<T> {
+    public interface IResizeableArray {
+        object GetItem(int index);
+        int Count { get; }
+    }
+    public class ResizeableArray<T> : IEnumerable<T>, IList<T>, IResizeableArray {
         public ResizeableArray() {
             Items = new T[32];
         }
@@ -17,7 +21,14 @@ namespace Crypto.Core.Helpers {
         public ResizeableArray(int count) {
             Items = new T[count];
         }
-
+        object IResizeableArray.GetItem(int index) {
+            if(index >= Count)
+                return null;
+            return Items[index];
+        }
+        int IResizeableArray.Count {
+            get { return Count; }
+        }
         event ListChangedEventHandler listChanged;
         public event ListChangedEventHandler ListChanged {
             add {

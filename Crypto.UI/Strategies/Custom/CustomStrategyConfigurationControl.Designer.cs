@@ -417,6 +417,7 @@
             this.propertyGridControl1.Name = "propertyGridControl1";
             this.propertyGridControl1.Size = new System.Drawing.Size(441, 773);
             this.propertyGridControl1.TabIndex = 0;
+            this.propertyGridControl1.UseDirectXPaint = DevExpress.Utils.DefaultBoolean.True;
             // 
             // CustomStrategyConfigurationControl
             // 

@@ -12,6 +12,15 @@ using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 namespace Crypto.Core.Common {
+    public class DelayedPositionInfo {
+        public int DataItemIndex { get; set; }
+        public int LiveTimeLength { get; set; }
+        public OrderType Type { get; set; }
+        public DateTime Time { get; set; }
+        public double Price { get; set; }
+        public double Amount { get; set; }
+        public string Mark { get; set; }
+    }
     public class OpenPositionInfo {
         public OpenPositionInfo() {
             ID = Guid.NewGuid();
@@ -51,6 +60,7 @@ namespace Crypto.Core.Common {
         public bool AllowTrailing { get; set; }
         public string MarketName { get; set; }
         public double StopLossPercent { get; set; } = 5;
+        public double MinProfitPercent { get; set; } = 10;
         public double StopLossDelta { get; set; } = 1000;
         public double OpenValue { get; set; }
         public double CloseValue { get; set; }
@@ -118,7 +128,13 @@ namespace Crypto.Core.Common {
         public double Earned { get; set; }
         public double Spent { get; set; }
         public double Profit { get { return Earned - Spent; } }
+        public double CurrentLoss {
+            get {
+                return Math.Min(0, Amount * (CurrentValue - OpenValue));
+            }
+        }
         public double StopLoss { get; set; }
+        public double OpenAmount { get; set; }
         public double Amount { get; set; }
         public double Total { get; set; }
         [XmlIgnore]
@@ -141,14 +157,14 @@ namespace Crypto.Core.Common {
 
         public string ToHtmlString() {
             StringBuilder b = new StringBuilder();
-            b.Append("amount: <b>" + Amount.ToString("0.########") + "<b><br>");
-            b.Append("open price: <b>" + OpenValue.ToString("0.########") + "<b><br>");
-            b.Append("close price: <b>" + CloseValue.ToString("0.########") + "<b><br>");
-            b.Append("stoploss: <b>" + StopLoss.ToString("0.########") + "<b><br>");
-            b.Append("change: <b>" + Change.ToString("0.##") + "%<b><br>");
-            b.Append("spent: <b>" + Spent.ToString("0.########") + "<b><br>");
-            b.Append("earned: <b>" + Earned.ToString("0.########") + "<b><br>");
-            b.Append("profit: <b>" + Profit.ToString("0.########") + "<b><br>");
+            b.Append("amount:      <b>" + OpenAmount.ToString("0.########") + "</b><br>");
+            b.Append("open price:  <b>" + OpenValue.ToString("0.########") + "</b><br>");
+            b.Append("close price: <b>" + CloseValue.ToString("0.########") + "</b><br>");
+            b.Append("stoploss:    <b>" + StopLoss.ToString("0.########") + "</b><br>");
+            b.Append("change:      <b>" + Change.ToString("0.##") + "%</b><br>");
+            b.Append("spent:       <b>" + Spent.ToString("0.########") + "</b><br>");
+            b.Append("earned:      <b>" + Earned.ToString("0.########") + "</b><br>");
+            b.Append("profit:      <b>" + Profit.ToString("0.########") + "</b><br>");
             return b.ToString();
         }
     }
@@ -176,7 +192,7 @@ namespace Crypto.Core.Common {
             var vp = StrategyDataItemInfo.DataItem(DataItemInfos, "ValuePreview"); vp.Visibility = DataVisibility.Table;
             var sp = StrategyDataItemInfo.DataItem(DataItemInfos, "StopLossPreview"); sp.Visibility = DataVisibility.Table;
 
-            var vh = StrategyDataItemInfo.DataItem(DataItemInfos, "Value"); vh.Visibility = DataVisibility.Chart; vh.Type = DataType.ChartData; vh.Color = Color.Green; vh.BindingSource = "ValueHistory";
+            var vh = StrategyDataItemInfo.DataItem(DataItemInfos, "Value"); vh.Visibility = DataVisibility.Chart; vh.Type = DataType.ChartData; vh.Color = Color.Green; vh.BindingSource = "ValueHistory"; vh.Name = "History";
             var dac = StrategyDataItemInfo.DataItem(vh.Children, "Value", Color.Orange); dac.ChartType = ChartType.ConstantY; dac.BindingSource = "DACLines";
             var slc = StrategyDataItemInfo.DataItem(vh.Children, "Value"); slc.Visibility = DataVisibility.Chart; slc.Type = DataType.ChartData; slc.Color = Color.Red; slc.BindingSource = "StopLossHistory";
             var clLine = StrategyDataItemInfo.DataItem(vh.Children, "CloseValue"); clLine.ChartType = ChartType.ConstantY; clLine.BindingSource = "CloseValue";

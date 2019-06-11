@@ -12,6 +12,7 @@ using DevExpress.XtraEditors;
 using Crypto.Core.Common;
 using Crypto.Core.Strategies.Custom;
 using DevExpress.XtraEditors.Repository;
+using System.Reflection;
 
 namespace CryptoMarketClient.Strategies.Custom {
     public partial class CustomStrategyConfigurationControl : StrategySpecificConfigurationControlBase {
@@ -81,7 +82,36 @@ namespace CryptoMarketClient.Strategies.Custom {
             base.OnStrategyChanged();
             this.exchangeTickersBindingSource.DataSource = Exchange.GetTickersNameInfo();
             this.tickerInputInfoBindingSource.DataSource = ((CustomTickerStrategy)Strategy).StrategyInfo.Tickers;
+            InitializePropertyTabs();
             this.propertyGridControl1.SelectedObject = Strategy;
+        }
+
+        private void InitializePropertyTabs() {
+            PropertyInfo[] props = Strategy.GetType().GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+            IEnumerable<IGrouping<string, PropertyInfo>> groups = props.Where(p => {
+                BrowsableAttribute a = p.GetCustomAttribute<BrowsableAttribute>();
+                Crypto.Core.Strategies.StrategyPropertyAttribute pt = p.GetCustomAttribute<Crypto.Core.Strategies.StrategyPropertyAttribute>();
+                if(a != null)
+                    return a.Browsable;
+                if(pt != null)
+                    return pt.Browsable;
+                return true;
+            }).ToList().GroupBy(p => {
+                Crypto.Core.Strategies.StrategyPropertyAttribute pt = p.GetCustomAttribute<Crypto.Core.Strategies.StrategyPropertyAttribute>();
+                return pt == null ? "Common" : pt.TabName;
+            });
+            this.propertyGridControl1.BeginUpdate();
+            try {
+                foreach(var group in groups) {
+                    DevExpress.XtraVerticalGrid.Tab tab = new DevExpress.XtraVerticalGrid.Tab(); tab.Caption = group.Key;
+                    foreach(PropertyInfo p in group)
+                        tab.FieldNames.Add(p.Name);
+                    this.propertyGridControl1.Tabs.Insert(0, tab);
+                }
+            }
+            finally {
+                this.propertyGridControl1.EndUpdate();
+            }
         }
 
         private void repositoryItemGridLookUpEdit1_EditValueChanged(object sender, EventArgs e) {

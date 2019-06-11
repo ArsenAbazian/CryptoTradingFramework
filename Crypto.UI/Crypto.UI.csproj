@@ -302,6 +302,12 @@
     <Compile Include="Strategies\Custom\RedWaterfall\RedWaterfallStrategyDataForm.Designer.cs">
       <DependentUpon>RedWaterfallStrategyDataForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Strategies\SimulationSettingsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Strategies\SimulationSettingsForm.Designer.cs">
+      <DependentUpon>SimulationSettingsForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Strategies\ParamsConfigurationForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -423,6 +429,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Strategies\Custom\InvictusExchange\WalletInvestorStrategyConfigControl.resx">
       <DependentUpon>WalletInvestorStrategyConfigControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Strategies\SimulationSettingsForm.resx">
+      <DependentUpon>SimulationSettingsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Strategies\ParamsConfigurationForm.resx">
       <DependentUpon>ParamsConfigurationForm.cs</DependentUpon>

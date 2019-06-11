@@ -31,8 +31,7 @@ namespace Crypto.Core.Strategies {
             list.Add(new StrategyRegistrationInfo() { Type = typeof(CustomTickerStrategy), Group = StrategyGroup.Custom, Name = "Custom Strategy", Description = "Your own fully customizable strategy" });
             list.Add(new StrategyRegistrationInfo() { Type = typeof(MarketMakingStrategy), Group = StrategyGroup.Custom, Name = "Stupid Market Making Strategy", Description = "No Comments" });
             list.Add(new StrategyRegistrationInfo() { Type = typeof(TriplePairStrategy), Group = StrategyGroup.Arbitrage, Name = "Triple Pair Strategy", Description = "" });
-            list.Add(new StrategyRegistrationInfo() { Type = typeof(SupportResistanceBasedStrategy), Group = StrategyGroup.Custom, Name = "Red Waterfall Strategy", Description = "This strategy based on buying coin after panic sell." });
-            list.Add(new StrategyRegistrationInfo() { Type = typeof(SupportResistanceSimpleBreaks), Group = StrategyGroup.Custom, Name = "Support Resistance Simple Breaks Strategy", Description = "-" });
+            list.Add(new StrategyRegistrationInfo() { Type = typeof(TaSimpleStrategy), Group = StrategyGroup.Custom, Name = "Support Resistance Simple Breaks Strategy", Description = "-" });
             return list;
         }
     }

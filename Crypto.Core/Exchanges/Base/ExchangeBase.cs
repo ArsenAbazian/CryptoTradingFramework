@@ -529,6 +529,7 @@ namespace CryptoMarketClient {
                 return null;
             }
         }
+        public virtual bool SupportCandleSticksRange { get { return true; } }
         public bool IsTickerPinned(Ticker tickerBase) {
             return PinnedTickers.FirstOrDefault(p => p.BaseCurrency == tickerBase.BaseCurrency && p.MarketCurrency == tickerBase.MarketCurrency) != null;
         }

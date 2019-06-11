@@ -31,7 +31,7 @@ namespace CryptoMarketClient.Strategies {
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject2 = new DevExpress.Utils.SerializableAppearanceObject();
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject3 = new DevExpress.Utils.SerializableAppearanceObject();
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject4 = new DevExpress.Utils.SerializableAppearanceObject();
-            this.dataLayoutControl1 = new DevExpress.XtraDataLayout.DataLayoutControl();
+            this.dataLayoutControl1 = new MyLayoutControl();
             this.simpleButton1 = new DevExpress.XtraEditors.SimpleButton();
             this.simpleButton2 = new DevExpress.XtraEditors.SimpleButton();
             this.EnabledCheckEdit = new DevExpress.XtraEditors.ToggleSwitch();

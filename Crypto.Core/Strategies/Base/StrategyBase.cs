@@ -34,8 +34,7 @@ namespace Crypto.Core.Strategies {
     [XmlInclude(typeof(TickerDataCaptureStrategy))]
     [XmlInclude(typeof(MarketMakingStrategy))]
     [XmlInclude(typeof(StatisticalArbitrageStrategy))]
-    [XmlInclude(typeof(SupportResistanceBasedStrategy))]
-    [XmlInclude(typeof(SupportResistanceSimpleBreaks))]
+    [XmlInclude(typeof(TaSimpleStrategy))]
     //[XmlInclude(typeof())]
     [Serializable]
     [ParameterObject]
@@ -51,18 +50,24 @@ namespace Crypto.Core.Strategies {
         [XmlIgnore]
         [Browsable(false)]
         public StrategiesManager Manager { get; set; }
+        [StrategyProperty(false)]
         public bool Enabled { get; set; } = false;
+        [StrategyProperty(false)]
         public bool DemoMode { get; set; } = true;
         [XmlIgnore]
+        [Browsable(false)]
         public bool OptimizationMode { get; set; }
         [XmlIgnore]
+        [Browsable(false)]
         public bool OptimizationParametersInitialized { get; set; }
         public string Description { get; set; }
+        [Browsable(false)]
         public abstract string StateText { get; }
         [Browsable(false)]
         [OutputParameter]
         public double Earned { get; set; }
 
+        [StrategyProperty(false)]
         public long ChatId { get; set; }
         public bool EnableNotifications { get; set; }
 
@@ -72,6 +77,7 @@ namespace Crypto.Core.Strategies {
             TelegramBot.Default.SendNotification(notification, ChatId);
         }
 
+        [Browsable(false)]
         public abstract string TypeName { get; }
         public string Name { get; set; }
         [Browsable(false)]
@@ -80,6 +86,7 @@ namespace Crypto.Core.Strategies {
         public List<StrategyHistoryItem> History { get; } = new List<StrategyHistoryItem>();
         [Browsable(false)]
         public List<TradingResult> TradeHistory { get; } = new List<TradingResult>();
+        [Browsable(false)]
         public abstract bool SupportSimulation { get; }
 
         [XmlIgnore]
@@ -96,10 +103,15 @@ namespace Crypto.Core.Strategies {
             return DataItemInfos.Last();
         }
 
+        [Browsable(false)]
+        public ResizeableArray<DelayedPositionInfo> DelayedPositions { get; } = new ResizeableArray<DelayedPositionInfo>();
+        [Browsable(false)]
         public ResizeableArray<OpenPositionInfo> OpenedOrders { get; } = new ResizeableArray<OpenPositionInfo>();
+        [Browsable(false)]
         public ResizeableArray<OpenPositionInfo> OrdersHistory { get; } = new ResizeableArray<OpenPositionInfo>();
 
         [XmlIgnore]
+        [Browsable(false)]
         public bool PanicMode { get; protected set; }
         public void Break() { PanicMode = true; }
 
@@ -221,7 +233,7 @@ namespace Crypto.Core.Strategies {
             }
         }
         Guid accountId;
-        //[Browsable(false)]
+        [StrategyProperty(false)]
         public Guid AccountId {
             get { return accountId; }
             set {
@@ -266,6 +278,20 @@ namespace Crypto.Core.Strategies {
             cloned.Assign(this);
             return cloned;
         }
+        
+        protected void AssignValueProperties(StrategyBase from) {
+            if(GetType() != from.GetType())
+                return;
+            PropertyInfo[] props = GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            foreach(var p in props) {
+                if(!p.CanWrite)
+                    continue;
+                if(p.PropertyType.IsValueType || p.PropertyType == typeof(string) || p.PropertyType.IsEnum) {
+                    p.SetValue(this, p.GetValue(from));
+                }
+            }
+        }
+
         public virtual void Assign(StrategyBase from) {
             Manager = from.Manager;
             Enabled = from.Enabled;
@@ -275,6 +301,8 @@ namespace Crypto.Core.Strategies {
             AccountId = from.AccountId;
             MaxAllowedDeposit = from.MaxAllowedDeposit;
             ChatId = from.ChatId;
+
+            AssignValueProperties(from);
 
             ParametersToOptimize.Clear();
             foreach(var item in from.ParametersToOptimize)
@@ -326,7 +354,7 @@ namespace Crypto.Core.Strategies {
                 list.Add(new StrategyValidationError() { DataObject = this, Description = "Account not found", PropertyName = "Account", Value = "[empty]" });
         }
 
-        protected virtual bool ShouldCheckAccount { get { return true; } }
+        protected virtual bool ShouldCheckAccount { get { return !DemoMode; } }
         public virtual List<StrategyValidationError> Validate() {
             List<StrategyValidationError> list = new List<StrategyValidationError>();
 
@@ -346,9 +374,11 @@ namespace Crypto.Core.Strategies {
                 list.Add(new StrategyValidationError() { DataObject = this, Description = "Max allowed deposit not specified.", PropertyName = "MaxAllowedDeposit", Value = "0" });
         }
 
+        [Browsable(false)]
         [TypeConverter(typeof(ExpandableObjectConverter))]
         public List<InputParameterInfo> ParametersToOptimize { get; } = new List<InputParameterInfo>();
 
+        [Browsable(false)]
         [TypeConverter(typeof(ExpandableObjectConverter))]
         public OutputParameterInfo OutputParameter { get; set; }
     }
@@ -407,5 +437,22 @@ namespace Crypto.Core.Strategies {
             IsInput = isInput;
         }
         public bool IsInput { get; private set; }
+    }
+
+    public class StrategyPropertyAttribute : Attribute {
+        public StrategyPropertyAttribute(string tabName) {
+            TabName = tabName;
+        }
+        public StrategyPropertyAttribute(string tabName, bool browsable) {
+            TabName = tabName;
+            Browsable = browsable;
+        }
+        public StrategyPropertyAttribute() : this("Common") {
+        }
+        public StrategyPropertyAttribute(bool browsable) : this("Common") {
+            Browsable = browsable;
+        }
+        public string TabName { get; set; }
+        public bool Browsable { get; set; } = true;
     }
 }
