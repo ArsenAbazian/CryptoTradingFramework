@@ -151,6 +151,18 @@ namespace Crypto.Core.Indicators {
             //}
         }
 
+        public double GetSupportBelow(double value) {
+            for(int i = Support.Count - 1; i >= 0; i--) {
+                if(Support[i].Value < value)
+                    return Support[i].Value;
+            }
+            return value;
+        }
+        public override void Clear() {
+            base.Clear();
+            Support.Clear();
+            Resistance.Clear();
+        }
         private bool UpdateSupport(SRValue value) {
             value.Average = value.Value;
             if(Support.Count == 0)

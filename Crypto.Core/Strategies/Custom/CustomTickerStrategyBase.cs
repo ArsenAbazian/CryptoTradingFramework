@@ -3,10 +3,12 @@ using Crypto.Core.Helpers;
 using Crypto.Core.Indicators;
 using CryptoMarketClient;
 using CryptoMarketClient.Common;
+using CryptoMarketClient.Helpers;
 using CryptoMarketClient.Strategies;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -128,7 +130,7 @@ namespace Crypto.Core.Strategies.Custom {
                 return false;
             double amount = info.DACTotalAmount * info.DACInfo.GetAmountInPc(zoneIndex) / 100;
             double lowAsk = Ticker.OrderBook.Asks[0].Value;
-            OpenPositionInfo dacPos = OpenLongPosition("DAC " + zoneIndex, lowAsk, amount, true, false, info.StopLossPercent, info.MinProfitPercent);
+            OpenPositionInfo dacPos = OpenLongPosition("D" + zoneIndex, lowAsk, amount, true, false, info.StopLossPercent, info.MinProfitPercent);
             if(dacPos != null) {
                 dacPos.AllowDAC = false;
                 dacPos.ParentID = info.ID;
@@ -136,8 +138,8 @@ namespace Crypto.Core.Strategies.Custom {
                 dacPos.StopLossPercent = (info.CloseValue - info.OpenValue) / info.OpenValue * 100 + 0.5;
                 CombinedStrategyDataItem item = (CombinedStrategyDataItem)StrategyData.Last();
                 info.DACInfo.Executed[zoneIndex] = true;
+                info.DACPositions.Add(dacPos);
                 dacPos.CloseValue = info.CloseValue;// 2 * CalcFee(dacPos.Total) + dacPos.OpenValue * 0.01; // 1% profit at least
-                item.Mark = dacPos.Mark;
             }
             return true;
         }
@@ -183,10 +185,10 @@ namespace Crypto.Core.Strategies.Custom {
             return OpenLongPosition(mark, value, amount, allowTrailing, true, trailingStopLossPc, minProfitPc);
         }
 
-        protected virtual DelayedPositionInfo AddDelayedPosition(string mark, double value, double amount, int liveTimeLength) {
+        protected virtual DelayedPositionInfo AddDelayedPosition(string mark, double value, double amount, double closeValue, int liveTimeLength) {
             if(1.05 * value * amount > MaxAllowedDeposit)
                 return null;
-            DelayedPositionInfo info = new DelayedPositionInfo() { Time = DataProvider.CurrentTime, Type = OrderType.Buy, Mark = mark, Amount = amount, Price = value, LiveTimeLength = liveTimeLength, DataItemIndex = StrategyData.Count - 1 };
+            DelayedPositionInfo info = new DelayedPositionInfo() { Time = DataProvider.CurrentTime, Type = OrderType.Buy, Mark = mark, Amount = amount, Price = value, LiveTimeLength = liveTimeLength, DataItemIndex = StrategyData.Count - 1, CloseValue = closeValue };
             DelayedPositions.Add(info);
             return info;
         }
@@ -226,18 +228,23 @@ namespace Crypto.Core.Strategies.Custom {
             OnOpenLongPosition(info);
             MaxAllowedDeposit -= info.Spent;
 
-            CombinedStrategyDataItem item = (CombinedStrategyDataItem)StrategyData.Last();
-            item.OpenedPositions.Add(info);
-            item.Mark = mark;
+            IOpenedPositionsProvider provider = (CombinedStrategyDataItem)StrategyData.Last();
+            provider.OpenedPositions.Add(info);
+            provider.AddMark(mark);
 
             return info;
         }
 
         protected virtual void OnOpenLongPosition(OpenPositionInfo info) {
-            
+            if(EnableNotifications) {
+                SendNotification("long open " + info.Mark + " rate: " + info.OpenValue.ToString("0.00000000") + " amount: " + info.OpenAmount.ToString("0.00000000") + " web: " + Ticker.WebPageAddress);
+            }
         }
 
         protected virtual void CloseLongPosition(OpenPositionInfo info) {
+            if(EnableNotifications) {
+                SendNotification("long close " + info.Mark + " rate: " + info.CloseValue.ToString("0.00000000") + " web: " + Ticker.WebPageAddress);
+            }
             //TradingResult res = MarketSell(Ticker.OrderBook.Bids[0].Value, info.Amount);
             //if(res != null) {
             //    double earned = res.Total - CalcFee(res.Total);

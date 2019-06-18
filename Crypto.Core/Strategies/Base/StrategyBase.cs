@@ -115,6 +115,9 @@ namespace Crypto.Core.Strategies {
         public bool PanicMode { get; protected set; }
         public void Break() { PanicMode = true; }
 
+        int IStrategyDataItemInfoOwner.MeasureUnitMultiplier { get { return 30; } set { } }
+        StrategyDateTimeMeasureUnit IStrategyDataItemInfoOwner.MeasureUnit { get { return StrategyDateTimeMeasureUnit.Minute; } set { } }
+
         protected virtual void ApplyParametersToOptimize() {
             foreach(InputParameterInfo info in ParametersToOptimize) {
                 info.ApplyValue();

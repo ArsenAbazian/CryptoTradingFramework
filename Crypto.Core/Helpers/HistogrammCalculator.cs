@@ -22,7 +22,9 @@ namespace Crypto.Core.Helpers {
         public static ArgumentValue[] Calculate(ResizeableArray<object> dataSource, string valueField, double clasterizationWidth) {
             double minX = GetMin(dataSource, valueField);
             double maxX = GetMax(dataSource, valueField);
-            int count = (int)((maxX - minX) / clasterizationWidth) + 1;
+            int count = 100;
+            if(clasterizationWidth != 0)
+                count = (int)((maxX - minX) / clasterizationWidth) + 1;
             return Calculate((ResizeableArray<object>)dataSource, valueField, count);
         }
 

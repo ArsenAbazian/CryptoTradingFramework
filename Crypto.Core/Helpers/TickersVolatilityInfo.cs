@@ -22,6 +22,9 @@ namespace Crypto.Core.Helpers {
         public List<TickerVolatilityInfo> Result { get; private set; } = new List<TickerVolatilityInfo>();
         public string Name { get { return "Tickers ATR"; } }
 
+        int IStrategyDataItemInfoOwner.MeasureUnitMultiplier { get { return 30; } set { } }
+        StrategyDateTimeMeasureUnit IStrategyDataItemInfoOwner.MeasureUnit { get { return StrategyDateTimeMeasureUnit.Minute; } set { } }
+
         public TickersVolatilityInfo() {
             DataItem("Name").Visibility = DataVisibility.Table;
             DataItem("MathExp").Visibility = DataVisibility.Table;

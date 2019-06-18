@@ -52,7 +52,7 @@ namespace CryptoMarketClient.Strategies {
                         root = item.BindingRoot;
                     item.DataSource = BindingHelper.GetBindingValue(item.BindingSource, root);
                 }
-                else
+                else if(item.DataSource == null)
                     item.DataSource = Visual.Items;
             }
         }
@@ -116,20 +116,7 @@ namespace CryptoMarketClient.Strategies {
         }
 
         private StrategyDataItemInfo CreateHistogrammDetailItem(StrategyDataItemInfo info) {
-            object ds = info.DataSource == null ? Visual.Items : info.DataSource;
-            StrategyDataItemInfo detail = new StrategyDataItemInfo();
-            detail.ChartType = info.ChartType;
-            detail.Color = info.Color;
-            detail.FieldName = "Y";
-            detail.ArgumentScaleType = ArgumentScaleType.Numerical;
-            detail.ArgumentDataMember = "X";
-            detail.FormatString = info.FormatString;
-            detail.GraphWidth = info.GraphWidth;
-            detail.Name = info.Name;
-            detail.PanelName = info.PanelName;
-            detail.Type = DataType.Numeric;
-            detail.DataSource = HistogrammCalculator.Calculate(ds, info.FieldName, info.ClasterizationWidth);
-            return detail;
+            return info.CreateHistogrammDetailItem(Visual);
         }
 
         protected virtual void CreateConstantLines(StrategyDataItemInfo info) {
@@ -195,7 +182,7 @@ namespace CryptoMarketClient.Strategies {
                 res = CreateLineSeries(info);
             if(info.ChartType == ChartType.Bar)
                 res = CreateBarSeries(info);
-            if(info.ChartType == ChartType.Area)
+            if(info.ChartType == ChartType.Area || info.ChartType == ChartType.StepArea)
                 res = CreateAreaSeries(info);
             if(info.ChartType == ChartType.Dot)
                 res = CreatePointSeries(info);
@@ -294,7 +281,7 @@ namespace CryptoMarketClient.Strategies {
 
         protected virtual Series CreateAnnotationSeriesCore(StrategyDataItemInfo info) {
             Series s = new Series();
-            s.Name = info.FieldName;
+            s.Name = info.Name;
             s.ArgumentDataMember = GetArgumentDataMember(info);
             s.ValueDataMembers.AddRange(info.FieldName);
             s.ValueScaleType = ScaleType.Numerical;
@@ -307,7 +294,7 @@ namespace CryptoMarketClient.Strategies {
 
         protected virtual Series CreatePointSeries(StrategyDataItemInfo info) {
             Series s = new Series();
-            s.Name = info.FieldName;
+            s.Name = info.Name;
             s.ArgumentDataMember = GetArgumentDataMember(info);
             s.ArgumentScaleType = GetArgumentScaleType(info);
             s.ValueDataMembers.AddRange(info.FieldName);
@@ -343,13 +330,17 @@ namespace CryptoMarketClient.Strategies {
         }
         protected virtual Series CreateAreaSeries(StrategyDataItemInfo info) {
             Series s = new Series();
-            s.Name = info.FieldName;
+            s.Name = info.Name;
             s.ArgumentDataMember = GetArgumentDataMember(info);
             s.ArgumentScaleType = GetArgumentScaleType(info);
             s.ValueDataMembers.AddRange(info.FieldName);
             s.ValueScaleType = ScaleType.Numerical;
             s.ShowInLegend = true;
-            AreaSeriesView view = new AreaSeriesView();
+            AreaSeriesView view = null;
+            if(info.ChartType == ChartType.Area)
+                view = new AreaSeriesView();
+            else
+                view = new StepAreaSeriesView();
             view.Color = info.Color;
             s.View = view;
             s.DataSource = GetDataSource(info);
@@ -358,7 +349,7 @@ namespace CryptoMarketClient.Strategies {
 
         protected virtual Series CreateBarSeries(StrategyDataItemInfo info) {
             Series s = new Series();
-            s.Name = info.FieldName;
+            s.Name = info.Name;
             s.ArgumentDataMember = GetArgumentDataMember(info);
             s.ArgumentScaleType = GetArgumentScaleType(info);
             s.ValueDataMembers.AddRange(info.FieldName);
@@ -377,7 +368,7 @@ namespace CryptoMarketClient.Strategies {
 
         private Series CreateLineSeries(StrategyDataItemInfo info) {
             Series s = new Series();
-            s.Name = info.FieldName;
+            s.Name = info.Name;
             s.ArgumentDataMember = GetArgumentDataMember(info);
             s.ArgumentScaleType = GetArgumentScaleType(info);
             s.ValueDataMembers.AddRange(info.FieldName);
@@ -420,14 +411,12 @@ namespace CryptoMarketClient.Strategies {
         }
 
         private void CheckInitializeTimeAxis() {
-            int totalMinutes = 30;
+            int totalMinutes = Visual.MeasureUnitMultiplier;
             DateTime first = DateTime.MinValue;
             DateTime last = DateTime.MaxValue;
 
-            ((XYDiagram)Chart.Diagram).AxisX.DateTimeScaleOptions.MeasureUnit = DateTimeMeasureUnit.Minute;
-            if(Visual.Items == null || Visual.Items.Count == 0)
-                ((XYDiagram)Chart.Diagram).AxisX.DateTimeScaleOptions.MeasureUnitMultiplier = 30;
-            else {
+            ((XYDiagram)Chart.Diagram).AxisX.DateTimeScaleOptions.MeasureUnit = (DateTimeMeasureUnit)Enum.Parse(typeof(DateTimeMeasureUnit), Visual.MeasureUnit.ToString());
+            if(Visual.Items != null && Visual.Items.Count > 1) {
                 object data1 = Visual.Items[1];
                 object data0 = Visual.Items[0];
                 object dataLast = Visual.Items.Last();

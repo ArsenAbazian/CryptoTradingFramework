@@ -132,8 +132,12 @@ namespace Crypto.Core.Indicators {
             }
         }
 
-        public override void Calculate() {
+        public virtual void Clear() {
             Result.Clear();
+        }
+
+        public override void Calculate() {
+            Clear();
             int count = Count;
             for(int i = 0; i < count; i++) {
                 Result.Add(Calculate(i));

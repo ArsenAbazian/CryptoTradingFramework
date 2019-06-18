@@ -12,6 +12,8 @@ namespace Crypto.Core.Strategies {
         string Name { get; }
         List<StrategyDataItemInfo> DataItemInfos { get; }
         ResizeableArray<object> Items { get; }
+        int MeasureUnitMultiplier { get; set; }
+        StrategyDateTimeMeasureUnit MeasureUnit { get; set; }
     }
 
     public class SdiConstantLine {
@@ -84,6 +86,24 @@ namespace Crypto.Core.Strategies {
         public Color Color { get; set; } = Color.Blue;
         public int GraphWidth { get; set; } = 1;
         public ChartType ChartType { get; set; } = ChartType.Line;
+
+        public StrategyDataItemInfo CreateHistogrammDetailItem(IStrategyDataItemInfoOwner visual) {
+            object ds = DataSource == null ? visual.Items : DataSource;
+            StrategyDataItemInfo detail = new StrategyDataItemInfo();
+            detail.ChartType = ChartType;
+            detail.Color = Color;
+            detail.FieldName = "Y";
+            detail.ArgumentScaleType = ArgumentScaleType.Numerical;
+            detail.ArgumentDataMember = "X";
+            detail.FormatString = FormatString;
+            detail.GraphWidth = GraphWidth;
+            detail.Name = Name;
+            detail.PanelName = PanelName;
+            detail.Type = DataType.Numeric;
+            detail.DataSource = HistogrammCalculator.Calculate(ds, FieldName, ClasterizationWidth);
+            return detail;
+        }
+
         public double ClasterizationWidth { get; set; }
         public string PanelName { get; set; } = "Default";
         string name;
@@ -141,9 +161,12 @@ namespace Crypto.Core.Strategies {
                 return PanelName;
             }
         }
+
+        public int MeasureUnitMultiplier { get; set; } = 1;
+        public StrategyDateTimeMeasureUnit MeasureUnit { get; set; } = StrategyDateTimeMeasureUnit.Minute;
     }
 
-    public enum ChartType { CandleStick, Line, Area, Bar, Dot, Annotation, StepLine, ConstantX, ConstantY }
+    public enum ChartType { CandleStick, Line, Area, StepArea, Bar, Dot, Annotation, StepLine, ConstantX, ConstantY }
     public enum DataType { DateTime, Numeric, ChartData, HistogrammData }
     [Flags]
     public enum DataVisibility { None, Table, Chart, Both = Table | Chart }

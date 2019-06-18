@@ -179,24 +179,54 @@ namespace Crypto.UI.Forms {
         }
         protected void SelectAnnotationWithTag(object tag) {
             ILinkedObjectProvider linkedProvider = (ILinkedObjectProvider)tag;
+            IOpenedPositionsProvider opProvider = tag as IOpenedPositionsProvider;
             object link = linkedProvider == null ? null : linkedProvider.GetLinkedObject();
             List<XYDiagramPaneBase> panes = GetPanes();
             foreach(XYDiagramPaneBase pane in panes) {
                 foreach(Annotation ann in Diagram.DefaultPane.Annotations) {
                     ILinkedObjectProvider obj = ann.Tag as ILinkedObjectProvider;
-                    if(ann.Tag == tag)
-                        ann.BackColor = Color.FromArgb(165, 255, 127);
-                    else if(obj != null && obj.GetLinkedObject() == link && link != null)
-                        ann.BackColor = Color.FromArgb(165, 255, 127);
-                    else
-                        ann.BackColor = Color.Empty;
+                    IOpenedPositionsProvider opProvider2 = ann.Tag as IOpenedPositionsProvider;
+                    if(ann.Tag == tag || (obj != null && obj.GetLinkedObject() == link && link != null)) {
+                        if((opProvider2.ClosedPositions.Count > 0 && opProvider2.ClosedPositions[0].Profit < 0) || 
+                            (opProvider.OpenedPositions.Count > 0 && opProvider.OpenedPositions[0].Profit < 0))
+                            ann.BackColor = Color.Pink;
+                        else 
+                            ann.BackColor = Color.FromArgb(165, 255, 127);
+                    }
                 }
             }
         }
 
         protected virtual void OnSelectedAnnotationChanged(Annotation prev, Annotation curr) {
             object tag = curr == null ? null : curr.Tag;
+            List<XYDiagramPaneBase> panes = GetPanes();
+            foreach(XYDiagramPaneBase pane in panes) {
+                foreach(Annotation ann in Diagram.DefaultPane.Annotations) {
+                    ann.BackColor = Color.Empty;
+                }
+            }
             SelectAnnotationWithTag(tag);
+            SelectChildrenAnnotationWithTag(tag);
+        }
+
+        private void SelectChildrenAnnotationWithTag(object tag) {
+            ILinkedObjectProvider provider = tag as ILinkedObjectProvider;
+            if(provider == null)
+                return;
+            ILinkedChildrenProvider childProvider = tag as ILinkedChildrenProvider;
+            if(childProvider == null)
+                return;
+            List<XYDiagramPaneBase> panes = GetPanes();
+            foreach(XYDiagramPaneBase pane in panes) {
+                foreach(Annotation ann in Diagram.DefaultPane.Annotations) {
+                    ILinkedObjectProvider child = ann.Tag as ILinkedObjectProvider;
+                    for(int i = 0; i < childProvider.Count; i++) {
+                        if(childProvider.GetChild(i) == child.GetLinkedObject()) {
+                            ann.BackColor = Color.FromArgb(0xff, 0xff, 0xcf, 0x9e);
+                        }
+                    }
+                }
+            }
         }
 
         private void chartControl_Click(object sender, EventArgs e) {
@@ -379,6 +409,30 @@ namespace Crypto.UI.Forms {
 
         private void pmShowChart_BeforePopup(object sender, CancelEventArgs e) {
             //if(this.pmShowChart.ItemLinks.Count == 0)
+        }
+
+        private void bsHistogramm_GetItemData(object sender, EventArgs e) {
+            if(Visual == null)
+                return;
+            if(this.bsHistogramm.ItemLinks.Count != 0)
+                return;
+            foreach(StrategyDataItemInfo item in Visual.DataItemInfos) {
+                if(!item.Visibility.HasFlag(DataVisibility.Chart))
+                    continue;
+                if(item.ChartType == ChartType.CandleStick)
+                    continue;
+                BarButtonItem bc = new BarButtonItem(this.barManager1, item.Name);
+                bc.ItemClick += OnShowHistogrammItemClick;
+                bc.AllowAllUp = false;
+                bc.Tag = item;
+                this.bsHistogramm.ItemLinks.Add(bc);
+            }
+        }
+
+        public event EventHandler ShowHistogrammItemClick;
+        private void OnShowHistogrammItemClick(object sender, ItemClickEventArgs e) {
+            if(ShowHistogrammItemClick != null)
+                ShowHistogrammItemClick(e.Item.Tag, EventArgs.Empty);
         }
     }
 

@@ -20,8 +20,12 @@ namespace Crypto.Core.Common {
         public double Price { get; set; }
         public double Amount { get; set; }
         public string Mark { get; set; }
+        public double CloseValue { get; set; }
     }
-    public class OpenPositionInfo {
+    public interface IChildPositionProvider {
+        ResizeableArray<OpenPositionInfo> Children { get; set; }
+    }
+    public class OpenPositionInfo : IChildPositionProvider {
         public OpenPositionInfo() {
             ID = Guid.NewGuid();
             ParentID = Guid.Empty;
@@ -53,6 +57,8 @@ namespace Crypto.Core.Common {
         public GridLineInfo[] DACLines {
             get { return AllowDAC ? DACInfo.Lines : new GridLineInfo[0]; }
         }
+        ResizeableArray<OpenPositionInfo> IChildPositionProvider.Children { get { return DACPositions; } set { DACPositions = value; } }
+        public ResizeableArray<OpenPositionInfo> DACPositions { get; set; } = new ResizeableArray<OpenPositionInfo>();
         public bool AllowHistory { get; set; } = false;
         public TimeSpan AggregationTime { get; set; } = new TimeSpan(0, 0, 30);
 
@@ -78,6 +84,7 @@ namespace Crypto.Core.Common {
         }
 
         public void OnCurrentValueChanged(DateTime time, double value) {
+            MaxValue = Math.Max(value, MaxValue);
             if(!AllowHistory)
                 return;
             DateTime lastValueTime = DateTime.MinValue;
@@ -92,6 +99,7 @@ namespace Crypto.Core.Common {
                 StopLossHistory.Add(new TimeBaseValue() { Time = time, Value = StopLoss });
         }
 
+        public double MaxValue { get; set; }
         public ResizeableArray<TimeBaseValue> ValueHistory { get; } = new ResizeableArray<TimeBaseValue>();
         public ResizeableArray<TimeBaseValue> StopLossHistory { get; } = new ResizeableArray<TimeBaseValue>();
 
@@ -133,6 +141,15 @@ namespace Crypto.Core.Common {
                 return Math.Min(0, Amount * (CurrentValue - OpenValue));
             }
         }
+        public double CurrentLossInPc {
+            get { return Math.Min(0, CurrentLoss / OpenValue * 100); }
+        }
+        public double CurrentChange {
+            get { return CurrentValue - OpenValue; }
+        }
+        public double CurrentChangeInPc {
+            get { return CurrentChange / OpenValue * 100; }
+        }
         public double StopLoss { get; set; }
         public double OpenAmount { get; set; }
         public double Amount { get; set; }
@@ -157,6 +174,7 @@ namespace Crypto.Core.Common {
 
         public string ToHtmlString() {
             StringBuilder b = new StringBuilder();
+            b.Append("mark:        <b>" + Mark + "</b><br>");
             b.Append("amount:      <b>" + OpenAmount.ToString("0.########") + "</b><br>");
             b.Append("open price:  <b>" + OpenValue.ToString("0.########") + "</b><br>");
             b.Append("close price: <b>" + CloseValue.ToString("0.########") + "</b><br>");
@@ -202,6 +220,11 @@ namespace Crypto.Core.Common {
             vp.DetailInfo = vh;
             sp.DetailInfo = sh;
         }
+
+        int IStrategyDataItemInfoOwner.MeasureUnitMultiplier {
+            get { return 5 * (((int)(Items[0].ValueHistory[1].Time - Items[0].ValueHistory[0].Time).TotalSeconds) % 5); }
+            set { } }
+        StrategyDateTimeMeasureUnit IStrategyDataItemInfoOwner.MeasureUnit { get { return StrategyDateTimeMeasureUnit.Second; } set { } }
 
         public List<StrategyDataItemInfo> DataItemInfos { get; } = new List<StrategyDataItemInfo>();
 

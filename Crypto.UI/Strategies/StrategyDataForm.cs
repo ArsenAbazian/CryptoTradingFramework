@@ -42,6 +42,7 @@ namespace CryptoMarketClient.Strategies {
 
         protected virtual void OnStrategyChanged() {
             this.chartDataControl1.AnnotationDoubleClick += OnChartAnnotationDoubleClick;
+            this.chartDataControl1.ShowHistogrammItemClick += OnShowHistogrammItemClick;
             this.strategyHistoryItemBindingSource.DataSource = Strategy.History;
             this.tradingResultBindingSource.DataSource = Strategy.TradeHistory;
             Text = Strategy.Name + " - Data";
@@ -62,6 +63,13 @@ namespace CryptoMarketClient.Strategies {
                 this.chartDataControl1.Chart.LoadFromFile(ChartSettingsFileName);
                 AttachPoints();
             }
+        }
+
+        private void OnShowHistogrammItemClick(object sender, EventArgs e) {
+            StrategyDataItemInfo info = (StrategyDataItemInfo)sender;
+            StrategyDataItemInfo hst = info.CreateHistogrammDetailItem(Strategy);
+            hst.PanelName = "Default";
+            ShowChartForm(hst, new StrategyDataVisualiser(hst), true);
         }
 
         private void OnVisulizerGetControl(object sender, DataControlProvideEventArgs e) {
@@ -100,7 +108,7 @@ namespace CryptoMarketClient.Strategies {
             panel.ID = Guid.NewGuid();
             panel.Text = visual.Name + " - Data Chart";
             panel.Controls.Add(control);
-            panel.Size = new Size((int)(Size.Width * 0.8), (int)(Size.Height * 0.8));
+            panel.FloatForm.Size = new Size((int)(Size.Width * 0.8), (int)(Size.Height * 0.8));
             this.dockManager1.RootPanels.AddRange(new DockPanel[] { panel });
             panel.Show();
             return control.Chart;

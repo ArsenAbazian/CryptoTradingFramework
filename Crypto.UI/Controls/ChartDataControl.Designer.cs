@@ -42,6 +42,7 @@
             this.repositoryItemButtonEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemButtonEdit();
             this.bsNavigate = new DevExpress.XtraBars.BarSubItem();
             this.bsEvents = new DevExpress.XtraBars.BarSubItem();
+            this.bsHistogramm = new DevExpress.XtraBars.BarSubItem();
             this.standaloneBarDockControl1 = new DevExpress.XtraBars.StandaloneBarDockControl();
             this.barDockControlTop = new DevExpress.XtraBars.BarDockControl();
             this.barDockControlBottom = new DevExpress.XtraBars.BarDockControl();
@@ -77,8 +78,9 @@
             this.bsSeries,
             this.beNavigate,
             this.bsNavigate,
-            this.bsEvents});
-            this.barManager1.MaxItemId = 10;
+            this.bsEvents,
+            this.bsHistogramm});
+            this.barManager1.MaxItemId = 11;
             this.barManager1.OptionsStubGlyphs.AllowStubGlyphs = DevExpress.Utils.DefaultBoolean.True;
             this.barManager1.OptionsStubGlyphs.CaseMode = DevExpress.Utils.Drawing.GlyphTextCaseMode.UpperCase;
             this.barManager1.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
@@ -103,7 +105,8 @@
             new DevExpress.XtraBars.LinkPersistInfo(this.bsPanes),
             new DevExpress.XtraBars.LinkPersistInfo(DevExpress.XtraBars.BarLinkUserDefines.Width, this.beNavigate, "", false, true, true, 147),
             new DevExpress.XtraBars.LinkPersistInfo(this.bsNavigate),
-            new DevExpress.XtraBars.LinkPersistInfo(this.bsEvents)});
+            new DevExpress.XtraBars.LinkPersistInfo(this.bsEvents),
+            new DevExpress.XtraBars.LinkPersistInfo(this.bsHistogramm)});
             this.bar1.OptionsBar.DrawBorder = false;
             this.bar1.OptionsBar.UseWholeRow = true;
             this.bar1.StandaloneBarDockControl = this.standaloneBarDockControl1;
@@ -158,7 +161,6 @@
             // 
             this.bsNavigate.Caption = "Navigate By";
             this.bsNavigate.Id = 7;
-            this.bsNavigate.MenuDrawMode = DevExpress.XtraBars.MenuDrawMode.SmallImagesText;
             this.bsNavigate.Name = "bsNavigate";
             this.bsNavigate.GetItemData += new System.EventHandler(this.bsNavigate_GetItemData);
             // 
@@ -166,9 +168,15 @@
             // 
             this.bsEvents.Caption = "Filter Events";
             this.bsEvents.Id = 8;
-            this.bsEvents.MenuDrawMode = DevExpress.XtraBars.MenuDrawMode.SmallImagesText;
             this.bsEvents.Name = "bsEvents";
             this.bsEvents.GetItemData += new System.EventHandler(this.bsEvents_GetItemData);
+            // 
+            // bsHistogramm
+            // 
+            this.bsHistogramm.Caption = "Show Histogramm";
+            this.bsHistogramm.Id = 10;
+            this.bsHistogramm.Name = "bsHistogramm";
+            this.bsHistogramm.GetItemData += new System.EventHandler(this.bsHistogramm_GetItemData);
             // 
             // standaloneBarDockControl1
             // 
@@ -329,5 +337,6 @@
         private DevExpress.Utils.ToolTipController toolTipController1;
         private DevExpress.XtraBars.BarSubItem bsEvents;
         private DevExpress.XtraBars.PopupMenu pmShowChart;
+        private DevExpress.XtraBars.BarSubItem bsHistogramm;
     }
 }

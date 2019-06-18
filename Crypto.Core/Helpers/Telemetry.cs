@@ -40,11 +40,15 @@ namespace CryptoMarketClient {
         public TelemetryClient InnerClient { get; set; }
 
         private void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e) {
+            if(InnerClient == null)
+                return;
             InnerClient.TrackException(e.Exception);
             InnerClient.Flush();
         }
 
         private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e) {
+            if(InnerClient == null)
+                return;
             InnerClient.TrackException(e.ExceptionObject as Exception);
             InnerClient.Flush();
         }
