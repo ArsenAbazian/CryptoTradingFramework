@@ -1,4 +1,6 @@
-﻿namespace CryptoMarketClient {
+﻿using System;
+
+namespace CryptoMarketClient {
     public class PoloniexTicker : Ticker {
         public PoloniexTicker(PoloniexExchange exchange) : base(exchange) {
             CandleStickPeriodMin = 5;
@@ -37,6 +39,7 @@
         public override string MarketName { get { return CurrencyPair; } set { } }
 
         public override string WebPageAddress { get { return "https://poloniex.com/exchange#" + Name.ToLower(); } }
+        
         //public override string GetDepositAddress(CurrencyType type) {
         //    if(type == CurrencyType.BaseCurrency) {
         //        if(!string.IsNullOrEmpty(BaseBalanceInfo.DepositAddress))

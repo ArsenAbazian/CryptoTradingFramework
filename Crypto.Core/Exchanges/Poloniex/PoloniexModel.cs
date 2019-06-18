@@ -37,6 +37,8 @@ namespace CryptoMarketClient {
 
         }
 
+        protected override bool ShouldAddKlineListener => true;
+
         protected internal override IIncrementalUpdateDataProvider CreateIncrementalUpdateDataProvider() {
             return new PoloniexIncrementalUpdateDataProvider();
         }
@@ -228,9 +230,10 @@ namespace CryptoMarketClient {
         }
 
         public override void StopListenKline(Ticker ticker) {
-            if(TickersSocket == null)
-                return;
-            TickersSocket.Unsubscribe(new WebSocketSubscribeInfo(SocketSubscribeType.Kline, ticker) { channel = ticker.CurrencyPair, command = "unsubscribe" });
+            RemoveKLineListener(ticker);
+            //if(TickersSocket == null)
+            //    return;
+            //TickersSocket.Unsubscribe(new WebSocketSubscribeInfo(SocketSubscribeType.Kline, ticker) { channel = ticker.CurrencyPair, command = "unsubscribe" });
         }
 
         protected override void StartListenTradeHistoryCore(Ticker ticker) {
@@ -243,12 +246,13 @@ namespace CryptoMarketClient {
         }
 
         protected override void StartListenKlineCore(Ticker ticker) {
-            if(TickersSocket == null) {
-                StartListenTickersStream();
-                if(!WaitUntil(5000, () => { return TickersSocketState == SocketConnectionState.Connected; }))
-                    return;
-            }
-            TickersSocket.Subscribe(new WebSocketSubscribeInfo(SocketSubscribeType.Kline, ticker) { Command = new Common.WebSocketCommandInfo { channel = ticker.CurrencyPair, command = "subscribe" } });
+            AddKLineListener(ticker);
+            //if(TickersSocket == null) {
+            //    StartListenTickersStream();
+            //    if(!WaitUntil(5000, () => { return TickersSocketState == SocketConnectionState.Connected; }))
+            //        return;
+            //}
+            //TickersSocket.Subscribe(new WebSocketSubscribeInfo(SocketSubscribeType.Kline, ticker) { Command = new Common.WebSocketCommandInfo { channel = ticker.CurrencyPair, command = "subscribe" } });
         }
 
         protected override void StartListenOrderBookCore(Ticker ticker) {
@@ -323,6 +327,10 @@ namespace CryptoMarketClient {
                 string[] item = res[i];
                 CandleStickData data = new CandleStickData();
                 data.Time = startTime.AddSeconds(FastValueConverter.ConvertPositiveLong(item[0]));
+                if(data.Time.Minute % candleStickPeriodMin != 0)
+                    continue;
+                if(list.Count > 0 && list.Last().Time == data.Time)
+                    continue;
                 data.High = FastValueConverter.Convert(item[1]);
                 data.Low = FastValueConverter.Convert(item[2]);
                 data.Open = FastValueConverter.Convert(item[3]);

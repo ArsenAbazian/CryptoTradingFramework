@@ -250,6 +250,14 @@ namespace CryptoMarketClient {
                 last = value;
             }
         }
+
+        protected internal virtual void UpdateKline() {
+            if(!IsKlineSubscribed)
+                return;
+            //CandleStickData last = CandleStickData.Last();
+            //CandleStickPeriodMin
+        }
+
         string lastString = null;
         public string LastString {
             get {
@@ -427,6 +435,27 @@ namespace CryptoMarketClient {
                 IsUpdatingOpenedOrders = false;
             }
         }
+
+        public void UpdateLastCandleStick() {
+            if(CandleStickData.Count == 0)
+                return;
+            CandleStickData last = CandleStickData.Last();
+            DateTime newKlineData = last.Time.AddMinutes(CandleStickPeriodMin);
+            DateTime timeToUpdate = last.Time;
+            if(DateTime.UtcNow >= newKlineData)
+                timeToUpdate = newKlineData;
+            Task t = Task.Run(() => {
+                ResizeableArray<CandleStickData> res = GetCandleStickData(CandleStickPeriodMin, timeToUpdate, 1000000);
+                if(res == null)
+                    return;
+                if(res[0].Time.Year == 1970)
+                    return;
+                for(int i = 0; i < res.Count; i++) {
+                    UpdateCandleStickData(res[i]);
+                }
+            });
+        }
+
         public string DownloadString(string address) {
             try {
                 ApiRate.WaitToProceed();

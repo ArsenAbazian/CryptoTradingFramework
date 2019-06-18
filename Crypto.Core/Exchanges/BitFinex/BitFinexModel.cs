@@ -27,6 +27,8 @@ namespace CryptoMarketClient.BitFinex {
             }
         }
 
+        protected override bool ShouldAddKlineListener => true;
+
         protected internal override IIncrementalUpdateDataProvider CreateIncrementalUpdateDataProvider() {
             return new BitFinexIncrementalUpdateDataProvider();
         }

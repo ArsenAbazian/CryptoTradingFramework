@@ -32,6 +32,8 @@ namespace CryptoMarketClient.Bittrex {
             RequestRate.Add(new RateLimit() { Limit = 25, Interval = TimeSpan.TicksPerMinute });
         }
 
+        protected override bool ShouldAddKlineListener => true;
+
         protected internal override IIncrementalUpdateDataProvider CreateIncrementalUpdateDataProvider() {
             return new BittrexIncrementalUpdateDataProvider();
         }

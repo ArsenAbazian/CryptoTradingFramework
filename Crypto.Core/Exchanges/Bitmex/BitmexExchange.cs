@@ -26,6 +26,8 @@ namespace CryptoMarketClient.Exchanges.Bitmex {
             }
         }
 
+        protected override bool ShouldAddKlineListener => false;
+
         protected internal override HMAC CreateHmac(string secret) {
             return new HMACSHA256(ASCIIEncoding.Default.GetBytes(secret));
         }

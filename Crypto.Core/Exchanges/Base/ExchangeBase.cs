@@ -51,6 +51,27 @@ namespace CryptoMarketClient {
             get { return Color.Green; }
         }
 
+        protected List<Ticker> KLineListeners { get; } = new List<CryptoMarketClient.Ticker>();
+        protected abstract bool ShouldAddKlineListener { get; }
+        public void AddKLineListener(Ticker t) {
+            if(!ShouldAddKlineListener)
+                return;
+            if(KLineListeners.Contains(t))
+                return;
+            lock(KLineListeners) {
+                KLineListeners.Add(t);
+            }
+            StartKlineListenTimer();
+        }
+
+        public void RemoveKLineListener(Ticker t) {
+            if(!KLineListeners.Contains(t))
+                return;
+            lock(KLineListeners) {
+                KLineListeners.Remove(t);
+            }
+        }
+
         public string ToQueryString(HttpRequestParamsCollection nvc) {
             StringBuilder sb = new StringBuilder();
 
@@ -358,9 +379,24 @@ namespace CryptoMarketClient {
             }
         }
 
+        System.Threading.Timer klineListenTimer;
+        protected System.Threading.Timer KLineListenTmer {
+            get {
+                if(klineListenTimer == null)
+                    klineListenTimer = new System.Threading.Timer(new System.Threading.TimerCallback(OnKlineListenTimer), this, 30000, WebSocketCheckTimerInterval);
+                return klineListenTimer;
+            }
+        }
+
         protected void StartSocketTimer() {
             if(!SimulationMode) {
                 object item = WebSocketCheckTimer;
+            }
+        }
+
+        protected void StartKlineListenTimer() {
+            if(!SimulationMode) {
+                object item = KLineListenTmer;
             }
         }
 
@@ -413,6 +449,14 @@ namespace CryptoMarketClient {
                     continue;
                 if(s.Ticker.OrderBook.LastUpdateTime != DateTime.MinValue && (DateTime.Now - s.Ticker.OrderBook.LastUpdateTime).TotalMilliseconds >= OrderBookAllowedDelayInterval)
                     OnOrderBookConnectionLost(info, s);
+            }
+        }
+
+        protected virtual void OnKlineListenTimer(object state) {
+            lock(KLineListeners) {
+                foreach(Ticker t in KLineListeners) {
+                    t.UpdateLastCandleStick();
+                }
             }
         }
 

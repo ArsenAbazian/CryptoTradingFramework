@@ -29,6 +29,8 @@ namespace CryptoMarketClient.Binance {
             }
         }
 
+        protected override bool ShouldAddKlineListener => false;
+
         protected internal override IIncrementalUpdateDataProvider CreateIncrementalUpdateDataProvider() {
             return new BinanceIncrementalUpdateDataProvider();
         }
