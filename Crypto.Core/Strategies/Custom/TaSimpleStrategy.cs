@@ -150,7 +150,7 @@ namespace Crypto.Core.Strategies.Custom {
         protected virtual void ProcessTickerCore() {
             if(Ticker.CandleStickData.Count < StrategyStartItemsCount) /// need back data for simulation
                 return;
-            if(Ticker.OrderBook.IsDirty)
+            if(Ticker.OrderBook.IsDirty || Ticker.OrderBook.Asks.Count == 0)
                 return;
             CombinedStrategyDataItem item = (CombinedStrategyDataItem)StrategyData.Last();
             if(!string.IsNullOrEmpty(item.Mark)) // processed
