@@ -18,6 +18,8 @@ namespace Crypto.Core.Strategies.Custom {
         public TaSimpleStrategy() {
         }
 
+        public override string TypeName => "Simple Technical Analysis Strategy";
+
         [Browsable(false)]
         public override int CandleStickIntervalMin { get; set; }
         

@@ -60,6 +60,7 @@ namespace Crypto.Core.Strategies {
         [XmlIgnore]
         [Browsable(false)]
         public bool OptimizationParametersInitialized { get; set; }
+        [StrategyProperty(false)]
         public string Description { get; set; }
         [Browsable(false)]
         public abstract string StateText { get; }
@@ -69,6 +70,7 @@ namespace Crypto.Core.Strategies {
 
         [StrategyProperty(false)]
         public long ChatId { get; set; }
+        [StrategyProperty(false)]
         public bool EnableNotifications { get; set; }
 
         public void SendNotification(string notification) {
@@ -79,6 +81,7 @@ namespace Crypto.Core.Strategies {
 
         [Browsable(false)]
         public abstract string TypeName { get; }
+        [StrategyProperty(false)]
         public string Name { get; set; }
         [Browsable(false)]
         public IStrategyDataProvider DataProvider { get { return Manager == null? null: Manager.DataProvider; } }
@@ -249,6 +252,7 @@ namespace Crypto.Core.Strategies {
 
         protected virtual void OnAccountIdChanged() { }
         double maxAllowedDeposit;
+        [StrategyProperty(false)]
         public double MaxAllowedDeposit {
             get { return maxAllowedDeposit; }
             set {

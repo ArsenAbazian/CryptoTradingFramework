@@ -38,7 +38,8 @@ namespace Crypto.Core.Strategies.Custom {
                 OnStrategyInfoChanged();
             }
         }
-        
+
+        [StrategyProperty(false)]
         public List<IndicatorBase> Indicators { get; } = new List<IndicatorBase>();
         
         [XmlIgnore]

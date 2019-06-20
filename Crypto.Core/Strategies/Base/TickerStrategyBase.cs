@@ -183,6 +183,7 @@ namespace CryptoMarketClient.Strategies {
         }
 
         TickerNameInfo tickerInfo;
+        [StrategyProperty(false)]
         public TickerNameInfo TickerInfo {
             get { return tickerInfo; }
             set {
