@@ -39,23 +39,23 @@ namespace Crypto.Core.Common {
         public DateTime CloseTime { get; set; }
         public TimeSpan Length { get { return CloseTime - Time; } }
 
-        public bool AllowDAC { get; set; }
-        public OrderGridInfo DACInfo { get; set; }
-        public double DACTotalAmount { get; set; }
-        public void InitializeDAC(double openValue, double probableMin, double amount, int stepCount) {
-            DACInfo = new OrderGridInfo();
-            DACInfo.Start.AmountPercent = 30;
-            DACInfo.Start.Value = openValue;
-            DACInfo.End.AmountPercent = 90;
-            DACInfo.End.Value = probableMin;
-            DACInfo.LineCount = stepCount;
-            DACInfo.Normalize();
-            DACTotalAmount = amount;
+        public bool AllowDCA { get; set; }
+        public OrderGridInfo DCAInfo { get; set; }
+        public double DCATotalAmount { get; set; }
+        public void InitializeDCA(double openValue, double probableMin, double amount, int stepCount) {
+            DCAInfo = new OrderGridInfo();
+            DCAInfo.Start.AmountPercent = 30;
+            DCAInfo.Start.Value = openValue;
+            DCAInfo.End.AmountPercent = 90;
+            DCAInfo.End.Value = probableMin;
+            DCAInfo.LineCount = stepCount;
+            DCAInfo.Normalize();
+            DCATotalAmount = amount;
         }
 
         [XmlIgnore]
         public GridLineInfo[] DACLines {
-            get { return AllowDAC ? DACInfo.Lines : new GridLineInfo[0]; }
+            get { return AllowDCA ? DCAInfo.Lines : new GridLineInfo[0]; }
         }
         ResizeableArray<OpenPositionInfo> IChildPositionProvider.Children { get { return DACPositions; } set { DACPositions = value; } }
         public ResizeableArray<OpenPositionInfo> DACPositions { get; set; } = new ResizeableArray<OpenPositionInfo>();

@@ -88,7 +88,7 @@ namespace Crypto.Core.Strategies.Custom {
                 BreakUpSettings.MinProfitPc);
             if(info == null)
                 return;
-            if(BreakUpSettings.AllowDAC) {
+            if(BreakUpSettings.AllowDCA) {
                 InitializeDac(info, BreakUpSettings);
             }
         }
@@ -103,34 +103,34 @@ namespace Crypto.Core.Strategies.Custom {
             info.Tag2 = SRIndicator2.Support.Last();
             double spread = resistance - support;
             info.CloseValue = resistance - spread * 0.1;
-            if(PingPongSettings.AllowDAC) {
+            if(PingPongSettings.AllowDCA) {
                 InitializeDac(info, PingPongSettings);
             }
         }
         protected void InitializeBreakDownDac(OpenPositionInfo info, TaSettingsBase settings) {
             double value = info.OpenValue;
-            double dacStart = value * (100.0 - settings.DACStartPercent) * 0.01;
+            double dacStart = value * (100.0 - settings.DCAStartPercent) * 0.01;
             double dacEnd = SRIndicator2.GetLastMinSupport(5);
             dacEnd = SRIndicator2.GetSupportBelow(dacEnd);
             if(dacEnd == 0 || dacEnd > dacStart)
                 dacEnd = dacStart - (SRIndicator2.Resistance.Last().Value - SRIndicator2.Support.Last().Value);
-            if(dacEnd > value * (100 - settings.DACEndPercent) * 0.01)
-                dacEnd = value * (100 - settings.DACEndPercent) * 0.01;
+            if(dacEnd > value * (100 - settings.DCAEndPercent) * 0.01)
+                dacEnd = value * (100 - settings.DCAEndPercent) * 0.01;
 
-            info.AllowDAC = true;
-            info.InitializeDAC(dacStart, dacEnd, info.Amount, 3);
+            info.AllowDCA = true;
+            info.InitializeDCA(dacStart, dacEnd, info.Amount, 3);
         }
         protected void InitializeDac(OpenPositionInfo info, TaSettingsBase settings) {
             double value = info.OpenValue;
-            double dacStart = value * (100.0 - settings.DACStartPercent) * 0.01;
+            double dacStart = value * (100.0 - settings.DCAStartPercent) * 0.01;
             double dacEnd = SRIndicator2.GetLastMinSupport(5);
             if(dacEnd > dacStart)
                 dacEnd = dacStart - (SRIndicator2.Resistance.Last().Value - SRIndicator2.Support.Last().Value);
-            if(dacEnd > value * (100 - settings.DACEndPercent) * 0.01)
-                dacEnd = value * (100 - settings.DACEndPercent) * 0.01;
+            if(dacEnd > value * (100 - settings.DCAEndPercent) * 0.01)
+                dacEnd = value * (100 - settings.DCAEndPercent) * 0.01;
 
-            info.AllowDAC = true;
-            info.InitializeDAC(dacStart, dacEnd, info.Amount, 3);
+            info.AllowDCA = true;
+            info.InitializeDCA(dacStart, dacEnd, info.Amount, 3);
         }
         protected virtual void UpdateCurrentLoss() {
             if(StrategyData.Count > 0) {
@@ -257,7 +257,7 @@ namespace Crypto.Core.Strategies.Custom {
             if(info == null)
                 return;
             info.CloseValue = closeValue;
-            if(BreakDownSettings.AllowDAC)
+            if(BreakDownSettings.AllowDCA)
                 InitializeDac(info, BreakDownSettings);
         }
 
@@ -403,11 +403,11 @@ namespace Crypto.Core.Strategies.Custom {
             return null;
         }
 
-        protected override bool ProcessDAC(OpenPositionInfo info) {
+        protected override bool ProcessDCA(OpenPositionInfo info) {
             TaSettingsBase st = GetSettings(info);
             if(st != null && st.EnableStopLoss)
                 return false;
-            return base.ProcessDAC(info);
+            return base.ProcessDCA(info);
         }
 
         protected override bool ShouldCloseLongPosition(OpenPositionInfo info) {
@@ -456,7 +456,7 @@ namespace Crypto.Core.Strategies.Custom {
 
     public class TaSettingsBase {
         public bool Enable { get; set; }
-        public bool AllowDAC { get; set; }
+        public bool AllowDCA { get; set; }
         public bool AllowTrailing { get; set; }
         public double AllowedDepositPc { get; set; } = 20;
         public double TrailingStopLossPc { get; set; } = 5;
@@ -466,10 +466,10 @@ namespace Crypto.Core.Strategies.Custom {
         }
 
         [InputParameter(1, 50, 0.1)]
-        public double DACStartPercent { get; set; } = 1;
+        public double DCAStartPercent { get; set; } = 1;
         [InputParameter(1, 50, 0.1)]
-        public double DACEndPercent { get; set; } = 5;
-        public int DACLevelCount { get; set; } = 3;
+        public double DCAEndPercent { get; set; } = 5;
+        public int DCALevelCount { get; set; } = 3;
 
         public bool EnableStopLoss { get; set; }
         public double StopLossPc { get; set; } = 2.7;
@@ -494,7 +494,7 @@ namespace Crypto.Core.Strategies.Custom {
     [ParameterObject]
     public class BreakDownSettings : TaSettingsBase {
         public BreakDownSettings() {
-            AllowDAC = true;
+            AllowDCA = true;
             AllowTrailing = true;
         }
         [InputParameter(10, 1000, 1)]
@@ -510,7 +510,7 @@ namespace Crypto.Core.Strategies.Custom {
     [ParameterObject]
     public class PingPongSettings : TaSettingsBase {
         public PingPongSettings() {
-            AllowDAC = true;
+            AllowDCA = true;
             AllowTrailing = false;
             EnableStopLoss = true;
         }

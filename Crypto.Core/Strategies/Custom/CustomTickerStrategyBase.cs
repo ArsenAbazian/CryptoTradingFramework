@@ -107,7 +107,7 @@ namespace Crypto.Core.Strategies.Custom {
                 foreach(OpenPositionInfo info in OpenedOrders)
                     info.UpdateCurrentValue(DataProvider.CurrentTime, Ticker.OrderBook.Bids[0].Value);
                 foreach(OpenPositionInfo info in OpenedOrders) {
-                    if(ProcessDAC(info))
+                    if(ProcessDCA(info))
                         continue;
                     if(ShouldContinueTrailing(info))
                         continue;
@@ -120,25 +120,25 @@ namespace Crypto.Core.Strategies.Custom {
             }
         }
 
-        protected virtual bool ProcessDAC(OpenPositionInfo info) {
-            if(!info.AllowDAC || info.Type != OrderType.Buy)
+        protected virtual bool ProcessDCA(OpenPositionInfo info) {
+            if(!info.AllowDCA || info.Type != OrderType.Buy)
                 return false;
             double highBid = Ticker.OrderBook.Bids[0].Value;
-            if(highBid >= info.DACInfo.Start.Value)
+            if(highBid >= info.DCAInfo.Start.Value)
                 return false;
-            int zoneIndex = info.DACInfo.GetZoneIndex(info.CurrentValue);
-            if(zoneIndex == -1 || info.DACInfo.IsExecuted(zoneIndex))
+            int zoneIndex = info.DCAInfo.GetZoneIndex(info.CurrentValue);
+            if(zoneIndex == -1 || info.DCAInfo.IsExecuted(zoneIndex))
                 return false;
-            double amount = info.DACTotalAmount * info.DACInfo.GetAmountInPc(zoneIndex) / 100;
+            double amount = info.DCATotalAmount * info.DCAInfo.GetAmountInPc(zoneIndex) / 100;
             double lowAsk = Ticker.OrderBook.Asks[0].Value;
             OpenPositionInfo dacPos = OpenLongPosition("D" + zoneIndex, lowAsk, amount, true, false, info.StopLossPercent, info.MinProfitPercent);
             if(dacPos != null) {
-                dacPos.AllowDAC = false;
+                dacPos.AllowDCA = false;
                 dacPos.ParentID = info.ID;
                 dacPos.StopLossDelta = info.CloseValue - info.OpenValue;
                 dacPos.StopLossPercent = (info.CloseValue - info.OpenValue) / info.OpenValue * 100 + 0.5;
                 CombinedStrategyDataItem item = (CombinedStrategyDataItem)StrategyData.Last();
-                info.DACInfo.Executed[zoneIndex] = true;
+                info.DCAInfo.Executed[zoneIndex] = true;
                 info.DACPositions.Add(dacPos);
                 dacPos.CloseValue = info.CloseValue;// 2 * CalcFee(dacPos.Total) + dacPos.OpenValue * 0.01; // 1% profit at least
             }
