@@ -119,8 +119,12 @@ namespace CryptoMarketClient.Strategies.Custom {
             info.TickerName = Convert.ToString(((GridLookUpEdit)sender).EditValue);
         }
 
+        protected virtual TickerInputInfo CreateDefaultTickerInputInfo() {
+            return new TickerInputInfo();
+        }
+
         private void biAdd_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
-            ((CustomTickerStrategy)Strategy).StrategyInfo.Tickers.Add(new TickerInputInfo());
+            ((CustomTickerStrategy)Strategy).StrategyInfo.Tickers.Add(CreateDefaultTickerInputInfo());
             this.gridView1.RefreshData();
         }
 
