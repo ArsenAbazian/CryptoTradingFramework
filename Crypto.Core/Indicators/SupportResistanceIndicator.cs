@@ -19,8 +19,6 @@ namespace Crypto.Core.Indicators {
         [InputParameter]
         public int Range { get; set; } = 3;
         [InputParameter]
-        public int ClasterizationRange { get; set; } = 24;
-        [InputParameter]
         public double ThresoldPerc { get; set; } = 0.6;
 
         public override void Assign(IndicatorBase ind) {
@@ -28,7 +26,6 @@ namespace Crypto.Core.Indicators {
             SupportResistanceIndicator sr = ind as SupportResistanceIndicator;
             if(sr != null) {
                 Range = sr.Range;
-                ClasterizationRange = sr.ClasterizationRange;
                 ThresoldPerc = sr.ThresoldPerc;
             }
         }

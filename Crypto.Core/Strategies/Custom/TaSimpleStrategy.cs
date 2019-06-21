@@ -37,7 +37,6 @@ namespace Crypto.Core.Strategies.Custom {
         public PingPongSettings PingPongSettings { get; set; } = new PingPongSettings();
 
         public int Range { get; set; } = 3;
-        public int ClasterizationRange { get; set; } = 24;
         public double ThresoldPerc { get; set; } = 0.6;
 
         protected SupportResistanceIndicator SRIndicator { get; private set; }
@@ -69,8 +68,8 @@ namespace Crypto.Core.Strategies.Custom {
         public override bool Start() {
             bool res = base.Start();
             if(res) {
-                SRIndicator = new SupportResistanceIndicator() { Ticker = Ticker, Range = Range, ClasterizationRange = ClasterizationRange, ThresoldPerc = ThresoldPerc };
-                SRIndicator2 = new SupportResistanceIndicator() { Ticker = Ticker, Range = Range, ClasterizationRange = ClasterizationRange, ThresoldPerc = ThresoldPerc * 3 };
+                SRIndicator = new SupportResistanceIndicator() { Ticker = Ticker, Range = Range, ThresoldPerc = ThresoldPerc };
+                SRIndicator2 = new SupportResistanceIndicator() { Ticker = Ticker, Range = Range,ThresoldPerc = ThresoldPerc * 3 };
                 SRIndicator.Calculate();
                 SRIndicator2.Calculate();
                 for(int i = 0; i < Ticker.CandleStickData.Count - 1; i++) { 
