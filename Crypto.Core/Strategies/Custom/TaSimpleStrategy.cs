@@ -118,7 +118,7 @@ namespace Crypto.Core.Strategies.Custom {
                 dacEnd = value * (100 - settings.DCAEndPercent) * 0.01;
 
             info.AllowDCA = true;
-            info.InitializeDCA(dacStart, dacEnd, info.Amount, 3);
+            info.InitializeDCA(dacStart, dacEnd, info.Amount, 3, settings.DCAStartAmountFraction, settings.DCAEndAmountFraction);
         }
         protected void InitializeDac(OpenPositionInfo info, TaSettingsBase settings) {
             double value = info.OpenValue;
@@ -130,7 +130,7 @@ namespace Crypto.Core.Strategies.Custom {
                 dacEnd = value * (100 - settings.DCAEndPercent) * 0.01;
 
             info.AllowDCA = true;
-            info.InitializeDCA(dacStart, dacEnd, info.Amount, 3);
+            info.InitializeDCA(dacStart, dacEnd, info.Amount, 3, settings.DCAStartAmountFraction, settings.DCAEndAmountFraction);
         }
         protected virtual void UpdateCurrentLoss() {
             if(StrategyData.Count > 0) {
@@ -467,8 +467,13 @@ namespace Crypto.Core.Strategies.Custom {
 
         [InputParameter(1, 50, 0.1)]
         public double DCAStartPercent { get; set; } = 1;
+        [InputParameter(1, 50, 1)]
+        public double DCAStartAmountFraction { get; set; } = 30;
         [InputParameter(1, 50, 0.1)]
         public double DCAEndPercent { get; set; } = 5;
+        [InputParameter(1, 50, 1)]
+        public double DCAEndAmountFraction { get; set; } = 90;
+        [InputParameter(2, 5, 1)]
         public int DCALevelCount { get; set; } = 3;
 
         public bool EnableStopLoss { get; set; }

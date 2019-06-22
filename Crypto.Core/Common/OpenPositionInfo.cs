@@ -42,7 +42,7 @@ namespace Crypto.Core.Common {
         public bool AllowDCA { get; set; }
         public OrderGridInfo DCAInfo { get; set; }
         public double DCATotalAmount { get; set; }
-        public void InitializeDCA(double openValue, double probableMin, double amount, int stepCount) {
+        public void InitializeDCA(double openValue, double probableMin, double amount, int stepCount, double startAmountPc, double endAmountPc) {
             DCAInfo = new OrderGridInfo();
             DCAInfo.Start.AmountPercent = 30;
             DCAInfo.Start.Value = openValue;

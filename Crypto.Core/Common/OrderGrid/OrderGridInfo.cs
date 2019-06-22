@@ -54,23 +54,23 @@ namespace Crypto.Core.Common.OrderGrid {
                 if(value > Start.Value)
                     return -1;
             }
-            double delta = (End.Value - Start.Value) / LineCount;
+            double delta = (End.Value - Start.Value) / (LineCount - 1);
             int index = (int)((value - Start.Value) / delta);
             return index;
         }
 
         public virtual double GetZoneArgument(int zoneIndex) {
-            double delta = (End.Value - Start.Value) / LineCount;
+            double delta = (End.Value - Start.Value) / (LineCount - 1);
             return Start.Value + delta * zoneIndex;
         }
 
         public virtual double GetAmountInPc(double value) {
             int index = GetZoneIndex(value);
-            return Start.AmountPercent + (End.AmountPercent - Start.AmountPercent) / LineCount * index;
+            return Start.AmountPercent + (End.AmountPercent - Start.AmountPercent) / (LineCount - 1) * index;
         }
 
         public virtual double GetAmountInPc(int zoneIndex) {
-            return Start.AmountPercent + (End.AmountPercent - Start.AmountPercent) / LineCount * zoneIndex;
+            return Start.AmountPercent + (End.AmountPercent - Start.AmountPercent) / (LineCount - 1) * zoneIndex;
         }
 
         public virtual void Assign(OrderGridInfo info) {
@@ -81,7 +81,7 @@ namespace Crypto.Core.Common.OrderGrid {
 
         public void Normalize() {
             double sum = 0;
-            double delta = (End.AmountPercent - Start.AmountPercent) / LineCount;
+            double delta = (End.AmountPercent - Start.AmountPercent) / (LineCount - 1);
 
             for(int i = 0; i < LineCount; i++) {
                 double amountPc = Start.AmountPercent + i * delta;
