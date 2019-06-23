@@ -86,7 +86,7 @@ namespace Crypto.Core.Strategies {
         public Color Color { get; set; } = Color.Blue;
         public int GraphWidth { get; set; } = 1;
         public ChartType ChartType { get; set; } = ChartType.Line;
-
+        
         public StrategyDataItemInfo CreateHistogrammDetailItem(IStrategyDataItemInfoOwner visual) {
             object ds = DataSource == null ? visual.Items : DataSource;
             StrategyDataItemInfo detail = new StrategyDataItemInfo();
@@ -106,6 +106,7 @@ namespace Crypto.Core.Strategies {
 
         public double ClasterizationWidth { get; set; }
         public string PanelName { get; set; } = "Default";
+        public bool PanelVisible { get; set; } = true;
         string name;
         public string Name { get { return string.IsNullOrEmpty(name) ? FieldName : name; } set { name = value; } }
         string annotationText;

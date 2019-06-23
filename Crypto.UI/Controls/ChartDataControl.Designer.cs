@@ -52,6 +52,8 @@
             this.chartControl = new DevExpress.XtraCharts.ChartControl();
             this.toolTipController1 = new DevExpress.Utils.ToolTipController(this.components);
             this.pmShowChart = new DevExpress.XtraBars.PopupMenu(this.components);
+            this.bsCustomize = new DevExpress.XtraBars.BarSubItem();
+            this.bsShowLegend = new DevExpress.XtraBars.BarCheckItem();
             ((System.ComponentModel.ISupportInitialize)(this.barManager1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemButtonEdit1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chartControl)).BeginInit();
@@ -79,8 +81,10 @@
             this.beNavigate,
             this.bsNavigate,
             this.bsEvents,
-            this.bsHistogramm});
-            this.barManager1.MaxItemId = 11;
+            this.bsHistogramm,
+            this.bsCustomize,
+            this.bsShowLegend});
+            this.barManager1.MaxItemId = 13;
             this.barManager1.OptionsStubGlyphs.AllowStubGlyphs = DevExpress.Utils.DefaultBoolean.True;
             this.barManager1.OptionsStubGlyphs.CaseMode = DevExpress.Utils.Drawing.GlyphTextCaseMode.UpperCase;
             this.barManager1.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
@@ -100,13 +104,12 @@
             this.bar1.DockStyle = DevExpress.XtraBars.BarDockStyle.Standalone;
             this.bar1.FloatLocation = new System.Drawing.Point(722, 393);
             this.bar1.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
-            new DevExpress.XtraBars.LinkPersistInfo(this.biCustomize),
-            new DevExpress.XtraBars.LinkPersistInfo(this.biReset),
             new DevExpress.XtraBars.LinkPersistInfo(this.bsPanes),
             new DevExpress.XtraBars.LinkPersistInfo(DevExpress.XtraBars.BarLinkUserDefines.Width, this.beNavigate, "", false, true, true, 147),
             new DevExpress.XtraBars.LinkPersistInfo(this.bsNavigate),
             new DevExpress.XtraBars.LinkPersistInfo(this.bsEvents),
-            new DevExpress.XtraBars.LinkPersistInfo(this.bsHistogramm)});
+            new DevExpress.XtraBars.LinkPersistInfo(this.bsHistogramm),
+            new DevExpress.XtraBars.LinkPersistInfo(this.bsCustomize)});
             this.bar1.OptionsBar.DrawBorder = false;
             this.bar1.OptionsBar.UseWholeRow = true;
             this.bar1.StandaloneBarDockControl = this.standaloneBarDockControl1;
@@ -187,7 +190,7 @@
             this.standaloneBarDockControl1.Manager = this.barManager1;
             this.standaloneBarDockControl1.Margin = new System.Windows.Forms.Padding(4);
             this.standaloneBarDockControl1.Name = "standaloneBarDockControl1";
-            this.standaloneBarDockControl1.Size = new System.Drawing.Size(1570, 60);
+            this.standaloneBarDockControl1.Size = new System.Drawing.Size(1665, 58);
             this.standaloneBarDockControl1.Text = "standaloneBarDockControl1";
             // 
             // barDockControlTop
@@ -197,7 +200,7 @@
             this.barDockControlTop.Location = new System.Drawing.Point(0, 0);
             this.barDockControlTop.Manager = this.barManager1;
             this.barDockControlTop.Margin = new System.Windows.Forms.Padding(4);
-            this.barDockControlTop.Size = new System.Drawing.Size(1570, 0);
+            this.barDockControlTop.Size = new System.Drawing.Size(1665, 0);
             // 
             // barDockControlBottom
             // 
@@ -206,7 +209,7 @@
             this.barDockControlBottom.Location = new System.Drawing.Point(0, 896);
             this.barDockControlBottom.Manager = this.barManager1;
             this.barDockControlBottom.Margin = new System.Windows.Forms.Padding(4);
-            this.barDockControlBottom.Size = new System.Drawing.Size(1570, 0);
+            this.barDockControlBottom.Size = new System.Drawing.Size(1665, 0);
             // 
             // barDockControlLeft
             // 
@@ -221,7 +224,7 @@
             // 
             this.barDockControlRight.CausesValidation = false;
             this.barDockControlRight.Dock = System.Windows.Forms.DockStyle.Right;
-            this.barDockControlRight.Location = new System.Drawing.Point(1570, 0);
+            this.barDockControlRight.Location = new System.Drawing.Point(1665, 0);
             this.barDockControlRight.Manager = this.barManager1;
             this.barDockControlRight.Margin = new System.Windows.Forms.Padding(4);
             this.barDockControlRight.Size = new System.Drawing.Size(0, 896);
@@ -262,7 +265,7 @@
             this.chartControl.Legend.MaxCrosshairContentWidth = 200;
             this.chartControl.Legend.Name = "Default Legend";
             this.chartControl.Legend.Visibility = DevExpress.Utils.DefaultBoolean.True;
-            this.chartControl.Location = new System.Drawing.Point(0, 60);
+            this.chartControl.Location = new System.Drawing.Point(0, 58);
             this.chartControl.Margin = new System.Windows.Forms.Padding(4);
             this.chartControl.Name = "chartControl";
             series1.ArgumentScaleType = DevExpress.XtraCharts.ScaleType.DateTime;
@@ -271,7 +274,7 @@
             this.chartControl.SeriesSerializable = new DevExpress.XtraCharts.Series[] {
         series1};
             this.chartControl.SeriesTemplate.SeriesColorizer = null;
-            this.chartControl.Size = new System.Drawing.Size(1570, 836);
+            this.chartControl.Size = new System.Drawing.Size(1665, 838);
             this.chartControl.TabIndex = 6;
             this.chartControl.ToolTipController = this.toolTipController1;
             this.chartControl.Click += new System.EventHandler(this.chartControl_Click);
@@ -292,6 +295,24 @@
             this.pmShowChart.Name = "pmShowChart";
             this.pmShowChart.BeforePopup += new System.ComponentModel.CancelEventHandler(this.pmShowChart_BeforePopup);
             // 
+            // bsCustomize
+            // 
+            this.bsCustomize.Caption = "Customize";
+            this.bsCustomize.Id = 11;
+            this.bsCustomize.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
+            new DevExpress.XtraBars.LinkPersistInfo(this.biCustomize),
+            new DevExpress.XtraBars.LinkPersistInfo(this.biReset),
+            new DevExpress.XtraBars.LinkPersistInfo(this.bsShowLegend)});
+            this.bsCustomize.Name = "bsCustomize";
+            // 
+            // bsShowLegend
+            // 
+            this.bsShowLegend.Caption = "Show Legend";
+            this.bsShowLegend.Id = 12;
+            this.bsShowLegend.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("barCheckItem1.ImageOptions.SvgImage")));
+            this.bsShowLegend.Name = "bsShowLegend";
+            this.bsShowLegend.CheckedChanged += new DevExpress.XtraBars.ItemClickEventHandler(this.bsShowLegend_CheckedChanged);
+            // 
             // ChartDataControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
@@ -304,7 +325,7 @@
             this.Controls.Add(this.barDockControlTop);
             this.Margin = new System.Windows.Forms.Padding(6);
             this.Name = "ChartDataControl";
-            this.Size = new System.Drawing.Size(1570, 896);
+            this.Size = new System.Drawing.Size(1665, 896);
             ((System.ComponentModel.ISupportInitialize)(this.barManager1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemButtonEdit1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(xyDiagram1)).EndInit();
@@ -338,5 +359,7 @@
         private DevExpress.XtraBars.BarSubItem bsEvents;
         private DevExpress.XtraBars.PopupMenu pmShowChart;
         private DevExpress.XtraBars.BarSubItem bsHistogramm;
+        private DevExpress.XtraBars.BarSubItem bsCustomize;
+        private DevExpress.XtraBars.BarCheckItem bsShowLegend;
     }
 }

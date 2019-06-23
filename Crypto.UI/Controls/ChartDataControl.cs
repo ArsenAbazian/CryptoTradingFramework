@@ -434,6 +434,10 @@ namespace Crypto.UI.Forms {
             if(ShowHistogrammItemClick != null)
                 ShowHistogrammItemClick(e.Item.Tag, EventArgs.Empty);
         }
+
+        private void bsShowLegend_CheckedChanged(object sender, ItemClickEventArgs e) {
+            this.chartControl.Legend.Visibility = this.bsShowLegend.Checked? DefaultBoolean.True: DefaultBoolean.False;
+        }
     }
 
     public class AnnotationFilter {

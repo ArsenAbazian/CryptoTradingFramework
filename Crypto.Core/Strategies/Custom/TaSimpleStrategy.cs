@@ -328,7 +328,7 @@ namespace Crypto.Core.Strategies.Custom {
 
             //br = AnnotationItem("Break", "Break", System.Drawing.Color.Blue, "Atr"); br.PanelIndex = 1; br.Visibility = DataVisibility.Chart; br.AnnotationText = "Br"; //"Br={BreakPercent:0.00} Closed={Closed} CloseStickCount={CloseLength}";
 
-            StrategyDataItemInfo sp = DataItem("SRSpread"); sp.Color = Color.FromArgb(0x20, Color.Green); sp.ChartType = ChartType.Area; sp.PanelName = "Price Range";
+            StrategyDataItemInfo sp = DataItem("SRSpread"); sp.Color = Color.FromArgb(0x20, Color.Green); sp.ChartType = ChartType.Area; sp.PanelName = "Price Range"; sp.PanelVisible = false;
 
             DataItem("CurrentLoss", Color.Red).Visibility = DataVisibility.Table;
             DataItem("Profit", Color.Green).Visibility = DataVisibility.Table;

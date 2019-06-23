@@ -491,6 +491,8 @@ namespace CryptoMarketClient.Strategies {
                 l.DockTarget = pane;
                 Chart.Legends.Add(l);
             }
+            if(!info.PanelVisible)
+                pane.Visibility = ChartElementVisibility.Hidden;
             return pane;
         }
 
