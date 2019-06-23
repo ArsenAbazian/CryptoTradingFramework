@@ -219,7 +219,6 @@ namespace Crypto.Core.Strategies.Custom {
                 Total = res.Total,
                 MinProfitPercent  = minProfitPc,
                 CloseValue = value *(1 + minProfitPc * 0.01),
-                Tag = StrategyData.Last()
             };
             info.UpdateCurrentValue(DataProvider.CurrentTime, res.Value);
 

@@ -32,14 +32,44 @@ namespace Crypto.Core.Helpers {
             if(dataSource.Count == 0)
                 return 0;
             PropertyInfo pi = dataSource[0].GetType().GetProperty(valueField, BindingFlags.Instance | BindingFlags.Public);
-            return dataSource.Min(i => (double)pi.GetValue(i));
+            return dataSource.Min(i => {
+                double val = (double)pi.GetValue(i);
+                if(double.IsNaN(val))
+                    return double.MaxValue;
+                return val;
+            });
+        }
+        private static double GetMin(ResizeableArray<TimeBaseValue> dataSource) {
+            if(dataSource.Count == 0)
+                return 0;
+            double min = double.NaN;
+            for(int i = 0; i < dataSource.Count; i++) {
+                if(double.IsNaN(min) || min > dataSource[i].Value)
+                    min = dataSource[i].Value;
+            }
+            return min;
+        }
+        private static double GetMax(ResizeableArray<TimeBaseValue> dataSource) {
+            if(dataSource.Count == 0)
+                return 0;
+            double min = double.NaN;
+            for(int i = 0; i < dataSource.Count; i++) {
+                if(double.IsNaN(min) || min < dataSource[i].Value)
+                    min = dataSource[i].Value;
+            }
+            return min;
         }
 
         private static double GetMax(ResizeableArray<object> dataSource, string valueField) {
             if(dataSource.Count == 0)
                 return 0;
             PropertyInfo pi = dataSource[0].GetType().GetProperty(valueField, BindingFlags.Instance | BindingFlags.Public);
-            return dataSource.Max(i => (double)pi.GetValue(i));
+            return dataSource.Max(i => {
+                double val = (double)pi.GetValue(i);
+                if(double.IsNaN(val))
+                    return double.MinValue;
+                return val;
+                });
         }
 
         public static ArgumentValue[] Calculate(ResizeableArray<object> data, string valueField, int count) {
@@ -108,15 +138,17 @@ namespace Crypto.Core.Helpers {
         }
 
         public static ArgumentValue[] Calculate(ResizeableArray<TimeBaseValue> data, double clasterizationWidth) {
-            double minX = data.Min(i => i.Value);
-            double maxX = data.Max(i => i.Value);
+            double minX = GetMin(data);
+            double maxX = GetMax(data);
             int count = (int)((maxX - minX) / clasterizationWidth) + 1;
             return Calculate(data, count);
         }
 
         public static ArgumentValue[] Calculate(ResizeableArray<TimeBaseValue> data, int count) {
-            double minX = data.Min(i => i.Value);
-            double maxX = data.Max(i => i.Value);
+            double minX = GetMin(data);
+            double maxX = GetMax(data);
+            if(double.IsNaN(minX) || double.IsNaN(maxX))
+                return new ArgumentValue[0];
             double step = (maxX - minX) / count;
 
             minX = ((int)(minX / step)) * step;

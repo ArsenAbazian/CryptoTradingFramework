@@ -126,16 +126,17 @@ namespace Crypto.Core.Strategies.Signal {
         }
 
         protected bool AlreadyOpenedPosition() {
-            if(OpenedOrders.Count == 0)
-                return false;
-            OpenPositionInfo lastOrder = OpenedOrders.Last();
-            TripleRsiStrategyData lastBuy = (TripleRsiStrategyData)OpenedOrders.Last().Tag;
-            TripleRsiStrategyData last = (TripleRsiStrategyData)StrategyData.Last();
-            if(lastOrder.CurrentValue > lastOrder.StopLoss && last.Index - lastBuy.Index < 7)
-                return true;
-            if(OpenedOrders.Last().Tag == StrategyData.Last())
-                return true;
-            return false;
+            //if(OpenedOrders.Count == 0)
+            //    return false;
+            //OpenPositionInfo lastOrder = OpenedOrders.Last();
+            throw new NotImplementedException();
+            //TripleRsiStrategyData lastBuy = (TripleRsiStrategyData)OpenedOrders.Last().Tag;
+            //TripleRsiStrategyData last = (TripleRsiStrategyData)StrategyData.Last();
+            //if(lastOrder.CurrentValue > lastOrder.StopLoss && last.Index - lastBuy.Index < 7)
+            //    return true;
+            //if(OpenedOrders.Last().Tag == StrategyData.Last())
+            //    return true;
+            //return false;
         }
 
         protected override void OnOpenLongPosition(OpenPositionInfo info) {
@@ -168,27 +169,28 @@ namespace Crypto.Core.Strategies.Signal {
         }
 
         protected override void CloseLongPosition(OpenPositionInfo info) {
-            info.UpdateCurrentValue(DataProvider.CurrentTime, Ticker.OrderBook.Bids[0].Value);
-            TradingResult res = MarketSell(info.CurrentValue, info.Amount);
-            if(res != null) {
-                double earned = res.Total - CalcFee(res.Total);
-                MaxAllowedDeposit += earned;
-                info.Earned += earned;
-                info.Amount -= res.Amount;
-                info.Total -= res.Total;
-                info.UpdateCurrentValue(DataProvider.CurrentTime, res.Value);
-                TripleRsiStrategyData item = (TripleRsiStrategyData)info.Tag;
-                TripleRsiStrategyData last = (TripleRsiStrategyData)StrategyData.Last();
-                if(info.Amount < 0.000001) {
-                    OpenedOrders.Remove(info);
-                    info.CloseTime = DataProvider.CurrentTime;
-                    Earned += info.Earned - info.Spent;
-                }
-                last.Sell = true;
-                last.Value = Ticker.OrderBook.Bids[0].Value;
-                //last.SellInfo = string.Format("b={0} s={1} d={2} p={3}", info.OpenValue, info.CurrentValue, info.CurrentValue - info.OpenValue, (info.CurrentValue - info.OpenValue) / info.OpenValue * 100);
-                item.SellInfo = string.Format("b={0} s={1} d={2} p={3}", info.OpenValue, info.CurrentValue, info.CurrentValue - info.OpenValue, (info.CurrentValue - info.OpenValue) / info.OpenValue * 100);
-            }
+            throw new NotImplementedException();
+            //info.UpdateCurrentValue(DataProvider.CurrentTime, Ticker.OrderBook.Bids[0].Value);
+            //TradingResult res = MarketSell(info.CurrentValue, info.Amount);
+            //if(res != null) {
+            //    double earned = res.Total - CalcFee(res.Total);
+            //    MaxAllowedDeposit += earned;
+            //    info.Earned += earned;
+            //    info.Amount -= res.Amount;
+            //    info.Total -= res.Total;
+            //    info.UpdateCurrentValue(DataProvider.CurrentTime, res.Value);
+            //    TripleRsiStrategyData item = (TripleRsiStrategyData)info.Tag;
+            //    TripleRsiStrategyData last = (TripleRsiStrategyData)StrategyData.Last();
+            //    if(info.Amount < 0.000001) {
+            //        OpenedOrders.Remove(info);
+            //        info.CloseTime = DataProvider.CurrentTime;
+            //        Earned += info.Earned - info.Spent;
+            //    }
+            //    last.Sell = true;
+            //    last.Value = Ticker.OrderBook.Bids[0].Value;
+            //    //last.SellInfo = string.Format("b={0} s={1} d={2} p={3}", info.OpenValue, info.CurrentValue, info.CurrentValue - info.OpenValue, (info.CurrentValue - info.OpenValue) / info.OpenValue * 100);
+            //    item.SellInfo = string.Format("b={0} s={1} d={2} p={3}", info.OpenValue, info.CurrentValue, info.CurrentValue - info.OpenValue, (info.CurrentValue - info.OpenValue) / info.OpenValue * 100);
+            //}
         }
 
         protected override void InitializeDataItems() {

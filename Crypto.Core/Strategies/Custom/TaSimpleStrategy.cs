@@ -100,7 +100,6 @@ namespace Crypto.Core.Strategies.Custom {
                 PingPongSettings.MinProfitPc);
             if(info == null)
                 return;
-            info.Tag2 = SRIndicator2.Support.Last();
             double spread = resistance - support;
             info.CloseValue = resistance - spread * 0.1;
             if(PingPongSettings.AllowDCA) {
@@ -278,8 +277,8 @@ namespace Crypto.Core.Strategies.Custom {
             foreach(OpenPositionInfo info in OpenedOrders) {
                 if(info.Mark != "RW")
                     continue;
-                SRValue res = (SRValue)info.Tag2;
-                if(info.Type == OrderType.Buy && SRIndicator.BelongsSameSupportLevel(res))
+                SRValue res = SRIndicator.Support.FirstOrDefault(i => i.Time == info.CandlestickTime);
+                if(res != null && info.Type == OrderType.Buy && SRIndicator.BelongsSameSupportLevel(res))
                     return true;
             }
             return false;
@@ -358,8 +357,8 @@ namespace Crypto.Core.Strategies.Custom {
             foreach(OpenPositionInfo info in OpenedOrders) {
                 if(info.Mark != "PP")
                     continue;
-                SRValue res = (SRValue)info.Tag2;
-                if(info.Type == OrderType.Buy && (SRIndicator2.BelongsSameSupportLevel(res) || last.Index - info.DataItemIndex < 5))
+                SRValue res = SRIndicator2.Support.FirstOrDefault(i => i.Time == info.CandlestickTime);
+                if(res != null && info.Type == OrderType.Buy && (SRIndicator2.BelongsSameSupportLevel(res) || last.Index - info.DataItemIndex < 5))
                     return true;
             }
             return false;
@@ -382,14 +381,8 @@ namespace Crypto.Core.Strategies.Custom {
         }
 
         protected override void OnOpenLongPosition(OpenPositionInfo info) {
-            info.Tag = StrategyData.Last();
-            if(info.Mark == "BU" || info.Mark == "PP") {
-                info.Tag2 = SRIndicator.Resistance.Last();
-            }
-            else if(info.Mark == "RW") {
-                info.Tag2 = SRIndicator.Support.Last();
-            }
             CombinedStrategyDataItem item = (CombinedStrategyDataItem)StrategyData.Last();
+            info.CandlestickTime = item.Time;
             item.Value = info.CurrentValue;
         }
 
@@ -436,9 +429,11 @@ namespace Crypto.Core.Strategies.Custom {
                 info.Amount -= res.Amount;
                 info.Total -= res.Total;
                 info.CloseValue = res.Value;
-                CombinedStrategyDataItem item = (CombinedStrategyDataItem)info.Tag;
-                item.Closed = true;
-                item.CloseLength = ((CombinedStrategyDataItem)StrategyData.Last()).Index - item.Index;
+                CombinedStrategyDataItem item = (CombinedStrategyDataItem)StrategyData.FirstOrDefault(i => ((CombinedStrategyDataItem)i).Time == info.CandlestickTime);
+                if(item != null) {
+                    item.Closed = true;
+                    item.CloseLength = ((CombinedStrategyDataItem)StrategyData.Last()).Index - item.Index;
+                }
                 CombinedStrategyDataItem last = (CombinedStrategyDataItem)StrategyData.Last();
                 if(info.Amount < 0.000001) {
                     OpenedOrders.Remove(info);
@@ -448,7 +443,8 @@ namespace Crypto.Core.Strategies.Custom {
                 }
                 last.ClosedOrder = true;
                 last.Value = Ticker.OrderBook.Bids[0].Value;
-                item.Profit = earned - info.Spent;
+                if(item != null)
+                    item.Profit = earned - info.Spent;
                 last.AddMark("Close " + info.Mark);
             }
         }

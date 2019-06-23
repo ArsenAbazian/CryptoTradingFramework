@@ -154,10 +154,7 @@ namespace Crypto.Core.Common {
         public double OpenAmount { get; set; }
         public double Amount { get; set; }
         public double Total { get; set; }
-        [XmlIgnore]
-        public object Tag { get; set; }
-        [XmlIgnore]
-        public object Tag2 { get; set; }
+        public DateTime CandlestickTime { get; set; }
         public string Mark { get; set; }
 
 
