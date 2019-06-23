@@ -23,6 +23,10 @@ namespace Crypto.UI.Forms {
         public ChartDataControl() {
             InitializeComponent();
             this.chartControl.UseDirectXPaint = true;
+            BarAndDockingController controller = new BarAndDockingController();
+            this.barManager1.Controller = controller;
+            controller.PropertiesBar.DefaultGlyphSize = new Size(16, 16);
+            controller.PropertiesBar.DefaultLargeGlyphSize = new Size(32, 32);
         }
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public ChartControl Chart { get { return this.chartControl; } }
@@ -85,6 +89,8 @@ namespace Crypto.UI.Forms {
                 return;
             foreach(XYDiagramPane item in dg.Panes) {
                 BarCheckItem ch = new BarCheckItem(this.barManager1) { Caption = item.Name, Checked = item.Visibility == ChartElementVisibility.Visible };
+                ch.AllowStubGlyph = DefaultBoolean.False;
+                ch.CloseSubMenuOnClick = false;
                 ch.Tag = item;
                 ch.CheckedChanged += OnPaneCheckedChanged;
                 this.bsPanes.ItemLinks.Add(ch);
@@ -110,6 +116,8 @@ namespace Crypto.UI.Forms {
                         continue;
 
                     BarCheckItem ch = new BarCheckItem(this.barManager1) { Caption = s.Name, Checked = true };
+                    ch.AllowStubGlyph = DefaultBoolean.False;
+                    ch.CloseSubMenuOnClick = false;
                     ch.Tag = s;
                     ch.CheckedChanged += OnSeriesCheckedChanged;
                     paneMenu.ItemLinks.Add(ch);
@@ -366,6 +374,7 @@ namespace Crypto.UI.Forms {
             }
         }
 
+        protected List<AnnotationFilter> FilterValues { get; private set; }
         private void bsEvents_GetItemData(object sender, EventArgs e) {
             if(this.bsEvents.ItemLinks.Count > 0)
                 return;
@@ -373,11 +382,25 @@ namespace Crypto.UI.Forms {
             foreach(StrategyDataItemInfo info in aItems) {
                 PropertyInfo pInfo = Visual.Items[0].GetType().GetProperty(info.FieldName, BindingFlags.Instance | BindingFlags.Public);
                 List<AnnotationFilter> filterValues = new List<AnnotationFilter>();
+                FilterValues = filterValues;
                 for(int i = 0; i < Visual.Items.Count; i++) {
                     object value = pInfo.GetValue(Visual.Items[i]);
                     if(value == null) continue;
-                    if(filterValues.FirstOrDefault(f => object.Equals(f.Value, value)) == null)
-                        filterValues.Add(new AnnotationFilter() { Value = value, Property = pInfo });
+
+                    if(info.Type == DataType.ListInString && value is string) {
+                        string list = (string)value;
+                        string[] items = list.Split(',');
+                        foreach(string item in items) {
+                            string timmed = item.Trim();
+                            if(filterValues.FirstOrDefault(f => object.Equals(f.Value, timmed)) == null) {
+                                filterValues.Add(new AnnotationFilter() { Value = timmed, Property = pInfo, StringListItem = true, Checked = true });
+                            }
+                        }
+                    }
+                    else {
+                        if(filterValues.FirstOrDefault(f => object.Equals(f.Value, value)) == null)
+                            filterValues.Add(new AnnotationFilter() { Value = value, Property = pInfo, Checked = true });
+                    }
                 }
                 if(filterValues.Count == 0)
                     continue;
@@ -389,21 +412,38 @@ namespace Crypto.UI.Forms {
 
                 foreach(AnnotationFilter value in filterValues) {
                     BarCheckItem ch = new BarCheckItem(this.barManager1) { Caption = Convert.ToString(value.Value), Checked = true };
+                    ch.AllowStubGlyph = DefaultBoolean.False;
+                    ch.CloseSubMenuOnClick = false;
                     ch.Tag = value;
                     ch.CheckedChanged += AnnotationFilterItemChecked;
                     this.bsEvents.ItemLinks.Add(ch);
                 }
-                this.bsEvents.ItemLinks.Add(subMenu);
             }
         }
 
         private void AnnotationFilterItemChecked(object sender, ItemClickEventArgs e) {
             BarCheckItem item = (BarCheckItem)sender;
             AnnotationFilter filter = (AnnotationFilter)item.Tag;
+            filter.Checked = item.Checked;
+            if(filter.StringListItem) {
+                List<AnnotationFilter> filters = FilterValues.Where(f => f.Property == filter.Property && f.Checked).ToList();
+                foreach(Annotation ann in Chart.AnnotationRepository) {
+                    string val = (string)filter.Property.GetValue(ann.Tag);
+                    bool visible = false;
+                    foreach(var f in filters) {
+                        if(val.Contains((string)f.Value)) {
+                            visible = true;
+                            break;
+                        }
+                    }
+                    ann.Visible = visible;
+                }
+                return;
+            }
             foreach(Annotation ann in Chart.AnnotationRepository) {
                 object val = filter.Property.GetValue(ann.Tag);
                 if(object.Equals(filter.Value, val))
-                    ann.Visible = item.Checked;
+                        ann.Visible = item.Checked;
             }
         }
 
@@ -443,5 +483,7 @@ namespace Crypto.UI.Forms {
     public class AnnotationFilter {
         public object Value { get; set; }
         public PropertyInfo Property { get; set; }
+        public bool StringListItem { get; set; }
+        public bool Checked { get; set; }
     }
 }

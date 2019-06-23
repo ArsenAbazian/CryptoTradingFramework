@@ -146,7 +146,6 @@ namespace Crypto.Core.Strategies {
 
         public StrategyDataItemInfo AnnotationItem(string fieldName, string text, Color color, string anchor) {
             var item = DataItem(fieldName);
-            item.ChartType = ChartType.Dot;
             item.Color = color;
             item.Visibility = DataVisibility.Chart;
             item.ChartType = ChartType.Annotation;

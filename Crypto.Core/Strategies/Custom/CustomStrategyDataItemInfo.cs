@@ -168,7 +168,7 @@ namespace Crypto.Core.Strategies {
     }
 
     public enum ChartType { CandleStick, Line, Area, StepArea, Bar, Dot, Annotation, StepLine, ConstantX, ConstantY }
-    public enum DataType { DateTime, Numeric, ChartData, HistogrammData }
+    public enum DataType { DateTime, Numeric, ChartData, HistogrammData, ListInString }
     [Flags]
     public enum DataVisibility { None, Table, Chart, Both = Table | Chart }
 

@@ -335,15 +335,15 @@ namespace Crypto.Core.Strategies.Custom {
             var ear = DataItem("Earned", Color.FromArgb(0x70, Color.LightBlue)); ear.PanelName = "Deposit"; ear.ChartType = ChartType.Area;
             var loss = DataItem("CurrentLoss", Color.FromArgb(0x70, Color.Pink)); loss.PanelName = "Deposit"; loss.ChartType = ChartType.Area; //loss.Reversed = true;
             var dep = DataItem("AvailableDeposit", Color.FromArgb(0x70, Color.Green)); dep.PanelName = "Deposit"; dep.GraphWidth = 1; dep.ChartType = ChartType.Line; //loss.Reversed = true;
-            
-            DataItem("Mark").Visibility = DataVisibility.Table;
+
+            var mark = DataItem("Mark"); mark.Visibility = DataVisibility.Table; mark.Type = DataType.ListInString;
             //StrategyDataItemInfo info = DataItem("PercentChangeFromSupport");
             //info.PanelName = "PcChangeFromSupport";
             //info.Color = Color.FromArgb(0x40, Color.Green);
 
             resValue = DataItem("Value"); resValue.GraphWidth = 2; resValue.Name = "L2 Resistance"; resValue.BindingSource = "SRIndicator2.Resistance"; resValue.Color = Color.FromArgb(0x80, Color.Magenta); resValue.ChartType = ChartType.StepLine; resValue.Name = "Resistance Slow";
             supValue = DataItem("Value"); supValue.GraphWidth = 2; supValue.Name = "L2 Support"; supValue.BindingSource = "SRIndicator2.Support"; supValue.Color = Color.FromArgb(0x80, Color.Green); supValue.ChartType = ChartType.StepLine; supValue.Name = "Support Slow";
-            AnnotationItem("Mark", null, Color.Green, "Value").AnnotationText = "{Mark}";
+            mark = AnnotationItem("Mark", null, Color.Green, "Value"); mark.AnnotationText = "{Mark}"; mark.Type = DataType.ListInString;
             //DataItemInfos.Remove(DataItemInfos.FirstOrDefault(i => i.FieldName == "Break"));
 
             //StrategyDataItemInfo bp = DataItem("SpreadBaseResistance"); bp.Color = Color.Green; bp.ChartType = ChartType.Bar; bp.PanelName = "BreakPercent";
