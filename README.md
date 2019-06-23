@@ -1,5 +1,3 @@
-Welcome to the CryptoTradingFramework wiki.
-
 ![CryptoTraderAuto](https://github.com/ArsenAbazian/CryptoTradingFramework/blob/master/Help/CryptoTraderAuto-AtGlance.png)
 
 CryptoTradingFramework allows you to create various applications for crypto exchanges.
