@@ -24,25 +24,27 @@
         /// </summary>
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
+            DevExpress.XtraEditors.Controls.EditorButtonImageOptions editorButtonImageOptions2 = new DevExpress.XtraEditors.Controls.EditorButtonImageOptions();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject5 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject6 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject7 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject8 = new DevExpress.Utils.SerializableAppearanceObject();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ChartDataControl));
-            DevExpress.XtraEditors.Controls.EditorButtonImageOptions editorButtonImageOptions1 = new DevExpress.XtraEditors.Controls.EditorButtonImageOptions();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject1 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject2 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject3 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject4 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.XtraCharts.XYDiagram xyDiagram1 = new DevExpress.XtraCharts.XYDiagram();
-            DevExpress.XtraCharts.Series series1 = new DevExpress.XtraCharts.Series();
-            DevExpress.XtraCharts.LineSeriesView lineSeriesView1 = new DevExpress.XtraCharts.LineSeriesView();
+            DevExpress.XtraCharts.XYDiagram xyDiagram2 = new DevExpress.XtraCharts.XYDiagram();
+            DevExpress.XtraCharts.Series series2 = new DevExpress.XtraCharts.Series();
+            DevExpress.XtraCharts.LineSeriesView lineSeriesView2 = new DevExpress.XtraCharts.LineSeriesView();
             this.barManager1 = new DevExpress.XtraBars.BarManager(this.components);
             this.bar1 = new DevExpress.XtraBars.Bar();
-            this.biCustomize = new DevExpress.XtraBars.BarButtonItem();
-            this.biReset = new DevExpress.XtraBars.BarButtonItem();
             this.bsPanes = new DevExpress.XtraBars.BarSubItem();
             this.beNavigate = new DevExpress.XtraBars.BarEditItem();
             this.repositoryItemButtonEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemButtonEdit();
             this.bsNavigate = new DevExpress.XtraBars.BarSubItem();
             this.bsEvents = new DevExpress.XtraBars.BarSubItem();
             this.bsHistogramm = new DevExpress.XtraBars.BarSubItem();
+            this.bsCustomize = new DevExpress.XtraBars.BarSubItem();
+            this.biCustomize = new DevExpress.XtraBars.BarButtonItem();
+            this.biReset = new DevExpress.XtraBars.BarButtonItem();
+            this.bsShowLegend = new DevExpress.XtraBars.BarCheckItem();
             this.standaloneBarDockControl1 = new DevExpress.XtraBars.StandaloneBarDockControl();
             this.barDockControlTop = new DevExpress.XtraBars.BarDockControl();
             this.barDockControlBottom = new DevExpress.XtraBars.BarDockControl();
@@ -52,14 +54,12 @@
             this.chartControl = new DevExpress.XtraCharts.ChartControl();
             this.toolTipController1 = new DevExpress.Utils.ToolTipController(this.components);
             this.pmShowChart = new DevExpress.XtraBars.PopupMenu(this.components);
-            this.bsCustomize = new DevExpress.XtraBars.BarSubItem();
-            this.bsShowLegend = new DevExpress.XtraBars.BarCheckItem();
             ((System.ComponentModel.ISupportInitialize)(this.barManager1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemButtonEdit1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chartControl)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(xyDiagram1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(series1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(lineSeriesView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(xyDiagram2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(series2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(lineSeriesView2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pmShowChart)).BeginInit();
             this.SuspendLayout();
             // 
@@ -105,8 +105,9 @@
             this.bar1.FloatLocation = new System.Drawing.Point(722, 393);
             this.bar1.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
             new DevExpress.XtraBars.LinkPersistInfo(this.bsPanes),
-            new DevExpress.XtraBars.LinkPersistInfo(DevExpress.XtraBars.BarLinkUserDefines.Width, this.beNavigate, "", false, true, true, 147),
+            new DevExpress.XtraBars.LinkPersistInfo(this.bsSeries),
             new DevExpress.XtraBars.LinkPersistInfo(this.bsNavigate),
+            new DevExpress.XtraBars.LinkPersistInfo(DevExpress.XtraBars.BarLinkUserDefines.Width, this.beNavigate, "", false, true, true, 147),
             new DevExpress.XtraBars.LinkPersistInfo(this.bsEvents),
             new DevExpress.XtraBars.LinkPersistInfo(this.bsHistogramm),
             new DevExpress.XtraBars.LinkPersistInfo(this.bsCustomize)});
@@ -114,24 +115,6 @@
             this.bar1.OptionsBar.UseWholeRow = true;
             this.bar1.StandaloneBarDockControl = this.standaloneBarDockControl1;
             this.bar1.Text = "Tools";
-            // 
-            // biCustomize
-            // 
-            this.biCustomize.Caption = "Customize";
-            this.biCustomize.Id = 0;
-            this.biCustomize.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("biCustomize.ImageOptions.SvgImage")));
-            this.biCustomize.Name = "biCustomize";
-            this.biCustomize.PaintStyle = DevExpress.XtraBars.BarItemPaintStyle.CaptionGlyph;
-            this.biCustomize.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.biCustomize_ItemClick);
-            // 
-            // biReset
-            // 
-            this.biReset.Caption = "Reset Defaults";
-            this.biReset.Id = 1;
-            this.biReset.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("biReset.ImageOptions.SvgImage")));
-            this.biReset.Name = "biReset";
-            this.biReset.PaintStyle = DevExpress.XtraBars.BarItemPaintStyle.CaptionGlyph;
-            this.biReset.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.biReset_ItemClick);
             // 
             // bsPanes
             // 
@@ -153,7 +136,7 @@
             // 
             this.repositoryItemButtonEdit1.AutoHeight = false;
             this.repositoryItemButtonEdit1.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Left, "", -1, true, true, true, editorButtonImageOptions1, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject1, serializableAppearanceObject2, serializableAppearanceObject3, serializableAppearanceObject4, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Left, "", -1, true, true, true, editorButtonImageOptions2, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject5, serializableAppearanceObject6, serializableAppearanceObject7, serializableAppearanceObject8, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Right)});
             this.repositoryItemButtonEdit1.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.repositoryItemButtonEdit1.EditFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
@@ -180,6 +163,42 @@
             this.bsHistogramm.Id = 10;
             this.bsHistogramm.Name = "bsHistogramm";
             this.bsHistogramm.GetItemData += new System.EventHandler(this.bsHistogramm_GetItemData);
+            // 
+            // bsCustomize
+            // 
+            this.bsCustomize.Caption = "Customize";
+            this.bsCustomize.Id = 11;
+            this.bsCustomize.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
+            new DevExpress.XtraBars.LinkPersistInfo(this.biCustomize),
+            new DevExpress.XtraBars.LinkPersistInfo(this.biReset),
+            new DevExpress.XtraBars.LinkPersistInfo(this.bsShowLegend)});
+            this.bsCustomize.Name = "bsCustomize";
+            // 
+            // biCustomize
+            // 
+            this.biCustomize.Caption = "Customize";
+            this.biCustomize.Id = 0;
+            this.biCustomize.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("biCustomize.ImageOptions.SvgImage")));
+            this.biCustomize.Name = "biCustomize";
+            this.biCustomize.PaintStyle = DevExpress.XtraBars.BarItemPaintStyle.CaptionGlyph;
+            this.biCustomize.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.biCustomize_ItemClick);
+            // 
+            // biReset
+            // 
+            this.biReset.Caption = "Reset Defaults";
+            this.biReset.Id = 1;
+            this.biReset.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("biReset.ImageOptions.SvgImage")));
+            this.biReset.Name = "biReset";
+            this.biReset.PaintStyle = DevExpress.XtraBars.BarItemPaintStyle.CaptionGlyph;
+            this.biReset.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.biReset_ItemClick);
+            // 
+            // bsShowLegend
+            // 
+            this.bsShowLegend.Caption = "Show Legend";
+            this.bsShowLegend.Id = 12;
+            this.bsShowLegend.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("bsShowLegend.ImageOptions.SvgImage")));
+            this.bsShowLegend.Name = "bsShowLegend";
+            this.bsShowLegend.CheckedChanged += new DevExpress.XtraBars.ItemClickEventHandler(this.bsShowLegend_CheckedChanged);
             // 
             // standaloneBarDockControl1
             // 
@@ -241,18 +260,18 @@
             this.chartControl.AutoLayout = false;
             this.chartControl.CacheToMemory = true;
             this.chartControl.CrosshairOptions.ContentShowMode = DevExpress.XtraCharts.CrosshairContentShowMode.Legend;
-            xyDiagram1.AxisX.DateTimeScaleOptions.AggregateFunction = DevExpress.XtraCharts.AggregateFunction.None;
-            xyDiagram1.AxisX.DateTimeScaleOptions.MeasureUnit = DevExpress.XtraCharts.DateTimeMeasureUnit.Minute;
-            xyDiagram1.AxisX.Label.TextPattern = "{A:h:mm d.MM}";
-            xyDiagram1.AxisX.VisibleInPanesSerializable = "-1";
-            xyDiagram1.AxisY.Alignment = DevExpress.XtraCharts.AxisAlignment.Far;
-            xyDiagram1.AxisY.Label.TextPattern = "{V:f8}";
-            xyDiagram1.AxisY.VisibleInPanesSerializable = "-1";
-            xyDiagram1.AxisY.WholeRange.AlwaysShowZeroLevel = false;
-            xyDiagram1.DependentAxesYRange = DevExpress.Utils.DefaultBoolean.True;
-            xyDiagram1.EnableAxisXScrolling = true;
-            xyDiagram1.EnableAxisXZooming = true;
-            this.chartControl.Diagram = xyDiagram1;
+            xyDiagram2.AxisX.DateTimeScaleOptions.AggregateFunction = DevExpress.XtraCharts.AggregateFunction.None;
+            xyDiagram2.AxisX.DateTimeScaleOptions.MeasureUnit = DevExpress.XtraCharts.DateTimeMeasureUnit.Minute;
+            xyDiagram2.AxisX.Label.TextPattern = "{A:h:mm d.MM}";
+            xyDiagram2.AxisX.VisibleInPanesSerializable = "-1";
+            xyDiagram2.AxisY.Alignment = DevExpress.XtraCharts.AxisAlignment.Far;
+            xyDiagram2.AxisY.Label.TextPattern = "{V:f8}";
+            xyDiagram2.AxisY.VisibleInPanesSerializable = "-1";
+            xyDiagram2.AxisY.WholeRange.AlwaysShowZeroLevel = false;
+            xyDiagram2.DependentAxesYRange = DevExpress.Utils.DefaultBoolean.True;
+            xyDiagram2.EnableAxisXScrolling = true;
+            xyDiagram2.EnableAxisXZooming = true;
+            this.chartControl.Diagram = xyDiagram2;
             this.chartControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.chartControl.Legend.AlignmentHorizontal = DevExpress.XtraCharts.LegendAlignmentHorizontal.Left;
             this.chartControl.Legend.BackColor = System.Drawing.Color.Transparent;
@@ -268,11 +287,11 @@
             this.chartControl.Location = new System.Drawing.Point(0, 58);
             this.chartControl.Margin = new System.Windows.Forms.Padding(4);
             this.chartControl.Name = "chartControl";
-            series1.ArgumentScaleType = DevExpress.XtraCharts.ScaleType.DateTime;
-            series1.Name = "Series 1";
-            series1.View = lineSeriesView1;
+            series2.ArgumentScaleType = DevExpress.XtraCharts.ScaleType.DateTime;
+            series2.Name = "Series 1";
+            series2.View = lineSeriesView2;
             this.chartControl.SeriesSerializable = new DevExpress.XtraCharts.Series[] {
-        series1};
+        series2};
             this.chartControl.SeriesTemplate.SeriesColorizer = null;
             this.chartControl.Size = new System.Drawing.Size(1665, 838);
             this.chartControl.TabIndex = 6;
@@ -295,24 +314,6 @@
             this.pmShowChart.Name = "pmShowChart";
             this.pmShowChart.BeforePopup += new System.ComponentModel.CancelEventHandler(this.pmShowChart_BeforePopup);
             // 
-            // bsCustomize
-            // 
-            this.bsCustomize.Caption = "Customize";
-            this.bsCustomize.Id = 11;
-            this.bsCustomize.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
-            new DevExpress.XtraBars.LinkPersistInfo(this.biCustomize),
-            new DevExpress.XtraBars.LinkPersistInfo(this.biReset),
-            new DevExpress.XtraBars.LinkPersistInfo(this.bsShowLegend)});
-            this.bsCustomize.Name = "bsCustomize";
-            // 
-            // bsShowLegend
-            // 
-            this.bsShowLegend.Caption = "Show Legend";
-            this.bsShowLegend.Id = 12;
-            this.bsShowLegend.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("barCheckItem1.ImageOptions.SvgImage")));
-            this.bsShowLegend.Name = "bsShowLegend";
-            this.bsShowLegend.CheckedChanged += new DevExpress.XtraBars.ItemClickEventHandler(this.bsShowLegend_CheckedChanged);
-            // 
             // ChartDataControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
@@ -328,9 +329,9 @@
             this.Size = new System.Drawing.Size(1665, 896);
             ((System.ComponentModel.ISupportInitialize)(this.barManager1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemButtonEdit1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(xyDiagram1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(lineSeriesView1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(series1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(xyDiagram2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(lineSeriesView2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(series2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.chartControl)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pmShowChart)).EndInit();
             this.ResumeLayout(false);
