@@ -142,6 +142,7 @@ namespace Crypto.Core.Strategies.Custom {
                 info.DACPositions.Add(dacPos);
                 dacPos.CloseValue = info.CloseValue;// 2 * CalcFee(dacPos.Total) + dacPos.OpenValue * 0.01; // 1% profit at least
             }
+            Save();
             return true;
         }
 
@@ -179,7 +180,8 @@ namespace Crypto.Core.Strategies.Custom {
         protected virtual void OpenLongPosition(string mark, double value, double amount, double minProfitPc) {
             OpenPositionInfo info = OpenLongPosition(mark, value, amount, false, 0, minProfitPc);
             if(info != null)
-                info.AllowHistory = DataProvider is SimulationStrategyDataProvider;
+                info.AllowHistory = true; // DataProvider is SimulationStrategyDataProvider;
+            Save();
         }
 
         protected virtual OpenPositionInfo OpenLongPosition(string mark, double value, double amount, bool allowTrailing, double trailingStopLossPc, double minProfitPc) {
@@ -232,6 +234,7 @@ namespace Crypto.Core.Strategies.Custom {
             provider.OpenedPositions.Add(info);
             provider.AddMark(mark);
 
+            Save();
             return info;
         }
 

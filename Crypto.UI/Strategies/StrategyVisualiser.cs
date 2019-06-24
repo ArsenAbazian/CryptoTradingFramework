@@ -446,7 +446,7 @@ namespace CryptoMarketClient.Strategies {
             if(first != DateTime.MinValue) {
                 DateTime current = first.Date;
                 while(current <= last) {
-                    ConstantLine constantLine = new ConstantLine(current.ToShortDateString(), current) { Color = Color.LightGray, ShowInLegend = false };
+                    ConstantLine constantLine = new ConstantLine(current.ToShortDateString(), current) { Color = Color.FromArgb(0x40, Color.LightGray), ShowInLegend = false };
                     constantLine.Title.Visible = false;
                     ((XYDiagram)Chart.Diagram).AxisX.ConstantLines.Add(constantLine);
                     ((XYDiagram)Chart.Diagram).AxisX.CustomLabels.Add(new CustomAxisLabel(current.ToShortDateString(), current));

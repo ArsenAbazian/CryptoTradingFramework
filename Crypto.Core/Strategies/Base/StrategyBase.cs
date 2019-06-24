@@ -269,7 +269,11 @@ namespace Crypto.Core.Strategies {
         [Browsable(false)]
         public string FileName { get; set; }
         public bool Load() { throw new NotImplementedException(); }
-        public bool Save() { throw new NotImplementedException(); }
+        public bool Save() {
+            if(Manager.DataProvider is SimulationStrategyDataProvider)
+                return true;
+            return Manager.Save();
+        }
 
         public void OnTick() {
             if(!Enabled)

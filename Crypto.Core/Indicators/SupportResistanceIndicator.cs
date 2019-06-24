@@ -250,6 +250,14 @@ namespace Crypto.Core.Indicators {
             }
             return true;
         }
+
+        public SRValue FindSupportByTime(DateTime candlestickTime) {
+            for(int i = Support.Count - 1; i >= 0; i--) {
+                if(Support[i].Time <= candlestickTime)
+                    return Support[i];
+            }
+            return null;
+        }
     }
 
     public class SRValue : IndicatorValue {

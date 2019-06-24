@@ -277,7 +277,7 @@ namespace Crypto.Core.Strategies.Custom {
             foreach(OpenPositionInfo info in OpenedOrders) {
                 if(info.Mark != "RW")
                     continue;
-                SRValue res = SRIndicator.Support.FirstOrDefault(i => i.Time == info.CandlestickTime);
+                SRValue res = SRIndicator.FindSupportByTime(info.CandlestickTime);
                 if(res != null && info.Type == OrderType.Buy && SRIndicator.BelongsSameSupportLevel(res))
                     return true;
             }
@@ -357,7 +357,7 @@ namespace Crypto.Core.Strategies.Custom {
             foreach(OpenPositionInfo info in OpenedOrders) {
                 if(info.Mark != "PP")
                     continue;
-                SRValue res = SRIndicator2.Support.FirstOrDefault(i => i.Time == info.CandlestickTime);
+                SRValue res = SRIndicator2.FindSupportByTime(info.CandlestickTime);
                 if(res != null && info.Type == OrderType.Buy && (SRIndicator2.BelongsSameSupportLevel(res) || last.Index - info.DataItemIndex < 5))
                     return true;
             }

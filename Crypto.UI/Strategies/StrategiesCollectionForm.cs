@@ -224,6 +224,7 @@ namespace CryptoMarketClient.Strategies {
             }
 
             StrategiesManager manager = new StrategiesManager();
+            manager.FileName = "SimulationStrategiesManager.xml";
             StrategyBase cloned = strategy.Clone();
             cloned.DemoMode = true;
             manager.Strategies.Add(cloned);
@@ -266,6 +267,7 @@ namespace CryptoMarketClient.Strategies {
             }
             this.beSimulationProgress.Visibility = BarItemVisibility.Never;
             SplashScreenManager.CloseOverlayForm(handle);
+            manager.Save();
             this.siStatus.Caption = "<b>Simulation done.</b>";
             Application.DoEvents();
             StrategyConfigurationManager.Default.ShowData(cloned);
