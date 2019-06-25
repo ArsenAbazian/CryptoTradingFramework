@@ -1,4 +1,5 @@
-﻿using CryptoMarketClient.Bittrex;
+﻿using Crypto.Core.Helpers;
+using CryptoMarketClient.Bittrex;
 using CryptoMarketClient.Common;
 using CryptoMarketClient.Helpers;
 using CryptoMarketClient.Strategies;
@@ -323,7 +324,7 @@ namespace CryptoMarketClient {
             return NotificationForms[NotificationForms.Count - 1];
         }
 
-        public List<TickerCollection> ArbitrageList { get; private set; }
+        public ResizeableArray<TickerCollection> ArbitrageList { get; private set; }
         public TickerCollectionUpdateHelper UpdateHelper { get; private set; }
         void BuildCurrenciesList() {
             PoloniexExchange.Default.Connect();

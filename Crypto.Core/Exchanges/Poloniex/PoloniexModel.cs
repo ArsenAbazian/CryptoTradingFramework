@@ -34,7 +34,8 @@ namespace CryptoMarketClient {
         }
 
         public PoloniexExchange() : base() {
-
+            RequestRate = new List<RateLimit>();
+            RequestRate.Add(new RateLimit() { Limit = 6, Interval = TimeSpan.TicksPerSecond});
         }
 
         protected override bool ShouldAddKlineListener => true;
@@ -443,8 +444,15 @@ namespace CryptoMarketClient {
         }
         public override bool UpdateOrderBook(Ticker ticker, int depth) {
             string address = GetOrderBookString(ticker, depth);
-            byte[] data = ((Ticker)ticker).DownloadBytes(address);
+            byte[] data = GetDownloadBytes(address);
             return OnUpdateOrderBook(ticker, data);
+        }
+        public override void UpdateOrderBookAsync(Ticker ticker, int depth, Action<OperationResultEventArgs> onOrderBookUpdated) {
+            string address = GetOrderBookString(ticker, depth);
+            GetDownloadBytesAsync(address, t => {
+                OnUpdateOrderBook(ticker, t.Result);
+                onOrderBookUpdated(new OperationResultEventArgs() { Ticker = ticker, Result = t.Result != null });
+            });
         }
         public override bool UpdateTicker(Ticker tickerBase) {
             return true;

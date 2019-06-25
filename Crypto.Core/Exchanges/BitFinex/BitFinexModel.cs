@@ -34,7 +34,7 @@ namespace CryptoMarketClient.BitFinex {
         }
 
         public override void OnAccountRemoved(AccountInfo info) {
-            
+
         }
 
         public override string BaseWebSocketAdress => "wss://api.bitfinex.com/ws/2";
@@ -165,7 +165,7 @@ namespace CryptoMarketClient.BitFinex {
             }
             address = "https://api.bitfinex.com/v2/tickers?symbols=";
             for(int i = 0; i < Tickers.Count; i++) {
-                BitFinexTicker ticker = (BitFinexTicker) Tickers[i];
+                BitFinexTicker ticker = (BitFinexTicker)Tickers[i];
                 address += ticker.CurrencyPair;
                 if(Tickers.IndexOf(ticker) < Tickers.Count - 1)
                     address += ",";
@@ -195,7 +195,7 @@ namespace CryptoMarketClient.BitFinex {
             for(int i = 0; i < res.Count; i++) {
                 string[] item = res[i];
                 string currency = item[0];
-                BitFinexCurrencyInfo c = (BitFinexCurrencyInfo) Currencies.FirstOrDefault(curr => curr.Currency == currency);
+                BitFinexCurrencyInfo c = (BitFinexCurrencyInfo)Currencies.FirstOrDefault(curr => curr.Currency == currency);
                 if(c == null) {
                     c = new BitFinexCurrencyInfo();
                     c.Currency = item[0];
@@ -283,7 +283,7 @@ namespace CryptoMarketClient.BitFinex {
             List<string[]> list = JSonHelper.Default.DeserializeArrayOfArrays(bytes, ref startIndex, 11);
             for(int i = 0; i < list.Count; i++) {
                 string[] item = list[i];
-                BitFinexTicker ticker = (BitFinexTicker) Tickers.FirstOrDefault(t => t.CurrencyPair == item[0]);
+                BitFinexTicker ticker = (BitFinexTicker)Tickers.FirstOrDefault(t => t.CurrencyPair == item[0]);
                 ticker.HighestBid = FastValueConverter.Convert(item[1]);
                 ticker.LowestAsk = FastValueConverter.Convert(item[3]);
                 ticker.Change = FastValueConverter.Convert(item[6]);
@@ -311,7 +311,14 @@ namespace CryptoMarketClient.BitFinex {
             byte[] data = GetDownloadBytes(address);
             if(data == null)
                 return false;
-            return UpdateOrderBook(info, data, false, depth);
+            return OnUpdateOrderBook(info, data, false, depth);
+        }
+        public override void UpdateOrderBookAsync(Ticker ticker, int depth, Action<OperationResultEventArgs> onOrderBookUpdate) {
+            string address = GetOrderBookString(ticker, depth);
+            GetDownloadBytesAsync(address, t => {
+                OnUpdateOrderBook(ticker, t.Result, false, depth);
+                onOrderBookUpdate(new OperationResultEventArgs() { Ticker = ticker, Result = t.Result != null });
+            });
         }
         public string GetOrderBookString(Ticker info, int depth) {
             return string.Format("https://api.bitfinex.com/v2/book/{0}/P0", Uri.EscapeDataString(info.MarketName));
@@ -320,12 +327,12 @@ namespace CryptoMarketClient.BitFinex {
             throw new NotImplementedException();
         }
         public bool UpdateOrderBook(BitFinexTicker info, byte[] data, int depth) {
-            return UpdateOrderBook(info, data, true, depth);
+            return OnUpdateOrderBook(info, data, true, depth);
         }
         public override bool UpdateOrderBook(Ticker tickerBase) {
             return UpdateOrderBook(tickerBase, OrderBook.Depth);
         }
-        public bool UpdateOrderBook(Ticker ticker, byte[] bytes, bool raiseChanged, int depth) {
+        public bool OnUpdateOrderBook(Ticker ticker, byte[] bytes, bool raiseChanged, int depth) {
             if(bytes == null)
                 return false;
 

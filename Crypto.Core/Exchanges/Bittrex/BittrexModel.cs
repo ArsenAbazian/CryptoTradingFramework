@@ -573,13 +573,21 @@ namespace CryptoMarketClient.Bittrex {
                 return false;
             return UpdateOrderBook(info, data, false, depth);
         }
+
+        public override void UpdateOrderBookAsync(Ticker ticker, int depth, Action<OperationResultEventArgs> onOrderBookUpdated) {
+            string address = GetOrderBookString(ticker, depth);
+            GetDownloadBytesAsync(address, t => {
+                OnUpdateOrderBook((BittrexTicker)ticker, t.Result, depth);
+                onOrderBookUpdated(new OperationResultEventArgs() { Ticker = ticker, Result = t.Result != null });
+            });
+        }
         public string GetOrderBookString(Ticker info, int depth) {
             return string.Format("https://bittrex.com/api/v1.1/public/getorderbook?market={0}&type=both&depth={1}", Uri.EscapeDataString(info.MarketName), depth * 2);
         }
         public override bool ProcessOrderBook(Ticker tickerBase, string text) {
             throw new NotImplementedException();
         }
-        public bool UpdateOrderBook(BittrexTicker info, byte[] data, int depth) {
+        public bool OnUpdateOrderBook(BittrexTicker info, byte[] data, int depth) {
             return UpdateOrderBook(info, data, true, depth);
         }
         public override bool UpdateOrderBook(Ticker tickerBase) {
@@ -642,7 +650,7 @@ namespace CryptoMarketClient.Bittrex {
             byte[] data = GetDownloadBytes(address);
             if(data == null)
                 return;
-            UpdateOrderBook(info, data, depth);
+            OnUpdateOrderBook(info, data, depth);
         }
         public bool GetTrades(BittrexTicker ticker) {
             string address = string.Format("https://bittrex.com/api/v1.1/public/getmarkethistory?market={0}", Uri.EscapeDataString(ticker.MarketName));

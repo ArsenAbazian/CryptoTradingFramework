@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Crypto.Core.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,8 +16,8 @@ namespace CryptoMarketClient {
             }
             return tickersList;
         }
-        public static List<TickerCollection> GetItems(List<Exchange> exchanges) {
-            List<TickerCollection> arbitrageList = new List<TickerCollection>();
+        public static ResizeableArray<TickerCollection> GetItems(List<Exchange> exchanges) {
+            ResizeableArray<TickerCollection> arbitrageList = new ResizeableArray<TickerCollection>();
             List<List<Ticker>> markets = GetMarketsList(exchanges);
             if(markets.Count == 0)
                 return arbitrageList;

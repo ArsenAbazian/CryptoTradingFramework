@@ -320,12 +320,19 @@ namespace CryptoMarketClient.Exchanges.Bitmex {
             byte[] data = GetDownloadBytes(address);
             if(data == null)
                 return false;
-            return UpdateOrderBook(ticker, data);
+            return OnUpdateOrderBook(ticker, data);
+        }
+        public override void UpdateOrderBookAsync(Ticker ticker, int depth, Action<OperationResultEventArgs> onOrderBookUpdated) {
+            string address = GetOrderBookString(ticker, OrderBook.Depth);
+            GetDownloadBytesAsync(address, t => {
+                OnUpdateOrderBook(ticker, t.Result);
+                onOrderBookUpdated(new OperationResultEventArgs() { Ticker = ticker, Result = t.Result != null });
+            });
         }
 
         protected string[] OrderBookItems { get; } = new string[] { "symbol", "id", "side", "size", "price" };
 
-        bool UpdateOrderBook(Ticker ticker, byte[] bytes) {
+        bool OnUpdateOrderBook(Ticker ticker, byte[] bytes) {
             if(bytes == null)
                 return false;
 

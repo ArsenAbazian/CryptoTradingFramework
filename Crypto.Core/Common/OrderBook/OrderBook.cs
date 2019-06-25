@@ -275,6 +275,8 @@ namespace CryptoMarketClient {
 
         public void UpdateEntries() {
             LastUpdateTime = DateTime.Now;
+            if(Bids.Count == 0 || Asks.Count == 0)
+                return;
             HighestBid = Bids[0].Value;
             LowestAsk = Asks[0].Value;
             if(UpdateEntriesCount == 0)

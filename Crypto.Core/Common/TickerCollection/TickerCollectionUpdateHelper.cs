@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Crypto.Core.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -18,24 +19,21 @@ namespace CryptoMarketClient.Common {
         }
 
         Stopwatch timer;
-        int concurrentTickersCount = 0;
-        int concurrentTickersCount2 = 0;
 
         public TickerCollectionUpdateHelper() {
             this.timer = new Stopwatch();
             this.timer.Start();
         }
 
-        public List<TickerCollection> Items { get; private set; }
+        public ResizeableArray<TickerCollection> Items { get; private set; }
         public List<Exchange> Exchanges { get; } = new List<Exchange>();
         public void Initialize() {
             Items = TickerCollectionHelper.GetItems(Exchanges);
-            Items = Items.Where((i) => i.BaseCurrency == "BTC" || (i.BaseCurrency == "USDT" && i.MarketCurrency == "BTC")).ToList();
+            Items = ResizeableArray<TickerCollection>.FromList(Items.Where((i) => i.BaseCurrency == "BTC" || (i.BaseCurrency == "USDT" && i.MarketCurrency == "BTC")).ToList());
         }
 
         
         public void Update(TickerCollection collection, ITickerCollectionUpdateListener listener) {
-            Interlocked.Increment(ref concurrentTickersCount);
             UpdateArbitrageInfo(collection, listener);
         }
 
@@ -46,37 +44,43 @@ namespace CryptoMarketClient.Common {
             info.StartUpdateMs = timer.ElapsedMilliseconds;
             info.ObtainingData = true;
 
-            Task task = Task.Factory.StartNew(() => {
-                for(int i = 0; i < info.Count; i++) {
-                    if(info.Tickers[i].UpdateOrderBook(OrderBook.Depth)) {
-                        //if(info.Tickers[i].UpdateTrades() && info.Tickers[i].TradeStatistic.Count > 0)
-                        //    info.Tickers[i].OrderBook.TradeInfo = info.Tickers[i].TradeStatistic.Last();
-                        //info.Tickers[i].OrderBook.CalcStatistics();
-                        info.Tickers[i].OrderBook.UpdateHistory();
+            for(int i = 0; i < info.Count; i++) {
+                info.Tickers[i].Exchange.UpdateOrderBookAsync(info.Tickers[i], 10, (e) => {
+                    if(e.Result)
+                        e.Ticker.OrderBook.UpdateHistory();
+                    if(e.Result)
                         info.ObtainDataSuccessCount++;
-                    }
                     info.ObtainDataCount++;
-                }
-            });
-            
-            await task;
-            Interlocked.Decrement(ref concurrentTickersCount); //todo
-            if(info.ObtainDataCount == info.Count) {
-                info.IsActual = info.ObtainDataSuccessCount == info.Count;
-                info.IsUpdating = true;
-                info.ObtainingData = false;
-                info.UpdateTimeMs = (int)(timer.ElapsedMilliseconds - info.StartUpdateMs);
-                //Debug.WriteLine(string.Format("{0} = {1}", info.Name, info.UpdateTimeMs));
-                if(listener != null)
-                    listener.OnUpdateTickerCollection(info, true);
+
+                    if(info.ObtainDataCount == info.Count) {
+                        info.IsActual = info.ObtainDataSuccessCount == info.Count;
+                        info.IsUpdating = true;
+                        info.ObtainingData = false;
+                        info.UpdateTimeMs = (int)(timer.ElapsedMilliseconds - info.StartUpdateMs);
+                        Debug.WriteLine("updated " + e.Ticker.Name + " " + info.UpdateTimeMs);
+                        if(listener != null)
+                            listener.OnUpdateTickerCollection(info, true);
+                    }
+                });
             }
+            //Task task = Task.Factory.StartNew(() => {
+            //    for(int i = 0; i < info.Count; i++) {
+            //        if(info.Tickers[i].UpdateOrderBook(OrderBook.Depth)) {
+            //            //if(info.Tickers[i].UpdateTrades() && info.Tickers[i].TradeStatistic.Count > 0)
+            //            //    info.Tickers[i].OrderBook.TradeInfo = info.Tickers[i].TradeStatistic.Last();
+            //            //info.Tickers[i].OrderBook.CalcStatistics();
+            //            info.Tickers[i].OrderBook.UpdateHistory();
+            //            info.ObtainDataSuccessCount++;
+            //        }
+            //        info.ObtainDataCount++;
+            //    }
+            //});
+            
+            //await task;
+            
             info.LastUpdate = DateTime.UtcNow;
         }
         public async void Update(TriplePairArbitrageInfo info, IStaticArbitrageUpdateListener listener) {
-            if(concurrentTickersCount2 > 8)
-                return;
-            Interlocked.Increment(ref concurrentTickersCount2);
-
             info.NextOverdueMs = 6000;
             info.StartUpdateMs = timer.ElapsedMilliseconds;
             info.ObtainingData = true;
@@ -96,7 +100,6 @@ namespace CryptoMarketClient.Common {
             });
 
             await task;
-            Interlocked.Decrement(ref concurrentTickersCount2); //todo
             if(info.ObtainDataCount == info.Count) {
                 info.IsActual = info.ObtainDataSuccessCount == info.Count;
                 info.IsUpdating = true;

@@ -41,6 +41,15 @@ namespace Crypto.Core.Helpers {
                 listChanged -= value;
             }
         }
+
+        public static ResizeableArray<T> FromList(List<T> list) {
+            ResizeableArray<T> res = new ResizeableArray<T>(list.Count);
+            foreach(T item in list) {
+                res.Add(item);
+            }
+            return res;
+        }
+
         protected void RaiseListChanged(ListChangedEventArgs e) {
             if(listChanged != null)
                 listChanged(this, e);

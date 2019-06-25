@@ -208,6 +208,7 @@
     <Compile Include="Exchanges\Binance\BinanceAccountBalanceInfo.cs" />
     <Compile Include="Exchanges\Bitmex\BitmexAccountBalanceInfo.cs" />
     <Compile Include="Helpers\BindingHelper.cs" />
+    <Compile Include="Helpers\ClassicArbitrageListener.cs" />
     <Compile Include="Helpers\HistogrammCalculator.cs" />
     <Compile Include="Helpers\SerializationHelper.cs" />
     <Compile Include="Helpers\Stack.cs" />

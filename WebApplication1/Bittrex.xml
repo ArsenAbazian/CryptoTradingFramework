@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<BittrexExchange xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <LastWebSocketRecvTime>0001-01-01T00:00:00</LastWebSocketRecvTime>
+  <Accounts />
+  <PinnedTickers />
+  <FileName>Bittrex.xml</FileName>
+  <IsInitialized>true</IsInitialized>
+</BittrexExchange>

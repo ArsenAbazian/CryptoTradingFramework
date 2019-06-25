@@ -732,17 +732,26 @@ namespace CryptoMarketClient.Binance {
         public override bool UpdateOrderBook(Ticker ticker, int depth) {
             string address = string.Format("https://api.binance.com/api/v1/depth?symbol={0}&limit={1}",
                 Uri.EscapeDataString(ticker.CurrencyPair), depth);
-            byte[] bytes = ((Ticker)ticker).DownloadBytes(address);
+            byte[] bytes = GetDownloadBytes(address);
             if(bytes == null || bytes.Length == 0)
                 return false;
             OnUpdateOrderBook(ticker, bytes);
             return true;
         }
 
+        public override void UpdateOrderBookAsync(Ticker ticker, int depth, Action<OperationResultEventArgs> onOrderBookUpdated) {
+            string address = string.Format("https://api.binance.com/api/v1/depth?symbol={0}&limit={1}",
+                Uri.EscapeDataString(ticker.CurrencyPair), depth);
+            GetDownloadBytesAsync(address, t => {
+                OnUpdateOrderBook(ticker, t.Result);
+                onOrderBookUpdated(new OperationResultEventArgs() { Ticker = ticker, Result = t.Result != null });
+            });
+        }
+
         public override bool UpdateOrderBook(Ticker ticker) {
             string address = string.Format("https://api.binance.com/api/v1/depth?symbol={0}&limit={1}",
                 Uri.EscapeDataString(ticker.CurrencyPair), 1000);
-            byte[] bytes = ((Ticker)ticker).DownloadBytes(address);
+            byte[] bytes = GetDownloadBytes(address);
             if(bytes == null || bytes.Length == 0)
                 return false;
             OnUpdateOrderBook(ticker, bytes);
@@ -774,16 +783,20 @@ namespace CryptoMarketClient.Binance {
                 asks.Clear();
                 if(iasks != null)
                     iasks.Clear();
-                for(int i = 0; i < jbids.Count; i++) {
-                    string[] item = jbids[i];
-                    bids.Add(new OrderBookEntry() { ValueString = item[0], AmountString = item[1] });
+                if(jbids != null) {
+                    for(int i = 0; i < jbids.Count; i++) {
+                        string[] item = jbids[i];
+                        bids.Add(new OrderBookEntry() { ValueString = item[0], AmountString = item[1] });
+                    }
                 }
-                for(int i = 0; i < jasks.Count; i++) {
-                    string[] item = jasks[i];
-                    OrderBookEntry e = new OrderBookEntry() { ValueString = item[0], AmountString = item[1] };
-                    asks.Add(e);
-                    if(iasks != null)
-                        iasks.Insert(0, e);
+                if(jasks != null) {
+                    for(int i = 0; i < jasks.Count; i++) {
+                        string[] item = jasks[i];
+                        OrderBookEntry e = new OrderBookEntry() { ValueString = item[0], AmountString = item[1] };
+                        asks.Add(e);
+                        if(iasks != null)
+                            iasks.Insert(0, e);
+                    }
                 }
                 ticker.OrderBook.Updates.Clear(FastValueConverter.ConvertPositiveLong(updateId[0]) + 1);
             }

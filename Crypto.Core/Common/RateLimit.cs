@@ -23,6 +23,7 @@ namespace CryptoMarketClient.Common {
             Count = 0;
             LastRequestTime = DateTime.Now.Ticks;
         }
+        public bool IsAllow { get { return !Exceeded || Elapsed; } }
         public void CheckAllow() {
             if(Exceeded) {
                 while(!Elapsed)

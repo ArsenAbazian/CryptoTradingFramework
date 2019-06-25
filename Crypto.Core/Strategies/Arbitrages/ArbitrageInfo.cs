@@ -233,10 +233,17 @@ namespace CryptoMarketClient.Common {
             if(!Owner.Disabled) {
                 lock(ArbitrageHistoryHelper.Default.History) {
                     ArbitrageHistoryHelper.Default.History.Add(st);
-                    ArbitrageHistoryHelper.Default.CheckSave();
+                    if(ArbitrageHistoryHelper.AllowSaveHistory)
+                        ArbitrageHistoryHelper.Default.CheckSave();
+                }
+                lock(History) {
+                    History.Add(st);
                 }
             }
         }
+
+        public List<ArbitrageStatisticsItem> History { get; } = new List<ArbitrageStatisticsItem>();
+        public DateTime Time { get; set; }
 
         void OnLowestAskTickerChanged() {
             if(LowestAskTicker != null) {

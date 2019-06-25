@@ -14,6 +14,7 @@ namespace CryptoMarketClient.Common {
     public class ArbitrageHistoryHelper : ISupportSerialization { 
         static readonly string Name = "ArbitrageHistory.xml";
         static ArbitrageHistoryHelper defaultHelper;
+        public static bool AllowSaveHistory { get; set; } = true;
         public static ArbitrageHistoryHelper Default {
             get {
                 if(defaultHelper == null) {

@@ -25,6 +25,7 @@ using System.Reflection;
 using Crypto.Core.Strategies;
 using CryptoMarketClient.BitFinex;
 using Crypto.Core.Exchanges.Base;
+using System.Threading.Tasks;
 
 namespace CryptoMarketClient {
     public abstract class Exchange : ISupportSerialization {
@@ -351,7 +352,7 @@ namespace CryptoMarketClient {
         }
         #endregion
 
-        protected string GetDownloadString(Ticker ticker, string address) {
+        protected internal string GetDownloadString(Ticker ticker, string address) {
             try {
                 return ticker.DownloadString(address);
             }
@@ -528,6 +529,25 @@ namespace CryptoMarketClient {
                 RequestRate[i].CheckAllow();
             }
         }
+        public bool CanMakeRequest() {
+            if(SuppressCheckRequestLimits)
+                return true;
+            if(RequestRate == null) {
+                try {
+                    SuppressCheckRequestLimits = true;
+                    if(!ObtainExchangeSettings() || RequestRate == null)
+                        return true;
+                }
+                finally {
+                    SuppressCheckRequestLimits = false;
+                }
+            }
+            for(int i = 0; i < RequestRate.Count; i++) {
+                if(!RequestRate[i].IsAllow)
+                    return false;
+            }
+            return true;
+        }
         protected void CheckOrderRateLimits() {
             if(OrderRate == null)
                 return;
@@ -560,7 +580,7 @@ namespace CryptoMarketClient {
         public DateTime FromUnixTimestamp(Int64 time) {
             return new DateTime(1970, 1, 1).AddSeconds(time);
         }
-        protected byte[] GetDownloadBytes(string address) {
+        protected internal byte[] GetDownloadBytes(string address) {
             try {
                 CheckRequestRateLimits();
                 return GetWebClient().DownloadData(address);
@@ -571,6 +591,18 @@ namespace CryptoMarketClient {
                     IsInitialized = false;
                 Telemetry.Default.TrackException(e);
                 return null;
+            }
+        }
+        protected internal async void GetDownloadBytesAsync(string address, Action<Task<byte[]>> continuationAction) {
+            try {
+                CheckRequestRateLimits();
+                await GetWebClient().DownloadDataAsync(address).ContinueWith(continuationAction);
+            }
+            catch(Exception e) {
+                WebException we = e as WebException;
+                if(we != null && (we.Message.Contains("418") || we.Message.Contains("429")))
+                    IsInitialized = false;
+                Telemetry.Default.TrackException(e);
             }
         }
         public virtual bool SupportCandleSticksRange { get { return true; } }
@@ -605,6 +637,7 @@ namespace CryptoMarketClient {
         }
         public abstract bool UpdateOrderBook(Ticker tickerBase);
         public abstract bool UpdateOrderBook(Ticker tickerBase, int depth);
+        public abstract void UpdateOrderBookAsync(Ticker tickerBase, int depth, Action<OperationResultEventArgs> onOrderBookUpdated);
         public abstract bool ProcessOrderBook(Ticker tickerBase, string text);
         public abstract bool UpdateTicker(Ticker tickerBase);
         public abstract bool UpdateTrades(Ticker tickerBase);
@@ -1276,5 +1309,10 @@ namespace CryptoMarketClient {
         Error,
         TooLongQue,
         Waiting
+    }
+
+    public class OperationResultEventArgs : EventArgs {
+        public Ticker Ticker { get; set; }
+        public bool Result { get; set; }
     }
 }

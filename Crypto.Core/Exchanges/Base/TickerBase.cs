@@ -286,6 +286,8 @@ namespace CryptoMarketClient {
         BalanceBase firstInfo, secondInfo;
         public BalanceBase BaseBalanceInfo {
             get {
+                if(Exchange.DefaultAccount == null)
+                    return null;
                 if(firstInfo == null)
                     firstInfo = Exchange.DefaultAccount.Balances.FirstOrDefault((b) => b.Currency == BaseCurrency);
                 return firstInfo;
@@ -293,6 +295,8 @@ namespace CryptoMarketClient {
         }
         public BalanceBase MarketBalanceInfo {
             get {
+                if(Exchange.DefaultAccount == null)
+                    return null;
                 if(secondInfo == null)
                     secondInfo = Exchange.DefaultAccount.Balances.FirstOrDefault((b) => b.Currency == MarketCurrency);
                 return secondInfo;
@@ -458,16 +462,16 @@ namespace CryptoMarketClient {
 
         public string DownloadString(string address) {
             try {
-                ApiRate.WaitToProceed();
-                return Exchange.GetWebClient().DownloadString(address);
+                //ApiRate.WaitToProceed();
+                return Exchange.GetDownloadString(this, address);
             }
             catch { }
             return string.Empty;
         }
         public byte[] DownloadBytes(string address) {
             try {
-                ApiRate.WaitToProceed();
-                return Exchange.GetWebClient().DownloadData(address);
+                //ApiRate.WaitToProceed();
+                return Exchange.GetDownloadBytes(address);
             }
             catch { }
             return null;
@@ -482,10 +486,10 @@ namespace CryptoMarketClient {
             }
         }
 
-        RateLimiting.RateGate apiRate = new RateLimiting.RateGate(6, TimeSpan.FromSeconds(1));
-        protected RateLimiting.RateGate ApiRate {
-            get { return apiRate; }
-        }
+        //RateLimiting.RateGate apiRate = new RateLimiting.RateGate(6, TimeSpan.FromSeconds(1));
+        //protected RateLimiting.RateGate ApiRate {
+        //    get { return apiRate; }
+        //}
 
         protected internal void RaiseHistoryChanged() {
             if(HistoryChanged != null)
