@@ -40,6 +40,8 @@ namespace CryptoMarketClient.Strategies {
             Items.Add(new StrategyConfigurationInfo() { StrategyType = typeof(TriplePairStrategy), ConfigurationFormType = typeof(TriplePairStrategyConfigurationControl), DataFormType = typeof(StrategyDataForm) });
             Items.Add(new StrategyConfigurationInfo() { StrategyType = typeof(MarketMakingStrategy), ConfigurationFormType = typeof(CustomStrategyConfigurationControl), DataFormType = typeof(StrategyDataForm) });
             Items.Add(new StrategyConfigurationInfo() { StrategyType = typeof(TaSimpleStrategy), ConfigurationFormType = typeof(TaSimpleStrategyConfigurationControl), DataFormType = typeof(RedWaterfallStrategyDataForm) });
+            Items.Add(new StrategyConfigurationInfo() { StrategyType = typeof(HipeBasedStrategy), ConfigurationFormType = typeof(HipeStrategyConfigurationControl), DataFormType = typeof(StrategyDataForm) });
+
             //Items.Add(new StrategyConfigurationInfo() { StrategyType = typeof(WalletInvestorForecastStrategy), ConfigurationFormType = typeof(WalletInvestorStrategyConfigControl), DataFormType = typeof(WalletInvestorDataForm) });
         }
         public void Add(StrategyConfigurationInfo info) {

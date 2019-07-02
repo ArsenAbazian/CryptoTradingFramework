@@ -1,4 +1,5 @@
 ﻿using Crypto.Core.Helpers;
+using Crypto.Core.Strategies;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -67,7 +68,7 @@ namespace CryptoMarketClient.Common {
     }
 
     [Serializable]
-    public class ArbitrageStatisticsItem {
+    public class ArbitrageStatisticsItem : IInputDataWithTime {
         public string LowestAskHost { get; set; }
         public string HighestBidHost { get; set; }
         public DateTime Time { get; set; }

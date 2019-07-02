@@ -166,12 +166,15 @@
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationCore" />
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.Linq" />
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Remoting" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Runtime.Serialization.Formatters.Soap" />
     <Reference Include="System.Security" />
@@ -186,6 +189,8 @@
     <Reference Include="Telegram.Bot, Version=14.10.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Telegram.Bot.14.10.0\lib\net45\Telegram.Bot.dll</HintPath>
     </Reference>
+    <Reference Include="UIAutomationClient" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controls\LogMessagesControl.cs">
@@ -250,6 +255,12 @@
     </Compile>
     <Compile Include="Strategies\Arbitrages\TriplePairStrategyConfigurationControl.Designer.cs">
       <DependentUpon>TriplePairStrategyConfigurationControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Strategies\Custom\HipeStrategyConfigurationControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Strategies\Custom\HipeStrategyConfigurationControl.Designer.cs">
+      <DependentUpon>HipeStrategyConfigurationControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Strategies\Custom\InvictusExchange\WalletInvestorItemsControl.cs">
       <SubType>UserControl</SubType>

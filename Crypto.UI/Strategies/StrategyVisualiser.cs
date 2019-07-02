@@ -74,6 +74,7 @@ namespace CryptoMarketClient.Strategies {
             if(Chart == null)
                 return;
             bool shouldRemoveDefaultSeries = Chart.Series.Count > 0;
+            int seriesCount = 0;
             for(int i = 0; i < Visual.DataItemInfos.Count; i++) {
                 StrategyDataItemInfo info = Visual.DataItemInfos[i];
                 if(SkipSeparateItems && info.SeparateWindow)
@@ -88,7 +89,10 @@ namespace CryptoMarketClient.Strategies {
                 if(s == null)
                     continue;
                 Chart.Series.Add(s);
+                seriesCount++;
             }
+            if(seriesCount == 0)
+                return;
             if(shouldRemoveDefaultSeries)
                 Chart.Series.RemoveAt(0);
             for(int i = 0; i < Visual.DataItemInfos.Count; i++) {
@@ -621,21 +625,29 @@ namespace CryptoMarketClient.Strategies {
             PropertyInfo pi = first.GetType().GetProperty(info.FieldName, BindingFlags.Instance | BindingFlags.Public);
             if(pi == null)
                 return null;
+
             object value = pi.GetValue(first);
-            if(value is bool) {
+            if(pi.PropertyType == typeof(bool) || value is bool) {
                 RepositoryItemCheckEdit res = new RepositoryItemCheckEdit();
                 res.CheckBoxOptions.Style = DevExpress.XtraEditors.Controls.CheckBoxStyle.SvgStar2;
                 return res;
             }
             double[] doubleData = null;
-            if(value is ResizeableArray<TimeBaseValue>) {
-                ResizeableArray<TimeBaseValue> data = (ResizeableArray<TimeBaseValue>)value;
-                doubleData = new double[Math.Min(data.Count, 50)];
-                for(int i = 0; i < doubleData.Length; i++)
-                    doubleData[i] = data[i].Value;
+            if(pi.PropertyType == typeof(ResizeableArray<TimeBaseValue>) || value is ResizeableArray<TimeBaseValue>) {
+                if(value == null)
+                    doubleData = new double[0];
+                else {
+                    ResizeableArray<TimeBaseValue> data = (ResizeableArray<TimeBaseValue>)value;
+                    doubleData = new double[Math.Min(data.Count, 50)];
+                    for(int i = 0; i < doubleData.Length; i++)
+                        doubleData[i] = data[i].Value;
+                }
             }
-            if(value is double[]) {
-                doubleData = (double[])value;
+            if(value is double[] || pi.PropertyType == typeof(double[])) {
+                if(value == null)
+                    doubleData = new double[0];
+                else 
+                    doubleData = (double[])value;
             }
             if(doubleData != null) {
                 RepositoryItemSparklineEdit res = new RepositoryItemSparklineEdit();

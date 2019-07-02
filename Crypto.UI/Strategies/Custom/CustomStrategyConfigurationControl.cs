@@ -13,6 +13,9 @@ using Crypto.Core.Common;
 using Crypto.Core.Strategies.Custom;
 using DevExpress.XtraEditors.Repository;
 using System.Reflection;
+using DevExpress.Utils.Behaviors;
+using DevExpress.XtraVerticalGrid.Rows;
+using Crypto.Core.Helpers;
 
 namespace CryptoMarketClient.Strategies.Custom {
     public partial class CustomStrategyConfigurationControl : StrategySpecificConfigurationControlBase {
@@ -83,7 +86,20 @@ namespace CryptoMarketClient.Strategies.Custom {
             this.exchangeTickersBindingSource.DataSource = Exchange.GetTickersNameInfo();
             this.tickerInputInfoBindingSource.DataSource = ((CustomTickerStrategy)Strategy).StrategyInfo.Tickers;
             InitializePropertyTabs();
+            SubscribePropertyGridEvents();
             this.propertyGridControl1.SelectedObject = Strategy;
+        }
+
+        private void SubscribePropertyGridEvents() {
+            this.propertyGridControl1.CustomRecordCellEdit += OnPropertyGridCustomRecordCellEdit;
+        }
+
+        private void OnPropertyGridCustomRecordCellEdit(object sender, DevExpress.XtraVerticalGrid.Events.GetCustomRowCellEditEventArgs e) {
+            PropertyDescriptor desc = this.propertyGridControl1.GetPropertyDescriptor(e.Row);
+            FileNameAttribute attr = GetFileNameAttribute(desc);
+            if(attr == null)
+                return;
+            e.RepositoryItem = this.reFileEditorButton;
         }
 
         private void InitializePropertyTabs() {
@@ -199,6 +215,30 @@ namespace CryptoMarketClient.Strategies.Custom {
             s.StrategyInfo.Tickers.Remove(info);
             s.StrategyInfo.Tickers.Insert(index, info);
             this.gridView1.RefreshData();
+        }
+
+        private void reFileEditorButton_ButtonClick(object sender, DevExpress.XtraEditors.Controls.ButtonPressedEventArgs e) {
+            PropertyDescriptor desc = this.propertyGridControl1.GetPropertyDescriptor(this.propertyGridControl1.FocusedRow);
+            FileNameAttribute attr = GetFileNameAttribute(desc);
+            if(attr == null)
+                throw new Exception("FileAttribute == null");
+            if(e.Button.Kind == DevExpress.XtraEditors.Controls.ButtonPredefines.Ellipsis) {
+                OpenFileDialog dlg = new OpenFileDialog();
+                dlg.Title = "Open Simulation File";
+                dlg.Filter = attr.FilterString;
+                if(dlg.ShowDialog() == DialogResult.OK) {
+                    this.propertyGridControl1.SetCellValue(this.propertyGridControl1.FocusedRow, 0, dlg.FileName);
+                    this.propertyGridControl1.CloseEditor();
+                }
+            }
+        }
+
+        private FileNameAttribute GetFileNameAttribute(PropertyDescriptor desc) {
+            foreach(var attr in desc.Attributes) {
+                if(attr is FileNameAttribute)
+                    return (FileNameAttribute)attr;
+            }
+            return null;
         }
     }
 }

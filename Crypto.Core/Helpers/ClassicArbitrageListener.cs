@@ -21,6 +21,18 @@ namespace CryptoMarketClient {
             BuildCurrenciesList();
             StartUpdateThread();
         }
+        public void EnterSimulation() {
+            ArbitrageHistoryHelper.AllowSaveHistory = true;
+            BuildCurrenciesList();
+            for(int i = 0; i < ArbitrageList[0].Count; i++)
+                ArbitrageList[0].Tickers[i].Exchange.EnterSimulationMode();
+        }
+
+        public void ExitSimulation() {
+            for(int i = 0; i < ArbitrageList[0].Count; i++)
+                ArbitrageList[0].Tickers[i].Exchange.ExitSimulationMode();
+        }
+
         protected virtual int UpdateInervalMs { get { return 1000; } }
         protected virtual bool AllowUpdateInactive { get { return false; } }
         protected Thread UpdateThread { get; private set; }
@@ -52,7 +64,7 @@ namespace CryptoMarketClient {
                 Thread.Sleep(UpdateInervalMs);
             }
         }
-
+        
         void UpdateCurrencies() {
             while(AllowWorkThread) {
                 foreach(Exchange exchange in UpdateHelper.Exchanges) {
@@ -115,6 +127,8 @@ namespace CryptoMarketClient {
             OnUpdateTickers();
         }
 
+        public event ArbitrageChangedEventHandler ArbitrageChanged;
+
         void ITickerCollectionUpdateListener.OnUpdateTickerCollection(TickerCollection collection, bool useInvokeForUI) {
             ArbitrageInfo info = collection.Arbitrage;
 
@@ -124,7 +138,9 @@ namespace CryptoMarketClient {
             collection.IsUpdating = true;
             info.Calculate();
             info.SaveExpectedProfitUSD();
+            RaiseArbitrageChanged(collection);
             collection.IsUpdating = false;
+
 
             //for(int i = 0; i < collection.Count; i++) {
             //    Ticker ticker = collection.Tickers[i];
@@ -134,6 +150,12 @@ namespace CryptoMarketClient {
             //        SendBoostStopNotification(ticker);
             //}
         }
+
+        private void RaiseArbitrageChanged(TickerCollection collection) {
+            if(ArbitrageChanged != null)
+                ArbitrageChanged(this, new ArbitrageChangedEventArgs() { TickersInfo = collection, Arbitrage = collection.Arbitrage });
+        }
+
         //void SendBoostNotification(Ticker info) {
         //    string text = string.Empty;
 
@@ -194,4 +216,11 @@ namespace CryptoMarketClient {
             ArbitrageList = UpdateHelper.Items;
         }
     }
+
+    public class ArbitrageChangedEventArgs : EventArgs {
+        public TickerCollection TickersInfo { get; set; }
+        public ArbitrageInfo Arbitrage { get; set; }
+    }
+
+    public delegate void ArbitrageChangedEventHandler(object sender, ArbitrageChangedEventArgs e);
 }

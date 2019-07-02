@@ -209,6 +209,7 @@
     <Compile Include="Exchanges\Bitmex\BitmexAccountBalanceInfo.cs" />
     <Compile Include="Helpers\BindingHelper.cs" />
     <Compile Include="Helpers\ClassicArbitrageListener.cs" />
+    <Compile Include="Helpers\FileNameAttribute.cs" />
     <Compile Include="Helpers\HistogrammCalculator.cs" />
     <Compile Include="Helpers\SerializationHelper.cs" />
     <Compile Include="Helpers\Stack.cs" />
@@ -295,6 +296,7 @@
     <Compile Include="Strategies\Base\InputParameterInfo.cs" />
     <Compile Include="Strategies\Custom\CustomStrategyDataItemInfo.cs" />
     <Compile Include="Strategies\Custom\CustomTickerStrategyBase.cs" />
+    <Compile Include="Strategies\Custom\HipeBasedStrategy.cs" />
     <Compile Include="Strategies\Custom\TaSimpleStrategy.cs" />
     <Compile Include="Strategies\Custom\WalletInvestorForecastStrategy.cs" />
     <Compile Include="Strategies\Grid\BaseGridStrategy.cs" />

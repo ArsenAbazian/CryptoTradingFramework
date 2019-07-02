@@ -35,7 +35,7 @@ namespace Crypto.Core.Strategies {
     [XmlInclude(typeof(MarketMakingStrategy))]
     [XmlInclude(typeof(StatisticalArbitrageStrategy))]
     [XmlInclude(typeof(TaSimpleStrategy))]
-    //[XmlInclude(typeof())]
+    [XmlInclude(typeof(HipeBasedStrategy))]
     [Serializable]
     [ParameterObject]
     public abstract class StrategyBase : IStrategyDataItemInfoOwner {
@@ -72,6 +72,8 @@ namespace Crypto.Core.Strategies {
         public long ChatId { get; set; }
         [StrategyProperty(false)]
         public bool EnableNotifications { get; set; }
+
+        protected bool SimulationMode { get { return DataProvider is SimulationStrategyDataProvider; } }
 
         public void SendNotification(string notification) {
             if(!EnableNotifications)
@@ -464,5 +466,9 @@ namespace Crypto.Core.Strategies {
         }
         public string TabName { get; set; }
         public bool Browsable { get; set; } = true;
+    }
+
+    public interface IInputDataWithTime {
+        DateTime Time { get; set; }
     }
 }

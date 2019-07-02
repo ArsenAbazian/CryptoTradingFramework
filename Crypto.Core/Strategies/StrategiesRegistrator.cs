@@ -32,6 +32,7 @@ namespace Crypto.Core.Strategies {
             //list.Add(new StrategyRegistrationInfo() { Type = typeof(MarketMakingStrategy), Group = StrategyGroup.Custom, Name = "Stupid Market Making Strategy", Description = "No Comments" });
             list.Add(new StrategyRegistrationInfo() { Type = typeof(TriplePairStrategy), Group = StrategyGroup.Arbitrage, Name = "Triple Pair Strategy", Description = "Strategy based on tripe pair arbitrage" });
             list.Add(new StrategyRegistrationInfo() { Type = typeof(TaSimpleStrategy), Group = StrategyGroup.TecnicalAnylysis, Name = "Ta Simple Strategy", Description = "Strategy based on simple technical analysis" });
+            list.Add(new StrategyRegistrationInfo() { Type = typeof(HipeBasedStrategy), Group = StrategyGroup.TecnicalAnylysis, Name = "Hipe Based Strategy", Description = "Strategy based on classic arbitrage detection, which happens on hipe" });
             return list;
         }
     }

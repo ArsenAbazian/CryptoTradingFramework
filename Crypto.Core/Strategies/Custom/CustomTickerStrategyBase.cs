@@ -196,7 +196,7 @@ namespace Crypto.Core.Strategies.Custom {
             return info;
         }
 
-        public double MinDepositForOpenPosition { get; set; } = 100;
+        public virtual double MinDepositForOpenPosition { get; set; } = 100;
 
         protected virtual OpenPositionInfo OpenLongPosition(string mark, double value, double amount, bool allowTrailing, bool checkForMinValue, double trailingStopLossPc, double minProfitPc) {
             if(1.05 * value * amount > MaxAllowedDeposit)

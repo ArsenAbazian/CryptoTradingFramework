@@ -60,7 +60,7 @@ namespace Crypto.Core.Strategies {
         public bool UseTradeHistory { get; set; }
         public bool UseKline { get; set; }
         public int KlineIntervalMin { get; set; }
-        public string SimulationDataFile { get; set; }
+        public string TickerSimulationDataFile { get; set; }
 
         public object Clone() {
             return new TickerInputInfo() {
@@ -71,7 +71,7 @@ namespace Crypto.Core.Strategies {
                 UseTradeHistory = this.UseTradeHistory,
                 UseKline = this.UseKline,
                 KlineIntervalMin = this.KlineIntervalMin,
-                SimulationDataFile = this.SimulationDataFile,
+                TickerSimulationDataFile = this.TickerSimulationDataFile,
                 OrderBookDepth = this.OrderBookDepth
             };
         }

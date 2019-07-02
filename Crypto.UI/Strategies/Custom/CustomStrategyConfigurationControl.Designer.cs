@@ -57,8 +57,9 @@
             this.repositoryItemLookUpEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemLookUpEdit();
             this.colSimulationDataFile = new DevExpress.XtraGrid.Columns.GridColumn();
             this.repositoryItemButtonEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemButtonEdit();
-            this.sidePanel1 = new DevExpress.XtraEditors.SidePanel();
+            this.sidePanelWithGrid = new DevExpress.XtraEditors.SidePanel();
             this.propertyGridControl1 = new DevExpress.XtraVerticalGrid.PropertyGridControl();
+            this.reFileEditorButton = new DevExpress.XtraEditors.Repository.RepositoryItemButtonEdit();
             ((System.ComponentModel.ISupportInitialize)(this.barManager1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tickerInputInfoBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.exchangeTickersBindingSource)).BeginInit();
@@ -71,8 +72,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemSpinEdit1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemLookUpEdit1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemButtonEdit1)).BeginInit();
-            this.sidePanel1.SuspendLayout();
+            this.sidePanelWithGrid.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.propertyGridControl1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.reFileEditorButton)).BeginInit();
             this.SuspendLayout();
             // 
             // barManager1
@@ -398,33 +400,46 @@
             this.repositoryItemButtonEdit1.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
             this.repositoryItemButtonEdit1.ButtonClick += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.repositoryItemButtonEdit1_ButtonClick);
             // 
-            // sidePanel1
+            // sidePanelWithGrid
             // 
-            this.sidePanel1.Controls.Add(this.propertyGridControl1);
-            this.sidePanel1.Dock = System.Windows.Forms.DockStyle.Right;
-            this.sidePanel1.Location = new System.Drawing.Point(871, 60);
-            this.sidePanel1.Name = "sidePanel1";
-            this.sidePanel1.Size = new System.Drawing.Size(443, 773);
-            this.sidePanel1.TabIndex = 14;
-            this.sidePanel1.Text = "sidePanel1";
+            this.sidePanelWithGrid.Controls.Add(this.propertyGridControl1);
+            this.sidePanelWithGrid.Dock = System.Windows.Forms.DockStyle.Right;
+            this.sidePanelWithGrid.Location = new System.Drawing.Point(871, 60);
+            this.sidePanelWithGrid.Name = "sidePanelWithGrid";
+            this.sidePanelWithGrid.Size = new System.Drawing.Size(443, 773);
+            this.sidePanelWithGrid.TabIndex = 14;
+            this.sidePanelWithGrid.Text = "sidePanel1";
             // 
             // propertyGridControl1
             // 
             this.propertyGridControl1.ActiveViewType = DevExpress.XtraVerticalGrid.PropertyGridView.Office;
             this.propertyGridControl1.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+            this.propertyGridControl1.Cursor = System.Windows.Forms.Cursors.Hand;
             this.propertyGridControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.propertyGridControl1.Location = new System.Drawing.Point(2, 0);
             this.propertyGridControl1.Name = "propertyGridControl1";
+            this.propertyGridControl1.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
+            this.reFileEditorButton});
             this.propertyGridControl1.Size = new System.Drawing.Size(441, 773);
             this.propertyGridControl1.TabIndex = 0;
             this.propertyGridControl1.UseDirectXPaint = DevExpress.Utils.DefaultBoolean.True;
             // 
+            // reFileEditorButton
+            // 
+            this.reFileEditorButton.AutoHeight = false;
+            this.reFileEditorButton.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton()});
+            this.reFileEditorButton.Name = "reFileEditorButton";
+            this.reFileEditorButton.ButtonClick += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.reFileEditorButton_ButtonClick);
+            // 
             // CustomStrategyConfigurationControl
             // 
+            this.Appearance.BackColor = System.Drawing.Color.White;
+            this.Appearance.Options.UseBackColor = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.tickersGridControl);
-            this.Controls.Add(this.sidePanel1);
+            this.Controls.Add(this.sidePanelWithGrid);
             this.Controls.Add(this.barDockControlLeft);
             this.Controls.Add(this.barDockControlRight);
             this.Controls.Add(this.barDockControlBottom);
@@ -444,8 +459,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemSpinEdit1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemLookUpEdit1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemButtonEdit1)).EndInit();
-            this.sidePanel1.ResumeLayout(false);
+            this.sidePanelWithGrid.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.propertyGridControl1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.reFileEditorButton)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -454,7 +470,6 @@
         #endregion
 
         private DevExpress.XtraBars.BarManager barManager1;
-        private DevExpress.XtraBars.Bar bar1;
         private DevExpress.XtraBars.BarDockControl barDockControlTop;
         private DevExpress.XtraBars.BarDockControl barDockControlBottom;
         private DevExpress.XtraBars.BarDockControl barDockControlLeft;
@@ -481,11 +496,13 @@
         protected DevExpress.XtraGrid.Columns.GridColumn colMarketName;
         protected DevExpress.XtraGrid.Columns.GridColumn colSimulationDataFile;
         protected DevExpress.XtraEditors.Repository.RepositoryItemButtonEdit repositoryItemButtonEdit1;
-        private DevExpress.XtraEditors.SidePanel sidePanel1;
         protected DevExpress.XtraVerticalGrid.PropertyGridControl propertyGridControl1;
         private DevExpress.XtraBars.BarButtonItem biMoveUp;
         private DevExpress.XtraBars.BarButtonItem biMoveDown;
         protected DevExpress.XtraGrid.Columns.GridColumn colOrderBookDepth;
         protected DevExpress.XtraEditors.Repository.RepositoryItemSpinEdit repositoryItemSpinEdit1;
+        private DevExpress.XtraEditors.Repository.RepositoryItemButtonEdit reFileEditorButton;
+        protected DevExpress.XtraEditors.SidePanel sidePanelWithGrid;
+        protected DevExpress.XtraBars.Bar bar1;
     }
 }
