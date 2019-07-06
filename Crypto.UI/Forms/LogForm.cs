@@ -1,4 +1,5 @@
-﻿using CryptoMarketClient.Common;
+﻿using Crypto.Core.Helpers;
+using CryptoMarketClient.Common;
 using DevExpress.XtraEditors;
 using System;
 using System.Collections.Generic;
@@ -15,8 +16,8 @@ namespace CryptoMarketClient {
         public LogForm() {
             InitializeComponent();
         }
-        public BindingList<LogMessage> Messages {
-            get { return (BindingList<LogMessage>)this.logMessageBindingSource.DataSource; }
+        public ResizeableArray<LogMessage> Messages {
+            get { return (ResizeableArray<LogMessage>)this.logMessageBindingSource.DataSource; }
             set { this.logMessageBindingSource.DataSource = value; }
         }
         public void RefreshData() {

@@ -117,6 +117,11 @@ namespace CryptoMarketClient {
                         current.UpdateTimeMs = currentUpdateTimeMS;
                         current.IsActual = false;
                         current.NextOverdueMs += 3000;
+                        if(current.UpdateTimeMs > 40000 && !current.RequestOverdue) {
+                            current.RequestOverdue = true;
+                            LogManager.Default.Warning(current, current.Name, "classic arbitrage request overdue");
+                            TelegramBot.Default.SendNotification(current.Name + ": classic arbitrage request overdue");
+                        }
                     }
                     continue;
                 }
@@ -130,6 +135,8 @@ namespace CryptoMarketClient {
         public event ArbitrageChangedEventHandler ArbitrageChanged;
 
         void ITickerCollectionUpdateListener.OnUpdateTickerCollection(TickerCollection collection, bool useInvokeForUI) {
+            collection.RequestOverdue = false;
+
             ArbitrageInfo info = collection.Arbitrage;
 
             double prevProfits = info.MaxProfitUSD;

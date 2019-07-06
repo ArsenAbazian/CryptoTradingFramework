@@ -71,7 +71,8 @@ namespace Crypto.Core.Strategies.Custom {
             coll.Arbitrage.Amount = st.Amount;
             coll.Arbitrage.MaxProfit = st.MaxProfit;
             coll.Arbitrage.MaxProfitUSD = st.MaxProfitUSD;
-            coll.Arbitrage.UsdTicker.Last = st.RateInUSD;
+            if(coll.Arbitrage.UsdTicker != null)
+                coll.Arbitrage.UsdTicker.Last = st.RateInUSD;
 
             coll.Arbitrage.History.Add(st);
 
@@ -100,7 +101,7 @@ namespace Crypto.Core.Strategies.Custom {
             DataItem("Mark").Visibility = DataVisibility.Table;
 
             var trend = DataItem("TrendPreview"); trend.Visibility = DataVisibility.Table;
-            var candle = StrategyDataItemInfo.CandleStickItem(trend.Children); candle.Visibility = DataVisibility.Chart; candle.BindingSource = "CandleSticks"; candle.Name = "KLine";
+            var candle = StrategyDataItemInfo.CandleStickItem(trend.Children); candle.Type = DataType.ChartData; candle.Visibility = DataVisibility.Chart; candle.BindingSource = "CandleSticks"; candle.Name = "KLine";
             trend.DetailInfo = candle;
         }
 
@@ -117,9 +118,23 @@ namespace Crypto.Core.Strategies.Custom {
             data.ProfitUSD = e.Arbitrage.MaxProfitUSD;
 
             if(HasPositiveArbitrage(e.Arbitrage)) {
-                data.Mark = "HP";
+                if(!HasAlreadyHipe(data))
+                    data.Mark = "HP";
             }
             StrategyData.Add(data);
+        }
+
+        private bool HasAlreadyHipe(HipeBaseStrategyItemData data) {
+            for(int i = StrategyData.Count - 1; i >= 0; i--) {
+                HipeBaseStrategyItemData prev = (HipeBaseStrategyItemData)StrategyData[i];
+                if((data.Time - prev.Time).TotalHours > 24)
+                    return false;
+                if(prev.BaseCurrency != data.BaseCurrency || prev.MarketCurrency != data.MarketCurrency)
+                    continue;
+                if(prev.Mark == "HP")
+                    return true;
+            }
+            return false;
         }
 
         private bool HasPositiveArbitrage(ArbitrageInfo arbitrage) {
@@ -128,6 +143,8 @@ namespace Crypto.Core.Strategies.Custom {
             int start = arbitrage.History.Count - 1;
             for(int i = start; i > start - 5; i--) {
                 if(arbitrage.History[i].MaxProfitUSD < 1)
+                    return false;
+                if(arbitrage.History[i].LowestAskHost != "Poloniex")
                     return false;
             }
             DateTime startTime = arbitrage.History[start - 5].Time;

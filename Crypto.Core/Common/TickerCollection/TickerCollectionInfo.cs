@@ -20,6 +20,7 @@ namespace CryptoMarketClient {
         public bool Disabled { get; set; }
 
         public Task UpdateTask { get; set; }
+        public bool RequestOverdue { get; set; }
 
         public Ticker[] Tickers { get; private set; } = new Ticker[16];
         Ticker usdTicker;

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Crypto.Core.Helpers;
 using CryptoMarketClient;
 using CryptoMarketClient.Common;
+using CryptoMarketClient.Helpers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApplication1.Controllers
@@ -15,9 +16,11 @@ namespace WebApplication1.Controllers
     public class ValuesController : ControllerBase {
         static ClassicArbitrageListener ClassicArbitrageListener { get; set; }
         public ValuesController() {
+            TelegramBot.Default.TryAddClient(SettingsStore.Default.TelegramBotBroadcastId, true, SettingsStore.Default.TelegramBotRegistrationCode, SettingsStore.Default);
             if(ClassicArbitrageListener == null) {
                 ClassicArbitrageListener = new ClassicArbitrageListener();
                 ClassicArbitrageListener.Start();
+                ArbitrageHistoryHelper.AllowSaveHistory = true;
             }
         }
         // GET api/values
@@ -52,9 +55,28 @@ namespace WebApplication1.Controllers
         //GET api/values/items
         //GET api/values/history
         //GET api/values/BTC-USDT
+        //GET api/values/log
         [HttpGet("{id}")]
         public ActionResult<string> Get(string id) {
-            if(id == "profit" || id == "items") {
+            if(id == "log") {
+                ResizeableArray<LogMessage> items = LogManager.Default.Messages;
+                StringBuilder b = new StringBuilder();
+                b.Append('[');
+                for(int i = items.Count - 1; i >= 0; i++) {
+                    LogMessage info = items[i];
+                    b.Append('{');
+                    b.Append("\"type\":"); b.Append('"'); b.Append(info.Type); b.Append("\",");
+                    b.Append("\"name\":"); b.Append('"'); b.Append(info.Name); b.Append("\",");
+                    b.Append("\"time\":"); b.Append('"'); b.Append(info.Time.ToLongTimeString()); b.Append("\",");
+                    b.Append("\"text\":"); b.Append('"'); b.Append(info.Text); b.Append("\",");
+                    b.Append("\"description\":"); b.Append('"'); b.Append(info.Description); b.Append("\",");
+                    b.Append("}\n");
+                    if(i < items.Count - 1) b.Append(',');
+                }
+                b.Append(']');
+                return b.ToString();
+            }
+            else if(id == "profit" || id == "items") {
                 ResizeableArray<TickerCollection> items = id == "profit"?  
                     ResizeableArray<TickerCollection>.FromList(ClassicArbitrageListener.ArbitrageList.Where(a => a.MaxProfitUSD > 0).ToList()):
                     ClassicArbitrageListener.ArbitrageList;

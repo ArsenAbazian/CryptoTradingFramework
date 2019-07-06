@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Crypto.Core.Helpers;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -8,10 +9,25 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace CryptoMarketClient.Common {
-    public class LogManager {
+    [Serializable]
+    public class LogManager : ISupportSerialization {
+        static readonly string Name = "Log.xml";
+        public static LogManager FromFile(string fileName) {
+            LogManager res = (LogManager)SerializationHelper.FromFile(fileName, typeof(LogManager));
+            if(res != null) res.FileName = Name;
+            return res;
+        }
+
+        protected bool Saving { get; set; }
+        public virtual void OnEndDeserialize() { }
+        public string FileName { get; set; }
+
+
         static LogManager defaultManager;
         public static LogManager Default {
             get {
+                if(defaultManager == null)
+                    defaultManager = LogManager.FromFile(Name);
                 if(defaultManager == null)
                     defaultManager = new LogManager();
                 return defaultManager;
@@ -19,7 +35,19 @@ namespace CryptoMarketClient.Common {
             set { defaultManager = value; }
         }
 
-        public BindingList<LogMessage> Messages { get; } = new BindingList<LogMessage>();
+        public void Save() {
+            if(Saving)
+                return;
+            Saving = true;
+            try {
+                SerializationHelper.Save(this, typeof(LogManager), null);
+            }
+            finally {
+                Saving = false;
+            }
+        }
+
+        public ResizeableArray<LogMessage> Messages { get; } = new ResizeableArray<LogMessage>();
         public void Log(string message) {
             Add(LogType.Log, null, null, message, null);
         }
@@ -62,6 +90,7 @@ namespace CryptoMarketClient.Common {
                 Description = description,
                 Time = DateTime.UtcNow
             });
+            Save();
             RefreshVisual();
         }
 

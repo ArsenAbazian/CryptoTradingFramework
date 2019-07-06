@@ -272,8 +272,7 @@ namespace CryptoMarketClient.Strategies {
         }
         
         private void gcData_DoubleClick(object sender, EventArgs e) {
-            object item = this.gvData.GetFocusedRow();
-            this.chartDataControl1.NavigateTo(item);
+            OnGridControlDoubleClick(this.gcData, e);
         }
 
         private void chartControl_DoubleClick(object sender, EventArgs e) {

@@ -40,7 +40,7 @@ namespace Crypto.Core.Strategies {
         }
 
         public static StrategyDataItemInfo CandleStickItem(List<StrategyDataItemInfo> dataItemInfos) {
-            dataItemInfos.Add(new StrategyDataItemInfo() { ChartType = ChartType.CandleStick, Visibility = DataVisibility.Chart });
+            dataItemInfos.Add(new StrategyDataItemInfo() { ChartType = ChartType.CandleStick, Visibility = DataVisibility.Chart, Type = DataType.ChartData });
             return dataItemInfos.Last();
         }
 
