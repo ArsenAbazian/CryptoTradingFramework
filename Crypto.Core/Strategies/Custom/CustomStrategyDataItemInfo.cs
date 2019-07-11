@@ -44,6 +44,11 @@ namespace Crypto.Core.Strategies {
             return dataItemInfos.Last();
         }
 
+        public static StrategyDataItemInfo CandleStickItem(List<StrategyDataItemInfo> dataItemInfos, string fileName) {
+            dataItemInfos.Add(new StrategyDataItemInfo() { ChartType = ChartType.CandleStick, Visibility = DataVisibility.Chart, Type = DataType.ChartData, FieldName = fileName });
+            return dataItemInfos.Last();
+        }
+
         public static StrategyDataItemInfo DataItem(List<StrategyDataItemInfo> dataItemInfos, string fieldName, string formatString) {
             dataItemInfos.Add(new StrategyDataItemInfo() { FieldName = fieldName, FormatString = formatString });
             return dataItemInfos.Last();

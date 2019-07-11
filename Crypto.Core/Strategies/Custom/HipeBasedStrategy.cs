@@ -7,6 +7,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -30,6 +31,10 @@ namespace Crypto.Core.Strategies.Custom {
 
         [Browsable(false)]
         public override double MinDepositForOpenPosition { get; set; } = 100;
+
+        [Browsable(false)]
+        [XmlIgnore]
+        public ResizeableArray<TickerCollection> Items { get { return Listener.ArbitrageList; } }
 
         [FileName("Xml Files (*.xml)|*.xml|All Files (*.*)|*.*")]
         [PropertyTab("Simulation")]
@@ -225,5 +230,81 @@ namespace Crypto.Core.Strategies.Custom {
         void OnNewItem(IInputDataWithTime item);
         void Connect();
         void Disconnect();
+    }
+
+    public class HipeBasedStrategyItemsInfoOwner : IStrategyDataItemInfoOwner {
+        public HipeBasedStrategyItemsInfoOwner(HipeBasedStrategy strategy) {
+            Strategy = strategy;
+            InitializeDataItemInfos();
+            InitializeItems();
+        }
+
+        protected virtual void InitializeItems() {
+            foreach(TickerCollection t in Strategy.Items) {
+                HipeBaseStrategyArbitrageDataItem item = new HipeBaseStrategyArbitrageDataItem();
+                item.BaseCurrency = t.BaseCurrency;
+                item.MarketCurrency = t.MarketCurrency;
+                item.ArbitrageHistory = t.Arbitrage.History;
+                item.ArbitragePreview = item.ArbitrageHistory.Select(h => h.MaxProfitUSD).ToArray();
+                this.items.Add(item);
+            }
+        }
+
+        protected virtual void InitializeDataItemInfos() {
+            StrategyDataItemInfo.DataItem(this.dataItemInfos, "BaseCurrency").Visibility = DataVisibility.Table;
+            StrategyDataItemInfo.DataItem(this.dataItemInfos, "MarketCurrency").Visibility = DataVisibility.Table;
+            StrategyDataItemInfo preview = StrategyDataItemInfo.DataItem(this.dataItemInfos, "ArbitragePreview"); preview.Type = DataType.ChartData; preview.Visibility = DataVisibility.Table;
+            StrategyDataItemInfo kline = StrategyDataItemInfo.CandleStickItem(preview.Children); kline.BindingSource = "CandleSticks"; kline.Visibility = DataVisibility.Chart;
+            StrategyDataItemInfo history = StrategyDataItemInfo.DataItem(preview.Children, "Spread"); history.Color = Color.FromArgb(0x60, System.Drawing.Color.Green); history.ChartType = ChartType.Area; history.PanelName = "Arbitrage"; history.BindingSource = "ArbitrageHistory"; history.Visibility = DataVisibility.Chart;
+        }
+
+        public HipeBasedStrategy Strategy {
+            get; private set;
+        }
+
+        string IStrategyDataItemInfoOwner.Name => Strategy.Name;
+
+        List<StrategyDataItemInfo> dataItemInfos = new List<StrategyDataItemInfo>();
+        List<StrategyDataItemInfo> IStrategyDataItemInfoOwner.DataItemInfos => dataItemInfos;
+
+        ResizeableArray<object> items = new ResizeableArray<object>();
+        ResizeableArray<object> IStrategyDataItemInfoOwner.Items => items;
+
+        int IStrategyDataItemInfoOwner.MeasureUnitMultiplier { get { return 5; } set { } }
+        StrategyDateTimeMeasureUnit IStrategyDataItemInfoOwner.MeasureUnit { get { return StrategyDateTimeMeasureUnit.Minute; } set { } }
+    }
+
+    public class HipeBaseStrategyArbitrageDataItem {
+        public string BaseCurrency { get; set; }
+        public string MarketCurrency { get; set; }
+        public double[] ArbitragePreview { get; set; }
+
+        ResizeableArray<CandleStickData> candleSticks;
+        public ResizeableArray<CandleStickData> CandleSticks {
+            get {
+                if(candleSticks == null)
+                    candleSticks = DownloadCandleSticks();
+                return candleSticks;
+            }
+        }
+
+        private ResizeableArray<CandleStickData> DownloadCandleSticks() {
+            Ticker ticker = PoloniexExchange.Default.Tickers.FirstOrDefault(t => t.BaseCurrency == BaseCurrency && t.MarketCurrency == MarketCurrency);
+            if(ticker == null)
+                throw new Exception("Ticker not found");
+            candleSticks = ticker.GetCandleStickData(5, GetCandleSticksStartTime(), (int)GetCandlesticksRange());
+            return candleSticks;
+        }
+
+        public ResizeableArray<ArbitrageStatisticsItem> ArbitrageHistory { get; set; }
+        protected DateTime GetCandleSticksStartTime() {
+            return ArbitrageHistory.Count > 0 ? ArbitrageHistory[0].Time : DateTime.MinValue;
+        }
+        protected long GetCandlesticksRange() {
+            DateTime start = GetCandleSticksStartTime();
+            if(start == DateTime.MinValue)
+                return 0;
+            return (int)((ArbitrageHistory[ArbitrageHistory.Count - 1].Time - start).TotalSeconds) + 1;
+        } 
     }
 }

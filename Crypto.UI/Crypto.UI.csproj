@@ -256,6 +256,12 @@
     <Compile Include="Strategies\Arbitrages\TriplePairStrategyConfigurationControl.Designer.cs">
       <DependentUpon>TriplePairStrategyConfigurationControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="Strategies\Custom\HipeBasedStrategyDataForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Strategies\Custom\HipeBasedStrategyDataForm.Designer.cs">
+      <DependentUpon>HipeBasedStrategyDataForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Strategies\Custom\HipeStrategyConfigurationControl.cs">
       <SubType>UserControl</SubType>
     </Compile>

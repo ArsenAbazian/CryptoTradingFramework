@@ -118,6 +118,7 @@ namespace CryptoMarketClient {
                         current.IsActual = false;
                         current.NextOverdueMs += 3000;
                         if(current.UpdateTimeMs > 40000 && !current.RequestOverdue) {
+                            current.ObtainingData = false;
                             current.RequestOverdue = true;
                             LogManager.Default.Warning(current, current.Name, "classic arbitrage request overdue");
                             TelegramBot.Default.SendNotification(current.Name + ": classic arbitrage request overdue");

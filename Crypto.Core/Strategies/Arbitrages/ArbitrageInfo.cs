@@ -1,4 +1,5 @@
-﻿using CryptoMarketClient.Common;
+﻿using Crypto.Core.Helpers;
+using CryptoMarketClient.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -242,7 +243,7 @@ namespace CryptoMarketClient.Common {
             }
         }
 
-        public List<ArbitrageStatisticsItem> History { get; } = new List<ArbitrageStatisticsItem>();
+        public ResizeableArray<ArbitrageStatisticsItem> History { get; } = new ResizeableArray<ArbitrageStatisticsItem>();
         public DateTime Time { get; set; }
 
         void OnLowestAskTickerChanged() {

@@ -130,7 +130,7 @@ namespace CryptoMarketClient.Strategies {
             ShowChartForm(item, new StrategyDataVisualiser(item), true);
         }
 
-        private void ShowTableForm(IStrategyDataItemInfoOwner visual) {
+        protected void ShowTableForm(IStrategyDataItemInfoOwner visual) {
             XtraForm form = new XtraForm();
             GridDataControl control = new GridDataControl();
             control.Grid.DoubleClick += OnGridControlDoubleClick;
@@ -152,7 +152,7 @@ namespace CryptoMarketClient.Strategies {
                 StrategyDataItemInfo info = (StrategyDataItemInfo)view.FocusedColumn.Tag;
                 if(info.DetailInfo != null)
                     info = info.DetailInfo;
-                if(!info.IsChartData) {
+                if(!info.IsChartData && info.Children.Count == 0) {
                     object item = view.GetFocusedRow();
                     this.chartDataControl1.NavigateTo(item);
                     return;

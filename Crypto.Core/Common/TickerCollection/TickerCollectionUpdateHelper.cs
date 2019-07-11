@@ -37,12 +37,13 @@ namespace CryptoMarketClient.Common {
             UpdateArbitrageInfo(collection, listener);
         }
 
-        async void UpdateArbitrageInfo(TickerCollection info, ITickerCollectionUpdateListener listener) {
+        void UpdateArbitrageInfo(TickerCollection info, ITickerCollectionUpdateListener listener) {
             info.ObtainDataSuccessCount = 0;
             info.ObtainDataCount = 0;
             info.NextOverdueMs = 6000;
             info.StartUpdateMs = timer.ElapsedMilliseconds;
             info.ObtainingData = true;
+            info.UpdateTimeMs = 0;
 
             for(int i = 0; i < info.Count; i++) {
                 info.Tickers[i].Exchange.UpdateOrderBookAsync(info.Tickers[i], 10, (e) => {
@@ -57,7 +58,6 @@ namespace CryptoMarketClient.Common {
                         info.IsUpdating = true;
                         info.ObtainingData = false;
                         info.UpdateTimeMs = (int)(timer.ElapsedMilliseconds - info.StartUpdateMs);
-                        Debug.WriteLine("updated " + e.Ticker.Name + " " + info.UpdateTimeMs);
                         if(listener != null)
                             listener.OnUpdateTickerCollection(info, true);
                     }

@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 namespace CryptoMarketClient.Common {
     public class MyWebClient : HttpClient {
         public MyWebClient() {
+            Timeout = TimeSpan.FromSeconds(40);
         }
         public string DownloadString(string address) {
             Task<string> t = this.GetStringAsync(address);
