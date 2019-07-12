@@ -19,7 +19,7 @@ Based on this framework [CryptoTraderAuto](https://github.com/ArsenAbazian/Crypt
 
 If you want to say "thank you" :)
 
-BTC     1PjFCsfVYwhU8CUqTKAGD2UdTeKqgemb1R
-ETH 	  0xa709fc01c5d32500f1c18605d48a7b7bd03f5893
-XRP     rEb8TK3gBgk5auZkwc6sHnwrGVJH8DuaLh            Tag = 106961926
-LTC 	  LPKGsLjnpc3xRsvPYYHuXhpFpx6zhpVg9n 
+* **BTC**     1PjFCsfVYwhU8CUqTKAGD2UdTeKqgemb1R
+* **ETH** 	  0xa709fc01c5d32500f1c18605d48a7b7bd03f5893
+* **XRP**     rEb8TK3gBgk5auZkwc6sHnwrGVJH8DuaLh            Tag = 106961926
+* **LTC** 	  LPKGsLjnpc3xRsvPYYHuXhpFpx6zhpVg9n 
