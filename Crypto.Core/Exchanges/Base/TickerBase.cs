@@ -593,6 +593,8 @@ namespace CryptoMarketClient {
             return Exchange.GetCandleStickData(this, candleStickPeriodMin, start, periodInSeconds);
         }
         public virtual bool UpdateMyTrades() {
+            if(Exchange.DefaultAccount == null)
+                return false;
             return Exchange.UpdateAccountTrades(Exchange.DefaultAccount, this);
         }
         public void UpdateTrailings() {

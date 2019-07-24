@@ -28,6 +28,7 @@
             this.btCancel = new DevExpress.XtraEditors.SimpleButton();
             this.btOk = new DevExpress.XtraEditors.SimpleButton();
             this.NameTextEdit = new DevExpress.XtraEditors.TextEdit();
+            this.exchangeAccountInfoBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.TypeImageComboBoxEdit = new DevExpress.XtraEditors.ImageComboBoxEdit();
             this.ApiKeyTextEdit = new DevExpress.XtraEditors.TextEdit();
             this.SecretTextEdit = new DevExpress.XtraEditors.TextEdit();
@@ -41,10 +42,11 @@
             this.layoutControlItem2 = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItem1 = new DevExpress.XtraLayout.LayoutControlItem();
             this.emptySpaceItem2 = new DevExpress.XtraLayout.EmptySpaceItem();
-            this.exchangeAccountInfoBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.dxErrorProvider1 = new DevExpress.XtraEditors.DXErrorProvider.DXErrorProvider(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.dataLayoutControl1)).BeginInit();
             this.dataLayoutControl1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.NameTextEdit.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.exchangeAccountInfoBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.TypeImageComboBoxEdit.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ApiKeyTextEdit.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.SecretTextEdit.Properties)).BeginInit();
@@ -58,7 +60,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItem2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.exchangeAccountInfoBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dxErrorProvider1)).BeginInit();
             this.SuspendLayout();
             // 
             // dataLayoutControl1
@@ -113,6 +115,10 @@
             this.NameTextEdit.Size = new System.Drawing.Size(664, 46);
             this.NameTextEdit.StyleController = this.dataLayoutControl1;
             this.NameTextEdit.TabIndex = 4;
+            // 
+            // exchangeAccountInfoBindingSource
+            // 
+            this.exchangeAccountInfoBindingSource.DataSource = typeof(CryptoMarketClient.AccountInfo);
             // 
             // TypeImageComboBoxEdit
             // 
@@ -245,19 +251,19 @@
             this.emptySpaceItem2.Size = new System.Drawing.Size(396, 48);
             this.emptySpaceItem2.TextSize = new System.Drawing.Size(0, 0);
             // 
-            // exchangeAccountInfoBindingSource
+            // dxErrorProvider1
             // 
-            this.exchangeAccountInfoBindingSource.DataSource = typeof(CryptoMarketClient.AccountInfo);
+            this.dxErrorProvider1.ContainerControl = this;
             // 
             // AccountEditingForm
             // 
             this.Appearance.FontSizeDelta = 2;
             this.Appearance.Options.UseFont = true;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(962F, 2117F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(965F, 2125F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(777, 334);
             this.Controls.Add(this.dataLayoutControl1);
-            this.Font = new System.Drawing.Font("Tahoma", 657.875F);
+            this.Font = new System.Drawing.Font("Tahoma", 659.875F);
             this.Margin = new System.Windows.Forms.Padding(5);
             this.Name = "AccountEditingForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
@@ -265,6 +271,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataLayoutControl1)).EndInit();
             this.dataLayoutControl1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.NameTextEdit.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.exchangeAccountInfoBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.TypeImageComboBoxEdit.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ApiKeyTextEdit.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.SecretTextEdit.Properties)).EndInit();
@@ -278,7 +285,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItem2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.exchangeAccountInfoBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dxErrorProvider1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -302,5 +309,6 @@
         private DevExpress.XtraLayout.EmptySpaceItem emptySpaceItem2;
         private DevExpress.XtraDataLayout.DataLayoutControl dataLayoutControl1;
         private DevExpress.XtraLayout.LayoutControlGroup layoutControlGroup1;
+        private DevExpress.XtraEditors.DXErrorProvider.DXErrorProvider dxErrorProvider1;
     }
 }
