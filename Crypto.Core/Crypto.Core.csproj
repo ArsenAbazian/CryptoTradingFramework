@@ -214,6 +214,7 @@
     <Compile Include="Helpers\SerializationHelper.cs" />
     <Compile Include="Helpers\Stack.cs" />
     <Compile Include="Helpers\TickersVolatilityInfo.cs" />
+    <Compile Include="Helpers\TradeHistoryIntensityInfo.cs" />
     <Compile Include="Helpers\Utils.cs" />
     <Compile Include="Indicators\AtrIndicator.cs" />
     <Compile Include="Indicators\EmaIndicator.cs" />

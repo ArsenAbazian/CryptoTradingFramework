@@ -564,8 +564,8 @@ namespace CryptoMarketClient {
             return true;
         }
 
-        public override List<TradeInfoItem> GetTrades(Ticker ticker, DateTime starTime) {
-            string address = string.Format("https://poloniex.com/public?command=returnTradeHistory&currencyPair={0}", Uri.EscapeDataString(ticker.CurrencyPair));
+        public override ResizeableArray<TradeInfoItem> GetTrades(Ticker ticker, DateTime starTime, DateTime endTime) {
+            string address = string.Format("https://poloniex.com/public?command=returnTradeHistory&currencyPair={0}&start={1}&end={2}", Uri.EscapeDataString(ticker.CurrencyPair), ToUnixTimestamp(starTime), ToUnixTimestamp(endTime));
             string text = GetDownloadString(address);
             if(string.IsNullOrEmpty(text))
                 return null;
@@ -573,11 +573,11 @@ namespace CryptoMarketClient {
             if(trades.Count == 0)
                 return null;
 
-            List<TradeInfoItem> list = new List<TradeInfoItem>();
+            ResizeableArray<TradeInfoItem> list = new ResizeableArray<TradeInfoItem>(trades.Count);
 
             int index = 0;
             for(int i = 0; i < trades.Count; i++) {
-                JObject obj = (JObject) trades[i];
+                JObject obj = (JObject)trades[i];
                 DateTime time = obj.Value<DateTime>("date");
                 int tradeId = obj.Value<int>("tradeID");
                 if(time < starTime)
@@ -599,6 +599,10 @@ namespace CryptoMarketClient {
                 ticker.RaiseTradeHistoryChanged(new TradeHistoryChangedEventArgs() { NewItems = list });
             }
             return list;
+        }
+
+        public override ResizeableArray<TradeInfoItem> GetTrades(Ticker ticker, DateTime startTime) {
+            return GetTrades(ticker, startTime, DateTime.UtcNow);
         }
 
         protected List<TradeInfoItem> UpdateList { get; } = new List<TradeInfoItem>(100);
@@ -638,7 +642,7 @@ namespace CryptoMarketClient {
                 (itemIndex, paramIndex, value) => { return paramIndex != 1 || value != lastGotTradeId; });
 
             int index = 0;
-            List<TradeInfoItem> newTrades = new List<TradeInfoItem>();
+            ResizeableArray<TradeInfoItem> newTrades = new ResizeableArray<TradeInfoItem>(trades.Count);
             for(int i = 0; i < trades.Count; i++) {
                 string[] obj = trades[i];
                 TradeInfoItem item = new TradeInfoItem(null, ticker);

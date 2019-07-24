@@ -13,7 +13,7 @@ namespace Crypto.Core.Helpers {
         object GetItem(int index);
         int Count { get; }
     }
-    public class ResizeableArray<T> : IEnumerable<T>, IList<T>, IResizeableArray {
+    public class ResizeableArray<T> : IEnumerable<T>, IList<T>, IResizeableArray, IListSource, IList, IBindingList {
         public ResizeableArray() {
             Items = new T[32];
         }
@@ -39,6 +39,16 @@ namespace Crypto.Core.Helpers {
             }
             remove {
                 listChanged -= value;
+            }
+        }
+
+        event ListChangedEventHandler IBindingList.ListChanged {
+            add {
+                ListChanged += value;
+            }
+
+            remove {
+                ListChanged -= value;
             }
         }
 
@@ -176,6 +186,38 @@ namespace Crypto.Core.Helpers {
 
         bool ICollection<T>.IsReadOnly => false;
 
+        bool IListSource.ContainsListCollection => false;
+
+        bool IList.IsReadOnly => false;
+
+        bool IList.IsFixedSize => false;
+
+        int ICollection.Count => Count;
+
+        object ICollection.SyncRoot => this;
+
+        bool ICollection.IsSynchronized => true;
+
+        bool IBindingList.AllowNew => true;
+
+        bool IBindingList.AllowEdit => true;
+
+        bool IBindingList.AllowRemove => true;
+
+        bool IBindingList.SupportsChangeNotification => true;
+
+        bool IBindingList.SupportsSearching => false;
+
+        bool IBindingList.SupportsSorting => false;
+
+        bool IBindingList.IsSorted => false;
+
+        PropertyDescriptor IBindingList.SortProperty => throw new NotSupportedException();
+
+        ListSortDirection IBindingList.SortDirection => throw new NotSupportedException();
+
+        object IList.this[int index] { get => this[index]; set => this[index] = (T)value; }
+
         T IList<T>.this[int index] {
             get { return Items[index]; }
             set {
@@ -244,6 +286,73 @@ namespace Crypto.Core.Helpers {
             for(int i = 0; i < data.Count; i++) {
                 Add(data.Items[i]);
             }
+        }
+        public void AddRangeReversed(ResizeableArray<T> data) {
+            for(int i = data.Count - 1; i >= 0; i--) {
+                Add(data.Items[i]);
+            }
+        }
+
+        IList IListSource.GetList() {
+            return this;
+        }
+
+        int IList.Add(object value) {
+            Add((T)value);
+            return Count;
+        }
+
+        bool IList.Contains(object value) {
+            return Items.Contains((T)value);
+        }
+
+        void IList.Clear() {
+            Clear();
+        }
+
+        int IList.IndexOf(object value) {
+            return IndexOf((T)value);
+        }
+
+        void IList.Insert(int index, object value) {
+            Insert(index, (T)value);
+        }
+
+        void IList.Remove(object value) {
+            Remove((T)value);
+        }
+
+        void IList.RemoveAt(int index) {
+            RemoveAt(index);
+        }
+
+        void ICollection.CopyTo(Array array, int index) {
+            for(int i = 0; i < Count; i++)
+                array.SetValue(Items[i], index + i);
+        }
+
+        object IBindingList.AddNew() {
+            return typeof(T).GetConstructor(new Type[] { }).Invoke(new object[] { });
+        }
+
+        void IBindingList.AddIndex(PropertyDescriptor property) {
+            throw new NotSupportedException();
+        }
+
+        void IBindingList.ApplySort(PropertyDescriptor property, ListSortDirection direction) {
+            throw new NotSupportedException();
+        }
+
+        int IBindingList.Find(PropertyDescriptor property, object key) {
+            throw new NotSupportedException();
+        }
+
+        void IBindingList.RemoveIndex(PropertyDescriptor property) {
+            throw new NotSupportedException();
+        }
+
+        void IBindingList.RemoveSort() {
+            throw new NotSupportedException();
         }
     }
 

@@ -27,6 +27,10 @@ namespace CryptoMarketClient.BitFinex {
             }
         }
 
+        public override ResizeableArray<TradeInfoItem> GetTrades(Ticker ticker, DateTime start, DateTime utcNow) {
+            throw new NotImplementedException();
+        }
+
         protected override bool ShouldAddKlineListener => true;
 
         protected internal override IIncrementalUpdateDataProvider CreateIncrementalUpdateDataProvider() {
@@ -482,7 +486,7 @@ namespace CryptoMarketClient.BitFinex {
             }
             return true;
         }
-        public override List<TradeInfoItem> GetTrades(Ticker info, DateTime starTime) {
+        public override ResizeableArray<TradeInfoItem> GetTrades(Ticker info, DateTime starTime) {
             string address = string.Format("https://bittrex.com/api/v1.1/public/getmarkethistory?market={0}", Uri.EscapeDataString(info.MarketName));
             byte[] bytes = null;
             try {
@@ -504,7 +508,7 @@ namespace CryptoMarketClient.BitFinex {
                 });
             if(res == null)
                 return null;
-            List<TradeInfoItem> list = new List<TradeInfoItem>();
+            ResizeableArray<TradeInfoItem> list = new ResizeableArray<TradeInfoItem>(res.Count);
 
             int index = 0;
             for(int i = 0; i < res.Count; i++) {
@@ -548,7 +552,7 @@ namespace CryptoMarketClient.BitFinex {
                 return true;
 
             int index = 0;
-            List<TradeInfoItem> newItems = new List<TradeInfoItem>();
+            ResizeableArray<TradeInfoItem> newItems = new ResizeableArray<TradeInfoItem>(res.Count);
             lock(info) {
                 for(int i = 0; i < res.Count; i++) {
                     string[] obj = res[i];

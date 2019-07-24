@@ -115,6 +115,8 @@ namespace CryptoMarketClient {
             return null;
         }
 
+        public abstract ResizeableArray<TradeInfoItem> GetTrades(Ticker ticker, DateTime start, DateTime utcNow);
+
         public DateTime LastWebSocketRecvTime { get; set; }
         public abstract bool AllowCandleStickIncrementalUpdate { get; }
         public abstract bool ObtainExchangeSettings();
@@ -641,7 +643,7 @@ namespace CryptoMarketClient {
         public abstract bool ProcessOrderBook(Ticker tickerBase, string text);
         public abstract bool UpdateTicker(Ticker tickerBase);
         public abstract bool UpdateTrades(Ticker tickerBase);
-        public abstract List<TradeInfoItem> GetTrades(Ticker ticker, DateTime starTime);
+        public abstract ResizeableArray<TradeInfoItem> GetTrades(Ticker ticker, DateTime starTime);
         public abstract bool UpdateOpenedOrders(AccountInfo account, Ticker ticker);
         public bool UpdateOpenedOrders(AccountInfo account) { return UpdateOpenedOrders(account, null); }
         public abstract bool UpdateCurrencies();

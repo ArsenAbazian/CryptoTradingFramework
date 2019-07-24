@@ -169,7 +169,7 @@ namespace CryptoMarketClient {
         public List<TradeInfoItem> MyTradeHistory { get; } = new List<TradeInfoItem>();
         public List<OpenedOrderInfo> OpenedOrders { get; } = new List<OpenedOrderInfo>();
         public BindingList<TickerHistoryItem> History { get; } = new BindingList<TickerHistoryItem>();
-        public List<TradeInfoItem> TradeHistory { get; } = new List<TradeInfoItem>();
+        public ResizeableArray<TradeInfoItem> TradeHistory { get; } = new ResizeableArray<TradeInfoItem>();
         public BindingList<TradeStatisticsItem> TradeStatistic { get; } = new BindingList<TradeStatisticsItem>();
 
         ResizeableArray<CandleStickData> candleStickData;
@@ -744,7 +744,7 @@ namespace CryptoMarketClient {
         
         public Ticker Ticker { get; set; }
         public TradeInfoItem NewItem { get; set; }
-        public List<TradeInfoItem> NewItems { get; set; } = new List<TradeInfoItem>();
+        public ResizeableArray<TradeInfoItem> NewItems { get; set; } = new ResizeableArray<TradeInfoItem>();
     }
 
     public delegate void TradeHistoryChangedEventHandler(object sender, TradeHistoryChangedEventArgs e);

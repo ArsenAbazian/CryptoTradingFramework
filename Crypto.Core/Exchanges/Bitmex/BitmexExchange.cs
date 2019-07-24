@@ -14,6 +14,7 @@ using System.Text;
 using Crypto.Core.Exchanges.Bitmex;
 using System.Security.Cryptography;
 using System.Net.Http.Headers;
+using Crypto.Core.Helpers;
 
 namespace CryptoMarketClient.Exchanges.Bitmex {
     public class BitmexExchange : Exchange {
@@ -24,6 +25,10 @@ namespace CryptoMarketClient.Exchanges.Bitmex {
                     defaultExchange = (BitmexExchange)Exchange.FromFile(ExchangeType.Bitmex, typeof(BitmexExchange));
                 return defaultExchange;
             }
+        }
+
+        public override ResizeableArray<TradeInfoItem> GetTrades(Ticker ticker, DateTime start, DateTime utcNow) {
+            throw new NotImplementedException();
         }
 
         protected override bool ShouldAddKlineListener => false;
@@ -147,7 +152,7 @@ namespace CryptoMarketClient.Exchanges.Bitmex {
             return obj.Value<string>(name) == null ? 0.0 : obj.Value<double>(name);
         }
 
-        public override List<TradeInfoItem> GetTrades(Ticker ticker, DateTime starTime) {
+        public override ResizeableArray<TradeInfoItem> GetTrades(Ticker ticker, DateTime starTime) {
             throw new NotImplementedException();
         }
 

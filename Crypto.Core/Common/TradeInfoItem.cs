@@ -3,19 +3,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace CryptoMarketClient {
     public enum TradeFillType { Fill, PartialFill }
     public enum TradeType { Buy, Sell }
 
+    [Serializable]
     public class TradeInfoItem {
         
         public TradeInfoItem(AccountInfo account, Ticker ticker) {
             Account = account;
             Ticker = ticker;
         }
+        public TradeInfoItem() { }
 
+        [XmlIgnore]
         public AccountInfo Account { get; set; }
+        [XmlIgnore]
         public Ticker Ticker { get; set; }
 
         DateTime? time;
@@ -33,6 +38,7 @@ namespace CryptoMarketClient {
         public string AmountString { get; set; }
         public string RateString { get; set; }
         double rate = 0;
+        [XmlIgnore]
         public double Rate {
             get {
                 if(rate == 0) {
@@ -45,6 +51,7 @@ namespace CryptoMarketClient {
             }
         }
         double amount = 0;
+        [XmlIgnore]
         public double Amount {
             get {
                 if(amount == 0) {

@@ -18,6 +18,6 @@ namespace CryptoMarketClient.Common {
         [XmlArray("CandleStickData"), XmlArrayItem(typeof(CandleStickData), ElementName = "CandleStickData")]
         public ResizeableArray<CandleStickData> CandleStickData { get; set; }
         [XmlArray("TradeData"), XmlArrayItem(typeof(TradeInfoItem), ElementName = "TradeHistoryItem")]
-        public List<TradeInfoItem> TradeData { get; set; }
+        public ResizeableArray<TradeInfoItem> TradeData { get; set; }
     }
 }

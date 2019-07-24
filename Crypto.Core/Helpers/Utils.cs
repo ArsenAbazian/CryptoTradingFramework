@@ -55,5 +55,9 @@ namespace Crypto.Core.Helpers {
             cachedData.Save();
             return res;
         }
+
+        public static ResizeableArray<TradeInfoItem> DownloadTradeHistory(Ticker ticker, DateTime time) {
+            return ticker.Exchange.GetTrades(ticker, time);
+        }
     }
 }

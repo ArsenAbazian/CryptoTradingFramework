@@ -652,5 +652,24 @@ namespace CryptoMarketClient {
             form.Visual = info;
             form.Show();
         }
+
+        private void biAnalyseTradeHistory_ItemClick(object sender, ItemClickEventArgs e) {
+            this.dpLog.Visibility = DockVisibility.Visible;
+            Application.DoEvents();
+            TradeHistoryIntensityInfo info = new TradeHistoryIntensityInfo() {
+                Exchange = PoloniexExchange.Default,
+                BaseCurrencies = new string[] { "BTC", "ETH" }
+            };
+            info.TickerAdded += (d, ee) => {
+                Application.DoEvents();
+            };
+            if(!info.Calculate()) {
+                XtraMessageBox.Show("Error calculating volatility");
+                return;
+            }
+            DataVisualiserForm form = new DataVisualiserForm();
+            form.Visual = info;
+            form.Show();
+        }
     }
 }

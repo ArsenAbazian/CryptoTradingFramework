@@ -29,6 +29,10 @@ namespace CryptoMarketClient.Binance {
             }
         }
 
+        public override ResizeableArray<TradeInfoItem> GetTrades(Ticker ticker, DateTime start, DateTime utcNow) {
+            throw new NotImplementedException();
+        }
+
         protected override bool ShouldAddKlineListener => false;
 
         protected internal override IIncrementalUpdateDataProvider CreateIncrementalUpdateDataProvider() {
@@ -614,7 +618,7 @@ namespace CryptoMarketClient.Binance {
             return result;
         }
 
-        public override List<TradeInfoItem> GetTrades(Ticker ticker, DateTime starTime) {
+        public override ResizeableArray<TradeInfoItem> GetTrades(Ticker ticker, DateTime starTime) {
             string address = string.Format("https://api.binance.com/api/v1/depth?symbol={0}&limit={1}",
                 Uri.EscapeDataString(ticker.CurrencyPair), 1000);
             string text = ((Ticker)ticker).DownloadString(address);
@@ -625,7 +629,7 @@ namespace CryptoMarketClient.Binance {
             if(trades.Count == 0)
                 return null;
 
-            List<TradeInfoItem> list = new List<TradeInfoItem>();
+            ResizeableArray<TradeInfoItem> list = new ResizeableArray<TradeInfoItem>(1000);
             int index = 0;
             for(int i = 0; i < trades.Count; i++) {
                 JObject obj = (JObject) trades[i];
@@ -871,7 +875,7 @@ namespace CryptoMarketClient.Binance {
             
             int index = 0, parseIndex = 0;
             List<string[]> items = JSonHelper.Default.DeserializeArrayOfObjects(data, ref parseIndex, TradeItemString);
-            List<TradeInfoItem> newItems = new List<TradeInfoItem>();
+            ResizeableArray<TradeInfoItem> newItems = new ResizeableArray<TradeInfoItem>(items.Count);
             for(int i = items.Count - 1; i >= 0; i--) {
                 string[] item = items[i];
                 DateTime time = FromUnixTime(FastValueConverter.ConvertPositiveLong(item[3]));

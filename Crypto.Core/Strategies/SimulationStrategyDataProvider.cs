@@ -64,6 +64,49 @@ namespace Crypto.Core.Strategies {
         public double SimulationProgress { get; set; } = 0.0;
         public double DownloadProgress { get; set; } = 0.0;
         public event EventHandler DownloadProgressChanged;
+
+        public ResizeableArray<TradeInfoItem> DownloadTradeHistory(TickerInputInfo info, DateTime time) {
+            CachedTradeHistory savedData = new CachedTradeHistory() { Exchange = info.Exchange, TickerName = info.TickerName };
+            CachedTradeHistory cachedData = CachedTradeHistory.FromFile(CachedTradeHistory.Directory + "\\" + ((ISupportSerialization)savedData).FileName);
+            if(cachedData != null) {
+                // outdated
+                if(SettingsStore.Default.SimulationSettings.StartTime.Date == cachedData.Items[0].Time.Date)
+                    return cachedData.Items;
+            }
+
+            DateTime start = DateTime.UtcNow.Date;
+            int intervalInSeconds = info.KlineIntervalMin * 60;
+            start = start.AddDays(-SettingsStore.Default.SimulationSettings.KLineHistoryIntervalDays);
+            DateTime origin = start;
+            DateTime end = DateTime.UtcNow;
+            ResizeableArray<TradeInfoItem> res = new ResizeableArray<TradeInfoItem>();
+            List<ResizeableArray<TradeInfoItem>> tmpList = new List<ResizeableArray<TradeInfoItem>>();
+            DownloadProgress = 0.0;
+
+            while(end > start) {
+                ResizeableArray<TradeInfoItem> data = info.Ticker.Exchange.GetTrades(info.Ticker, start, end);
+                if(data == null || data.Count == 0)
+                    break;
+                tmpList.Add(data);
+                DownloadProgress = 100 - (100 * (data.Last().Time - origin).TotalMinutes / (DateTime.UtcNow - origin).TotalMinutes);
+                RaiseDownloadProgressChanged();
+                Thread.Sleep(300);
+                end = data.Last().Time.AddMilliseconds(-1);
+            }
+            for(int i = tmpList.Count - 1; i>=0; i--) { 
+                res.AddRangeReversed(tmpList[i]);
+            }
+            cachedData = savedData;
+            cachedData.Items = res;
+            cachedData.Save();
+            for(int i = 0; i < res.Count - 1; i++) {
+                if(res[i].Time > res[i + 1].Time) {
+                    throw new Exception("TradeHistory Timing Error!");
+                }
+            }
+            return res;
+        }
+
         public DateTime LastTime { get; private set; } = DateTime.Now;
         DateTime IStrategyDataProvider.CurrentTime { get { return LastTime; } }
         void IStrategyDataProvider.OnTick() {
@@ -240,7 +283,7 @@ namespace Crypto.Core.Strategies {
             return ob;
         }
 
-        protected virtual ResizeableArray<CandleStickData> DownloadCandleStickData(TickerInputInfo info) {
+        public virtual ResizeableArray<CandleStickData> DownloadCandleStickData(TickerInputInfo info) {
             CachedCandleStickData savedData = new CachedCandleStickData() { Exchange = info.Exchange, TickerName = info.TickerName, IntervalMin = info.KlineIntervalMin };
             CachedCandleStickData cachedData = CachedCandleStickData.FromFile(CachedCandleStickData.Directory + "\\" + ((ISupportSerialization)savedData).FileName);
             if(cachedData != null) {
@@ -276,7 +319,7 @@ namespace Crypto.Core.Strategies {
             }
 
             //for(int i = 0; i < candleStickCount / deltaCount; i++) {
-            while(start.Date < DateTime.Now.Date) { 
+            while(start.Date < DateTime.UtcNow.Date) { 
                 ResizeableArray<CandleStickData> data = info.Ticker.GetCandleStickData(info.KlineIntervalMin, start, intervalInSeconds * deltaCount);
                 if(data == null || data.Count == 0) {
                     start = start.AddSeconds(intervalInSeconds * deltaCount);
@@ -465,6 +508,28 @@ namespace Crypto.Core.Strategies {
         public string TickerName { get; set; }
         public int IntervalMin { get; set; }
         
+    }
+
+    [Serializable]
+    public class CachedTradeHistory : ISupportSerialization {
+        public static string Directory { get { return "SimulationData\\TradeHistory"; } }
+        public static CachedTradeHistory FromFile(string fileName) {
+            return (CachedTradeHistory)SerializationHelper.FromFile(fileName, typeof(CachedTradeHistory));
+        }
+
+        void ISupportSerialization.OnEndDeserialize() {
+
+        }
+
+        public bool Save() {
+            return SerializationHelper.Save(this, typeof(CachedTradeHistory), Directory);
+        }
+
+        string ISupportSerialization.FileName { get { return Exchange.ToString() + "_" + TickerName.ToString() + "_TradeHistory.xml"; } set { } }
+
+        public ResizeableArray<TradeInfoItem> Items { get; set; } = new ResizeableArray<TradeInfoItem>();
+        public ExchangeType Exchange { get; set; }
+        public string TickerName { get; set; }
     }
 
     public class SimulationSettings {
