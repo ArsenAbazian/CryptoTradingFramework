@@ -33,12 +33,16 @@ namespace CryptoMarketClient {
         }
 
         private void btOk_Click(object sender, EventArgs e) {
+            this.dxErrorProvider1.ClearErrors();
             if(Account.Name == null || string.IsNullOrEmpty(Account.Name.Trim()))
                 this.dxErrorProvider1.SetError(NameTextEdit, "Name should not be empty");
             if(Account.ApiKey == null || string.IsNullOrEmpty(Account.ApiKey.Trim()))
                 this.dxErrorProvider1.SetError(ApiKeyTextEdit, "ApiKey should not be empty");
             if(Account.Secret == null || string.IsNullOrEmpty(Account.Secret.Trim()))
-                this.dxErrorProvider1.SetError(ApiKeyTextEdit, "Secret should not be empty");
+                this.dxErrorProvider1.SetError(SecretTextEdit, "Secret should not be empty");
+            if(this.dxErrorProvider1.HasErrors) {
+                return;
+            }
 
             Account.Name = Account.Name.Trim();
             Account.ApiKey = Account.ApiKey.Trim();
