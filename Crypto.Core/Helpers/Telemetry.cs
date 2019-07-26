@@ -3,6 +3,7 @@ using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.Extensibility;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -32,18 +33,26 @@ namespace CryptoMarketClient {
             tc.Context.Component.Version = Assembly.GetEntryAssembly().GetName().Version.ToString();
 
             InnerClient = tc;
+            LogFile = new StreamWriter("log.txt");
         }
 
+        protected StreamWriter LogFile { get; private set; }
         public Telemetry() {
             InitializeTelemetry();
         }
         public TelemetryClient InnerClient { get; set; }
+
+        void LogToFile(Exception e) {
+            LogFile.WriteLine(DateTime.Now.ToString() + " " + e.ToString());
+            LogFile.FlushAsync();
+        }
 
         private void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e) {
             if(InnerClient == null)
                 return;
             InnerClient.TrackException(e.Exception);
             InnerClient.Flush();
+            LogToFile(e.Exception);
         }
 
         private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e) {
@@ -51,6 +60,7 @@ namespace CryptoMarketClient {
                 return;
             InnerClient.TrackException(e.ExceptionObject as Exception);
             InnerClient.Flush();
+            LogToFile(e.ExceptionObject as Exception);
         }
 
         public void TrackException(Exception e) {

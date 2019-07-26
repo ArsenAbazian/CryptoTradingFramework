@@ -871,6 +871,8 @@ namespace CryptoMarketClient {
             return ((long)((DateTime.UtcNow - new DateTime(1,1,1)).TotalMilliseconds * 10000)).ToString();
         }
         public override bool UpdateOpenedOrders(AccountInfo account, Ticker ticker) {
+            if(account == null)
+                return false;
             string address = string.Format("https://poloniex.com/tradingApi");
 
             HttpRequestParamsCollection coll = new HttpRequestParamsCollection();

@@ -706,6 +706,8 @@ namespace CryptoMarketClient.BitFinex {
             return client.DownloadStringTaskAsync(address);
         }
         public override bool UpdateOpenedOrders(AccountInfo account, Ticker ticker) {
+            if(account == null)
+                return false;
             string address = string.Empty;
             if(ticker != null) {
                 address = string.Format("https://bittrex.com/api/v1.1/market/getopenorders?apikey={0}&nonce={1}&market={2}",

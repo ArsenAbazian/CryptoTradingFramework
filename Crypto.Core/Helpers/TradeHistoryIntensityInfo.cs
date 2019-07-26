@@ -19,8 +19,8 @@ namespace Crypto.Core.Helpers {
             StrategyDataItemInfo.DataItem(DataItemInfos, "BaseCurrency").Visibility = DataVisibility.Table;
             StrategyDataItemInfo.DataItem(DataItemInfos, "MarketCurrency").Visibility = DataVisibility.Table;
             StrategyDataItemInfo preview = StrategyDataItemInfo.DataItem(DataItemInfos, "HistogrammPreview"); preview.Color = Color.FromArgb(0x40, Color.Green); preview.Visibility = DataVisibility.Table;
-            StrategyDataItemInfo candle = StrategyDataItemInfo.CandleStickItem(preview.Children, "CandleSticks"); candle.Visibility = DataVisibility.Chart; candle.BindingSource = "CandleSticks";
-            StrategyDataItemInfo bars = StrategyDataItemInfo.DataItem(preview.Children, "Value"); bars.ArgumentDataMember = "Time"; bars.Visibility = DataVisibility.Chart; bars.Color = Color.FromArgb(0x40, Color.Green); bars.ChartType = ChartType.Bar; bars.BindingSource = "Histogramm"; bars.PanelName = "Trades";
+            StrategyDataItemInfo bars = StrategyDataItemInfo.DataItem(preview.Children, "Value"); bars.ArgumentDataMember = "Time"; bars.Visibility = DataVisibility.Chart; bars.Color = Color.FromArgb(0x40, Color.Green); bars.ChartType = ChartType.Bar; bars.BindingSource = "Histogramm"; bars.MeasureUnit = StrategyDateTimeMeasureUnit.Second;
+            StrategyDataItemInfo candle = StrategyDataItemInfo.CandleStickItem(preview.Children, "CandleSticks"); candle.Visibility = DataVisibility.Chart; candle.BindingSource = "CandleSticks"; candle.PanelName = "KLine";
         }
 
         public Exchange Exchange { get; set; }
@@ -134,7 +134,7 @@ namespace Crypto.Core.Helpers {
         public TimeBaseValue[] Histogramm {
             get {
                 if(histogramm == null)
-                    histogramm = HistogrammCalculator.CalculateByTime(TradeHistory, "Time", TimeSpan.FromSeconds(1));
+                    histogramm = HistogrammCalculator.CalculateByTime(TradeHistory, "Time", TimeSpan.FromSeconds(2));
                 return histogramm;
             }
         }

@@ -280,6 +280,9 @@ namespace CryptoMarketClient.Exchanges.Bitmex {
         }
 
         protected virtual bool UpdateOrdersCore(AccountInfo account, Ticker ticker, bool onlyOpened) {
+            if(account == null)
+                return false;
+
             string path = "/api/v1/order?reverse=true";
             if(onlyOpened)
                 path = "/api/v1/order?reverse=true&filter=%7B%22open%22%3A%22true%22%7D"; //{"open":"true"}

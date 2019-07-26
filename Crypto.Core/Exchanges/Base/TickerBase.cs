@@ -433,6 +433,8 @@ namespace CryptoMarketClient {
                 return true;
             try {
                 IsUpdatingOpenedOrders = true;
+                if(Exchange.DefaultAccount == null)
+                    return false;
                 return Exchange.UpdateOpenedOrders(Exchange.DefaultAccount, this);
             }
             finally {
