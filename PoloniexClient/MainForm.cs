@@ -687,18 +687,12 @@ namespace CryptoMarketClient {
         }
 
         private void barButtonItem5_ItemClick_1(object sender, ItemClickEventArgs e) {
-            using(OpenFileDialog dlg = new OpenFileDialog()) {
-                dlg.Filter = "Xml Files (*.xml)|*.xml|All Files (*.*)|*.*";
+            using(TickerDataDownloadForm dlg = new TickerDataDownloadForm() { Owner = this }) {
                 if(dlg.ShowDialog() != DialogResult.OK)
                     return;
-                string[] items = Path.GetFileNameWithoutExtension(dlg.FileName).Split('_');
-                Exchange exchange = Exchange.Get((ExchangeType)Enum.Parse(typeof(ExchangeType), items[0]));
-                exchange.Connect();
-                string baseCurrency = items[1];
-                string marketCurrency = items[2];
                 TradeHistoryIntensityInfo info = new TradeHistoryIntensityInfo();
-                info.Exchange = exchange;
-                TickerTradeHistoryInfo historyInfo = info.DownloadItem(baseCurrency, marketCurrency);
+                info.Exchange = Exchange.Get(dlg.TickerInfo.Exchange);
+                TickerTradeHistoryInfo historyInfo = info.DownloadItem(dlg.TickerInfo.Ticker.BaseCurrency, dlg.TickerInfo.Ticker.MarketCurrency);
                 if(historyInfo == null) {
                     XtraMessageBox.Show("Error downloading ticker trade history");
                     return;
