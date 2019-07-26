@@ -102,6 +102,9 @@ namespace Crypto.UI.Forms {
                 if(info.IsChartData)
                     return;
                 info.Value = view.GetFocusedRow();
+                foreach(var item in info.Children) {
+                    item.Value = info.Value;
+                }
                 ShowChartForm(info);
             }
         }

@@ -31,6 +31,7 @@ using Crypto.Core.Exchanges.Base;
 using Crypto.Core.Helpers;
 using System.IO.Compression;
 using System.IO.Packaging;
+using System.Threading;
 
 namespace CryptoMarketClient {
     public partial class MainForm : DevExpress.XtraBars.Ribbon.RibbonForm {
@@ -653,23 +654,62 @@ namespace CryptoMarketClient {
             form.Show();
         }
 
+        protected Thread TradeHistoryCalculationThread { get; set; }
         private void biAnalyseTradeHistory_ItemClick(object sender, ItemClickEventArgs e) {
             this.dpLog.Visibility = DockVisibility.Visible;
             Application.DoEvents();
-            TradeHistoryIntensityInfo info = new TradeHistoryIntensityInfo() {
-                Exchange = PoloniexExchange.Default,
-                BaseCurrencies = new string[] { "BTC", "ETH" }
-            };
-            info.TickerAdded += (d, ee) => {
-                Application.DoEvents();
-            };
-            if(!info.Calculate()) {
-                XtraMessageBox.Show("Error calculating volatility");
+            if(TradeHistoryCalculationThread != null) {
                 return;
             }
+            TradeHistoryCalculationThread = new Thread(() => {
+                TradeHistoryIntensityInfo info = new TradeHistoryIntensityInfo() {
+                    Exchange = PoloniexExchange.Default,
+                    BaseCurrencies = new string[] { "USDT" }
+                };
+                info.TickerAdded += (d, ee) => {
+                    Application.DoEvents();
+                };
+                if(!info.Calculate()) {
+                    BeginInvoke(new Action<string>(OnError), new object[] { "Error calculating volatility" });
+                    return;
+                }
+                BeginInvoke(new Action<TradeHistoryIntensityInfo>(OnTradeHistoryInfoCalculated), new object[] { info });
+            });
+            TradeHistoryCalculationThread.Start();
+        }
+        void OnTradeHistoryInfoCalculated(TradeHistoryIntensityInfo info) {
             DataVisualiserForm form = new DataVisualiserForm();
             form.Visual = info;
             form.Show();
+        }
+        void OnError(string text) {
+            XtraMessageBox.Show(text);
+        }
+
+        private void barButtonItem5_ItemClick_1(object sender, ItemClickEventArgs e) {
+            using(OpenFileDialog dlg = new OpenFileDialog()) {
+                dlg.Filter = "Xml Files (*.xml)|*.xml|All Files (*.*)|*.*";
+                if(dlg.ShowDialog() != DialogResult.OK)
+                    return;
+                string[] items = Path.GetFileNameWithoutExtension(dlg.FileName).Split('_');
+                Exchange exchange = Exchange.Get((ExchangeType)Enum.Parse(typeof(ExchangeType), items[0]));
+                exchange.Connect();
+                string baseCurrency = items[1];
+                string marketCurrency = items[2];
+                TradeHistoryIntensityInfo info = new TradeHistoryIntensityInfo();
+                info.Exchange = exchange;
+                TickerTradeHistoryInfo historyInfo = info.DownloadItem(baseCurrency, marketCurrency);
+                if(historyInfo == null) {
+                    XtraMessageBox.Show("Error downloading ticker trade history");
+                    return;
+                }
+                info.Items.Add(historyInfo);
+                info.Result.Add(historyInfo);
+
+                DataVisualiserForm form = new DataVisualiserForm();
+                form.Visual = info;
+                form.Show();
+            }
         }
     }
 }

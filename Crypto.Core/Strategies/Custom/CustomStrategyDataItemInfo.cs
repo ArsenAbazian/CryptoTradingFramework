@@ -154,7 +154,8 @@ namespace Crypto.Core.Strategies {
             get {
                 if(list == null) {
                     list = new List<StrategyDataItemInfo>();
-                    list.Add(this);
+                    if(Children.Count == 0)
+                        list.Add(this);
                     list.AddRange(Children);
                 }
                 return list;

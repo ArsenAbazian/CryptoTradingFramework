@@ -9,6 +9,45 @@ using System.Threading.Tasks;
 
 namespace Crypto.Core.Helpers {
     public static class HistogrammCalculator {
+        public static TimeBaseValue[] CalculateByTime<T>(ResizeableArray<T> array, string timeField, TimeSpan interval) {
+            if(array.Count == 0)
+                return new TimeBaseValue[0];
+            DateTime min = GetMinTime(array, timeField);
+            DateTime max = GetMaxTime(array, timeField);
+            int count = (int)((max - min).TotalMilliseconds / interval.TotalMilliseconds + 0.5);
+            TimeBaseValue[] list = new TimeBaseValue[count + 1];
+            PropertyInfo pi = array[0].GetType().GetProperty(timeField, BindingFlags.Instance | BindingFlags.Public);
+            double k = 1.0 / interval.TotalMilliseconds;
+            for(int i = 0; i < list.Length; i++) {
+                list[i] = new TimeBaseValue() { Time = min.AddMilliseconds((int)i * interval.TotalMilliseconds)};
+            }
+            
+            for(int i = 0; i < array.Count; i++) {
+                DateTime time = (DateTime)pi.GetValue(array[i]);
+                int index = (int)((time - min).TotalMilliseconds * k + 0.5);
+                list[index].Value++;
+            }
+            return list;
+        }
+
+        public static double[] ToDouble(TimeBaseValue[] list) {
+            return list.Select((i) => i.Value).ToArray();
+        }
+
+        private static DateTime GetMaxTime<T>(ResizeableArray<T> dataSource, string field) {
+            if(dataSource.Count == 0)
+                return DateTime.MinValue;
+            PropertyInfo pi = dataSource[0].GetType().GetProperty(field, BindingFlags.Instance | BindingFlags.Public);
+            return dataSource.Max(i => (DateTime)pi.GetValue(i));
+        }
+
+        private static DateTime GetMinTime<T>(ResizeableArray<T> dataSource, string field) {
+            if(dataSource.Count == 0)
+                return DateTime.MinValue;
+            PropertyInfo pi = dataSource[0].GetType().GetProperty(field, BindingFlags.Instance | BindingFlags.Public);
+            return dataSource.Min(i => (DateTime)pi.GetValue(i));
+        }
+
         public static ArgumentValue[] Calculate(object dataSource, string fieldName, double clasterizationWidth) {
             if(dataSource is double[])
                 return Calculate((double[])dataSource, clasterizationWidth);

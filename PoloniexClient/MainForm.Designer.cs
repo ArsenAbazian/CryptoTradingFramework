@@ -88,9 +88,12 @@
             this.bsCapture = new DevExpress.XtraBars.BarSubItem();
             this.bbGrabData = new DevExpress.XtraBars.BarButtonItem();
             this.bbCompressAndSend = new DevExpress.XtraBars.BarButtonItem();
-            this.bbCalculateAtr = new DevExpress.XtraBars.BarButtonItem();
             this.biActiveConnections = new DevExpress.XtraBars.BarButtonItem();
             this.biCheckTelegram = new DevExpress.XtraBars.BarButtonItem();
+            this.barSubItem1 = new DevExpress.XtraBars.BarSubItem();
+            this.bbCalculateAtr = new DevExpress.XtraBars.BarButtonItem();
+            this.biAnalyseTradeHistory = new DevExpress.XtraBars.BarButtonItem();
+            this.biAnalyseSingleTrade = new DevExpress.XtraBars.BarButtonItem();
             this.sbExchanges = new DevExpress.XtraBars.BarSubItem();
             this.ribbonPageCategory1 = new DevExpress.XtraBars.Ribbon.RibbonPageCategory();
             this.ribbonPage2 = new DevExpress.XtraBars.Ribbon.RibbonPage();
@@ -121,7 +124,6 @@
             this.logMessagesControl2 = new CryptoMarketClient.LogMessagesControl();
             this.ribbonPage7 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPage8 = new DevExpress.XtraBars.Ribbon.RibbonPage();
-            this.biAnalyseTradeHistory = new DevExpress.XtraBars.BarButtonItem();
             ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemSpinEdit1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemSpinEdit2)).BeginInit();
@@ -189,10 +191,12 @@
             this.biActiveConnections,
             this.biCheckTelegram,
             this.bbCalculateAtr,
-            this.biAnalyseTradeHistory});
+            this.biAnalyseTradeHistory,
+            this.barSubItem1,
+            this.biAnalyseSingleTrade});
             this.ribbonControl1.Location = new System.Drawing.Point(0, 0);
-            this.ribbonControl1.Margin = new System.Windows.Forms.Padding(12, 12, 12, 12);
-            this.ribbonControl1.MaxItemId = 54;
+            this.ribbonControl1.Margin = new System.Windows.Forms.Padding(12);
+            this.ribbonControl1.MaxItemId = 56;
             this.ribbonControl1.MdiMergeStyle = DevExpress.XtraBars.Ribbon.RibbonMdiMergeStyle.Always;
             this.ribbonControl1.Name = "ribbonControl1";
             this.ribbonControl1.PageCategories.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageCategory[] {
@@ -550,11 +554,11 @@
             new DevExpress.XtraBars.LinkPersistInfo(this.bbShowYourTotalDeposit),
             new DevExpress.XtraBars.LinkPersistInfo(this.btShowApiKeys),
             new DevExpress.XtraBars.LinkPersistInfo(this.bsCapture),
-            new DevExpress.XtraBars.LinkPersistInfo(this.bbCalculateAtr),
             new DevExpress.XtraBars.LinkPersistInfo(this.biActiveConnections),
             new DevExpress.XtraBars.LinkPersistInfo(this.biLog),
             new DevExpress.XtraBars.LinkPersistInfo(this.biCheckTelegram),
-            new DevExpress.XtraBars.LinkPersistInfo(this.biAnalyseTradeHistory)});
+            new DevExpress.XtraBars.LinkPersistInfo(this.barSubItem1),
+            new DevExpress.XtraBars.LinkPersistInfo(this.biAnalyseSingleTrade)});
             this.bsTools.Name = "bsTools";
             // 
             // bsCapture
@@ -583,13 +587,6 @@
             this.bbCompressAndSend.Name = "bbCompressAndSend";
             this.bbCompressAndSend.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bbCompressAndSend_ItemClick);
             // 
-            // bbCalculateAtr
-            // 
-            this.bbCalculateAtr.Caption = "Calculate Volatility (ATR)";
-            this.bbCalculateAtr.Id = 52;
-            this.bbCalculateAtr.Name = "bbCalculateAtr";
-            this.bbCalculateAtr.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bbCalculateAtr_ItemClick);
-            // 
             // biActiveConnections
             // 
             this.biActiveConnections.Caption = "Active Connections";
@@ -605,6 +602,36 @@
             this.biCheckTelegram.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("biCheckTelegram.ImageOptions.SvgImage")));
             this.biCheckTelegram.Name = "biCheckTelegram";
             this.biCheckTelegram.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.biCheckTelegram_ItemClick);
+            // 
+            // barSubItem1
+            // 
+            this.barSubItem1.Caption = "Downloads";
+            this.barSubItem1.Id = 54;
+            this.barSubItem1.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
+            new DevExpress.XtraBars.LinkPersistInfo(this.bbCalculateAtr),
+            new DevExpress.XtraBars.LinkPersistInfo(this.biAnalyseTradeHistory)});
+            this.barSubItem1.Name = "barSubItem1";
+            // 
+            // bbCalculateAtr
+            // 
+            this.bbCalculateAtr.Caption = "Download Candlesticks / Calculate Volatility (ATR)";
+            this.bbCalculateAtr.Id = 52;
+            this.bbCalculateAtr.Name = "bbCalculateAtr";
+            this.bbCalculateAtr.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bbCalculateAtr_ItemClick);
+            // 
+            // biAnalyseTradeHistory
+            // 
+            this.biAnalyseTradeHistory.Caption = "Download TradeHistory / Analyze";
+            this.biAnalyseTradeHistory.Id = 53;
+            this.biAnalyseTradeHistory.Name = "biAnalyseTradeHistory";
+            this.biAnalyseTradeHistory.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.biAnalyseTradeHistory_ItemClick);
+            // 
+            // biAnalyseSingleTrade
+            // 
+            this.biAnalyseSingleTrade.Caption = "Analyze Trade History";
+            this.biAnalyseSingleTrade.Id = 55;
+            this.biAnalyseSingleTrade.Name = "biAnalyseSingleTrade";
+            this.biAnalyseSingleTrade.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItem5_ItemClick_1);
             // 
             // sbExchanges
             // 
@@ -757,7 +784,7 @@
             // 
             this.ribbonStatusBar1.AutoHeight = true;
             this.ribbonStatusBar1.Location = new System.Drawing.Point(0, 1036);
-            this.ribbonStatusBar1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.ribbonStatusBar1.Margin = new System.Windows.Forms.Padding(6);
             this.ribbonStatusBar1.Name = "ribbonStatusBar1";
             this.ribbonStatusBar1.Ribbon = this.ribbonControl1;
             this.ribbonStatusBar1.Size = new System.Drawing.Size(1930, 62);
@@ -843,13 +870,6 @@
             this.ribbonPage8.Name = "ribbonPage8";
             this.ribbonPage8.Text = "ribbonPage8";
             // 
-            // biAnalyseTradeHistory
-            // 
-            this.biAnalyseTradeHistory.Caption = "Analyze TradeHistory";
-            this.biAnalyseTradeHistory.Id = 53;
-            this.biAnalyseTradeHistory.Name = "biAnalyseTradeHistory";
-            this.biAnalyseTradeHistory.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.biAnalyseTradeHistory_ItemClick);
-            // 
             // MainForm
             // 
             this.AllowFormGlass = DevExpress.Utils.DefaultBoolean.False;
@@ -859,7 +879,7 @@
             this.Controls.Add(this.ribbonStatusBar1);
             this.Controls.Add(this.ribbonControl1);
             this.IsMdiContainer = true;
-            this.Margin = new System.Windows.Forms.Padding(12, 12, 12, 12);
+            this.Margin = new System.Windows.Forms.Padding(12);
             this.Name = "MainForm";
             this.Ribbon = this.ribbonControl1;
             this.StatusBar = this.ribbonStatusBar1;
@@ -962,6 +982,8 @@
         private LogMessagesControl logMessagesControl2;
         private DevExpress.XtraBars.BarButtonItem bbCalculateAtr;
         private DevExpress.XtraBars.BarButtonItem biAnalyseTradeHistory;
+        private DevExpress.XtraBars.BarSubItem barSubItem1;
+        private DevExpress.XtraBars.BarButtonItem biAnalyseSingleTrade;
     }
 }
 
