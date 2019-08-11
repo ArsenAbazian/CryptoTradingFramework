@@ -661,6 +661,7 @@ namespace CryptoMarketClient {
             if(TradeHistoryCalculationThread != null) {
                 return;
             }
+            DownloadCanceled = false;
             TradeHistoryCalculationThread = new Thread(() => {
                 TradeHistoryIntensityInfo info = new TradeHistoryIntensityInfo() {
                     Exchange = PoloniexExchange.Default,
@@ -678,7 +679,7 @@ namespace CryptoMarketClient {
             TradeHistoryCalculationThread.Start();
         }
         void OnTradeHistoryInfoCalculated(TradeHistoryIntensityInfo info) {
-            DataVisualiserForm form = new DataVisualiserForm();
+            StrategyDataForm form = new StrategyDataForm();
             form.Visual = info;
             form.Show();
         }
@@ -686,13 +687,32 @@ namespace CryptoMarketClient {
             XtraMessageBox.Show(text);
         }
 
+        protected bool DownloadCanceled { get; set; }
+        protected DownloadProgressForm ProgressForm { get; set; }
         private void barButtonItem5_ItemClick_1(object sender, ItemClickEventArgs e) {
             using(TickerDataDownloadForm dlg = new TickerDataDownloadForm() { Owner = this }) {
                 if(dlg.ShowDialog() != DialogResult.OK)
                     return;
+                DownloadCanceled = false;
                 TradeHistoryIntensityInfo info = new TradeHistoryIntensityInfo();
+                info.DownloadProgressChanged += OnTickerDownloadProgressChanged;
                 info.Exchange = Exchange.Get(dlg.TickerInfo.Exchange);
-                TickerTradeHistoryInfo historyInfo = info.DownloadItem(dlg.TickerInfo.Ticker.BaseCurrency, dlg.TickerInfo.Ticker.MarketCurrency);
+                TickerTradeHistoryInfo historyInfo = null;
+                ProgressForm = new DownloadProgressForm();
+                ProgressForm.Cancel += (d, ee) => {
+                    DownloadCanceled = true;
+                };
+                
+                Thread t = new Thread(() => {
+                    historyInfo = info.DownloadItem(dlg.TickerInfo.Ticker.BaseCurrency, dlg.TickerInfo.Ticker.MarketCurrency);
+                    BeginInvoke(new MethodInvoker(() => ProgressForm.Close()));
+                });
+                t.Start();
+                ProgressForm.ShowDialog(this);
+                if(DownloadCanceled) {
+                    XtraMessageBox.Show("Downloading Canceled.");
+                    return;
+                }
                 if(historyInfo == null) {
                     XtraMessageBox.Show("Error downloading ticker trade history");
                     return;
@@ -700,10 +720,15 @@ namespace CryptoMarketClient {
                 info.Items.Add(historyInfo);
                 info.Result.Add(historyInfo);
 
-                DataVisualiserForm form = new DataVisualiserForm();
-                form.Visual = info;
-                form.Show();
+                StrategyDataForm dataForm = new StrategyDataForm();
+                dataForm.Visual = info;
+                dataForm.Show();
             }
+        }
+
+        private void OnTickerDownloadProgressChanged(object sender, TickerDownloadProgressEventArgs e) {
+            ProgressForm.SetProgress(e.DownloadText, (int)e.DownloadProgress);
+            e.Cancel = DownloadCanceled;
         }
     }
 }

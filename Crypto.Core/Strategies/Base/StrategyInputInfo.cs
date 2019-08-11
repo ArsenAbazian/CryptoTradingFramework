@@ -1,4 +1,5 @@
 ﻿using CryptoMarketClient;
+using CryptoMarketClient.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -60,6 +61,8 @@ namespace Crypto.Core.Strategies {
         public bool UseTradeHistory { get; set; }
         public bool UseKline { get; set; }
         public int KlineIntervalMin { get; set; }
+        public DateTime StartDate { get; set; } = DateTime.MinValue;
+        public DateTime EndDate { get; set; } = DateTime.MinValue;
         public string TickerSimulationDataFile { get; set; }
 
         public object Clone() {
@@ -72,8 +75,19 @@ namespace Crypto.Core.Strategies {
                 UseKline = this.UseKline,
                 KlineIntervalMin = this.KlineIntervalMin,
                 TickerSimulationDataFile = this.TickerSimulationDataFile,
-                OrderBookDepth = this.OrderBookDepth
+                OrderBookDepth = this.OrderBookDepth,
+                StartDate = this.StartDate,
+                EndDate = this.EndDate
             };
+        }
+
+        public bool AutoUpdateEndTime { get; set; } = true;
+        public void CheckUpdateTime() {
+            if(StartDate == DateTime.MinValue) {
+                StartDate = DateTime.UtcNow.Date.AddDays(-SettingsStore.Default.SimulationSettings.KLineHistoryIntervalDays);
+                EndDate = DateTime.UtcNow.Date;
+                AutoUpdateEndTime = true;
+            }
         }
     }
 }

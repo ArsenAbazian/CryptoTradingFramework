@@ -221,14 +221,22 @@ namespace Crypto.Core.Helpers {
         T IList<T>.this[int index] {
             get { return Items[index]; }
             set {
+                while(index >= Items.Length)
+                    Resize();
                 Items[index] = value;
+                if(index >= Count)
+                    Count = index + 1;
                 RaiseListChanged(new ListChangedEventArgs(ListChangedType.ItemChanged, index));
             }
         }
         public T this[int index] {
             get { return Items[index]; }
             set {
+                while(index >= Items.Length)
+                    Resize();
                 Items[index] = value;
+                if(index >= Count)
+                    Count = index + 1;
                 RaiseListChanged(new ListChangedEventArgs(ListChangedType.ItemChanged, index));
             }
         }

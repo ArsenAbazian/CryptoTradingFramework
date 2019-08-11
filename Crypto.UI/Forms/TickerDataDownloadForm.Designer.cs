@@ -51,6 +51,10 @@ namespace Crypto.UI.Forms {
             this.emptySpaceItem2 = new DevExpress.XtraLayout.EmptySpaceItem();
             this.gridLookUpEdit1View = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.dxErrorProvider1 = new DevExpress.XtraEditors.DXErrorProvider.DXErrorProvider(this.components);
+            this.deStart = new DevExpress.XtraEditors.DateEdit();
+            this.layoutControlItem6 = new DevExpress.XtraLayout.LayoutControlItem();
+            this.deEnd = new DevExpress.XtraEditors.DateEdit();
+            this.layoutControlItem7 = new DevExpress.XtraLayout.LayoutControlItem();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControl1)).BeginInit();
             this.layoutControl1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.leIntervals.Properties)).BeginInit();
@@ -69,6 +73,12 @@ namespace Crypto.UI.Forms {
             ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItem2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridLookUpEdit1View)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dxErrorProvider1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.deStart.Properties.CalendarTimeProperties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.deStart.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem6)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.deEnd.Properties.CalendarTimeProperties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.deEnd.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem7)).BeginInit();
             this.SuspendLayout();
             // 
             // layoutControl1
@@ -78,6 +88,8 @@ namespace Crypto.UI.Forms {
             this.layoutControl1.Controls.Add(this.ceExchanges);
             this.layoutControl1.Controls.Add(this.sbOk);
             this.layoutControl1.Controls.Add(this.simpleButton2);
+            this.layoutControl1.Controls.Add(this.deStart);
+            this.layoutControl1.Controls.Add(this.deEnd);
             this.layoutControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.layoutControl1.Location = new System.Drawing.Point(0, 0);
             this.layoutControl1.Name = "layoutControl1";
@@ -213,7 +225,9 @@ namespace Crypto.UI.Forms {
             this.layoutControlItem5,
             this.emptySpaceItem1,
             this.layoutControlItem4,
-            this.emptySpaceItem2});
+            this.emptySpaceItem2,
+            this.layoutControlItem6,
+            this.layoutControlItem7});
             this.Root.Name = "Root";
             this.Root.Size = new System.Drawing.Size(671, 423);
             this.Root.TextVisible = false;
@@ -275,9 +289,9 @@ namespace Crypto.UI.Forms {
             // emptySpaceItem2
             // 
             this.emptySpaceItem2.AllowHotTrack = false;
-            this.emptySpaceItem2.Location = new System.Drawing.Point(0, 132);
+            this.emptySpaceItem2.Location = new System.Drawing.Point(0, 220);
             this.emptySpaceItem2.Name = "emptySpaceItem2";
-            this.emptySpaceItem2.Size = new System.Drawing.Size(651, 223);
+            this.emptySpaceItem2.Size = new System.Drawing.Size(651, 135);
             this.emptySpaceItem2.TextSize = new System.Drawing.Size(0, 0);
             // 
             // gridLookUpEdit1View
@@ -290,6 +304,50 @@ namespace Crypto.UI.Forms {
             // dxErrorProvider1
             // 
             this.dxErrorProvider1.ContainerControl = this;
+            // 
+            // deStart
+            // 
+            this.deStart.EditValue = null;
+            this.deStart.Location = new System.Drawing.Point(181, 144);
+            this.deStart.Name = "deStart";
+            this.deStart.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.deStart.Properties.CalendarTimeProperties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.deStart.Size = new System.Drawing.Size(478, 40);
+            this.deStart.StyleController = this.layoutControl1;
+            this.deStart.TabIndex = 9;
+            // 
+            // layoutControlItem6
+            // 
+            this.layoutControlItem6.Control = this.deStart;
+            this.layoutControlItem6.Location = new System.Drawing.Point(0, 132);
+            this.layoutControlItem6.Name = "layoutControlItem6";
+            this.layoutControlItem6.Size = new System.Drawing.Size(651, 44);
+            this.layoutControlItem6.Text = "Start Date";
+            this.layoutControlItem6.TextSize = new System.Drawing.Size(166, 25);
+            // 
+            // deEnd
+            // 
+            this.deEnd.EditValue = null;
+            this.deEnd.Location = new System.Drawing.Point(181, 188);
+            this.deEnd.Name = "deEnd";
+            this.deEnd.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.deEnd.Properties.CalendarTimeProperties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.deEnd.Size = new System.Drawing.Size(478, 40);
+            this.deEnd.StyleController = this.layoutControl1;
+            this.deEnd.TabIndex = 10;
+            // 
+            // layoutControlItem7
+            // 
+            this.layoutControlItem7.Control = this.deEnd;
+            this.layoutControlItem7.Location = new System.Drawing.Point(0, 176);
+            this.layoutControlItem7.Name = "layoutControlItem7";
+            this.layoutControlItem7.Size = new System.Drawing.Size(651, 44);
+            this.layoutControlItem7.Text = "End Date";
+            this.layoutControlItem7.TextSize = new System.Drawing.Size(166, 25);
             // 
             // TickerDataDownloadForm
             // 
@@ -319,6 +377,12 @@ namespace Crypto.UI.Forms {
             ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItem2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridLookUpEdit1View)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dxErrorProvider1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.deStart.Properties.CalendarTimeProperties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.deStart.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem6)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.deEnd.Properties.CalendarTimeProperties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.deEnd.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem7)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -347,5 +411,9 @@ namespace Crypto.UI.Forms {
         protected DevExpress.XtraGrid.Columns.GridColumn colBaseCurrency;
         protected DevExpress.XtraGrid.Columns.GridColumn colMarketName;
         protected DevExpress.XtraGrid.Views.Grid.GridView repositoryItemGridLookUpEdit1View;
+        private DateEdit deStart;
+        private DateEdit deEnd;
+        private LayoutControlItem layoutControlItem6;
+        private LayoutControlItem layoutControlItem7;
     }
 }

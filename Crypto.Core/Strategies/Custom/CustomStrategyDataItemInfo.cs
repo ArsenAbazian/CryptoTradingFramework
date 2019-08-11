@@ -10,6 +10,7 @@ using System.Xml.Serialization;
 namespace Crypto.Core.Strategies {
     public interface IStrategyDataItemInfoOwner {
         string Name { get; }
+        Guid Id { get; set; }
         List<StrategyDataItemInfo> DataItemInfos { get; }
         ResizeableArray<object> Items { get; }
         int MeasureUnitMultiplier { get; set; }
@@ -81,6 +82,8 @@ namespace Crypto.Core.Strategies {
         }
         #endregion
 
+        public Guid Id { get; set; } = Guid.NewGuid();
+
         public StrategyDataItemInfo DetailInfo { get; set; }
 
         [XmlIgnore]
@@ -112,6 +115,9 @@ namespace Crypto.Core.Strategies {
             detail.Type = DataType.Numeric;
             detail.DataSource = HistogrammCalculator.Calculate(ds, FieldName, ClasterizationWidth);
             return detail;
+        }
+        public string GetArgumentDataMember() {
+            return ArgumentDataMember == null ? "Time" : ArgumentDataMember;
         }
 
         public double ClasterizationWidth { get; set; }
@@ -166,6 +172,13 @@ namespace Crypto.Core.Strategies {
         public ResizeableArray<object> Items { get; set; }
         public bool IsChartData { get { return Type == DataType.ChartData || Type == DataType.HistogrammData; } }
         public bool Reversed { get; internal set; }
+        public string AxisXName {
+            get {
+                if(Reversed)
+                    return PanelName + "ReversedX";
+                return PanelName + "X";
+            }
+        }
         public string AxisYName {
             get {
                 if(Reversed)

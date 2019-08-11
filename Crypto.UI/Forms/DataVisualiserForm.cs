@@ -49,17 +49,6 @@ namespace Crypto.UI.Forms {
                 ShowTableForm(Visual);
             if(chartItemCount > 0)
                 ShowChartForm(Visual);
-            
-            //visualizer.Visualize(Visual, this.gcData, this.chartControl);
-
-            //if(File.Exists(ChartSettingsFileName)) {
-            //    DetachePoints();
-            //    this.chartControl.LoadFromFile(ChartSettingsFileName);
-            //    AttachPoints();
-            //}
-            //if(this.chartControl.Series.Count == 0)
-            //    this.tpChartPage.Visible = false;
-
         }
 
         private void ShowChartForm(IStrategyDataItemInfoOwner visual) {

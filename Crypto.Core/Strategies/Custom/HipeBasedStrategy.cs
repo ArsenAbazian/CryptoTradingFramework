@@ -239,6 +239,8 @@ namespace Crypto.Core.Strategies.Custom {
             InitializeItems();
         }
 
+        public Guid Id { get; set; } = Guid.NewGuid();
+
         protected virtual void InitializeItems() {
             foreach(TickerCollection t in Strategy.Items) {
                 HipeBaseStrategyArbitrageDataItem item = new HipeBaseStrategyArbitrageDataItem();

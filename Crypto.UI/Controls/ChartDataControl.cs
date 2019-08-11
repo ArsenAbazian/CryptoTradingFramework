@@ -291,19 +291,35 @@ namespace Crypto.UI.Forms {
             PropertyInfo pInfo = item.GetType().GetProperty("Time", BindingFlags.Public | BindingFlags.Instance);
             if(pInfo == null)
                 return;
-            NavigateTo((DateTime)pInfo.GetValue(item));
+            NavigateToValue(pInfo.GetValue(item));
         }
 
-        public void NavigateTo(DateTime time) {
-            DateTime prevMin = (DateTime)((XYDiagram)Chart.Diagram).AxisX.VisualRange.MinValue;
-            DateTime prevMax = (DateTime)((XYDiagram)Chart.Diagram).AxisX.VisualRange.MaxValue;
-            TimeSpan viewPort2 = new TimeSpan((prevMax - prevMin).Ticks / 2);
-            DateTime newMin = time - viewPort2;
-            TimeSpan delta = newMin - prevMin;
-            DateTime newMax = prevMax + delta;
+        public void NavigateToValue(object value) {
+            if(((XYDiagram)Chart.Diagram).AxisX.VisualRange.MinValue is DateTime) {
+                DateTime time = (DateTime)value;
+                DateTime prevMin = (DateTime)((XYDiagram)Chart.Diagram).AxisX.VisualRange.MinValue;
+                DateTime prevMax = (DateTime)((XYDiagram)Chart.Diagram).AxisX.VisualRange.MaxValue;
+                TimeSpan viewPort2 = new TimeSpan((prevMax - prevMin).Ticks / 2);
+                DateTime newMin = time - viewPort2;
+                TimeSpan delta = newMin - prevMin;
+                DateTime newMax = prevMax + delta;
 
-            ((XYDiagram)Chart.Diagram).AxisX.VisualRange.MinValue = newMin;
-            ((XYDiagram)Chart.Diagram).AxisX.VisualRange.MaxValue = newMax;
+                ((XYDiagram)Chart.Diagram).AxisX.VisualRange.MinValue = newMin;
+                ((XYDiagram)Chart.Diagram).AxisX.VisualRange.MaxValue = newMax;
+            }
+            else {
+                return;
+                //double val = (double)value;
+                //double prevMin = (double)((XYDiagram)Chart.Diagram).AxisX.VisualRange.MinValue;
+                //double prevMax = (double)((XYDiagram)Chart.Diagram).AxisX.VisualRange.MaxValue;
+                //double viewPort2 = prevMax - prevMin;
+                //double newMin = val - viewPort2;
+                //double delta = newMin - prevMin;
+                //double newMax = prevMax + delta;
+
+                //((XYDiagram)Chart.Diagram).AxisX.VisualRange.MinValue = newMin;
+                //((XYDiagram)Chart.Diagram).AxisX.VisualRange.MaxValue = newMax;
+            }
         }
 
         protected int navigatableIndex = -1;
@@ -376,7 +392,7 @@ namespace Crypto.UI.Forms {
 
         protected List<AnnotationFilter> FilterValues { get; private set; }
         private void bsEvents_GetItemData(object sender, EventArgs e) {
-            if(this.bsEvents.ItemLinks.Count > 0)
+            if(this.bsEvents.ItemLinks.Count > 0 || Visual == null)
                 return;
             List<StrategyDataItemInfo> aItems = Visual.DataItemInfos.Where(i => i.ChartType == ChartType.Annotation).ToList();
             foreach(StrategyDataItemInfo info in aItems) {

@@ -557,8 +557,7 @@
             new DevExpress.XtraBars.LinkPersistInfo(this.biActiveConnections),
             new DevExpress.XtraBars.LinkPersistInfo(this.biLog),
             new DevExpress.XtraBars.LinkPersistInfo(this.biCheckTelegram),
-            new DevExpress.XtraBars.LinkPersistInfo(this.barSubItem1),
-            new DevExpress.XtraBars.LinkPersistInfo(this.biAnalyseSingleTrade)});
+            new DevExpress.XtraBars.LinkPersistInfo(this.barSubItem1)});
             this.bsTools.Name = "bsTools";
             // 
             // bsCapture
@@ -609,7 +608,8 @@
             this.barSubItem1.Id = 54;
             this.barSubItem1.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
             new DevExpress.XtraBars.LinkPersistInfo(this.bbCalculateAtr),
-            new DevExpress.XtraBars.LinkPersistInfo(this.biAnalyseTradeHistory)});
+            new DevExpress.XtraBars.LinkPersistInfo(this.biAnalyseTradeHistory),
+            new DevExpress.XtraBars.LinkPersistInfo(this.biAnalyseSingleTrade)});
             this.barSubItem1.Name = "barSubItem1";
             // 
             // bbCalculateAtr
@@ -621,14 +621,14 @@
             // 
             // biAnalyseTradeHistory
             // 
-            this.biAnalyseTradeHistory.Caption = "Download TradeHistory / Analyze";
+            this.biAnalyseTradeHistory.Caption = "Download Tickers Data / Calculate Intensity";
             this.biAnalyseTradeHistory.Id = 53;
             this.biAnalyseTradeHistory.Name = "biAnalyseTradeHistory";
             this.biAnalyseTradeHistory.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.biAnalyseTradeHistory_ItemClick);
             // 
             // biAnalyseSingleTrade
             // 
-            this.biAnalyseSingleTrade.Caption = "Analyze Trade History";
+            this.biAnalyseSingleTrade.Caption = "Download Single Ticker Data";
             this.biAnalyseSingleTrade.Id = 55;
             this.biAnalyseSingleTrade.Name = "biAnalyseSingleTrade";
             this.biAnalyseSingleTrade.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItem5_ItemClick_1);

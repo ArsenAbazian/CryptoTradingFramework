@@ -193,7 +193,7 @@ namespace Crypto.Core.Indicators {
             return max;
         }
 
-        public ArgumentValue[] CalcHistogramm(int count) {
+        public ResizeableArray<ArgumentValue> CalcHistogramm(int count) {
             return HistogrammCalculator.Calculate(Result, count);
         }
     }

@@ -22,6 +22,10 @@ namespace Crypto.UI.Forms {
 
             this.ceExchanges.Properties.Items.AddEnum<ExchangeType>();
             this.ceExchanges.EditValue = ExchangeType.Poloniex;
+            this.deStart.Properties.MinValue = DateTime.UtcNow.AddMonths(-12).Date;
+            this.deEnd.Properties.MaxValue = DateTime.UtcNow;
+            this.deEnd.EditValue = this.deEnd.Properties.MaxValue;
+            this.deStart.EditValue = this.deEnd.Properties.MaxValue.AddMonths(-1);
         }
 
         private void sbOk_Click(object sender, EventArgs e) {
@@ -35,9 +39,22 @@ namespace Crypto.UI.Forms {
                 this.dxErrorProvider1.SetError(this.cbExchangeTickers, "Ticker not selected.");
             if(this.leIntervals.EditValue == null)
                 this.dxErrorProvider1.SetError(this.leIntervals, "KLine Interval not selectged");
+            if(this.deEnd.DateTime <= this.deStart.DateTime)
+                this.dxErrorProvider1.SetError(this.deStart, "Start Date should be less than End Date");
             if(this.dxErrorProvider1.HasErrors)
                 return;
-            TickerInfo = new TickerInputInfo() { Exchange = type, KlineIntervalMin = ((int)leIntervals.EditValue), Ticker = t, TickerName = t.Name, UseKline = true, UseTradeHistory = true };
+            TickerInfo = new TickerInputInfo() {
+                Exchange = type,
+                KlineIntervalMin = ((int)leIntervals.EditValue),
+                Ticker = t,
+                TickerName = t.Name,
+                UseKline = true,
+                UseTradeHistory = true,
+                StartDate = this.deStart.DateTime,
+                EndDate = this.deEnd.DateTime,
+                AutoUpdateEndTime = false
+            };
+
             DialogResult = DialogResult.OK;
             Close();
         }

@@ -207,7 +207,7 @@ namespace CryptoMarketClient.Strategies {
         private void gridView1_RowStyle(object sender, DevExpress.XtraGrid.Views.Grid.RowStyleEventArgs e) {
             if(this.gridView1.FocusedRowHandle != e.RowHandle)
                 return;
-            e.Appearance.BackColor = Color.FromArgb(0x10, this.gridView1.PaintAppearance.FocusedRow.BackColor);
+            e.Appearance.BackColor = Color.FromArgb(0x20, this.gridView1.PaintAppearance.FocusedRow.BackColor);
             e.HighPriority = true;
         }
 
@@ -273,7 +273,7 @@ namespace CryptoMarketClient.Strategies {
             StrategyConfigurationManager.Default.ShowData(cloned);
         }
 
-        private void OnSimulationProviderDownloadProgressChanged(object sender, EventArgs e) {
+        private void OnSimulationProviderDownloadProgressChanged(object sender, TickerDownloadProgressEventArgs e) {
             this.beSimulationProgress.EditValue = (int)(((SimulationStrategyDataProvider)sender).DownloadProgress / 100.0 * this.repositoryItemProgressBar1.Maximum);
             Application.DoEvents();
         }

@@ -11,6 +11,8 @@ using System.Threading.Tasks;
 
 namespace Crypto.Core.Helpers {
     public class TickersVolatilityInfo : IStrategyDataItemInfoOwner {
+        public Guid Id { get; set; } = Guid.NewGuid();
+
         public Exchange Exchange { get; set; }
         public string[] BaseCurrencies { get; set; }
         public string[] MarketCurrencies { get; set; }
@@ -164,7 +166,7 @@ namespace Crypto.Core.Helpers {
         }
 
         public double[] HistogrammDouble { get; set; }
-        public ArgumentValue[] Histogramm { get; set; }
+        public ResizeableArray<ArgumentValue> Histogramm { get; set; }
         public AtrIndicator Indicator { get; private set; }
         public double MathExp { get; set; }
         public double Deviation { get; set; }

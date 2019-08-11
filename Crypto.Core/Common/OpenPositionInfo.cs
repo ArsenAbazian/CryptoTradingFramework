@@ -188,7 +188,10 @@ namespace Crypto.Core.Common {
         public OpenPositionVisualDataProvider(ResizeableArray<OpenPositionInfo> items) {
             Items = items;
             InitializeDataItemInfos();
+            Id = Guid.NewGuid();
         }
+
+        public Guid Id { get; set; }
 
         protected virtual void InitializeDataItemInfos() {
             StrategyDataItemInfo.TimeItem(DataItemInfos, "Mark").Visibility = DataVisibility.Table;

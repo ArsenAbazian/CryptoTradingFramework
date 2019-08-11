@@ -9,16 +9,16 @@ using System.Threading.Tasks;
 
 namespace Crypto.Core.Helpers {
     public static class HistogrammCalculator {
-        public static TimeBaseValue[] CalculateByTime<T>(ResizeableArray<T> array, string timeField, TimeSpan interval) {
+        public static ResizeableArray<TimeBaseValue> CalculateByTime<T>(ResizeableArray<T> array, string timeField, TimeSpan interval) {
             if(array.Count == 0)
-                return new TimeBaseValue[0];
+                return new ResizeableArray<TimeBaseValue>();
             DateTime min = GetMinTime(array, timeField);
             DateTime max = GetMaxTime(array, timeField);
             int count = (int)((max - min).TotalMilliseconds / interval.TotalMilliseconds + 0.5);
-            TimeBaseValue[] list = new TimeBaseValue[count + 1];
+            ResizeableArray<TimeBaseValue> list = new ResizeableArray<TimeBaseValue>(count + 1);
             PropertyInfo pi = array[0].GetType().GetProperty(timeField, BindingFlags.Instance | BindingFlags.Public);
             double k = 1.0 / interval.TotalMilliseconds;
-            for(int i = 0; i < list.Length; i++) {
+            for(int i = 0; i < count + 1; i++) {
                 list[i] = new TimeBaseValue() { Time = min.AddMilliseconds((int)i * interval.TotalMilliseconds)};
             }
             
@@ -30,7 +30,7 @@ namespace Crypto.Core.Helpers {
             return list;
         }
 
-        public static double[] ToDouble(TimeBaseValue[] list) {
+        public static double[] ToDouble(ResizeableArray<TimeBaseValue> list) {
             return list.Select((i) => i.Value).ToArray();
         }
 
@@ -48,7 +48,7 @@ namespace Crypto.Core.Helpers {
             return dataSource.Min(i => (DateTime)pi.GetValue(i));
         }
 
-        public static ArgumentValue[] Calculate(object dataSource, string fieldName, double clasterizationWidth) {
+        public static ResizeableArray<ArgumentValue> Calculate(object dataSource, string fieldName, double clasterizationWidth) {
             if(dataSource is double[])
                 return Calculate((double[])dataSource, clasterizationWidth);
             if(dataSource is ResizeableArray<TimeBaseValue>)
@@ -58,7 +58,7 @@ namespace Crypto.Core.Helpers {
             return null;
         }
 
-        public static ArgumentValue[] Calculate(ResizeableArray<object> dataSource, string valueField, double clasterizationWidth) {
+        public static ResizeableArray<ArgumentValue> Calculate(ResizeableArray<object> dataSource, string valueField, double clasterizationWidth) {
             double minX = GetMin(dataSource, valueField);
             double maxX = GetMax(dataSource, valueField);
             int count = 100;
@@ -111,7 +111,7 @@ namespace Crypto.Core.Helpers {
                 });
         }
 
-        public static ArgumentValue[] Calculate(ResizeableArray<object> data, string valueField, int count) {
+        public static ResizeableArray<ArgumentValue> Calculate(ResizeableArray<object> data, string valueField, int count) {
             if(data.Count == 0)
                 return null;
             double minX = GetMin(data, valueField);
@@ -122,7 +122,7 @@ namespace Crypto.Core.Helpers {
             maxX = ((int)(maxX / step + 0.5)) * step;
 
             count = (int)((maxX - minX) / step);
-            ArgumentValue[] res = new ArgumentValue[count + 1];
+            ResizeableArray<ArgumentValue> res = new ResizeableArray<ArgumentValue>(count + 1);
             for(int i = 0; i < count + 1; i++) {
                 res[i] = new ArgumentValue() { X = minX + i * step };
             }
@@ -132,7 +132,7 @@ namespace Crypto.Core.Helpers {
                 if(double.IsNaN(val))
                     continue;
                 int index = (int)((val - minX) / step + 0.5);
-                if(index >= res.Length)
+                if(index >= res.Count)
                     continue;
                 res[index].Y += 1.0;
             }
@@ -143,14 +143,14 @@ namespace Crypto.Core.Helpers {
             return res;
         }
 
-        public static ArgumentValue[] Calculate(double[] data, double clasterizationWidth) {
+        public static ResizeableArray<ArgumentValue> Calculate(double[] data, double clasterizationWidth) {
             double minX = data.Min();
             double maxX = data.Max();
             int count = (int)((maxX - minX) / clasterizationWidth) + 1;
             return Calculate(data, count);
         }
 
-        public static ArgumentValue[] Calculate(double[] data, int count) {
+        public static ResizeableArray<ArgumentValue> Calculate(double[] data, int count) {
             double minX = data.Min();
             double maxX = data.Max();
             double step = (maxX - minX) / count;
@@ -159,7 +159,7 @@ namespace Crypto.Core.Helpers {
             maxX = ((int)(maxX / step + 0.5)) * step;
 
             count = (int)((maxX - minX) / step);
-            ArgumentValue[] res = new ArgumentValue[count + 1];
+            ResizeableArray<ArgumentValue> res = new ResizeableArray<ArgumentValue>(count + 1);
             for(int i = 0; i < count + 1; i++) {
                 res[i] = new ArgumentValue() { X = minX + i * step };
             }
@@ -176,25 +176,25 @@ namespace Crypto.Core.Helpers {
             return res;
         }
 
-        public static ArgumentValue[] Calculate(ResizeableArray<TimeBaseValue> data, double clasterizationWidth) {
+        public static ResizeableArray<ArgumentValue> Calculate(ResizeableArray<TimeBaseValue> data, double clasterizationWidth) {
             double minX = GetMin(data);
             double maxX = GetMax(data);
             int count = (int)((maxX - minX) / clasterizationWidth) + 1;
             return Calculate(data, count);
         }
 
-        public static ArgumentValue[] Calculate(ResizeableArray<TimeBaseValue> data, int count) {
+        public static ResizeableArray<ArgumentValue> Calculate(ResizeableArray<TimeBaseValue> data, int count) {
             double minX = GetMin(data);
             double maxX = GetMax(data);
             if(double.IsNaN(minX) || double.IsNaN(maxX))
-                return new ArgumentValue[0];
+                return new ResizeableArray<ArgumentValue>();
             double step = (maxX - minX) / count;
 
             minX = ((int)(minX / step)) * step;
             maxX = ((int)(maxX / step + 0.5)) * step;
 
             count = (int)((maxX - minX) / step);
-            ArgumentValue[] res = new ArgumentValue[count + 1];
+            ResizeableArray<ArgumentValue> res = new ResizeableArray<ArgumentValue>(count + 1);
             for(int i = 0; i < count + 1; i++) {
                 res[i] = new ArgumentValue() { X = minX + i * step };
             }

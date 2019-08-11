@@ -63,25 +63,26 @@ namespace Crypto.Core.Strategies {
         public DateTime EndTime { get; private set; }
         public double SimulationProgress { get; set; } = 0.0;
         public double DownloadProgress { get; set; } = 0.0;
-        public event EventHandler DownloadProgressChanged;
+        public event TickerDownloadProgressEventHandler DownloadProgressChanged;
+        public string DownloadText { get; set; } = "Downloading...";
 
         public ResizeableArray<TradeInfoItem> DownloadTradeHistory(TickerInputInfo info, DateTime time) {
             CachedTradeHistory savedData = new CachedTradeHistory() { Exchange = info.Exchange, TickerName = info.TickerName };
             CachedTradeHistory cachedData = CachedTradeHistory.FromFile(CachedTradeHistory.Directory + "\\" + ((ISupportSerialization)savedData).FileName);
+            info.CheckUpdateTime();
             if(cachedData != null) {
-                // outdated
-                if(SettingsStore.Default.SimulationSettings.StartTime.Date == cachedData.Items[0].Time.Date)
+                if(info.StartDate != DateTime.MinValue && info.StartDate == cachedData.Items[0].Time.Date && info.EndDate.AddDays(-1) <= cachedData.Items.Last().Time.Date)
                     return cachedData.Items;
             }
 
-            DateTime start = DateTime.UtcNow.Date;
+            DateTime start = info.StartDate.Date;
             int intervalInSeconds = info.KlineIntervalMin * 60;
-            start = start.AddDays(-SettingsStore.Default.SimulationSettings.KLineHistoryIntervalDays);
             DateTime origin = start;
-            DateTime end = DateTime.UtcNow;
+            DateTime end = info.EndDate.Date;
             ResizeableArray<TradeInfoItem> res = new ResizeableArray<TradeInfoItem>();
             List<ResizeableArray<TradeInfoItem>> tmpList = new List<ResizeableArray<TradeInfoItem>>();
             DownloadProgress = 0.0;
+            DownloadText = "Donwloading Trade History Data for " + info.Exchange + ":" + info.TickerName;
 
             while(end > start) {
                 ResizeableArray<TradeInfoItem> data = info.Ticker.Exchange.GetTrades(info.Ticker, start, end);
@@ -89,7 +90,9 @@ namespace Crypto.Core.Strategies {
                     break;
                 tmpList.Add(data);
                 DownloadProgress = 100 - (100 * (data.Last().Time - origin).TotalMinutes / (DateTime.UtcNow - origin).TotalMinutes);
-                RaiseDownloadProgressChanged();
+                var args = RaiseDownloadProgressChanged();
+                if(args.Cancel)
+                    return null;
                 Thread.Sleep(300);
                 end = data.Last().Time.AddMilliseconds(-1);
             }
@@ -286,31 +289,31 @@ namespace Crypto.Core.Strategies {
         public virtual ResizeableArray<CandleStickData> DownloadCandleStickData(TickerInputInfo info) {
             CachedCandleStickData savedData = new CachedCandleStickData() { Exchange = info.Exchange, TickerName = info.TickerName, IntervalMin = info.KlineIntervalMin };
             CachedCandleStickData cachedData = CachedCandleStickData.FromFile(CachedCandleStickData.Directory + "\\" + ((ISupportSerialization)savedData).FileName);
+            info.CheckUpdateTime();
             if(cachedData != null) {
-                // outdated
-                if(SettingsStore.Default.SimulationSettings.StartTime.Date == cachedData.Items[0].Time.Date)
+                if(info.StartDate != DateTime.MinValue && info.StartDate == cachedData.Items[0].Time.Date && info.EndDate == cachedData.Items.Last().Time.Date)
                     return cachedData.Items;
             }
 
-            DateTime start = DateTime.UtcNow.Date;
+            DateTime start = info.StartDate;
             int intervalInSeconds = info.KlineIntervalMin * 60;
-            //int candleStickCount = 10000;
-            start = start.AddDays(-SettingsStore.Default.SimulationSettings.KLineHistoryIntervalDays);// .AddSeconds(-intervalInSeconds * candleStickCount);
             ResizeableArray<CandleStickData> res = new ResizeableArray<CandleStickData>();
-            //List<ResizeableArray<CandleStickData>> splitData = new List<ResizeableArray<CandleStickData>>();
             int deltaCount = 500;
             long minCount = (long)(SettingsStore.Default.SimulationSettings.KLineHistoryIntervalDays) * 24 * 60;
             long candleStickCount = minCount / info.KlineIntervalMin;
             long pageCount = candleStickCount / deltaCount;
             int pageIndex = 0;
             DownloadProgress = 0.0;
+            DownloadText = "Donwloading CandleStick Data for " + info.Exchange + ":" + info.TickerName;
 
             if(!info.Ticker.Exchange.SupportCandleSticksRange) {
                 ResizeableArray<CandleStickData> data = info.Ticker.GetCandleStickData(info.KlineIntervalMin, start, intervalInSeconds * deltaCount);
                 if(data == null)
                     return null;
                 DownloadProgress = 100;
-                RaiseDownloadProgressChanged();
+                var args = RaiseDownloadProgressChanged();
+                if(args.Cancel)
+                    return null;
 
                 cachedData = savedData;
                 cachedData.Items = data;
@@ -318,8 +321,7 @@ namespace Crypto.Core.Strategies {
                 return data;
             }
 
-            //for(int i = 0; i < candleStickCount / deltaCount; i++) {
-            while(start.Date < DateTime.UtcNow.Date) { 
+            while(start.Date < info.EndDate.Date) { 
                 ResizeableArray<CandleStickData> data = info.Ticker.GetCandleStickData(info.KlineIntervalMin, start, intervalInSeconds * deltaCount);
                 if(data == null || data.Count == 0) {
                     start = start.AddSeconds(intervalInSeconds * deltaCount);
@@ -338,9 +340,13 @@ namespace Crypto.Core.Strategies {
             return res;   
         }
 
-        private void RaiseDownloadProgressChanged() {
-            if(DownloadProgressChanged != null)
-                DownloadProgressChanged(this, EventArgs.Empty);
+        private TickerDownloadProgressEventArgs RaiseDownloadProgressChanged() {
+            if(DownloadProgressChanged != null) {
+                TickerDownloadProgressEventArgs res = new TickerDownloadProgressEventArgs() { DownloadText = DownloadText, DownloadProgress = DownloadProgress };
+                DownloadProgressChanged(this, res);
+                return res;
+            }
+            return null;
         }
 
         protected Dictionary<object, StrategySimulationData> SimulationData { get; } = new Dictionary<object, StrategySimulationData>();
@@ -545,4 +551,11 @@ namespace Crypto.Core.Strategies {
             return res;
         }
     }
+
+    public class TickerDownloadProgressEventArgs {
+        public string DownloadText { get; set; }
+        public double DownloadProgress { get; set; }
+        public bool Cancel { get; set; } = false;
+    }
+    public delegate void TickerDownloadProgressEventHandler(object sender, TickerDownloadProgressEventArgs e);
 }
