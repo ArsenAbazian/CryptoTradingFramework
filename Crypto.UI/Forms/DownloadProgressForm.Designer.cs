@@ -64,7 +64,7 @@ namespace Crypto.UI.Forms {
             this.lbCaption.Size = new System.Drawing.Size(122, 25);
             this.lbCaption.StyleController = this.layoutControl1;
             this.lbCaption.TabIndex = 4;
-            this.lbCaption.Text = "labelControl1";
+            this.lbCaption.Text = "";
             // 
             // progressBarControl1
             // 

@@ -82,6 +82,11 @@ namespace CryptoMarketClient.Strategies {
                 StrategyDataItemInfo info = Visual.DataItemInfos[i];
                 if(SkipSeparateItems && info.SeparateWindow)
                     continue;
+                if(info.ZoomAsMap) {
+                    ((XYDiagram)Chart.Diagram).EnableAxisYScrolling = true;
+                    ((XYDiagram)Chart.Diagram).EnableAxisYZooming = true;
+                    ((XYDiagram)Chart.Diagram).DependentAxesYRange = DefaultBoolean.False;
+                }
                 if(info.Type == DataType.HistogrammData)
                     info = CreateHistogrammDetailItem(info);
                 if(!info.Visibility.HasFlag(DataVisibility.Chart))
@@ -342,6 +347,9 @@ namespace CryptoMarketClient.Strategies {
                 s.DataSource = dataSource;
             }
             else {
+                view.PointMarkerOptions.BorderVisible = false;
+                view.PointMarkerOptions.Kind = MarkerKind.Square;
+                view.PointMarkerOptions.Size = ScaleUtils.ScaleValue(4);
                 s.Points.AddRange(CreateSeriesPoints(info));
             }
             return s;
@@ -558,6 +566,12 @@ namespace CryptoMarketClient.Strategies {
         private void CheckInitializeTimeAxis() {
             if(Chart.Series[0].ArgumentScaleType != ScaleType.DateTime) {
                 ((XYDiagram)Chart.Diagram).AxisX.Label.TextPattern = "{A}";
+                if(Chart.Series[0].Points.Count > 0) {
+                    ((XYDiagram)Chart.Diagram).AxisX.WholeRange.SetMinMaxValues(
+                        Chart.Series[0].Points.Min(i => i.ArgumentX.NumericalArgument),
+                        Chart.Series[0].Points.Max(i => i.ArgumentX.NumericalArgument)
+                        );
+                }
                 return;
             }
 

@@ -91,6 +91,7 @@ namespace Crypto.Core.Strategies {
         [XmlIgnore]
         public List<SdiConstantLine> YLines { get; } = new List<SdiConstantLine>();
 
+        public bool ZoomAsMap { get; set; }
         public bool SeparateWindow { get; set; }
         public string FieldName { get; set; }
         public DataType Type { get; set; } = DataType.Numeric;

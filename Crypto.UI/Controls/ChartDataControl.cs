@@ -17,12 +17,13 @@ using Crypto.Core.Strategies;
 using Crypto.Core.Strategies.Custom;
 using DevExpress.Utils;
 using Crypto.Core.Helpers;
+using CryptoMarketClient.Common;
 
 namespace Crypto.UI.Forms {
     public partial class ChartDataControl : XtraUserControl {
         public ChartDataControl() {
             InitializeComponent();
-            this.chartControl.UseDirectXPaint = true;
+            this.chartControl.UseDirectXPaint = SettingsStore.Default.UseDirectXForCharts;
             BarAndDockingController controller = new BarAndDockingController();
             this.barManager1.Controller = controller;
             controller.PropertiesBar.DefaultGlyphSize = new Size(16, 16);
