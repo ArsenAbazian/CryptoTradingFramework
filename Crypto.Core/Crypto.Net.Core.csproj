@@ -54,8 +54,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="DevExpress.Data.v18.1">
-      <HintPath>..\..\..\..\Work\2018.1\Bin\NETCore\DevExpress.Data.v18.1.dll</HintPath>
+    <Reference Include="DevExpress.Data.v19.1">
+      
       <Private>true</Private>
     </Reference>
   </ItemGroup>
