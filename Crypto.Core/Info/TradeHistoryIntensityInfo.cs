@@ -52,7 +52,9 @@ namespace Crypto.Core.Helpers {
             StrategyDataItemInfo dcount = StrategyDataItemInfo.DataItem(preview.Children, "TrendCount"); dcount.BindingSource = "Histogramm"; dcount.Visibility = DataVisibility.Both; dcount.Color = Color.FromArgb(0x80, Color.Green); dcount.ChartType = ChartType.Line; dcount.MeasureUnit = StrategyDateTimeMeasureUnit.Second; dcount.MeasureUnitMultiplier = intervalSec; dcount.PanelName = "Trend Counts";
             StrategyDataItemInfo dvolume = StrategyDataItemInfo.DataItem(preview.Children, "TrendVolume"); dvolume.BindingSource = "Histogramm"; dvolume.Visibility = DataVisibility.Both; dvolume.Color = Color.FromArgb(0x40, Color.Green); dvolume.ChartType = ChartType.Line; dvolume.MeasureUnit = StrategyDateTimeMeasureUnit.Second; dvolume.MeasureUnitMultiplier = intervalSec; dvolume.PanelName = "Trend Volumes"; dvolume.PanelVisible = false;
 
-            StrategyDataItemInfo tcdr = StrategyDataItemInfo.DataItem(preview.Children, "MaxPriceDeltaInPeriodPc"); tcdr.BindingSource = "Histogramm"; tcdr.Visibility = DataVisibility.Chart; tcdr.Color = Color.FromArgb(0x80, Color.Green); tcdr.ChartType = ChartType.Dot; tcdr.SeparateWindow = true; tcdr.ArgumentDataMember = "TrendCount"; tcdr.ArgumentScaleType = ArgumentScaleType.Numerical; tcdr.ZoomAsMap = true;
+            StrategyDataItemInfo tcdr = StrategyDataItemInfo.DataItem(preview.Children, "MaxPriceDeltaInPeriodPc"); tcdr.BindingSource = "Histogramm"; tcdr.Visibility = DataVisibility.Chart; tcdr.Color = Color.FromArgb(0x80, Color.Green); tcdr.ChartType = ChartType.Dot; tcdr.SeparateWindow = true; tcdr.ArgumentDataMember = "TrendVolume"; tcdr.ArgumentScaleType = ArgumentScaleType.Numerical; tcdr.ZoomAsMap = true;
+            StrategyDataItemInfo bcdr = StrategyDataItemInfo.DataItem(preview.Children, "MaxPriceDeltaInPeriodPc"); tcdr.BindingSource = "Histogramm"; tcdr.Visibility = DataVisibility.Chart; tcdr.Color = Color.FromArgb(0x80, Color.Green); tcdr.ChartType = ChartType.Dot; tcdr.SeparateWindow = true; tcdr.ArgumentDataMember = "BuyVolume"; tcdr.ArgumentScaleType = ArgumentScaleType.Numerical; tcdr.ZoomAsMap = true;
+            StrategyDataItemInfo scdr = StrategyDataItemInfo.DataItem(preview.Children, "MaxPriceDeltaInPeriodPc"); tcdr.BindingSource = "Histogramm"; tcdr.Visibility = DataVisibility.Chart; tcdr.Color = Color.FromArgb(0x80, Color.Red); tcdr.ChartType = ChartType.Dot; tcdr.SeparateWindow = true; tcdr.ArgumentDataMember = "SellVolume"; tcdr.ArgumentScaleType = ArgumentScaleType.Numerical; tcdr.ZoomAsMap = true;
         }
 
         public Exchange Exchange { get; set; }
@@ -209,8 +211,8 @@ namespace Crypto.Core.Helpers {
                 item.TradeVolume += trade.Amount;
 
                 if(TradeHistory[i].Type == TradeType.Sell) {
-                    item.SellCount--;
-                    item.SellVolume -= trade.Amount;
+                    item.SellCount++;
+                    item.SellVolume += trade.Amount;
                 }
                 else {
                     item.BuyCount++;

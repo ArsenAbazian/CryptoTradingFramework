@@ -6,6 +6,7 @@ using CryptoMarketClient.Common;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -67,7 +68,7 @@ namespace Crypto.Core.Strategies {
         public string DownloadText { get; set; } = "Downloading...";
 
         public ResizeableArray<TradeInfoItem> DownloadTradeHistory(TickerInputInfo info, DateTime time) {
-            CachedTradeHistory savedData = new CachedTradeHistory() { Exchange = info.Exchange, TickerName = info.TickerName };
+            CachedTradeHistory savedData = new CachedTradeHistory() { Exchange = info.Exchange, TickerName = info.TickerName, StartDate = info.StartDate, EndDate = info.EndDate, BaseCurrency = info.Ticker.BaseCurrency, MarketCurrency = info.Ticker.MarketCurrency };
             CachedTradeHistory cachedData = CachedTradeHistory.FromFile(CachedTradeHistory.Directory + "\\" + ((ISupportSerialization)savedData).FileName);
             info.CheckUpdateTime();
             if(cachedData != null) {
@@ -287,7 +288,7 @@ namespace Crypto.Core.Strategies {
         }
 
         public virtual ResizeableArray<CandleStickData> DownloadCandleStickData(TickerInputInfo info) {
-            CachedCandleStickData savedData = new CachedCandleStickData() { Exchange = info.Exchange, TickerName = info.TickerName, IntervalMin = info.KlineIntervalMin };
+            CachedCandleStickData savedData = new CachedCandleStickData() { Exchange = info.Exchange, TickerName = info.TickerName, IntervalMin = info.KlineIntervalMin, StartDate = info.StartDate, EndDate = info.EndDate, BaseCurrency = info.Ticker.BaseCurrency, MarketCurrency = info.Ticker.MarketCurrency };
             CachedCandleStickData cachedData = CachedCandleStickData.FromFile(CachedCandleStickData.Directory + "\\" + ((ISupportSerialization)savedData).FileName);
             info.CheckUpdateTime();
             if(cachedData != null) {
@@ -507,13 +508,55 @@ namespace Crypto.Core.Strategies {
             return SerializationHelper.Save(this, typeof(CachedCandleStickData), Directory);
         }
 
-        string ISupportSerialization.FileName { get { return Exchange.ToString() + "_" + TickerName.ToString() + "_" + IntervalMin.ToString() + "_CandleStickData.xml"; } set { } }
+        string ISupportSerialization.FileName { get {
+                return TickerDownloadDataInfo.GetCandlestickCachedDataFileName(Exchange, BaseCurrency, MarketCurrency, IntervalMin, StartDate, EndDate);
+            } set { } }
 
         public ResizeableArray<CandleStickData> Items { get; set; } = new ResizeableArray<CandleStickData>();
         public ExchangeType Exchange { get; set; }
         public string TickerName { get; set; }
+        public string BaseCurrency { get; set; }
+        public string MarketCurrency { get; set; }
         public int IntervalMin { get; set; }
-        
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
+    }
+
+    public class TickerDownloadDataInfo {
+        public bool Selected { get; set; }
+        public TickerDataType Type { get; set; }
+        public ExchangeType Exchange { get; set; }
+        public string BaseCurrency { get; set; }
+        public string MarketCurrency { get; set; }
+        public int KLineIntervalMin { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
+        public string FileName { get; set; }
+
+        public static string GetCandlestickCachedDataFileName(ExchangeType e, string baseCurrency, string marketCurrency, int intervalMin, DateTime start, DateTime end) {
+            return e.ToString() + "_" + baseCurrency + "_" + marketCurrency + "_" + intervalMin + "_" +
+                start.ToString("d", CultureInfo.InvariantCulture) + "_" +
+                end.ToString("d", CultureInfo.InvariantCulture) + "_" +
+                "CandlestickData.xml";
+        }
+
+        public static string GetTradeHistoryCachedDataFileName(ExchangeType e, string baseCurrency, string marketCurrency, DateTime start, DateTime end) {
+            return e.ToString() + "_" + baseCurrency + "_" + marketCurrency + "_" +
+                start.ToString("d", CultureInfo.InvariantCulture) + "_" +
+                end.ToString("d", CultureInfo.InvariantCulture) + "_" +
+                "TradeHistory.xml";
+        }
+
+        public void GenerateFileName() {
+            if(Type == TickerDataType.Candlesticks)
+                FileName = GetCandlestickCachedDataFileName(Exchange, BaseCurrency, MarketCurrency, KLineIntervalMin, StartDate, EndDate);
+            else 
+                FileName = GetTradeHistoryCachedDataFileName(Exchange, BaseCurrency, MarketCurrency, StartDate, EndDate);
+        }
+    }
+    public enum TickerDataType {
+        Candlesticks,
+        TradeHistory
     }
 
     [Serializable]
@@ -531,11 +574,18 @@ namespace Crypto.Core.Strategies {
             return SerializationHelper.Save(this, typeof(CachedTradeHistory), Directory);
         }
 
-        string ISupportSerialization.FileName { get { return Exchange.ToString() + "_" + TickerName.ToString() + "_TradeHistory.xml"; } set { } }
+        string ISupportSerialization.FileName {
+            get {
+                return TickerDownloadDataInfo.GetTradeHistoryCachedDataFileName(Exchange, BaseCurrency, MarketCurrency, StartDate, EndDate); }
+            set { } }
 
         public ResizeableArray<TradeInfoItem> Items { get; set; } = new ResizeableArray<TradeInfoItem>();
         public ExchangeType Exchange { get; set; }
         public string TickerName { get; set; }
+        public string BaseCurrency { get; set; }
+        public string MarketCurrency { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
     }
 
     public class SimulationSettings {

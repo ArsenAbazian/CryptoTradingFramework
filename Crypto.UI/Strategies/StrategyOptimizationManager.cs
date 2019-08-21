@@ -125,7 +125,6 @@ namespace Crypto.UI.Strategies {
         }
 
         public event EventHandler Error;
-        public event EventHandler Started;
         public event EventHandler StateChanged;
 
         int IMOOProblem.GetDimensionCount() {
