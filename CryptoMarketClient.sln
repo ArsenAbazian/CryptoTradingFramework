@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29209.62
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CryptoMarketClient", "PoloniexClient\CryptoMarketClient.csproj", "{544E62E5-DC81-410C-9F75-F914A0B711C1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CryptoMarketClient", "CryptoMarketClient\CryptoMarketClient.csproj", "{544E62E5-DC81-410C-9F75-F914A0B711C1}"
 	ProjectSection(ProjectDependencies) = postProject
 		{4A5B7AB2-B8CE-4C47-AA5E-7CE8BED74249} = {4A5B7AB2-B8CE-4C47-AA5E-7CE8BED74249}
 		{E0EB4BE7-619B-4D6F-A8AC-30ED54DA583F} = {E0EB4BE7-619B-4D6F-A8AC-30ED54DA583F}
