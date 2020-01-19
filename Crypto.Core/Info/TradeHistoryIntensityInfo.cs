@@ -52,9 +52,9 @@ namespace Crypto.Core.Helpers {
             StrategyDataItemInfo dcount = StrategyDataItemInfo.DataItem(preview.Children, "TrendCount"); dcount.BindingSource = "Histogramm"; dcount.Visibility = DataVisibility.Both; dcount.Color = Color.FromArgb(0x80, Color.Green); dcount.ChartType = ChartType.Line; dcount.MeasureUnit = StrategyDateTimeMeasureUnit.Second; dcount.MeasureUnitMultiplier = intervalSec; dcount.PanelName = "Trend Counts";
             StrategyDataItemInfo dvolume = StrategyDataItemInfo.DataItem(preview.Children, "TrendVolume"); dvolume.BindingSource = "Histogramm"; dvolume.Visibility = DataVisibility.Both; dvolume.Color = Color.FromArgb(0x40, Color.Green); dvolume.ChartType = ChartType.Line; dvolume.MeasureUnit = StrategyDateTimeMeasureUnit.Second; dvolume.MeasureUnitMultiplier = intervalSec; dvolume.PanelName = "Trend Volumes"; dvolume.PanelVisible = false;
 
-            StrategyDataItemInfo tcdr = StrategyDataItemInfo.DataItem(preview.Children, "MaxPriceDeltaInPeriodPc"); tcdr.BindingSource = "Histogramm"; tcdr.Visibility = DataVisibility.Chart; tcdr.Color = Color.FromArgb(0x80, Color.Green); tcdr.ChartType = ChartType.Dot; tcdr.SeparateWindow = true; tcdr.ArgumentDataMember = "TrendVolume"; tcdr.ArgumentScaleType = ArgumentScaleType.Numerical; tcdr.ZoomAsMap = true;
-            StrategyDataItemInfo bcdr = StrategyDataItemInfo.DataItem(preview.Children, "MaxPriceDeltaInPeriodPc"); tcdr.BindingSource = "Histogramm"; tcdr.Visibility = DataVisibility.Chart; tcdr.Color = Color.FromArgb(0x80, Color.Green); tcdr.ChartType = ChartType.Dot; tcdr.SeparateWindow = true; tcdr.ArgumentDataMember = "BuyVolume"; tcdr.ArgumentScaleType = ArgumentScaleType.Numerical; tcdr.ZoomAsMap = true;
-            StrategyDataItemInfo scdr = StrategyDataItemInfo.DataItem(preview.Children, "MaxPriceDeltaInPeriodPc"); tcdr.BindingSource = "Histogramm"; tcdr.Visibility = DataVisibility.Chart; tcdr.Color = Color.FromArgb(0x80, Color.Red); tcdr.ChartType = ChartType.Dot; tcdr.SeparateWindow = true; tcdr.ArgumentDataMember = "SellVolume"; tcdr.ArgumentScaleType = ArgumentScaleType.Numerical; tcdr.ZoomAsMap = true;
+            StrategyDataItemInfo tcdr = StrategyDataItemInfo.DataItem(preview.Children, "MaxPriceDeltaInPeriodPc"); tcdr.BindingSource = "Histogramm"; tcdr.Visibility = DataVisibility.Chart; tcdr.Color = Color.FromArgb(0x80, Color.Green); tcdr.ChartType = ChartType.Dot; tcdr.SeparateWindow = true; tcdr.ArgumentDataMember = "TrendVolume"; tcdr.ArgumentScaleType = ArgumentScaleType.Numerical; tcdr.ZoomAsMap = true; tcdr.GraphWidth = 2;
+            //StrategyDataItemInfo bcdr = StrategyDataItemInfo.DataItem(preview.Children, "MaxPriceDeltaInPeriodPc"); tcdr.BindingSource = "Histogramm"; tcdr.Visibility = DataVisibility.Chart; tcdr.Color = Color.FromArgb(0x80, Color.Green); tcdr.ChartType = ChartType.Dot; tcdr.SeparateWindow = true; tcdr.ArgumentDataMember = "BuyVolume"; tcdr.ArgumentScaleType = ArgumentScaleType.Numerical; tcdr.ZoomAsMap = true;
+            //StrategyDataItemInfo scdr = StrategyDataItemInfo.DataItem(preview.Children, "MaxPriceDeltaInPeriodPc"); tcdr.BindingSource = "Histogramm"; tcdr.Visibility = DataVisibility.Chart; tcdr.Color = Color.FromArgb(0x80, Color.Red); tcdr.ChartType = ChartType.Dot; tcdr.SeparateWindow = true; tcdr.ArgumentDataMember = "SellVolume"; tcdr.ArgumentScaleType = ArgumentScaleType.Numerical; tcdr.ZoomAsMap = true;
         }
 
         public Exchange Exchange { get; set; }
@@ -63,33 +63,37 @@ namespace Crypto.Core.Helpers {
 
         public List<StrategyDataItemInfo> DataItemInfos { get; } = new List<StrategyDataItemInfo>();
         public ResizeableArray<object> Items { get; private set; } = new ResizeableArray<object>();
-        public ResizeableArray<TickerTradeHistoryInfo> Result { get; private set; } = new ResizeableArray<TickerTradeHistoryInfo>();
+        public ResizeableArray<TickerDownloadData> Result { get; private set; } = new ResizeableArray<TickerDownloadData>();
         public string Name { get { return "Tickers TradeHistory Intencity"; } }
 
         int IStrategyDataItemInfoOwner.MeasureUnitMultiplier { get { return 30; } set { } }
         StrategyDateTimeMeasureUnit IStrategyDataItemInfoOwner.MeasureUnit { get { return StrategyDateTimeMeasureUnit.Minute; } set { } }
 
         public ResizeableArray<CandleStickData> StrategySimulationProvider { get; private set; }
-        public TickerTradeHistoryInfo DownloadItem(string baseCurrency, string marketCurrency) {
+        public TickerDownloadData DownloadItem(string baseCurrency, string marketCurrency) {
             SimulationStrategyDataProvider provider = new SimulationStrategyDataProvider();
             Ticker ticker = Exchange.Tickers.FirstOrDefault(t => t.BaseCurrency == baseCurrency && t.MarketCurrency == marketCurrency);
             return DownloadItem(ticker);
         }
-
-        public TickerTradeHistoryInfo DownloadItem(Ticker ticker) {
+        public TickerDownloadData DownloadItem(TickerInputInfo info) {
+            return DownloadItem(info, true);
+        }
+        public TickerDownloadData DownloadItem(TickerInputInfo info, bool downloadCandle) {
+            Ticker ticker = info.Ticker;
             SimulationStrategyDataProvider provider = new SimulationStrategyDataProvider();
             provider.DownloadProgressChanged += DownloadProgressChanged;
-            TickerInputInfo info = new TickerInputInfo() { Exchange = ticker.Exchange.Type, KlineIntervalMin = 5, Ticker = ticker, TickerName = ticker.Name };
-            ResizeableArray<CandleStickData> kline = provider.DownloadCandleStickData(info);
-            if(kline == null) {
-                LogManager.Default.Error("Cannot download candlesticks for " + ticker.Name);
-                return null;
+            if(downloadCandle) {
+                ResizeableArray<CandleStickData> kline = provider.DownloadCandleStickData(info);
+                if(kline == null) {
+                    LogManager.Default.Error("Cannot download candlesticks for " + ticker.Name);
+                    return null;
+                }
+
+                LogManager.Default.Success("Downloaded candlesticks for " + ticker.Name);
+                ticker.CandleStickData.AddRange(kline);
             }
 
-            LogManager.Default.Success("Downloaded candlesticks for " + ticker.Name);
-            ticker.CandleStickData.AddRange(kline);
-
-            ResizeableArray<TradeInfoItem> trades = provider.DownloadTradeHistory(info, ticker.CandleStickData.First().Time);
+            ResizeableArray<TradeInfoItem> trades = provider.DownloadTradeHistory(info, info.StartDate);
             if(trades == null) {
                 LogManager.Default.Error("Cannot download trade history for " + ticker.Name);
                 return null;
@@ -97,9 +101,13 @@ namespace Crypto.Core.Helpers {
             LogManager.Default.Success("Downloaded trade history for " + ticker.Name);
             ticker.TradeHistory.AddRange(trades);
 
-            TickerTradeHistoryInfo tradeInfo = new TickerTradeHistoryInfo() { Ticker = ticker };
+            TickerDownloadData tradeInfo = new TickerDownloadData() { Ticker = ticker };
             tradeInfo.HistogrammIntervalSec = HistogrammIntervalSec;
             return tradeInfo;
+        }
+        public TickerDownloadData DownloadItem(Ticker ticker) {
+            TickerInputInfo info = new TickerInputInfo() { Exchange = ticker.Exchange.Type, KlineIntervalMin = 5, Ticker = ticker, TickerName = ticker.Name };
+            return DownloadItem(info);
         }
 
         public bool Calculate() {
@@ -114,7 +122,7 @@ namespace Crypto.Core.Helpers {
             foreach(string baseCurr in BaseCurrencies) {
                 List<Ticker> tickers = Exchange.Tickers.Where(t => t.BaseCurrency == baseCurr && (MarketCurrencies == null || MarketCurrencies.Contains(t.MarketCurrency))).ToList();
                 foreach(Ticker ticker in tickers) {
-                    TickerTradeHistoryInfo tradeInfo = DownloadItem(ticker);
+                    TickerDownloadData tradeInfo = DownloadItem(ticker);
                     if(tradeInfo == null)
                         continue;
                     Result.Add(tradeInfo);
@@ -125,7 +133,7 @@ namespace Crypto.Core.Helpers {
             return true;
         }
 
-        protected void RaiseTickerAdded(TickerTradeHistoryInfo info) {
+        protected void RaiseTickerAdded(TickerDownloadData info) {
             if(TickerAdded != null)
                 TickerAdded(this, new TickerTradeHistoryInfoEventArgs() { Info = info });
         }
@@ -140,10 +148,10 @@ namespace Crypto.Core.Helpers {
     public delegate void TickerTradeHistoryInfoEventHandler(object sender, TickerTradeHistoryInfoEventArgs e);
 
     public class TickerTradeHistoryInfoEventArgs : EventArgs {
-        public TickerTradeHistoryInfo Info { get; set; }
+        public TickerDownloadData Info { get; set; }
     }
 
-    public class TickerTradeHistoryInfo {
+    public class TickerDownloadData {
         Ticker ticker;
         public Ticker Ticker {
             get { return ticker; }

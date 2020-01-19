@@ -423,6 +423,7 @@ namespace Crypto.Core.Strategies {
             MaxValue = maxValue;
             Change = change;
         }
+        [XmlIgnore]
         public bool IsInput { get; private set; }
         public object MinValue { get; set; }
         public object MaxValue { get; set; }
@@ -437,6 +438,7 @@ namespace Crypto.Core.Strategies {
         public OutputParameterAttribute(bool isOutput) {
             IsOutput = isOutput;
         }
+        [XmlIgnore]
         public bool IsOutput { get; private set; }
     }
 
@@ -448,6 +450,7 @@ namespace Crypto.Core.Strategies {
         public ParameterObjectAttribute(bool isInput) {
             IsInput = isInput;
         }
+        [XmlIgnore]
         public bool IsInput { get; private set; }
     }
 

@@ -97,6 +97,7 @@ namespace Crypto.Core.Helpers {
         }
 
         private void OnInsert(T item, int index) {
+            //RaiseListChanged(new ListChangedEventArgs(ListChangedType.Reset, index));
             RaiseListChanged(new ListChangedEventArgs(ListChangedType.ItemAdded, index));
             SubscribeEvents(item);   
         }
@@ -152,6 +153,7 @@ namespace Crypto.Core.Helpers {
             for(int i = index; i < Count - 1; i++) {
                 Items[i] = Items[i + 1];
             }
+            //RaiseListChanged(new ListChangedEventArgs(ListChangedType.Reset, index));
             RaiseListChanged(new ListChangedEventArgs(ListChangedType.ItemDeleted, index));
             Count--;
         }

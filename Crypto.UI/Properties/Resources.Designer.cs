@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace CryptoMarketClient.Properties {
+namespace Crypto.UI.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace CryptoMarketClient.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("CryptoMarketClient.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Crypto.UI.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -63,9 +63,9 @@ namespace CryptoMarketClient.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap BinanceIcon {
+        internal static System.Drawing.Bitmap notification_image {
             get {
-                object obj = ResourceManager.GetObject("BinanceIcon", resourceCulture);
+                object obj = ResourceManager.GetObject("notification_image", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -73,29 +73,9 @@ namespace CryptoMarketClient.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap BitFinexIcon {
+        internal static System.Drawing.Bitmap notification_image1 {
             get {
-                object obj = ResourceManager.GetObject("BitFinexIcon", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap BittrexIcon {
-            get {
-                object obj = ResourceManager.GetObject("BittrexIcon", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap chart {
-            get {
-                object obj = ResourceManager.GetObject("chart", resourceCulture);
+                object obj = ResourceManager.GetObject("notification_image1", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -106,26 +86,6 @@ namespace CryptoMarketClient.Properties {
         internal static System.Drawing.Bitmap notification_image2 {
             get {
                 object obj = ResourceManager.GetObject("notification_image2", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap notification_image3 {
-            get {
-                object obj = ResourceManager.GetObject("notification_image3", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap PoloniexIcon {
-            get {
-                object obj = ResourceManager.GetObject("PoloniexIcon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

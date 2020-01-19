@@ -21,7 +21,7 @@ namespace CryptoMarketClient {
         /// </summary>
         [STAThread]
         static void Main() {
-            //DevExpress.Data.CurrencyDataController.DisableThreadingProblemsDetection = true;
+            DevExpress.Data.CurrencyDataController.DisableThreadingProblemsDetection = true;
             SettingsStore.ApplicationDirectory = Path.GetDirectoryName(Application.ExecutablePath);
             WindowsFormsSettings.DefaultFont = new System.Drawing.Font("Segoe UI", 9);
             WindowsFormsSettings.ScrollUIMode = ScrollUIMode.Desktop;
@@ -29,7 +29,7 @@ namespace CryptoMarketClient {
             WindowsFormsSettings.FormThickBorder = true;
             if(UserLookAndFeel.Default.SkinName == "The Bezier") {
                 if(string.IsNullOrEmpty(SettingsStore.Default.SelectedPaletteName))
-                    SettingsStore.Default.SelectedPaletteName = "Gloom Gloom";
+                    SettingsStore.Default.SelectedPaletteName = "VS Light";
                 var skin = CommonSkins.GetSkin(UserLookAndFeel.Default);
                 DevExpress.Utils.Svg.SvgPalette pallete = skin.CustomSvgPalettes[SettingsStore.Default.SelectedPaletteName];
                 skin.SvgPalettes[Skin.DefaultSkinPaletteName].SetCustomPalette(pallete);

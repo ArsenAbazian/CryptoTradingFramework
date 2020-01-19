@@ -68,6 +68,7 @@ namespace CryptoMarketClient.Strategies {
             this.colEnableNotifications = new DevExpress.XtraGrid.Columns.GridColumn();
             this.repositoryItemCheckEdit3 = new DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit();
             this.behaviorManager1 = new DevExpress.Utils.Behaviors.BehaviorManager(this.components);
+            this.toastNotificationsManager1 = new DevExpress.XtraBars.ToastNotifications.ToastNotificationsManager(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.barManager1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemProgressBar1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dockManager1)).BeginInit();
@@ -82,6 +83,7 @@ namespace CryptoMarketClient.Strategies {
             ((System.ComponentModel.ISupportInitialize)(this.riTextEditState)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.behaviorManager1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.toastNotificationsManager1)).BeginInit();
             this.SuspendLayout();
             // 
             // barManager1
@@ -178,12 +180,8 @@ namespace CryptoMarketClient.Strategies {
             this.biStart.Caption = "<b>Run!</b>";
             this.biStart.Id = 4;
             this.biStart.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("biStart.ImageOptions.SvgImage")));
-            //this.biStart.ItemAppearance.Hovered.ForeColor = DevExpress.LookAndFeel.DXSkinColors.ForeColors.Information;
-            //this.biStart.ItemAppearance.Hovered.Options.UseForeColor = true;
             this.biStart.ItemAppearance.Normal.ForeColor = DevExpress.LookAndFeel.DXSkinColors.ForeColors.Information;
             this.biStart.ItemAppearance.Normal.Options.UseForeColor = true;
-            //this.biStart.ItemAppearance.Pressed.ForeColor = DevExpress.LookAndFeel.DXSkinColors.ForeColors.Information;
-            //this.biStart.ItemAppearance.Pressed.Options.UseForeColor = true;
             this.biStart.Name = "biStart";
             this.biStart.PaintStyle = DevExpress.XtraBars.BarItemPaintStyle.CaptionGlyph;
             this.biStart.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.biStart_ItemClick);
@@ -194,12 +192,8 @@ namespace CryptoMarketClient.Strategies {
             this.biStop.Caption = "<b>Stop</b>";
             this.biStop.Id = 5;
             this.biStop.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("biStop.ImageOptions.SvgImage")));
-            //this.biStop.ItemAppearance.Hovered.ForeColor = DevExpress.LookAndFeel.DXSkinColors.ForeColors.Critical;
-            //this.biStop.ItemAppearance.Hovered.Options.UseForeColor = true;
             this.biStop.ItemAppearance.Normal.ForeColor = DevExpress.LookAndFeel.DXSkinColors.ForeColors.Critical;
             this.biStop.ItemAppearance.Normal.Options.UseForeColor = true;
-            //this.biStop.ItemAppearance.Pressed.ForeColor = DevExpress.LookAndFeel.DXSkinColors.ForeColors.Critical;
-            //this.biStop.ItemAppearance.Pressed.Options.UseForeColor = true;
             this.biStop.Name = "biStop";
             this.biStop.PaintStyle = DevExpress.XtraBars.BarItemPaintStyle.CaptionGlyph;
             this.biStop.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.biStop_ItemClick);
@@ -255,6 +249,7 @@ namespace CryptoMarketClient.Strategies {
             this.biSettings.Alignment = DevExpress.XtraBars.BarItemLinkAlignment.Right;
             this.biSettings.Caption = "Settings";
             this.biSettings.Id = 14;
+            this.biSettings.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("biSettings.ImageOptions.SvgImage")));
             this.biSettings.Name = "biSettings";
             this.biSettings.PaintStyle = DevExpress.XtraBars.BarItemPaintStyle.CaptionGlyph;
             this.biSettings.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.biSettings_ItemClick);
@@ -311,9 +306,9 @@ namespace CryptoMarketClient.Strategies {
             // 
             this.barDockControlBottom.CausesValidation = false;
             this.barDockControlBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.barDockControlBottom.Location = new System.Drawing.Point(0, 967);
+            this.barDockControlBottom.Location = new System.Drawing.Point(0, 974);
             this.barDockControlBottom.Manager = this.barManager1;
-            this.barDockControlBottom.Size = new System.Drawing.Size(1667, 59);
+            this.barDockControlBottom.Size = new System.Drawing.Size(1667, 52);
             // 
             // barDockControlLeft
             // 
@@ -321,7 +316,7 @@ namespace CryptoMarketClient.Strategies {
             this.barDockControlLeft.Dock = System.Windows.Forms.DockStyle.Left;
             this.barDockControlLeft.Location = new System.Drawing.Point(0, 60);
             this.barDockControlLeft.Manager = this.barManager1;
-            this.barDockControlLeft.Size = new System.Drawing.Size(0, 907);
+            this.barDockControlLeft.Size = new System.Drawing.Size(0, 914);
             // 
             // barDockControlRight
             // 
@@ -329,7 +324,7 @@ namespace CryptoMarketClient.Strategies {
             this.barDockControlRight.Dock = System.Windows.Forms.DockStyle.Right;
             this.barDockControlRight.Location = new System.Drawing.Point(1667, 60);
             this.barDockControlRight.Manager = this.barManager1;
-            this.barDockControlRight.Size = new System.Drawing.Size(0, 907);
+            this.barDockControlRight.Size = new System.Drawing.Size(0, 914);
             // 
             // dockManager1
             // 
@@ -395,7 +390,7 @@ namespace CryptoMarketClient.Strategies {
             this.repositoryItemCheckEdit2,
             this.repositoryItemCheckEdit3,
             this.riTextEditState});
-            this.gridControl1.Size = new System.Drawing.Size(1667, 907);
+            this.gridControl1.Size = new System.Drawing.Size(1667, 914);
             this.gridControl1.TabIndex = 4;
             this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridView1});
@@ -532,6 +527,12 @@ namespace CryptoMarketClient.Strategies {
             this.repositoryItemCheckEdit3.Name = "repositoryItemCheckEdit3";
             this.repositoryItemCheckEdit3.EditValueChanged += new System.EventHandler(this.repositoryItemCheckEdit3_EditValueChanged);
             // 
+            // toastNotificationsManager1
+            // 
+            this.toastNotificationsManager1.ApplicationId = "ab6decea-81d2-4ad9-b8b7-45653fe59087";
+            this.toastNotificationsManager1.Notifications.AddRange(new DevExpress.XtraBars.ToastNotifications.IToastNotificationProperties[] {
+            new DevExpress.XtraBars.ToastNotifications.ToastNotification("404ef86f-183c-4fea-960b-86f54e52ea76", global::Crypto.UI.Properties.Resources.notification_image2, "Strategies Simulator", "Strategy simulation finished!", "", DevExpress.XtraBars.ToastNotifications.ToastNotificationSound.Default, DevExpress.XtraBars.ToastNotifications.ToastNotificationDuration.Long, DevExpress.XtraBars.ToastNotifications.ToastNotificationTemplate.ImageAndText01)});
+            // 
             // StrategiesCollectionForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
@@ -558,6 +559,7 @@ namespace CryptoMarketClient.Strategies {
             ((System.ComponentModel.ISupportInitialize)(this.riTextEditState)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.behaviorManager1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.toastNotificationsManager1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -605,5 +607,6 @@ namespace CryptoMarketClient.Strategies {
         private BarEditItem beSimulationProgress;
         private DevExpress.XtraEditors.Repository.RepositoryItemProgressBar repositoryItemProgressBar1;
         private BarButtonItem biSettings;
+        private DevExpress.XtraBars.ToastNotifications.ToastNotificationsManager toastNotificationsManager1;
     }
 }

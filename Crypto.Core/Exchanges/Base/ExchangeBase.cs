@@ -1284,6 +1284,8 @@ namespace CryptoMarketClient {
 
         public static Color CandleStickColor { get { return BidColor; } }
         public static Color CandleStickReductionColor { get { return AskColor; } }
+
+        public virtual bool SupportBuySellVolume { get { return false; } }
     }
 
     public class CandleStickIntervalInfo {

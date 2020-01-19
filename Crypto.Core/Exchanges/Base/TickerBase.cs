@@ -201,7 +201,7 @@ namespace CryptoMarketClient {
         public string LowestAskString {
             get {
                 if(lowestAskString == null)
-                    lowestAskString = GetStringWithChangePercent(LowestAsk, AskChange);
+                    lowestAskString = GetString(LowestAsk);
                 return lowestAskString;
             }
         }
@@ -209,7 +209,7 @@ namespace CryptoMarketClient {
         public string HighestBidString {
             get {
                 if(highestBidString == null)
-                    highestBidString = GetStringWithChangePercent(HighestBid, BidChange);
+                    highestBidString = GetString(HighestBid);
                 return highestBidString;
             }
         }
@@ -262,14 +262,19 @@ namespace CryptoMarketClient {
         public string LastString {
             get {
                 if(lastString == null)
-                    lastString = GetStringWithChangePercent(Last, Change);
+                    lastString = GetString(Last);
                 return lastString;
             }
         }
         public virtual string GetStringWithChangePercent(double value, double change) {
-            if(change >= 0) 
+            if(change == 0)
+                return string.Format("<b>{0:0.00000000}</b>", value);
+            if (change >= 0) 
                 return string.Format("<b>{0:0.00000000}</b> <color=green><size=-2>{1:0.##}%</size></color>", value, change);
             return string.Format("<b>{0:0.00000000}</b> <color=red><size=-2>{1:0.##}%</size></color>", value, change);
+        }
+        public virtual string GetString(double value) {
+            return GetStringWithChangePercent(value, 0);
         }
         public double BaseVolume { get; set; }
         public double Volume { get; set; }

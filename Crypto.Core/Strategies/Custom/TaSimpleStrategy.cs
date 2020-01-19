@@ -39,7 +39,9 @@ namespace Crypto.Core.Strategies.Custom {
         public int Range { get; set; } = 3;
         public double ThresoldPerc { get; set; } = 0.6;
 
+        [XmlIgnore]
         protected SupportResistanceIndicator SRIndicator { get; private set; }
+        [XmlIgnore]
         protected SupportResistanceIndicator SRIndicator2 { get; private set; }
 
         public override void Assign(StrategyBase from) {
@@ -589,6 +591,7 @@ namespace Crypto.Core.Strategies.Custom {
         public bool Closed { get; set; }
         public bool ClosedOrder { get; set; }
         public double Profit { get; set; }
+        [XmlIgnore]
         public double SRSpread { get; internal set; }
         //public object BreakValue { get; internal set; }
 
@@ -654,6 +657,7 @@ namespace Crypto.Core.Strategies.Custom {
         }
 
         public double PercentChangeFromSupport { get; set; }
+        [XmlIgnore]
         public double SpreadBaseResistance { get; internal set; }
 
         object ILinkedObjectProvider.GetLinkedObject() {

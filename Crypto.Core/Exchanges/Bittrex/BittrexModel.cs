@@ -552,7 +552,7 @@ namespace CryptoMarketClient.Bittrex {
                     }
                 }
                 BittrexTicker info = (BittrexTicker) first;
-                if(info == null)
+                if(info == null || item[1] == "null")
                     continue;
                 info.Hr24High = FastValueConverter.Convert(item[1]);
                 info.Hr24Low = FastValueConverter.Convert(item[2]);

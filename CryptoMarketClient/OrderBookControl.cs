@@ -26,6 +26,8 @@ namespace CryptoMarketClient {
             this.askGridView.ViewCaptionHeight = 32;
             this.gcRate.AppearanceCell.ForeColor = Exchange.AskColor;
             this.gcRate2.AppearanceCell.ForeColor = Exchange.BidColor;
+            this.bidGridView.OptionsBehavior.KeepFocusedRowOnUpdate = false;
+            this.askGridView.OptionsBehavior.KeepFocusedRowOnUpdate = false;
         }
 
         protected int LastAskTopRowIndex { get; set; } = -1;

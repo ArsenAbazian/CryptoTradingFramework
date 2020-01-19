@@ -54,7 +54,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="DevExpress.Data.v19.1">
+    <Reference Include="DevExpress.Data.v19.2">
       
       <Private>true</Private>
     </Reference>

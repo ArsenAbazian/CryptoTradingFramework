@@ -15,8 +15,12 @@ namespace CryptoMarketClient.Exchanges.Poloniex {
                 }
                 else if(item[0][0] == 't') {
                     TradeInfoItem trade = new TradeInfoItem(null, ticker) {
-                            Type = item[2][0] == '0' ? TradeType.Sell : TradeType.Buy, RateString = item[3], AmountString = item[4], Time = new DateTime(Convert.ToInt64(item[5]))
+                            Type = item[2][0] == '0' ? TradeType.Sell : TradeType.Buy, RateString = item[3], AmountString = item[4], Time = ticker.Exchange.FromUnixTimestamp(Convert.ToInt64(item[5]))
                     };
+                    if(trade.Time.Year == 1)
+                    {
+                        throw new InvalidOperationException();
+                    }
                     ticker.TradeHistory.Insert(0, trade);
                     CandleStickChartHelper.UpdateVolumes(ticker.CandleStickData, trade, ticker.CandleStickPeriodMin);
                 }

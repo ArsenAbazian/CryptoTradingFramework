@@ -8,6 +8,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace CryptoMarketClient {
     public class Telemetry {
@@ -33,16 +34,26 @@ namespace CryptoMarketClient {
             tc.Context.Component.Version = Assembly.GetEntryAssembly().GetName().Version.ToString();
 
             InnerClient = tc;
-            LogFile = new StreamWriter("log.txt");
+            try
+            {
+                LogFile = new StreamWriter("log.txt");
+            }
+            catch(Exception)
+            {
+                LogFile = null;
+            }
         }
 
         protected StreamWriter LogFile { get; private set; }
         public Telemetry() {
             InitializeTelemetry();
         }
+        [XmlIgnore]
         public TelemetryClient InnerClient { get; set; }
 
         void LogToFile(Exception e) {
+            if (LogFile == null)
+                return;
             LogFile.WriteLine(DateTime.Now.ToString() + " " + e.ToString());
             LogFile.FlushAsync();
         }

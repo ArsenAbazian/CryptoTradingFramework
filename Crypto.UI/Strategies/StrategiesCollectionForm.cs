@@ -270,6 +270,7 @@ namespace CryptoMarketClient.Strategies {
             manager.Save();
             this.siStatus.Caption = "<b>Simulation done.</b>";
             Application.DoEvents();
+            //this.toastNotificationsManager1.ShowNotification("404ef86f-183c-4fea-960b-86f54e52ea76");
             StrategyConfigurationManager.Default.ShowData(cloned);
         }
 

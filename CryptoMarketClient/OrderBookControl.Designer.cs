@@ -29,13 +29,13 @@
             this.gcVolume = new DevExpress.XtraGrid.Columns.GridColumn();
             this.bidPanel = new DevExpress.XtraEditors.SidePanel();
             this.bidGridControl = new DevExpress.XtraGrid.GridControl();
-            this.bidGridView = new DevExpress.XtraGrid.Views.Grid.GridView();
+            this.bidGridView = new Crypto.UI.Controls.ThreadSafeGridView();
             this.gcRate2 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gcAmount2 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.repositoryItemTextEdit2 = new DevExpress.XtraEditors.Repository.RepositoryItemTextEdit();
             this.askPanel = new DevExpress.XtraEditors.SidePanel();
             this.askGridControl = new DevExpress.XtraGrid.GridControl();
-            this.askGridView = new DevExpress.XtraGrid.Views.Grid.GridView();
+            this.askGridView = new Crypto.UI.Controls.ThreadSafeGridView();
             this.gcRate = new DevExpress.XtraGrid.Columns.GridColumn();
             this.repositoryItemTextEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemTextEdit();
             this.gcAmount = new DevExpress.XtraGrid.Columns.GridColumn();

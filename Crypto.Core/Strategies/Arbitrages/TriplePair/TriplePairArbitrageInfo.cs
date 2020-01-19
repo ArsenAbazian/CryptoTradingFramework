@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace CryptoMarketClient.Common {
     [Serializable]
@@ -24,7 +25,9 @@ namespace CryptoMarketClient.Common {
             Earned = info.LastEarned;
         }
 
+        [XmlIgnore]
         public double Disbalance { get; private set; }
+        [XmlIgnore]
         public OperationDirection Direction { get; private set; }
 
         [DisplayName("Alt in Base")]
@@ -55,10 +58,15 @@ namespace CryptoMarketClient.Common {
         public Ticker BaseUsdt { get; set; }
         public Ticker AltUsdt { get; set; }
 
+        [XmlIgnore]
         public double Disbalance { get; private set; }
+        [XmlIgnore]
         public OperationDirection Direction { get; private set; }
+        [XmlIgnore]
         public int AltBaseIndex { get; private set; }
+        [XmlIgnore]
         public int AltUsdtIndex { get; private set; }
+        [XmlIgnore]
         public int BaseUsdtIndex { get; private set; }
         public bool IsSelected { get; set; }
 
@@ -588,6 +596,7 @@ namespace CryptoMarketClient.Common {
             return Exchange + "-" + AltCoin + "-" + BaseCoin;
         }
         public string Error { get; set; }
+        [XmlIgnore]
         public bool DemoMode { get; internal set; }
     }
 

@@ -221,7 +221,7 @@
             this.gcLast.Name = "gcLast";
             this.gcLast.OptionsColumn.AllowEdit = false;
             this.gcLast.Visible = true;
-            this.gcLast.VisibleIndex = 3;
+            this.gcLast.VisibleIndex = 2;
             this.gcLast.Width = 118;
             // 
             // teValueWithChange
@@ -245,7 +245,7 @@
             this.gcHighestBid.Name = "gcHighestBid";
             this.gcHighestBid.OptionsColumn.AllowEdit = false;
             this.gcHighestBid.Visible = true;
-            this.gcHighestBid.VisibleIndex = 4;
+            this.gcHighestBid.VisibleIndex = 3;
             this.gcHighestBid.Width = 118;
             // 
             // gcDeltaAsk
@@ -263,7 +263,7 @@
             this.gcLowestAsk.Name = "gcLowestAsk";
             this.gcLowestAsk.OptionsColumn.AllowEdit = false;
             this.gcLowestAsk.Visible = true;
-            this.gcLowestAsk.VisibleIndex = 5;
+            this.gcLowestAsk.VisibleIndex = 4;
             this.gcLowestAsk.Width = 118;
             // 
             // colIsActual
@@ -281,7 +281,7 @@
             this.gcSecond.Name = "gcSecond";
             this.gcSecond.OptionsColumn.AllowEdit = false;
             this.gcSecond.Visible = true;
-            this.gcSecond.VisibleIndex = 2;
+            this.gcSecond.VisibleIndex = 1;
             this.gcSecond.Width = 242;
             // 
             // repositoryItemTextEdit1
@@ -294,7 +294,7 @@
             // 
             this.gridControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gridControl1.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(24, 23, 24, 23);
-            this.gridControl1.Location = new System.Drawing.Point(446, 337);
+            this.gridControl1.Location = new System.Drawing.Point(446, 329);
             this.gridControl1.MainView = this.gridView1;
             this.gridControl1.Margin = new System.Windows.Forms.Padding(24, 23, 24, 23);
             this.gridControl1.Name = "gridControl1";
@@ -303,7 +303,7 @@
             this.repositoryItemCheckEdit1,
             this.repositoryItemTextEdit1,
             this.teValueWithChange});
-            this.gridControl1.Size = new System.Drawing.Size(1367, 603);
+            this.gridControl1.Size = new System.Drawing.Size(1367, 611);
             this.gridControl1.TabIndex = 0;
             this.gridControl1.UseDirectXPaint = DevExpress.Utils.DefaultBoolean.True;
             this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
@@ -365,7 +365,7 @@
             this.gridColumn1.Name = "gridColumn1";
             this.gridColumn1.UnboundType = DevExpress.Data.UnboundColumnType.Object;
             this.gridColumn1.Visible = true;
-            this.gridColumn1.VisibleIndex = 10;
+            this.gridColumn1.VisibleIndex = 8;
             this.gridColumn1.Width = 150;
             // 
             // colIsSelected
@@ -399,20 +399,18 @@
             this.gcCurrencyPair.FieldName = "CurrencyPair";
             this.gcCurrencyPair.Name = "gcCurrencyPair";
             this.gcCurrencyPair.OptionsColumn.AllowEdit = false;
-            this.gcCurrencyPair.Visible = true;
-            this.gcCurrencyPair.VisibleIndex = 1;
             this.gcCurrencyPair.Width = 206;
             // 
             // gcBaseVolume
             // 
-            this.gcBaseVolume.Caption = "Base Volume";
+            this.gcBaseVolume.Caption = "24 Hour Volume";
             this.gcBaseVolume.DisplayFormat.FormatString = "0.00000000";
             this.gcBaseVolume.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.gcBaseVolume.FieldName = "BaseVolume";
             this.gcBaseVolume.Name = "gcBaseVolume";
             this.gcBaseVolume.OptionsColumn.AllowEdit = false;
             this.gcBaseVolume.Visible = true;
-            this.gcBaseVolume.VisibleIndex = 6;
+            this.gcBaseVolume.VisibleIndex = 7;
             this.gcBaseVolume.Width = 118;
             // 
             // gcQuoteVolume
@@ -423,8 +421,6 @@
             this.gcQuoteVolume.FieldName = "QuoteVolume";
             this.gcQuoteVolume.Name = "gcQuoteVolume";
             this.gcQuoteVolume.OptionsColumn.AllowEdit = false;
-            this.gcQuoteVolume.Visible = true;
-            this.gcQuoteVolume.VisibleIndex = 9;
             this.gcQuoteVolume.Width = 154;
             // 
             // gcIsFrozen
@@ -443,7 +439,7 @@
             this.gcHr24High.Name = "gcHr24High";
             this.gcHr24High.OptionsColumn.AllowEdit = false;
             this.gcHr24High.Visible = true;
-            this.gcHr24High.VisibleIndex = 7;
+            this.gcHr24High.VisibleIndex = 5;
             this.gcHr24High.Width = 118;
             // 
             // gcHr24Low
@@ -455,7 +451,7 @@
             this.gcHr24Low.Name = "gcHr24Low";
             this.gcHr24Low.OptionsColumn.AllowEdit = false;
             this.gcHr24Low.Visible = true;
-            this.gcHr24Low.VisibleIndex = 8;
+            this.gcHr24Low.VisibleIndex = 6;
             this.gcHr24Low.Width = 118;
             // 
             // gcTime
@@ -823,8 +819,7 @@
             this.bar1.DockStyle = DevExpress.XtraBars.BarDockStyle.Standalone;
             this.bar1.FloatLocation = new System.Drawing.Point(605, 618);
             this.bar1.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
-            new DevExpress.XtraBars.LinkPersistInfo(this.bcShowOnlyFavorite),
-            new DevExpress.XtraBars.LinkPersistInfo(this.biBestFit)});
+            new DevExpress.XtraBars.LinkPersistInfo(this.bcShowOnlyFavorite)});
             this.bar1.OptionsBar.DrawBorder = false;
             this.bar1.OptionsBar.UseWholeRow = true;
             this.bar1.StandaloneBarDockControl = this.standaloneBarDockControl2;
@@ -857,7 +852,7 @@
             this.standaloneBarDockControl2.Location = new System.Drawing.Point(446, 277);
             this.standaloneBarDockControl2.Manager = this.barManager1;
             this.standaloneBarDockControl2.Name = "standaloneBarDockControl2";
-            this.standaloneBarDockControl2.Size = new System.Drawing.Size(1367, 60);
+            this.standaloneBarDockControl2.Size = new System.Drawing.Size(1367, 52);
             this.standaloneBarDockControl2.Text = "standaloneBarDockControl2";
             // 
             // barAndDockingController1

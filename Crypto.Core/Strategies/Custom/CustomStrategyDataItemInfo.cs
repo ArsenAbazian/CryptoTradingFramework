@@ -136,7 +136,8 @@ namespace Crypto.Core.Strategies {
         }
         public ArgumentScaleType ArgumentScaleType { get; set; } = ArgumentScaleType.DateTime;
         public string ArgumentDataMember { get; set; }
-        public bool HasAnnotationStringFormat { get; private set; }
+        [XmlIgnore]
+        public bool HasAnnotationStringFormat { get; internal set; }
         public string AnnotationAnchorField { get; set; }
         public DataVisibility Visibility { get; set; } = DataVisibility.Both;
         public bool UseCustomTimeUnit { get; set; } = false;
@@ -172,6 +173,7 @@ namespace Crypto.Core.Strategies {
         public object Value { get; set; }
         public ResizeableArray<object> Items { get; set; }
         public bool IsChartData { get { return Type == DataType.ChartData || Type == DataType.HistogrammData; } }
+        [XmlIgnore]
         public bool Reversed { get; internal set; }
         public string AxisXName {
             get {

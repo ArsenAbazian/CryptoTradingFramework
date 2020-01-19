@@ -24,21 +24,138 @@
         /// </summary>
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
-            DevExpress.XtraEditors.Controls.EditorButtonImageOptions editorButtonImageOptions2 = new DevExpress.XtraEditors.Controls.EditorButtonImageOptions();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject5 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject6 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject7 = new DevExpress.Utils.SerializableAppearanceObject();
-            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject8 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.XtraEditors.Controls.EditorButtonImageOptions editorButtonImageOptions1 = new DevExpress.XtraEditors.Controls.EditorButtonImageOptions();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject1 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject2 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject3 = new DevExpress.Utils.SerializableAppearanceObject();
+            DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject4 = new DevExpress.Utils.SerializableAppearanceObject();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ChartDataControl));
-            DevExpress.XtraCharts.XYDiagram xyDiagram2 = new DevExpress.XtraCharts.XYDiagram();
-            DevExpress.XtraCharts.Series series2 = new DevExpress.XtraCharts.Series();
-            DevExpress.XtraCharts.LineSeriesView lineSeriesView2 = new DevExpress.XtraCharts.LineSeriesView();
+            DevExpress.XtraCharts.XYDiagram xyDiagram1 = new DevExpress.XtraCharts.XYDiagram();
+            DevExpress.XtraCharts.Series series1 = new DevExpress.XtraCharts.Series();
+            DevExpress.XtraCharts.LineSeriesView lineSeriesView1 = new DevExpress.XtraCharts.LineSeriesView();
+            DevExpress.XtraCharts.UI.ChartControlCommandGalleryItemGroup2DColumn chartControlCommandGalleryItemGroup2DColumn1 = new DevExpress.XtraCharts.UI.ChartControlCommandGalleryItemGroup2DColumn();
+            DevExpress.XtraCharts.UI.CreateBarChartItem createBarChartItem1 = new DevExpress.XtraCharts.UI.CreateBarChartItem();
+            DevExpress.XtraCharts.UI.CreateFullStackedBarChartItem createFullStackedBarChartItem1 = new DevExpress.XtraCharts.UI.CreateFullStackedBarChartItem();
+            DevExpress.XtraCharts.UI.CreateSideBySideFullStackedBarChartItem createSideBySideFullStackedBarChartItem1 = new DevExpress.XtraCharts.UI.CreateSideBySideFullStackedBarChartItem();
+            DevExpress.XtraCharts.UI.CreateSideBySideStackedBarChartItem createSideBySideStackedBarChartItem1 = new DevExpress.XtraCharts.UI.CreateSideBySideStackedBarChartItem();
+            DevExpress.XtraCharts.UI.CreateStackedBarChartItem createStackedBarChartItem1 = new DevExpress.XtraCharts.UI.CreateStackedBarChartItem();
+            DevExpress.XtraCharts.UI.CreateWaterfallChartItem createWaterfallChartItem1 = new DevExpress.XtraCharts.UI.CreateWaterfallChartItem();
+            DevExpress.XtraCharts.UI.ChartControlCommandGalleryItemGroup3DColumn chartControlCommandGalleryItemGroup3DColumn1 = new DevExpress.XtraCharts.UI.ChartControlCommandGalleryItemGroup3DColumn();
+            DevExpress.XtraCharts.UI.CreateBar3DChartItem createBar3DChartItem1 = new DevExpress.XtraCharts.UI.CreateBar3DChartItem();
+            DevExpress.XtraCharts.UI.CreateFullStackedBar3DChartItem createFullStackedBar3DChartItem1 = new DevExpress.XtraCharts.UI.CreateFullStackedBar3DChartItem();
+            DevExpress.XtraCharts.UI.CreateManhattanBarChartItem createManhattanBarChartItem1 = new DevExpress.XtraCharts.UI.CreateManhattanBarChartItem();
+            DevExpress.XtraCharts.UI.CreateSideBySideFullStackedBar3DChartItem createSideBySideFullStackedBar3DChartItem1 = new DevExpress.XtraCharts.UI.CreateSideBySideFullStackedBar3DChartItem();
+            DevExpress.XtraCharts.UI.CreateSideBySideStackedBar3DChartItem createSideBySideStackedBar3DChartItem1 = new DevExpress.XtraCharts.UI.CreateSideBySideStackedBar3DChartItem();
+            DevExpress.XtraCharts.UI.CreateStackedBar3DChartItem createStackedBar3DChartItem1 = new DevExpress.XtraCharts.UI.CreateStackedBar3DChartItem();
+            DevExpress.XtraCharts.UI.ChartControlCommandGalleryItemGroupCylinderColumn chartControlCommandGalleryItemGroupCylinderColumn1 = new DevExpress.XtraCharts.UI.ChartControlCommandGalleryItemGroupCylinderColumn();
+            DevExpress.XtraCharts.UI.CreateCylinderBar3DChartItem createCylinderBar3DChartItem1 = new DevExpress.XtraCharts.UI.CreateCylinderBar3DChartItem();
+            DevExpress.XtraCharts.UI.CreateCylinderFullStackedBar3DChartItem createCylinderFullStackedBar3DChartItem1 = new DevExpress.XtraCharts.UI.CreateCylinderFullStackedBar3DChartItem();
+            DevExpress.XtraCharts.UI.CreateCylinderManhattanBarChartItem createCylinderManhattanBarChartItem1 = new DevExpress.XtraCharts.UI.CreateCylinderManhattanBarChartItem();
+            DevExpress.XtraCharts.UI.CreateCylinderSideBySideFullStackedBar3DChartItem createCylinderSideBySideFullStackedBar3DChartItem1 = new DevExpress.XtraCharts.UI.CreateCylinderSideBySideFullStackedBar3DChartItem();
+            DevExpress.XtraCharts.UI.CreateCylinderSideBySideStackedBar3DChartItem createCylinderSideBySideStackedBar3DChartItem1 = new DevExpress.XtraCharts.UI.CreateCylinderSideBySideStackedBar3DChartItem();
+            DevExpress.XtraCharts.UI.CreateCylinderStackedBar3DChartItem createCylinderStackedBar3DChartItem1 = new DevExpress.XtraCharts.UI.CreateCylinderStackedBar3DChartItem();
+            DevExpress.XtraCharts.UI.ChartControlCommandGalleryItemGroupConeColumn chartControlCommandGalleryItemGroupConeColumn1 = new DevExpress.XtraCharts.UI.ChartControlCommandGalleryItemGroupConeColumn();
+            DevExpress.XtraCharts.UI.CreateConeBar3DChartItem createConeBar3DChartItem1 = new DevExpress.XtraCharts.UI.CreateConeBar3DChartItem();
+            DevExpress.XtraCharts.UI.CreateConeFullStackedBar3DChartItem createConeFullStackedBar3DChartItem1 = new DevExpress.XtraCharts.UI.CreateConeFullStackedBar3DChartItem();
+            DevExpress.XtraCharts.UI.CreateConeManhattanBarChartItem createConeManhattanBarChartItem1 = new DevExpress.XtraCharts.UI.CreateConeManhattanBarChartItem();
+            DevExpress.XtraCharts.UI.CreateConeSideBySideFullStackedBar3DChartItem createConeSideBySideFullStackedBar3DChartItem1 = new DevExpress.XtraCharts.UI.CreateConeSideBySideFullStackedBar3DChartItem();
+            DevExpress.XtraCharts.UI.CreateConeSideBySideStackedBar3DChartItem createConeSideBySideStackedBar3DChartItem1 = new DevExpress.XtraCharts.UI.CreateConeSideBySideStackedBar3DChartItem();
+            DevExpress.XtraCharts.UI.CreateConeStackedBar3DChartItem createConeStackedBar3DChartItem1 = new DevExpress.XtraCharts.UI.CreateConeStackedBar3DChartItem();
+            DevExpress.XtraCharts.UI.ChartControlCommandGalleryItemGroupPyramidColumn chartControlCommandGalleryItemGroupPyramidColumn1 = new DevExpress.XtraCharts.UI.ChartControlCommandGalleryItemGroupPyramidColumn();
+            DevExpress.XtraCharts.UI.CreatePyramidBar3DChartItem createPyramidBar3DChartItem1 = new DevExpress.XtraCharts.UI.CreatePyramidBar3DChartItem();
+            DevExpress.XtraCharts.UI.CreatePyramidFullStackedBar3DChartItem createPyramidFullStackedBar3DChartItem1 = new DevExpress.XtraCharts.UI.CreatePyramidFullStackedBar3DChartItem();
+            DevExpress.XtraCharts.UI.CreatePyramidManhattanBarChartItem createPyramidManhattanBarChartItem1 = new DevExpress.XtraCharts.UI.CreatePyramidManhattanBarChartItem();
+            DevExpress.XtraCharts.UI.CreatePyramidSideBySideFullStackedBar3DChartItem createPyramidSideBySideFullStackedBar3DChartItem1 = new DevExpress.XtraCharts.UI.CreatePyramidSideBySideFullStackedBar3DChartItem();
+            DevExpress.XtraCharts.UI.CreatePyramidSideBySideStackedBar3DChartItem createPyramidSideBySideStackedBar3DChartItem1 = new DevExpress.XtraCharts.UI.CreatePyramidSideBySideStackedBar3DChartItem();
+            DevExpress.XtraCharts.UI.CreatePyramidStackedBar3DChartItem createPyramidStackedBar3DChartItem1 = new DevExpress.XtraCharts.UI.CreatePyramidStackedBar3DChartItem();
+            DevExpress.XtraCharts.UI.ChartControlCommandGalleryItemGroup2DLine chartControlCommandGalleryItemGroup2DLine1 = new DevExpress.XtraCharts.UI.ChartControlCommandGalleryItemGroup2DLine();
+            DevExpress.XtraCharts.UI.CreateLineChartItem createLineChartItem1 = new DevExpress.XtraCharts.UI.CreateLineChartItem();
+            DevExpress.XtraCharts.UI.CreateFullStackedLineChartItem createFullStackedLineChartItem1 = new DevExpress.XtraCharts.UI.CreateFullStackedLineChartItem();
+            DevExpress.XtraCharts.UI.CreateScatterLineChartItem createScatterLineChartItem1 = new DevExpress.XtraCharts.UI.CreateScatterLineChartItem();
+            DevExpress.XtraCharts.UI.CreateSplineChartItem createSplineChartItem1 = new DevExpress.XtraCharts.UI.CreateSplineChartItem();
+            DevExpress.XtraCharts.UI.CreateStackedLineChartItem createStackedLineChartItem1 = new DevExpress.XtraCharts.UI.CreateStackedLineChartItem();
+            DevExpress.XtraCharts.UI.CreateStepLineChartItem createStepLineChartItem1 = new DevExpress.XtraCharts.UI.CreateStepLineChartItem();
+            DevExpress.XtraCharts.UI.ChartControlCommandGalleryItemGroup3DLine chartControlCommandGalleryItemGroup3DLine1 = new DevExpress.XtraCharts.UI.ChartControlCommandGalleryItemGroup3DLine();
+            DevExpress.XtraCharts.UI.CreateLine3DChartItem createLine3DChartItem1 = new DevExpress.XtraCharts.UI.CreateLine3DChartItem();
+            DevExpress.XtraCharts.UI.CreateFullStackedLine3DChartItem createFullStackedLine3DChartItem1 = new DevExpress.XtraCharts.UI.CreateFullStackedLine3DChartItem();
+            DevExpress.XtraCharts.UI.CreateSpline3DChartItem createSpline3DChartItem1 = new DevExpress.XtraCharts.UI.CreateSpline3DChartItem();
+            DevExpress.XtraCharts.UI.CreateStackedLine3DChartItem createStackedLine3DChartItem1 = new DevExpress.XtraCharts.UI.CreateStackedLine3DChartItem();
+            DevExpress.XtraCharts.UI.CreateStepLine3DChartItem createStepLine3DChartItem1 = new DevExpress.XtraCharts.UI.CreateStepLine3DChartItem();
+            DevExpress.XtraCharts.UI.ChartControlCommandGalleryItemGroup2DPie chartControlCommandGalleryItemGroup2DPie1 = new DevExpress.XtraCharts.UI.ChartControlCommandGalleryItemGroup2DPie();
+            DevExpress.XtraCharts.UI.CreatePieChartItem createPieChartItem1 = new DevExpress.XtraCharts.UI.CreatePieChartItem();
+            DevExpress.XtraCharts.UI.CreateDoughnutChartItem createDoughnutChartItem1 = new DevExpress.XtraCharts.UI.CreateDoughnutChartItem();
+            DevExpress.XtraCharts.UI.CreateNestedDoughnutChartItem createNestedDoughnutChartItem1 = new DevExpress.XtraCharts.UI.CreateNestedDoughnutChartItem();
+            DevExpress.XtraCharts.UI.ChartControlCommandGalleryItemGroup3DPie chartControlCommandGalleryItemGroup3DPie1 = new DevExpress.XtraCharts.UI.ChartControlCommandGalleryItemGroup3DPie();
+            DevExpress.XtraCharts.UI.CreatePie3DChartItem createPie3DChartItem1 = new DevExpress.XtraCharts.UI.CreatePie3DChartItem();
+            DevExpress.XtraCharts.UI.CreateDoughnut3DChartItem createDoughnut3DChartItem1 = new DevExpress.XtraCharts.UI.CreateDoughnut3DChartItem();
+            DevExpress.XtraCharts.UI.ChartControlCommandGalleryItemGroup2DBar chartControlCommandGalleryItemGroup2DBar1 = new DevExpress.XtraCharts.UI.ChartControlCommandGalleryItemGroup2DBar();
+            DevExpress.XtraCharts.UI.CreateRotatedBarChartItem createRotatedBarChartItem1 = new DevExpress.XtraCharts.UI.CreateRotatedBarChartItem();
+            DevExpress.XtraCharts.UI.CreateRotatedFullStackedBarChartItem createRotatedFullStackedBarChartItem1 = new DevExpress.XtraCharts.UI.CreateRotatedFullStackedBarChartItem();
+            DevExpress.XtraCharts.UI.CreateRotatedSideBySideFullStackedBarChartItem createRotatedSideBySideFullStackedBarChartItem1 = new DevExpress.XtraCharts.UI.CreateRotatedSideBySideFullStackedBarChartItem();
+            DevExpress.XtraCharts.UI.CreateRotatedSideBySideStackedBarChartItem createRotatedSideBySideStackedBarChartItem1 = new DevExpress.XtraCharts.UI.CreateRotatedSideBySideStackedBarChartItem();
+            DevExpress.XtraCharts.UI.CreateRotatedStackedBarChartItem createRotatedStackedBarChartItem1 = new DevExpress.XtraCharts.UI.CreateRotatedStackedBarChartItem();
+            DevExpress.XtraCharts.UI.ChartControlCommandGalleryItemGroup2DArea chartControlCommandGalleryItemGroup2DArea1 = new DevExpress.XtraCharts.UI.ChartControlCommandGalleryItemGroup2DArea();
+            DevExpress.XtraCharts.UI.CreateAreaChartItem createAreaChartItem1 = new DevExpress.XtraCharts.UI.CreateAreaChartItem();
+            DevExpress.XtraCharts.UI.CreateFullStackedAreaChartItem createFullStackedAreaChartItem1 = new DevExpress.XtraCharts.UI.CreateFullStackedAreaChartItem();
+            DevExpress.XtraCharts.UI.CreateFullStackedSplineAreaChartItem createFullStackedSplineAreaChartItem1 = new DevExpress.XtraCharts.UI.CreateFullStackedSplineAreaChartItem();
+            DevExpress.XtraCharts.UI.CreateFullStackedStepAreaChartItem createFullStackedStepAreaChartItem1 = new DevExpress.XtraCharts.UI.CreateFullStackedStepAreaChartItem();
+            DevExpress.XtraCharts.UI.CreateSplineAreaChartItem createSplineAreaChartItem1 = new DevExpress.XtraCharts.UI.CreateSplineAreaChartItem();
+            DevExpress.XtraCharts.UI.CreateStackedAreaChartItem createStackedAreaChartItem1 = new DevExpress.XtraCharts.UI.CreateStackedAreaChartItem();
+            DevExpress.XtraCharts.UI.CreateStackedStepAreaChartItem createStackedStepAreaChartItem1 = new DevExpress.XtraCharts.UI.CreateStackedStepAreaChartItem();
+            DevExpress.XtraCharts.UI.CreateStackedSplineAreaChartItem createStackedSplineAreaChartItem1 = new DevExpress.XtraCharts.UI.CreateStackedSplineAreaChartItem();
+            DevExpress.XtraCharts.UI.CreateStepAreaChartItem createStepAreaChartItem1 = new DevExpress.XtraCharts.UI.CreateStepAreaChartItem();
+            DevExpress.XtraCharts.UI.ChartControlCommandGalleryItemGroup3DArea chartControlCommandGalleryItemGroup3DArea1 = new DevExpress.XtraCharts.UI.ChartControlCommandGalleryItemGroup3DArea();
+            DevExpress.XtraCharts.UI.CreateArea3DChartItem createArea3DChartItem1 = new DevExpress.XtraCharts.UI.CreateArea3DChartItem();
+            DevExpress.XtraCharts.UI.CreateFullStackedArea3DChartItem createFullStackedArea3DChartItem1 = new DevExpress.XtraCharts.UI.CreateFullStackedArea3DChartItem();
+            DevExpress.XtraCharts.UI.CreateFullStackedSplineArea3DChartItem createFullStackedSplineArea3DChartItem1 = new DevExpress.XtraCharts.UI.CreateFullStackedSplineArea3DChartItem();
+            DevExpress.XtraCharts.UI.CreateSplineArea3DChartItem createSplineArea3DChartItem1 = new DevExpress.XtraCharts.UI.CreateSplineArea3DChartItem();
+            DevExpress.XtraCharts.UI.CreateStackedArea3DChartItem createStackedArea3DChartItem1 = new DevExpress.XtraCharts.UI.CreateStackedArea3DChartItem();
+            DevExpress.XtraCharts.UI.CreateStackedSplineArea3DChartItem createStackedSplineArea3DChartItem1 = new DevExpress.XtraCharts.UI.CreateStackedSplineArea3DChartItem();
+            DevExpress.XtraCharts.UI.CreateStepArea3DChartItem createStepArea3DChartItem1 = new DevExpress.XtraCharts.UI.CreateStepArea3DChartItem();
+            DevExpress.XtraCharts.UI.ChartControlCommandGalleryItemGroupPoint chartControlCommandGalleryItemGroupPoint1 = new DevExpress.XtraCharts.UI.ChartControlCommandGalleryItemGroupPoint();
+            DevExpress.XtraCharts.UI.CreatePointChartItem createPointChartItem1 = new DevExpress.XtraCharts.UI.CreatePointChartItem();
+            DevExpress.XtraCharts.UI.CreateBubbleChartItem createBubbleChartItem1 = new DevExpress.XtraCharts.UI.CreateBubbleChartItem();
+            DevExpress.XtraCharts.UI.ChartControlCommandGalleryItemGroupFunnel chartControlCommandGalleryItemGroupFunnel1 = new DevExpress.XtraCharts.UI.ChartControlCommandGalleryItemGroupFunnel();
+            DevExpress.XtraCharts.UI.CreateFunnelChartItem createFunnelChartItem1 = new DevExpress.XtraCharts.UI.CreateFunnelChartItem();
+            DevExpress.XtraCharts.UI.CreateFunnel3DChartItem createFunnel3DChartItem1 = new DevExpress.XtraCharts.UI.CreateFunnel3DChartItem();
+            DevExpress.XtraCharts.UI.ChartControlCommandGalleryItemGroupFinancial chartControlCommandGalleryItemGroupFinancial1 = new DevExpress.XtraCharts.UI.ChartControlCommandGalleryItemGroupFinancial();
+            DevExpress.XtraCharts.UI.CreateStockChartItem createStockChartItem1 = new DevExpress.XtraCharts.UI.CreateStockChartItem();
+            DevExpress.XtraCharts.UI.CreateCandleStickChartItem createCandleStickChartItem1 = new DevExpress.XtraCharts.UI.CreateCandleStickChartItem();
+            DevExpress.XtraCharts.UI.ChartControlCommandGalleryItemGroupRadar chartControlCommandGalleryItemGroupRadar1 = new DevExpress.XtraCharts.UI.ChartControlCommandGalleryItemGroupRadar();
+            DevExpress.XtraCharts.UI.CreateRadarPointChartItem createRadarPointChartItem1 = new DevExpress.XtraCharts.UI.CreateRadarPointChartItem();
+            DevExpress.XtraCharts.UI.CreateRadarLineChartItem createRadarLineChartItem1 = new DevExpress.XtraCharts.UI.CreateRadarLineChartItem();
+            DevExpress.XtraCharts.UI.CreateRadarAreaChartItem createRadarAreaChartItem1 = new DevExpress.XtraCharts.UI.CreateRadarAreaChartItem();
+            DevExpress.XtraCharts.UI.CreateRadarRangeAreaChartItem createRadarRangeAreaChartItem1 = new DevExpress.XtraCharts.UI.CreateRadarRangeAreaChartItem();
+            DevExpress.XtraCharts.UI.CreateScatterRadarLineChartItem createScatterRadarLineChartItem1 = new DevExpress.XtraCharts.UI.CreateScatterRadarLineChartItem();
+            DevExpress.XtraCharts.UI.ChartControlCommandGalleryItemGroupPolar chartControlCommandGalleryItemGroupPolar1 = new DevExpress.XtraCharts.UI.ChartControlCommandGalleryItemGroupPolar();
+            DevExpress.XtraCharts.UI.CreatePolarPointChartItem createPolarPointChartItem1 = new DevExpress.XtraCharts.UI.CreatePolarPointChartItem();
+            DevExpress.XtraCharts.UI.CreatePolarLineChartItem createPolarLineChartItem1 = new DevExpress.XtraCharts.UI.CreatePolarLineChartItem();
+            DevExpress.XtraCharts.UI.CreatePolarAreaChartItem createPolarAreaChartItem1 = new DevExpress.XtraCharts.UI.CreatePolarAreaChartItem();
+            DevExpress.XtraCharts.UI.CreatePolarRangeAreaChartItem createPolarRangeAreaChartItem1 = new DevExpress.XtraCharts.UI.CreatePolarRangeAreaChartItem();
+            DevExpress.XtraCharts.UI.CreateScatterPolarLineChartItem createScatterPolarLineChartItem1 = new DevExpress.XtraCharts.UI.CreateScatterPolarLineChartItem();
+            DevExpress.XtraCharts.UI.ChartControlCommandGalleryItemGroupRange chartControlCommandGalleryItemGroupRange1 = new DevExpress.XtraCharts.UI.ChartControlCommandGalleryItemGroupRange();
+            DevExpress.XtraCharts.UI.CreateRangeBarChartItem createRangeBarChartItem1 = new DevExpress.XtraCharts.UI.CreateRangeBarChartItem();
+            DevExpress.XtraCharts.UI.CreateSideBySideRangeBarChartItem createSideBySideRangeBarChartItem1 = new DevExpress.XtraCharts.UI.CreateSideBySideRangeBarChartItem();
+            DevExpress.XtraCharts.UI.CreateRangeAreaChartItem createRangeAreaChartItem1 = new DevExpress.XtraCharts.UI.CreateRangeAreaChartItem();
+            DevExpress.XtraCharts.UI.CreateRangeArea3DChartItem createRangeArea3DChartItem1 = new DevExpress.XtraCharts.UI.CreateRangeArea3DChartItem();
+            DevExpress.XtraCharts.UI.ChartControlCommandGalleryItemGroupGantt chartControlCommandGalleryItemGroupGantt1 = new DevExpress.XtraCharts.UI.ChartControlCommandGalleryItemGroupGantt();
+            DevExpress.XtraCharts.UI.CreateGanttChartItem createGanttChartItem1 = new DevExpress.XtraCharts.UI.CreateGanttChartItem();
+            DevExpress.XtraCharts.UI.CreateSideBySideGanttChartItem createSideBySideGanttChartItem1 = new DevExpress.XtraCharts.UI.CreateSideBySideGanttChartItem();
+            DevExpress.XtraCharts.UI.ChartControlCommandGalleryItemGroupBoxPlot chartControlCommandGalleryItemGroupBoxPlot1 = new DevExpress.XtraCharts.UI.ChartControlCommandGalleryItemGroupBoxPlot();
+            DevExpress.XtraCharts.UI.CreateBoxPlotChartItem createBoxPlotChartItem1 = new DevExpress.XtraCharts.UI.CreateBoxPlotChartItem();
+            DevExpress.XtraCharts.ChartIntervalItem chartIntervalItem1 = new DevExpress.XtraCharts.ChartIntervalItem();
+            DevExpress.XtraCharts.ChartIntervalItem chartIntervalItem2 = new DevExpress.XtraCharts.ChartIntervalItem();
+            DevExpress.XtraCharts.ChartIntervalItem chartIntervalItem3 = new DevExpress.XtraCharts.ChartIntervalItem();
+            DevExpress.XtraCharts.ChartIntervalItem chartIntervalItem4 = new DevExpress.XtraCharts.ChartIntervalItem();
+            DevExpress.XtraCharts.ChartIntervalItem chartIntervalItem5 = new DevExpress.XtraCharts.ChartIntervalItem();
+            DevExpress.XtraCharts.ChartIntervalItem chartIntervalItem6 = new DevExpress.XtraCharts.ChartIntervalItem();
             this.barManager1 = new DevExpress.XtraBars.BarManager(this.components);
             this.bar1 = new DevExpress.XtraBars.Bar();
             this.bsPanes = new DevExpress.XtraBars.BarSubItem();
+            this.bsSeries = new DevExpress.XtraBars.BarSubItem();
+            this.bsNavigate = new DevExpress.XtraBars.BarSubItem();
             this.beNavigate = new DevExpress.XtraBars.BarEditItem();
             this.repositoryItemButtonEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemButtonEdit();
-            this.bsNavigate = new DevExpress.XtraBars.BarSubItem();
             this.bsEvents = new DevExpress.XtraBars.BarSubItem();
             this.bsHistogramm = new DevExpress.XtraBars.BarSubItem();
             this.bsCustomize = new DevExpress.XtraBars.BarSubItem();
@@ -50,23 +167,93 @@
             this.barDockControlBottom = new DevExpress.XtraBars.BarDockControl();
             this.barDockControlLeft = new DevExpress.XtraBars.BarDockControl();
             this.barDockControlRight = new DevExpress.XtraBars.BarDockControl();
-            this.bsSeries = new DevExpress.XtraBars.BarSubItem();
             this.chartControl = new DevExpress.XtraCharts.ChartControl();
             this.toolTipController1 = new DevExpress.Utils.ToolTipController(this.components);
             this.pmShowChart = new DevExpress.XtraBars.PopupMenu(this.components);
+            this.chartBarController1 = new DevExpress.XtraCharts.UI.ChartBarController(this.components);
+            this.createBarBaseItem1 = new DevExpress.XtraCharts.UI.CreateBarBaseItem();
+            this.commandBarGalleryDropDown1 = new DevExpress.XtraBars.Commands.CommandBarGalleryDropDown(this.components);
+            this.createLineBaseItem1 = new DevExpress.XtraCharts.UI.CreateLineBaseItem();
+            this.commandBarGalleryDropDown2 = new DevExpress.XtraBars.Commands.CommandBarGalleryDropDown(this.components);
+            this.createPieBaseItem1 = new DevExpress.XtraCharts.UI.CreatePieBaseItem();
+            this.commandBarGalleryDropDown3 = new DevExpress.XtraBars.Commands.CommandBarGalleryDropDown(this.components);
+            this.createRotatedBarBaseItem1 = new DevExpress.XtraCharts.UI.CreateRotatedBarBaseItem();
+            this.commandBarGalleryDropDown4 = new DevExpress.XtraBars.Commands.CommandBarGalleryDropDown(this.components);
+            this.createAreaBaseItem1 = new DevExpress.XtraCharts.UI.CreateAreaBaseItem();
+            this.commandBarGalleryDropDown5 = new DevExpress.XtraBars.Commands.CommandBarGalleryDropDown(this.components);
+            this.createOtherSeriesTypesBaseItem1 = new DevExpress.XtraCharts.UI.CreateOtherSeriesTypesBaseItem();
+            this.commandBarGalleryDropDown6 = new DevExpress.XtraBars.Commands.CommandBarGalleryDropDown(this.components);
+            this.changePaletteGalleryBaseItem1 = new DevExpress.XtraCharts.UI.ChangePaletteGalleryBaseItem();
+            this.commandBarGalleryDropDown7 = new DevExpress.XtraBars.Commands.CommandBarGalleryDropDown(this.components);
+            this.changeAppearanceGalleryBaseBarManagerItem1 = new DevExpress.XtraCharts.UI.ChangeAppearanceGalleryBaseBarManagerItem();
+            this.commandBarGalleryDropDown8 = new DevExpress.XtraBars.Commands.CommandBarGalleryDropDown(this.components);
+            this.runDesignerChartItem1 = new DevExpress.XtraCharts.UI.RunDesignerChartItem();
+            this.saveAsTemplateChartItem1 = new DevExpress.XtraCharts.UI.SaveAsTemplateChartItem();
+            this.loadTemplateChartItem1 = new DevExpress.XtraCharts.UI.LoadTemplateChartItem();
+            this.chartPrintExportBar1 = new DevExpress.XtraCharts.UI.ChartPrintExportBar();
+            this.printPreviewChartItem1 = new DevExpress.XtraCharts.UI.PrintPreviewChartItem();
+            this.printChartItem1 = new DevExpress.XtraCharts.UI.PrintChartItem();
+            this.exportToPDFChartItem1 = new DevExpress.XtraCharts.UI.ExportToPDFChartItem();
+            this.exportToHTMLChartItem1 = new DevExpress.XtraCharts.UI.ExportToHTMLChartItem();
+            this.exportToMHTChartItem1 = new DevExpress.XtraCharts.UI.ExportToMHTChartItem();
+            this.exportToXLSChartItem1 = new DevExpress.XtraCharts.UI.ExportToXLSChartItem();
+            this.exportToXLSXChartItem1 = new DevExpress.XtraCharts.UI.ExportToXLSXChartItem();
+            this.exportToRTFChartItem1 = new DevExpress.XtraCharts.UI.ExportToRTFChartItem();
+            this.exportToBMPChartItem1 = new DevExpress.XtraCharts.UI.ExportToBMPChartItem();
+            this.exportToGIFChartItem1 = new DevExpress.XtraCharts.UI.ExportToGIFChartItem();
+            this.exportToJPEGChartItem1 = new DevExpress.XtraCharts.UI.ExportToJPEGChartItem();
+            this.exportToPNGChartItem1 = new DevExpress.XtraCharts.UI.ExportToPNGChartItem();
+            this.exportToTIFFChartItem1 = new DevExpress.XtraCharts.UI.ExportToTIFFChartItem();
+            this.createExportToImageBaseItem1 = new DevExpress.XtraCharts.UI.CreateExportToImageBaseItem();
+            this.createExportBaseItem1 = new DevExpress.XtraCharts.UI.CreateExportBaseItem();
+            this.chartFinancialSeriesBar1 = new DevExpress.XtraCharts.UI.ChartFinancialSeriesBar();
+            this.selectSeriesBarItem1 = new DevExpress.XtraCharts.UI.SelectSeriesBarItem();
+            this.changeSeriesViewBarItem1 = new DevExpress.XtraCharts.UI.ChangeSeriesViewBarItem();
+            this.selectSeriesRepositoryItemComboBox1 = new DevExpress.XtraCharts.UI.SelectSeriesRepositoryItemComboBox();
+            this.changeSeriesViewRepositoryItemComboBox1 = new DevExpress.XtraCharts.UI.ChangeSeriesViewRepositoryItemComboBox();
+            this.chartFinancialIndicatorsBar1 = new DevExpress.XtraCharts.UI.ChartFinancialIndicatorsBar();
+            this.disableIndicatorInteractionBarItem1 = new DevExpress.XtraCharts.UI.DisableIndicatorInteractionBarItem();
+            this.drawTrendLineIndicatorBarItem1 = new DevExpress.XtraCharts.UI.DrawTrendLineIndicatorBarItem();
+            this.drawFibonacciArcsIndicatorBarItem1 = new DevExpress.XtraCharts.UI.DrawFibonacciArcsIndicatorBarItem();
+            this.drawFibonacciFansIndicatorBarItem1 = new DevExpress.XtraCharts.UI.DrawFibonacciFansIndicatorBarItem();
+            this.drawFibonacciRetracementIndicatorBarItem1 = new DevExpress.XtraCharts.UI.DrawFibonacciRetracementIndicatorBarItem();
+            this.removeIndicatorBarItem1 = new DevExpress.XtraCharts.UI.RemoveIndicatorBarItem();
+            this.addIndicatorBarItem1 = new DevExpress.XtraCharts.UI.AddIndicatorBarItem();
+            this.commandBarGalleryDropDown9 = new DevExpress.XtraBars.Commands.CommandBarGalleryDropDown(this.components);
+            this.selectAxisMeasureUnitBarItem1 = new DevExpress.XtraCharts.UI.SelectAxisMeasureUnitBarItem();
+            this.selectPeriodBarItem1 = new DevExpress.XtraCharts.UI.SelectPeriodBarItem();
+            this.selectAxisMeasureUnitRepositoryItemComboBox1 = new DevExpress.XtraCharts.UI.SelectAxisMeasureUnitRepositoryItemComboBox();
+            this.selectPeriodRepositoryItemComboBox1 = new DevExpress.XtraCharts.UI.SelectPeriodRepositoryItemComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.barManager1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemButtonEdit1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chartControl)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(xyDiagram2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(series2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(lineSeriesView2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(xyDiagram1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(series1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(lineSeriesView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pmShowChart)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chartBarController1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.commandBarGalleryDropDown1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.commandBarGalleryDropDown2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.commandBarGalleryDropDown3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.commandBarGalleryDropDown4)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.commandBarGalleryDropDown5)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.commandBarGalleryDropDown6)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.commandBarGalleryDropDown7)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.commandBarGalleryDropDown8)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.selectSeriesRepositoryItemComboBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.changeSeriesViewRepositoryItemComboBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.commandBarGalleryDropDown9)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.selectAxisMeasureUnitRepositoryItemComboBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.selectPeriodRepositoryItemComboBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // barManager1
             // 
             this.barManager1.Bars.AddRange(new DevExpress.XtraBars.Bar[] {
-            this.bar1});
+            this.bar1,
+            this.chartPrintExportBar1,
+            this.chartFinancialSeriesBar1,
+            this.chartFinancialIndicatorsBar1});
             this.barManager1.DockControls.Add(this.barDockControlTop);
             this.barManager1.DockControls.Add(this.barDockControlBottom);
             this.barManager1.DockControls.Add(this.barDockControlLeft);
@@ -83,21 +270,56 @@
             this.bsEvents,
             this.bsHistogramm,
             this.bsCustomize,
-            this.bsShowLegend});
-            this.barManager1.MaxItemId = 13;
+            this.bsShowLegend,
+            this.createBarBaseItem1,
+            this.createLineBaseItem1,
+            this.createPieBaseItem1,
+            this.createRotatedBarBaseItem1,
+            this.createAreaBaseItem1,
+            this.createOtherSeriesTypesBaseItem1,
+            this.changePaletteGalleryBaseItem1,
+            this.changeAppearanceGalleryBaseBarManagerItem1,
+            this.runDesignerChartItem1,
+            this.saveAsTemplateChartItem1,
+            this.loadTemplateChartItem1,
+            this.printPreviewChartItem1,
+            this.printChartItem1,
+            this.createExportBaseItem1,
+            this.exportToPDFChartItem1,
+            this.exportToHTMLChartItem1,
+            this.exportToMHTChartItem1,
+            this.exportToXLSChartItem1,
+            this.exportToXLSXChartItem1,
+            this.exportToRTFChartItem1,
+            this.exportToBMPChartItem1,
+            this.exportToGIFChartItem1,
+            this.exportToJPEGChartItem1,
+            this.exportToPNGChartItem1,
+            this.exportToTIFFChartItem1,
+            this.createExportToImageBaseItem1,
+            this.selectSeriesBarItem1,
+            this.changeSeriesViewBarItem1,
+            this.disableIndicatorInteractionBarItem1,
+            this.drawTrendLineIndicatorBarItem1,
+            this.drawFibonacciArcsIndicatorBarItem1,
+            this.drawFibonacciFansIndicatorBarItem1,
+            this.drawFibonacciRetracementIndicatorBarItem1,
+            this.removeIndicatorBarItem1,
+            this.addIndicatorBarItem1,
+            this.selectAxisMeasureUnitBarItem1,
+            this.selectPeriodBarItem1});
+            this.barManager1.MaxItemId = 50;
             this.barManager1.OptionsStubGlyphs.AllowStubGlyphs = DevExpress.Utils.DefaultBoolean.True;
             this.barManager1.OptionsStubGlyphs.CaseMode = DevExpress.Utils.Drawing.GlyphTextCaseMode.UpperCase;
             this.barManager1.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
-            this.repositoryItemButtonEdit1});
+            this.repositoryItemButtonEdit1,
+            this.selectSeriesRepositoryItemComboBox1,
+            this.changeSeriesViewRepositoryItemComboBox1,
+            this.selectAxisMeasureUnitRepositoryItemComboBox1,
+            this.selectPeriodRepositoryItemComboBox1});
             // 
             // bar1
             // 
-            this.bar1.BarAppearance.Hovered.FontStyleDelta = System.Drawing.FontStyle.Bold;
-            this.bar1.BarAppearance.Hovered.Options.UseFont = true;
-            this.bar1.BarAppearance.Normal.FontStyleDelta = System.Drawing.FontStyle.Bold;
-            this.bar1.BarAppearance.Normal.Options.UseFont = true;
-            this.bar1.BarAppearance.Pressed.FontStyleDelta = System.Drawing.FontStyle.Bold;
-            this.bar1.BarAppearance.Pressed.Options.UseFont = true;
             this.bar1.BarName = "Tools";
             this.bar1.DockCol = 0;
             this.bar1.DockRow = 0;
@@ -105,13 +327,12 @@
             this.bar1.FloatLocation = new System.Drawing.Point(722, 393);
             this.bar1.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
             new DevExpress.XtraBars.LinkPersistInfo(this.bsPanes),
-            new DevExpress.XtraBars.LinkPersistInfo(this.bsSeries),
+            new DevExpress.XtraBars.LinkPersistInfo(DevExpress.XtraBars.BarLinkUserDefines.None, false, this.bsSeries, false),
             new DevExpress.XtraBars.LinkPersistInfo(this.bsNavigate),
             new DevExpress.XtraBars.LinkPersistInfo(DevExpress.XtraBars.BarLinkUserDefines.Width, this.beNavigate, "", false, true, true, 147),
             new DevExpress.XtraBars.LinkPersistInfo(this.bsEvents),
             new DevExpress.XtraBars.LinkPersistInfo(this.bsHistogramm),
             new DevExpress.XtraBars.LinkPersistInfo(this.bsCustomize)});
-            this.bar1.OptionsBar.DrawBorder = false;
             this.bar1.OptionsBar.UseWholeRow = true;
             this.bar1.StandaloneBarDockControl = this.standaloneBarDockControl1;
             this.bar1.Text = "Tools";
@@ -123,6 +344,20 @@
             this.bsPanes.MenuDrawMode = DevExpress.XtraBars.MenuDrawMode.SmallImagesText;
             this.bsPanes.Name = "bsPanes";
             this.bsPanes.GetItemData += new System.EventHandler(this.bsPanes_GetItemData);
+            // 
+            // bsSeries
+            // 
+            this.bsSeries.Caption = "Series";
+            this.bsSeries.Id = 5;
+            this.bsSeries.Name = "bsSeries";
+            this.bsSeries.GetItemData += new System.EventHandler(this.bsSeries_GetItemData);
+            // 
+            // bsNavigate
+            // 
+            this.bsNavigate.Caption = "Navigate By";
+            this.bsNavigate.Id = 7;
+            this.bsNavigate.Name = "bsNavigate";
+            this.bsNavigate.GetItemData += new System.EventHandler(this.bsNavigate_GetItemData);
             // 
             // beNavigate
             // 
@@ -136,19 +371,12 @@
             // 
             this.repositoryItemButtonEdit1.AutoHeight = false;
             this.repositoryItemButtonEdit1.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Left, "", -1, true, true, true, editorButtonImageOptions2, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject5, serializableAppearanceObject6, serializableAppearanceObject7, serializableAppearanceObject8, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Left, "", -1, true, true, true, editorButtonImageOptions1, new DevExpress.Utils.KeyShortcut(System.Windows.Forms.Keys.None), serializableAppearanceObject1, serializableAppearanceObject2, serializableAppearanceObject3, serializableAppearanceObject4, "", null, null, DevExpress.Utils.ToolTipAnchor.Default),
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Right)});
             this.repositoryItemButtonEdit1.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.repositoryItemButtonEdit1.EditFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.repositoryItemButtonEdit1.Name = "repositoryItemButtonEdit1";
             this.repositoryItemButtonEdit1.ButtonClick += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.repositoryItemButtonEdit1_ButtonClick);
-            // 
-            // bsNavigate
-            // 
-            this.bsNavigate.Caption = "Navigate By";
-            this.bsNavigate.Id = 7;
-            this.bsNavigate.Name = "bsNavigate";
-            this.bsNavigate.GetItemData += new System.EventHandler(this.bsNavigate_GetItemData);
             // 
             // bsEvents
             // 
@@ -205,7 +433,7 @@
             this.standaloneBarDockControl1.AutoSize = true;
             this.standaloneBarDockControl1.CausesValidation = false;
             this.standaloneBarDockControl1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.standaloneBarDockControl1.Location = new System.Drawing.Point(0, 0);
+            this.standaloneBarDockControl1.Location = new System.Drawing.Point(0, 60);
             this.standaloneBarDockControl1.Manager = this.barManager1;
             this.standaloneBarDockControl1.Margin = new System.Windows.Forms.Padding(4);
             this.standaloneBarDockControl1.Name = "standaloneBarDockControl1";
@@ -219,7 +447,7 @@
             this.barDockControlTop.Location = new System.Drawing.Point(0, 0);
             this.barDockControlTop.Manager = this.barManager1;
             this.barDockControlTop.Margin = new System.Windows.Forms.Padding(4);
-            this.barDockControlTop.Size = new System.Drawing.Size(1665, 0);
+            this.barDockControlTop.Size = new System.Drawing.Size(1665, 60);
             // 
             // barDockControlBottom
             // 
@@ -234,44 +462,38 @@
             // 
             this.barDockControlLeft.CausesValidation = false;
             this.barDockControlLeft.Dock = System.Windows.Forms.DockStyle.Left;
-            this.barDockControlLeft.Location = new System.Drawing.Point(0, 0);
+            this.barDockControlLeft.Location = new System.Drawing.Point(0, 60);
             this.barDockControlLeft.Manager = this.barManager1;
             this.barDockControlLeft.Margin = new System.Windows.Forms.Padding(4);
-            this.barDockControlLeft.Size = new System.Drawing.Size(0, 896);
+            this.barDockControlLeft.Size = new System.Drawing.Size(0, 836);
             // 
             // barDockControlRight
             // 
             this.barDockControlRight.CausesValidation = false;
             this.barDockControlRight.Dock = System.Windows.Forms.DockStyle.Right;
-            this.barDockControlRight.Location = new System.Drawing.Point(1665, 0);
+            this.barDockControlRight.Location = new System.Drawing.Point(1665, 60);
             this.barDockControlRight.Manager = this.barManager1;
             this.barDockControlRight.Margin = new System.Windows.Forms.Padding(4);
-            this.barDockControlRight.Size = new System.Drawing.Size(0, 896);
-            // 
-            // bsSeries
-            // 
-            this.bsSeries.Caption = "Series";
-            this.bsSeries.Id = 5;
-            this.bsSeries.Name = "bsSeries";
-            this.bsSeries.GetItemData += new System.EventHandler(this.bsSeries_GetItemData);
+            this.barDockControlRight.Size = new System.Drawing.Size(0, 836);
             // 
             // chartControl
             // 
             this.chartControl.AutoLayout = false;
             this.chartControl.CacheToMemory = true;
             this.chartControl.CrosshairOptions.ContentShowMode = DevExpress.XtraCharts.CrosshairContentShowMode.Legend;
-            xyDiagram2.AxisX.DateTimeScaleOptions.AggregateFunction = DevExpress.XtraCharts.AggregateFunction.None;
-            xyDiagram2.AxisX.DateTimeScaleOptions.MeasureUnit = DevExpress.XtraCharts.DateTimeMeasureUnit.Minute;
-            xyDiagram2.AxisX.Label.TextPattern = "{A:h:mm d.MM}";
-            xyDiagram2.AxisX.VisibleInPanesSerializable = "-1";
-            xyDiagram2.AxisY.Alignment = DevExpress.XtraCharts.AxisAlignment.Far;
-            xyDiagram2.AxisY.Label.TextPattern = "{V:f8}";
-            xyDiagram2.AxisY.VisibleInPanesSerializable = "-1";
-            xyDiagram2.AxisY.WholeRange.AlwaysShowZeroLevel = false;
-            xyDiagram2.DependentAxesYRange = DevExpress.Utils.DefaultBoolean.True;
-            xyDiagram2.EnableAxisXScrolling = true;
-            xyDiagram2.EnableAxisXZooming = true;
-            this.chartControl.Diagram = xyDiagram2;
+            xyDiagram1.AxisX.DateTimeScaleOptions.AggregateFunction = DevExpress.XtraCharts.AggregateFunction.None;
+            xyDiagram1.AxisX.DateTimeScaleOptions.MeasureUnit = DevExpress.XtraCharts.DateTimeMeasureUnit.Minute;
+            xyDiagram1.AxisX.Label.TextPattern = "{A:h:mm d.MM}";
+            xyDiagram1.AxisX.VisibleInPanesSerializable = "-1";
+            xyDiagram1.AxisY.Alignment = DevExpress.XtraCharts.AxisAlignment.Far;
+            xyDiagram1.AxisY.Label.TextPattern = "{V:f8}";
+            xyDiagram1.AxisY.VisibleInPanesSerializable = "-1";
+            xyDiagram1.AxisY.WholeRange.AlwaysShowZeroLevel = false;
+            xyDiagram1.DependentAxesYRange = DevExpress.Utils.DefaultBoolean.True;
+            xyDiagram1.EnableAxisXScrolling = true;
+            xyDiagram1.EnableAxisXZooming = true;
+            xyDiagram1.RuntimePaneResize = true;
+            this.chartControl.Diagram = xyDiagram1;
             this.chartControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.chartControl.Legend.AlignmentHorizontal = DevExpress.XtraCharts.LegendAlignmentHorizontal.Left;
             this.chartControl.Legend.BackColor = System.Drawing.Color.Transparent;
@@ -284,16 +506,15 @@
             this.chartControl.Legend.MaxCrosshairContentWidth = 200;
             this.chartControl.Legend.Name = "Default Legend";
             this.chartControl.Legend.Visibility = DevExpress.Utils.DefaultBoolean.True;
-            this.chartControl.Location = new System.Drawing.Point(0, 58);
+            this.chartControl.Location = new System.Drawing.Point(0, 118);
             this.chartControl.Margin = new System.Windows.Forms.Padding(4);
             this.chartControl.Name = "chartControl";
-            series2.ArgumentScaleType = DevExpress.XtraCharts.ScaleType.DateTime;
-            series2.Name = "Series 1";
-            series2.View = lineSeriesView2;
+            series1.ArgumentScaleType = DevExpress.XtraCharts.ScaleType.DateTime;
+            series1.Name = "Series 1";
+            series1.View = lineSeriesView1;
             this.chartControl.SeriesSerializable = new DevExpress.XtraCharts.Series[] {
-        series2};
-            this.chartControl.SeriesTemplate.SeriesColorizer = null;
-            this.chartControl.Size = new System.Drawing.Size(1665, 838);
+        series1};
+            this.chartControl.Size = new System.Drawing.Size(1665, 778);
             this.chartControl.TabIndex = 6;
             this.chartControl.ToolTipController = this.toolTipController1;
             this.chartControl.Click += new System.EventHandler(this.chartControl_Click);
@@ -314,6 +535,576 @@
             this.pmShowChart.Name = "pmShowChart";
             this.pmShowChart.BeforePopup += new System.ComponentModel.CancelEventHandler(this.pmShowChart_BeforePopup);
             // 
+            // chartBarController1
+            // 
+            this.chartBarController1.BarItems.Add(this.createBarBaseItem1);
+            this.chartBarController1.BarItems.Add(this.createLineBaseItem1);
+            this.chartBarController1.BarItems.Add(this.createPieBaseItem1);
+            this.chartBarController1.BarItems.Add(this.createRotatedBarBaseItem1);
+            this.chartBarController1.BarItems.Add(this.createAreaBaseItem1);
+            this.chartBarController1.BarItems.Add(this.createOtherSeriesTypesBaseItem1);
+            this.chartBarController1.BarItems.Add(this.changePaletteGalleryBaseItem1);
+            this.chartBarController1.BarItems.Add(this.changeAppearanceGalleryBaseBarManagerItem1);
+            this.chartBarController1.BarItems.Add(this.runDesignerChartItem1);
+            this.chartBarController1.BarItems.Add(this.saveAsTemplateChartItem1);
+            this.chartBarController1.BarItems.Add(this.loadTemplateChartItem1);
+            this.chartBarController1.BarItems.Add(this.printPreviewChartItem1);
+            this.chartBarController1.BarItems.Add(this.printChartItem1);
+            this.chartBarController1.BarItems.Add(this.exportToPDFChartItem1);
+            this.chartBarController1.BarItems.Add(this.exportToHTMLChartItem1);
+            this.chartBarController1.BarItems.Add(this.exportToMHTChartItem1);
+            this.chartBarController1.BarItems.Add(this.exportToXLSChartItem1);
+            this.chartBarController1.BarItems.Add(this.exportToXLSXChartItem1);
+            this.chartBarController1.BarItems.Add(this.exportToRTFChartItem1);
+            this.chartBarController1.BarItems.Add(this.exportToBMPChartItem1);
+            this.chartBarController1.BarItems.Add(this.exportToGIFChartItem1);
+            this.chartBarController1.BarItems.Add(this.exportToJPEGChartItem1);
+            this.chartBarController1.BarItems.Add(this.exportToPNGChartItem1);
+            this.chartBarController1.BarItems.Add(this.exportToTIFFChartItem1);
+            this.chartBarController1.BarItems.Add(this.createExportToImageBaseItem1);
+            this.chartBarController1.BarItems.Add(this.createExportBaseItem1);
+            this.chartBarController1.BarItems.Add(this.selectSeriesBarItem1);
+            this.chartBarController1.BarItems.Add(this.changeSeriesViewBarItem1);
+            this.chartBarController1.BarItems.Add(this.disableIndicatorInteractionBarItem1);
+            this.chartBarController1.BarItems.Add(this.drawTrendLineIndicatorBarItem1);
+            this.chartBarController1.BarItems.Add(this.drawFibonacciArcsIndicatorBarItem1);
+            this.chartBarController1.BarItems.Add(this.drawFibonacciFansIndicatorBarItem1);
+            this.chartBarController1.BarItems.Add(this.drawFibonacciRetracementIndicatorBarItem1);
+            this.chartBarController1.BarItems.Add(this.removeIndicatorBarItem1);
+            this.chartBarController1.BarItems.Add(this.addIndicatorBarItem1);
+            this.chartBarController1.BarItems.Add(this.selectAxisMeasureUnitBarItem1);
+            this.chartBarController1.BarItems.Add(this.selectPeriodBarItem1);
+            this.chartBarController1.Control = this.chartControl;
+            // 
+            // createBarBaseItem1
+            // 
+            this.createBarBaseItem1.DropDownControl = this.commandBarGalleryDropDown1;
+            this.createBarBaseItem1.Id = 37;
+            this.createBarBaseItem1.Name = "createBarBaseItem1";
+            // 
+            // commandBarGalleryDropDown1
+            // 
+            // 
+            // 
+            // 
+            chartControlCommandGalleryItemGroup2DColumn1.Items.AddRange(new DevExpress.XtraBars.Ribbon.GalleryItem[] {
+            createBarChartItem1,
+            createFullStackedBarChartItem1,
+            createSideBySideFullStackedBarChartItem1,
+            createSideBySideStackedBarChartItem1,
+            createStackedBarChartItem1,
+            createWaterfallChartItem1});
+            chartControlCommandGalleryItemGroup3DColumn1.Items.AddRange(new DevExpress.XtraBars.Ribbon.GalleryItem[] {
+            createBar3DChartItem1,
+            createFullStackedBar3DChartItem1,
+            createManhattanBarChartItem1,
+            createSideBySideFullStackedBar3DChartItem1,
+            createSideBySideStackedBar3DChartItem1,
+            createStackedBar3DChartItem1});
+            chartControlCommandGalleryItemGroupCylinderColumn1.Items.AddRange(new DevExpress.XtraBars.Ribbon.GalleryItem[] {
+            createCylinderBar3DChartItem1,
+            createCylinderFullStackedBar3DChartItem1,
+            createCylinderManhattanBarChartItem1,
+            createCylinderSideBySideFullStackedBar3DChartItem1,
+            createCylinderSideBySideStackedBar3DChartItem1,
+            createCylinderStackedBar3DChartItem1});
+            chartControlCommandGalleryItemGroupConeColumn1.Items.AddRange(new DevExpress.XtraBars.Ribbon.GalleryItem[] {
+            createConeBar3DChartItem1,
+            createConeFullStackedBar3DChartItem1,
+            createConeManhattanBarChartItem1,
+            createConeSideBySideFullStackedBar3DChartItem1,
+            createConeSideBySideStackedBar3DChartItem1,
+            createConeStackedBar3DChartItem1});
+            chartControlCommandGalleryItemGroupPyramidColumn1.Items.AddRange(new DevExpress.XtraBars.Ribbon.GalleryItem[] {
+            createPyramidBar3DChartItem1,
+            createPyramidFullStackedBar3DChartItem1,
+            createPyramidManhattanBarChartItem1,
+            createPyramidSideBySideFullStackedBar3DChartItem1,
+            createPyramidSideBySideStackedBar3DChartItem1,
+            createPyramidStackedBar3DChartItem1});
+            this.commandBarGalleryDropDown1.Gallery.Groups.AddRange(new DevExpress.XtraBars.Ribbon.GalleryItemGroup[] {
+            chartControlCommandGalleryItemGroup2DColumn1,
+            chartControlCommandGalleryItemGroup3DColumn1,
+            chartControlCommandGalleryItemGroupCylinderColumn1,
+            chartControlCommandGalleryItemGroupConeColumn1,
+            chartControlCommandGalleryItemGroupPyramidColumn1});
+            this.commandBarGalleryDropDown1.Manager = this.barManager1;
+            this.commandBarGalleryDropDown1.Name = "commandBarGalleryDropDown1";
+            // 
+            // createLineBaseItem1
+            // 
+            this.createLineBaseItem1.DropDownControl = this.commandBarGalleryDropDown2;
+            this.createLineBaseItem1.Id = 38;
+            this.createLineBaseItem1.Name = "createLineBaseItem1";
+            // 
+            // commandBarGalleryDropDown2
+            // 
+            // 
+            // 
+            // 
+            chartControlCommandGalleryItemGroup2DLine1.Items.AddRange(new DevExpress.XtraBars.Ribbon.GalleryItem[] {
+            createLineChartItem1,
+            createFullStackedLineChartItem1,
+            createScatterLineChartItem1,
+            createSplineChartItem1,
+            createStackedLineChartItem1,
+            createStepLineChartItem1});
+            chartControlCommandGalleryItemGroup3DLine1.Items.AddRange(new DevExpress.XtraBars.Ribbon.GalleryItem[] {
+            createLine3DChartItem1,
+            createFullStackedLine3DChartItem1,
+            createSpline3DChartItem1,
+            createStackedLine3DChartItem1,
+            createStepLine3DChartItem1});
+            this.commandBarGalleryDropDown2.Gallery.Groups.AddRange(new DevExpress.XtraBars.Ribbon.GalleryItemGroup[] {
+            chartControlCommandGalleryItemGroup2DLine1,
+            chartControlCommandGalleryItemGroup3DLine1});
+            this.commandBarGalleryDropDown2.Manager = this.barManager1;
+            this.commandBarGalleryDropDown2.Name = "commandBarGalleryDropDown2";
+            // 
+            // createPieBaseItem1
+            // 
+            this.createPieBaseItem1.DropDownControl = this.commandBarGalleryDropDown3;
+            this.createPieBaseItem1.Id = 39;
+            this.createPieBaseItem1.Name = "createPieBaseItem1";
+            // 
+            // commandBarGalleryDropDown3
+            // 
+            // 
+            // 
+            // 
+            chartControlCommandGalleryItemGroup2DPie1.Items.AddRange(new DevExpress.XtraBars.Ribbon.GalleryItem[] {
+            createPieChartItem1,
+            createDoughnutChartItem1,
+            createNestedDoughnutChartItem1});
+            chartControlCommandGalleryItemGroup3DPie1.Items.AddRange(new DevExpress.XtraBars.Ribbon.GalleryItem[] {
+            createPie3DChartItem1,
+            createDoughnut3DChartItem1});
+            this.commandBarGalleryDropDown3.Gallery.Groups.AddRange(new DevExpress.XtraBars.Ribbon.GalleryItemGroup[] {
+            chartControlCommandGalleryItemGroup2DPie1,
+            chartControlCommandGalleryItemGroup3DPie1});
+            this.commandBarGalleryDropDown3.Manager = this.barManager1;
+            this.commandBarGalleryDropDown3.Name = "commandBarGalleryDropDown3";
+            // 
+            // createRotatedBarBaseItem1
+            // 
+            this.createRotatedBarBaseItem1.DropDownControl = this.commandBarGalleryDropDown4;
+            this.createRotatedBarBaseItem1.Id = 40;
+            this.createRotatedBarBaseItem1.Name = "createRotatedBarBaseItem1";
+            // 
+            // commandBarGalleryDropDown4
+            // 
+            // 
+            // 
+            // 
+            chartControlCommandGalleryItemGroup2DBar1.Items.AddRange(new DevExpress.XtraBars.Ribbon.GalleryItem[] {
+            createRotatedBarChartItem1,
+            createRotatedFullStackedBarChartItem1,
+            createRotatedSideBySideFullStackedBarChartItem1,
+            createRotatedSideBySideStackedBarChartItem1,
+            createRotatedStackedBarChartItem1});
+            this.commandBarGalleryDropDown4.Gallery.Groups.AddRange(new DevExpress.XtraBars.Ribbon.GalleryItemGroup[] {
+            chartControlCommandGalleryItemGroup2DBar1});
+            this.commandBarGalleryDropDown4.Manager = this.barManager1;
+            this.commandBarGalleryDropDown4.Name = "commandBarGalleryDropDown4";
+            // 
+            // createAreaBaseItem1
+            // 
+            this.createAreaBaseItem1.DropDownControl = this.commandBarGalleryDropDown5;
+            this.createAreaBaseItem1.Id = 41;
+            this.createAreaBaseItem1.Name = "createAreaBaseItem1";
+            // 
+            // commandBarGalleryDropDown5
+            // 
+            // 
+            // 
+            // 
+            chartControlCommandGalleryItemGroup2DArea1.Items.AddRange(new DevExpress.XtraBars.Ribbon.GalleryItem[] {
+            createAreaChartItem1,
+            createFullStackedAreaChartItem1,
+            createFullStackedSplineAreaChartItem1,
+            createFullStackedStepAreaChartItem1,
+            createSplineAreaChartItem1,
+            createStackedAreaChartItem1,
+            createStackedStepAreaChartItem1,
+            createStackedSplineAreaChartItem1,
+            createStepAreaChartItem1});
+            chartControlCommandGalleryItemGroup3DArea1.Items.AddRange(new DevExpress.XtraBars.Ribbon.GalleryItem[] {
+            createArea3DChartItem1,
+            createFullStackedArea3DChartItem1,
+            createFullStackedSplineArea3DChartItem1,
+            createSplineArea3DChartItem1,
+            createStackedArea3DChartItem1,
+            createStackedSplineArea3DChartItem1,
+            createStepArea3DChartItem1});
+            this.commandBarGalleryDropDown5.Gallery.Groups.AddRange(new DevExpress.XtraBars.Ribbon.GalleryItemGroup[] {
+            chartControlCommandGalleryItemGroup2DArea1,
+            chartControlCommandGalleryItemGroup3DArea1});
+            this.commandBarGalleryDropDown5.Manager = this.barManager1;
+            this.commandBarGalleryDropDown5.Name = "commandBarGalleryDropDown5";
+            // 
+            // createOtherSeriesTypesBaseItem1
+            // 
+            this.createOtherSeriesTypesBaseItem1.DropDownControl = this.commandBarGalleryDropDown6;
+            this.createOtherSeriesTypesBaseItem1.Id = 42;
+            this.createOtherSeriesTypesBaseItem1.Name = "createOtherSeriesTypesBaseItem1";
+            // 
+            // commandBarGalleryDropDown6
+            // 
+            // 
+            // 
+            // 
+            chartControlCommandGalleryItemGroupPoint1.Items.AddRange(new DevExpress.XtraBars.Ribbon.GalleryItem[] {
+            createPointChartItem1,
+            createBubbleChartItem1});
+            chartControlCommandGalleryItemGroupFunnel1.Items.AddRange(new DevExpress.XtraBars.Ribbon.GalleryItem[] {
+            createFunnelChartItem1,
+            createFunnel3DChartItem1});
+            chartControlCommandGalleryItemGroupFinancial1.Items.AddRange(new DevExpress.XtraBars.Ribbon.GalleryItem[] {
+            createStockChartItem1,
+            createCandleStickChartItem1});
+            chartControlCommandGalleryItemGroupRadar1.Items.AddRange(new DevExpress.XtraBars.Ribbon.GalleryItem[] {
+            createRadarPointChartItem1,
+            createRadarLineChartItem1,
+            createRadarAreaChartItem1,
+            createRadarRangeAreaChartItem1,
+            createScatterRadarLineChartItem1});
+            chartControlCommandGalleryItemGroupPolar1.Items.AddRange(new DevExpress.XtraBars.Ribbon.GalleryItem[] {
+            createPolarPointChartItem1,
+            createPolarLineChartItem1,
+            createPolarAreaChartItem1,
+            createPolarRangeAreaChartItem1,
+            createScatterPolarLineChartItem1});
+            chartControlCommandGalleryItemGroupRange1.Items.AddRange(new DevExpress.XtraBars.Ribbon.GalleryItem[] {
+            createRangeBarChartItem1,
+            createSideBySideRangeBarChartItem1,
+            createRangeAreaChartItem1,
+            createRangeArea3DChartItem1});
+            chartControlCommandGalleryItemGroupGantt1.Items.AddRange(new DevExpress.XtraBars.Ribbon.GalleryItem[] {
+            createGanttChartItem1,
+            createSideBySideGanttChartItem1});
+            chartControlCommandGalleryItemGroupBoxPlot1.Items.AddRange(new DevExpress.XtraBars.Ribbon.GalleryItem[] {
+            createBoxPlotChartItem1});
+            this.commandBarGalleryDropDown6.Gallery.Groups.AddRange(new DevExpress.XtraBars.Ribbon.GalleryItemGroup[] {
+            chartControlCommandGalleryItemGroupPoint1,
+            chartControlCommandGalleryItemGroupFunnel1,
+            chartControlCommandGalleryItemGroupFinancial1,
+            chartControlCommandGalleryItemGroupRadar1,
+            chartControlCommandGalleryItemGroupPolar1,
+            chartControlCommandGalleryItemGroupRange1,
+            chartControlCommandGalleryItemGroupGantt1,
+            chartControlCommandGalleryItemGroupBoxPlot1});
+            this.commandBarGalleryDropDown6.Manager = this.barManager1;
+            this.commandBarGalleryDropDown6.Name = "commandBarGalleryDropDown6";
+            // 
+            // changePaletteGalleryBaseItem1
+            // 
+            this.changePaletteGalleryBaseItem1.DropDownControl = this.commandBarGalleryDropDown7;
+            this.changePaletteGalleryBaseItem1.Id = 43;
+            this.changePaletteGalleryBaseItem1.Name = "changePaletteGalleryBaseItem1";
+            // 
+            // commandBarGalleryDropDown7
+            // 
+            this.commandBarGalleryDropDown7.Manager = this.barManager1;
+            this.commandBarGalleryDropDown7.Name = "commandBarGalleryDropDown7";
+            // 
+            // changeAppearanceGalleryBaseBarManagerItem1
+            // 
+            this.changeAppearanceGalleryBaseBarManagerItem1.DropDownControl = this.commandBarGalleryDropDown8;
+            this.changeAppearanceGalleryBaseBarManagerItem1.Id = 44;
+            this.changeAppearanceGalleryBaseBarManagerItem1.Name = "changeAppearanceGalleryBaseBarManagerItem1";
+            // 
+            // commandBarGalleryDropDown8
+            // 
+            this.commandBarGalleryDropDown8.Manager = this.barManager1;
+            this.commandBarGalleryDropDown8.Name = "commandBarGalleryDropDown8";
+            // 
+            // runDesignerChartItem1
+            // 
+            this.runDesignerChartItem1.Id = 45;
+            this.runDesignerChartItem1.Name = "runDesignerChartItem1";
+            // 
+            // saveAsTemplateChartItem1
+            // 
+            this.saveAsTemplateChartItem1.Id = 46;
+            this.saveAsTemplateChartItem1.Name = "saveAsTemplateChartItem1";
+            // 
+            // loadTemplateChartItem1
+            // 
+            this.loadTemplateChartItem1.Id = 47;
+            this.loadTemplateChartItem1.Name = "loadTemplateChartItem1";
+            // 
+            // chartPrintExportBar1
+            // 
+            this.chartPrintExportBar1.Control = this.chartControl;
+            this.chartPrintExportBar1.DockCol = 2;
+            this.chartPrintExportBar1.DockRow = 0;
+            this.chartPrintExportBar1.DockStyle = DevExpress.XtraBars.BarDockStyle.Top;
+            this.chartPrintExportBar1.FloatLocation = new System.Drawing.Point(727, 195);
+            this.chartPrintExportBar1.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
+            new DevExpress.XtraBars.LinkPersistInfo(this.printPreviewChartItem1),
+            new DevExpress.XtraBars.LinkPersistInfo(this.printChartItem1),
+            new DevExpress.XtraBars.LinkPersistInfo(this.createExportBaseItem1)});
+            this.chartPrintExportBar1.Offset = 1323;
+            // 
+            // printPreviewChartItem1
+            // 
+            this.printPreviewChartItem1.Id = 13;
+            this.printPreviewChartItem1.Name = "printPreviewChartItem1";
+            // 
+            // printChartItem1
+            // 
+            this.printChartItem1.Id = 14;
+            this.printChartItem1.Name = "printChartItem1";
+            // 
+            // exportToPDFChartItem1
+            // 
+            this.exportToPDFChartItem1.Id = 16;
+            this.exportToPDFChartItem1.Name = "exportToPDFChartItem1";
+            // 
+            // exportToHTMLChartItem1
+            // 
+            this.exportToHTMLChartItem1.Id = 17;
+            this.exportToHTMLChartItem1.Name = "exportToHTMLChartItem1";
+            // 
+            // exportToMHTChartItem1
+            // 
+            this.exportToMHTChartItem1.Id = 18;
+            this.exportToMHTChartItem1.Name = "exportToMHTChartItem1";
+            // 
+            // exportToXLSChartItem1
+            // 
+            this.exportToXLSChartItem1.Id = 19;
+            this.exportToXLSChartItem1.Name = "exportToXLSChartItem1";
+            // 
+            // exportToXLSXChartItem1
+            // 
+            this.exportToXLSXChartItem1.Id = 20;
+            this.exportToXLSXChartItem1.Name = "exportToXLSXChartItem1";
+            // 
+            // exportToRTFChartItem1
+            // 
+            this.exportToRTFChartItem1.Id = 21;
+            this.exportToRTFChartItem1.Name = "exportToRTFChartItem1";
+            // 
+            // exportToBMPChartItem1
+            // 
+            this.exportToBMPChartItem1.Id = 23;
+            this.exportToBMPChartItem1.Name = "exportToBMPChartItem1";
+            // 
+            // exportToGIFChartItem1
+            // 
+            this.exportToGIFChartItem1.Id = 24;
+            this.exportToGIFChartItem1.Name = "exportToGIFChartItem1";
+            // 
+            // exportToJPEGChartItem1
+            // 
+            this.exportToJPEGChartItem1.Id = 25;
+            this.exportToJPEGChartItem1.Name = "exportToJPEGChartItem1";
+            // 
+            // exportToPNGChartItem1
+            // 
+            this.exportToPNGChartItem1.Id = 26;
+            this.exportToPNGChartItem1.Name = "exportToPNGChartItem1";
+            // 
+            // exportToTIFFChartItem1
+            // 
+            this.exportToTIFFChartItem1.Id = 27;
+            this.exportToTIFFChartItem1.Name = "exportToTIFFChartItem1";
+            // 
+            // createExportToImageBaseItem1
+            // 
+            this.createExportToImageBaseItem1.Id = 22;
+            this.createExportToImageBaseItem1.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
+            new DevExpress.XtraBars.LinkPersistInfo(this.exportToBMPChartItem1),
+            new DevExpress.XtraBars.LinkPersistInfo(this.exportToGIFChartItem1),
+            new DevExpress.XtraBars.LinkPersistInfo(this.exportToJPEGChartItem1),
+            new DevExpress.XtraBars.LinkPersistInfo(this.exportToPNGChartItem1),
+            new DevExpress.XtraBars.LinkPersistInfo(this.exportToTIFFChartItem1)});
+            this.createExportToImageBaseItem1.MenuDrawMode = DevExpress.XtraBars.MenuDrawMode.SmallImagesText;
+            this.createExportToImageBaseItem1.Name = "createExportToImageBaseItem1";
+            // 
+            // createExportBaseItem1
+            // 
+            this.createExportBaseItem1.Id = 15;
+            this.createExportBaseItem1.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
+            new DevExpress.XtraBars.LinkPersistInfo(this.exportToPDFChartItem1),
+            new DevExpress.XtraBars.LinkPersistInfo(this.exportToHTMLChartItem1),
+            new DevExpress.XtraBars.LinkPersistInfo(this.exportToMHTChartItem1),
+            new DevExpress.XtraBars.LinkPersistInfo(this.exportToXLSChartItem1),
+            new DevExpress.XtraBars.LinkPersistInfo(this.exportToXLSXChartItem1),
+            new DevExpress.XtraBars.LinkPersistInfo(this.exportToRTFChartItem1),
+            new DevExpress.XtraBars.LinkPersistInfo(this.createExportToImageBaseItem1)});
+            this.createExportBaseItem1.MenuDrawMode = DevExpress.XtraBars.MenuDrawMode.SmallImagesText;
+            this.createExportBaseItem1.Name = "createExportBaseItem1";
+            this.createExportBaseItem1.PaintStyle = DevExpress.XtraBars.BarItemPaintStyle.CaptionInMenu;
+            // 
+            // chartFinancialSeriesBar1
+            // 
+            this.chartFinancialSeriesBar1.Control = this.chartControl;
+            this.chartFinancialSeriesBar1.DockCol = 0;
+            this.chartFinancialSeriesBar1.DockRow = 0;
+            this.chartFinancialSeriesBar1.DockStyle = DevExpress.XtraBars.BarDockStyle.Top;
+            this.chartFinancialSeriesBar1.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
+            new DevExpress.XtraBars.LinkPersistInfo(this.selectSeriesBarItem1),
+            new DevExpress.XtraBars.LinkPersistInfo(this.changeSeriesViewBarItem1)});
+            // 
+            // selectSeriesBarItem1
+            // 
+            this.selectSeriesBarItem1.Edit = this.selectSeriesRepositoryItemComboBox1;
+            this.selectSeriesBarItem1.EditValue = "Series 1";
+            this.selectSeriesBarItem1.Id = 28;
+            this.selectSeriesBarItem1.Name = "selectSeriesBarItem1";
+            this.selectSeriesBarItem1.PaintStyle = DevExpress.XtraBars.BarItemPaintStyle.Caption;
+            this.selectSeriesBarItem1.UseCommandCaption = true;
+            // 
+            // changeSeriesViewBarItem1
+            // 
+            this.changeSeriesViewBarItem1.Edit = this.changeSeriesViewRepositoryItemComboBox1;
+            this.changeSeriesViewBarItem1.EditValue = DevExpress.XtraCharts.ViewType.Line;
+            this.changeSeriesViewBarItem1.Id = 29;
+            this.changeSeriesViewBarItem1.Name = "changeSeriesViewBarItem1";
+            this.changeSeriesViewBarItem1.PaintStyle = DevExpress.XtraBars.BarItemPaintStyle.Caption;
+            this.changeSeriesViewBarItem1.UseCommandCaption = true;
+            // 
+            // selectSeriesRepositoryItemComboBox1
+            // 
+            this.selectSeriesRepositoryItemComboBox1.AutoHeight = false;
+            this.selectSeriesRepositoryItemComboBox1.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.selectSeriesRepositoryItemComboBox1.Items.AddRange(new object[] {
+            "Series 1"});
+            this.selectSeriesRepositoryItemComboBox1.Name = "selectSeriesRepositoryItemComboBox1";
+            this.selectSeriesRepositoryItemComboBox1.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+            // 
+            // changeSeriesViewRepositoryItemComboBox1
+            // 
+            this.changeSeriesViewRepositoryItemComboBox1.AutoHeight = false;
+            this.changeSeriesViewRepositoryItemComboBox1.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.changeSeriesViewRepositoryItemComboBox1.Items.AddRange(new object[] {
+            DevExpress.XtraCharts.ViewType.Stock,
+            DevExpress.XtraCharts.ViewType.CandleStick,
+            DevExpress.XtraCharts.ViewType.Area,
+            DevExpress.XtraCharts.ViewType.Line,
+            DevExpress.XtraCharts.ViewType.Bar});
+            this.changeSeriesViewRepositoryItemComboBox1.Name = "changeSeriesViewRepositoryItemComboBox1";
+            this.changeSeriesViewRepositoryItemComboBox1.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+            // 
+            // chartFinancialIndicatorsBar1
+            // 
+            this.chartFinancialIndicatorsBar1.Control = this.chartControl;
+            this.chartFinancialIndicatorsBar1.DockCol = 1;
+            this.chartFinancialIndicatorsBar1.DockRow = 0;
+            this.chartFinancialIndicatorsBar1.DockStyle = DevExpress.XtraBars.BarDockStyle.Top;
+            this.chartFinancialIndicatorsBar1.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
+            new DevExpress.XtraBars.LinkPersistInfo(this.disableIndicatorInteractionBarItem1),
+            new DevExpress.XtraBars.LinkPersistInfo(this.drawTrendLineIndicatorBarItem1),
+            new DevExpress.XtraBars.LinkPersistInfo(this.drawFibonacciArcsIndicatorBarItem1),
+            new DevExpress.XtraBars.LinkPersistInfo(this.drawFibonacciFansIndicatorBarItem1),
+            new DevExpress.XtraBars.LinkPersistInfo(this.drawFibonacciRetracementIndicatorBarItem1),
+            new DevExpress.XtraBars.LinkPersistInfo(this.removeIndicatorBarItem1),
+            new DevExpress.XtraBars.LinkPersistInfo(this.addIndicatorBarItem1, true)});
+            // 
+            // disableIndicatorInteractionBarItem1
+            // 
+            this.disableIndicatorInteractionBarItem1.BindableChecked = true;
+            this.disableIndicatorInteractionBarItem1.Checked = true;
+            this.disableIndicatorInteractionBarItem1.Id = 30;
+            this.disableIndicatorInteractionBarItem1.Name = "disableIndicatorInteractionBarItem1";
+            // 
+            // drawTrendLineIndicatorBarItem1
+            // 
+            this.drawTrendLineIndicatorBarItem1.Id = 31;
+            this.drawTrendLineIndicatorBarItem1.Name = "drawTrendLineIndicatorBarItem1";
+            // 
+            // drawFibonacciArcsIndicatorBarItem1
+            // 
+            this.drawFibonacciArcsIndicatorBarItem1.Id = 32;
+            this.drawFibonacciArcsIndicatorBarItem1.Name = "drawFibonacciArcsIndicatorBarItem1";
+            // 
+            // drawFibonacciFansIndicatorBarItem1
+            // 
+            this.drawFibonacciFansIndicatorBarItem1.Id = 33;
+            this.drawFibonacciFansIndicatorBarItem1.Name = "drawFibonacciFansIndicatorBarItem1";
+            // 
+            // drawFibonacciRetracementIndicatorBarItem1
+            // 
+            this.drawFibonacciRetracementIndicatorBarItem1.Id = 34;
+            this.drawFibonacciRetracementIndicatorBarItem1.Name = "drawFibonacciRetracementIndicatorBarItem1";
+            // 
+            // removeIndicatorBarItem1
+            // 
+            this.removeIndicatorBarItem1.Id = 35;
+            this.removeIndicatorBarItem1.Name = "removeIndicatorBarItem1";
+            // 
+            // addIndicatorBarItem1
+            // 
+            this.addIndicatorBarItem1.DropDownControl = this.commandBarGalleryDropDown9;
+            this.addIndicatorBarItem1.Id = 36;
+            this.addIndicatorBarItem1.Name = "addIndicatorBarItem1";
+            this.addIndicatorBarItem1.PaintStyle = DevExpress.XtraBars.BarItemPaintStyle.Caption;
+            // 
+            // commandBarGalleryDropDown9
+            // 
+            this.commandBarGalleryDropDown9.Manager = this.barManager1;
+            this.commandBarGalleryDropDown9.Name = "commandBarGalleryDropDown9";
+            // 
+            // selectAxisMeasureUnitBarItem1
+            // 
+            this.selectAxisMeasureUnitBarItem1.Edit = this.selectAxisMeasureUnitRepositoryItemComboBox1;
+            this.selectAxisMeasureUnitBarItem1.EditValue = chartIntervalItem1;
+            this.selectAxisMeasureUnitBarItem1.Id = 48;
+            this.selectAxisMeasureUnitBarItem1.Name = "selectAxisMeasureUnitBarItem1";
+            this.selectAxisMeasureUnitBarItem1.PaintStyle = DevExpress.XtraBars.BarItemPaintStyle.Caption;
+            this.selectAxisMeasureUnitBarItem1.UseCommandCaption = true;
+            // 
+            // selectPeriodBarItem1
+            // 
+            this.selectPeriodBarItem1.Edit = this.selectPeriodRepositoryItemComboBox1;
+            this.selectPeriodBarItem1.EditValue = chartIntervalItem4;
+            this.selectPeriodBarItem1.Id = 49;
+            this.selectPeriodBarItem1.Name = "selectPeriodBarItem1";
+            this.selectPeriodBarItem1.PaintStyle = DevExpress.XtraBars.BarItemPaintStyle.Caption;
+            this.selectPeriodBarItem1.UseCommandCaption = true;
+            // 
+            // selectAxisMeasureUnitRepositoryItemComboBox1
+            // 
+            this.selectAxisMeasureUnitRepositoryItemComboBox1.AutoHeight = false;
+            this.selectAxisMeasureUnitRepositoryItemComboBox1.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            chartIntervalItem1.Caption = "1 day";
+            chartIntervalItem1.MeasureUnit = DevExpress.XtraCharts.DateTimeMeasureUnit.Day;
+            chartIntervalItem2.Caption = "1 week";
+            chartIntervalItem2.MeasureUnit = DevExpress.XtraCharts.DateTimeMeasureUnit.Week;
+            chartIntervalItem3.Caption = "1 month";
+            chartIntervalItem3.MeasureUnit = DevExpress.XtraCharts.DateTimeMeasureUnit.Month;
+            this.selectAxisMeasureUnitRepositoryItemComboBox1.Items.AddRange(new object[] {
+            chartIntervalItem1,
+            chartIntervalItem2,
+            chartIntervalItem3});
+            this.selectAxisMeasureUnitRepositoryItemComboBox1.Name = "selectAxisMeasureUnitRepositoryItemComboBox1";
+            this.selectAxisMeasureUnitRepositoryItemComboBox1.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+            // 
+            // selectPeriodRepositoryItemComboBox1
+            // 
+            this.selectPeriodRepositoryItemComboBox1.AutoHeight = false;
+            this.selectPeriodRepositoryItemComboBox1.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            chartIntervalItem4.Caption = "6 month";
+            chartIntervalItem4.MeasureUnit = DevExpress.XtraCharts.DateTimeMeasureUnit.Month;
+            chartIntervalItem4.MeasureUnitMultiplier = 6;
+            chartIntervalItem5.Caption = "1 year";
+            chartIntervalItem5.MeasureUnit = DevExpress.XtraCharts.DateTimeMeasureUnit.Year;
+            chartIntervalItem6.Caption = "2 year";
+            chartIntervalItem6.MeasureUnit = DevExpress.XtraCharts.DateTimeMeasureUnit.Year;
+            chartIntervalItem6.MeasureUnitMultiplier = 2;
+            this.selectPeriodRepositoryItemComboBox1.Items.AddRange(new object[] {
+            chartIntervalItem4,
+            chartIntervalItem5,
+            chartIntervalItem6});
+            this.selectPeriodRepositoryItemComboBox1.Name = "selectPeriodRepositoryItemComboBox1";
+            this.selectPeriodRepositoryItemComboBox1.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+            // 
             // ChartDataControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
@@ -329,11 +1120,25 @@
             this.Size = new System.Drawing.Size(1665, 896);
             ((System.ComponentModel.ISupportInitialize)(this.barManager1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemButtonEdit1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(xyDiagram2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(lineSeriesView2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(series2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(xyDiagram1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(lineSeriesView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(series1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.chartControl)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pmShowChart)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chartBarController1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.commandBarGalleryDropDown1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.commandBarGalleryDropDown2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.commandBarGalleryDropDown3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.commandBarGalleryDropDown4)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.commandBarGalleryDropDown5)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.commandBarGalleryDropDown6)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.commandBarGalleryDropDown7)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.commandBarGalleryDropDown8)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.selectSeriesRepositoryItemComboBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.changeSeriesViewRepositoryItemComboBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.commandBarGalleryDropDown9)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.selectAxisMeasureUnitRepositoryItemComboBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.selectPeriodRepositoryItemComboBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -362,5 +1167,59 @@
         private DevExpress.XtraBars.BarSubItem bsHistogramm;
         private DevExpress.XtraBars.BarSubItem bsCustomize;
         private DevExpress.XtraBars.BarCheckItem bsShowLegend;
+        private DevExpress.XtraCharts.UI.ChartPrintExportBar chartPrintExportBar1;
+        private DevExpress.XtraCharts.UI.PrintPreviewChartItem printPreviewChartItem1;
+        private DevExpress.XtraCharts.UI.PrintChartItem printChartItem1;
+        private DevExpress.XtraCharts.UI.CreateExportBaseItem createExportBaseItem1;
+        private DevExpress.XtraCharts.UI.ExportToPDFChartItem exportToPDFChartItem1;
+        private DevExpress.XtraCharts.UI.ExportToHTMLChartItem exportToHTMLChartItem1;
+        private DevExpress.XtraCharts.UI.ExportToMHTChartItem exportToMHTChartItem1;
+        private DevExpress.XtraCharts.UI.ExportToXLSChartItem exportToXLSChartItem1;
+        private DevExpress.XtraCharts.UI.ExportToXLSXChartItem exportToXLSXChartItem1;
+        private DevExpress.XtraCharts.UI.ExportToRTFChartItem exportToRTFChartItem1;
+        private DevExpress.XtraCharts.UI.CreateExportToImageBaseItem createExportToImageBaseItem1;
+        private DevExpress.XtraCharts.UI.ExportToBMPChartItem exportToBMPChartItem1;
+        private DevExpress.XtraCharts.UI.ExportToGIFChartItem exportToGIFChartItem1;
+        private DevExpress.XtraCharts.UI.ExportToJPEGChartItem exportToJPEGChartItem1;
+        private DevExpress.XtraCharts.UI.ExportToPNGChartItem exportToPNGChartItem1;
+        private DevExpress.XtraCharts.UI.ExportToTIFFChartItem exportToTIFFChartItem1;
+        private DevExpress.XtraCharts.UI.ChartFinancialSeriesBar chartFinancialSeriesBar1;
+        private DevExpress.XtraCharts.UI.SelectSeriesBarItem selectSeriesBarItem1;
+        private DevExpress.XtraCharts.UI.SelectSeriesRepositoryItemComboBox selectSeriesRepositoryItemComboBox1;
+        private DevExpress.XtraCharts.UI.ChangeSeriesViewBarItem changeSeriesViewBarItem1;
+        private DevExpress.XtraCharts.UI.ChangeSeriesViewRepositoryItemComboBox changeSeriesViewRepositoryItemComboBox1;
+        private DevExpress.XtraCharts.UI.ChartFinancialIndicatorsBar chartFinancialIndicatorsBar1;
+        private DevExpress.XtraCharts.UI.DisableIndicatorInteractionBarItem disableIndicatorInteractionBarItem1;
+        private DevExpress.XtraCharts.UI.DrawTrendLineIndicatorBarItem drawTrendLineIndicatorBarItem1;
+        private DevExpress.XtraCharts.UI.DrawFibonacciArcsIndicatorBarItem drawFibonacciArcsIndicatorBarItem1;
+        private DevExpress.XtraCharts.UI.DrawFibonacciFansIndicatorBarItem drawFibonacciFansIndicatorBarItem1;
+        private DevExpress.XtraCharts.UI.DrawFibonacciRetracementIndicatorBarItem drawFibonacciRetracementIndicatorBarItem1;
+        private DevExpress.XtraCharts.UI.RemoveIndicatorBarItem removeIndicatorBarItem1;
+        private DevExpress.XtraCharts.UI.AddIndicatorBarItem addIndicatorBarItem1;
+        private DevExpress.XtraBars.Commands.CommandBarGalleryDropDown commandBarGalleryDropDown9;
+        private DevExpress.XtraCharts.UI.CreateBarBaseItem createBarBaseItem1;
+        private DevExpress.XtraBars.Commands.CommandBarGalleryDropDown commandBarGalleryDropDown1;
+        private DevExpress.XtraCharts.UI.CreateLineBaseItem createLineBaseItem1;
+        private DevExpress.XtraBars.Commands.CommandBarGalleryDropDown commandBarGalleryDropDown2;
+        private DevExpress.XtraCharts.UI.CreatePieBaseItem createPieBaseItem1;
+        private DevExpress.XtraBars.Commands.CommandBarGalleryDropDown commandBarGalleryDropDown3;
+        private DevExpress.XtraCharts.UI.CreateRotatedBarBaseItem createRotatedBarBaseItem1;
+        private DevExpress.XtraBars.Commands.CommandBarGalleryDropDown commandBarGalleryDropDown4;
+        private DevExpress.XtraCharts.UI.CreateAreaBaseItem createAreaBaseItem1;
+        private DevExpress.XtraBars.Commands.CommandBarGalleryDropDown commandBarGalleryDropDown5;
+        private DevExpress.XtraCharts.UI.CreateOtherSeriesTypesBaseItem createOtherSeriesTypesBaseItem1;
+        private DevExpress.XtraBars.Commands.CommandBarGalleryDropDown commandBarGalleryDropDown6;
+        private DevExpress.XtraCharts.UI.ChangePaletteGalleryBaseItem changePaletteGalleryBaseItem1;
+        private DevExpress.XtraBars.Commands.CommandBarGalleryDropDown commandBarGalleryDropDown7;
+        private DevExpress.XtraCharts.UI.ChangeAppearanceGalleryBaseBarManagerItem changeAppearanceGalleryBaseBarManagerItem1;
+        private DevExpress.XtraBars.Commands.CommandBarGalleryDropDown commandBarGalleryDropDown8;
+        private DevExpress.XtraCharts.UI.RunDesignerChartItem runDesignerChartItem1;
+        private DevExpress.XtraCharts.UI.SaveAsTemplateChartItem saveAsTemplateChartItem1;
+        private DevExpress.XtraCharts.UI.LoadTemplateChartItem loadTemplateChartItem1;
+        private DevExpress.XtraCharts.UI.SelectAxisMeasureUnitBarItem selectAxisMeasureUnitBarItem1;
+        private DevExpress.XtraCharts.UI.SelectAxisMeasureUnitRepositoryItemComboBox selectAxisMeasureUnitRepositoryItemComboBox1;
+        private DevExpress.XtraCharts.UI.SelectPeriodBarItem selectPeriodBarItem1;
+        private DevExpress.XtraCharts.UI.SelectPeriodRepositoryItemComboBox selectPeriodRepositoryItemComboBox1;
+        private DevExpress.XtraCharts.UI.ChartBarController chartBarController1;
     }
 }

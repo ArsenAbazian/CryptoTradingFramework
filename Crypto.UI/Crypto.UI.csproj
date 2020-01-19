@@ -84,97 +84,74 @@
     <Reference Include="cs-statistics, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\cs-moea.1.0.2\lib\net452\Release\cs-statistics.dll</HintPath>
     </Reference>
-    <Reference Include="DevExpress.Charts.v19.1.Core, Version=19.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4, processorArchitecture=MSIL">
+    <Reference Include="DevExpress.Charts.v19.2.Core, Version=19.2.0.0 ">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\2019.1\Bin\Framework4\DevExpress.Charts.v19.1.Core.dll</HintPath>
     </Reference>
-    <Reference Include="DevExpress.Data.v19.1, Version=19.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4, processorArchitecture=MSIL">
+    <Reference Include="DevExpress.Data.v19.2, Version=19.2.0.0 ">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\2019.1\Bin\Framework4\DevExpress.Data.v19.1.dll</HintPath>
     </Reference>
-    <Reference Include="DevExpress.Dialogs.v19.1.Core, Version=19.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4, processorArchitecture=MSIL">
+    <Reference Include="DevExpress.Dialogs.v19.2.Core, Version=19.2.0.0 ">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\2019.1\Bin\Framework4\DevExpress.Dialogs.v19.1.Core.dll</HintPath>
     </Reference>
-    <Reference Include="DevExpress.Images.v19.1, Version=19.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4, processorArchitecture=MSIL">
+    <Reference Include="DevExpress.Images.v19.2, Version=19.2.0.0 ">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\2019.1\Bin\Framework4\DevExpress.Images.v19.1.dll</HintPath>
     </Reference>
-    <Reference Include="DevExpress.Office.v19.1.Core, Version=19.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4, processorArchitecture=MSIL">
+    <Reference Include="DevExpress.Office.v19.2.Core, Version=19.2.0.0 ">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\2019.1\Bin\Framework4\DevExpress.Office.v19.1.Core.dll</HintPath>
     </Reference>
-    <Reference Include="DevExpress.Pdf.v19.1.Core, Version=19.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4, processorArchitecture=MSIL">
+    <Reference Include="DevExpress.Pdf.v19.2.Core, Version=19.2.0.0 ">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\2019.1\Bin\Framework4\DevExpress.Pdf.v19.1.Core.dll</HintPath>
     </Reference>
-    <Reference Include="DevExpress.Printing.v19.1.Core, Version=19.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4, processorArchitecture=MSIL">
+    <Reference Include="DevExpress.Printing.v19.2.Core, Version=19.2.0.0 ">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\2019.1\Bin\Framework4\DevExpress.Printing.v19.1.Core.dll</HintPath>
     </Reference>
-    <Reference Include="DevExpress.RichEdit.v19.1.Core, Version=19.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4, processorArchitecture=MSIL">
+    <Reference Include="DevExpress.RichEdit.v19.2.Core, Version=19.2.0.0 ">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\2019.1\Bin\Framework4\DevExpress.RichEdit.v19.1.Core.dll</HintPath>
     </Reference>
-    <Reference Include="DevExpress.Sparkline.v19.1.Core, Version=19.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4, processorArchitecture=MSIL">
+    <Reference Include="DevExpress.Sparkline.v19.2.Core, Version=19.2.0.0 ">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\2019.1\Bin\Framework4\DevExpress.Sparkline.v19.1.Core.dll</HintPath>
     </Reference>
-    <Reference Include="DevExpress.Utils.v19.1, Version=19.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4, processorArchitecture=MSIL">
+    <Reference Include="DevExpress.Utils.v19.2, Version=19.2.0.0 ">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\2019.1\Bin\Framework4\DevExpress.Utils.v19.1.dll</HintPath>
     </Reference>
-    <Reference Include="DevExpress.Xpo.v19.1, Version=19.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4, processorArchitecture=MSIL">
+    <Reference Include="DevExpress.Xpo.v19.2, Version=19.2.0.0 ">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\2019.1\Bin\Framework4\DevExpress.Xpo.v19.1.dll</HintPath>
     </Reference>
-    <Reference Include="DevExpress.XtraBars.v19.1, Version=19.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4, processorArchitecture=MSIL">
+    <Reference Include="DevExpress.XtraBars.v19.2, Version=19.2.0.0 ">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\2019.1\Bin\Framework4\DevExpress.XtraBars.v19.1.dll</HintPath>
     </Reference>
-    <Reference Include="DevExpress.XtraCharts.v19.1, Version=19.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4, processorArchitecture=MSIL">
+    <Reference Include="DevExpress.XtraCharts.v19.2, Version=19.2.0.0 ">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\2019.1\Bin\Framework4\DevExpress.XtraCharts.v19.1.dll</HintPath>
     </Reference>
-    <Reference Include="DevExpress.XtraCharts.v19.1.Extensions, Version=19.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4, processorArchitecture=MSIL">
+    <Reference Include="DevExpress.XtraCharts.v19.2.Extensions, Version=19.2.0.0 ">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\2019.1\Bin\Framework4\DevExpress.XtraCharts.v19.1.Extensions.dll</HintPath>
     </Reference>
-    <Reference Include="DevExpress.XtraCharts.v19.1.UI, Version=19.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4, processorArchitecture=MSIL">
+    <Reference Include="DevExpress.XtraCharts.v19.2.UI, Version=19.2.0.0 ">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\2019.1\Bin\Framework4\DevExpress.XtraCharts.v19.1.UI.dll</HintPath>
     </Reference>
-    <Reference Include="DevExpress.XtraCharts.v19.1.Wizard, Version=19.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4, processorArchitecture=MSIL">
+    <Reference Include="DevExpress.XtraCharts.v19.2.Wizard, Version=19.2.0.0 ">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\2019.1\Bin\Framework4\DevExpress.XtraCharts.v19.1.Wizard.dll</HintPath>
     </Reference>
-    <Reference Include="DevExpress.XtraDialogs.v19.1, Version=19.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4, processorArchitecture=MSIL">
+    <Reference Include="DevExpress.XtraDialogs.v19.2, Version=19.2.0.0 ">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\2019.1\Bin\Framework4\DevExpress.XtraDialogs.v19.1.dll</HintPath>
     </Reference>
-    <Reference Include="DevExpress.XtraEditors.v19.1, Version=19.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4, processorArchitecture=MSIL">
+    <Reference Include="DevExpress.XtraEditors.v19.2, Version=19.2.0.0 ">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\2019.1\Bin\Framework4\DevExpress.XtraEditors.v19.1.dll</HintPath>
     </Reference>
-    <Reference Include="DevExpress.XtraGrid.v19.1, Version=19.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4, processorArchitecture=MSIL">
+    <Reference Include="DevExpress.XtraGrid.v19.2, Version=19.2.0.0 ">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\2019.1\Bin\Framework4\DevExpress.XtraGrid.v19.1.dll</HintPath>
     </Reference>
-    <Reference Include="DevExpress.XtraLayout.v19.1, Version=19.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4, processorArchitecture=MSIL">
+    <Reference Include="DevExpress.XtraLayout.v19.2, Version=19.2.0.0 ">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\2019.1\Bin\Framework4\DevExpress.XtraLayout.v19.1.dll</HintPath>
     </Reference>
-    <Reference Include="DevExpress.XtraPrinting.v19.1, Version=19.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4, processorArchitecture=MSIL">
+    <Reference Include="DevExpress.XtraPrinting.v19.2, Version=19.2.0.0 ">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\2019.1\Bin\Framework4\DevExpress.XtraPrinting.v19.1.dll</HintPath>
     </Reference>
-    <Reference Include="DevExpress.XtraTreeList.v19.1, Version=19.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4, processorArchitecture=MSIL">
+    <Reference Include="DevExpress.XtraTreeList.v19.2, Version=19.2.0.0 ">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\2019.1\Bin\Framework4\DevExpress.XtraTreeList.v19.1.dll</HintPath>
     </Reference>
-    <Reference Include="DevExpress.XtraVerticalGrid.v19.1, Version=19.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4, processorArchitecture=MSIL">
+    <Reference Include="DevExpress.XtraVerticalGrid.v19.2, Version=19.2.0.0 ">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\2019.1\Bin\Framework4\DevExpress.XtraVerticalGrid.v19.1.dll</HintPath>
     </Reference>
     <Reference Include="EnvDTE, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>True</EmbedInteropTypes>
@@ -220,6 +197,9 @@
       <DependentUpon>LogMessagesControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\MyChartControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\ThreadSafeGridView.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Forms\AccountBalancesForm.cs">
@@ -281,6 +261,11 @@
     </Compile>
     <Compile Include="Forms\TickerDataDownloadForm.Designer.cs">
       <DependentUpon>TickerDataDownloadForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Strategies\Arbitrages\Statistical\StatArbitrageStrategyConfigurationControl.cs">
       <SubType>UserControl</SubType>
@@ -473,6 +458,10 @@
     <EmbeddedResource Include="Forms\TickerDataDownloadForm.resx">
       <DependentUpon>TickerDataDownloadForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Strategies\Arbitrages\Statistical\StatArbitrageStrategyConfigurationControl.resx">
       <DependentUpon>StatArbitrageStrategyConfigurationControl.cs</DependentUpon>
     </EmbeddedResource>
@@ -514,6 +503,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Strategies\StrategiesCollectionForm.resx">
       <DependentUpon>StrategiesCollectionForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Strategies\StrategyConfigurationForm.resx">
       <DependentUpon>StrategyConfigurationForm.cs</DependentUpon>
@@ -550,6 +540,15 @@
       <Project>{4a5b7ab2-b8ce-4c47-aa5e-7ce8bed74249}</Project>
       <Name>Crypto.Core</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\notification_image.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\notification_image.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\notification_image2.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

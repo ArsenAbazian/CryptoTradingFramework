@@ -83,6 +83,7 @@
             this.tileViewSelector.DetailHeight = 673;
             this.tileViewSelector.GridControl = this.gridSelector;
             this.tileViewSelector.Name = "tileViewSelector";
+            this.tileViewSelector.OptionsTiles.AllowItemHover = true;
             this.tileViewSelector.OptionsTiles.HighlightFocusedTileStyle = DevExpress.XtraGrid.Views.Tile.HighlightFocusedTileStyle.None;
             this.tileViewSelector.OptionsTiles.ItemPadding = new System.Windows.Forms.Padding(0);
             this.tileViewSelector.OptionsTiles.ItemSize = new System.Drawing.Size(300, 220);

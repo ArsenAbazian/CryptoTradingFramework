@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace Crypto.Core.Strategies {
     public class SimulationStrategyDataProvider : IStrategyDataProvider {
@@ -60,7 +61,9 @@ namespace Crypto.Core.Strategies {
             return tm1 < tm2 ? tm1 : tm2;
         }
 
+        [XmlIgnore]
         public DateTime StartTime { get; private set; }
+        [XmlIgnore]
         public DateTime EndTime { get; private set; }
         public double SimulationProgress { get; set; } = 0.0;
         public double DownloadProgress { get; set; } = 0.0;
@@ -111,6 +114,7 @@ namespace Crypto.Core.Strategies {
             return res;
         }
 
+        [XmlIgnore]
         public DateTime LastTime { get; private set; } = DateTime.Now;
         DateTime IStrategyDataProvider.CurrentTime { get { return LastTime; } }
         void IStrategyDataProvider.OnTick() {
@@ -533,17 +537,27 @@ namespace Crypto.Core.Strategies {
         public DateTime EndDate { get; set; }
         public string FileName { get; set; }
 
+        public static string DateTime2String(DateTime value) {
+            string res = value.ToString("d", CultureInfo.InvariantCulture);
+            return res.Replace(CultureInfo.InvariantCulture.DateTimeFormat.DateSeparator, "#");
+        }
+
+        public static DateTime DateTimeFromString(string str) {
+            str = str.Replace("#", CultureInfo.InvariantCulture.DateTimeFormat.DateSeparator);
+            return DateTime.Parse(str, CultureInfo.InvariantCulture);
+        }
+
         public static string GetCandlestickCachedDataFileName(ExchangeType e, string baseCurrency, string marketCurrency, int intervalMin, DateTime start, DateTime end) {
             return e.ToString() + "_" + baseCurrency + "_" + marketCurrency + "_" + intervalMin + "_" +
-                start.ToString("d", CultureInfo.InvariantCulture) + "_" +
-                end.ToString("d", CultureInfo.InvariantCulture) + "_" +
+                DateTime2String(start) + "_" +
+                DateTime2String(end) + "_" +
                 "CandlestickData.xml";
         }
 
         public static string GetTradeHistoryCachedDataFileName(ExchangeType e, string baseCurrency, string marketCurrency, DateTime start, DateTime end) {
             return e.ToString() + "_" + baseCurrency + "_" + marketCurrency + "_" +
-                start.ToString("d", CultureInfo.InvariantCulture) + "_" +
-                end.ToString("d", CultureInfo.InvariantCulture) + "_" +
+                DateTime2String(start) + "_" +
+                DateTime2String(end) + "_" +
                 "TradeHistory.xml";
         }
 

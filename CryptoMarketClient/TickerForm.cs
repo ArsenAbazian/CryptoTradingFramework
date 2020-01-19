@@ -26,7 +26,6 @@ namespace CryptoMarketClient {
         }
 
         protected virtual void DisposeCore() {
-            Timer.Dispose();
             Ticker = null;
         }
 
@@ -52,17 +51,6 @@ namespace CryptoMarketClient {
                 Telemetry.Default.TrackException(ee);
             }
             Ticker.UpdateTrades();
-            Timer.InitializeLifetimeService();
-        }
-        System.Threading.Timer timer;
-        public System.Threading.Timer Timer {
-            get {
-                if(timer == null) {
-                    timer = new System.Threading.Timer(OnThreadUpdate);
-                    timer.Change(0, 2000);
-                }
-                return timer;
-            }
         }
         protected void OnThreadUpdate(object state) {
             try {
@@ -149,8 +137,6 @@ namespace CryptoMarketClient {
             UpdateTickerInfoBarCore();
         }
         void UpdateTickerInfoBarCore() {
-            this.siTime.Caption = DateTime.Now.ToString();
-
             int multiplier = 10000000;
             if(Ticker.Last >= 1000)
                 multiplier = 1;

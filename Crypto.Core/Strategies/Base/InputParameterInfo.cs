@@ -113,7 +113,7 @@ namespace Crypto.Core.Strategies.Base {
         }
 
         public Guid ParentID { get { return Parent == null ? Guid.Empty : Parent.ID; } }
-        public Guid ID { get; private set; }
+        public Guid ID { get; set; }
         public List<InputParameterNode> Children { get; } = new List<InputParameterNode>();
     }
 

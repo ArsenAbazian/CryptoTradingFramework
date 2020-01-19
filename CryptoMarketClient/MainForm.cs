@@ -42,6 +42,7 @@ namespace CryptoMarketClient {
         }
 
         protected override bool SupportAdvancedTitlePainting => false;
+        protected override FormShowMode ShowMode => FormShowMode.AfterInitialization;
 
         protected override void OnShown(EventArgs e) {
             base.OnShown(e);
@@ -59,9 +60,19 @@ namespace CryptoMarketClient {
             //SplashScreenManager.CloseDefaultWaitForm();
 
             InitializeExchangeButtons();
-            
+
             //ExchangesForm.Show();
             //ExchangesForm.Activate();
+
+            this.toastNotificationsManager1.ShowNotification(this.toastNotificationsManager1.Notifications[0]);
+            AddExchangesForm();
+        }
+
+        private void AddExchangesForm()
+        {
+            ExchangeCollectionForm form = new ExchangeCollectionForm();
+            form.MdiParent = this;
+            form.Show();
         }
 
         void InitializeExchangeButtons() {
@@ -471,6 +482,13 @@ namespace CryptoMarketClient {
         }
         
         public void ShowExchange(Exchange exchange) {
+            foreach(BarItemLink link in this.sbExchanges.ItemLinks) {
+                if(link.Item.Tag == exchange)
+                {
+                    ((BarCheckItem)link.Item).Checked = true;
+                    break;
+                }
+            }
             //switch(exchange.Type) {
             //    case ExchangeType.Poloniex:
             //        PoloniexTickersForm.Show();
@@ -697,7 +715,7 @@ namespace CryptoMarketClient {
                 TradeHistoryIntensityInfo info = new TradeHistoryIntensityInfo();
                 info.DownloadProgressChanged += OnTickerDownloadProgressChanged;
                 info.Exchange = Exchange.Get(dlg.TickerInfo.Exchange);
-                TickerTradeHistoryInfo historyInfo = null;
+                Crypto.Core.Helpers.TickerDownloadData historyInfo = null;
                 ProgressForm = new DownloadProgressForm();
                 ProgressForm.Cancel += (d, ee) => {
                     DownloadCanceled = true;
@@ -729,6 +747,19 @@ namespace CryptoMarketClient {
         private void OnTickerDownloadProgressChanged(object sender, TickerDownloadProgressEventArgs e) {
             ProgressForm.SetProgress(e.DownloadText, (int)e.DownloadProgress);
             e.Cancel = DownloadCanceled;
+        }
+
+        DownloadManagerForm downloadForm;
+        protected DownloadManagerForm DownloadForm {
+            get {
+                if(downloadForm == null || downloadForm.IsDisposed)
+                    downloadForm = new DownloadManagerForm();
+                return downloadForm;
+            }
+        }
+        private void biDownloadManager_ItemClick(object sender, ItemClickEventArgs e) {
+            DownloadForm.MdiParent = this;
+            DownloadForm.Show();
         }
     }
 }
