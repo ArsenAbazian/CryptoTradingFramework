@@ -8,7 +8,6 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
-using System.Windows.Forms;
 using WebSocket4Net;
 using SuperSocket.ClientEngine;
 using CryptoMarketClient.Helpers;
@@ -437,7 +436,7 @@ namespace CryptoMarketClient.Binance {
         }
 
         protected internal override HMAC CreateHmac(string secret) {
-            return new HMACSHA256(ASCIIEncoding.Default.GetBytes(secret));
+            return new HMACSHA256(System.Text.ASCIIEncoding.Default.GetBytes(secret));
         }
 
         public override bool ObtainExchangeSettings() {
@@ -767,7 +766,7 @@ namespace CryptoMarketClient.Binance {
             string[] updateId = JSonHelper.Default.StartDeserializeObject(bytes, ref startIndex, OrderBookStartItems);
 
             if(ticker.CaptureData)
-                ticker.CaptureDataCore(CaptureStreamType.OrderBook, CaptureMessageType.Snapshot, ASCIIEncoding.Default.GetString(bytes));
+                ticker.CaptureDataCore(CaptureStreamType.OrderBook, CaptureMessageType.Snapshot, System.Text.ASCIIEncoding.Default.GetString(bytes));
 
             const string bidString = "\"bids\":";
             const string askString = "\"asks\":";

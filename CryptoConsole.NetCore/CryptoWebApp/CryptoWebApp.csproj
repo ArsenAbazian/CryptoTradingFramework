@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileContext>..\CryptoService.Core</DockerfileContext>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Crypto.Net.Core.csproj.bak" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Crypto.Core\Crypto.Net.Core.csproj" />
+  </ItemGroup>
+
+
+</Project>

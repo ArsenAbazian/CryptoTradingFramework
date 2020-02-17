@@ -2,18 +2,20 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace CryptoMarketClient.Common {
     [Serializable]
     public class LogManager : ISupportSerialization {
         static readonly string Name = "Log.xml";
         public static LogManager FromFile(string fileName) {
-            LogManager res = (LogManager)SerializationHelper.FromFile(fileName, typeof(LogManager));
+            Type type = typeof(LogManager);
+            LogManager res = (LogManager)SerializationHelper.FromFile(fileName, type);
             if(res != null) res.FileName = Name;
             return res;
         }
@@ -82,15 +84,20 @@ namespace CryptoMarketClient.Common {
             Add(LogType.Log, null, null, message, null);
         }
         public void Add(LogType type, object owner, string name, string message, string description) {
-            Messages.Add(new LogMessage() {
-                Type = type,
-                Owner = owner,
-                Name = name,
-                Text = message,
-                Description = description,
-                Time = DateTime.UtcNow
-            });
-            Save();
+            lock(Messages) {
+                Messages.Add(new LogMessage() {
+                    Type = type,
+                    Owner = owner,
+                    Name = name,
+                    Text = message,
+                    Description = description,
+                    Time = DateTime.UtcNow
+                });
+                Debug.WriteLine(DateTime.UtcNow.ToLongTimeString() + ": " + message);
+            }
+            lock(this) {
+                Save();
+            }
             RefreshVisual();
         }
 

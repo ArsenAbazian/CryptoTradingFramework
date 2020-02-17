@@ -17,13 +17,9 @@ namespace CryptoMarketClient.Helpers {
         }
 
         public string ByteArray2String(byte[] bytes, int index, int length) {
-            unsafe {
-                fixed (byte* bytes2 = &bytes[0]) {
-                    if(bytes[index] == '"')
-                        return new string((sbyte*)bytes2, index + 1, length - 2);
-                    return new string((sbyte*)bytes2, index, length);
-                }
-            }
+            if(bytes[index] == '"') 
+                return Encoding.ASCII.GetString(bytes, index + 1, length - 2);
+            return Encoding.ASCII.GetString(bytes, index, length);
         }
         public bool CheckSkipSymbol(byte[] bytes, char symbol, ref int startIndex) {
             if(startIndex >= bytes.Length)

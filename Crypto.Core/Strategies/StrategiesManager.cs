@@ -2,6 +2,7 @@
 using CryptoMarketClient;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -85,40 +86,64 @@ namespace Crypto.Core.Strategies {
         protected bool StopThread { get; set; }
         [XmlIgnore]
         public bool Running { get; private set; }
-        public bool Start() {
-            if(!Initialized)
-                throw new Exception("Strategies manager is not initialized with data provider");
-            if(Running)
-                return true;
+        protected bool StartStrategies() {
             bool res = true;
-            foreach(StrategyBase s in Strategies)
+            foreach(StrategyBase s in Strategies) {
                 if(s.Enabled) {
                     res &= s.Start();
                     if(res)
                         s.OnStarted();
                 }
+            }
+            return res;
+        }
+        public bool OnTick() {
+            Thread.Sleep(10);
+            if(DataProvider.IsFinished) {
+                Stop();
+                return false;
+            }
+            DataProvider.OnTick();
+            foreach(var s in Strategies) {
+                s.OnTick();
+                if(s.PanicMode) {
+                    Stop();
+                    return false;
+                }
+            }
+            return true;
+        }
+        public bool RunSingleThread() {
+            if(!Initialized)
+                throw new Exception("Strategies manager is not initialized with data provider");
+            if(Running)
+                return true;
+            bool res = StartStrategies();
+            if(res)
+                Running = true;
+            return res;
+        }
+        public bool RunMultiThread() {
+            if(!Initialized)
+                throw new Exception("Strategies manager is not initialized with data provider");
+            if(Running)
+                return true;
+            bool res = StartStrategies();
             if(res) {
                 StopThread = false;
                 RunThread = new Thread(() => {
                     while(!StopThread) {
-                        if(DataProvider.IsFinished) {
-                            Stop();
+                        if(!OnTick())
                             return;
-                        }
-                        DataProvider.OnTick();
-                        foreach(var s in Strategies) {
-                            s.OnTick();
-                            if(s.PanicMode) {
-                                Stop();
-                                return;
-                            }
-                        }
                     }
                 });
                 RunThread.Start();
                 Running = true;
             }
             return res;
+        }
+        public bool Start() {
+            return RunMultiThread();
         }
         public bool Stop() {
             bool res = true;

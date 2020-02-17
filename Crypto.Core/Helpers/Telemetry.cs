@@ -25,6 +25,7 @@ namespace CryptoMarketClient {
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
 
+#if !CORE
             TelemetryConfiguration.Active.InstrumentationKey = "c54faeb2-109e-40c8-ad03-58aa69c17592";
             Microsoft.ApplicationInsights.TelemetryClient tc = new Microsoft.ApplicationInsights.TelemetryClient();
             tc.InstrumentationKey = "c54faeb2-109e-40c8-ad03-58aa69c17592";
@@ -42,6 +43,7 @@ namespace CryptoMarketClient {
             {
                 LogFile = null;
             }
+#endif
         }
 
         protected StreamWriter LogFile { get; private set; }
@@ -76,6 +78,8 @@ namespace CryptoMarketClient {
 
         public void TrackException(Exception e) {
             LogManager.Default.Error("exception", e.Message);
+            if(InnerClient == null)
+                return;
             InnerClient.TrackException(e);
             Task.Run(() => { InnerClient.Flush(); });
         }
@@ -87,6 +91,8 @@ namespace CryptoMarketClient {
             TrackException(e);
         }
         public void TrackEvent(string str, bool flush) {
+            if(InnerClient == null)
+                return;
             InnerClient.TrackEvent(str);
             if(flush)
                 InnerClient.Flush();
@@ -97,6 +103,8 @@ namespace CryptoMarketClient {
             for(int index = 0; index < parameters.GetLength(0); index++) {
                 dr.Add(parameters[index, 0], parameters[index, 1]);
             }
+            if(InnerClient == null)
+                return;
             InnerClient.TrackEvent(str, dr);
             if(flush)
                 Task.Run(() => { InnerClient.Flush(); });
@@ -109,6 +117,8 @@ namespace CryptoMarketClient {
                     continue;
                 dr.Add(parameters[index], parameters[index + 1]);
             }
+            if(InnerClient == null)
+                return;
             InnerClient.TrackEvent(str, dr);
             if(flush) {
                 if(Count > 10) {
@@ -119,7 +129,8 @@ namespace CryptoMarketClient {
             }
         }
         public void Flush() {
-            InnerClient.Flush();
+            if(InnerClient != null)
+                InnerClient.Flush();
         }
         public void TrackEvent(LogType type, object owner, string text, string description) {
             string name = owner == null ? string.Empty : owner.ToString();

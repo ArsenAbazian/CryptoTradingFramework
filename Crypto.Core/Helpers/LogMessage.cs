@@ -27,6 +27,10 @@ namespace CryptoMarketClient.Common {
         public DateTime Time { get; set; }
         public string Text { get; set; }
         public string Description { get; set; }
+
+        public override string ToString() {
+            return string.Format("{0}: {1}: {2} - {3}", Time, Type, Text, Description);
+        }
     }
     public enum LogType {
         Log,

@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Windows.Forms;
 using WebSocket4Net;
 using SuperSocket.ClientEngine;
 using CryptoMarketClient.Helpers;
@@ -34,7 +33,7 @@ namespace CryptoMarketClient.Exchanges.Bitmex {
         protected override bool ShouldAddKlineListener => false;
 
         protected internal override HMAC CreateHmac(string secret) {
-            return new HMACSHA256(ASCIIEncoding.Default.GetBytes(secret));
+            return new HMACSHA256(System.Text.ASCIIEncoding.Default.GetBytes(secret));
         }
 
         public override bool AllowCandleStickIncrementalUpdate => false;

@@ -8,7 +8,6 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.Xml.Serialization;
 
 namespace CryptoMarketClient.Common {
@@ -57,7 +56,11 @@ namespace CryptoMarketClient.Common {
 
         public static string SettingsFileName { get { return "settings.xml"; } }
         public static string ApplicationName { get { return "CryptoMarketClient"; } }
-        public static string ApplicationDirectory { get; set; } = "";
+        public static string ApplicationDirectory { 
+            get { 
+                return Directory.GetCurrentDirectory(); 
+            } 
+        }
         static string SettingsSectionName { get { return "Settings"; } }
 
         
