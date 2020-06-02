@@ -84,73 +84,73 @@
     <Reference Include="cs-statistics, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\cs-moea.1.0.2\lib\net452\Release\cs-statistics.dll</HintPath>
     </Reference>
-    <Reference Include="DevExpress.Charts.v19.2.Core, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.Charts.v19.2.Core, Version=19.2.7.0 ">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="DevExpress.Data.v19.2, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.Data.v19.2, Version=19.2.7.0 ">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="DevExpress.Dialogs.v19.2.Core, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.Dialogs.v19.2.Core, Version=19.2.7.0 ">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="DevExpress.Images.v19.2, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.Images.v19.2, Version=19.2.7.0 ">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="DevExpress.Office.v19.2.Core, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.Office.v19.2.Core, Version=19.2.7.0 ">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="DevExpress.Pdf.v19.2.Core, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.Pdf.v19.2.Core, Version=19.2.7.0 ">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="DevExpress.Printing.v19.2.Core, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.Printing.v19.2.Core, Version=19.2.7.0 ">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="DevExpress.RichEdit.v19.2.Core, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.RichEdit.v19.2.Core, Version=19.2.7.0 ">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="DevExpress.Sparkline.v19.2.Core, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.Sparkline.v19.2.Core, Version=19.2.7.0 ">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="DevExpress.Utils.v19.2, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.Utils.v19.2, Version=19.2.7.0 ">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="DevExpress.Xpo.v19.2, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.Xpo.v19.2, Version=19.2.7.0 ">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="DevExpress.XtraBars.v19.2, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.XtraBars.v19.2, Version=19.2.7.0 ">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="DevExpress.XtraCharts.v19.2, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.XtraCharts.v19.2, Version=19.2.7.0 ">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="DevExpress.XtraCharts.v19.2.Extensions, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.XtraCharts.v19.2.Extensions, Version=19.2.7.0 ">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="DevExpress.XtraCharts.v19.2.UI, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.XtraCharts.v19.2.UI, Version=19.2.7.0 ">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="DevExpress.XtraCharts.v19.2.Wizard, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.XtraCharts.v19.2.Wizard, Version=19.2.7.0 ">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="DevExpress.XtraDialogs.v19.2, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.XtraDialogs.v19.2, Version=19.2.7.0 ">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="DevExpress.XtraEditors.v19.2, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.XtraEditors.v19.2, Version=19.2.7.0 ">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="DevExpress.XtraGrid.v19.2, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.XtraGrid.v19.2, Version=19.2.7.0 ">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="DevExpress.XtraLayout.v19.2, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.XtraLayout.v19.2, Version=19.2.7.0 ">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="DevExpress.XtraPrinting.v19.2, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.XtraPrinting.v19.2, Version=19.2.7.0 ">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="DevExpress.XtraTreeList.v19.2, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.XtraTreeList.v19.2, Version=19.2.7.0 ">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="DevExpress.XtraVerticalGrid.v19.2, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.XtraVerticalGrid.v19.2, Version=19.2.7.0 ">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
     <Reference Include="EnvDTE, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -291,13 +291,6 @@
     <Compile Include="Strategies\Custom\HipeStrategyConfigurationControl.Designer.cs">
       <DependentUpon>HipeStrategyConfigurationControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Strategies\Custom\InvictusExchange\WalletInvestorItemsControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Strategies\Custom\InvictusExchange\WalletInvestorItemsControl.Designer.cs">
-      <DependentUpon>WalletInvestorItemsControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Strategies\Custom\InvictusExchange\WalletInvestorForecastProvider.cs" />
     <Compile Include="Forms\LogForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -313,22 +306,12 @@
     <Compile Include="Helpers\CmLogManager.cs" />
     <Compile Include="Helpers\CurrencyLogoProvider.cs" />
     <Compile Include="Helpers\ExchangeLogoProvider.cs" />
-    <Compile Include="Helpers\PortalHelperBase.cs" />
-    <Compile Include="Helpers\PortalWebClient.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Strategies\Custom\CustomStrategyConfigurationControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Strategies\Custom\CustomStrategyConfigurationControl.Designer.cs">
       <DependentUpon>CustomStrategyConfigurationControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Strategies\Custom\InvictusExchange\WalletInvestorStrategyConfigControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Strategies\Custom\InvictusExchange\WalletInvestorStrategyConfigControl.Designer.cs">
-      <DependentUpon>WalletInvestorStrategyConfigControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Strategies\Custom\RedWaterfall\RedWaterfallStrategyDataForm.cs">
       <SubType>Form</SubType>
@@ -468,9 +451,6 @@
     <EmbeddedResource Include="Strategies\Arbitrages\TriplePairStrategyConfigurationControl.resx">
       <DependentUpon>TriplePairStrategyConfigurationControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Strategies\Custom\InvictusExchange\WalletInvestorItemsControl.resx">
-      <DependentUpon>WalletInvestorItemsControl.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\LogForm.resx">
       <DependentUpon>LogForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -479,9 +459,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Strategies\Custom\CustomStrategyConfigurationControl.resx">
       <DependentUpon>CustomStrategyConfigurationControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Strategies\Custom\InvictusExchange\WalletInvestorStrategyConfigControl.resx">
-      <DependentUpon>WalletInvestorStrategyConfigControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Strategies\SimulationSettingsForm.resx">
       <DependentUpon>SimulationSettingsForm.cs</DependentUpon>

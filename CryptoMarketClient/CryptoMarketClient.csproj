@@ -114,92 +114,92 @@
     <Reference Include="Crypto.UI">
       <HintPath>..\Bin\Crypto.UI.dll</HintPath>
     </Reference>
-    <Reference Include="DevExpress.Charts.v19.2.Core, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.Charts.v19.2.Core, Version=19.2.7.0 ">
       <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.Data.v19.2, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.Data.v19.2, Version=19.2.7.0 ">
       <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.Dialogs.v19.2.Core, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.Dialogs.v19.2.Core, Version=19.2.7.0 ">
       <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.Images.v19.2, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.Images.v19.2, Version=19.2.7.0 ">
       <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.Office.v19.2.Core, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.Office.v19.2.Core, Version=19.2.7.0 ">
       <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.Pdf.v19.2.Core, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.Pdf.v19.2.Core, Version=19.2.7.0 ">
       <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.Printing.v19.2.Core, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.Printing.v19.2.Core, Version=19.2.7.0 ">
       <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.RichEdit.v19.2.Core, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.RichEdit.v19.2.Core, Version=19.2.7.0 ">
       <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.Sparkline.v19.2.Core, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.Sparkline.v19.2.Core, Version=19.2.7.0 ">
       <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.Utils.v19.2, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.Utils.v19.2, Version=19.2.7.0 ">
       <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.Xpo.v19.2, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.Xpo.v19.2, Version=19.2.7.0 ">
       <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.XtraBars.v19.2, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.XtraBars.v19.2, Version=19.2.7.0 ">
       <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.XtraCharts.v19.2, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.XtraCharts.v19.2, Version=19.2.7.0 ">
       <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.XtraCharts.v19.2.Extensions, Version=19.2.0.0 " />
-    <Reference Include="DevExpress.XtraCharts.v19.2.UI, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.XtraCharts.v19.2.Extensions, Version=19.2.7.0 " />
+    <Reference Include="DevExpress.XtraCharts.v19.2.UI, Version=19.2.7.0 ">
       <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.XtraCharts.v19.2.Wizard, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.XtraCharts.v19.2.Wizard, Version=19.2.7.0 ">
       <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.XtraDialogs.v19.2, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.XtraDialogs.v19.2, Version=19.2.7.0 ">
       <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.XtraEditors.v19.2, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.XtraEditors.v19.2, Version=19.2.7.0 ">
       <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.XtraGrid.v19.2, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.XtraGrid.v19.2, Version=19.2.7.0 ">
       <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.XtraLayout.v19.2, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.XtraLayout.v19.2, Version=19.2.7.0 ">
       <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.XtraPrinting.v19.2, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.XtraPrinting.v19.2, Version=19.2.7.0 ">
       <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.XtraTreeList.v19.2, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.XtraTreeList.v19.2, Version=19.2.7.0 ">
       <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.XtraVerticalGrid.v19.2, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.XtraVerticalGrid.v19.2, Version=19.2.7.0 ">
       <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
