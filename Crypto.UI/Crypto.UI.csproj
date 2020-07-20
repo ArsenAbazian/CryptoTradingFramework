@@ -84,73 +84,76 @@
     <Reference Include="cs-statistics, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\cs-moea.1.0.2\lib\net452\Release\cs-statistics.dll</HintPath>
     </Reference>
-    <Reference Include="DevExpress.Charts.v19.2.Core, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.Charts.v20.1.Core, Version=20.1.0.0 ">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="DevExpress.Data.v19.2, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.Data.v20.1, Version=20.1.0.0 ">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="DevExpress.Dialogs.v19.2.Core, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.Dialogs.v20.1.Core, Version=20.1.0.0 ">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="DevExpress.Images.v19.2, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.Images.v20.1, Version=20.1.0.0 ">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="DevExpress.Office.v19.2.Core, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.Office.v20.1.Core, Version=20.1.0.0 ">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="DevExpress.Pdf.v19.2.Core, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.Pdf.v20.1.Core, Version=20.1.0.0 ">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="DevExpress.Printing.v19.2.Core, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.Printing.v20.1.Core, Version=20.1.0.0 ">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="DevExpress.RichEdit.v19.2.Core, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.RichEdit.v20.1.Core, Version=20.1.0.0 ">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="DevExpress.Sparkline.v19.2.Core, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.Sparkline.v20.1.Core, Version=20.1.0.0 ">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="DevExpress.Utils.v19.2, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.Data.Desktop.v20.1, Version=20.1.0.0 ">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="DevExpress.Xpo.v19.2, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.Utils.v20.1, Version=20.1.0.0 ">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="DevExpress.XtraBars.v19.2, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.Xpo.v20.1, Version=20.1.0.0 ">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="DevExpress.XtraCharts.v19.2, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.XtraBars.v20.1, Version=20.1.0.0 ">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="DevExpress.XtraCharts.v19.2.Extensions, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.XtraCharts.v20.1, Version=20.1.0.0 ">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="DevExpress.XtraCharts.v19.2.UI, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.XtraCharts.v20.1.Extensions, Version=20.1.0.0 ">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="DevExpress.XtraCharts.v19.2.Wizard, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.XtraCharts.v20.1.UI, Version=20.1.0.0 ">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="DevExpress.XtraDialogs.v19.2, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.XtraCharts.v20.1.Wizard, Version=20.1.0.0 ">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="DevExpress.XtraEditors.v19.2, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.XtraDialogs.v20.1, Version=20.1.0.0 ">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="DevExpress.XtraGrid.v19.2, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.XtraEditors.v20.1, Version=20.1.0.0 ">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="DevExpress.XtraLayout.v19.2, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.XtraGrid.v20.1, Version=20.1.0.0 ">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="DevExpress.XtraPrinting.v19.2, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.XtraLayout.v20.1, Version=20.1.0.0 ">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="DevExpress.XtraTreeList.v19.2, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.XtraPrinting.v20.1, Version=20.1.0.0 ">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="DevExpress.XtraVerticalGrid.v19.2, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.XtraTreeList.v20.1, Version=20.1.0.0 ">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="DevExpress.XtraVerticalGrid.v20.1, Version=20.1.0.0 ">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
     <Reference Include="EnvDTE, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">

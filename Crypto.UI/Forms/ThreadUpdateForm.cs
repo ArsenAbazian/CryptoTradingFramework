@@ -1,4 +1,5 @@
-﻿using DevExpress.XtraEditors;
+﻿using DevExpress.XtraBars.Ribbon;
+using DevExpress.XtraEditors;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -31,23 +32,29 @@ namespace CryptoMarketClient {
             UpdateThread = CheckStartThread(UpdateThread, ThreadWork);
         }
 
+        protected virtual bool AutoStartThread { get { return true; } }
+
         protected override void OnShown(EventArgs e) {
             base.OnShown(e);
-            StartUpdateThread();
+            if(AutoStartThread)
+                StartUpdateThread();
         }
 
         protected override void OnActivated(EventArgs e) {
             base.OnActivated(e);
-            if(!AllowUpdateInactive)
+            if(!AllowUpdateInactive && AutoStartThread)
                 StartUpdateThread();
         }
 
         protected override void OnDeactivate(EventArgs e) {
             base.OnDeactivate(e);
-            if(!AllowUpdateInactive)
+            if(!AllowUpdateInactive && AutoStartThread)
                 StopUpdateThread();
         }
         protected virtual void StopUpdateThread() {
+            AllowWorkThread = false;
+        }
+        public void StopThread() {
             AllowWorkThread = false;
         }
 
@@ -61,6 +68,9 @@ namespace CryptoMarketClient {
         }
         protected virtual void OnThreadUpdate() {
             
+        }
+
+        public virtual void OnRibbonMerged(RibbonControl ownerRibbon) {
         }
     }
 }

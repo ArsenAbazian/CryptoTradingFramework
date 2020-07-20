@@ -22,7 +22,7 @@ namespace CryptoMarketClient {
         [STAThread]
         static void Main() {
             DevExpress.Data.CurrencyDataController.DisableThreadingProblemsDetection = true;
-            SettingsStore.ApplicationDirectory = Path.GetDirectoryName(Application.ExecutablePath);
+            //SettingsStore.ApplicationDirectory = Path.GetDirectoryName(Application.ExecutablePath);
             WindowsFormsSettings.DefaultFont = new System.Drawing.Font("Segoe UI", 9);
             WindowsFormsSettings.ScrollUIMode = ScrollUIMode.Desktop;
             UserLookAndFeel.Default.SetSkinStyle(SettingsStore.Default.SelectedThemeName);

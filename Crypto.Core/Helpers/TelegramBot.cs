@@ -31,13 +31,14 @@ namespace CryptoMarketClient.Helpers {
             return Guid.NewGuid().ToString().Replace("-", "");
         }
         public TelegramBot() {
-            var proxy = new HttpToSocks5Proxy("142.93.108.135", 1080, "sockuser", "boogieperets");
+            //var proxy = new HttpToSocks5Proxy("142.93.108.135", 1080, "sockuser", "boogieperets");
 
             WebClient cl = new WebClient();
-            cl.Proxy = proxy;
-            
-            proxy.ResolveHostnamesLocally = true;
-            InnerClient = new Telegram.Bot.TelegramBotClient("410447550:AAGz1QRPgdoh5tuddcMleFYI9Ttw-Ytn9Fs", proxy);
+            //cl.Proxy = proxy;
+
+            //proxy.ResolveHostnamesLocally = true;
+            //InnerClient = new Telegram.Bot.TelegramBotClient("410447550:AAGz1QRPgdoh5tuddcMleFYI9Ttw-Ytn9Fs", proxy);
+            InnerClient = new Telegram.Bot.TelegramBotClient("410447550:AAGz1QRPgdoh5tuddcMleFYI9Ttw-Ytn9Fs", (IWebProxy)null);
         }
         bool RegisterNewUsers(Update[] result) {
             bool registered = false;

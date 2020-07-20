@@ -102,6 +102,7 @@ namespace CryptoMarketClient.Common {
         public bool Binance { get; set; }
         public bool BitFinex { get; set; }
         public bool Bitmex { get; set; }
+        public string LastOpenedWebTickersFile { get; set; }
     }
 }
 

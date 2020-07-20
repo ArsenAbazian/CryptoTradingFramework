@@ -114,92 +114,96 @@
     <Reference Include="Crypto.UI">
       <HintPath>..\Bin\Crypto.UI.dll</HintPath>
     </Reference>
-    <Reference Include="DevExpress.Charts.v19.2.Core, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.Charts.v20.1.Core, Version=20.1.0.0 ">
       <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.Data.v19.2, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.Data.v20.1, Version=20.1.0.0 ">
       <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.Dialogs.v19.2.Core, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.Dialogs.v20.1.Core, Version=20.1.0.0 ">
       <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.Images.v19.2, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.Images.v20.1, Version=20.1.0.0 ">
       <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.Office.v19.2.Core, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.Office.v20.1.Core, Version=20.1.0.0 ">
       <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.Pdf.v19.2.Core, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.Pdf.v20.1.Core, Version=20.1.0.0 ">
       <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.Printing.v19.2.Core, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.Printing.v20.1.Core, Version=20.1.0.0 ">
       <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.RichEdit.v19.2.Core, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.RichEdit.v20.1.Core, Version=20.1.0.0 ">
       <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.Sparkline.v19.2.Core, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.Sparkline.v20.1.Core, Version=20.1.0.0 ">
       <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.Utils.v19.2, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.Data.Desktop.v20.1, Version=20.1.0.0 ">
       <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.Xpo.v19.2, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.Utils.v20.1, Version=20.1.0.0 ">
       <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.XtraBars.v19.2, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.Xpo.v20.1, Version=20.1.0.0 ">
       <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.XtraCharts.v19.2, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.XtraBars.v20.1, Version=20.1.0.0 ">
       <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.XtraCharts.v19.2.Extensions, Version=19.2.0.0 "/>
-    <Reference Include="DevExpress.XtraCharts.v19.2.UI, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.XtraCharts.v20.1, Version=20.1.0.0 ">
       <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.XtraCharts.v19.2.Wizard, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.XtraCharts.v20.1.Extensions, Version=20.1.0.0 " />
+    <Reference Include="DevExpress.XtraCharts.v20.1.UI, Version=20.1.0.0 ">
       <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.XtraDialogs.v19.2, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.XtraCharts.v20.1.Wizard, Version=20.1.0.0 ">
       <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.XtraEditors.v19.2, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.XtraDialogs.v20.1, Version=20.1.0.0 ">
       <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.XtraGrid.v19.2, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.XtraEditors.v20.1, Version=20.1.0.0 ">
       <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.XtraLayout.v19.2, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.XtraGrid.v20.1, Version=20.1.0.0 ">
       <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.XtraPrinting.v19.2, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.XtraLayout.v20.1, Version=20.1.0.0 ">
       <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.XtraTreeList.v19.2, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.XtraPrinting.v20.1, Version=20.1.0.0 ">
       <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.XtraVerticalGrid.v19.2, Version=19.2.0.0 ">
+    <Reference Include="DevExpress.XtraTreeList.v20.1, Version=20.1.0.0 ">
+      <SpecificVersion>False</SpecificVersion>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DevExpress.XtraVerticalGrid.v20.1, Version=20.1.0.0 ">
       <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
@@ -409,6 +413,19 @@
     <Compile Include="ExchangeCollectionForm.Designer.cs">
       <DependentUpon>ExchangeCollectionForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Modules\TickerExchangeWebInfoCollectionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Modules\TickerExchangeWebInfoCollectionForm.Designer.cs">
+      <DependentUpon>TickerExchangeWebInfoCollectionForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\TickerExchangeWebListInfo.cs" />
+    <Compile Include="Modules\TickerWebInfoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Modules\TickerWebInfoForm.Designer.cs">
+      <DependentUpon>TickerWebInfoForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="OpenedOrdersForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -607,6 +624,12 @@
     <EmbeddedResource Include="ConnectionErrorHistoryForm.resx">
       <DependentUpon>ConnectionErrorHistoryForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Modules\TickerExchangeWebInfoCollectionForm.resx">
+      <DependentUpon>TickerExchangeWebInfoCollectionForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Modules\TickerWebInfoForm.resx">
+      <DependentUpon>TickerWebInfoForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="OpenedOrdersForm.resx">
       <DependentUpon>OpenedOrdersForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -628,6 +651,7 @@
     <EmbeddedResource Include="ExchangeCollectionControl.resx">
       <DependentUpon>ExchangeCollectionControl.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Properties\licenses.licx" />
     <EmbeddedResource Include="SideBySideOrderBookControl.resx">
       <DependentUpon>SideBySideOrderBookControl.cs</DependentUpon>
     </EmbeddedResource>

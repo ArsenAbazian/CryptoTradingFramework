@@ -262,10 +262,10 @@ namespace CryptoMarketClient {
             // 
             this.gridControl1.DataSource = this.tickerArbitrageInfoBindingSource;
             this.gridControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gridControl1.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(12, 12, 12, 12);
+            this.gridControl1.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(12);
             this.gridControl1.Location = new System.Drawing.Point(0, 0);
             this.gridControl1.MainView = this.gridView1;
-            this.gridControl1.Margin = new System.Windows.Forms.Padding(12, 12, 12, 12);
+            this.gridControl1.Margin = new System.Windows.Forms.Padding(12);
             this.gridControl1.Name = "gridControl1";
             this.gridControl1.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repositoryItemCheckEdit1,
@@ -277,7 +277,7 @@ namespace CryptoMarketClient {
             this.repositoryItemSparklineEdit2,
             this.repositoryItemSparklineEdit3,
             this.repositoryItemSparklineEdit4});
-            this.gridControl1.Size = new System.Drawing.Size(3832, 1768);
+            this.gridControl1.Size = new System.Drawing.Size(3832, 1750);
             this.gridControl1.TabIndex = 0;
             this.gridControl1.UseDirectXPaint = DevExpress.Utils.DefaultBoolean.True;
             this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
@@ -739,7 +739,6 @@ namespace CryptoMarketClient {
             // 
             // ribbonControl1
             // 
-            this.ribbonControl1.AllowGlyphSkinning = true;
             this.ribbonControl1.ExpandCollapseItem.Id = 0;
             this.ribbonControl1.Items.AddRange(new DevExpress.XtraBars.BarItem[] {
             this.ribbonControl1.ExpandCollapseItem,
@@ -767,9 +766,10 @@ namespace CryptoMarketClient {
             this.bsShowTickerChart,
             this.bsStrategies,
             this.bsShowOrderBookHistory,
-            this.bcShowNonZeroAmout});
+            this.bcShowNonZeroAmout,
+            this.ribbonControl1.SearchEditItem});
             this.ribbonControl1.Location = new System.Drawing.Point(0, 0);
-            this.ribbonControl1.Margin = new System.Windows.Forms.Padding(12, 12, 12, 12);
+            this.ribbonControl1.Margin = new System.Windows.Forms.Padding(12);
             this.ribbonControl1.MaxItemId = 33;
             this.ribbonControl1.Name = "ribbonControl1";
             this.ribbonControl1.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
@@ -779,7 +779,7 @@ namespace CryptoMarketClient {
             this.repositoryItemSpinEdit1,
             this.repositoryItemSpinEdit2,
             this.repositoryItemSpinEdit3});
-            this.ribbonControl1.Size = new System.Drawing.Size(3832, 259);
+            this.ribbonControl1.Size = new System.Drawing.Size(3832, 277);
             // 
             // bbAllCurrencies
             // 
@@ -1012,6 +1012,7 @@ namespace CryptoMarketClient {
             // ribbonPageGroup1
             // 
             this.ribbonPageGroup1.AllowTextClipping = false;
+            this.ribbonPageGroup1.CaptionButtonVisible = DevExpress.Utils.DefaultBoolean.False;
             this.ribbonPageGroup1.ItemLinks.Add(this.btShowCombinedBidAsk);
             this.ribbonPageGroup1.ItemLinks.Add(this.bbShowOrderBookHistory);
             this.ribbonPageGroup1.ItemLinks.Add(this.bbAllCurrencies, true);
@@ -1021,7 +1022,6 @@ namespace CryptoMarketClient {
             this.ribbonPageGroup1.ItemLinks.Add(this.bbAnalytics);
             this.ribbonPageGroup1.ItemLinks.Add(this.bcShowNonZeroAmout);
             this.ribbonPageGroup1.Name = "ribbonPageGroup1";
-            this.ribbonPageGroup1.ShowCaptionButton = false;
             this.ribbonPageGroup1.Text = "Arbitrage";
             // 
             // ribbonPageGroup2
@@ -1078,10 +1078,10 @@ namespace CryptoMarketClient {
             // 
             this.sidePanel1.Controls.Add(this.gridControl1);
             this.sidePanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.sidePanel1.Location = new System.Drawing.Point(0, 259);
-            this.sidePanel1.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
+            this.sidePanel1.Location = new System.Drawing.Point(0, 277);
+            this.sidePanel1.Margin = new System.Windows.Forms.Padding(8);
             this.sidePanel1.Name = "sidePanel1";
-            this.sidePanel1.Size = new System.Drawing.Size(3832, 1768);
+            this.sidePanel1.Size = new System.Drawing.Size(3832, 1750);
             this.sidePanel1.TabIndex = 6;
             this.sidePanel1.Text = "sidePanel1";
             // 
@@ -1100,7 +1100,7 @@ namespace CryptoMarketClient {
             this.ClientSize = new System.Drawing.Size(3832, 2027);
             this.Controls.Add(this.sidePanel1);
             this.Controls.Add(this.ribbonControl1);
-            this.Margin = new System.Windows.Forms.Padding(12, 12, 12, 12);
+            this.Margin = new System.Windows.Forms.Padding(12);
             this.Name = "TickerArbitrageForm";
             this.Text = "Classic Arbitrage";
             this.Load += new System.EventHandler(this.TickerArbitrageForm_Load);

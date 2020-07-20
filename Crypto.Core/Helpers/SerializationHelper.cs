@@ -71,6 +71,8 @@ namespace Crypto.Core.Helpers {
         }
 
         public static bool Save(ISupportSerialization obj, Type t, string path) {
+            if(File.Exists(obj.FileName))
+                obj.FileName = Path.GetFileName(obj.FileName);
             string fullName = string.IsNullOrEmpty(path)? obj.FileName: path + "\\" + obj.FileName;
             string tmpFile = fullName + ".tmp";
             if(!string.IsNullOrEmpty(path) && !Directory.Exists(path))
