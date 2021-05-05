@@ -34,6 +34,8 @@ namespace Crypto.Core.Strategies {
         public IStrategyDataProvider DataProvider { get; set; }
         [XmlIgnore]
         public bool Initialized { get; private set; }
+        [XmlIgnore]
+        public IThreadManager ThreadManager { get; set; }
 
         public bool Initialize(IStrategyDataProvider dataProvider) {
             DataProvider = dataProvider;
@@ -98,7 +100,7 @@ namespace Crypto.Core.Strategies {
             return res;
         }
         public bool OnTick() {
-            Thread.Sleep(10);
+            //Thread.Sleep(10);
             if(DataProvider.IsFinished) {
                 Stop();
                 return false;

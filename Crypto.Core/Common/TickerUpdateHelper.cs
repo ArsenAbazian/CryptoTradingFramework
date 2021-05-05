@@ -66,7 +66,7 @@ namespace CryptoMarketClient {
             if(last != null) {
                 if(last.Ask == item.LowestAsk && last.Bid == item.HighestBid && last.Current == item.Last)
                     return;
-                item.Change = ((item.Last - last.Current) / last.Current) * 100;
+                //item.Change = ((item.Last - last.Current) / last.Current) * 100;
                 if(last.Bid != item.HighestBid)
                     item.BidChange = (item.HighestBid - last.Bid) * 100;
                 if(last.Ask != item.LowestAsk)

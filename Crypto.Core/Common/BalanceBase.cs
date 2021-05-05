@@ -29,10 +29,21 @@ namespace CryptoMarketClient.Common {
             }
             set { btcValue = value; }
         }
+        public double UsdtPrice {
+            get {
+                if(ExchangeCore == null)
+                    return double.NaN;
+                if(UsdtTicker != null)
+                    return UsdtTicker.HighestBid;
+                return double.NaN;
+            }
+        }
         public double UsdtValue {
             get {
                 if(ExchangeCore == null)
                     return double.NaN;
+                if(UsdtTicker != null)
+                    return UsdtTicker.HighestBid * (Available + OnOrders);
                 if(ExchangeCore.BtcUsdtTicker == null)
                     return double.NaN;
                 return BtcValue * ExchangeCore.BtcUsdtTicker.HighestBid;
@@ -44,6 +55,14 @@ namespace CryptoMarketClient.Common {
                 if(btcTicker == null && ExchangeCore != null)
                     btcTicker = ExchangeCore.Tickers.FirstOrDefault(t => t.MarketCurrency == Currency && t.BaseCurrency == "BTC");
                 return btcTicker;
+            }
+        }
+        Ticker usdtTicker;
+        public Ticker UsdtTicker {
+            get {
+                if(usdtTicker == null && ExchangeCore != null)
+                    usdtTicker = ExchangeCore.Tickers.FirstOrDefault(t => t.MarketCurrency == Currency && t.BaseCurrency == "USDT");
+                return usdtTicker;
             }
         }
         public string DepositAddress { get; set; }

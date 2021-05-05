@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
@@ -102,7 +103,6 @@ namespace CryptoMarketClient.Common {
         public bool Binance { get; set; }
         public bool BitFinex { get; set; }
         public bool Bitmex { get; set; }
-        public string LastOpenedWebTickersFile { get; set; }
     }
 }
 

@@ -84,7 +84,7 @@ namespace Crypto.Core.Strategies.Custom {
 
         
         protected virtual void OpenBreakUpPosition(double value) {
-            OpenPositionInfo info = OpenLongPosition("BU", value, 
+            OpenPositionInfo info = OpenLongPosition(Ticker, "BU", value, 
                 BreakUpSettings.GetAllowedDeposit(MaxAllowedDeposit) / value, BreakUpSettings.AllowTrailing, 
                 BreakUpSettings.TrailingStopLossPc, 
                 BreakUpSettings.MinProfitPc);
@@ -95,7 +95,7 @@ namespace Crypto.Core.Strategies.Custom {
             }
         }
         protected virtual void OpenPingPongPosition(double value, double resistance, double support) {
-            OpenPositionInfo info = OpenLongPosition("PP", value, 
+            OpenPositionInfo info = OpenLongPosition(Ticker, "PP", value, 
                 PingPongSettings.GetAllowedDeposit(MaxAllowedDeposit) / value, 
                 PingPongSettings.AllowTrailing,
                 PingPongSettings.TrailingStopLossPc,
@@ -254,7 +254,7 @@ namespace Crypto.Core.Strategies.Custom {
                 AddDelayedPosition("RW", value, amount, closeValue, BreakDownSettings.DelayedPeriodLength);
                 return;
             }
-            OpenPositionInfo info = OpenLongPosition("RW", value, amount, BreakDownSettings.AllowTrailing, BreakDownSettings.TrailingStopLossPc, BreakDownSettings.MinProfitPc);
+            OpenPositionInfo info = OpenLongPosition(Ticker, "RW", value, amount, BreakDownSettings.AllowTrailing, BreakDownSettings.TrailingStopLossPc, BreakDownSettings.MinProfitPc);
             if(info == null)
                 return;
             info.CloseValue = closeValue;

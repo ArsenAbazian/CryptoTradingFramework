@@ -2,6 +2,7 @@
 using Crypto.Core.Helpers;
 using Crypto.Core.Indicators;
 using Crypto.Core.Strategies;
+using CryptoMarketClient;
 using CryptoMarketClient.Common;
 using System;
 using System.Collections.Generic;
@@ -42,6 +43,10 @@ namespace Crypto.Core.Common {
         public bool AllowDCA { get; set; }
         public OrderGridInfo DCAInfo { get; set; }
         public double DCATotalAmount { get; set; }
+
+        [XmlIgnore]
+        public Ticker Ticker { get; set; }
+
         public void InitializeDCA(double openValue, double probableMin, double amount, int stepCount, double startAmountPc, double endAmountPc) {
             DCAInfo = new OrderGridInfo();
             DCAInfo.Start.AmountPercent = 30;
@@ -201,6 +206,7 @@ namespace Crypto.Core.Common {
             StrategyDataItemInfo.EnumItem(DataItemInfos, "Type").Visibility = DataVisibility.Table;
             StrategyDataItemInfo.DataItem(DataItemInfos, "OpenValue").Visibility = DataVisibility.Table;
             StrategyDataItemInfo.DataItem(DataItemInfos, "CloseValue").Visibility = DataVisibility.Table;
+            StrategyDataItemInfo.DataItem(DataItemInfos, "OpenAmount").Visibility = DataVisibility.Table;
             StrategyDataItemInfo.DataItem(DataItemInfos, "Change").Visibility = DataVisibility.Table;
             StrategyDataItemInfo.DataItem(DataItemInfos, "StopLoss").Visibility = DataVisibility.Table;
             StrategyDataItemInfo.DataItem(DataItemInfos, "Spent").Visibility = DataVisibility.Table;

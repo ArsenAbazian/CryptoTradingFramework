@@ -49,12 +49,14 @@ namespace CryptoMarketClient {
 
         public void Offset(double firstBidValue) {
             double delta = firstBidValue - Bids[0].Value;
-            for(int i = 0; i < Bids.Count; i++) {
-                Bids[i].Value += delta;
+            foreach(OrderBookEntry e in Bids) { 
+                e.Offset(delta);
             }
-            for(int i = 0; i < Asks.Count; i++) {
-                Asks[i].Value += delta;
+            foreach(OrderBookEntry e in Asks) { 
+                e.Offset(delta);
             }
+            HighestBid = Bids[0].Value;
+            LowestAsk = Asks[0].Value;
         }
 
         public double AskExpectation { get; private set; }

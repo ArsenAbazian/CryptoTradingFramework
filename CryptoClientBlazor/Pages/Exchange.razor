@@ -1,0 +1,202 @@
+﻿@page "/exchange"
+
+@using CryptoClientBlazor.Data
+@using Microsoft.AspNetCore.WebUtilities;
+@using Microsoft.Extensions.Primitives;
+@inject NavigationManager NavManager
+@inject ExchangeService ExchangeService; 
+
+<h2>@exchangeType</h2>
+<p><em>@status</em></p>
+
+@if (this.tickers == null)
+{
+    
+}
+else
+{
+<div class="tickers-grid-container">
+    <DxDataGrid CssClass="tickers-grid" Data="@filteredTickers" ShowFilterRow="false" AllowSort="true" AllowColumnDragDrop="true" PageSize="200" @ref="tickersGrid">
+        <HeaderTemplate>
+            <DxToolbar ItemRenderStyleMode="ToolbarRenderStyleMode.Plain">
+                <Items>
+                    @foreach (string baseCurrency in markets)
+                    {
+                        <DxToolbarItem Text="@baseCurrency" GroupName="basecurrency"
+                                       CheckedChanged="(x) => { checkedMarket = baseCurrency; UpdateTickers(); }"
+                                       Checked="@(checkedMarket == baseCurrency)"></DxToolbarItem>
+                    }
+                    <DxToolbarItem GroupName="favotite" Text="Show Favorites" bind-Checked="@showSelected" CheckedChanged="(x) => { this.showSelected = !this.showSelected; UpdateTickers(); }" Alignment="ToolbarItemAlignment.Right"></DxToolbarItem>
+                    <DxToolbarItem Alignment="ToolbarItemAlignment.Right">
+                        <Template>
+                            <DxTextBox @bind-Text="@FilterString" ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto"></DxTextBox>
+                        </Template>
+                    </DxToolbarItem>
+                </Items>
+            </DxToolbar>
+        </HeaderTemplate>
+        <Columns>
+            <DxDataGridCheckBoxColumn Field="IsSelected" Caption=" " Width="50px">
+                <DisplayTemplate>
+                    @{
+                        var id = ((CryptoMarketClient.Ticker)context).CurrencyPair;
+                        if (!((CryptoMarketClient.Ticker)context).IsSelected)
+                        {
+                            <i class="fas fa-star cell-star" @onclick="() => SelectCurrency(id, true)"></i>
+                        }
+                        else
+                        {
+                            <i class="fas fa-star cell-star-gold" @onclick="() => SelectCurrency(id, false)"></i>
+                        }
+                    }
+                </DisplayTemplate>
+            </DxDataGridCheckBoxColumn>
+
+            <DxDataGridColumn Field="MarketCurrency" Caption="Currency">
+                <DisplayTemplate>
+                    <div class="cell-value">@(((CryptoMarketClient.Ticker)context).MarketCurrency)</div>
+                </DisplayTemplate>
+            </DxDataGridColumn>
+            <DxDataGridColumn Field="Last" Caption="Last Price" AllowSort="true">
+                <DisplayTemplate>
+                    @{
+                        var t = ((CryptoMarketClient.Ticker)context);
+                        if (t.Change > 0)
+                        {
+                            <div class="cell-value-green">@string.Format("{0:0.00000000}", ((CryptoMarketClient.Ticker)context).Last)</div>
+                        }
+                        else
+                        {
+                            <div class="cell-value-red">@string.Format("{0:0.00000000}", ((CryptoMarketClient.Ticker)context).Last)</div>
+                        }
+                    }
+
+                </DisplayTemplate>
+            </DxDataGridColumn>
+            <DxDataGridColumn Field="Change" Caption="24Hr Change">
+                <DisplayTemplate>
+                    @{
+                        var t = ((CryptoMarketClient.Ticker)context);
+                        if (t.Change >= 0)
+                        {
+                            <div class="cell-value-green">@string.Format("+{0:0.00}%", ((CryptoMarketClient.Ticker)context).Change)</div>
+                        }
+                        else
+                        {
+                            <div class="cell-value-red">@string.Format("{0:0.00}%", ((CryptoMarketClient.Ticker)context).Change)</div>
+                        }
+                    }
+                </DisplayTemplate>
+            </DxDataGridColumn>
+            <DxDataGridColumn Field="Hr24Low" Caption="24h Low" AllowSort="true">
+                <DisplayTemplate>
+                    <div class="cell-value">@string.Format("{0:0.00000000}", ((CryptoMarketClient.Ticker)context).Hr24Low)</div>
+                </DisplayTemplate>
+            </DxDataGridColumn>
+            <DxDataGridColumn Field="Hr24High" Caption="24h High" AllowSort="true">
+                <DisplayTemplate>
+                    <div class="cell-value">@string.Format("{0:0.00000000}", ((CryptoMarketClient.Ticker)context).Hr24High)</div>
+                </DisplayTemplate>
+            </DxDataGridColumn>
+            <DxDataGridColumn Field="BaseVolume" Caption="Base Volume">
+                <DisplayTemplate>
+                    <div class="cell-value">@string.Format("{0:0.00000000}", ((CryptoMarketClient.Ticker)context).BaseVolume)</div>
+                </DisplayTemplate>
+            </DxDataGridColumn>
+            <DxDataGridColumn Field="QuoteVolume" Caption="Quote Volume">
+                <DisplayTemplate>
+                    <div class="cell-value">@string.Format("{0:0.00000000}", ((CryptoMarketClient.Ticker)context).Volume)</div>
+                </DisplayTemplate>
+            </DxDataGridColumn>
+            <DxDataGridColumn Caption="">
+                <DisplayTemplate>
+                    @{
+                        var t = ((CryptoMarketClient.Ticker)context);
+                        <a class="ticker-link" href="ticker?e=@this.exchangeType&t=@t.CurrencyPair">
+                            <DxButton RenderStyle="ButtonRenderStyle.Primary" RenderStyleMode="ButtonRenderStyleMode.Outline" Text="Trade"></DxButton>
+                        </a>
+                    }
+                </DisplayTemplate>
+            </DxDataGridColumn>
+            <DxDataGridColumn Caption="">
+                <DisplayTemplate>
+                    @{
+                        var t = ((CryptoMarketClient.Ticker)context);
+                        <a class="web-page-link" href="@t.WebPageAddress">Web Page</a>
+                    }
+                </DisplayTemplate>
+            </DxDataGridColumn>
+        </Columns>
+    </DxDataGrid>
+</div>
+
+}
+
+@code {
+    private CryptoMarketClient.Ticker[] tickers;
+    private CryptoMarketClient.Ticker[] filteredTickers;
+    private CryptoMarketClient.ExchangeType exchangeType;
+    private CryptoMarketClient.Exchange exchange;
+    private string status = "Connecting...";
+    private string[] markets = new string[0];
+    private string checkedMarket = "BTC";
+    private bool showSelected = false;
+    DxDataGrid<CryptoMarketClient.Ticker> tickersGrid;
+
+    string filterString = "";
+    private string FilterString {
+        get { return filterString; }
+        set {
+            if (FilterString == value)
+                return;
+            filterString = value;
+            UpdateTickers();
+        }
+    }
+
+    protected void SelectCurrency(string pair, bool select)
+    {
+        CryptoMarketClient.Ticker tt = tickers.FirstOrDefault(t => t.CurrencyPair == pair);
+        if (tt == null)
+            return;
+        tt.IsSelected = select;
+        this.exchange.Save();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var uri = NavManager.ToAbsoluteUri(NavManager.Uri);
+        if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("e", out var etype))
+        {
+            this.exchangeType = Enum.Parse<CryptoMarketClient.ExchangeType>(etype);
+            this.exchange = CryptoMarketClient.Exchange.Get(this.exchangeType);
+            this.status = "State: " + this.exchange.TickersSocketState.ToString();
+            this.exchange.TickersSocketStateChanged += OnTickersSocketStateChanged;
+            this.exchange.TickerChanged += OnTickersUpdate;
+
+            this.tickers = await ExchangeService.GetTickers(this.exchange);
+            this.filteredTickers = this.tickers.Where(t => t.BaseCurrency == this.checkedMarket).ToArray();
+            this.markets = await ExchangeService.GetMarkets(this.exchange);
+        }
+        else
+        {
+            this.status = "Undefined Exchange";
+        }
+
+    }
+
+    private void OnTickersUpdate(object sender, CryptoMarketClient.TickerUpdateEventArgs e) {
+        if(this.tickersGrid != null)
+            this.tickersGrid.Refresh();
+    }
+
+    private void OnTickersSocketStateChanged(object sender, CryptoMarketClient.Common.ConnectionInfoChangedEventArgs e)
+    {
+        this.status = "State:" + e.NewState.ToString();
+
+    }
+
+    private void UpdateTickers() {
+        this.filteredTickers = this.tickers.Where(t => t.BaseCurrency == this.checkedMarket && (FilterString == null || t.MarketCurrency.Contains(FilterString)) && (!this.showSelected || t.IsSelected)).ToArray();
+    }
+}

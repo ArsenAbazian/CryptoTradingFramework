@@ -86,6 +86,8 @@ namespace CryptoMarketClient.Strategies {
         }
 
         protected virtual void OnStrategyChanged() {
+            InitializeTickersDataMenu();
+
             this.chartDataControl1.AnnotationDoubleClick += OnChartAnnotationDoubleClick;
             this.chartDataControl1.ShowHistogrammItemClick += OnShowHistogrammItemClick;
             this.strategyHistoryItemBindingSource.DataSource = Strategy.History;
@@ -107,6 +109,43 @@ namespace CryptoMarketClient.Strategies {
                 DetachePoints();
                 this.chartDataControl1.Chart.LoadFromFile(ChartSettingsFileName);
                 AttachPoints();
+            }
+        }
+
+        protected virtual void InitializeTickersDataMenu() {
+            if(Strategy == null)
+                return;
+            CustomTickerStrategy st = Strategy as CustomTickerStrategy;
+            if(st == null)
+                return;
+            foreach(Ticker t in st.Tickers) {
+                BarButtonItem bt = new BarButtonItem(this.barManager1, t.Exchange.Name + ": " + t.Name);
+                bt.ItemClick += (d, e) => {
+                    StrategyDataItemInfo info = new StrategyDataItemInfo();
+                    info.DataSource = t.TradeHistory;
+                    StrategyDataItemInfo time = StrategyDataItemInfo.TimeItem(info.Children, "Time");
+                    time.DataSource = t.TradeHistory;
+                    time.FormatString = "dd.MM hh:mm:ss.fff";
+                    StrategyDataItemInfo.DataItem(info.Children, nameof(TradeInfoItem.Rate)).DataSource = t.TradeHistory;
+                    StrategyDataItemInfo amount = StrategyDataItemInfo.DataItem(info.Children, nameof(TradeInfoItem.Amount));
+                    amount.Visibility = DataVisibility.Table; amount.DataSource = t.TradeHistory;
+                    ShowChartForm(info, new StrategyDataVisualiser(info), true);
+                };
+                this.sbTradeHistory.ItemLinks.Add(bt);
+
+                bt = new BarButtonItem(this.barManager1, t.Exchange.Name + ": " + t.Name);
+                bt.ItemClick += (d, e) => {
+                    StrategyDataItemInfo info = new StrategyDataItemInfo();
+                    info.DataSource = t.TradeHistory;
+                    StrategyDataItemInfo time = StrategyDataItemInfo.TimeItem(info.Children, "Time");
+                    time.DataSource = t.TradeHistory;
+                    time.FormatString = "dd.MM hh:mm:ss.fff";
+                    StrategyDataItemInfo.DataItem(info.Children, nameof(TradeInfoItem.Rate)).DataSource = t.TradeHistory;
+                    StrategyDataItemInfo amount = StrategyDataItemInfo.DataItem(info.Children, nameof(TradeInfoItem.Amount));
+                    amount.Visibility = DataVisibility.Table; amount.DataSource = t.TradeHistory;
+                    ShowTableForm(info);
+                };
+                this.sbTradeHistoryTable.ItemLinks.Add(bt);
             }
         }
 

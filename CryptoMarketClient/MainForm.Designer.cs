@@ -98,7 +98,6 @@
             this.sbExchanges = new DevExpress.XtraBars.BarSubItem();
             this.barSubItem2 = new DevExpress.XtraBars.BarSubItem();
             this.biGapDetector = new DevExpress.XtraBars.BarButtonItem();
-            this.biWebTickers = new DevExpress.XtraBars.BarButtonItem();
             this.ribbonPageCategory1 = new DevExpress.XtraBars.Ribbon.RibbonPageCategory();
             this.ribbonPage2 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPageGroup2 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
@@ -203,8 +202,7 @@
             this.biAnalyseSingleTrade,
             this.biDownloadManager,
             this.barSubItem2,
-            this.biGapDetector,
-            this.biWebTickers});
+            this.biGapDetector});
             this.ribbonControl1.Location = new System.Drawing.Point(0, 0);
             this.ribbonControl1.Margin = new System.Windows.Forms.Padding(12);
             this.ribbonControl1.MaxItemId = 60;
@@ -665,8 +663,7 @@
             this.barSubItem2.Caption = "Modules";
             this.barSubItem2.Id = 57;
             this.barSubItem2.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("barSubItem2.ImageOptions.SvgImage")));
-            this.barSubItem2.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
-            new DevExpress.XtraBars.LinkPersistInfo(this.biWebTickers)});
+            this.barSubItem2.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {});
             this.barSubItem2.Name = "barSubItem2";
             // 
             // biGapDetector
@@ -675,14 +672,6 @@
             this.biGapDetector.Id = 58;
             this.biGapDetector.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("biGapDetector.ImageOptions.SvgImage")));
             this.biGapDetector.Name = "biGapDetector";
-            // 
-            // biWebTickers
-            // 
-            this.biWebTickers.Caption = "Web Tickers";
-            this.biWebTickers.Id = 59;
-            this.biWebTickers.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("biWebTickers.ImageOptions.SvgImage")));
-            this.biWebTickers.Name = "biWebTickers";
-            this.biWebTickers.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.biWebTickers_ItemClick);
             // 
             // ribbonPageCategory1
             // 
@@ -1054,7 +1043,6 @@
         private DevExpress.XtraBars.Ribbon.RibbonPage ribbonPage5;
         private DevExpress.XtraBars.BarSubItem barSubItem2;
         private DevExpress.XtraBars.BarButtonItem biGapDetector;
-        private DevExpress.XtraBars.BarButtonItem biWebTickers;
     }
 }
 

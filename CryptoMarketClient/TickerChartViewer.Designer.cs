@@ -185,7 +185,6 @@ namespace CryptoMarketClient {
             this.barSubItem2 = new DevExpress.XtraBars.BarSubItem();
             this.ciShowWalls = new DevExpress.XtraBars.BarCheckItem();
             this.biSyncWalls = new DevExpress.XtraBars.BarButtonItem();
-            this.disableIndicatorInteractionBarItem1 = new DevExpress.XtraCharts.UI.DisableIndicatorInteractionBarItem();
             this.drawTrendLineIndicatorBarItem1 = new DevExpress.XtraCharts.UI.DrawTrendLineIndicatorBarItem();
             this.drawFibonacciArcsIndicatorBarItem1 = new DevExpress.XtraCharts.UI.DrawFibonacciArcsIndicatorBarItem();
             this.drawFibonacciFansIndicatorBarItem1 = new DevExpress.XtraCharts.UI.DrawFibonacciFansIndicatorBarItem();
@@ -461,7 +460,6 @@ namespace CryptoMarketClient {
             this.createExportToImageBaseItem1,
             this.selectSeriesBarItem1,
             this.changeSeriesViewBarItem1,
-            this.disableIndicatorInteractionBarItem1,
             this.drawTrendLineIndicatorBarItem1,
             this.drawFibonacciArcsIndicatorBarItem1,
             this.drawFibonacciFansIndicatorBarItem1,
@@ -547,7 +545,6 @@ namespace CryptoMarketClient {
             new DevExpress.XtraBars.LinkPersistInfo(this.selectSeriesBarItem1),
             new DevExpress.XtraBars.LinkPersistInfo(this.changeSeriesViewBarItem1),
             new DevExpress.XtraBars.LinkPersistInfo(this.barSubItem2),
-            new DevExpress.XtraBars.LinkPersistInfo(this.disableIndicatorInteractionBarItem1),
             new DevExpress.XtraBars.LinkPersistInfo(this.drawTrendLineIndicatorBarItem1),
             new DevExpress.XtraBars.LinkPersistInfo(this.drawFibonacciArcsIndicatorBarItem1),
             new DevExpress.XtraBars.LinkPersistInfo(this.drawFibonacciFansIndicatorBarItem1),
@@ -657,13 +654,6 @@ namespace CryptoMarketClient {
             this.biSyncWalls.Id = 66;
             this.biSyncWalls.Name = "biSyncWalls";
             this.biSyncWalls.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.biSyncWalls_ItemClick);
-            // 
-            // disableIndicatorInteractionBarItem1
-            // 
-            this.disableIndicatorInteractionBarItem1.BindableChecked = true;
-            this.disableIndicatorInteractionBarItem1.Checked = true;
-            this.disableIndicatorInteractionBarItem1.Id = 51;
-            this.disableIndicatorInteractionBarItem1.Name = "disableIndicatorInteractionBarItem1";
             // 
             // drawTrendLineIndicatorBarItem1
             // 
@@ -1555,7 +1545,6 @@ namespace CryptoMarketClient {
             this.chartBarController1.BarItems.Add(this.createExportBaseItem1);
             this.chartBarController1.BarItems.Add(this.selectSeriesBarItem1);
             this.chartBarController1.BarItems.Add(this.changeSeriesViewBarItem1);
-            this.chartBarController1.BarItems.Add(this.disableIndicatorInteractionBarItem1);
             this.chartBarController1.BarItems.Add(this.drawTrendLineIndicatorBarItem1);
             this.chartBarController1.BarItems.Add(this.drawFibonacciArcsIndicatorBarItem1);
             this.chartBarController1.BarItems.Add(this.drawFibonacciFansIndicatorBarItem1);
@@ -1695,7 +1684,6 @@ namespace CryptoMarketClient {
         private DevExpress.XtraCharts.UI.ExportToPNGChartItem exportToPNGChartItem1;
         private DevExpress.XtraCharts.UI.ExportToTIFFChartItem exportToTIFFChartItem1;
         private DevExpress.XtraCharts.UI.ChartFinancialIndicatorsBar chartFinancialIndicatorsBar1;
-        private DevExpress.XtraCharts.UI.DisableIndicatorInteractionBarItem disableIndicatorInteractionBarItem1;
         private DevExpress.XtraCharts.UI.DrawTrendLineIndicatorBarItem drawTrendLineIndicatorBarItem1;
         private DevExpress.XtraCharts.UI.DrawFibonacciArcsIndicatorBarItem drawFibonacciArcsIndicatorBarItem1;
         private DevExpress.XtraCharts.UI.DrawFibonacciFansIndicatorBarItem drawFibonacciFansIndicatorBarItem1;

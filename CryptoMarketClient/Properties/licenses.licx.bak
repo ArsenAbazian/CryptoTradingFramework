@@ -1,2 +1,14 @@
-DevExpress.XtraBars.Docking2010.DocumentManager, DevExpress.XtraBars.v18.1, Version=18.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4
-DevExpress.XtraBars.Ribbon.RibbonControl, DevExpress.XtraBars.v18.1, Version=18.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4
+DevExpress.XtraEditors.LookUpEdit, DevExpress.XtraEditors.v20.1, Version=20.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4
+DevExpress.XtraBars.BarManager, DevExpress.XtraBars.v20.1, Version=20.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4
+DevExpress.XtraBars.Docking2010.DocumentManager, DevExpress.XtraBars.v20.1, Version=20.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4
+DevExpress.XtraBars.Docking.DockManager, DevExpress.XtraBars.v20.1, Version=20.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4
+DevExpress.XtraDataLayout.DataLayoutControl, DevExpress.XtraLayout.v20.1, Version=20.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4
+DevExpress.XtraEditors.Repository.RepositoryItemTextEdit, DevExpress.XtraEditors.v20.1, Version=20.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4
+DevExpress.XtraGrid.GridControl, DevExpress.XtraGrid.v20.1, Version=20.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4
+DevExpress.XtraEditors.ImageComboBoxEdit, DevExpress.XtraEditors.v20.1, Version=20.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4
+DevExpress.XtraEditors.ComboBoxEdit, DevExpress.XtraEditors.v20.1, Version=20.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4
+DevExpress.XtraBars.Ribbon.RibbonControl, DevExpress.XtraBars.v20.1, Version=20.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4
+DevExpress.XtraEditors.TextEdit, DevExpress.XtraEditors.v20.1, Version=20.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4
+DevExpress.XtraEditors.Repository.RepositoryItemProgressBar, DevExpress.XtraEditors.v20.1, Version=20.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4
+DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit, DevExpress.XtraEditors.v20.1, Version=20.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4
+DevExpress.XtraVerticalGrid.PropertyGridControl, DevExpress.XtraVerticalGrid.v20.1, Version=20.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4

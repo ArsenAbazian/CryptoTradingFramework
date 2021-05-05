@@ -26,8 +26,50 @@ namespace CryptoMarketClient.BitFinex {
             }
         }
 
-        public override ResizeableArray<TradeInfoItem> GetTrades(Ticker ticker, DateTime start, DateTime utcNow) {
-            throw new NotImplementedException();
+        protected override bool GetTradesCore(ResizeableArray<TradeInfoItem> list, Ticker ticker, DateTime start, DateTime end) {
+            string address = string.Format("https://bittrex.com/api/v1.1/public/getmarkethistory?market={0}", Uri.EscapeDataString(ticker.MarketName));
+            byte[] bytes = null;
+            try {
+                bytes = GetDownloadBytes(address);
+            }
+            catch(Exception) {
+                return false;
+            }
+            if(bytes == null)
+                return false;
+
+            int startIndex = 1;
+            if(!JSonHelper.Default.SkipSymbol(bytes, ':', 3, ref startIndex))
+                return false;
+
+            List<string[]> res = JSonHelper.Default.DeserializeArrayOfObjects(bytes, ref startIndex, new string[] { "Id", "TimeStamp", "Quantity", "Price", "Total", "FillType", "OrderType" },
+                (itemIndex, paramIndex, value) => {
+                    return paramIndex != 1 || Convert.ToDateTime(value) >= start;
+                });
+            if(res == null)
+                return false;
+
+            ResizeableArray<TradeInfoItem> tmp = new ResizeableArray<TradeInfoItem>(res.Count);
+
+            for(int i = 0; i < res.Count; i++) {
+                string[] obj = res[i];
+                TradeInfoItem item = new TradeInfoItem(null, ticker);
+                item.Id = Convert.ToInt64(obj[0]);
+                item.Time = Convert.ToDateTime(obj[1]);
+                item.AmountString = obj[2];
+                item.RateString = obj[3];
+                item.Total = FastValueConverter.Convert(obj[4]);
+                item.Type = obj[6].Length == 3 ? TradeType.Buy : TradeType.Sell;
+                item.Fill = obj[5].Length == 4 ? TradeFillType.Fill : TradeFillType.PartialFill;
+                if(list.Last() == null || list.Last().Time < item.Time)
+                    tmp.Add(item);
+            }
+            if(tmp.Count > 0 && tmp.Last().Time < tmp[0].Time)
+                list.AddRangeReversed(tmp);
+            else
+                list.AddRange(tmp);
+
+            return true;
         }
 
         protected override bool ShouldAddKlineListener => true;
@@ -485,46 +527,7 @@ namespace CryptoMarketClient.BitFinex {
             }
             return true;
         }
-        public override ResizeableArray<TradeInfoItem> GetTrades(Ticker info, DateTime starTime) {
-            string address = string.Format("https://bittrex.com/api/v1.1/public/getmarkethistory?market={0}", Uri.EscapeDataString(info.MarketName));
-            byte[] bytes = null;
-            try {
-                bytes = GetDownloadBytes(address);
-            }
-            catch(Exception) {
-                return null;
-            }
-            if(bytes == null)
-                return null;
-
-            int startIndex = 1;
-            if(!JSonHelper.Default.SkipSymbol(bytes, ':', 3, ref startIndex))
-                return null;
-
-            List<string[]> res = JSonHelper.Default.DeserializeArrayOfObjects(bytes, ref startIndex, new string[] { "Id", "TimeStamp", "Quantity", "Price", "Total", "FillType", "OrderType" },
-                (itemIndex, paramIndex, value) => {
-                    return paramIndex != 1 || Convert.ToDateTime(value) >= starTime;
-                });
-            if(res == null)
-                return null;
-            ResizeableArray<TradeInfoItem> list = new ResizeableArray<TradeInfoItem>(res.Count);
-
-            int index = 0;
-            for(int i = 0; i < res.Count; i++) {
-                string[] obj = res[i];
-                TradeInfoItem item = new TradeInfoItem(null, info);
-                item.Id = Convert.ToInt64(obj[0]);
-                item.Time = Convert.ToDateTime(obj[1]);
-                item.AmountString = obj[2];
-                item.RateString = obj[3];
-                item.Total = FastValueConverter.Convert(obj[4]);
-                item.Type = obj[6].Length == 3 ? TradeType.Buy : TradeType.Sell;
-                item.Fill = obj[5].Length == 4 ? TradeFillType.Fill : TradeFillType.PartialFill;
-                list.Insert(index, item);
-                index++;
-            }
-            return list;
-        }
+        
         public override bool UpdateTrades(Ticker info) {
             string address = string.Format("https://bittrex.com/api/v1.1/public/getmarkethistory?market={0}", Uri.EscapeDataString(info.MarketName));
             byte[] bytes = null;

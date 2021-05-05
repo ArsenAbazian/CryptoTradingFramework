@@ -165,6 +165,8 @@ namespace Crypto.UI.Forms {
             if(XtraMessageBox.Show("Are you sure to remove selected items?", "Remove", MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
                 return;
             foreach(var item in items) {
+                if(item.FileName == null)
+                    item.GenerateFileName();
                 File.Delete(item.FileName);
             }
         }

@@ -19,6 +19,7 @@ using System.Xml.Serialization;
 namespace CryptoMarketClient {
     [Serializable]
     public abstract class Ticker : ISupportSerialization, IComparable {
+        public static bool UseHtmlString { get; set; } = true;
         public Ticker(Exchange exchange) {
             Exchange = exchange;
             OrderBook = new OrderBook(this);
@@ -243,11 +244,17 @@ namespace CryptoMarketClient {
             set {
                 if(value == Last)
                     return;
-                if(Last != 0)
-                    Change = (value - Last) / Last;
+                //if(Last != 0)
+                //    Change = (value - Last) / Last;
                 lastString = null;
                 last = value;
             }
+        }
+
+        public double Total(double value, double amount) {
+            if(ContractTicker)
+                return ContractValue * amount;
+            return value * amount;
         }
 
         protected internal virtual void UpdateKline() {
@@ -266,12 +273,22 @@ namespace CryptoMarketClient {
             }
         }
         public virtual string GetStringWithChangePercent(double value, double change) {
+            if(!UseHtmlString) {
+                return string.Format("{0:0.00000000}", value);
+            }
             if(change == 0)
                 return string.Format("<b>{0:0.00000000}</b>", value);
             if (change >= 0) 
                 return string.Format("<b>{0:0.00000000}</b> <color=green><size=-2>{1:0.##}%</size></color>", value, change);
             return string.Format("<b>{0:0.00000000}</b> <color=red><size=-2>{1:0.##}%</size></color>", value, change);
         }
+
+        public double SpentInBaseCurrency(double rate, double amount) {
+            if(ContractTicker)
+                return amount * ContractValue;
+            return rate * amount;
+        }
+
         public virtual string GetString(double value) {
             return GetStringWithChangePercent(value, 0);
         }
@@ -285,7 +302,19 @@ namespace CryptoMarketClient {
         public double AskChange { get; set; }
         public abstract double Fee { get; set; }
 
-        public Ticker UsdTicker { get; set; }
+        Ticker usdTicker;
+        public Ticker UsdTicker {
+            get {
+                if(usdTicker == null)
+                    usdTicker = FindUsdTicker();
+                return usdTicker;
+            }
+            set { usdTicker = value; }
+        }
+
+        protected virtual Ticker FindUsdTicker() {
+            return null;
+        }
 
         BalanceBase firstInfo, secondInfo;
         public BalanceBase BaseBalanceInfo {
@@ -358,8 +387,8 @@ namespace CryptoMarketClient {
         public double MarketCurrencyTotalBalance { get { return MarketBalanceInfo == null ? 0 : MarketBalanceInfo.OnOrders + MarketBalanceInfo.Available; } }
         public bool MarketCurrencyEnabled { get { return MarketCurrencyInfo == null ? false : !MarketCurrencyInfo.Disabled; } }
 
-        public string BaseCurrency { get; set; }
-        public string MarketCurrency { get; set; }
+        public virtual string BaseCurrency { get; set; }
+        public virtual string MarketCurrency { get; set; }
         public abstract string HostName { get; }
         public DateTime Time { get; set; }
         public int CandleStickPeriodMin { get; set; } = 1;
@@ -577,7 +606,7 @@ namespace CryptoMarketClient {
             if(last != null) {
                 if(last.Ask == LowestAsk && last.Bid == HighestBid && last.Current == Last)
                     return;
-                Change = ((Last - last.Current) / last.Current) * 100;
+                //Change = ((Last - last.Current) / last.Current) * 100;
                 if(last.Bid != HighestBid)
                     BidChange = (HighestBid - last.Bid) * 100;
                 if(last.Ask != LowestAsk)
@@ -624,7 +653,11 @@ namespace CryptoMarketClient {
                 return events;
             }
         }
-        
+
+        protected internal void UpdateTradeData(TradeInfoItem tradeInfoItem) {
+            TradeHistory.Add(tradeInfoItem);
+        }
+
         public event NotifyCollectionChangedEventHandler EventsChanged {
             add { Events.CollectionChanged += value; }
             remove { Events.CollectionChanged -= value; }
@@ -709,6 +742,27 @@ namespace CryptoMarketClient {
 
         public virtual void OnEndDeserialize() {
 
+        }
+        public double GetActualBidByAmount(double amount) {
+            var bids = OrderBook.Bids;
+            double total = 0;
+            foreach(OrderBookEntry e in bids) {
+                total += e.Amount;
+                if(total >= amount)
+                    return e.Value;
+            }
+            return 0;
+        }
+
+        public double GetActualAskByAmount(double amount) {
+            var asks = OrderBook.Asks;
+            double total = 0;
+            foreach(OrderBookEntry e in asks) {
+                total += e.Amount;
+                if(total >= amount)
+                    return e.Value;
+            }
+            return 0;
         }
 
         public virtual bool IsListeningOrderBook { get; }

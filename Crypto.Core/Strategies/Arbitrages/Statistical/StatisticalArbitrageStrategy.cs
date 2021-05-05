@@ -1,4 +1,5 @@
-﻿using Crypto.Core.Common.OrderGrid;
+﻿using Crypto.Core.Common;
+using Crypto.Core.Common.OrderGrid;
 using Crypto.Core.Helpers;
 using Crypto.Core.Strategies.Custom;
 using CryptoMarketClient;
@@ -19,6 +20,25 @@ namespace Crypto.Core.Strategies.Arbitrages.Statistical {
             InitializeOrderGrid();
         }
 
+        double maxAllowedShortDeposit;
+        [StrategyProperty(true, TabName = "Common")]
+        public double MaxAllowedShortDeposit {
+            get { return maxAllowedShortDeposit; }
+            set {
+                if(MaxAllowedShortDeposit == value)
+                    return;
+                maxAllowedShortDeposit = value;
+                OnMaxAllowedDepositChanged();
+            }
+        }
+
+        [Browsable(false)]
+        public double MaxActualShortSellDeposit { get; set; } = -1;
+
+        protected virtual void OnMaxAllowedShortDepositChanged() {
+            MaxActualShortSellDeposit = -1;
+        }
+
         protected virtual void InitializeOrderGrid() {
             OrderGridInfo info = new OrderGridInfo();
             info.Start.Value = 10;
@@ -36,7 +56,7 @@ namespace Crypto.Core.Strategies.Arbitrages.Statistical {
         protected Ticker Short { get { return Tickers[1]; } }
 
         public override List<StrategyValidationError> Validate() {
-            List< StrategyValidationError> res = base.Validate();
+            List<StrategyValidationError> res = base.Validate();
             if(StrategyInfo.Tickers.Count != 2) {
                 res.Add(new StrategyValidationError() { DataObject = this, Description = "Should be specified two tickers.", Value = StrategyInfo.Tickers.Count.ToString() });
             }
@@ -48,12 +68,13 @@ namespace Crypto.Core.Strategies.Arbitrages.Statistical {
             StatisticalArbitrageStrategy s = from as StatisticalArbitrageStrategy;
             if(s == null)
                 return;
-            this.CloseSpread = s.CloseSpread;
+            SpreadClosePosition = s.SpreadClosePosition;
+            SpreadOpenPosition = s.SpreadOpenPosition;
             OrderGrid.Assign(s.OrderGrid);
         }
 
         protected StatisticalArbitrageHistoryItem LastItem { get; set; }
-        public double CloseSpread { get { return 0; } set { } }
+        //public double CloseSpread { get { return 0; } set { } }
 
         OrderGridInfo orderGrid;
         [TypeConverter(typeof(ExpandableObjectConverter))]
@@ -88,9 +109,12 @@ namespace Crypto.Core.Strategies.Arbitrages.Statistical {
         protected string StateTextCore { get; set; }
         public override string StateText => StateTextCore;
 
+        public double SpreadOpenPosition { get; set; }
+        public double SpreadClosePosition { get; set; }
+
         protected override void OnTickCore() {
             base.OnTickCore();
-            
+
             double bottomAsk = 0;
             double topBid = 0;
             double bottomBid = 0;
@@ -111,76 +135,217 @@ namespace Crypto.Core.Strategies.Arbitrages.Statistical {
             double spreadToOpen = topBid - bottomAsk;
             double spreadToClose = topAsk - bottomBid;
 
+            if(LastItem == null || LastItem.LongAsk != bottomAsk || LastItem.ShortBid != topBid) {
+                LastItem = new StatisticalArbitrageHistoryItem();
+                LastItem.Time = DataProvider.CurrentTime;
+                LastItem.LongAsk = bottomAsk;
+                LastItem.LongBid = bottomBid;
+                LastItem.ShortBid = topBid;
+                LastItem.ShortAsk = topAsk;
+                LastItem.Earned = Earned;
+                LastItem.Index = StrategyData.Count;
+                StrategyData.Add(LastItem);
+                StateTextCore = "<b><color=green>long=" + LastItem.LongAsk.ToString("0.########") + "</color> <color=red> short=" + LastItem.ShortBid.ToString("0.########") + "</color>  spread = " + LastItem.OpenSpread.ToString("0.00000000") + "  order count = " + OpenedOrders.Count + "</b>";
+            }
+
             if(TryOpenMoreDeals(bottomAsk, topBid, spreadToOpen)) {
 
             }
             else if(TryCloseDeals(bottomBid, topAsk, spreadToClose)) {
 
             }
-            else if(LastItem == null || LastItem.LongPrice != bottomAsk || LastItem.ShortPrice != topBid) {
-                LastItem = new StatisticalArbitrageHistoryItem();
-                LastItem.Time = DataProvider.CurrentTime;
-                LastItem.LongPrice = bottomAsk;
-                LastItem.ShortPrice = topBid;
-                LastItem.Earned = Earned;
-                StrategyData.Add(LastItem);
-
-                StateTextCore = "<b><color=green>long=" + LastItem.LongPrice.ToString("0.########") + "</color> <color=red> short=" + LastItem.ShortPrice.ToString("0.########") + "</color>  spread = " + LastItem.Spread.ToString("0.00000000") + "  order count = " + OpenedOrders.Count + "</b>";
-            }
         }
 
         private bool TryCloseDeals(double bottomBid, double topAsk, double spreadToClose) {
-            if(spreadToClose > CloseSpread)
+            if(spreadToClose > SpreadClosePosition)
                 return false;
             if(OpenedOrders.Count == 0)
                 return false;
 
-            StatisticalArbitrageOrderInfo order = GetOpenedOrderWithMaxSpread();
-            double actualSellAmount = GetActualBottomBidAmount(bottomBid);
-            double finalSellAmount = Math.Min(actualSellAmount, order.LongAmount);
-            double koeffSell = finalSellAmount / order.LongAmount;
+            //StatisticalArbitrageOrderInfo order = GetOpenedOrderWithMaxSpread();
+            foreach(StatisticalArbitrageOrderInfo order in OpenedPairs) {
+                if(order.Spread < SpreadClosePosition)
+                    continue;
 
-            double actualBuyAmount = GetActualShortAskAmount(topAsk);
-            double finalBuyAmount = Math.Min(actualBuyAmount, order.ShortAmount);
-            double koeffBuy = finalBuyAmount / order.ShortAmount;
-            double koeff = Math.Min(koeffBuy, koeffSell);
-            finalSellAmount *= koeff;
-            finalBuyAmount *= koeff;
+                double actualLongCloseBid = Long.GetActualBidByAmount(order.LongAmount);
+                double actualShortCloseAsk = Short.GetActualAskByAmount(order.ShortAmount);
+
+                double spread = actualShortCloseAsk - actualLongCloseBid;
+                if(spread > SpreadClosePosition)
+                    continue;
+
+                double actualSellAmount = GetActualBottomBidAmount(actualLongCloseBid);
+                double actualBuyAmount = GetActualShortAskAmount(actualShortCloseAsk);
+
+                double finalSellAmount = Math.Min(actualSellAmount, order.LongAmount);
+                double koeffSell = finalSellAmount / order.LongAmount;
+
+                double finalBuyAmount = Math.Min(actualBuyAmount, order.ShortAmount);
+                double koeffBuy = finalBuyAmount / order.ShortAmount;
+                double koeff = Math.Min(koeffBuy, koeffSell);
+                finalSellAmount *= koeff;
+                finalBuyAmount *= koeff;
+
+                TradingResult closeLong = MarketSell(Long, bottomBid, finalSellAmount);
+                TradingResult closeShort = MarketBuy(Short, topAsk, finalBuyAmount);
 
 
-            MarketSell(Long, bottomBid, finalSellAmount);
-            MarketBuy(Short, topAsk, finalBuyAmount);
+                order.LongAmount -= closeLong.Amount;
+                order.ShortAmount -= closeShort.Amount;
+                
+                //double eInc = (1 / order.LongValue - 1 / order.ShortValue) * finalBuyAmount;
+                //Earned += eInc;
 
-            order.LongAmount -= finalSellAmount;
-            order.ShortAmount -= finalBuyAmount;
-            double eInc = (1 / order.LongValue - 1 / order.ShortValue) * finalBuyAmount;
-            Earned += eInc;
-            
-            LastItem = new StatisticalArbitrageHistoryItem();
-            LastItem.Time = DateTime.UtcNow;
-            LastItem.Earned = Earned;
-            LastItem.LongAmount = finalSellAmount;
-            LastItem.LongPrice = bottomBid;
-            LastItem.ShortPrice = topAsk;
-            LastItem.ShortAmount = finalBuyAmount;
-            LastItem.Close = true;
-            StrategyData.Add(LastItem);
+                LastItem = new StatisticalArbitrageHistoryItem();
+                LastItem.Time = DataProvider.CurrentTime;
+                LastItem.Earned = Earned;
+                LastItem.LongAmount = finalSellAmount;
+                LastItem.LongAsk = Long.OrderBook.LowestAsk;
+                LastItem.LongBid = bottomBid;
+                LastItem.ShortAsk = topAsk;
+                LastItem.ShortBid = Short.OrderBook.HighestBid;
+                LastItem.ShortAmount = finalBuyAmount;
+                LastItem.Close = true;
+                LastItem.Index = StrategyData.Count;
+                LastItem.Mark = "CLOSE";
+                LastItem.ClosedPositions.Add(order.LongPosition);
+                LastItem.ClosedPositions.Add(order.ShortPosition);
+                StrategyData.Add(LastItem);
 
-            //if(order.LongAmount <= 0 && order.ShortAmount <= 0)
-            //    OpenedOrders.Remove(order);
-            OnOrderClosed(LastItem);
+                CloseLongPosition(order.LongPosition, closeLong);
+                CloseShortPosition(order.ShortPosition, closeShort);
+
+                if(order.LongAmount <= 0 && order.ShortAmount <= 0) {
+                    OpenedPairs.Remove(order);
+                    OnOrderClosed(LastItem);
+                }
+                else {
+                    throw new Exception("Partial Close Not Implemented");
+                }
+            }
 
             return true;
         }
-        
+
+        protected void CloseShortPosition(OpenPositionInfo info, TradingResult res) {
+            if(res == null)
+                return;
+
+            double earned = res.Total - CalcFee(res.Total);
+            MaxAllowedShortDeposit += earned;
+
+            info.UpdateCurrentValue(DataProvider.CurrentTime, res.Value);
+            info.Earned += earned;
+            info.Amount -= res.Amount;
+            info.Total -= res.Total;
+            info.CloseValue = res.Value;
+
+            //CombinedStrategyDataItem item = (CombinedStrategyDataItem)StrategyData.FirstOrDefault(i => ((CombinedStrategyDataItem)i).Time == info.CandlestickTime);
+            //if(item != null) {
+            //    item.Closed = true;
+            //    item.CloseLength = ((CombinedStrategyDataItem)StrategyData.Last()).Index - item.Index;
+            //}
+            IOpenedPositionsProvider last = (IOpenedPositionsProvider)StrategyData.Last();
+            double fee = 0.075 / 100.0;
+            double profit = ((1 / info.CloseValue) - (1 / info.OpenValue)) * res.Amount;
+            double openFee = fee * (1 / info.OpenValue) * res.Amount; // info.Ticker.Total(info.OpenValue, res.Amount);
+            double closeFee = fee * (1 / info.CloseValue) * res.Amount; // info.Ticker.Total(info.CloseValue, res.Amount);
+
+            profit -=  openFee + closeFee;
+            profit *= Short.UsdTicker.OrderBook.Bids[0].Value;
+            Earned += profit;
+            if(info.Amount < 0.000001) {
+                OpenedOrders.Remove(info);
+                last.ClosedPositions.Add(info);
+                info.CloseTime = DataProvider.CurrentTime;
+            }
+            //last.ClosedOrder = true;
+            //last.Value = Ticker.OrderBook.Bids[0].Value;
+            //if(item != null)
+            //    item.Profit = profit;
+            //last.AddMark("Close " + info.Mark);
+        }
+
+        protected void CloseLongPosition(OpenPositionInfo info, TradingResult res) {
+            if(res == null)
+                return;
+
+            double earned = res.Total - CalcFee(res.Total);
+            MaxAllowedDeposit += earned;
+
+            info.UpdateCurrentValue(DataProvider.CurrentTime, res.Value);
+            info.Earned += earned;
+            info.Amount -= res.Amount;
+            info.Total -= res.Total;
+            info.CloseValue = res.Value;
+
+            //StatisticalArbitrageHistoryItem item = (StatisticalArbitrageHistoryItem)StrategyData.FirstOrDefault(i => ((StatisticalArbitrageHistoryItem)i).Time == info.CandlestickTime);
+            //if(item != null) {
+            //    item.Closed = true;
+            //    item.CloseLength = ((CombinedStrategyDataItem)StrategyData.Last()).Index - item.Index;
+            //}
+            IOpenedPositionsProvider last = StrategyData.Last() as IOpenedPositionsProvider;
+            if(info.Amount < 0.000001) {
+                OpenedOrders.Remove(info);
+                last.ClosedPositions.Add(info);
+                info.CloseTime = DataProvider.CurrentTime;
+                Earned += info.Earned - info.Spent;
+            }
+            //last.ClosedOrder = true;
+            //last.Value = Ticker.OrderBook.Bids[0].Value;
+            //if(item != null)
+            //    item.Profit = earned - info.Spent;
+            //last.AddMark("Close " + info.Mark);
+        }
+
+        //protected override void CloseLongPosition(OpenPositionInfo info) {
+        //    TradingResult res = MarketSell(Ticker.OrderBook.Bids[0].Value, info.Amount);
+        //    if(res != null) {
+        //        double earned = res.Total - CalcFee(res.Total);
+        //        MaxAllowedDeposit += earned;
+        //        info.UpdateCurrentValue(DataProvider.CurrentTime, res.Value);
+        //        info.Earned += earned;
+        //        info.Amount -= res.Amount;
+        //        info.Total -= res.Total;
+        //        info.CloseValue = res.Value;
+        //        CombinedStrategyDataItem item = (CombinedStrategyDataItem)StrategyData.FirstOrDefault(i => ((CombinedStrategyDataItem)i).Time == info.CandlestickTime);
+        //        if(item != null) {
+        //            item.Closed = true;
+        //            item.CloseLength = ((CombinedStrategyDataItem)StrategyData.Last()).Index - item.Index;
+        //        }
+        //        CombinedStrategyDataItem last = (CombinedStrategyDataItem)StrategyData.Last();
+        //        if(info.Amount < 0.000001) {
+        //            OpenedOrders.Remove(info);
+        //            last.ClosedPositions.Add(info);
+        //            info.CloseTime = DataProvider.CurrentTime;
+        //            Earned += info.Earned - info.Spent;
+        //        }
+        //        last.ClosedOrder = true;
+        //        last.Value = Ticker.OrderBook.Bids[0].Value;
+        //        if(item != null)
+        //            item.Profit = earned - info.Spent;
+        //        last.AddMark("Close " + info.Mark);
+        //    }
+        //}
+
+        protected ResizeableArray<StatisticalArbitrageOrderInfo> OpenedPairs { get; } = new ResizeableArray<StatisticalArbitrageOrderInfo>();
+
+        protected override double GetMaxAllowedShortDeposit() { return MaxAllowedShortDeposit; }
+        protected override void UpdateMaxAllowedShortDeposit(double delta) {
+            MaxAllowedShortDeposit += delta;
+        }
         private bool TryOpenMoreDeals(double bottomAsk, double topBid, double spreadToOpen) {
-            int zoneIndex = OrderGrid.GetZoneIndex(spreadToOpen);
-            if(zoneIndex == -1)
-                return false;
-            double baseAmount = GetRemainAmountForZoneInBaseCurrency(zoneIndex);
-            if(baseAmount == 0)
+            if(spreadToOpen < SpreadOpenPosition)
                 return false;
 
+            //int zoneIndex = OrderGrid.GetZoneIndex(spreadToOpen);
+            //if(zoneIndex == -1)
+            //    return false;
+            //double baseAmount = GetRemainAmountForZoneInBaseCurrency(zoneIndex);
+            //if(baseAmount == 0)
+            //    return false;
+
+            double baseAmount = MaxAllowedDeposit * 0.9;
             double buyAmount = CalculateLongBuyAmountByBaseAmount(baseAmount);
             double actualBuyAmount = GetActualBottomAskAmount(bottomAsk);
             double finalBuyAmount = Math.Min(buyAmount, actualBuyAmount);
@@ -192,28 +357,62 @@ namespace Crypto.Core.Strategies.Arbitrages.Statistical {
                 finalBuyAmount = CalculateRequiredLongAmount(finalSellAmount, spreadToOpen);
             }
 
-            MarketBuy(Long, bottomAsk, finalBuyAmount);
-            MarketSell(Short, topBid, finalSellAmount);
+            if(finalBuyAmount == 0 || finalSellAmount == 0 || finalBuyAmount * bottomAsk < MinDepositForOpenPosition)
+                return false;
 
             var order = new StatisticalArbitrageOrderInfo() {
-                LongAmount = finalBuyAmount,
-                LongValue = bottomAsk,
-                ShortAmount = finalSellAmount,
-                ShortTotalAmount = finalSellAmount,
+                
                 ShortValue = topBid,
-                ZoneIndex = zoneIndex,
                 SpentDeposit = Long.HighestBidInBaseCurrency() * finalBuyAmount,
                 Spread = spreadToOpen
             };
 
+            if(Long.SpentInBaseCurrency(bottomAsk, finalBuyAmount) * 1.05 > MaxAllowedDeposit) {
+                LogManager.Default.Add(LogType.Error, this, Name, "not enough deposit for open long position", "spent = " + Long.SpentInBaseCurrency(bottomAsk, finalBuyAmount) + " in " + Long.BaseCurrency + "; deposit = " + MaxAllowedDeposit);
+                return false;
+            }
+
+            if(Short.SpentInBaseCurrency(topBid, finalSellAmount) * 1.05 > GetMaxAllowedShortDeposit()) {
+                LogManager.Default.Add(LogType.Error, this, Name, "not enough deposit for open long position", "spent = " + Short.SpentInBaseCurrency(topBid, finalSellAmount) + " in " + Short.BaseCurrency + "; deposit = " + GetMaxAllowedShortDeposit());
+                return false;
+            }
+
+            OpenedPairs.Add(order);
+            OpenPositionInfo lp = OpenLongPosition(Long, "OL", bottomAsk, finalBuyAmount, 1000);
+            if(lp == null) {
+                OpenedPairs.Remove(order);
+                LogManager.Default.Add(LogType.Error, this, Name, "failed open long position", "price = " + bottomAsk + "; amount = " + finalBuyAmount + "; spent = " + Long.SpentInBaseCurrency(bottomAsk, finalBuyAmount) + " in " + Long.BaseCurrency);
+                return false;
+            }
+
+            OpenPositionInfo sp = OpenShortPosition(Short, "OS", topBid, finalSellAmount, 1000);
+            if(sp == null) {
+                OpenedPairs.Remove(order);
+                LogManager.Default.Add(LogType.Error, this, Name, "failed open short position", "price = " + topBid + "; amount = " + finalSellAmount + "; spent = " + Short.SpentInBaseCurrency(topBid, finalSellAmount));
+                return false;
+            }
+
+            order.LongPosition = lp;
+            order.ShortPosition = sp;
+            order.LongAmount = lp.OpenAmount;
+            order.LongValue = lp.OpenValue;
+            order.ShortAmount = sp.OpenAmount;
+            order.ShortTotalAmount = sp.OpenValue;
+
             LastItem = new StatisticalArbitrageHistoryItem();
-            LastItem.Time = DateTime.UtcNow;
+            LastItem.OpenedPositions.Add(order.LongPosition);
+            LastItem.OpenedPositions.Add(order.ShortPosition);
+            LastItem.Time = DataProvider.CurrentTime;
             LastItem.Earned = Earned;
-            LastItem.LongPrice = bottomAsk;
-            LastItem.ShortPrice = topBid;
+            LastItem.LongBid = Long.OrderBook.HighestBid;
+            LastItem.LongAsk = bottomAsk;
+            LastItem.ShortBid = topBid;
+            LastItem.ShortAsk = Short.OrderBook.LowestAsk;
             LastItem.LongAmount = finalBuyAmount;
             LastItem.ShortAmount = finalSellAmount;
             LastItem.Open = true;
+            LastItem.Index = StrategyData.Count;
+            LastItem.Mark = "OPEN";
             StrategyData.Add(LastItem);
 
             //OpenedOrders.Add(order);
@@ -225,26 +424,26 @@ namespace Crypto.Core.Strategies.Arbitrages.Statistical {
         private void OnOrderOpened(StatisticalArbitrageHistoryItem lastItem) {
             string text = string.Empty;
             text += "<b>" + Name + "</b> open order:";
-            text += "<pre> buy:       " + lastItem.LongPrice.ToString("0.########") + " am = " + lastItem.LongAmount.ToString("0.########") + "</pre>";
-            text += "<pre> sell:      " + lastItem.ShortPrice.ToString("0.########") + " am = " + lastItem.ShortAmount.ToString("0.########") + "</pre>";
+            text += "<pre> buy:       " + lastItem.LongAsk.ToString("0.########") + " am = " + lastItem.LongAmount.ToString("0.########") + "</pre>";
+            text += "<pre> sell:      " + lastItem.ShortBid.ToString("0.########") + " am = " + lastItem.ShortAmount.ToString("0.########") + "</pre>";
 
             TelegramBot.Default.SendNotification(text, ChatId);
             LogManager.Default.Add(LogType.Success, this, null, "open order",
-                "buy " + lastItem.LongPrice.ToString("0.########") + " am = " + lastItem.LongAmount.ToString("0.########") +
-                "    sell" + lastItem.ShortPrice.ToString("0.########") + " am = " + lastItem.ShortAmount.ToString("0.########"));
+                "buy " + lastItem.LongAsk.ToString("0.########") + " am = " + lastItem.LongAmount.ToString("0.########") +
+                "    sell" + lastItem.ShortBid.ToString("0.########") + " am = " + lastItem.ShortAmount.ToString("0.########"));
         }
 
         private void OnOrderClosed(StatisticalArbitrageHistoryItem lastItem) {
             string text = string.Empty;
             text += "<b>" + Name + "</b> close order:";
-            text += "<pre> buy:       " + lastItem.LongPrice.ToString("0.########") + " am = " + lastItem.LongAmount.ToString("0.########") + "</pre>";
-            text += "<pre> sell:      " + lastItem.ShortPrice.ToString("0.########") + " am = " + lastItem.ShortAmount.ToString("0.########") + "</pre>";
+            text += "<pre> buy:       " + lastItem.LongAsk.ToString("0.########") + " am = " + lastItem.LongAmount.ToString("0.########") + "</pre>";
+            text += "<pre> sell:      " + lastItem.ShortBid.ToString("0.########") + " am = " + lastItem.ShortAmount.ToString("0.########") + "</pre>";
             text += "<pre> earned:    " + lastItem.Earned.ToString("0.########") + "</pre>";
 
             TelegramBot.Default.SendNotification(text, ChatId);
             LogManager.Default.Add(LogType.Success, this, null, "open order",
-                "buy " + lastItem.LongPrice.ToString("0.########") + " am = " + lastItem.LongAmount.ToString("0.########") +
-                "    sell " + lastItem.ShortPrice.ToString("0.########") + " am = " + lastItem.ShortAmount.ToString("0.########") + 
+                "buy " + lastItem.LongAsk.ToString("0.########") + " am = " + lastItem.LongAmount.ToString("0.########") +
+                "    sell " + lastItem.ShortBid.ToString("0.########") + " am = " + lastItem.ShortAmount.ToString("0.########") + 
                 "    earned " + lastItem.Earned.ToString("0.########"));
         }
 
@@ -268,14 +467,14 @@ namespace Crypto.Core.Strategies.Arbitrages.Statistical {
             return (buyAmount * Long.HighestBidInBaseCurrency() + spread * buyAmount) / Short.LowestAskInBaseCurrency();
         }
 
-        protected virtual StatisticalArbitrageOrderInfo GetOpenedOrderWithMaxSpread() {
-            StatisticalArbitrageOrderInfo maxItem = null;
-            //foreach(StatisticalArbitrageOrderInfo item in OpenedOrders) {
-            //    if(maxItem == null || maxItem.Spread < item.Spread)
-            //        maxItem = item;
-            //}
-            return maxItem;
-        }
+        //protected virtual StatisticalArbitrageOrderInfo GetOpenedOrderWithMaxSpread() {
+        //    StatisticalArbitrageOrderInfo maxItem = null;
+        //    foreach(StatisticalArbitrageOrderInfo item in OpenedOrders) {
+        //        if(maxItem == null || maxItem.Spread < item.Spread)
+        //            maxItem = item;
+        //    }
+        //    return maxItem;
+        //}
 
         private double GetActualShortBidAmount(double topBid) {
             return Short.OrderBook.CalcBidAmount(topBid);
@@ -310,14 +509,17 @@ namespace Crypto.Core.Strategies.Arbitrages.Statistical {
             StrategyDataItemInfo info = TimeItem("Time");
             info.TimeUnit = StrategyDateTimeMeasureUnit.Millisecond;
             info.TimeUnitMeasureMultiplier = 1;
-            DataItem("LongPrice").Color = Exchange.AskColor;
-            DataItem("ShortPrice").Color = Exchange.BidColor;
-            DataItem("Spread").PanelName = "Spread";
+            info.FormatString = "dd.MM hh:mm:ss.fff";
+            DataItem("Index").Visibility = DataVisibility.Table;
+            DataItem("LongAsk").Color = Exchange.AskColor;
+            DataItem("ShortBid").Color = Exchange.BidColor;
+            DataItem("OpenSpread").PanelName = "Spread";
             StrategyDataItemInfo earned = DataItem("Earned");
             earned.FormatString = "0.########";
             earned.PanelName = "Earned"; earned.Color = Color.FromArgb(0x20, Exchange.BidColor); earned.ChartType = ChartType.Area;
-            AnnotationItem("Open", "Open", Exchange.BidColor, "LongPrice");
-            AnnotationItem("Close", "Close", Exchange.AskColor, "ShortPrice");
+            var mark = AnnotationItem("Mark", null, Color.Green, "MiddleValue"); mark.AnnotationText = "{Mark}"; mark.Type = DataType.ListInString;
+            //AnnotationItem("Open", "Open", Exchange.BidColor, "LongAsk");
+            //AnnotationItem("Close", "Close", Exchange.AskColor, "ShortBid");
         }
 
         protected override bool CheckLong() {
@@ -329,20 +531,100 @@ namespace Crypto.Core.Strategies.Arbitrages.Statistical {
         }
     }
 
-    public class StatisticalArbitrageHistoryItem {
+    public class StatisticalArbitrageHistoryItem : IOpenedPositionsProvider, ILinkedObjectProvider, IDetailInfoProvider {
         public DateTime Time { get; set; }
-        public double LongPrice { get; set; }
-        public double ShortPrice { get; set; }
+        public int Index { get; set; }
+        public double LongAsk { get; set; }
+        public double LongBid { get; set; }
+        public double MiddleValue { 
+            get {
+                if(Open)
+                    return (LongAsk + ShortBid) / 2;
+                if(Close)
+                    return (LongBid + ShortAsk) / 2;
+                return 0;
+            } 
+        }
+        public double ShortBid { get; set; }
+        public double ShortAsk { get; set; }
         public double LongAmount { get; set; }
         public double ShortAmount { get; set; }
-        public double Spread { get { return ShortPrice - LongPrice; } }
+        public double OpenSpread { get { return ShortBid - LongAsk; } }
+        public double CloseSpread { get { return ShortAsk - LongBid; } }
         public double Earned { get; set; }
         public bool Open { get; set; }
         public bool Close { get; set; }
+
+        ResizeableArray<OpenPositionInfo> closedPositions;
+        [XmlIgnore]
+        public ResizeableArray<OpenPositionInfo> ClosedPositions {
+            get {
+                if(closedPositions == null)
+                    closedPositions = new ResizeableArray<OpenPositionInfo>();
+                return closedPositions;
+            }
+        }
+
+        ResizeableArray<OpenPositionInfo> openedPositions;
+        [XmlIgnore]
+        public ResizeableArray<OpenPositionInfo> OpenedPositions {
+            get {
+                if(openedPositions == null)
+                    openedPositions = new ResizeableArray<OpenPositionInfo>();
+                return openedPositions;
+            }
+        }
+
+        public string Mark {
+            get; set;
+        }
+
+        string IDetailInfoProvider.DetailString {
+            get {
+                StringBuilder b = new StringBuilder();
+                b.Append("<b>Index: " + Index + "</b><br>");
+                if(OpenedPositions.Count > 0) {
+                    b.AppendLine("<b>opened positions</b><br>");
+                    foreach(OpenPositionInfo info in OpenedPositions) {
+                        b.Append(info.ToHtmlString());
+                        b.AppendLine();
+                    }
+                }
+                if(ClosedPositions.Count > 0) {
+                    b.AppendLine("<b>closed positions</b><br>");
+                    foreach(OpenPositionInfo info in ClosedPositions) {
+                        b.Append(info.ToHtmlString());
+                        b.AppendLine();
+                    }
+                }
+                return b.ToString();
+            }
+        }
+
+        public void AddMark(string mark) {
+            if(string.IsNullOrEmpty(Mark)) {
+                Mark = mark;
+                return;
+            }
+            Mark += "," + mark;
+        }
+
+        object ILinkedObjectProvider.GetLinkedObject() {
+            if(OpenedPositions.Count > 0)
+                return OpenedPositions[0];
+            if(ClosedPositions.Count > 0)
+                return ClosedPositions[0];
+            return null;
+        }
     }
-    
+
     [Serializable]
-    public class StatisticalArbitrageOrderInfo {
+    public class StatisticalArbitrageOrderInfo : IOpenedPositionsProvider {
+        [XmlIgnore]
+        public OpenPositionInfo LongPosition { get; set; }
+        [XmlIgnore]
+        public OpenPositionInfo ShortPosition { get; set; }
+
         public double ShortAmount { get; set; }
         public double ShortValue { get; set; }
         public double LongAmount { get; set; }
@@ -351,5 +633,36 @@ namespace Crypto.Core.Strategies.Arbitrages.Statistical {
         public double ShortTotalAmount { get; set; }
         public double SpentDeposit { get; set; }
         public int ZoneIndex { get; set; }
+
+        ResizeableArray<OpenPositionInfo> closedPositions;
+        [XmlIgnore]
+        public ResizeableArray<OpenPositionInfo> ClosedPositions {
+            get {
+                if(closedPositions == null)
+                    closedPositions = new ResizeableArray<OpenPositionInfo>();
+                return closedPositions;
+            }
+        }
+
+        ResizeableArray<OpenPositionInfo> openedPositions;
+        [XmlIgnore]
+        public ResizeableArray<OpenPositionInfo> OpenedPositions {
+            get {
+                if(openedPositions == null)
+                    openedPositions = new ResizeableArray<OpenPositionInfo>();
+                return openedPositions;
+            }
+        }
+
+        public string Mark {
+            get; set;
+        }
+        public void AddMark(string mark) {
+            if(string.IsNullOrEmpty(Mark)) {
+                Mark = mark;
+                return;
+            }
+            Mark += "," + mark;
+        }
     }
 }

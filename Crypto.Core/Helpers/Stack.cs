@@ -7,12 +7,19 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace Crypto.Core.Helpers {
     public interface IResizeableArray {
         object GetItem(int index);
         int Count { get; }
     }
+
+    public interface IThreadManager {
+        bool IsMultiThread { get; }
+        void Invoke(Action<object, ListChangedEventArgs> a, object sender, ListChangedEventArgs e);
+    }
+
     public class ResizeableArray<T> : IEnumerable<T>, IList<T>, IResizeableArray, IListSource, IList, IBindingList {
         public ResizeableArray() {
             Items = new T[32];
@@ -21,6 +28,10 @@ namespace Crypto.Core.Helpers {
         public ResizeableArray(int count) {
             Items = new T[count];
         }
+
+        [XmlIgnore]
+        public IThreadManager ThreadManager { get; set; }
+        
         object IResizeableArray.GetItem(int index) {
             if(index >= Count)
                 return null;
@@ -29,6 +40,7 @@ namespace Crypto.Core.Helpers {
         int IResizeableArray.Count {
             get { return Count; }
         }
+
         event ListChangedEventHandler listChanged;
         public event ListChangedEventHandler ListChanged {
             add {
@@ -61,8 +73,13 @@ namespace Crypto.Core.Helpers {
         }
 
         protected void RaiseListChanged(ListChangedEventArgs e) {
-            if(listChanged != null)
-                listChanged(this, e);
+            if(listChanged != null) {
+                if(ThreadManager != null && ThreadManager.IsMultiThread) {
+                    ThreadManager.Invoke((sender, ee) => listChanged(sender, ee), this, e);
+                }
+                else 
+                    listChanged(this, e);
+            }
         }
 
         public int Count { get; private set; }
@@ -291,7 +308,7 @@ namespace Crypto.Core.Helpers {
                 Count--;
         }
 
-        public T Last() { return Items[Count - 1]; }
+        public T Last() { return Count == 0? default(T): Items[Count - 1]; }
         public void AddRange(ResizeableArray<T> data) {
             for(int i = 0; i < data.Count; i++) {
                 Add(data.Items[i]);

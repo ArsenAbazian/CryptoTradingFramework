@@ -186,7 +186,7 @@ namespace CryptoMarketClient {
             ticker.Last = DeserializeDoubleInQuotes(bytes, ref current, end);
             ticker.LowestAsk = DeserializeDoubleInQuotes(bytes, ref current, end);
             ticker.HighestBid = DeserializeDoubleInQuotes(bytes, ref current, end);
-            ticker.Change = DeserializeDoubleInQuotes(bytes, ref current, end);
+            ticker.Change = DeserializeDoubleInQuotes(bytes, ref current, end) * 100;
             ticker.BaseVolume = DeserializeDoubleInQuotes(bytes, ref current, end);
             ticker.Volume = DeserializeDoubleInQuotes(bytes, ref current, end);
             ticker.IsFrozen = DeserializePositiveInt(bytes, ref current, end) == 1;
@@ -563,18 +563,17 @@ namespace CryptoMarketClient {
             return true;
         }
 
-        public override ResizeableArray<TradeInfoItem> GetTrades(Ticker ticker, DateTime starTime, DateTime endTime) {
+        protected override bool GetTradesCore(ResizeableArray<TradeInfoItem> list, Ticker ticker, DateTime starTime, DateTime endTime) {
             string address = string.Format("https://poloniex.com/public?command=returnTradeHistory&currencyPair={0}&start={1}&end={2}", Uri.EscapeDataString(ticker.CurrencyPair), ToUnixTimestamp(starTime), ToUnixTimestamp(endTime));
             string text = GetDownloadString(address);
             if(string.IsNullOrEmpty(text))
-                return null;
+                return false;
             JArray trades = JsonConvert.DeserializeObject<JArray>(text);
             if(trades.Count == 0)
-                return null;
+                return false;
 
-            ResizeableArray<TradeInfoItem> list = new ResizeableArray<TradeInfoItem>(trades.Count);
+            ResizeableArray<TradeInfoItem> tmp = new ResizeableArray<TradeInfoItem>();
 
-            int index = 0;
             for(int i = 0; i < trades.Count; i++) {
                 JObject obj = (JObject)trades[i];
                 DateTime time = obj.Value<DateTime>("date");
@@ -591,17 +590,14 @@ namespace CryptoMarketClient {
                 double price = item.Rate;
                 double amount = item.Amount;
                 item.Total = price * amount;
-                list.Insert(index, item);
-                index++;
+                if(list.Last() == null || list.Last().Time < item.Time)
+                    tmp.Add(item);
             }
-            if(ticker.HasTradeHistorySubscribers) {
-                ticker.RaiseTradeHistoryChanged(new TradeHistoryChangedEventArgs() { NewItems = list });
-            }
-            return list;
-        }
-
-        public override ResizeableArray<TradeInfoItem> GetTrades(Ticker ticker, DateTime startTime) {
-            return GetTrades(ticker, startTime, DateTime.UtcNow);
+            if(tmp.Count > 0 && tmp.Last().Time < tmp[0].Time)
+                list.AddRangeReversed(tmp);
+            else
+                list.AddRange(tmp);
+            return true;
         }
 
         protected List<TradeInfoItem> UpdateList { get; } = new List<TradeInfoItem>(100);

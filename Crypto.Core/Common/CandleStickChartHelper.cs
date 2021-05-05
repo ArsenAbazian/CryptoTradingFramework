@@ -179,6 +179,8 @@ namespace CryptoMarketClient {
             }
         }
         public static void UpdateCandle(CandleStickData candle, TradeInfoItem trade) {
+            if(candle == null)
+                return;
             if(trade.Type == TradeType.Buy)
                 candle.BuyVolume += trade.Amount;
             else

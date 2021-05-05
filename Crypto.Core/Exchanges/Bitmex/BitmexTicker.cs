@@ -34,5 +34,9 @@ namespace CryptoMarketClient.Exchanges.Bitmex {
         public override bool IsListeningKline {
             get { return IsTradeHistorySubscribed && Exchange.GetKlineSocketState(this) == SocketConnectionState.Connected; }
         }
+        protected override Ticker FindUsdTicker() {
+            string name = Name.Substring(0, 3) + "USD";
+            return Exchange.Tickers.FirstOrDefault(t => t.Name == name);
+        }
     }
 }

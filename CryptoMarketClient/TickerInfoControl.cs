@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using DevExpress.XtraEditors;
 using DevExpress.Skins;
 using DevExpress.XtraGrid.Views.Tile.ViewInfo;
+using CryptoMarketClient.Strategies;
 
 namespace CryptoMarketClient {
     public partial class TickerInfo : XtraUserControl {

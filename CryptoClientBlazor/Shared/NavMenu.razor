@@ -1,0 +1,25 @@
+﻿<DxTreeView AllowSelectNodes="true" CssClass="app-sidebar">
+    <Nodes>
+        <DxTreeViewNode NavigateUrl="" Text="Overview"></DxTreeViewNode>
+        <DxTreeViewNode Name="ExchangeNode" NavigateUrl="" Text="Exchanges">
+            <Nodes>
+                <DxTreeViewNode NavigateUrl="exchange?e=Poloniex" Text="Poloniex"></DxTreeViewNode>
+                <DxTreeViewNode NavigateUrl="exchange?e=Bittrex" Text="Bittrex"></DxTreeViewNode>
+                <DxTreeViewNode NavigateUrl="exchange?e=Binance" Text="Binance"></DxTreeViewNode>
+            </Nodes>
+        </DxTreeViewNode>
+        <DxTreeViewNode NavigateUrl="" Text="Settings">
+            <Nodes>
+                <DxTreeViewNode NavigateUrl="apikeys" Text="Api Keys"></DxTreeViewNode>
+            </Nodes>
+        </DxTreeViewNode>
+        @*<DxTreeViewNode NavigateUrl="datagrid" Text="Data Grid"></DxTreeViewNode>*@
+    </Nodes>
+</DxTreeView>
+
+@code {
+    protected override void OnInitialized()
+    {
+
+    }
+} 

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -12,14 +12,17 @@
   <ItemGroup>
     <Compile Remove="Exchanges\Exmo\**" />
     <Compile Remove="Exchanges\HitBtc\**" />
+    <Compile Remove="Exchanges\Tinkoff\**" />
     <Compile Remove="Exchanges\Yobit\**" />
     <Compile Remove="Forms\**" />
     <EmbeddedResource Remove="Exchanges\Exmo\**" />
     <EmbeddedResource Remove="Exchanges\HitBtc\**" />
+    <EmbeddedResource Remove="Exchanges\Tinkoff\**" />
     <EmbeddedResource Remove="Exchanges\Yobit\**" />
     <EmbeddedResource Remove="Forms\**" />
     <None Remove="Exchanges\Exmo\**" />
     <None Remove="Exchanges\HitBtc\**" />
+    <None Remove="Exchanges\Tinkoff\**" />
     <None Remove="Exchanges\Yobit\**" />
     <None Remove="Forms\**" />
   </ItemGroup>

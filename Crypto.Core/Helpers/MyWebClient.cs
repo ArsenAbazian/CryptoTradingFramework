@@ -14,27 +14,50 @@ using System.Threading.Tasks;
 
 namespace CryptoMarketClient.Common {
     public class MyWebClient : HttpClient {
+        public MyWebClient(Exchange e) : this() {
+            Exchange = e;
+        }
         public MyWebClient() {
             Timeout = TimeSpan.FromSeconds(40);
         }
-        public string DownloadString(string address) {
-            Task<string> t = this.GetStringAsync(address);
-            t.Wait(10000);
-            return t.Result;
-        }
-        public byte[] DownloadData(string adress) {
-            Task<byte[]> t = this.GetByteArrayAsync(adress);
+        protected Exchange Exchange { get; private set; }
+        public HttpResponseHeaders ResponseHeaders { get; set; }
+        public string DownloadString(string adress) {
+            Task<HttpResponseMessage> t = this.GetAsync(adress);
             try {
                 t.Wait(10000);
-                return t.Result;
+                ResponseHeaders = t.Result.Headers;
+                OnRequestCompleted();
+                var t2 = t.Result.Content.ReadAsStringAsync();
+                t2.Wait(10000);
+                return t2.Result;
             }
             catch(Exception e) {
                 Telemetry.Default.TrackException(e);
-                return t.Result;
+                return null;
             }
-            //byte[] res = DownloadDataAsync(adress).Result;
-            //return res;
         }
+        public byte[] DownloadData(string adress) {
+            Task<HttpResponseMessage> t = this.GetAsync(adress);
+            try {
+                t.Wait(10000);
+                ResponseHeaders = t.Result.Headers;
+                OnRequestCompleted();
+                var t2 = t.Result.Content.ReadAsByteArrayAsync();
+                t2.Wait(10000);
+                return t2.Result;
+            }
+            catch(Exception e) {
+                Telemetry.Default.TrackException(e);
+                return null;
+            }
+        }
+
+        protected virtual void OnRequestCompleted() {
+            if(Exchange != null)
+                Exchange.OnRequestCompleted(this);
+        }
+
         public async Task<byte[]> DownloadDataAsync(string adress) {
             HttpRequestMessage msg = new HttpRequestMessage(HttpMethod.Get, adress);
             using(var response = await SendAsync(msg)) {
@@ -102,28 +125,4 @@ namespace CryptoMarketClient.Common {
             this.Add(new KeyValuePair<string, string>(key, value));
         }
     }
-
-    //public class MyWebClient : WebClient {
-    //    static MyWebClient() {
-    //        ServicePointManager.ServerCertificateValidationCallback = delegate (object s, X509Certificate certificate,
-    //         X509Chain chain, SslPolicyErrors sslPolicyErrors)
-    //        { return true; };
-    //    }
-    //    public MyWebClient() : base() {
-            
-    //    }
-    //    protected override WebRequest GetWebRequest(Uri address) {
-    //        WebRequest res = base.GetWebRequest(address);
-    //        HttpWebRequest hres = res as HttpWebRequest;
-    //        if(hres != null) {
-    //            hres.Headers.Add(HttpRequestHeader.AcceptEncoding, "gzip, deflate");
-    //            hres.ContentType = "application/x-www-form-urlencoded";
-    //            hres.Accept = "application/xml, text/json, text/x-json, text/javascript, text/xml, application/json";
-    //            hres.Headers.Add(HttpRequestHeader.AcceptLanguage, "en-us");
-    //            hres.AutomaticDecompression = DecompressionMethods.Deflate | DecompressionMethods.GZip;
-    //        }
-    //        res.Timeout = 7000;
-    //        return res;
-    //    }
-    //}
 }

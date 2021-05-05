@@ -32,7 +32,6 @@ using Crypto.Core.Helpers;
 using System.IO.Compression;
 using System.IO.Packaging;
 using System.Threading;
-using CryptoMarketClient.Modules;
 
 namespace CryptoMarketClient {
     public partial class MainForm : DevExpress.XtraBars.Ribbon.RibbonForm {
@@ -369,8 +368,10 @@ namespace CryptoMarketClient {
         }
 
         private void ribbonControl1_Merge(object sender, DevExpress.XtraBars.Ribbon.RibbonMergeEventArgs e) {
-            if(e.MergedChild.StatusBar != null)
+            if(e.MergedChild.StatusBar != null) {
+                this.ribbonStatusBar1.UnMergeStatusBar();
                 this.ribbonStatusBar1.MergeStatusBar(e.MergedChild.StatusBar);
+            }
             ThreadUpdateForm form = ActiveMdiChild as ThreadUpdateForm;
             if(form != null)
                 form.OnRibbonMerged(this.ribbonControl1);
@@ -773,12 +774,6 @@ namespace CryptoMarketClient {
         private void biDownloadManager_ItemClick(object sender, ItemClickEventArgs e) {
             DownloadForm.MdiParent = this;
             DownloadForm.Show();
-        }
-
-        private void biWebTickers_ItemClick(object sender, ItemClickEventArgs e) {
-            TickerExchangeWebInfoCollectionForm form = new TickerExchangeWebInfoCollectionForm();
-            form.MdiParent = this;
-            form.Show();
         }
     }
 }

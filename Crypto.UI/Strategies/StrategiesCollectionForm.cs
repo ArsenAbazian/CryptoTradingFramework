@@ -1,4 +1,5 @@
-﻿using Crypto.Core.Strategies;
+﻿using Crypto.Core.Helpers;
+using Crypto.Core.Strategies;
 using Crypto.UI.Strategies;
 using CryptoMarketClient.Common;
 using DevExpress.XtraBars;
@@ -47,6 +48,7 @@ namespace CryptoMarketClient.Strategies {
         private void biStart_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
             Stopped = false;
             if(!Manager.Initialized) {
+                Manager.ThreadManager = new ThreadManager() { OwnerControl = this };
                 if(!Manager.Initialize(new RealtimeStrategyDataProvider())) {
                     XtraMessageBox.Show("There are troubles initializing manager with RealtimeStrategyDataProvider. Check log for detailed information.");
                     return;
@@ -238,10 +240,15 @@ namespace CryptoMarketClient.Strategies {
             this.beSimulationProgress.EditValue = 0;
             this.beSimulationProgress.Visibility = BarItemVisibility.Always;
 
-            manager.Initialize(dataProvider);
+            if(!manager.Initialize(dataProvider)) {
+                XtraMessageBox.Show("Could not initialize data for strategy. Please check log", "Initialization");
+                SplashScreenManager.CloseOverlayForm(handle);
+                return;
+            }
             dataProvider.DownloadProgressChanged -= OnSimulationProviderDownloadProgressChanged;
             if(!manager.Start()) {
                 XtraMessageBox.Show("Error starting simulation! Please check log messages");
+                SplashScreenManager.CloseOverlayForm(handle);
                 return;
             }
             this.beSimulationProgress.EditValue = 0;
@@ -257,7 +264,9 @@ namespace CryptoMarketClient.Strategies {
                 this.beSimulationProgress.EditValue = (int)(dataProvider.SimulationProgress * this.repositoryItemProgressBar1.Maximum);
                 if(timer.ElapsedMilliseconds / 1000 > elapsedSeconds) {
                     elapsedSeconds = (int)(timer.ElapsedMilliseconds / 1000);
-                    this.siStatus.Caption = string.Format("<b>Running simulation... {0} sec</b>", elapsedSeconds);
+                    this.siStatus.Caption = string.Format("<b>Running simulation... {0} -> {1}</b>", 
+                        dataProvider.LastTime.ToString("dd.MM hh:mm:ss"),
+                        dataProvider.EndTime.ToString("dd.MM hh:mm:ss"));
                     Application.DoEvents();
                 }
                 if((dataProvider.SimulationProgress - progress) >= 0.05) {
@@ -286,11 +295,28 @@ namespace CryptoMarketClient.Strategies {
                 this.dpLogPanel.Visibility = DevExpress.XtraBars.Docking.DockVisibility.Hidden;
         }
 
+        bool inRefresh = false;
         void ILogVisualizer.RefreshView() {
-            //if(IsHandleCreated && this.dpLogPanel.Visibility != DevExpress.XtraBars.Docking.DockVisibility.Hidden)
-            //    BeginInvoke(new MethodInvoker(() => {
-            //        this.logMessagesControl.RefreshData();
-            //    }));
+            if(this.inRefresh)
+                return;
+            try {
+                this.inRefresh = true;
+                if(IsHandleCreated && this.dpLogPanel.Visibility != DevExpress.XtraBars.Docking.DockVisibility.Hidden) {
+                    if(InvokeRequired) {
+                        BeginInvoke(new MethodInvoker(() => {
+                            this.logMessagesControl.RefreshData();
+                            //Application.DoEvents();
+                        }));
+                    }
+                    else {
+                        this.logMessagesControl.RefreshData();
+                        Application.DoEvents();
+                    }
+                }
+            }
+            finally {
+                this.inRefresh = false;
+            }
         }
 
         private void repositoryItemCheckEdit3_EditValueChanged(object sender, EventArgs e) {
@@ -366,6 +392,16 @@ namespace CryptoMarketClient.Strategies {
                 SettingsStore.Default.SimulationSettings.Assign(form.Settings);
                 SettingsStore.Default.Save();
             }
+        }
+    }
+
+    public class ThreadManager : IThreadManager {
+        public Control OwnerControl { get; set; }
+
+        bool IThreadManager.IsMultiThread => true;
+
+        void IThreadManager.Invoke(Action<object, ListChangedEventArgs> a, object sender, ListChangedEventArgs e) {
+            OwnerControl.Invoke(a, sender, e);
         }
     }
 }

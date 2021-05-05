@@ -53,8 +53,9 @@ namespace CryptoMarketClient.Strategies {
                         root = item.BindingRoot;
                     item.DataSource = BindingHelper.GetBindingValue(item.BindingSource, root);
                 }
-                else if(item.DataSource == null)
+                else if(item.DataSource == null) {
                     item.DataSource = Visual.Items;
+                }
             }
         }
 

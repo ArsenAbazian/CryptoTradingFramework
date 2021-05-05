@@ -189,7 +189,6 @@
             this.changeSeriesViewBarItem1 = new DevExpress.XtraCharts.UI.ChangeSeriesViewBarItem();
             this.changeSeriesViewRepositoryItemComboBox1 = new DevExpress.XtraCharts.UI.ChangeSeriesViewRepositoryItemComboBox();
             this.chartFinancialIndicatorsBar1 = new DevExpress.XtraCharts.UI.ChartFinancialIndicatorsBar();
-            this.disableIndicatorInteractionBarItem1 = new DevExpress.XtraCharts.UI.DisableIndicatorInteractionBarItem();
             this.drawTrendLineIndicatorBarItem1 = new DevExpress.XtraCharts.UI.DrawTrendLineIndicatorBarItem();
             this.drawFibonacciArcsIndicatorBarItem1 = new DevExpress.XtraCharts.UI.DrawFibonacciArcsIndicatorBarItem();
             this.drawFibonacciFansIndicatorBarItem1 = new DevExpress.XtraCharts.UI.DrawFibonacciFansIndicatorBarItem();
@@ -301,7 +300,6 @@
             this.createExportToImageBaseItem1,
             this.selectSeriesBarItem1,
             this.changeSeriesViewBarItem1,
-            this.disableIndicatorInteractionBarItem1,
             this.drawTrendLineIndicatorBarItem1,
             this.drawFibonacciArcsIndicatorBarItem1,
             this.drawFibonacciFansIndicatorBarItem1,
@@ -659,20 +657,12 @@
             this.chartFinancialIndicatorsBar1.DockRow = 0;
             this.chartFinancialIndicatorsBar1.DockStyle = DevExpress.XtraBars.BarDockStyle.Top;
             this.chartFinancialIndicatorsBar1.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
-            new DevExpress.XtraBars.LinkPersistInfo(this.disableIndicatorInteractionBarItem1),
             new DevExpress.XtraBars.LinkPersistInfo(this.drawTrendLineIndicatorBarItem1),
             new DevExpress.XtraBars.LinkPersistInfo(this.drawFibonacciArcsIndicatorBarItem1),
             new DevExpress.XtraBars.LinkPersistInfo(this.drawFibonacciFansIndicatorBarItem1),
             new DevExpress.XtraBars.LinkPersistInfo(this.drawFibonacciRetracementIndicatorBarItem1),
             new DevExpress.XtraBars.LinkPersistInfo(this.removeIndicatorBarItem1),
             new DevExpress.XtraBars.LinkPersistInfo(this.addIndicatorBarItem1, true)});
-            // 
-            // disableIndicatorInteractionBarItem1
-            // 
-            this.disableIndicatorInteractionBarItem1.BindableChecked = true;
-            this.disableIndicatorInteractionBarItem1.Checked = true;
-            this.disableIndicatorInteractionBarItem1.Id = 30;
-            this.disableIndicatorInteractionBarItem1.Name = "disableIndicatorInteractionBarItem1";
             // 
             // drawTrendLineIndicatorBarItem1
             // 
@@ -1191,7 +1181,6 @@
             this.chartBarController1.BarItems.Add(this.createExportBaseItem1);
             this.chartBarController1.BarItems.Add(this.selectSeriesBarItem1);
             this.chartBarController1.BarItems.Add(this.changeSeriesViewBarItem1);
-            this.chartBarController1.BarItems.Add(this.disableIndicatorInteractionBarItem1);
             this.chartBarController1.BarItems.Add(this.drawTrendLineIndicatorBarItem1);
             this.chartBarController1.BarItems.Add(this.drawFibonacciArcsIndicatorBarItem1);
             this.chartBarController1.BarItems.Add(this.drawFibonacciFansIndicatorBarItem1);
@@ -1286,7 +1275,6 @@
         private DevExpress.XtraCharts.UI.ChangeSeriesViewBarItem changeSeriesViewBarItem1;
         private DevExpress.XtraCharts.UI.ChangeSeriesViewRepositoryItemComboBox changeSeriesViewRepositoryItemComboBox1;
         private DevExpress.XtraCharts.UI.ChartFinancialIndicatorsBar chartFinancialIndicatorsBar1;
-        private DevExpress.XtraCharts.UI.DisableIndicatorInteractionBarItem disableIndicatorInteractionBarItem1;
         private DevExpress.XtraCharts.UI.DrawTrendLineIndicatorBarItem drawTrendLineIndicatorBarItem1;
         private DevExpress.XtraCharts.UI.DrawFibonacciArcsIndicatorBarItem drawFibonacciArcsIndicatorBarItem1;
         private DevExpress.XtraCharts.UI.DrawFibonacciFansIndicatorBarItem drawFibonacciFansIndicatorBarItem1;

@@ -69,7 +69,32 @@ namespace CryptoMarketClient {
                 //AmountString = amount.ToString("0.00000000");
             }
         }
-        public double Volume { get; set; }
+
+        public void Offset(double delta) {
+            this.valueCore += delta;
+            this.valueString = null;
+        }
+
+        string volumeString = null;
+        double volume;
+        public double Volume {
+            get { return volume; }
+            set
+            {
+                if (Volume == value)
+                    return;
+                volumeString = null;
+                volume = value;
+            }
+        }
+        public string VolumeString
+        {
+            get { 
+                if(volumeString == null)
+                    volumeString = Volume.ToString("0.00000000");
+                return volumeString;
+            }
+        }
         public double VolumeTotal { get; set; }
         public double VolumePercent { get; set; }
         public void Clear() {
@@ -280,7 +305,7 @@ namespace CryptoMarketClient {
                                 return ParseExponent(str, sign * value + fix * divider[j - i - 1], j + 1, end);
                             fix = (fix << 3) + (fix << 1) + str[j] - 0x30;
                         }
-                        return sign * value + fix * divider[length - i - 1];
+                        return sign * (value + fix * divider[length - i - 1]);
                     }
                     if(str[i] == '-' || str[i] == 'e' || str[i] == 'E')
                         return sign * ParseExponent(str, value, i + 1, end);

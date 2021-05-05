@@ -106,7 +106,7 @@ namespace Crypto.Core.Strategies.Signal {
                 if(AlreadyOpenedPosition())
                     return;
                 SendNotification(GetNotificationString("time to buy"));
-                OpenLongPosition("3RSI", Ticker.OrderBook.Asks[0].Value, MaxAllowedDeposit * 0.2 / Ticker.OrderBook.Asks[0].Value, 10);
+                OpenLongPosition(Ticker, "3RSI", Ticker.OrderBook.Asks[0].Value, MaxAllowedDeposit * 0.2 / Ticker.OrderBook.Asks[0].Value, 10);
             }
             ProcessDelayedPositions();
             ProcessLongPositions();

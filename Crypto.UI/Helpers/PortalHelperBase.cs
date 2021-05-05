@@ -494,8 +494,8 @@ namespace CryptoMarketClient.Helpers {
         }
 
         public bool IsBrowserInitialized { get; set; } = true;
-        private void OnBrowserInitializedChanged(object sender, IsBrowserInitializedChangedEventArgs e) {
-            IsBrowserInitialized = e.IsBrowserInitialized;
+        private void OnBrowserInitializedChanged(object sender, EventArgs e) {
+            IsBrowserInitialized = true;// e.IsBrowserInitialized;
         }
 
         public string Login { get; set; }

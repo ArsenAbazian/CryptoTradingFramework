@@ -20,6 +20,7 @@ using DevExpress.Data;
 using DevExpress.XtraCharts.Designer;
 using System.IO;
 using Crypto.Core.Helpers;
+using CryptoMarketClient.Strategies;
 
 namespace CryptoMarketClient {
     public partial class TickerChartViewer : XtraUserControl {
@@ -45,17 +46,27 @@ namespace CryptoMarketClient {
                 OnTickerChanged(prev);
             }
         }
+        IThreadManager threadManager;
+        protected IThreadManager ThreadManager {
+            get {
+                if(threadManager == null)
+                    threadManager = new ThreadManager() { OwnerControl = this };
+                return threadManager;
+            }
+        }
         void OnTickerChanged(Ticker prev) {
             if(prev != null) {
                 prev.CandleStickChanged -= OnTickerCandleStickChanged;
                 prev.EventsChanged -= Settings_EventsChanged;
                 prev.StopListenKlineStream();
+                prev.CandleStickData.ThreadManager = null;
             }
             if(Ticker != null) {
                 Ticker.CandleStickChanged += OnTickerCandleStickChanged;
                 Ticker.EventsChanged += Settings_EventsChanged;
             }
             if(Ticker != null) {
+                Ticker.CandleStickData.ThreadManager = ThreadManager;
                 Ticker.StopListenKlineStream();
                 SetCandleStickCheckItemValues();
                 UpdateOrderBook();

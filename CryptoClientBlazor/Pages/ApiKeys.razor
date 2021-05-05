@@ -1,0 +1,122 @@
+﻿@page "/apikeys"
+
+@using CryptoClientBlazor.Data
+@inject ApiKeysService ApiKeyService
+
+<h2>Api Keys</h2>
+
+
+@if (accounts == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="separator"></div>
+    <DxDataGrid Data="@accounts" @bind-SingleSelectedDataRow="@SelectedAccount">
+        <HeaderTemplate>
+            <DxToolbar ItemRenderStyleMode="ToolbarRenderStyleMode.Plain">
+                <Items>
+                    <DxToolbarItem Text="Create New" IconCssClass="fas fa-plus" Click="OnAddNewClick"></DxToolbarItem>
+                    <DxToolbarItem Text="Edit" IconCssClass="fas fa-edit" Click="OnEditClick"></DxToolbarItem>
+                    <DxToolbarItem Text="Remove" IconCssClass="fas fa-trash-alt"></DxToolbarItem>
+                </Items>
+            </DxToolbar>
+        </HeaderTemplate>
+        <Columns>
+            <DxDataGridCheckBoxColumn Caption="Default" Field="Default" Width="60px" />
+            <DxDataGridCheckBoxColumn Caption="Active" Field="Active" Width="60px" />
+            <DxDataGridColumn Caption="Exchange" Field="Type" AllowGroup="true" GroupIndex="0" />
+            <DxDataGridColumn Caption="Name" Field="Name" />
+            <DxDataGridColumn Caption="ApiKey" Field="ApiKey" />
+        </Columns>
+    </DxDataGrid>
+
+    <DxPopup HeaderText="Add/Edit Item" @bind-Visible="@PopupVisible">
+        <Content>
+            <DxFormLayout Data="@EditingInfo" ItemSizeMode="SizeMode.Small">
+                <DxFormLayoutItem Caption="Name:" ColSpanMd="12">
+                    <Template>
+                        <DxTextBox @bind-Text="@EditingInfo.Name"></DxTextBox>
+                    </Template>
+                </DxFormLayoutItem>
+                <DxFormLayoutItem Caption="Exchange:" ColSpanMd="12">
+                    <Template>
+                        <DxComboBox Data="@ExchangeTypes" @bind-Value="@EditingInfo.Type"></DxComboBox>
+                    </Template>
+                </DxFormLayoutItem>
+                <DxFormLayoutItem Caption="Api Key:" ColSpanMd="12">
+                    <Template>
+                        <DxTextBox @bind-Text="@EditingInfo.ApiKey"></DxTextBox>
+                    </Template>
+                </DxFormLayoutItem>
+                <DxFormLayoutItem Caption="Secret:" ColSpanMd="12">
+                    <Template>
+                        <DxTextBox @bind-Text="@EditingInfo.Secret" Password="@(EditingMode == CryptoMarketClient.Common.EditingMode.Edit)"></DxTextBox>
+                    </Template>
+                </DxFormLayoutItem>
+                <DxFormLayoutItem Caption="Active:" ColSpanMd="12">
+                    <Template>
+                        <DxCheckBox @bind-Checked="@EditingInfo.Active"></DxCheckBox>
+                    </Template>
+                </DxFormLayoutItem>
+                <DxFormLayoutItem Caption="Default ApiKey:" ColSpanMd="12">
+                    <Template>
+                        <DxCheckBox @bind-Checked="@EditingInfo.Default"></DxCheckBox>
+                    </Template>
+                </DxFormLayoutItem>
+                <DxFormLayoutItem ColSpanMd="12">
+                    <Template>
+                        <div class="right-aligned-dx-form-container">
+                            <DxButton Text="OK" style="padding-left:2.0em; padding-right: 2.0em;" Click="OnEditingOk"></DxButton>
+                        </div>
+                    </Template>
+                </DxFormLayoutItem>
+            </DxFormLayout>
+        </Content>
+    </DxPopup>
+}
+
+@code {
+    private CryptoMarketClient.AccountInfo[] accounts;
+    private bool PopupVisible { get; set; } = false;
+    private CryptoMarketClient.AccountInfo EditingInfo { get; set; }
+    private CryptoMarketClient.AccountInfo SelectedAccount { get; set; }
+    private List<CryptoMarketClient.ExchangeType> ExchangeTypes { get; set; }
+    private CryptoMarketClient.Common.EditingMode EditingMode { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        ExchangeTypes = Enum.GetValues<CryptoMarketClient.ExchangeType>().ToList<CryptoMarketClient.ExchangeType>();
+        accounts = await ApiKeyService.GetAccounts();
+    }
+
+    private async void OnEditingOk()
+    {
+        if(EditingMode == CryptoMarketClient.Common.EditingMode.Add)
+        {
+            ApiKeyService.AddAccount(EditingInfo);
+        }
+        else
+        {
+            ApiKeyService.EditAccount(EditingInfo);
+        }
+        PopupVisible = false;
+        accounts = await ApiKeyService.GetAccounts();
+    }
+
+    void OnAddNewClick() {
+        EditingInfo = new CryptoMarketClient.AccountInfo();
+        EditingMode = CryptoMarketClient.Common.EditingMode.Add;
+        PopupVisible = true;
+    }
+
+    void OnEditClick()
+    {
+        EditingInfo = SelectedAccount;
+        if (EditingInfo == null)
+            return;
+        EditingMode = CryptoMarketClient.Common.EditingMode.Edit;
+        PopupVisible = true;
+    }
+}

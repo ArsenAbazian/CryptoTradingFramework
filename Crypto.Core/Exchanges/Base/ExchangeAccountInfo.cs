@@ -258,6 +258,7 @@ namespace CryptoMarketClient {
         BitFinex,
         Binance,
         Yobit,
-        Bitmex
+        Bitmex,
+        //Tinkoff
     }
 }

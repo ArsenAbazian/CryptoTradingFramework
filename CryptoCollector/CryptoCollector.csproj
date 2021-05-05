@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="DevExpress.Data.v20.1">
+    <Reference Include="DevExpress.Data.v20.2">
       
     </Reference>
   </ItemGroup>

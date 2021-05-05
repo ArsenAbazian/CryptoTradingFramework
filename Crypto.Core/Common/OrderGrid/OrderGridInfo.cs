@@ -23,6 +23,11 @@ namespace Crypto.Core.Common.OrderGrid {
         public OrderGridItemInfo Start { get; set; } = new OrderGridItemInfo();
         public OrderGridItemInfo End { get; set; } = new OrderGridItemInfo();
         public ResizeableArray<bool> Executed { get; set; }
+        
+        public OrderGridInfo() {
+            Executed = new ResizeableArray<bool>(1);
+        }
+        
         int lineCount = 1;
         public int LineCount {
             get { return lineCount; }

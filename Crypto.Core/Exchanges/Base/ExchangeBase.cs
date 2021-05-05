@@ -26,6 +26,7 @@ using Crypto.Core.Strategies;
 using CryptoMarketClient.BitFinex;
 using Crypto.Core.Exchanges.Base;
 using System.Threading.Tasks;
+//using Crypto.Core.Exchanges.Tinkoff;
 
 namespace CryptoMarketClient {
     public abstract class Exchange : ISupportSerialization {
@@ -38,6 +39,10 @@ namespace CryptoMarketClient {
             Registered.Add(BittrexExchange.Default);
             Registered.Add(BinanceExchange.Default);
             Registered.Add(BitmexExchange.Default);
+            //Registered.Add(TinkoffExchange.Default);
+        }
+
+        protected internal virtual void OnRequestCompleted(MyWebClient myWebClient) {
         }
 
         public Exchange() {
@@ -111,11 +116,29 @@ namespace CryptoMarketClient {
                     return new BittrexExchange();
                 case ExchangeType.Poloniex:
                     return new PoloniexExchange();
+                //case ExchangeType.Tinkoff:
+                //    return new TinkoffExchange();
             }
             return null;
         }
 
-        public abstract ResizeableArray<TradeInfoItem> GetTrades(Ticker ticker, DateTime start, DateTime utcNow);
+        protected virtual DateTime GetTradesRangeEndTime(DateTime start, DateTime end) {
+            return end;
+        }
+
+        public virtual ResizeableArray<TradeInfoItem> GetTrades(Ticker ticker, DateTime start, DateTime end) {
+            ResizeableArray<TradeInfoItem> res = new ResizeableArray<TradeInfoItem>();
+            while(res.Last() == null || res.Last().Time < end) {
+                DateTime lastTime = res.Last() == null ? DateTime.MinValue : res.Last().Time;
+                if(!GetTradesCore(res, ticker, start, GetTradesRangeEndTime(start, end)))
+                    break;
+                if(res.Count == 0 || (res.Last() != null && res.Last().Time == lastTime))
+                    return res;
+                start = res.Last().Time.AddMilliseconds(1);
+            }
+            return res;
+        }
+        protected abstract bool GetTradesCore(ResizeableArray<TradeInfoItem> list, Ticker ticker, DateTime start, DateTime end);
 
         public DateTime LastWebSocketRecvTime { get; set; }
         public abstract bool AllowCandleStickIncrementalUpdate { get; }
@@ -365,8 +388,8 @@ namespace CryptoMarketClient {
         }
 
         protected int CurrentClientIndex { get; set; }
-        public MyWebClient GetWebClient() {
-            MyWebClient cl = new MyWebClient();
+        public virtual MyWebClient GetWebClient() {
+            MyWebClient cl = new MyWebClient(this);
             return cl;
         }
         protected virtual int WebSocketCheckTimerInterval { get { return 5000; } }
@@ -512,9 +535,26 @@ namespace CryptoMarketClient {
         protected Stopwatch Timer { get; } = new Stopwatch();
         protected List<RateLimit> RequestRate { get; set; }
         protected List<RateLimit> OrderRate { get; set; }
-        public bool IsInitialized { get; set; }
+
+        bool isInitialized;
+        public bool IsInitialized {
+            get { return isInitialized; }
+            set {
+                if(IsInitialized == value)
+                    return;
+                isInitialized = value;
+                OnIsInitializedChanged();
+            }
+        }
+
+        protected virtual void OnIsInitializedChanged() {
+            if(InitializedChanged != null)
+                InitializedChanged.Invoke(this, EventArgs.Empty);
+        }
+        public event EventHandler InitializedChanged;
+
         protected bool SuppressCheckRequestLimits { get; set; }
-        protected void CheckRequestRateLimits() {
+        protected virtual void CheckRequestRateLimits() {
             if(SuppressCheckRequestLimits)
                 return;
             if(RequestRate == null) {
@@ -572,15 +612,25 @@ namespace CryptoMarketClient {
                 WebException we = e as WebException;
                 if(we != null && (we.Message.Contains("418") || we.Message.Contains("429")))
                     IsInitialized = false;
+                LogManager.Default.Add(LogType.Error, this, "GetDownloadString", e.ToString(), address);
                 Telemetry.Default.TrackException(e);
                 return null;
             }
         }
+
+        protected static DateTime UtcStart { get { return new DateTime(1970, 1, 1, 00, 00, 00, DateTimeKind.Utc); } }
+
         public static Int32 ToUnixTimestamp(DateTime time) {
-            return (Int32)(time.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
+            return (Int32)(time.Subtract(UtcStart)).TotalSeconds;
+        }
+        public static long ToUnixTimestampMs(DateTime time) {
+            return (long)(time.Subtract(UtcStart)).TotalMilliseconds;
         }
         public DateTime FromUnixTimestamp(Int64 time) {
-            return new DateTime(1970, 1, 1).AddSeconds(time);
+            return UtcStart.AddSeconds(time);
+        }
+        public DateTime FromUnixTimestampMs(Int64 time) {
+            return UtcStart.AddMilliseconds(time);
         }
         protected internal byte[] GetDownloadBytes(string address) {
             try {
@@ -643,7 +693,9 @@ namespace CryptoMarketClient {
         public abstract bool ProcessOrderBook(Ticker tickerBase, string text);
         public abstract bool UpdateTicker(Ticker tickerBase);
         public abstract bool UpdateTrades(Ticker tickerBase);
-        public abstract ResizeableArray<TradeInfoItem> GetTrades(Ticker ticker, DateTime starTime);
+        public ResizeableArray<TradeInfoItem> GetTrades(Ticker ticker, DateTime startTime) { 
+            return GetTrades(ticker, startTime, DateTime.UtcNow); 
+        }
         public abstract bool UpdateOpenedOrders(AccountInfo account, Ticker ticker);
         public bool UpdateOpenedOrders(AccountInfo account) { return UpdateOpenedOrders(account, null); }
         public abstract bool UpdateCurrencies();
@@ -893,6 +945,7 @@ namespace CryptoMarketClient {
                 return;
             }
             TickersSocket = CreateTickersSocket();
+            TickersSocket.StateChanged += OnTickersSocketStateChanged;
             if(!SimulationMode)
                 TickersSocket.Open();
             else
@@ -900,6 +953,13 @@ namespace CryptoMarketClient {
             TickersSocket.AddRef();
         }
 
+        private void OnTickersSocketStateChanged(object sender, ConnectionInfoChangedEventArgs e) {
+            if (TickersSocketStateChanged != null)
+                TickersSocketStateChanged(this, e);
+        }
+
+        public event ConnectionInfoChangedEventHandler TickersSocketStateChanged;
+        
         public virtual void StopListenTickersStream() {
             StopListenTickersStream(false);
         }
@@ -1270,6 +1330,17 @@ namespace CryptoMarketClient {
             OrderBookSockets.Clear();
             TradeHistorySockets.Clear();
             KlineSockets.Clear();
+        }
+
+        public string[] GetMarkets()
+        {
+            List<string> markets = new List<string>();
+            foreach(Ticker t in Tickers)
+            {
+                if (!markets.Contains(t.BaseCurrency))
+                    markets.Add(t.BaseCurrency);
+            }
+            return markets.ToArray();
         }
 
         List<CandleStickIntervalInfo> allowedCandleStickIntervals;

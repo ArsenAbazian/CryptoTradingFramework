@@ -28,8 +28,40 @@ namespace CryptoMarketClient.Binance {
             }
         }
 
-        public override ResizeableArray<TradeInfoItem> GetTrades(Ticker ticker, DateTime start, DateTime utcNow) {
-            throw new NotImplementedException();
+        protected override DateTime GetTradesRangeEndTime(DateTime start, DateTime end) {
+            return start.AddMinutes(59);
+        }
+
+        protected override bool GetTradesCore(ResizeableArray<TradeInfoItem> list, Ticker ticker, DateTime start, DateTime end) {
+            string address = string.Format("https://api.binance.com/api/v1/aggTrades?symbol={0}&limit={1}&startTime={2}&endTime={3}",
+                Uri.EscapeDataString(ticker.CurrencyPair), 1000, ToUnixTimestampMs(start), ToUnixTimestampMs(end));
+            byte[] data = ((Ticker)ticker).DownloadBytes(address);
+            if(data == null || data.Length == 0)
+                return false;
+
+            int parseIndex = 0;
+            List<string[]> items = JSonHelper.Default.DeserializeArrayOfObjects(data, ref parseIndex, AggTradeItemString);
+            for(int i = 0; i < items.Count; i++) {
+                string[] item = items[i];
+                DateTime time = FromUnixTimestampMs(FastValueConverter.ConvertPositiveLong(item[5]));
+                //if(time > end)
+                //    break;
+                int tradeId = FastValueConverter.ConvertPositiveInteger(item[0]);
+
+                TradeInfoItem t = new TradeInfoItem(null, ticker);
+                bool isBuy = item[6][0] != 't';
+                t.AmountString = item[2];
+                t.Time = time;
+                t.Type = isBuy ? TradeType.Buy : TradeType.Sell;
+                t.RateString = item[1];
+                t.Id = tradeId;
+                double price = t.Rate;
+                double amount = t.Amount;
+                t.Total = price * amount;
+                if(list.Last() == null || list.Last().Time < time)
+                    list.Add(t);
+            }
+            return true;
         }
 
         protected override bool ShouldAddKlineListener => false;
@@ -456,10 +488,14 @@ namespace CryptoMarketClient.Binance {
             JArray rateLimits = settings.Value<JArray>("rateLimits");
             RequestRate = new List<RateLimit>();
             OrderRate = new List<RateLimit>();
+            string timezone = settings.Value<string>("timezone");
+            long ms = settings.Value<long>("serverTime");
+            DateTime serverTime = FromUnixTimestampMs(ms);
+
             for(int i = 0; i < rateLimits.Count; i++) {
                 JObject rateLimit = (JObject) rateLimits[i];
                 string rateType = rateLimit.Value<string>("rateLimitType");
-                if(rateType == "REQUESTS")
+                if(rateType == "REQUESTS" || rateType == "REQUEST_WEIGHT")
                     RequestRate.Add(GetRateLimit(rateLimit));
                 if(rateType == "ORDERS")
                     OrderRate.Add(GetRateLimit(rateLimit));
@@ -616,45 +652,7 @@ namespace CryptoMarketClient.Binance {
             IsInitialized = true;
             return result;
         }
-
-        public override ResizeableArray<TradeInfoItem> GetTrades(Ticker ticker, DateTime starTime) {
-            string address = string.Format("https://api.binance.com/api/v1/depth?symbol={0}&limit={1}",
-                Uri.EscapeDataString(ticker.CurrencyPair), 1000);
-            string text = ((Ticker)ticker).DownloadString(address);
-            if(string.IsNullOrEmpty(text))
-                return null;
-
-            JArray trades = JsonConvert.DeserializeObject<JArray>(text);
-            if(trades.Count == 0)
-                return null;
-
-            ResizeableArray<TradeInfoItem> list = new ResizeableArray<TradeInfoItem>(1000);
-            int index = 0;
-            for(int i = 0; i < trades.Count; i++) {
-                JObject obj = (JObject) trades[i];
-                DateTime time = new DateTime(obj.Value<Int64>("time"));
-                int tradeId = obj.Value<int>("id");
-                if(time < starTime)
-                    break;
-                TradeInfoItem item = new TradeInfoItem(null, ticker);
-                bool isBuy = obj.Value<string>("type").Length == 3;
-                item.AmountString = obj.Value<string>("qty");
-                item.Time = time;
-                item.Type = isBuy ? TradeType.Buy : TradeType.Sell;
-                item.RateString = obj.Value<string>("price");
-                item.Id = tradeId;
-                double price = item.Rate;
-                double amount = item.Amount;
-                item.Total = price * amount;
-                list.Add(item);
-                index++;
-            }
-            if(ticker.HasTradeHistorySubscribers) {
-                ticker.RaiseTradeHistoryChanged(new TradeHistoryChangedEventArgs() { NewItems = list });
-            }
-            return list;
-        }
-
+        
         public override bool ProcessOrderBook(Ticker tickerBase, string text) {
             return true;
             //throw new NotImplementedException();
@@ -859,6 +857,15 @@ namespace CryptoMarketClient.Binance {
                 if(tradeItemString == null)
                     tradeItemString = new string[] { "id", "price", "qty", "time", "isBuyerMaker", "isBestMatch" };
                 return tradeItemString;
+            }
+        }
+
+        string[] aggTradeItemString;
+        protected string[] AggTradeItemString {
+            get {
+                if(aggTradeItemString == null)
+                    aggTradeItemString = new string[] { "a", "p", "q", "f", "l", "T", "m", "M" };
+                return aggTradeItemString;
             }
         }
 

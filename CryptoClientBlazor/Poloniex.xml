@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<PoloniexExchange xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <LastWebSocketRecvTime>2021-03-02T18:43:03.6516604+03:00</LastWebSocketRecvTime>
+  <Accounts>
+    <AccountInfo>
+      <Id>d0a0f96f-bb42-4378-8759-d58c33f2f369</Id>
+      <Name>Arsen</Name>
+      <Default>true</Default>
+      <Active>true</Active>
+      <Type>Poloniex</Type>
+      <ApiKeyEncoded>M+WZhRyjC08=</ApiKeyEncoded>
+      <SecretEncoded>f7cSPyWAq74=</SecretEncoded>
+    </AccountInfo>
+  </Accounts>
+  <PinnedTickers />
+  <FileName>Poloniex.xml</FileName>
+  <IsInitialized>true</IsInitialized>
+</PoloniexExchange>
