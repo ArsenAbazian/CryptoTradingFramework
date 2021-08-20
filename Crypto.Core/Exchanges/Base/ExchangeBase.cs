@@ -26,7 +26,6 @@ using Crypto.Core.Strategies;
 using CryptoMarketClient.BitFinex;
 using Crypto.Core.Exchanges.Base;
 using System.Threading.Tasks;
-//using Crypto.Core.Exchanges.Tinkoff;
 
 namespace CryptoMarketClient {
     public abstract class Exchange : ISupportSerialization {
@@ -39,7 +38,6 @@ namespace CryptoMarketClient {
             Registered.Add(BittrexExchange.Default);
             Registered.Add(BinanceExchange.Default);
             Registered.Add(BitmexExchange.Default);
-            //Registered.Add(TinkoffExchange.Default);
         }
 
         protected internal virtual void OnRequestCompleted(MyWebClient myWebClient) {
@@ -116,8 +114,6 @@ namespace CryptoMarketClient {
                     return new BittrexExchange();
                 case ExchangeType.Poloniex:
                     return new PoloniexExchange();
-                //case ExchangeType.Tinkoff:
-                //    return new TinkoffExchange();
             }
             return null;
         }
