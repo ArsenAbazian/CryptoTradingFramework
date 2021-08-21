@@ -43,12 +43,20 @@ namespace CryptoMarketClient.Exchanges.Bitmex {
             return string.Empty;
         }
 
-        public override TradingResult Buy(AccountInfo account, Ticker ticker, double rate, double amount) {
+        public override TradingResult BuyLong(AccountInfo account, Ticker ticker, double rate, double amount) {
             string data = string.Format("symbol={0}&orderQty={1}&price={2}&ordType=Limit", ticker.MarketName, amount, rate);
             byte[] bytes = UploadPrivateData(account, "POST", "/api/v1/order", data);
             if(bytes == null)
                 return null;
             return OnTradingResult(account, ticker, Encoding.UTF8.GetString(bytes));
+        }
+
+        public override TradingResult BuyShort(AccountInfo account, Ticker ticker, double rate, double amount) {
+            throw new NotImplementedException();
+        }
+
+        public override TradingResult SellShort(AccountInfo account, Ticker ticker, double rate, double amount) {
+            throw new NotImplementedException();
         }
 
         public TradingResult OnTradingResult(AccountInfo account, Ticker ticker, string text) {
@@ -219,7 +227,7 @@ namespace CryptoMarketClient.Exchanges.Bitmex {
             throw new NotImplementedException();
         }
 
-        public override TradingResult Sell(AccountInfo account, Ticker ticker, double rate, double amount) {
+        public override TradingResult SellLong(AccountInfo account, Ticker ticker, double rate, double amount) {
             string text = DownloadPrivateString(account, "POST",
                 string.Format("/api/v1/order?symbol={0}&orderQty={1}&price={2}&ordType=Market&side=Sell", ticker.MarketName, amount, rate));
             if(string.IsNullOrEmpty(text))

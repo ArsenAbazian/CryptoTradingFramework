@@ -101,9 +101,9 @@ namespace CryptoMarketClient.Binance {
             throw new NotImplementedException();
         }
 
-        protected TradingResult MakeTrade(AccountInfo account, Ticker ticker, double rate, double amount, string buySell) {
-            string queryString = string.Format("symbol={0}&side={1}&quantity={2:0.########}&price={3:0.########}&timestamp={4}&type=LIMIT&timeInForce=GTC&recvWindow=5000", 
-                ticker.Name, buySell, amount, rate, GetNonce());
+        protected TradingResult MakeTrade(AccountInfo account, Ticker ticker, double rate, double amount, string side, string positionSide) {
+            string queryString = string.Format("symbol={0}&side={1}&positionSide={2}&quantity={3:0.########}&price={4:0.########}&timestamp={5}&type=LIMIT&timeInForce=GTC&recvWindow=5000", 
+                ticker.Name, side, positionSide, amount, rate, GetNonce());
             string signature = account.GetSign(queryString);
 
             string address = string.Format("https://api.binance.com/api/v3/order?{0}&signature={1}",
@@ -122,9 +122,16 @@ namespace CryptoMarketClient.Binance {
             }
         }
 
-        public override TradingResult Buy(AccountInfo account, Ticker ticker, double rate, double amount) {
-            return MakeTrade(account, ticker, rate, amount, "BUY");
+        public override TradingResult BuyLong(AccountInfo account, Ticker ticker, double rate, double amount) {
+            return MakeTrade(account, ticker, rate, amount, "BUY", "LONG");
+        }
 
+        public override TradingResult BuyShort(AccountInfo account, Ticker ticker, double rate, double amount) {
+            throw new NotImplementedException();
+        }
+
+        public override TradingResult SellShort(AccountInfo account, Ticker ticker, double rate, double amount) {
+            throw new NotImplementedException();
         }
 
         protected TradingResult OnTradeResult(AccountInfo account, Ticker ticker, byte[] data) {
@@ -158,8 +165,8 @@ namespace CryptoMarketClient.Binance {
             return tr;
         }
 
-        public override TradingResult Sell(AccountInfo account, Ticker ticker, double rate, double amount) {
-            return MakeTrade(account, ticker, rate, amount, "SELL");
+        public override TradingResult SellLong(AccountInfo account, Ticker ticker, double rate, double amount) {
+            return MakeTrade(account, ticker, rate, amount, "SELL", "LONG");
         }
 
         public override string BaseWebSocketAdress => "wss://stream.binance.com:9443/ws/!ticker@arr";

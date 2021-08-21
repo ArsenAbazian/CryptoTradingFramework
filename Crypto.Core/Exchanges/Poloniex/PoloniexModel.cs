@@ -1009,7 +1009,7 @@ namespace CryptoMarketClient {
         //    return true;
         //}
 
-        public override TradingResult Buy(AccountInfo account, Ticker ticker, double rate, double amount) {
+        public override TradingResult BuyLong(AccountInfo account, Ticker ticker, double rate, double amount) {
             string address = string.Format("https://poloniex.com/tradingApi");
 
             HttpRequestParamsCollection coll = new HttpRequestParamsCollection();
@@ -1033,7 +1033,7 @@ namespace CryptoMarketClient {
             }
         }
 
-        public override TradingResult Sell(AccountInfo account, Ticker ticker, double rate, double amount) {
+        public override TradingResult SellLong(AccountInfo account, Ticker ticker, double rate, double amount) {
             string address = string.Format("https://poloniex.com/tradingApi");
 
             HttpRequestParamsCollection coll = new HttpRequestParamsCollection();
@@ -1056,6 +1056,14 @@ namespace CryptoMarketClient {
                 return null;
             }
             
+        }
+
+        public override TradingResult BuyShort(AccountInfo account, Ticker ticker, double rate, double amount) {
+            throw new NotImplementedException();
+        }
+
+        public override TradingResult SellShort(AccountInfo account, Ticker ticker, double rate, double amount) {
+            throw new NotImplementedException();
         }
 
         public TradingResult OnBuy(AccountInfo account, Ticker ticker, byte[] data) {

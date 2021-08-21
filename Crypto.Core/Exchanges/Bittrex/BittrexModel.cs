@@ -894,7 +894,7 @@ namespace CryptoMarketClient.Bittrex {
             return true;
         }
 
-        public override TradingResult Buy(AccountInfo account, Ticker ticker, double rate, double amount) {
+        public override TradingResult BuyLong(AccountInfo account, Ticker ticker, double rate, double amount) {
             string address = string.Format("https://bittrex.com/api/v1.1/market/buylimit?apikey={0}&nonce={1}&market={2}&quantity={3}&rate={4}",
                 Uri.EscapeDataString(account.ApiKey),
                 GetNonce(),
@@ -907,7 +907,7 @@ namespace CryptoMarketClient.Bittrex {
             string text = client.DownloadString(address);
             return OnBuy(account, ticker, text);
         }
-        public override TradingResult Sell(AccountInfo account, Ticker ticker, double rate, double amount) {
+        public override TradingResult SellLong(AccountInfo account, Ticker ticker, double rate, double amount) {
             string address = string.Format("https://bittrex.com/api/v1.1/market/selllimit?apikey={0}&nonce={1}&market={2}&quantity={3}&rate={4}",
                 Uri.EscapeDataString(account.ApiKey),
                 GetNonce(),
@@ -919,6 +919,13 @@ namespace CryptoMarketClient.Bittrex {
             client.Headers.Add("apisign", account.GetSign(address));
             string text = client.DownloadString(address);
             return OnSell(account, ticker, text);
+        }
+        public override TradingResult BuyShort(AccountInfo account, Ticker ticker, double rate, double amount) {
+            throw new NotImplementedException();
+        }
+
+        public override TradingResult SellShort(AccountInfo account, Ticker ticker, double rate, double amount) {
+            throw new NotImplementedException();
         }
         public override bool Cancel(AccountInfo account, string orderId) {
             string address = string.Format("https://bittrex.com/api/v1.1/market/cancel?apikey={0}&nonce={1}&uuid={2}",

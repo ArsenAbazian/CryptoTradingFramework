@@ -581,10 +581,10 @@ namespace CryptoMarketClient {
             return Sell(Exchange.DefaultAccount, rate, amount);
         }
         public TradingResult Buy(AccountInfo account, double lowestAsk, double amount) {
-            return Exchange.Buy(account, this, lowestAsk, amount);
+            return Exchange.BuyLong(account, this, lowestAsk, amount);
         }
         public TradingResult Sell(AccountInfo account, double highestBid, double amount) {
-            return Exchange.Sell(account, this, highestBid, amount);
+            return Exchange.SellLong(account, this, highestBid, amount);
         }
         public bool Withdraw(AccountInfo account, string currency, string address, string paymentId, double amount) {
             return Exchange.Withdraw(account, currency, address, paymentId, amount);

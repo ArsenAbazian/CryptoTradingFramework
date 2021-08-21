@@ -699,8 +699,14 @@ namespace CryptoMarketClient {
         public abstract bool GetBalance(AccountInfo info, string currency);
         public abstract string CreateDeposit(AccountInfo account, string currency);
         public abstract bool GetDeposites(AccountInfo account);
-        public abstract TradingResult Buy(AccountInfo account, Ticker ticker, double rate, double amount);
-        public abstract TradingResult Sell(AccountInfo account, Ticker ticker, double rate, double amount);
+        public TradingResult Buy(AccountInfo account, Ticker ticker, double rate, double amount) { return BuyLong(account, ticker, rate, amount); }
+        public TradingResult Sell(AccountInfo account, Ticker ticker, double rate, double amount) { return SellLong(account, ticker, rate, amount); }
+        public abstract TradingResult BuyLong(AccountInfo account, Ticker ticker, double rate, double amount);
+        public abstract TradingResult SellLong(AccountInfo account, Ticker ticker, double rate, double amount);
+
+        public abstract TradingResult BuyShort(AccountInfo account, Ticker ticker, double rate, double amount);
+        public abstract TradingResult SellShort(AccountInfo account, Ticker ticker, double rate, double amount);
+        
         public abstract bool Cancel(AccountInfo account, string orderId);
         public virtual ResizeableArray<CandleStickData> GetCandleStickData(Ticker ticker, int candleStickPeriodMin, DateTime start, long periodInSeconds) {
             return new ResizeableArray<CandleStickData>();
