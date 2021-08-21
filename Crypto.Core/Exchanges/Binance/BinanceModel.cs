@@ -127,11 +127,11 @@ namespace CryptoMarketClient.Binance {
         }
 
         public override TradingResult BuyShort(AccountInfo account, Ticker ticker, double rate, double amount) {
-            throw new NotImplementedException();
+            return MakeTrade(account, ticker, rate, amount, "BUY", "SHORT");
         }
 
         public override TradingResult SellShort(AccountInfo account, Ticker ticker, double rate, double amount) {
-            throw new NotImplementedException();
+            return MakeTrade(account, ticker, rate, amount, "SELL", "SHORT");
         }
 
         protected TradingResult OnTradeResult(AccountInfo account, Ticker ticker, byte[] data) {
