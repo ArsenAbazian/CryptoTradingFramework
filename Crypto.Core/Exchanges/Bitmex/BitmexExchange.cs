@@ -1,4 +1,4 @@
-﻿using CryptoMarketClient.Common;
+﻿using Crypto.Core.Common;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -7,16 +7,13 @@ using System.Diagnostics;
 using System.Linq;
 using WebSocket4Net;
 using SuperSocket.ClientEngine;
-using CryptoMarketClient.Helpers;
+using Crypto.Core.Helpers;
 using Crypto.Core.Exchanges.Base;
 using System.Text;
-using Crypto.Core.Exchanges.Bitmex;
 using System.Security.Cryptography;
-using System.Net.Http.Headers;
-using Crypto.Core.Helpers;
 using System.Threading;
 
-namespace CryptoMarketClient.Exchanges.Bitmex {
+namespace Crypto.Core.Exchanges.Bitmex {
     public class BitmexExchange : Exchange {
         static BitmexExchange defaultExchange;
         public static BitmexExchange Default {
@@ -296,10 +293,12 @@ namespace CryptoMarketClient.Exchanges.Bitmex {
                 IEnumerable<string> limit = myWebClient.ResponseHeaders.GetValues("X-RateLimit-Limit");
                 XRateLimitLimit = Convert.ToInt32(limit.First());
             }
-            IEnumerable<string> remain = myWebClient.ResponseHeaders.GetValues("X-RateLimit-Remaining");
-            XRateLimitRemain = FastValueConverter.ConvertPositiveInteger(remain.First());
-            IEnumerable<string> resetTime = myWebClient.ResponseHeaders.GetValues("X-RateLimit-Reset");
-            XRateLimitReset = FastValueConverter.ConvertPositiveLong(resetTime.First());
+            if(myWebClient.ResponseHeaders.Contains("X-RateLimit-Remaining")) {
+                IEnumerable<string> remain = myWebClient.ResponseHeaders.GetValues("X-RateLimit-Remaining");
+                XRateLimitRemain = FastValueConverter.ConvertPositiveInteger(remain.First());
+                IEnumerable<string> resetTime = myWebClient.ResponseHeaders.GetValues("X-RateLimit-Reset");
+                XRateLimitReset = FastValueConverter.ConvertPositiveLong(resetTime.First());
+            }
         }
 
         protected string DownloadPrivateString(AccountInfo account, string verb, string path) {

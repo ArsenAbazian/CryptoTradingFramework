@@ -1,8 +1,8 @@
-﻿using Crypto.Core.Helpers;
-using CryptoMarketClient.Bittrex;
-using CryptoMarketClient.Common;
-using CryptoMarketClient.Helpers;
-using CryptoMarketClient.Strategies;
+﻿using Crypto.Core;
+using Crypto.Core.Bittrex;
+using Crypto.Core.Common;
+using Crypto.Core.Helpers;
+using Crypto.Core.Strategies;
 using DevExpress.Data.Filtering;
 using DevExpress.XtraBars;
 using DevExpress.XtraEditors;

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CryptoMarketClient {
+namespace Crypto.Core {
     public enum OrderBookUpdateType { Add, Modify, Remove, RefreshAll }
     public class OrderBookUpdateInfo {
         public OrderBookEntry Entry { get; set; }

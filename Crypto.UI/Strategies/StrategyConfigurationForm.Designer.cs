@@ -236,7 +236,7 @@ namespace CryptoMarketClient.Strategies {
             // 
             // accountInfoBindingSource
             // 
-            this.accountInfoBindingSource.DataSource = typeof(CryptoMarketClient.AccountInfo);
+            this.accountInfoBindingSource.DataSource = typeof(Crypto.Core.AccountInfo);
             // 
             // leAccountsView
             // 

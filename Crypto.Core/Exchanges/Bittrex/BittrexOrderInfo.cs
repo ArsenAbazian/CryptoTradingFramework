@@ -1,7 +1,7 @@
-﻿using CryptoMarketClient.Common;
+﻿using Crypto.Core.Common;
 using System;
 
-namespace CryptoMarketClient.Bittrex {
+namespace Crypto.Core.Bittrex {
     public class BittrexOrderInfo : OpenedOrderInfo {
         public BittrexOrderInfo(AccountInfo account, Ticker ticker) : base(account, ticker) { }
 

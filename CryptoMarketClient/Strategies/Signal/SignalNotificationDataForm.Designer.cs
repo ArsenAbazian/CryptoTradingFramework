@@ -66,7 +66,7 @@
             // 
             // combinedSignalDataItemBindingSource
             // 
-            this.combinedSignalDataItemBindingSource.DataSource = typeof(CryptoMarketClient.Strategies.Signal.CombinedSignalDataItem);
+            this.combinedSignalDataItemBindingSource.DataSource = typeof(CombinedSignalDataItem);
             // 
             // gridView1
             // 

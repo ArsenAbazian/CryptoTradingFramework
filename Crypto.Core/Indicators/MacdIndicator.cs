@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using System.Xml.Serialization;
 using Crypto.Core.Helpers;
 using Crypto.Core.Strategies;
-using CryptoMarketClient;
+using Crypto.Core;
 
 namespace Crypto.Core.Indicators {
     public class MacdIndicator : WindowIndicator {

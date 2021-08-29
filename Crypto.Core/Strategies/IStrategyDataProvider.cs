@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using CryptoMarketClient;
+using Crypto.Core;
 
 namespace Crypto.Core.Strategies {
     public interface IStrategyDataProvider {

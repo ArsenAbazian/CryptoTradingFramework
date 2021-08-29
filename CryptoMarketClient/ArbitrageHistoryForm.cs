@@ -1,4 +1,4 @@
-﻿using CryptoMarketClient.Common;
+﻿using Crypto.Core.Common;
 using DevExpress.Data;
 using DevExpress.XtraEditors;
 using System;

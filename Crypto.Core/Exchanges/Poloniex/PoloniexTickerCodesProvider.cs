@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CryptoMarketClient.Exchanges.Poloniex {
+namespace Crypto.Core.Exchanges.Poloniex {
     public static class PoloniexTickerCodesProvider {
         static Dictionary<string, int> codes;
         static Dictionary<int, string> names;

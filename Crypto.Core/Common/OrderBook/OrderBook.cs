@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CryptoMarketClient {
+namespace Crypto.Core {
     public class OrderBook {
         public const int Depth = 20;
         public static bool AllowOrderBookHistory { get; set; } = false;

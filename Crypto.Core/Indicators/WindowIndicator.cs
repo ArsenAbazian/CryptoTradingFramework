@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using CryptoMarketClient;
+using Crypto.Core;
 
 namespace Crypto.Core.Indicators {
     public class WindowIndicator : SingleValueIndicator {

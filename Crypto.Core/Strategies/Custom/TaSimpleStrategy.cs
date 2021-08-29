@@ -1,15 +1,12 @@
 ﻿using Crypto.Core.Common;
 using Crypto.Core.Helpers;
 using Crypto.Core.Indicators;
-using CryptoMarketClient;
-using CryptoMarketClient.Common;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 namespace Crypto.Core.Strategies.Custom {

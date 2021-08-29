@@ -1,6 +1,6 @@
 ﻿using Crypto.Core.Helpers;
 using Crypto.Core.Strategies;
-using CryptoMarketClient;
+using Crypto.Core;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

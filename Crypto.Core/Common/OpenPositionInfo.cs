@@ -2,8 +2,8 @@
 using Crypto.Core.Helpers;
 using Crypto.Core.Indicators;
 using Crypto.Core.Strategies;
-using CryptoMarketClient;
-using CryptoMarketClient.Common;
+using Crypto.Core;
+using Crypto.Core.Common;
 using System;
 using System.Collections.Generic;
 using System.Drawing;

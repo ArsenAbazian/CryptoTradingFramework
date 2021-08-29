@@ -142,7 +142,7 @@
             // 
             // gcDownExchanges
             // 
-            this.gcDownExchanges.DataSource = typeof(CryptoMarketClient.ExchangeInfo);
+            this.gcDownExchanges.DataSource = typeof(ExchangeInfo);
             this.gcDownExchanges.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(6);
             this.gcDownExchanges.Location = new System.Drawing.Point(12, 100);
             this.gcDownExchanges.MainView = this.gvDownExchanges;
@@ -379,7 +379,7 @@
             // 
             // gcData
             // 
-            this.gcData.DataSource = typeof(CryptoMarketClient.ExchangeInfo);
+            this.gcData.DataSource = typeof(ExchangeInfo);
             this.gcData.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gcData.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(6);
             this.gcData.Location = new System.Drawing.Point(0, 0);

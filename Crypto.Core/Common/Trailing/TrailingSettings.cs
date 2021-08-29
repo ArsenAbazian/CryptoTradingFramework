@@ -9,9 +9,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
-using CryptoMarketClient.Helpers;
+using Crypto.Core.Helpers;
 
-namespace CryptoMarketClient.Common {
+namespace Crypto.Core.Common {
     [Serializable]
     public class TradingSettings : INotifyPropertyChanged {
         public TradingSettings(Ticker ticker) {

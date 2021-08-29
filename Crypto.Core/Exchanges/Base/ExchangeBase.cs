@@ -1,12 +1,10 @@
-﻿using CryptoMarketClient.Binance;
-using CryptoMarketClient.Bittrex;
-using CryptoMarketClient.Common;
-using CryptoMarketClient.Exchanges.Base;
-using CryptoMarketClient.Exchanges.Bitmex;
+﻿using Crypto.Core.Binance;
+using Crypto.Core.Bittrex;
+using Crypto.Core.Common;
+using Crypto.Core.Exchanges.Base;
+using Crypto.Core.Exchanges.Bitmex;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -17,17 +15,15 @@ using System.Text;
 using WebSocket4Net;
 using Microsoft.AspNet.SignalR.Client;
 using System.Threading;
-using System.Net.Http;
-using Crypto.Core.Common;
 using System.Xml.Serialization;
 using Crypto.Core.Helpers;
 using System.Reflection;
 using Crypto.Core.Strategies;
-using CryptoMarketClient.BitFinex;
-using Crypto.Core.Exchanges.Base;
+using Crypto.Core.BitFinex;
 using System.Threading.Tasks;
+using Crypto.Core.Exchanges.Binance.Futures;
 
-namespace CryptoMarketClient {
+namespace Crypto.Core {
     public abstract class Exchange : ISupportSerialization {
         public static List<Exchange> Registered { get; } = new List<Exchange>();
         public static List<Exchange> Connected { get; } = new List<Exchange>();
@@ -38,6 +34,7 @@ namespace CryptoMarketClient {
             Registered.Add(BittrexExchange.Default);
             Registered.Add(BinanceExchange.Default);
             Registered.Add(BitmexExchange.Default);
+            Registered.Add(BinanceFuturesExchange.Default);
         }
 
         protected internal virtual void OnRequestCompleted(MyWebClient myWebClient) {
@@ -55,7 +52,7 @@ namespace CryptoMarketClient {
             get { return Color.Green; }
         }
 
-        protected List<Ticker> KLineListeners { get; } = new List<CryptoMarketClient.Ticker>();
+        protected List<Ticker> KLineListeners { get; } = new List<Crypto.Core.Ticker>();
         protected abstract bool ShouldAddKlineListener { get; }
         public void AddKLineListener(Ticker t) {
             if(!ShouldAddKlineListener)

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CryptoMarketClient.Exchanges.Bitmex {
+namespace Crypto.Core.Exchanges.Bitmex {
     public class BitmexIncDataProvider : IIncrementalUpdateDataProvider {
         public BitmexIncDataProvider(BitmexExchange exchange) {
             Exchange = exchange;

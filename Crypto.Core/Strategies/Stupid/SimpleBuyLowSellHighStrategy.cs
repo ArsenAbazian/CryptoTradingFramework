@@ -1,5 +1,5 @@
 ﻿using Crypto.Core.Strategies;
-using CryptoMarketClient.Common;
+using Crypto.Core.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
-namespace CryptoMarketClient.Strategies.Stupid {
+namespace Crypto.Core.Strategies.Stupid {
     public class SimpleBuyLowSellHighStrategy : TickerStrategyBase {
         public override string TypeName => "Stupid Buy Low Sell High";
         

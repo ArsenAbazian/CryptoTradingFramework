@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CryptoMarketClient.Common {
+namespace Crypto.Core.Common {
     public abstract class BalanceBase {
         public BalanceBase(AccountInfo info) {
             Account = info;

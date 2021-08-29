@@ -120,7 +120,7 @@ namespace Crypto.UI.Forms {
             // 
             // candleStickIntervalInfoBindingSource
             // 
-            this.candleStickIntervalInfoBindingSource.DataSource = typeof(CryptoMarketClient.CandleStickIntervalInfo);
+            this.candleStickIntervalInfoBindingSource.DataSource = typeof(Crypto.Core.CandleStickIntervalInfo);
             // 
             // cbExchangeTickers
             // 
@@ -142,7 +142,7 @@ namespace Crypto.UI.Forms {
             // 
             // exchangeTickersBindingSource
             // 
-            this.exchangeTickersBindingSource.DataSource = typeof(CryptoMarketClient.Ticker);
+            this.exchangeTickersBindingSource.DataSource = typeof(Crypto.Core.Ticker);
             // 
             // repositoryItemGridLookUpEdit1View
             // 

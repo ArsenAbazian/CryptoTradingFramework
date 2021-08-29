@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CryptoMarketClient.Strategies {
+namespace Crypto.Core.Strategies {
     public class StaticGridStrategy : GridStrategyBase {
 
         public StaticGridStrategy() : base() { }

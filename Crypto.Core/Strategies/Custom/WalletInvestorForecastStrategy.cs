@@ -1,11 +1,8 @@
-﻿using Crypto.Core.Common;
-using Crypto.Core.Strategies;
-using Crypto.Core.Strategies.Custom;
-using CryptoMarketClient.Binance;
-using CryptoMarketClient.Bittrex;
-using CryptoMarketClient.Common;
-using CryptoMarketClient.Exchanges.Bitmex;
-using CryptoMarketClient.Helpers;
+﻿using Crypto.Core.Binance;
+using Crypto.Core.Bittrex;
+using Crypto.Core.Common;
+using Crypto.Core.Exchanges.Bitmex;
+using Crypto.Core.Helpers;
 using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
@@ -13,8 +10,6 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 namespace Crypto.Core.Strategies {
@@ -141,15 +136,15 @@ namespace Crypto.Core.Strategies {
             if(ForecastProvider == null)
                 ForecastProvider = DefaultProvider;
             if(!BinanceExchange.Default.Connect()) {
-                Log(CryptoMarketClient.Common.LogType.Error, "Cannot connect Binance exchange", 0, 0, StrategyOperation.Connect);
+                Log(Crypto.Core.Common.LogType.Error, "Cannot connect Binance exchange", 0, 0, StrategyOperation.Connect);
                 return false;
             }
             if(!BittrexExchange.Default.Connect()) {
-                Log(CryptoMarketClient.Common.LogType.Error, "Cannot connect Bittrex exchange", 0, 0, StrategyOperation.Connect);
+                Log(Crypto.Core.Common.LogType.Error, "Cannot connect Bittrex exchange", 0, 0, StrategyOperation.Connect);
                 return false;
             }
             if(!BitmexExchange.Default.Connect()) {
-                Log(CryptoMarketClient.Common.LogType.Error, "Cannot connect Bitmex exchange", 0, 0, StrategyOperation.Connect);
+                Log(Crypto.Core.Common.LogType.Error, "Cannot connect Bitmex exchange", 0, 0, StrategyOperation.Connect);
                 return false;
             }
             CheckUpdateItems();
@@ -229,7 +224,7 @@ namespace Crypto.Core.Strategies {
             Log(LogType.Warning, string.Format("found {0} items matched min 24h% and exchanges", list.Count), 0, 0, StrategyOperation.Connect);
             Log(LogType.Log, "initialize forecast data provider", 0, 0, StrategyOperation.Connect);
             if(!ForecastProvider.Initialize(this)) {
-                Log(CryptoMarketClient.Common.LogType.Error, "Cannot initialize forecast provider.", 0, 0, StrategyOperation.Connect);
+                Log(Crypto.Core.Common.LogType.Error, "Cannot initialize forecast provider.", 0, 0, StrategyOperation.Connect);
                 return;
             }
             Log(LogType.Success, "initialize forecast data provider", 0, 0, StrategyOperation.Connect);

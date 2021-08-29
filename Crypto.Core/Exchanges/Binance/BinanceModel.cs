@@ -1,22 +1,17 @@
-﻿using CryptoMarketClient.Common;
-using CryptoMarketClient.Exchanges.Binance;
+﻿using Crypto.Core.Common;
+using Crypto.Core.Exchanges.Binance;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using WebSocket4Net;
-using SuperSocket.ClientEngine;
-using CryptoMarketClient.Helpers;
-using System.Security.Cryptography;
-using Crypto.Core.Exchanges.Binance;
-using Crypto.Core.Exchanges.Base;
 using Crypto.Core.Helpers;
+using System.Security.Cryptography;
+using Crypto.Core.Exchanges.Base;
 
-namespace CryptoMarketClient.Binance {
+namespace Crypto.Core.Binance {
     public class BinanceExchange : Exchange {
         static BinanceExchange defaultExchange;
         public static BinanceExchange Default {
@@ -32,8 +27,10 @@ namespace CryptoMarketClient.Binance {
             return start.AddMinutes(59);
         }
 
+        protected virtual string AggTradesApiString => "https://api.binance.com/api/v1/aggTrades";
+
         protected override bool GetTradesCore(ResizeableArray<TradeInfoItem> list, Ticker ticker, DateTime start, DateTime end) {
-            string address = string.Format("https://api.binance.com/api/v1/aggTrades?symbol={0}&limit={1}&startTime={2}&endTime={3}",
+            string address = string.Format("{0}?symbol={1}&limit={2}&startTime={3}&endTime={4}", AggTradesApiString, 
                 Uri.EscapeDataString(ticker.CurrencyPair), 1000, ToUnixTimestampMs(start), ToUnixTimestampMs(end));
             byte[] data = ((Ticker)ticker).DownloadBytes(address);
             if(data == null || data.Length == 0)
@@ -77,12 +74,13 @@ namespace CryptoMarketClient.Binance {
         public override string CreateDeposit(AccountInfo account, string currency) {
             throw new NotImplementedException();
         }
-         
+        
+        protected virtual string BalanceApiString { get { return "https://binance.com/api/v3/account"; } }
         public override bool GetBalance(AccountInfo account, string currency) {
             string queryString = string.Format("timestamp={0}", GetNonce());
             string signature = account.GetSign(queryString);
 
-            string address = string.Format("https://binance.com/api/v3/account?{0}&signature={1}", queryString, signature);
+            string address = string.Format("{0}?{1}&signature={2}", BalanceApiString, queryString, signature);
             MyWebClient client = GetWebClient();
 
             client.Headers.Clear();
@@ -398,9 +396,15 @@ namespace CryptoMarketClient.Binance {
 
         string[] webSocketTickersInfo;
         protected string[] WebSocketTickersInfo {
-            get {
-                if(webSocketTickersInfo == null) {
-                    webSocketTickersInfo = new string[] {
+            get { 
+                if(webSocketTickersInfo == null)
+                    webSocketTickersInfo = CreateWebSocketTickersInfoStrings(); 
+                return webSocketTickersInfo;
+            }
+        }
+
+        protected virtual string[] CreateWebSocketTickersInfoStrings() {
+            return new string[] {
                         "e",
                         "E",
                         "s",
@@ -425,10 +429,8 @@ namespace CryptoMarketClient.Binance {
                         "L",
                         "n"
                     };
-                }
-                return webSocketTickersInfo;
-            }
         }
+
         protected internal override void OnTickersSocketMessageReceived(object sender, MessageReceivedEventArgs e) {
             base.OnTickersSocketMessageReceived(sender, e);
             byte[] data = Encoding.Default.GetBytes(e.Message);
@@ -442,7 +444,7 @@ namespace CryptoMarketClient.Binance {
             }
         }
 
-        protected void On24HourTickerRecv(string[] item) {
+        protected virtual void On24HourTickerRecv(string[] item) {
             string symbolName = item[2];
             Ticker first = null;
             for(int i = 0; i < Tickers.Count; i++) {
@@ -453,8 +455,18 @@ namespace CryptoMarketClient.Binance {
                 }
             }
             BinanceTicker t = (BinanceTicker)first;
+            On24HourTickerRecvCore(t, item);
+            
+            t.UpdateTrailings();
+
+            lock(t) {
+                RaiseTickerChanged(t);
+            }
+        }
+
+        protected virtual void On24HourTickerRecvCore(BinanceTicker t, string[] item) {
             if(t == null)
-                throw new DllNotFoundException("binance symbol not found " + symbolName);
+                throw new DllNotFoundException("binance symbol not found " + item[2]);
             t.Change = FastValueConverter.Convert(item[4]);
             t.HighestBid = FastValueConverter.Convert(item[9]);
             t.LowestAsk = FastValueConverter.Convert(item[11]);
@@ -462,12 +474,6 @@ namespace CryptoMarketClient.Binance {
             t.Hr24Low = FastValueConverter.Convert(item[15]);
             t.BaseVolume = FastValueConverter.Convert(item[16]);
             t.Volume = FastValueConverter.Convert(item[17]);
-
-            t.UpdateTrailings();
-
-            lock(t) {
-                RaiseTickerChanged(t);
-            }
         }
 
         public override bool GetDeposites(AccountInfo account) {
@@ -478,8 +484,10 @@ namespace CryptoMarketClient.Binance {
             return new HMACSHA256(System.Text.ASCIIEncoding.Default.GetBytes(secret));
         }
 
+        protected virtual string ExchangeSettingsApi { get { return "https://api.binance.com/api/v1/exchangeInfo"; } }
+
         public override bool ObtainExchangeSettings() {
-            string address = "https://api.binance.com/api/v1/exchangeInfo";
+            string address = ExchangeSettingsApi;
             string text = string.Empty;
             try {
                 text = GetDownloadString(address);
@@ -662,16 +670,16 @@ namespace CryptoMarketClient.Binance {
         
         public override bool ProcessOrderBook(Ticker tickerBase, string text) {
             return true;
-            //throw new NotImplementedException();
         }
 
-        string GetNonce() {
+        protected string GetNonce() {
             long timestamp = (long)(DateTime.UtcNow - epoch).TotalMilliseconds;
             return timestamp.ToString();
         }
 
+        protected virtual string ServerTimeApi { get { return "https://binance.com/api/v1/time"; } }
         protected long GetServerTime() {
-            string adress = "https://binance.com/api/v1/time";
+            string adress = ServerTimeApi;
             MyWebClient client = GetWebClient();
             try {
                 return FastValueConverter.ConvertPositiveLong(client.DownloadString(adress));
@@ -683,7 +691,7 @@ namespace CryptoMarketClient.Binance {
         }
 
         public override bool UpdateBalances(AccountInfo account) {
-            string queryString = string.Format("timestamp={0}", GetNonce());
+            string queryString = string.Format("timestamp={0}&recvWindow=50000", GetNonce());
             string signature = account.GetSign(queryString);
 
             string address = string.Format("https://binance.com/api/v3/account?{0}&signature={1}", queryString, signature);
@@ -701,7 +709,7 @@ namespace CryptoMarketClient.Binance {
             }
         }
 
-        public bool OnGetBalances(AccountInfo account, byte[] data) {
+        public virtual bool OnGetBalances(AccountInfo account, byte[] data) {
             string text = UTF8Encoding.Default.GetString(data);
             JObject root = (JObject)JsonConvert.DeserializeObject(text);
             if(root.Value<string>("code") != null) {
@@ -737,8 +745,10 @@ namespace CryptoMarketClient.Binance {
             //throw new NotImplementedException();
         }
 
+        protected virtual string UpdateOrderBookApiString => "https://api.binance.com/api/v1/depth";
+        
         public override bool UpdateOrderBook(Ticker ticker, int depth) {
-            string address = string.Format("https://api.binance.com/api/v1/depth?symbol={0}&limit={1}",
+            string address = string.Format("{0}?symbol={1}&limit={2}", UpdateOrderBookApiString, 
                 Uri.EscapeDataString(ticker.CurrencyPair), depth);
             byte[] bytes = GetDownloadBytes(address);
             if(bytes == null || bytes.Length == 0)
@@ -748,7 +758,7 @@ namespace CryptoMarketClient.Binance {
         }
 
         public override void UpdateOrderBookAsync(Ticker ticker, int depth, Action<OperationResultEventArgs> onOrderBookUpdated) {
-            string address = string.Format("https://api.binance.com/api/v1/depth?symbol={0}&limit={1}",
+            string address = string.Format("{0}?symbol={0}&limit={1}", UpdateOrderBookApiString,
                 Uri.EscapeDataString(ticker.CurrencyPair), depth);
             GetDownloadBytesAsync(address, t => {
                 OnUpdateOrderBook(ticker, t.Result);
@@ -820,8 +830,9 @@ namespace CryptoMarketClient.Binance {
             //throw new NotImplementedException();
         }
 
+        protected virtual string TickerInfoApiString => "https://api.binance.com/api/v1/ticker/24hr";
         public override bool UpdateTickersInfo() {
-            string address = "https://api.binance.com/api/v1/ticker/24hr";
+            string address = TickerInfoApiString;
             string text = string.Empty;
             try {
                 text = GetDownloadString(address);
@@ -843,28 +854,35 @@ namespace CryptoMarketClient.Binance {
                         break;
                     }
                 }
-                BinanceTicker t = (BinanceTicker) first;
-                if(t == null)
-                    continue;
-                t.Last = item.Value<double>("lastPrice");
-                t.LowestAsk = item.Value<double>("askPrice");
-                t.HighestBid = item.Value<double>("bidPrice");
-                t.Change = item.Value<double>("priceChangePercent");
-                t.BaseVolume = item.Value<double>("volume");
-                t.Volume = item.Value<double>("quoteVolume");
-                t.Hr24High = item.Value<double>("highPrice");
-                t.Hr24Low = item.Value<double>("lowPrice");
+                UpdateTickerInfo((BinanceTicker) first, item);
             }
             return true;
+        }
+
+        protected virtual void UpdateTickerInfo(BinanceTicker t, JObject item) {
+            if(t == null)
+                    return;
+            t.Last = item.Value<double>("lastPrice");
+            t.LowestAsk = item.Value<double>("askPrice");
+            t.HighestBid = item.Value<double>("bidPrice");
+            t.Change = item.Value<double>("priceChangePercent");
+            t.BaseVolume = item.Value<double>("volume");
+            t.Volume = item.Value<double>("quoteVolume");
+            t.Hr24High = item.Value<double>("highPrice");
+            t.Hr24Low = item.Value<double>("lowPrice");
         }
 
         string[] tradeItemString;
         protected string[] TradeItemString {
             get {
                 if(tradeItemString == null)
-                    tradeItemString = new string[] { "id", "price", "qty", "time", "isBuyerMaker", "isBestMatch" };
+                    tradeItemString = CreateTradeItemString(); 
                 return tradeItemString;
             }
+        }
+
+        protected virtual string[] CreateTradeItemString() {
+            return new string[] { "id", "price", "qty", "time", "isBuyerMaker", "isBestMatch" };
         }
 
         string[] aggTradeItemString;
@@ -876,8 +894,10 @@ namespace CryptoMarketClient.Binance {
             }
         }
 
+        protected virtual string UpdateTradesApiString => "https://api.binance.com/api/v1/trades";
+
         public override bool UpdateTrades(Ticker ticker) {
-            string address = string.Format("https://api.binance.com/api/v1/trades?symbol={0}&limit={1}",
+            string address = string.Format("{0}?symbol={1}&limit={2}", UpdateTradesApiString, 
                 Uri.EscapeDataString(ticker.CurrencyPair), 1000);
             byte[] data = ((Ticker)ticker).DownloadBytes(address);
             if(data == null || data.Length == 0)
@@ -891,19 +911,7 @@ namespace CryptoMarketClient.Binance {
             ResizeableArray<TradeInfoItem> newItems = new ResizeableArray<TradeInfoItem>(items.Count);
             for(int i = items.Count - 1; i >= 0; i--) {
                 string[] item = items[i];
-                DateTime time = FromUnixTime(FastValueConverter.ConvertPositiveLong(item[3]));
-                int tradeId = FastValueConverter.ConvertPositiveInteger(item[0]);
-
-                TradeInfoItem t = new TradeInfoItem(null, ticker);
-                bool isBuy = item[4][0] != 't';
-                t.AmountString = item[2];
-                t.Time = time;
-                t.Type = isBuy ? TradeType.Buy : TradeType.Sell;
-                t.RateString = item[1];
-                t.Id = tradeId;
-                double price = t.Rate;
-                double amount = t.Amount;
-                t.Total = price * amount;
+                TradeInfoItem t = InitializeTradeInfoItem(item, ticker);
                 ticker.TradeHistory.Add(t);
                 newItems.Add(t);
                 index++;
@@ -913,6 +921,25 @@ namespace CryptoMarketClient.Binance {
             }
             return true;
         }
+
+        private TradeInfoItem InitializeTradeInfoItem(string[] item, Ticker ticker) {
+            DateTime time = FromUnixTime(FastValueConverter.ConvertPositiveLong(item[3]));
+            int tradeId = FastValueConverter.ConvertPositiveInteger(item[0]);
+
+            TradeInfoItem t = new TradeInfoItem(null, ticker);
+            bool isBuy = item[4][0] != 't';
+            t.AmountString = item[2];
+            t.Time = time;
+            t.Type = isBuy ? TradeType.Buy : TradeType.Sell;
+            t.RateString = item[1];
+            t.Id = tradeId;
+            double price = t.Rate;
+            double amount = t.Amount;
+            t.Total = price * amount;
+
+            return t;
+        }
+
         protected internal override void ApplyCapturedEvent(Ticker ticker, TickerCaptureDataInfo info) {
             throw new NotImplementedException();
         }

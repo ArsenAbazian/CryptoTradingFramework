@@ -1,15 +1,13 @@
-﻿using DevExpress.Utils;
+﻿using Crypto.Core;
+using DevExpress.Utils;
 using DevExpress.Utils.Serializing;
 using DevExpress.XtraEditors;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace CryptoMarketClient {

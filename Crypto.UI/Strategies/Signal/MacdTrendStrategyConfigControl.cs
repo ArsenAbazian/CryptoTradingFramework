@@ -10,6 +10,8 @@ using System.Windows.Forms;
 using DevExpress.XtraEditors;
 using Crypto.Core.Common;
 using Crypto.Core.Strategies.Signal;
+using Crypto.Core;
+using Crypto.Core.Strategies;
 
 namespace CryptoMarketClient.Strategies.Signal {
     public partial class MacdTrendStrategyConfigControl : StrategySpecificConfigurationControlBase {

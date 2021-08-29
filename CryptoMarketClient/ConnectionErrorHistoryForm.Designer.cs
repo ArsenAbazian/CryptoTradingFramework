@@ -60,7 +60,7 @@
             // 
             // socketInfoHistoryItemBindingSource
             // 
-            this.socketInfoHistoryItemBindingSource.DataSource = typeof(CryptoMarketClient.Common.SocketInfoHistoryItem);
+            this.socketInfoHistoryItemBindingSource.DataSource = typeof(Crypto.Core.Common.SocketInfoHistoryItem);
             // 
             // colTime
             // 

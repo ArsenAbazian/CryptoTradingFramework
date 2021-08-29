@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CryptoMarketClient {
+namespace Crypto.Core {
     public static class TickerCollectionHelper {
         static List<List<Ticker>> GetMarketsList(List<Exchange> exchanges) {
             List<List<Ticker>> tickersList = new List<List<Ticker>>();

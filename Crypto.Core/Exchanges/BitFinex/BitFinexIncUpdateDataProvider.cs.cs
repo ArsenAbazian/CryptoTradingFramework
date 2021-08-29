@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CryptoMarketClient.Exchanges.BitFinex {
+namespace Crypto.Core.Exchanges.BitFinex {
     public class BitFinexIncrementalUpdateDataProvider : IIncrementalUpdateDataProvider {
         public void Update(Ticker ticker, IncrementalUpdateInfo info) {
             throw new NotImplementedException();

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CryptoMarketClient {
+namespace Crypto.Core {
     public enum OrderBookEntryType { Bid, Ask }
     public class OrderBookEntry {
         public string valueString;

@@ -1,4 +1,4 @@
-﻿using CryptoMarketClient.Common;
+﻿using Crypto.Core.Common;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
-namespace CryptoMarketClient {
+namespace Crypto.Core {
     [Serializable]
     public class AccountInfo {
 
@@ -259,5 +259,6 @@ namespace CryptoMarketClient {
         Binance,
         Yobit,
         Bitmex,
+        BinanceFutures
     }
 }

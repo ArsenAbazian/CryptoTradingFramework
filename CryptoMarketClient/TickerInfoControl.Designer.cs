@@ -112,7 +112,7 @@
             // 
             // bindingSource
             // 
-            this.bindingSource.DataSource = typeof(CryptoMarketClient.Ticker);
+            this.bindingSource.DataSource = typeof(Crypto.Core.Ticker);
             // 
             // gridView1
             // 

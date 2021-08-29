@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
+using Crypto.Core;
 
 namespace CryptoMarketClient {
     public partial class MyTradesCollectionControl : XtraUserControl {

@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CryptoMarketClient {
+namespace Crypto.Core {
     public class TickerUpdateHelper {
         public TickerUpdateHelper(Ticker ticker) {
             Ticker = ticker;

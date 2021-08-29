@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CryptoMarketClient.Common {
+namespace Crypto.Core.Common {
     [Serializable]
     public class PinnedTickerInfo {
         public string BaseCurrency { get; set; }

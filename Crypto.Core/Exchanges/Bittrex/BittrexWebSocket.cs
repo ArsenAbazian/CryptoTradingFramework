@@ -1,4 +1,4 @@
-﻿using CryptoMarketClient.Common;
+﻿using Crypto.Core.Common;
 using Microsoft.AspNet.SignalR.Client;
 using System;
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CryptoMarketClient.Exchanges.Bittrex {
+namespace Crypto.Core.Exchanges.Bittrex {
     public sealed class SignalWebSocket {
         public delegate void SignalCallback(SignalSocketCommand command, string marketName, string info);
 

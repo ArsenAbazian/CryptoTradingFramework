@@ -1,4 +1,5 @@
-﻿using CryptoMarketClient.Common;
+﻿using Crypto.Core;
+using Crypto.Core.Common;
 using CryptoMarketClient.Helpers;
 using DevExpress.Utils;
 using DevExpress.XtraBars.Docking;

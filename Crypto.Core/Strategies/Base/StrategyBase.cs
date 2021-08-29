@@ -6,19 +6,12 @@ using Crypto.Core.Strategies.Base;
 using Crypto.Core.Strategies.Custom;
 using Crypto.Core.Strategies.Listeners;
 using Crypto.Core.Strategies.Stupid;
-using CryptoMarketClient;
-using CryptoMarketClient.Common;
-using CryptoMarketClient.Helpers;
-using CryptoMarketClient.Strategies;
-using CryptoMarketClient.Strategies.Stupid;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 namespace Crypto.Core.Strategies {

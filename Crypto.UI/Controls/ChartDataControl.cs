@@ -4,8 +4,6 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Data;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
 using DevExpress.XtraCharts;
@@ -17,7 +15,7 @@ using Crypto.Core.Strategies;
 using Crypto.Core.Strategies.Custom;
 using DevExpress.Utils;
 using Crypto.Core.Helpers;
-using CryptoMarketClient.Common;
+using Crypto.Core.Common;
 
 namespace Crypto.UI.Forms {
     public partial class ChartDataControl : XtraUserControl {

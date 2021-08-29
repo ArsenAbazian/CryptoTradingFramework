@@ -232,6 +232,9 @@
     <Compile Include="Common\TickerNameInfo.cs" />
     <Compile Include="Exchanges\Base\TickerCaptureDataInfo.cs" />
     <Compile Include="Exchanges\Binance\BinanceAccountBalanceInfo.cs" />
+    <Compile Include="Exchanges\Binance\Futures\BinanceFuturesModel.cs" />
+    <Compile Include="Exchanges\Binance\Futures\BinanceFuturesTicker.cs" />
+    <Compile Include="Exchanges\Binance\Futures\BinanceFuturesIncUpdateDataProvider.cs.cs" />
     <Compile Include="Exchanges\Bitmex\BitmexAccountBalanceInfo.cs" />
     <Compile Include="Helpers\BindingHelper.cs" />
     <Compile Include="Helpers\ClassicArbitrageListener.cs" />
@@ -349,6 +352,7 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

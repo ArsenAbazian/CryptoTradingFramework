@@ -1,21 +1,17 @@
-﻿using CryptoMarketClient.Common;
-using CryptoMarketClient.Exchanges.Bittrex;
-using Microsoft.AspNet.SignalR.Client;
+﻿using Crypto.Core.Common;
+using Crypto.Core.Exchanges.Bittrex;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
-using System.Net;
 using System.Text;
 using System.Threading.Tasks;
-using CryptoMarketClient.Helpers;
-using Crypto.Core.Exchanges.Base;
 using Crypto.Core.Helpers;
+using Crypto.Core.Exchanges.Base;
 
-namespace CryptoMarketClient.Bittrex {
+namespace Crypto.Core.Bittrex {
     public class BittrexExchange : Exchange {
         static BittrexExchange defaultExchange;
         public static BittrexExchange Default {

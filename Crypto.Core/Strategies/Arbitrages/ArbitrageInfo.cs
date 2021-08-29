@@ -1,12 +1,12 @@
 ﻿using Crypto.Core.Helpers;
-using CryptoMarketClient.Common;
+using Crypto.Core.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CryptoMarketClient.Common {
+namespace Crypto.Core.Common {
     public class ArbitrageInfo {
         public static int Depth { get; set; } = 7;
         public static double InvalidValue = -10000000;

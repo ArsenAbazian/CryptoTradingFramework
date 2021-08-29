@@ -1,4 +1,4 @@
-﻿using CryptoMarketClient.Common;
+﻿using Crypto.Core.Common;
 
 namespace CryptoMarketClient {
     partial class LogForm {
@@ -63,7 +63,7 @@ namespace CryptoMarketClient {
             // 
             // logMessageBindingSource
             // 
-            this.logMessageBindingSource.DataSource = typeof(CryptoMarketClient.Common.LogMessage);
+            this.logMessageBindingSource.DataSource = typeof(Crypto.Core.Common.LogMessage);
             // 
             // gridView1
             // 
@@ -80,7 +80,7 @@ namespace CryptoMarketClient {
             formatConditionRuleValue1.Appearance.Options.UseBackColor = true;
             formatConditionRuleValue1.Appearance.Options.UseForeColor = true;
             formatConditionRuleValue1.Condition = DevExpress.XtraEditors.FormatCondition.Equal;
-            formatConditionRuleValue1.Value1 = CryptoMarketClient.Common.LogType.Warning;
+            formatConditionRuleValue1.Value1 = Crypto.Core.Common.LogType.Warning;
             gridFormatRule1.Rule = formatConditionRuleValue1;
             gridFormatRule2.ApplyToRow = true;
             gridFormatRule2.Column = this.colType;
@@ -90,7 +90,7 @@ namespace CryptoMarketClient {
             formatConditionRuleValue2.Appearance.Options.UseBackColor = true;
             formatConditionRuleValue2.Appearance.Options.UseForeColor = true;
             formatConditionRuleValue2.Condition = DevExpress.XtraEditors.FormatCondition.Equal;
-            formatConditionRuleValue2.Value1 = CryptoMarketClient.Common.LogType.Error;
+            formatConditionRuleValue2.Value1 = Crypto.Core.Common.LogType.Error;
             gridFormatRule2.Rule = formatConditionRuleValue2;
             gridFormatRule3.ApplyToRow = true;
             gridFormatRule3.Column = this.colType;

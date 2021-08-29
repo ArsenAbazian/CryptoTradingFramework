@@ -12,7 +12,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CryptoMarketClient.Common {
+namespace Crypto.Core.Common {
     public class MyWebClient : HttpClient {
         public MyWebClient(Exchange e) : this() {
             Exchange = e;

@@ -1,5 +1,5 @@
 ﻿using Crypto.Core.Indicators;
-using CryptoMarketClient;
+using Crypto.Core;
 using System;
 using System.Collections;
 using System.Collections.Generic;

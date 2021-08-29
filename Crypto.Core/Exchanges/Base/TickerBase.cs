@@ -1,22 +1,17 @@
 ﻿using Crypto.Core.Exchanges.Base;
 using Crypto.Core.Helpers;
-using CryptoMarketClient.Common;
-using CryptoMarketClient.Exchanges.Base;
-using CryptoMarketClient.Strategies;
+using Crypto.Core.Common;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
-namespace CryptoMarketClient {
+namespace Crypto.Core {
     [Serializable]
     public abstract class Ticker : ISupportSerialization, IComparable {
         public static bool UseHtmlString { get; set; } = true;
@@ -179,7 +174,7 @@ namespace CryptoMarketClient {
         public ResizeableArray<CandleStickData> CandleStickData {
             get {
                 if(candleStickData == null) {
-                    candleStickData = new ResizeableArray<CryptoMarketClient.CandleStickData>();
+                    candleStickData = new ResizeableArray<Crypto.Core.CandleStickData>();
                     candleStickData.ListChanged += OnCandleStickDataItemsChanged;
                 }
                 return candleStickData;

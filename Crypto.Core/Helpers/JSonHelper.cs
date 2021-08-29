@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CryptoMarketClient.Helpers {
+namespace Crypto.Core.Helpers {
     public delegate bool IfDelegate2(int itemIndex, int paramIndex, string value);
 
     public class JSonHelper {

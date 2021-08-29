@@ -1,5 +1,5 @@
-﻿using CryptoMarketClient;
-using CryptoMarketClient.Common;
+﻿using Crypto.Core;
+using Crypto.Core.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;

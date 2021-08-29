@@ -173,7 +173,7 @@ namespace CryptoMarketClient {
             // 
             // socketConnectionInfoBindingSource
             // 
-            this.socketConnectionInfoBindingSource.DataSource = typeof(CryptoMarketClient.Common.SocketConnectionInfo);
+            this.socketConnectionInfoBindingSource.DataSource = typeof(Crypto.Core.Common.SocketConnectionInfo);
             // 
             // gvConnections
             // 

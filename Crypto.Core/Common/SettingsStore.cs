@@ -1,17 +1,11 @@
 ﻿using Crypto.Core.Helpers;
 using Crypto.Core.Strategies;
-using CryptoMarketClient.Helpers;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
 
-namespace CryptoMarketClient.Common {
+namespace Crypto.Core.Common {
     [Serializable]
     public class SettingsStore : ISupportSerialization {
         static SettingsStore defaultSettings;
@@ -56,7 +50,7 @@ namespace CryptoMarketClient.Common {
         }
 
         public static string SettingsFileName { get { return "settings.xml"; } }
-        public static string ApplicationName { get { return "CryptoMarketClient"; } }
+        public static string ApplicationName { get { return "Crypto.Core"; } }
         public static string ApplicationDirectory { 
             get { 
                 return Directory.GetCurrentDirectory(); 

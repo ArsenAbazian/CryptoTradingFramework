@@ -1,4 +1,4 @@
-﻿using CryptoMarketClient.Common;
+﻿using Crypto.Core.Common;
 using DevExpress.XtraBars;
 using DevExpress.XtraCharts;
 
@@ -642,7 +642,7 @@ namespace CryptoMarketClient.Strategies {
             // 
             // tradingResultBindingSource
             // 
-            this.tradingResultBindingSource.DataSource = typeof(CryptoMarketClient.Common.TradingResult);
+            this.tradingResultBindingSource.DataSource = typeof(TradingResult);
             // 
             // gvTradeHistory
             // 
@@ -659,14 +659,14 @@ namespace CryptoMarketClient.Strategies {
             gridFormatRule1.Name = "Buy";
             formatConditionRuleValue1.Condition = DevExpress.XtraEditors.FormatCondition.Equal;
             formatConditionRuleValue1.PredefinedName = "Green Fill";
-            formatConditionRuleValue1.Value1 = CryptoMarketClient.Common.OrderType.Buy;
+            formatConditionRuleValue1.Value1 = OrderType.Buy;
             gridFormatRule1.Rule = formatConditionRuleValue1;
             gridFormatRule2.ApplyToRow = true;
             gridFormatRule2.Column = this.colType1;
             gridFormatRule2.Name = "Sell";
             formatConditionRuleValue2.Condition = DevExpress.XtraEditors.FormatCondition.Equal;
             formatConditionRuleValue2.PredefinedName = "Red Fill";
-            formatConditionRuleValue2.Value1 = CryptoMarketClient.Common.OrderType.Sell;
+            formatConditionRuleValue2.Value1 = OrderType.Sell;
             gridFormatRule2.Rule = formatConditionRuleValue2;
             this.gvTradeHistory.FormatRules.Add(gridFormatRule1);
             this.gvTradeHistory.FormatRules.Add(gridFormatRule2);

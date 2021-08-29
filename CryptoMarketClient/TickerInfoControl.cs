@@ -11,6 +11,7 @@ using DevExpress.XtraEditors;
 using DevExpress.Skins;
 using DevExpress.XtraGrid.Views.Tile.ViewInfo;
 using CryptoMarketClient.Strategies;
+using Crypto.Core;
 
 namespace CryptoMarketClient {
     public partial class TickerInfo : XtraUserControl {

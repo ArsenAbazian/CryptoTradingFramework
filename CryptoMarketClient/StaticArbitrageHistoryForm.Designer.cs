@@ -96,7 +96,7 @@
             // 
             // staticArbitrageInfoHistoryItemBindingSource
             // 
-            this.staticArbitrageInfoHistoryItemBindingSource.DataSource = typeof(CryptoMarketClient.Common.TriplePairInfoHistoryItem);
+            this.staticArbitrageInfoHistoryItemBindingSource.DataSource = typeof(Crypto.Core.Common.TriplePairInfoHistoryItem);
             // 
             // gridView1
             // 

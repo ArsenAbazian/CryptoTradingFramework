@@ -1,7 +1,7 @@
-﻿using Crypto.Core.Helpers;
+﻿using Crypto.Core.Common;
+using Crypto.Core.Helpers;
 using Crypto.Core.Strategies;
 using Crypto.UI.Strategies;
-using CryptoMarketClient.Common;
 using DevExpress.XtraBars;
 using DevExpress.XtraEditors;
 using DevExpress.XtraSplashScreen;

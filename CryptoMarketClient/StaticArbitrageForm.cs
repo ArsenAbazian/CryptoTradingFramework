@@ -1,5 +1,6 @@
-﻿using CryptoMarketClient.Bittrex;
-using CryptoMarketClient.Common;
+﻿using Crypto.Core;
+using Crypto.Core.Bittrex;
+using Crypto.Core.Common;
 using DevExpress.XtraBars;
 using DevExpress.XtraEditors;
 using System;

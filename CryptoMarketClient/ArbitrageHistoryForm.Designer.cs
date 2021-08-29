@@ -102,7 +102,7 @@
             // 
             // arbitrageStatisticsItemBindingSource
             // 
-            this.arbitrageStatisticsItemBindingSource.DataSource = typeof(CryptoMarketClient.Common.ArbitrageStatisticsItem);
+            this.arbitrageStatisticsItemBindingSource.DataSource = typeof(Crypto.Core.Common.ArbitrageStatisticsItem);
             // 
             // gridView1
             // 

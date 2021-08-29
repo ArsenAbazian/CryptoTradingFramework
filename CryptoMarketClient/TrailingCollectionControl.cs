@@ -9,7 +9,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
 using DevExpress.XtraCharts;
-using CryptoMarketClient.Common;
+using Crypto.Core.Common;
+using Crypto.Core;
 
 namespace CryptoMarketClient {
     public partial class TrailingCollectionControl : UserControl {

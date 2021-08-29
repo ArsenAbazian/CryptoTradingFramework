@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using CryptoMarketClient.Common;
+using Crypto.Core.Common;
 
-namespace CryptoMarketClient.BitFinex {
+namespace Crypto.Core.BitFinex {
     public class BitFinexTicker : Ticker {
         public BitFinexTicker(BitFinexExchange exchange) : base(exchange) { }
 

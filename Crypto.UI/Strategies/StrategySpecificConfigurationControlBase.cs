@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using DevExpress.XtraEditors;
 using Crypto.Core.Strategies;
 using DevExpress.Skins;
+using Crypto.Core;
 
 namespace CryptoMarketClient.Strategies {
     public partial class StrategySpecificConfigurationControlBase : XtraUserControl {

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
-namespace CryptoMarketClient.Common {
+namespace Crypto.Core.Common {
     public class TradingResult {
         public string OrderId { get; set; }
         public List<TradeEntry> Trades { get; } = new List<TradeEntry>();

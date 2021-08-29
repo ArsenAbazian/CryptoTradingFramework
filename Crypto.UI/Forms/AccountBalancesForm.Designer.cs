@@ -1,4 +1,4 @@
-﻿namespace CryptoMarketClient.Common {
+﻿namespace Crypto.Core.Common {
     partial class AccountBalancesForm {
         /// <summary>
         /// Required designer variable.
@@ -107,7 +107,7 @@
             // 
             // poloniexAccountBalanceInfoBindingSource
             // 
-            this.poloniexAccountBalanceInfoBindingSource.DataSource = typeof(CryptoMarketClient.Common.BalanceBase);
+            this.poloniexAccountBalanceInfoBindingSource.DataSource = typeof(Crypto.Core.Common.BalanceBase);
             // 
             // gridView1
             // 
@@ -381,6 +381,7 @@
             this.bsInfo.AllowHtmlText = DevExpress.Utils.DefaultBoolean.True;
             this.bsInfo.Id = 1;
             this.bsInfo.Name = "bsInfo";
+            this.bsInfo.ItemClick += OnInfoItemClick;
             // 
             // barDockControlTop
             // 
@@ -451,7 +452,7 @@
             this.PerformLayout();
 
         }
-
+        
         #endregion
 
         private DevExpress.XtraGrid.GridControl gridControl1;

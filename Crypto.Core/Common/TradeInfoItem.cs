@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
-namespace CryptoMarketClient {
+namespace Crypto.Core {
     public enum TradeFillType { Fill, PartialFill }
     public enum TradeType { Buy, Sell }
 

@@ -2,7 +2,7 @@
 using System.Collections.Concurrent;
 using System.Threading;
 
-namespace CryptoMarketClient.RateLimiting {
+namespace Crypto.Core.RateLimiting {
     /// <summary>
     /// Used to control the rate of some occurrence per unit of time.
     /// </summary>

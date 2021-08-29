@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CryptoMarketClient.Exchanges.Bittrex {
+namespace Crypto.Core.Exchanges.Bittrex {
     public class BittrexIncrementalUpdateDataProvider : IIncrementalUpdateDataProvider {
         public void Update(Ticker ticker, IncrementalUpdateInfo info) {
             for(int i = 0; i < info.BidsUpdates.Count; i++) {

@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
 using Crypto.Core.Common;
+using Crypto.Core;
+using Crypto.Core.Strategies;
 
 namespace CryptoMarketClient.Strategies.Stupid {
     public partial class SimpleBuyLowSellHighConfigControl : StrategySpecificConfigurationControlBase {

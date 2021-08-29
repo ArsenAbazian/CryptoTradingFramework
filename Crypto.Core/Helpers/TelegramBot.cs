@@ -1,4 +1,4 @@
-﻿using CryptoMarketClient;
+﻿using Crypto.Core;
 using MihaZupan;
 using System;
 using System.Collections.Generic;
@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 
-namespace CryptoMarketClient.Helpers {
+namespace Crypto.Core.Helpers {
     public class TelegramBot {
         static TelegramBot defaultBot;
         public static TelegramBot Default {

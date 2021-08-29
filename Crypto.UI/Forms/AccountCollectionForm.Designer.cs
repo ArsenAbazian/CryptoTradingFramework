@@ -111,7 +111,7 @@ namespace CryptoMarketClient {
             // 
             // apiKeyInfoBindingSource
             // 
-            this.apiKeyInfoBindingSource.DataSource = typeof(CryptoMarketClient.AccountInfo);
+            this.apiKeyInfoBindingSource.DataSource = typeof(Crypto.Core.AccountInfo);
             // 
             // gridView1
             // 

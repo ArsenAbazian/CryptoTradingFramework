@@ -2,14 +2,9 @@
 using Crypto.Core.Strategies.Arbitrages.Statistical;
 using Crypto.Core.Strategies.Custom;
 using Crypto.Core.Strategies.Signal;
-using Crypto.Core.Strategies.Stupid;
-using CryptoMarketClient.Strategies.Stupid;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Crypto.Core.Strategies {
     public static class StrategiesRegistrator {

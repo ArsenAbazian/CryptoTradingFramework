@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using CryptoMarketClient.Common;
+using Crypto.Core.Common;
 
-namespace CryptoMarketClient.Binance {
+namespace Crypto.Core.Binance {
     public class BinanceTicker : Ticker {
         public BinanceTicker(BinanceExchange exchange) : base(exchange) {
             // https://github.com/binance-exchange/binance-official-api-docs/blob/master/web-socket-streams.md
@@ -16,16 +16,8 @@ namespace CryptoMarketClient.Binance {
         string currensyPair;
         public override string CurrencyPair {
             get { return currensyPair; }
-            set {
-                currensyPair = value;
-                OnCurrencyPairChanged();
-            }
+            set { currensyPair = value; }
         }
-        void OnCurrencyPairChanged() {
-            BaseCurrency = CurrencyPair.Substring(3);
-            MarketCurrency = CurrencyPair.Substring(0, 3);
-        }
-
 
         public override bool IsListeningOrderBook {
             get { return IsOrderBookSubscribed && Exchange.GetOrderBookSocketState(this) == SocketConnectionState.Connected; }

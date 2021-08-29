@@ -93,12 +93,12 @@ namespace Crypto.UI.Strategies.Arbitrages {
             this.ExchangeImageComboBoxEdit.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
             this.ExchangeImageComboBoxEdit.Properties.Items.AddRange(new DevExpress.XtraEditors.Controls.ImageComboBoxItem[] {
-            new DevExpress.XtraEditors.Controls.ImageComboBoxItem("Poloniex", CryptoMarketClient.ExchangeType.Poloniex, 0),
-            new DevExpress.XtraEditors.Controls.ImageComboBoxItem("Bittrex", CryptoMarketClient.ExchangeType.Bittrex, 1),
-            new DevExpress.XtraEditors.Controls.ImageComboBoxItem("BitFinex", CryptoMarketClient.ExchangeType.BitFinex, 2),
-            new DevExpress.XtraEditors.Controls.ImageComboBoxItem("Binance", CryptoMarketClient.ExchangeType.Binance, 3),
-            new DevExpress.XtraEditors.Controls.ImageComboBoxItem("Yobit", CryptoMarketClient.ExchangeType.Yobit, 4),
-            new DevExpress.XtraEditors.Controls.ImageComboBoxItem("Bitmex", CryptoMarketClient.ExchangeType.Bitmex, 5)});
+            new DevExpress.XtraEditors.Controls.ImageComboBoxItem("Poloniex", Crypto.Core.ExchangeType.Poloniex, 0),
+            new DevExpress.XtraEditors.Controls.ImageComboBoxItem("Bittrex", Crypto.Core.ExchangeType.Bittrex, 1),
+            new DevExpress.XtraEditors.Controls.ImageComboBoxItem("BitFinex", Crypto.Core.ExchangeType.BitFinex, 2),
+            new DevExpress.XtraEditors.Controls.ImageComboBoxItem("Binance", Crypto.Core.ExchangeType.Binance, 3),
+            new DevExpress.XtraEditors.Controls.ImageComboBoxItem("Yobit", Crypto.Core.ExchangeType.Yobit, 4),
+            new DevExpress.XtraEditors.Controls.ImageComboBoxItem("Bitmex", Crypto.Core.ExchangeType.Bitmex, 5)});
             this.ExchangeImageComboBoxEdit.Properties.UseCtrlScroll = true;
             this.ExchangeImageComboBoxEdit.Size = new System.Drawing.Size(942, 40);
             this.ExchangeImageComboBoxEdit.StyleController = this.dataLayoutControl1;

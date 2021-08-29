@@ -2,16 +2,11 @@
 using Crypto.Core.Common.OrderGrid;
 using Crypto.Core.Helpers;
 using Crypto.Core.Strategies.Custom;
-using CryptoMarketClient;
-using CryptoMarketClient.Common;
-using CryptoMarketClient.Helpers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 namespace Crypto.Core.Strategies.Arbitrages.Statistical {

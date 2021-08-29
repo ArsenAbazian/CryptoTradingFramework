@@ -1,21 +1,18 @@
-﻿using CryptoMarketClient.Common;
-using CryptoMarketClient.Exchanges.BitFinex;
+﻿using Crypto.Core.Common;
+using Crypto.Core.Exchanges.BitFinex;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
-using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using WebSocket4Net;
-using CryptoMarketClient.Helpers;
-using Crypto.Core.Exchanges.Base;
 using Crypto.Core.Helpers;
+using Crypto.Core.Exchanges.Base;
 
-namespace CryptoMarketClient.BitFinex {
+namespace Crypto.Core.BitFinex {
     public class BitFinexExchange : Exchange {
         static BitFinexExchange defaultExchange;
         public static BitFinexExchange Default {

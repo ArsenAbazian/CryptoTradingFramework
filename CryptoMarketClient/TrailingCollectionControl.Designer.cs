@@ -112,7 +112,7 @@ namespace CryptoMarketClient {
             // 
             // trailingSettingsBindingSource
             // 
-            this.trailingSettingsBindingSource.DataSource = typeof(CryptoMarketClient.Common.TradingSettings);
+            this.trailingSettingsBindingSource.DataSource = typeof(Crypto.Core.Common.TradingSettings);
             // 
             // gvTrailings
             // 
@@ -164,14 +164,14 @@ namespace CryptoMarketClient {
             gridFormatRule3.Name = "SellRule";
             formatConditionRuleValue3.Condition = DevExpress.XtraEditors.FormatCondition.Equal;
             formatConditionRuleValue3.PredefinedName = "Red Bold Text";
-            formatConditionRuleValue3.Value1 = CryptoMarketClient.Common.TrailingType.Sell;
+            formatConditionRuleValue3.Value1 = Crypto.Core.Common.TrailingType.Sell;
             gridFormatRule3.Rule = formatConditionRuleValue3;
             gridFormatRule4.Column = this.colType;
             gridFormatRule4.ColumnApplyTo = this.colType;
             gridFormatRule4.Name = "BuyRule";
             formatConditionRuleValue4.Condition = DevExpress.XtraEditors.FormatCondition.Equal;
             formatConditionRuleValue4.PredefinedName = "Green Bold Text";
-            formatConditionRuleValue4.Value1 = CryptoMarketClient.Common.TrailingType.Buy;
+            formatConditionRuleValue4.Value1 = Crypto.Core.Common.TrailingType.Buy;
             gridFormatRule4.Rule = formatConditionRuleValue4;
             this.gvTrailings.FormatRules.Add(gridFormatRule1);
             this.gvTrailings.FormatRules.Add(gridFormatRule2);

@@ -1,4 +1,5 @@
-﻿using Crypto.Core.Helpers;
+﻿using Crypto.Core;
+using Crypto.Core.Helpers;
 using Crypto.Core.Strategies;
 using CryptoMarketClient;
 using CryptoMarketClient.Strategies;

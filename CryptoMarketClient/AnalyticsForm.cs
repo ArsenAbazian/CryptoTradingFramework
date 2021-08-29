@@ -1,4 +1,5 @@
-﻿using DevExpress.XtraBars.Ribbon;
+﻿using Crypto.Core;
+using DevExpress.XtraBars.Ribbon;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;

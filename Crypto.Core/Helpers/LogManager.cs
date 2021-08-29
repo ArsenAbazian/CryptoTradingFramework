@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CryptoMarketClient.Common {
+namespace Crypto.Core.Common {
     [Serializable]
     public class LogManager : ISupportSerialization {
         static readonly string Name = "Log.xml";

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CryptoMarketClient.Exchanges.Base {
+namespace Crypto.Core.Exchanges.Base {
     public class CurrencyInfoBase {
         public string Currency { get; set; }
         public double MaxDailyWithdrawal { get; set; }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Slack.Client;
 using Slack.Client.entity;
 
-namespace CryptoMarketClient {
+namespace Crypto.Core {
     public class SlackBot {
         static SlackBot defaultBot;
         public static SlackBot Default {

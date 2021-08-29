@@ -1,37 +1,29 @@
-﻿using System;
+﻿using Crypto.Core;
+using Crypto.Core.Binance;
+using Crypto.Core.BitFinex;
+using Crypto.Core.Bittrex;
+using Crypto.Core.Common;
+using Crypto.Core.Exchanges.Base;
+using Crypto.Core.Helpers;
+using Crypto.Core.Strategies;
+using Crypto.Core.Strategies.Listeners;
+using Crypto.UI.Forms;
+using CryptoMarketClient.Helpers;
+using CryptoMarketClient.Strategies;
+using DevExpress.LookAndFeel;
+using DevExpress.XtraBars;
+using DevExpress.XtraBars.Docking;
+using DevExpress.XtraEditors;
+using DevExpress.XtraSplashScreen;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using System.Reactive.Subjects;
-using System.Diagnostics;
-using DevExpress.XtraWaitForm;
-using CryptoMarketClient.Bittrex;
-using DevExpress.XtraEditors;
-using CryptoMarketClient.Common;
 using System.IO;
-using DevExpress.XtraSplashScreen;
-using CryptoMarketClient.Binance;
-using DevExpress.LookAndFeel;
-using CryptoMarketClient.BitFinex;
-using DevExpress.XtraBars;
-using DevExpress.Data;
-using DevExpress.XtraBars.Docking;
-using CryptoMarketClient.Helpers;
-using CryptoMarketClient.Strategies;
-using Crypto.Core.Strategies.Listeners;
-using Crypto.UI.Forms;
-using Crypto.Core.Strategies;
-using Crypto.Core.Exchanges.Base;
-using Crypto.Core.Helpers;
 using System.IO.Compression;
-using System.IO.Packaging;
+using System.Linq;
 using System.Threading;
+using System.Windows.Forms;
 
 namespace CryptoMarketClient {
     public partial class MainForm : DevExpress.XtraBars.Ribbon.RibbonForm {
@@ -300,9 +292,7 @@ namespace CryptoMarketClient {
         private void bbShowYourTotalDeposit_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
             AccountBalancesForm form = new AccountBalancesForm();
             form.MdiParent = this;
-            form.Exchanges.Add(PoloniexExchange.Default);
-            form.Exchanges.Add(BittrexExchange.Default);
-            form.Exchanges.Add(BinanceExchange.Default);
+            Exchange.Registered.ForEach(i => form.Exchanges.Add(i));
             form.Show();
         }
 

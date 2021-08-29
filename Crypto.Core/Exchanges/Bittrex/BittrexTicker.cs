@@ -1,7 +1,7 @@
-﻿using CryptoMarketClient.Exchanges.Base;
+﻿using Crypto.Core.Exchanges.Base;
 using System;
 
-namespace CryptoMarketClient.Bittrex {
+namespace Crypto.Core.Bittrex {
     public class BittrexTicker : Ticker {
         public BittrexTicker(Exchange exchange) : base(exchange) { }
 

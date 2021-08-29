@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CryptoMarketClient.Exchanges.Binance {
+namespace Crypto.Core.Exchanges.Binance {
     public class BinanceIncrementalUpdateDataProvider : IIncrementalUpdateDataProvider {
         public void Update(Ticker ticker, IncrementalUpdateInfo info) {
             List<OrderBookEntry> bids = ticker.OrderBook.Bids;

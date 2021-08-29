@@ -118,7 +118,7 @@
             // 
             // exchangeAccountInfoBindingSource
             // 
-            this.exchangeAccountInfoBindingSource.DataSource = typeof(CryptoMarketClient.AccountInfo);
+            this.exchangeAccountInfoBindingSource.DataSource = typeof(Crypto.Core.AccountInfo);
             // 
             // TypeImageComboBoxEdit
             // 

@@ -75,7 +75,7 @@
             // 
             // orderBookVolumeHistoryItemBindingSource
             // 
-            this.orderBookVolumeHistoryItemBindingSource.DataSource = typeof(CryptoMarketClient.OrderBookStatisticItem);
+            this.orderBookVolumeHistoryItemBindingSource.DataSource = typeof(Crypto.Core.OrderBookStatisticItem);
             // 
             // gridView1
             // 

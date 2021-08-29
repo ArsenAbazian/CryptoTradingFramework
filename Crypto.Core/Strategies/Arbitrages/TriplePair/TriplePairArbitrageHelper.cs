@@ -1,11 +1,11 @@
-﻿using CryptoMarketClient.Bittrex;
+﻿using Crypto.Core.Bittrex;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CryptoMarketClient.Common {
+namespace Crypto.Core.Common {
     public class TriplePairArbitrageHelper {
         public static TriplePairArbitrageHelper Default {
             get; private set;

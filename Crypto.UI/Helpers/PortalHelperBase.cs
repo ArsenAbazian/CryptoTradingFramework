@@ -1,5 +1,6 @@
 ﻿using CefSharp;
 using CefSharp.WinForms;
+using Crypto.Core;
 using DevExpress.Skins;
 using DevExpress.XtraBars;
 using DevExpress.XtraEditors;

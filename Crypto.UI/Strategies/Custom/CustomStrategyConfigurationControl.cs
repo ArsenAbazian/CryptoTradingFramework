@@ -16,6 +16,7 @@ using System.Reflection;
 using DevExpress.Utils.Behaviors;
 using DevExpress.XtraVerticalGrid.Rows;
 using Crypto.Core.Helpers;
+using Crypto.Core;
 
 namespace CryptoMarketClient.Strategies.Custom {
     public partial class CustomStrategyConfigurationControl : StrategySpecificConfigurationControlBase {

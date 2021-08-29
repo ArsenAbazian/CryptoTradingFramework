@@ -1,6 +1,6 @@
 ﻿using Crypto.Core.Helpers;
 using Crypto.Core.Strategies;
-using CryptoMarketClient.Common;
+using Crypto.Core.Common;
 using DevExpress.XtraEditors;
 using MOEA.ComponentModels.SolutionModels;
 using MOEA.Core.ComponentModels;

@@ -1,4 +1,4 @@
-﻿using CryptoMarketClient.Common;
+﻿using Crypto.Core.Common;
 
 namespace CryptoMarketClient {
     partial class TradeSettingsControl {
@@ -189,7 +189,7 @@ namespace CryptoMarketClient {
             // 
             // tradeSettingsBindingSource
             // 
-            this.tradeSettingsBindingSource.DataSource = typeof(CryptoMarketClient.Common.TradingSettings);
+            this.tradeSettingsBindingSource.DataSource = typeof(Crypto.Core.Common.TradingSettings);
             // 
             // AmoutTextEdit
             // 

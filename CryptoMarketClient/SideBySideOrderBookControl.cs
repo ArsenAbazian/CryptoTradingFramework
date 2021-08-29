@@ -15,6 +15,7 @@ using DevExpress.XtraGrid.Views.Grid;
 using System.Collections;
 using DevExpress.Utils.DirectXPaint;
 using DevExpress.Utils;
+using Crypto.Core;
 
 namespace CryptoMarketClient {
     public partial class SideBySideOrderBookControl : XtraUserControl {

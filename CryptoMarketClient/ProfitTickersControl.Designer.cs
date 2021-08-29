@@ -121,7 +121,7 @@
             // 
             // combinedTickerInfoBindingSource
             // 
-            this.combinedTickerInfoBindingSource.DataSource = typeof(CryptoMarketClient.CombinedTickerInfo);
+            this.combinedTickerInfoBindingSource.DataSource = typeof(CombinedTickerInfo);
             // 
             // tileView1
             // 

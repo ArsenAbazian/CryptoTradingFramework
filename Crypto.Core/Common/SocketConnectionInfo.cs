@@ -1,4 +1,4 @@
-﻿using CryptoMarketClient.Exchanges.Bittrex;
+﻿using Crypto.Core.Exchanges.Bittrex;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -7,9 +7,9 @@ using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using WebSocket4Net;
-using static CryptoMarketClient.Exchanges.Bittrex.SignalWebSocket;
+using static Crypto.Core.Exchanges.Bittrex.SignalWebSocket;
 
-namespace CryptoMarketClient.Common {
+namespace Crypto.Core.Common {
     public class SocketConnectionInfo {
         public SocketConnectionInfo(Exchange exchange, Ticker ticker, string address, SocketType socketType, SocketSubscribeType connType) {
             if(connType == SocketSubscribeType.OrderBook ||

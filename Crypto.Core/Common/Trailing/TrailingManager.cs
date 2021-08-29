@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CryptoMarketClient.Common {
+namespace Crypto.Core.Common {
     public class TrailingManager {
         static TrailingManager defaultManager;
         public static TrailingManager Default {

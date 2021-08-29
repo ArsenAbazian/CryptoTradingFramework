@@ -1,4 +1,4 @@
-﻿using CryptoMarketClient.Common;
+﻿using Crypto.Core.Common;
 
 namespace CryptoMarketClient {
     partial class TradeResultControl {
@@ -92,7 +92,7 @@ namespace CryptoMarketClient {
             // 
             // tradeEntryBindingSource
             // 
-            this.tradeEntryBindingSource.DataSource = typeof(CryptoMarketClient.Common.TradeEntry);
+            this.tradeEntryBindingSource.DataSource = typeof(Crypto.Core.Common.TradeEntry);
             // 
             // colAmount
             // 

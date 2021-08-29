@@ -1,4 +1,5 @@
-﻿using DevExpress.XtraEditors;
+﻿using Crypto.Core;
+using DevExpress.XtraEditors;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

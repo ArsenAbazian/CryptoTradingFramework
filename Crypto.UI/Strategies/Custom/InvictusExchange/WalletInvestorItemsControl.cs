@@ -1,9 +1,6 @@
-﻿using Crypto.Core.Strategies;
-using CryptoMarketClient.Binance;
-using CryptoMarketClient.Bittrex;
-using CryptoMarketClient.Exchanges.Bitmex;
+﻿using Crypto.Core.Binance;
+using Crypto.Core.Strategies;
 using CryptoMarketClient.Helpers;
-using CryptoMarketClient.Strategies;
 using DevExpress.XtraEditors;
 using DevExpress.XtraSplashScreen;
 using HtmlAgilityPack;

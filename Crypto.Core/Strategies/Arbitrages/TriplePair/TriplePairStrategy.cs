@@ -1,7 +1,7 @@
 ﻿using Crypto.Core.Strategies.Custom;
-using CryptoMarketClient;
-using CryptoMarketClient.Common;
-using CryptoMarketClient.Helpers;
+using Crypto.Core;
+using Crypto.Core.Common;
+using Crypto.Core.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;

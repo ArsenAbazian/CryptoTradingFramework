@@ -1,25 +1,19 @@
-﻿using CryptoMarketClient.Common;
-using CryptoMarketClient.Exchanges.Poloniex;
-using CryptoMarketClient.Helpers;
-using CryptoMarketClient.Poloniex;
+﻿using Crypto.Core.Common;
+using Crypto.Core.Exchanges.Poloniex;
+using Crypto.Core.Helpers;
+using Crypto.Core.Poloniex;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
-using System.Net;
 using System.Text;
 using System.Threading.Tasks;
-using SuperSocket.ClientEngine;
 using WebSocket4Net;
-using System.Net.Sockets;
 using Crypto.Core.Exchanges.Base;
-using Crypto.Core.Helpers;
 
-namespace CryptoMarketClient {
+namespace Crypto.Core {
     public class PoloniexExchange : Exchange {
         const string PoloniexServerAddress = "wss://api.poloniex.com";
 

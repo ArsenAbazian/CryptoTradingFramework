@@ -1,11 +1,11 @@
-﻿using CryptoMarketClient.Common;
+﻿using Crypto.Core.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CryptoMarketClient.Common {
+namespace Crypto.Core.Common {
     public class OpenedOrderInfo {
         public OpenedOrderInfo(AccountInfo account, Ticker ticker) {
             Account = account;

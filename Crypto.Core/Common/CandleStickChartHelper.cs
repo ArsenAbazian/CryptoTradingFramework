@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CryptoMarketClient {
+namespace Crypto.Core {
     public class CandleStickData : TimeBaseValue, INotifyPropertyChanged {
         protected override void OnTimeChanged() {
             RaisePropertyChanged("Time");

@@ -1,11 +1,11 @@
-﻿using CryptoMarketClient.Common;
+﻿using Crypto.Core.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CryptoMarketClient {
+namespace Crypto.Core {
     public class TickerCollection {
         public static int Depth { get; set; } = 25;
 

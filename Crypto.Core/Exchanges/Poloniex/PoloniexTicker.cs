@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CryptoMarketClient {
+namespace Crypto.Core {
     public class PoloniexTicker : Ticker {
         public PoloniexTicker(PoloniexExchange exchange) : base(exchange) {
             CandleStickPeriodMin = 5;

@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CryptoMarketClient.Common {
+namespace Crypto.Core.Common {
     [Serializable]
     public class ArbitrageHistoryHelper : ISupportSerialization { 
         static readonly string Name = "ArbitrageHistory.xml";

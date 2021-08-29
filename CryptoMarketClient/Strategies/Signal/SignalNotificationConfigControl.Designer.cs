@@ -175,7 +175,7 @@
             // 
             // candleStickIntervalInfoBindingSource
             // 
-            this.candleStickIntervalInfoBindingSource.DataSource = typeof(CryptoMarketClient.CandleStickIntervalInfo);
+            this.candleStickIntervalInfoBindingSource.DataSource = typeof(Crypto.Core.CandleStickIntervalInfo);
             // 
             // layoutControlGroup1
             // 

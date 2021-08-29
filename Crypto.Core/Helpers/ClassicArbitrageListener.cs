@@ -1,18 +1,11 @@
 ﻿using Crypto.Core.Helpers;
-using CryptoMarketClient.Binance;
-using CryptoMarketClient.Bittrex;
-using CryptoMarketClient.Common;
-using CryptoMarketClient.Helpers;
-using CryptoMarketClient.Strategies;
+using Crypto.Core.Binance;
+using Crypto.Core.Common;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 
-namespace CryptoMarketClient {
+namespace Crypto.Core {
     public partial class ClassicArbitrageListener : ITickerCollectionUpdateListener {
         public ClassicArbitrageListener() { }
 

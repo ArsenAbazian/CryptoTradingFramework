@@ -238,7 +238,7 @@
             // 
             // simpleBuyLowSellHighStrategyBindingSource
             // 
-            this.simpleBuyLowSellHighStrategyBindingSource.DataSource = typeof(CryptoMarketClient.Strategies.Stupid.SimpleBuyLowSellHighStrategy);
+            this.simpleBuyLowSellHighStrategyBindingSource.DataSource = typeof(Crypto.Core.Strategies.Stupid.SimpleBuyLowSellHighStrategy);
             // 
             // tickerNameInfoBindingSource
             // 

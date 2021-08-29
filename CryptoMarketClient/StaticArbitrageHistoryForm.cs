@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using CryptoMarketClient.Common;
+using Crypto.Core.Common;
 
 namespace CryptoMarketClient {
     public partial class StaticArbitrageHistoryForm : XtraForm {

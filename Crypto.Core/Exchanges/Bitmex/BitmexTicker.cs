@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CryptoMarketClient.Exchanges.Bitmex {
+namespace Crypto.Core.Exchanges.Bitmex {
     public class BitmexTicker : Ticker {
         public BitmexTicker(Exchange exchange) : base(exchange) {
             QuantityFilter = new TickerFilter() { MinValue = 1, TickSize = 1 };

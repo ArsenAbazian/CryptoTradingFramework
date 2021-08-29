@@ -1,4 +1,5 @@
-﻿using CryptoMarketClient.Common;
+﻿using Crypto.Core;
+using Crypto.Core.Common;
 using DevExpress.XtraEditors;
 using DevExpress.XtraGrid;
 using DevExpress.XtraGrid.Columns;

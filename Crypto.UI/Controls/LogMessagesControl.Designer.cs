@@ -78,7 +78,7 @@
             formatConditionRuleValue1.Appearance.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
             formatConditionRuleValue1.Appearance.Options.UseBackColor = true;
             formatConditionRuleValue1.Condition = DevExpress.XtraEditors.FormatCondition.Equal;
-            formatConditionRuleValue1.Value1 = CryptoMarketClient.Common.LogType.Error;
+            formatConditionRuleValue1.Value1 = Crypto.Core.Common.LogType.Error;
             gridFormatRule1.Rule = formatConditionRuleValue1;
             gridFormatRule2.ApplyToRow = true;
             gridFormatRule2.Column = this.colType;
@@ -86,14 +86,14 @@
             formatConditionRuleValue2.Appearance.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(255)))), ((int)(((byte)(224)))), ((int)(((byte)(192)))));
             formatConditionRuleValue2.Appearance.Options.UseBackColor = true;
             formatConditionRuleValue2.Condition = DevExpress.XtraEditors.FormatCondition.Equal;
-            formatConditionRuleValue2.Value1 = CryptoMarketClient.Common.LogType.Warning;
+            formatConditionRuleValue2.Value1 = Crypto.Core.Common.LogType.Warning;
             gridFormatRule2.Rule = formatConditionRuleValue2;
             gridFormatRule3.ApplyToRow = true;
             gridFormatRule3.Name = "FormatRuleSuccess";
             formatConditionRuleValue3.Appearance.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             formatConditionRuleValue3.Appearance.Options.UseBackColor = true;
             formatConditionRuleValue3.Condition = DevExpress.XtraEditors.FormatCondition.Equal;
-            formatConditionRuleValue3.Value1 = CryptoMarketClient.Common.LogType.Success;
+            formatConditionRuleValue3.Value1 = Crypto.Core.Common.LogType.Success;
             gridFormatRule3.Rule = formatConditionRuleValue3;
             this.gvLog.FormatRules.Add(gridFormatRule1);
             this.gvLog.FormatRules.Add(gridFormatRule2);

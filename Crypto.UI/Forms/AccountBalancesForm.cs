@@ -1,15 +1,12 @@
-﻿using DevExpress.Data.Filtering;
+﻿using Crypto.Core;
+using Crypto.Core.Common;
+using CryptoMarketClient;
+using DevExpress.Data.Filtering;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace CryptoMarketClient.Common {
+namespace Crypto.Core.Common {
     public partial class AccountBalancesForm : ThreadUpdateForm {
         public AccountBalancesForm(Exchange exchange) {
             InitializeComponent();
@@ -34,41 +31,57 @@ namespace CryptoMarketClient.Common {
             UpdateBalances();
         }
         
+        private void OnInfoItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
+            LogManager.Default.ShowLogForm();
+        }
+
+        List<BalanceBase> total = new List<BalanceBase>();
+        Dictionary<ExchangeType, bool> balanceObtained = new Dictionary<ExchangeType, bool>();
+        bool shouldExpandGroups = true;
         void UpdateBalances() {
             foreach(Exchange e in Exchanges) {
                 this.bsInfo.Caption = "<color=green><b>Updating "+ e.Name + "</color></b>";
-                if(!e.IsConnected)
-                    e.Connect();
+                if(!e.IsConnected) {
+                    if(!e.Connect()) {
+                        this.bsInfo.Caption = "<color=red><b>Update failed.</color></b>";
+                        continue;
+                    }
+                }
                 if(!e.UpdateAllAccountsBalances()) {
                     this.bsInfo.Caption = "<color=red><b>UpdateBalances failed.</color></b>";
-                    return;
+                    continue;
                 }
                 if(this.bcDeposites.Checked) {
                     if(!e.GetAllAccountsDeposites()) {
                         this.bsInfo.Caption = "<color=red><b>GetDeposites failed</color></b>";
-                        return;
+                        //continue;
                     }
                 }
                 this.bsInfo.Caption = "";
+                if(!this.balanceObtained.ContainsKey(e.Type)) {
+                    this.balanceObtained.Add(e.Type, true);
+                    total.AddRange(e.GetAllBalances());
+                    this.shouldExpandGroups = true;
+                }
                 if(!IsHandleCreated || IsDisposed)
-                    return;
+                    continue;
+            
+                BeginInvoke(new MethodInvoker(() => {
+                    if(!this.gridControl1.IsHandleCreated || this.gridControl1.IsDisposed)
+                        return;
+                    if(this.poloniexAccountBalanceInfoBindingSource.DataSource is Type) {
+                        this.poloniexAccountBalanceInfoBindingSource.DataSource = total;
+                        UpdateFilter();
+                        this.gridView1.ExpandAllGroups();
+                    }
+                    else {
+                        if(this.shouldExpandGroups)
+                            this.gridView1.ExpandAllGroups();
+                        this.shouldExpandGroups = false;
+                        this.gridView1.RefreshData();
+                    }
+                }));    
             }
-
-            BeginInvoke(new MethodInvoker(() => {
-                if(!this.gridControl1.IsHandleCreated || this.gridControl1.IsDisposed)
-                    return;
-                if(this.poloniexAccountBalanceInfoBindingSource.DataSource is Type) {
-                    List<BalanceBase> total = new List<BalanceBase>();
-                    foreach(Exchange ee in Exchanges)
-                        total.AddRange(ee.GetAllBalances());
-                    this.poloniexAccountBalanceInfoBindingSource.DataSource = total;
-                    UpdateFilter();
-                    this.gridView1.ExpandAllGroups();
-                }
-                else {
-                    this.gridView1.RefreshData();
-                }
-            }));
         }
 
         protected void UpdateFilter() {

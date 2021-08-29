@@ -1,5 +1,6 @@
 ﻿using CefSharp;
 using CefSharp.WinForms;
+using Crypto.Core;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

@@ -1,5 +1,4 @@
-﻿using CryptoMarketClient.Common;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -21,6 +20,8 @@ using DevExpress.XtraCharts.Designer;
 using System.IO;
 using Crypto.Core.Helpers;
 using CryptoMarketClient.Strategies;
+using Crypto.Core;
+using Crypto.Core.Common;
 
 namespace CryptoMarketClient {
     public partial class TickerChartViewer : XtraUserControl {

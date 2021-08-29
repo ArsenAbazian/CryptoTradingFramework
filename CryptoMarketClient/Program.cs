@@ -1,6 +1,4 @@
-﻿using CryptoMarketClient.Bittrex;
-using CryptoMarketClient.Common;
-using DevExpress.LookAndFeel;
+﻿using DevExpress.LookAndFeel;
 using DevExpress.Skins;
 using DevExpress.Utils.DirectXPaint;
 using DevExpress.XtraEditors;
@@ -13,6 +11,8 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Crypto.Core.Common;
+using Crypto.Core;
 
 namespace CryptoMarketClient {
     static class Program {

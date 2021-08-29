@@ -1,17 +1,9 @@
 ﻿using Crypto.Core.Common;
 using Crypto.Core.Indicators;
 using Crypto.Core.Strategies.Custom;
-using CryptoMarketClient;
-using CryptoMarketClient.Common;
-using CryptoMarketClient.Helpers;
-using CryptoMarketClient.Strategies;
-using CryptoMarketClient.Strategies.Stupid;
+using Crypto.Core.Helpers;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 namespace Crypto.Core.Strategies.Signal {

@@ -1,6 +1,6 @@
 ﻿using Crypto.Core.Indicators;
-using CryptoMarketClient.Helpers;
-using CryptoMarketClient.Strategies;
+using Crypto.Core.Helpers;
+using Crypto.Core.Strategies;
 using System;
 using System.Collections.Generic;
 using System.Linq;

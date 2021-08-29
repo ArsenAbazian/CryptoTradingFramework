@@ -1,4 +1,4 @@
-﻿using CryptoMarketClient;
+﻿using Crypto.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,16 +14,16 @@ namespace Crypto.Core.Common {
         public string MarketCurrency { get; set; }
         public string FullName { get { return Exchange + ": " + Ticker; } }
         public Ticker FindTicker() {
-            Exchange e = CryptoMarketClient.Exchange.Get(Exchange);
+            Exchange e = Crypto.Core.Exchange.Get(Exchange);
             e.Connect();
             return e.Ticker(Ticker);
         }
         public Ticker FindTickerFor(ExchangeType exchange) {
-            Exchange e2 = CryptoMarketClient.Exchange.Get(Exchange);
+            Exchange e2 = Crypto.Core.Exchange.Get(Exchange);
             if(!e2.Connect())
                 return null;
             Ticker t = e2.Ticker(Ticker);
-            Exchange e = CryptoMarketClient.Exchange.Get(exchange);
+            Exchange e = Crypto.Core.Exchange.Get(exchange);
             if(!e.Connect())
                 return null;
             return e.Ticker(t.BaseCurrency, t.MarketCurrency);

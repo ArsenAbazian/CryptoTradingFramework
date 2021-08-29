@@ -1,4 +1,5 @@
-﻿using DevExpress.Skins;
+﻿using Crypto.Core;
+using DevExpress.Skins;
 using DevExpress.XtraCharts;
 using System;
 using System.Collections.Generic;

@@ -1,15 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
 using Crypto.Core.Common;
-using Crypto.Core.Strategies;
-using CryptoMarketClient.Common;
 
-namespace CryptoMarketClient.Strategies {
+namespace Crypto.Core.Strategies {
     [Serializable]
     public abstract class TickerStrategyBase  : StrategyBase {
         public TickerStrategyBase() {

@@ -1,4 +1,5 @@
-﻿using Crypto.Core.Common;
+﻿using Crypto.Core;
+using Crypto.Core.Common;
 using Crypto.Core.Helpers;
 using Crypto.Core.Strategies;
 using Crypto.Core.Strategies.Custom;

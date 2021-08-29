@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
-namespace CryptoMarketClient.Strategies {
+namespace Crypto.Core.Strategies {
     public class GridStrategyBase : TickerStrategyBase {
         public GridStrategyBase() : base() {
         }

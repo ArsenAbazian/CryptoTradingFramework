@@ -1,4 +1,5 @@
-﻿using CryptoMarketClient.Common;
+﻿using Crypto.Core;
+using Crypto.Core.Common;
 using CryptoMarketClient.Helpers;
 using CryptoMarketClient.Poloniex;
 using DevExpress.Data.Filtering;
@@ -292,7 +293,7 @@ namespace CryptoMarketClient {
             this.gridView1.CloseEditor();
             Ticker ticker = (Ticker)this.gridView1.GetFocusedRow();
             if(ticker.IsSelected)
-                Exchange.PinnedTickers.Add(new Common.PinnedTickerInfo() { BaseCurrency = ticker.BaseCurrency, MarketCurrency = ticker.MarketCurrency });
+                Exchange.PinnedTickers.Add(new PinnedTickerInfo() { BaseCurrency = ticker.BaseCurrency, MarketCurrency = ticker.MarketCurrency });
             else {
                 PinnedTickerInfo info = Exchange.PinnedTickers.FirstOrDefault(p => p.BaseCurrency == ticker.BaseCurrency && p.MarketCurrency == ticker.MarketCurrency);
                 Exchange.PinnedTickers.Remove(info);

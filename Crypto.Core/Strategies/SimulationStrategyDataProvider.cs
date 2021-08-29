@@ -1,8 +1,8 @@
 ﻿using Crypto.Core.Exchanges.Base;
 using Crypto.Core.Helpers;
 using Crypto.Core.Strategies.Custom;
-using CryptoMarketClient;
-using CryptoMarketClient.Common;
+using Crypto.Core;
+using Crypto.Core.Common;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -545,7 +545,7 @@ namespace Crypto.Core.Strategies {
         }
 
         protected CandleStickData CreateStartCandleStick(CandleStickData data) {
-            CandleStickData res = new CryptoMarketClient.CandleStickData();
+            CandleStickData res = new Crypto.Core.CandleStickData();
             res.Assign(data);
             res.Open = res.Close = res.High = res.Low = data.Open;
             return res;

@@ -1,11 +1,11 @@
-﻿using CryptoMarketClient.Common;
+﻿using Crypto.Core.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CryptoMarketClient.Bittrex {
+namespace Crypto.Core.Bittrex {
     public class BittrexAccountBalanceInfo : BalanceBase {
         public BittrexAccountBalanceInfo(AccountInfo info) : base(info) { }
 

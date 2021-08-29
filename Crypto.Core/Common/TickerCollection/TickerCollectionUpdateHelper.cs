@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CryptoMarketClient.Common {
+namespace Crypto.Core.Common {
     public class TickerCollectionUpdateHelper {
         static TickerCollectionUpdateHelper defaultHelper;
         public static TickerCollectionUpdateHelper Default {

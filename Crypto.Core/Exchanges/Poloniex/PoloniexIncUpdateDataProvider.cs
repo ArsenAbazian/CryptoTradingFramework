@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CryptoMarketClient.Exchanges.Poloniex {
+namespace Crypto.Core.Exchanges.Poloniex {
     public class PoloniexIncrementalUpdateDataProvider : IIncrementalUpdateDataProvider {
         public void Update(Ticker ticker, IncrementalUpdateInfo info) {
             for(int i = 0; i < info.Updates.Count; i++) {

@@ -381,7 +381,7 @@
             // 
             // tradeHistoryItemBindingSource
             // 
-            this.tradeHistoryItemBindingSource.DataSource = typeof(CryptoMarketClient.TradeInfoItem);
+            this.tradeHistoryItemBindingSource.DataSource = typeof(Crypto.Core.TradeInfoItem);
             // 
             // gvTrades
             // 
@@ -402,7 +402,7 @@
             formatConditionRuleValue1.Appearance.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
             formatConditionRuleValue1.Appearance.Options.UseForeColor = true;
             formatConditionRuleValue1.Condition = DevExpress.XtraEditors.FormatCondition.Equal;
-            formatConditionRuleValue1.Value1 = CryptoMarketClient.TradeType.Buy;
+            formatConditionRuleValue1.Value1 = Crypto.Core.TradeType.Buy;
             gridFormatRule1.Rule = formatConditionRuleValue1;
             gridFormatRule2.Column = this.colType;
             gridFormatRule2.ColumnApplyTo = this.colRate;
@@ -410,7 +410,7 @@
             formatConditionRuleValue2.Appearance.ForeColor = System.Drawing.Color.Red;
             formatConditionRuleValue2.Appearance.Options.UseForeColor = true;
             formatConditionRuleValue2.Condition = DevExpress.XtraEditors.FormatCondition.Equal;
-            formatConditionRuleValue2.Value1 = CryptoMarketClient.TradeType.Sell;
+            formatConditionRuleValue2.Value1 = Crypto.Core.TradeType.Sell;
             gridFormatRule2.Rule = formatConditionRuleValue2;
             this.gvTrades.FormatRules.Add(gridFormatRule1);
             this.gvTrades.FormatRules.Add(gridFormatRule2);
@@ -868,7 +868,7 @@
             // 
             // openedOrderInfoBindingSource
             // 
-            this.openedOrderInfoBindingSource.DataSource = typeof(CryptoMarketClient.Common.OpenedOrderInfo);
+            this.openedOrderInfoBindingSource.DataSource = typeof(Crypto.Core.Common.OpenedOrderInfo);
             // 
             // gvOpenedOrders
             // 
@@ -888,13 +888,13 @@
             formatConditionRuleValue3.Appearance.ForeColor = System.Drawing.Color.Red;
             formatConditionRuleValue3.Appearance.Options.UseForeColor = true;
             formatConditionRuleValue3.Condition = DevExpress.XtraEditors.FormatCondition.Equal;
-            formatConditionRuleValue3.Value1 = CryptoMarketClient.Common.OrderType.Sell;
+            formatConditionRuleValue3.Value1 = Crypto.Core.Common.OrderType.Sell;
             gridFormatRule3.Rule = formatConditionRuleValue3;
             gridFormatRule4.Column = this.colType1;
             gridFormatRule4.ColumnApplyTo = this.colType1;
             gridFormatRule4.Name = "FormatBuy";
             formatConditionRuleValue4.Condition = DevExpress.XtraEditors.FormatCondition.Equal;
-            formatConditionRuleValue4.Value1 = CryptoMarketClient.Common.OrderType.Buy;
+            formatConditionRuleValue4.Value1 = Crypto.Core.Common.OrderType.Buy;
             gridFormatRule4.Rule = formatConditionRuleValue4;
             this.gvOpenedOrders.FormatRules.Add(gridFormatRule3);
             this.gvOpenedOrders.FormatRules.Add(gridFormatRule4);
@@ -1047,11 +1047,11 @@
             // 
             // tradingResultBindingSource1
             // 
-            this.tradingResultBindingSource1.DataSource = typeof(CryptoMarketClient.Common.TradingResult);
+            this.tradingResultBindingSource1.DataSource = typeof(Crypto.Core.Common.TradingResult);
             // 
             // tradingResultBindingSource
             // 
-            this.tradingResultBindingSource.DataSource = typeof(CryptoMarketClient.Common.TradingResult);
+            this.tradingResultBindingSource.DataSource = typeof(Crypto.Core.Common.TradingResult);
             // 
             // popupMenu1
             // 

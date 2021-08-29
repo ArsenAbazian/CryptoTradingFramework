@@ -1,4 +1,4 @@
-﻿using CryptoMarketClient.Common;
+﻿using Crypto.Core.Common;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.Extensibility;
 using System;
@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
-namespace CryptoMarketClient {
+namespace Crypto.Core {
     public class Telemetry {
         static Telemetry defaultTelemetry;
         public static Telemetry Default {
@@ -56,8 +56,11 @@ namespace CryptoMarketClient {
         void LogToFile(Exception e) {
             if (LogFile == null)
                 return;
-            LogFile.WriteLine(DateTime.Now.ToString() + " " + e.ToString());
-            LogFile.FlushAsync();
+            try {
+                LogFile.WriteLine(DateTime.Now.ToString() + " " + e.ToString());
+                LogFile.FlushAsync();
+            }
+            catch(Exception) { }
         }
 
         private void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e) {

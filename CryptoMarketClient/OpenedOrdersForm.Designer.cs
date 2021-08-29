@@ -106,7 +106,7 @@
             // 
             // openedOrdersBindingSource
             // 
-            this.openedOrdersBindingSource.DataSource = typeof(CryptoMarketClient.Common.OpenedOrderInfo);
+            this.openedOrdersBindingSource.DataSource = typeof(Crypto.Core.Common.OpenedOrderInfo);
             // 
             // gridView1
             // 
@@ -134,7 +134,7 @@
             formatConditionRuleValue1.Appearance.Options.UseFont = true;
             formatConditionRuleValue1.Appearance.Options.UseForeColor = true;
             formatConditionRuleValue1.Condition = DevExpress.XtraEditors.FormatCondition.Equal;
-            formatConditionRuleValue1.Value1 = CryptoMarketClient.Common.OrderType.Buy;
+            formatConditionRuleValue1.Value1 = Crypto.Core.Common.OrderType.Buy;
             gridFormatRule1.Rule = formatConditionRuleValue1;
             gridFormatRule2.Column = this.colType;
             gridFormatRule2.ColumnApplyTo = this.colDateString;
@@ -144,7 +144,7 @@
             formatConditionRuleValue2.Appearance.Options.UseFont = true;
             formatConditionRuleValue2.Appearance.Options.UseForeColor = true;
             formatConditionRuleValue2.Condition = DevExpress.XtraEditors.FormatCondition.Equal;
-            formatConditionRuleValue2.Value1 = CryptoMarketClient.Common.OrderType.Sell;
+            formatConditionRuleValue2.Value1 = Crypto.Core.Common.OrderType.Sell;
             gridFormatRule2.Rule = formatConditionRuleValue2;
             this.gridView1.FormatRules.Add(gridFormatRule1);
             this.gridView1.FormatRules.Add(gridFormatRule2);

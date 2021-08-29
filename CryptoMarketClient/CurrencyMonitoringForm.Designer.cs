@@ -137,7 +137,7 @@
             // 
             // bittrexTickerBindingSource
             // 
-            this.bittrexTickerBindingSource.DataSource = typeof(CryptoMarketClient.Ticker);
+            this.bittrexTickerBindingSource.DataSource = typeof(Crypto.Core.Ticker);
             // 
             // gridView1
             // 

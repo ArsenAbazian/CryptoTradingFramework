@@ -286,7 +286,7 @@ namespace CryptoMarketClient {
             // 
             // tickerArbitrageInfoBindingSource
             // 
-            this.tickerArbitrageInfoBindingSource.DataSource = typeof(CryptoMarketClient.TickerCollection);
+            this.tickerArbitrageInfoBindingSource.DataSource = typeof(Crypto.Core.TickerCollection);
             // 
             // gridView1
             // 

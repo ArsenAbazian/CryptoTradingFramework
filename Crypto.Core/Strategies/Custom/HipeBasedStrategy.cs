@@ -1,7 +1,7 @@
 ﻿using Crypto.Core.Helpers;
 using Crypto.Core.Indicators;
-using CryptoMarketClient;
-using CryptoMarketClient.Common;
+using Crypto.Core;
+using Crypto.Core.Common;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;

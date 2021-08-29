@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
-namespace CryptoMarketClient.Common {
+namespace Crypto.Core.Common {
     public class LogMessage {
         public LogType Type { get; set; }
         public string Id { get; set; }

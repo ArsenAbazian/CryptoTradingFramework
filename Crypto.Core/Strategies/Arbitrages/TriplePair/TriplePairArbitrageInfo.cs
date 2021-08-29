@@ -8,7 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
-namespace CryptoMarketClient.Common {
+namespace Crypto.Core.Common {
     [Serializable]
     public class TriplePairInfoHistoryItem {
         public TriplePairInfoHistoryItem(TriplePairArbitrageInfo info) {
