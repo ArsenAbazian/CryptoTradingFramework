@@ -42,30 +42,51 @@ namespace Crypto.Core.Exchanges.Binance.Futures {
             throw new NotImplementedException();
         }
 
-        protected override string ServerTimeApi { get { return "https://binance.com/fapi/v1/time"; } }
+        protected override string ServerTimeApi { get { return "https://fapi.binance.com/fapi/v1/time"; } }
 
-        protected override string BalanceApiString => "https://binance.com/fapi/v2/balance";
+        protected override string BalanceApiString => "https://fapi.binance.com/fapi/v2/balance";
+
+        public override bool UpdateBalances(AccountInfo account) {
+            string queryString = string.Format("timestamp={0}&recvWindow=50000", GetNonce());
+            string signature = account.GetSign(queryString);
+
+            string address = string.Format("{0}?{1}&signature={2}", BalanceApiString, queryString, signature);
+            MyWebClient client = GetWebClient();
+            
+            client.Headers.Clear();
+            client.Headers.Add("X-MBX-APIKEY", account.ApiKey);
+
+            try {
+                return OnGetBalances(account, client.DownloadData(address));
+            }
+            catch(Exception e) {
+                LogManager.Default.Log(e.ToString());
+                return false;
+            }
+        }
 
         public override bool OnGetBalances(AccountInfo account, byte[] data) {
             string text = UTF8Encoding.Default.GetString(data);
-            object root = JsonConvert.DeserializeObject(text);
-            if(root is JObject) {
-                if(((JObject)root).Value<string>("code") != null) {
-                    LogManager.Default.Error(this, "error on get balance", text);
-                    return false;
-                }
+            object conv = JsonConvert.DeserializeObject(text);
+            JObject root = conv as JObject;
+            if(conv == null) { 
+                LogManager.Default.Error(this, "error on get balance", "empty text return");
+                return false;
             }
-
-            JArray balances = (JArray)root;
+            if(root != null && root.Value<string>("code") != null) {
+                LogManager.Default.Error(this, "error on get balance", root.Value<string>("message"));
+                return false;
+            }
+            JArray balances = conv as JArray;
             if(balances == null)
                 return false;
             account.Balances.Clear();
             foreach(JObject obj in balances) {
                 BinanceAccountBalanceInfo b = new BinanceAccountBalanceInfo(account);
+                b.Balance = obj.Value<double>("balance");
                 b.Currency = obj.Value<string>("asset");
-                double balance = obj.Value<double>("balance");
                 b.Available = obj.Value<double>("availableBalance");
-                b.OnOrders = balance - b.Available;
+                b.OnOrders = b.Balance - b.Available;
                 account.Balances.Add(b);
             }
             return true;

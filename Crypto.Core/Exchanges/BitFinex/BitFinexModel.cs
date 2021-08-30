@@ -962,6 +962,7 @@ namespace Crypto.Core.BitFinex {
                     item.Currency = obj.Value<string>("Currency");
                     //item.Balance = obj.Value<double>("Balance");
                     item.Available = obj.Value<double>("Available");
+                    item.Balance = item.Available;
                     //item.Pending = obj.Value<double>("Pending");
                     item.DepositAddress = obj.Value<string>("CryptoAddress");
                     //item.Requested = obj.Value<bool>("Requested");

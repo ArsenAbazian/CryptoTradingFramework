@@ -289,16 +289,18 @@ namespace Crypto.Core.Exchanges.Bitmex {
 
         protected internal override void OnRequestCompleted(MyWebClient myWebClient) {
             base.OnRequestCompleted(myWebClient);
+            if(!myWebClient.ResponseHeaders.Contains("X-RateLimit-Remaining"))
+                return;
             if(XRateLimitLimit == 0) {
                 IEnumerable<string> limit = myWebClient.ResponseHeaders.GetValues("X-RateLimit-Limit");
                 XRateLimitLimit = Convert.ToInt32(limit.First());
+                return;
             }
-            if(myWebClient.ResponseHeaders.Contains("X-RateLimit-Remaining")) {
-                IEnumerable<string> remain = myWebClient.ResponseHeaders.GetValues("X-RateLimit-Remaining");
-                XRateLimitRemain = FastValueConverter.ConvertPositiveInteger(remain.First());
-                IEnumerable<string> resetTime = myWebClient.ResponseHeaders.GetValues("X-RateLimit-Reset");
-                XRateLimitReset = FastValueConverter.ConvertPositiveLong(resetTime.First());
-            }
+            
+            IEnumerable<string> remain = myWebClient.ResponseHeaders.GetValues("X-RateLimit-Remaining");
+            XRateLimitRemain = FastValueConverter.ConvertPositiveInteger(remain.First());
+            IEnumerable<string> resetTime = myWebClient.ResponseHeaders.GetValues("X-RateLimit-Reset");
+            XRateLimitReset = FastValueConverter.ConvertPositiveLong(resetTime.First());
         }
 
         protected string DownloadPrivateString(AccountInfo account, string verb, string path) {
@@ -331,11 +333,16 @@ namespace Crypto.Core.Exchanges.Bitmex {
 
         public bool OnGetBalances(AccountInfo account, byte[] data) {
             string text = UTF8Encoding.Default.GetString(data);
+            if(string.IsNullOrEmpty(text) || text.StartsWith("<html>")) { 
+                LogManager.Default.Error(this, "error on get balance", text);
+                return false;    
+            }
             JObject obj = (JObject)JsonConvert.DeserializeObject(text);
             account.Balances.Clear();
             BitmexAccountBalanceInfo b = new BitmexAccountBalanceInfo(account);
             b.Currency = obj.Value<string>("currency");
             b.Available = obj.Value<double>("amount");
+            b.Balance = b.Available;
             b.OnOrders = 0;// obj.Value<double>("locked");
             account.Balances.Add(b);
             return true;

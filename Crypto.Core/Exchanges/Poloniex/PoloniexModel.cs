@@ -807,6 +807,7 @@ namespace Crypto.Core {
                     binfo.LastAvailable = binfo.Available;
                     binfo.Available = obj.Value<double>("available");
                     binfo.OnOrders = obj.Value<double>("onOrders");
+                    binfo.Balance = binfo.Available + binfo.OnOrders;
                     binfo.BtcValue = obj.Value<double>("btcValue");
                 }
             }

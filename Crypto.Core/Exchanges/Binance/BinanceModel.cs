@@ -694,7 +694,7 @@ namespace Crypto.Core.Binance {
             string queryString = string.Format("timestamp={0}&recvWindow=50000", GetNonce());
             string signature = account.GetSign(queryString);
 
-            string address = string.Format("https://binance.com/api/v3/account?{0}&signature={1}", queryString, signature);
+            string address = string.Format("{0}?{1}&signature={2}", BalanceApiString, queryString, signature);
             MyWebClient client = GetWebClient();
             
             client.Headers.Clear();
@@ -725,6 +725,7 @@ namespace Crypto.Core.Binance {
                 b.Currency = obj.Value<string>("asset");
                 b.Available = obj.Value<double>("free");
                 b.OnOrders = obj.Value<double>("locked");
+                b.Balance = b.Available + b.OnOrders;
                 account.Balances.Add(b);
             }
             return true;

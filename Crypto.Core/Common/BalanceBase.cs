@@ -15,6 +15,7 @@ namespace Crypto.Core.Common {
         public Exchange ExchangeCore { get { return Account == null ? null : Account.Exchange; } }
         public string AccountName { get { return Account == null ? "undefined" : Account.Name; } }
         public string Currency { get; set; }
+        public double Balance { get; set; }
         public double Available { get; set; }
         public double LastAvailable { get; set; }
         public double OnOrders { get; set; }
