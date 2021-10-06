@@ -161,10 +161,51 @@ namespace Crypto.Core {
         public List<TradingSettings> Trailings { get; } = new List<TradingSettings>();
 
         public List<TradingResult> Trades { get; } = new List<TradingResult>();
-        public List<TradeInfoItem> MyTradeHistory { get; } = new List<TradeInfoItem>();
+        public LinkedList<TradeInfoItem> AccountTradeHistory { get; } = new LinkedList<TradeInfoItem>();
+        public ResizeableArray<TradeInfoItem> GetAccountTradeHistory() {
+            ResizeableArray<TradeInfoItem> res = new ResizeableArray<TradeInfoItem>(AccountTradeHistory.Count);
+            foreach(var item in AccountTradeHistory)
+                res.Add(item);
+            return res; 
+        }
+
+        CycleArray<TradeInfoItem> accountShortTradeHistory;
+        public CycleArray<TradeInfoItem> AccountShortTradeHistory { 
+            get {
+                if(accountShortTradeHistory == null)
+                    accountShortTradeHistory = new CycleArray<TradeInfoItem>(2000);
+                return accountShortTradeHistory;
+            }    
+        }
+        protected internal OpenedOrderInfo[] PrevOpenedOrders { get; set; }
         public List<OpenedOrderInfo> OpenedOrders { get; } = new List<OpenedOrderInfo>();
-        public BindingList<TickerHistoryItem> History { get; } = new BindingList<TickerHistoryItem>();
-        public ResizeableArray<TradeInfoItem> TradeHistory { get; } = new ResizeableArray<TradeInfoItem>();
+        public LinkedList<TickerHistoryItem> History { get; } = new LinkedList<TickerHistoryItem>();
+
+        public event CancelOrderHandler OrderCanceled;
+        protected internal void RaiseOrderCanceled(CancelOrderEventArgs e) {
+            if(OrderCanceled != null)
+                OrderCanceled(this, e);
+            if(Exchange != null)
+                Exchange.RaiseOrderCanceled(e);
+        }
+
+        public LinkedList<TradeInfoItem> TradeHistory { get; } = new LinkedList<TradeInfoItem>();
+        public ResizeableArray<TradeInfoItem> GetTradeHistory() { 
+            ResizeableArray<TradeInfoItem> res = new ResizeableArray<TradeInfoItem>(TradeHistory.Count);
+            foreach(var item in TradeHistory)
+                res.Add(item);
+            return res; 
+        } 
+
+        CycleArray<TradeInfoItem> shortTradeHistory;
+        public CycleArray<TradeInfoItem> ShortTradeHistory { 
+            get { 
+                if(shortTradeHistory == null)
+                    shortTradeHistory = new CycleArray<TradeInfoItem>(6000);
+                return shortTradeHistory;
+            }    
+        }
+        
         public BindingList<TradeStatisticsItem> TradeStatistic { get; } = new BindingList<TradeStatisticsItem>();
 
         ResizeableArray<CandleStickData> candleStickData;
@@ -192,6 +233,23 @@ namespace Crypto.Core {
 
         public OrderBook OrderBook { get; private set; }
         public abstract string Name { get; }
+
+        public void ClearMyTradeHistory() {
+            if(AccountTradeHistory != null)
+                AccountTradeHistory.Clear();
+            if(AccountShortTradeHistory != null)
+                AccountShortTradeHistory.Clear();
+        }
+
+        public void ClearTradeHistory() {
+            if(TradeHistory != null)
+                TradeHistory.Clear();
+            if(ShortTradeHistory != null)
+                ShortTradeHistory.Clear();
+            if(TradeStatistic != null)
+                TradeStatistic.Clear();
+        }
+
         string lowestAskString = null;
         public string LowestAskString {
             get {
@@ -268,6 +326,8 @@ namespace Crypto.Core {
             }
         }
         public virtual string GetStringWithChangePercent(double value, double change) {
+            if(value == 0)
+                return "NO DATA YET";
             if(!UseHtmlString) {
                 return string.Format("{0:0.00000000}", value);
             }
@@ -423,6 +483,7 @@ namespace Crypto.Core {
             Time = DateTime.UtcNow;
             UpdateHistoryItem();
         }
+
         public bool ProcessOrderBook(string text) { return Exchange.ProcessOrderBook(this, text); }
         protected bool IsUpdatingTicker { get; set; }
         public bool UpdateTicker() {
@@ -442,31 +503,60 @@ namespace Crypto.Core {
             }
         }
         protected bool IsUpdatingOrderBook { get; set; }
-        protected bool IsUpdatingTrades { get; set; }
+        public void LockAccountTrades() {
+            MyTradesUpdateCount++;
+        }
+        public void UnlockAccountTrades() {
+            if(MyTradesUpdateCount == 0)
+                return;
+            MyTradesUpdateCount--;
+        }
+
+        public void LockTrades() {
+            TradesUpdateCount++;
+        }
+        public void UnlockTrades() {
+            if(TradesUpdateCount == 0)
+                return;
+            TradesUpdateCount--;
+        }
+        public void LockOpenOrders() {
+            OpenOrdersUpdateCount++;
+        }
+        public void UnlockOpenOrders() {
+            if(OpenOrdersUpdateCount == 0)
+                return;
+            OpenOrdersUpdateCount--;
+        }
+        protected int TradesUpdateCount { get; set; }
+        protected int MyTradesUpdateCount { get; set; }
+        protected int OpenOrdersUpdateCount { get; set; }
+        public bool IsUpdatingTrades { get { return TradesUpdateCount > 0; } }
+        public bool IsUpdatingAccountTrades { get { return MyTradesUpdateCount > 0; } }
         public bool UpdateTrades() {
             if(IsUpdatingTrades)
                 return true;
             try {
-                IsUpdatingTrades = true;
+                LockTrades();
                 return Exchange.UpdateTrades(this);
             }
             finally {
-                IsUpdatingTrades = false;
+                UnlockTrades();
             }
         }
-        protected bool IsUpdatingOpenedOrders { get; set; }
+        public bool IsUpdatingOpenedOrders => OpenOrdersUpdateCount > 0;
         protected internal byte[] OpenedOrdersData { get; set; }
         public bool UpdateOpenedOrders() {
             if(IsUpdatingOpenedOrders)
                 return true;
             try {
-                IsUpdatingOpenedOrders = true;
+                LockOpenOrders();
                 if(Exchange.DefaultAccount == null)
                     return false;
                 return Exchange.UpdateOpenedOrders(Exchange.DefaultAccount, this);
             }
             finally {
-                IsUpdatingOpenedOrders = false;
+                UnlockOpenOrders();
             }
         }
 
@@ -507,6 +597,15 @@ namespace Crypto.Core {
             return null;
         }
 
+        public byte[] DownloadBytes(string address, MyWebClient client) {
+            try {
+                //ApiRate.WaitToProceed();
+                return Exchange.GetDownloadBytes(address, client);
+            }
+            catch { }
+            return null;
+        }
+
         TickerUpdateHelper updateHelper;
         protected TickerUpdateHelper UpdateHelper {
             get {
@@ -525,12 +624,24 @@ namespace Crypto.Core {
             if(HistoryChanged != null)
                 HistoryChanged(this, EventArgs.Empty);
         }
+
+        protected internal virtual void AddMyTradeHistoryItem(IEnumerable<TradeInfoItem> items) {
+            foreach(TradeInfoItem item in items)
+                AddAccountTradeHistoryItem(item);
+        }
+
+        public void AddAccountTradeHistoryItem(TradeInfoItem item) {
+            AccountTradeHistory.AddLast(item);
+            AccountShortTradeHistory.Add(item);
+        }
+
         protected internal void RaiseChanged() {
             if(Changed != null)
                 Changed(this, EventArgs.Empty);
         }
 
         public bool HasTradeHistorySubscribers { get { return TradeHistoryChanged != null; } }
+        public bool HasAccountTradeHistorySubscribers { get { return AccountTradeHistoryChanged != null; } }
 
         protected internal void RaiseTradeHistoryChanged(TradeHistoryChangedEventArgs e) {
             e.Ticker = this;
@@ -538,8 +649,15 @@ namespace Crypto.Core {
                 TradeHistoryChanged(this, e);
         }
 
+        protected internal void RaiseAccountTradeHistoryChanged(TradeHistoryChangedEventArgs e) {
+            e.Ticker = this;
+            if(AccountTradeHistoryChanged != null)
+                AccountTradeHistoryChanged(this, e);
+        }
+
         public event EventHandler HistoryChanged;
         public event TradeHistoryChangedEventHandler TradeHistoryChanged;
+        public event TradeHistoryChangedEventHandler AccountTradeHistoryChanged;
         public event EventHandler Changed;
         public event EventHandler OpenedOrdersChanged;
         public event ListChangedEventHandler CandleStickChanged;
@@ -547,7 +665,7 @@ namespace Crypto.Core {
             add { OrderBook.Changed += value; }
             remove { OrderBook.Changed -= value; }
         }
-        public void RaiseOpenedOrdersChanged() {
+        protected internal void RaiseOpenedOrdersChanged() {
             if(OpenedOrdersChanged != null)
                 OpenedOrdersChanged(this, EventArgs.Empty);
         }
@@ -607,7 +725,7 @@ namespace Crypto.Core {
                 if(last.Ask != LowestAsk)
                     AskChange = (LowestAsk - last.Ask) * 100;
             }
-            History.Add(new TickerHistoryItem() { Time = Time, Ask = LowestAsk, Bid = HighestBid, Current = Last });
+            History.AddLast(new TickerHistoryItem() { Time = Time, Ask = LowestAsk, Bid = HighestBid, Current = Last });
             RaiseHistoryChanged();
         }
         public void UpdateMarketCurrencyStatusHistory() {
@@ -622,7 +740,7 @@ namespace Crypto.Core {
         public ResizeableArray<CandleStickData> GetCandleStickData(int candleStickPeriodMin, DateTime start, int periodInSeconds) {
             return Exchange.GetCandleStickData(this, candleStickPeriodMin, start, periodInSeconds);
         }
-        public virtual bool UpdateMyTrades() {
+        public virtual bool UpdateAccountTrades() {
             if(Exchange.DefaultAccount == null)
                 return false;
             return Exchange.UpdateAccountTrades(Exchange.DefaultAccount, this);
@@ -648,9 +766,31 @@ namespace Crypto.Core {
                 return events;
             }
         }
+        
+        protected internal virtual void InsertTradeHistoryItem(TradeInfoItem item) {
+            if(TradeHistory.Count > 0) {
+                TradeInfoItem first = TradeHistory.First();
+                if(first.Time > item.Time)
+                    throw new Exception("Invalid Trade History Items Order By Time");
+                if(first.Id != 0 && first.Id != item.Id - 1)
+                    throw new Exception("Invalid Trade History Items Order By Id");
+            }
+            TradeHistory.AddFirst(item);
+            ShortTradeHistory.AddFirst(item);
+        }
 
-        protected internal void UpdateTradeData(TradeInfoItem tradeInfoItem) {
-            TradeHistory.Add(tradeInfoItem);
+        protected internal virtual void AddTradeHistoryItem(IEnumerable<TradeInfoItem> items) {
+            foreach(TradeInfoItem item in items)
+                AddTradeHistoryItem(item);
+        }
+
+        protected internal virtual void AddTradeHistoryItem(TradeInfoItem item) {
+            TradeHistory.AddLast(item);
+            ShortTradeHistory.Add(item);
+        }
+
+        protected internal void UpdateSimulationTradeData(TradeInfoItem tradeInfoItem) {
+            TradeHistory.AddLast(tradeInfoItem);
         }
 
         public event NotifyCollectionChangedEventHandler EventsChanged {
@@ -676,7 +816,7 @@ namespace Crypto.Core {
             return false;
         }
         public bool Cancel(OpenedOrderInfo info) {
-            return Exchange.Cancel(Exchange.DefaultAccount, info.OrderId);
+            return Exchange.Cancel(Exchange.DefaultAccount, info.Ticker, info.OrderId);
         }
         public void StopListenTickerStream() {
             Exchange.StopListenTickerStream(this);
@@ -722,6 +862,7 @@ namespace Crypto.Core {
                 return 1;
             return CurrencyPair.CompareTo(((Ticker)obj).CurrencyPair);
         }
+
         public void StartListenOrderBook() {
             Exchange.StartListenOrderBook(this);
         }
@@ -777,6 +918,35 @@ namespace Crypto.Core {
         public bool CaptureData { get; set; }
         public virtual bool ContractTicker { get; set; }
         public virtual double ContractValue { get; set; }
+
+        internal void SaveOpenedOrders() {
+            PrevOpenedOrders = new OpenedOrderInfo[OpenedOrders.Count];
+            for(int i = 0; i < OpenedOrders.Count; i++)
+                PrevOpenedOrders[i] = OpenedOrders[i];
+        }
+        public List<string> GetOpenedOrdersChangeNotifications() {
+            List<string> res = new List<string>();
+            if(PrevOpenedOrders == null) 
+                PrevOpenedOrders = new OpenedOrderInfo[0];
+            for(int i = 0; i < PrevOpenedOrders.Length; i ++) {
+                var po = PrevOpenedOrders[i];
+                var oo = OpenedOrders.FirstOrDefault(o => o.OrderId == PrevOpenedOrders[i].OrderId);
+                if(oo == null)
+                    res.Add("Order " + po.OrderId + " completely filled");
+                else if(oo.Amount != po.Amount) {
+                    res.Add("Order " + po.OrderId + " partially filled");
+                }
+            }
+            for(int i = 0; i < OpenedOrders.Count; i++) {
+                var oo = OpenedOrders[i];
+                var po = PrevOpenedOrders.FirstOrDefault(p => p.OrderId == oo.OrderId);
+                if(po == null)
+                    res.Add("New order '" + oo.OrderId + "' added. " + oo.TickerName + " rate = " + oo.ValueString + " amount = " + oo.AmountString);
+            }
+            PrevOpenedOrders = new OpenedOrderInfo[OpenedOrders.Count];
+            OpenedOrders.CopyTo(PrevOpenedOrders);
+            return res;
+        }
     }
 
     public enum TickerUpdateMode {
@@ -801,7 +971,7 @@ namespace Crypto.Core {
         
         public Ticker Ticker { get; set; }
         public TradeInfoItem NewItem { get; set; }
-        public ResizeableArray<TradeInfoItem> NewItems { get; set; } = new ResizeableArray<TradeInfoItem>();
+        public IEnumerable<TradeInfoItem> NewItems { get; set; } = new List<TradeInfoItem>();
     }
 
     public delegate void TradeHistoryChangedEventHandler(object sender, TradeHistoryChangedEventArgs e);

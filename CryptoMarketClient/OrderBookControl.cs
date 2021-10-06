@@ -16,6 +16,9 @@ using System.Collections;
 using DevExpress.Utils.DirectXPaint;
 using DevExpress.Utils;
 using Crypto.Core;
+using DevExpress.XtraGrid.Scrolling;
+using DevExpress.XtraEditors.ViewInfo;
+using System.Reflection;
 
 namespace CryptoMarketClient {
     public partial class OrderBookControl : XtraUserControl {
@@ -43,9 +46,9 @@ namespace CryptoMarketClient {
         private void OnAsksChanged() {
             if(Asks == null)
                 return;
-            SnapAsksToEnd = true;
-            this.askGridView.FocusedRowHandle = this.askGridView.GetRowHandle(Asks.Count - 1);
-            this.askGridView.MoveLast();
+            //SnapAsksToEnd = true;
+            //this.askGridView.FocusedRowHandle = this.askGridView.GetRowHandle(Asks.Count - 1);
+            //this.askGridView.MoveLast();
         }
 
         public List<OrderBookEntry> Bids {
@@ -59,10 +62,10 @@ namespace CryptoMarketClient {
         }
 
         void UpdateAsksVisibleRowIndex() {
-            if(SnapAsksToEnd)
-                this.askGridView.MoveLast();
-            else
-                this.askGridView.TopRowIndex = LastAskTopRowIndex;
+            //if(SnapAsksToEnd)
+            //    this.askGridView.MoveLast();
+            //else
+            //    this.askGridView.TopRowIndex = LastAskTopRowIndex;
         }
 
         public void RefreshAsks() {
@@ -84,12 +87,13 @@ namespace CryptoMarketClient {
         }
         void UpdateAskTableHeight() {
             int height = 32 + (this.Height - 32) / 2;
-            this.askGridControl.Invalidate();
-            this.askGridControl.Update();
-            GridViewInfo vi = (GridViewInfo)this.askGridView.GetViewInfo();
-            if(vi.RowsInfo.Count > 0 && vi.RowsInfo[vi.RowsInfo.Count - 1].Bounds.Bottom < vi.Bounds.Bottom)
-                height = vi.RowsInfo[vi.RowsInfo.Count - 1].Bounds.Bottom + 2;
-            this.askPanel.Height = height;
+            this.askPanel.Height = Height / 2;
+            //this.askGridControl.Invalidate();
+            //this.askGridControl.Update();
+            //GridViewInfo vi = (GridViewInfo)this.askGridView.GetViewInfo();
+            //if(vi.RowsInfo.Count > 0 && vi.RowsInfo[vi.RowsInfo.Count - 1].Bounds.Bottom < vi.Bounds.Bottom)
+            //    height = vi.RowsInfo[vi.RowsInfo.Count - 1].Bounds.Bottom + 2;
+            //this.askPanel.Height = height;
         }
 
         public string OrderBookCaption { get { return this.askGridView.ViewCaption; } set { this.askGridView.ViewCaption = value; } }
@@ -106,7 +110,7 @@ namespace CryptoMarketClient {
         void OnTickerCollectionChanged() {
             Bids = TickerCollection.Arbitrage.HighestBidTicker == null ? null : TickerCollection.Arbitrage.HighestBidTicker.OrderBook.Bids;
             Asks = TickerCollection.Arbitrage.LowestAskTicker == null ? null : TickerCollection.Arbitrage.LowestAskTicker.OrderBook.Asks;
-            SnapAsksToEnd = true;
+            //SnapAsksToEnd = true;
             OrderBookCaption = TickerCollection.Name;
             UpdateAskTableHeight();
         }
@@ -152,11 +156,11 @@ namespace CryptoMarketClient {
             RaiseBidRowChanged(ee);
         }
 
-        protected bool SnapAsksToEnd { get; set; }
+        //protected bool SnapAsksToEnd { get; set; }
         private void askGridView_TopRowChanged(object sender, EventArgs e) {
-            LastAskTopRowIndex = this.askGridView.TopRowIndex;
-            if(this.askGridView.IsRowVisible(this.askGridView.GetRowHandle(Asks.Count - 1)) != RowVisibleState.Hidden)
-                SnapAsksToEnd = true;
+            //LastAskTopRowIndex = this.askGridView.TopRowIndex;
+            //if(this.askGridView.IsRowVisible(this.askGridView.GetRowHandle(Asks.Count - 1)) != RowVisibleState.Hidden)
+            //    SnapAsksToEnd = true;
         }
 
         private void askGridView_CustomDrawCell(object sender, RowCellCustomDrawEventArgs e) {

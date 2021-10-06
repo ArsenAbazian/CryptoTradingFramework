@@ -26,17 +26,7 @@ namespace Crypto.Core.Exchanges.Binance.Futures {
         public override ExchangeType Type => ExchangeType.BinanceFutures;
         public override string BaseWebSocketAdress => "wss://fstream.binance.com/ws/!ticker@arr";
 
-        public override TradingResult BuyLong(AccountInfo account, Ticker ticker, double rate, double amount) {
-            throw new NotImplementedException();
-        }
-
-        public override TradingResult BuyShort(AccountInfo account, Ticker ticker, double rate, double amount) {
-            throw new NotImplementedException();
-        }
-
-        public override bool Cancel(AccountInfo account, string orderId) {
-            throw new NotImplementedException();
-        }
+        protected override string CancelOrderApiString => "https://fapi.binance.com/fapi/v1/order";
 
         public override string CreateDeposit(AccountInfo account, string currency) {
             throw new NotImplementedException();
@@ -45,8 +35,44 @@ namespace Crypto.Core.Exchanges.Binance.Futures {
         protected override string ServerTimeApi { get { return "https://fapi.binance.com/fapi/v1/time"; } }
 
         protected override string BalanceApiString => "https://fapi.binance.com/fapi/v2/balance";
+        protected override string TradeApiString => "https://fapi.binance.com/fapi/v1/order";
+        protected override string OrderStatusApiString => "https://fapi.binance.com/fapi/v1/order";
+        public override bool AllowCheckOrderStatus => true;
+
+        protected override TradingResult OnTradeResultCore(AccountInfo account, Ticker ticker, JObject res) { 
+            TradingResult tr = new TradingResult();
+            tr.Ticker = ticker;
+            tr.OrderId = res.Value<string>("orderId");
+            tr.Amount = Convert.ToDouble(res.Value<string>("executedQty"));
+            tr.Value= Convert.ToDouble(res.Value<string>("price"));
+            tr.Type = res.Value<string>("side")[0] == 'B'? OrderType.Buy: OrderType.Sell; 
+            tr.PositionSide = res.Value<string>("positionSide")[0] == 'S'? PositionSide.Short: PositionSide.Long;
+            tr.Total = tr.Amount * tr.Value;
+            tr.OrderStatus = res.Value<string>("status");
+            tr.Filled = res.Value<bool>("closePosition") == true;
+            return tr;
+        }
 
         public override bool UpdateBalances(AccountInfo account) {
+            string queryString = string.Format("timestamp={0}&recvWindow=50000", GetNonce());
+            string signature = account.GetSign(queryString);
+
+            string address = string.Format("{0}?{1}&signature={2}", BalanceApiString, queryString, signature);
+            MyWebClient client = GetWebClient();
+            
+            client.Headers.Clear();
+            client.Headers.Add("X-MBX-APIKEY", account.ApiKey);
+
+            try {
+                return OnGetBalances(account, client.DownloadData(address));
+            }
+            catch(Exception e) {
+                LogManager.Default.Log(e.ToString());
+                return false;
+            }
+        }
+
+        public override bool GetBalance(AccountInfo account, string currency) {
             string queryString = string.Format("timestamp={0}&recvWindow=50000", GetNonce());
             string signature = account.GetSign(queryString);
 
@@ -90,6 +116,59 @@ namespace Crypto.Core.Exchanges.Binance.Futures {
                 account.Balances.Add(b);
             }
             return true;
+        }
+
+        protected override string[] CreateOpenedOrdersString() {
+            return new string[] { 
+                "orderId",
+		        "symbol",
+		        "status",
+		        "clientOrderId",
+		        "price",
+		        "avgPrice",
+		        "origQty",
+		        "executedQty",
+		        "cumQuote",
+		        "timeInForce",
+		        "type",
+		        "reduceOnly",
+		        "closePosition",
+		        "side",
+		        "positionSide",
+		        "stopPrice",
+		        "workingType",
+		        "priceProtect",
+		        "origType",
+		        "time",
+		        "updateTime"
+            };
+        }
+
+        protected override OpenedOrderInfo InitializeOpenedOrderItem(string[] item, Ticker ticker) {
+            OpenedOrderInfo t = new OpenedOrderInfo(null, ticker);
+            t.OrderId = item[0];
+            t.Ticker = ticker;
+            t.ValueString = item[4];
+            t.AmountString = item[6];
+            t.TotalString = item[7];
+            t.Type = item[13][0] == 'B'? OrderType.Buy: OrderType.Sell;
+            t.Date = FromUnixTime(FastValueConverter.ConvertPositiveLong(item[19]));
+
+            return t;
+        }
+
+        protected override TradeInfoItem InitializeTradeInfoItem(string[] item, Ticker ticker) {
+            DateTime time = FromUnixTime(FastValueConverter.ConvertPositiveLong(item[4]));
+
+            TradeInfoItem t = new TradeInfoItem(null, ticker);
+            bool isBuy = item[4][0] != 't';
+            t.AmountString = item[2];
+            t.Time = time;
+            t.Type = isBuy ? TradeType.Buy : TradeType.Sell;
+            t.RateString = item[1];
+            t.IdString = item[0];
+
+            return t;
         }
 
         protected override void UpdateTickerInfo(BinanceTicker t, JObject item) {
@@ -149,24 +228,6 @@ namespace Crypto.Core.Exchanges.Binance.Futures {
             return new string[] { "id", "price", "qty", "quoteQty", "time", "isBuyerMaker" };
         }
 
-        private TradeInfoItem InitializeTradeInfoItem(string[] item, Ticker ticker) {
-            DateTime time = FromUnixTime(FastValueConverter.ConvertPositiveLong(item[4]));
-            int tradeId = FastValueConverter.ConvertPositiveInteger(item[0]);
-
-            TradeInfoItem t = new TradeInfoItem(null, ticker);
-            bool isBuy = item[5][0] != 't';
-            t.AmountString = item[2];
-            t.Time = time;
-            t.Type = isBuy ? TradeType.Buy : TradeType.Sell;
-            t.RateString = item[1];
-            t.Id = tradeId;
-            double price = t.Rate;
-            double amount = t.Amount;
-            t.Total = price * amount;
-
-            return t;
-        }
-
         protected override string ExchangeSettingsApi { get { return "https://binance.com/fapi/v1/exchangeInfo"; } }
 
         public override void OnAccountRemoved(AccountInfo info) {
@@ -176,25 +237,26 @@ namespace Crypto.Core.Exchanges.Binance.Futures {
             return true;
         }
 
-        public override TradingResult SellLong(AccountInfo account, Ticker ticker, double rate, double amount) {
-            throw new NotImplementedException();
-        }
+        protected override string UpdateAccountTradesApiString => "https://fapi.binance.com/fapi/v1/userTrades";
+        protected override TradeInfoItem InitializeAccountTradeInfoItem(string[] item, Ticker ticker) {
+            DateTime time = FromUnixTime(FastValueConverter.ConvertPositiveLong(item[13]));
 
-        public override TradingResult SellShort(AccountInfo account, Ticker ticker, double rate, double amount) {
-            throw new NotImplementedException();
-        }
-
-        public override bool UpdateAccountTrades(AccountInfo account, Ticker ticker) {
-            return true;
+            TradeInfoItem t = new TradeInfoItem(null, ticker);
+            t.OrderNumber = item[5];
+            bool isBuy = item[10][0] != 'S';
+            t.AmountString = item[7];
+            t.Time = time;
+            t.Type = isBuy ? TradeType.Buy : TradeType.Sell;
+            t.RateString = item[6];
+            t.IdString = item[3];
+            return t;
         }
 
         public override bool UpdateCurrencies() {
             return true;
         }
 
-        public override bool UpdateOpenedOrders(AccountInfo account, Ticker ticker) {
-            return true;
-        }
+        protected override string OpenOrdersApiString => "https://fapi.binance.com/fapi/v1/openOrders";
 
         protected override string UpdateOrderBookApiString => "https://fapi.binance.com/fapi/v1/depth";
 

@@ -1,9 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\CefSharp.WinForms.81.3.100\build\CefSharp.WinForms.props" Condition="Exists('..\packages\CefSharp.WinForms.81.3.100\build\CefSharp.WinForms.props')" />
-  <Import Project="..\packages\CefSharp.Common.81.3.100\build\CefSharp.Common.props" Condition="Exists('..\packages\CefSharp.Common.81.3.100\build\CefSharp.Common.props')" />
-  <Import Project="..\packages\cef.redist.x86.81.3.10\build\cef.redist.x86.props" Condition="Exists('..\packages\cef.redist.x86.81.3.10\build\cef.redist.x86.props')" />
-  <Import Project="..\packages\cef.redist.x64.81.3.10\build\cef.redist.x64.props" Condition="Exists('..\packages\cef.redist.x64.81.3.10\build\cef.redist.x64.props')" />
   <Import Project="..\packages\CefSharp.WinForms.71.0.2\build\CefSharp.WinForms.props" Condition="Exists('..\packages\CefSharp.WinForms.71.0.2\build\CefSharp.WinForms.props')" />
   <Import Project="..\packages\CefSharp.Common.71.0.2\build\CefSharp.Common.props" Condition="Exists('..\packages\CefSharp.Common.71.0.2\build\CefSharp.Common.props')" />
   <Import Project="..\packages\cef.redist.x86.3.3578.1870\build\cef.redist.x86.props" Condition="Exists('..\packages\cef.redist.x86.3.3578.1870\build\cef.redist.x86.props')" />
@@ -214,23 +210,18 @@
     </Reference>
     <Reference Include="Fleck, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Fleck.1.1.0\lib\net45\Fleck.dll</HintPath>
-      <Private>True</Private>
     </Reference>
-    <Reference Include="HtmlAgilityPack, Version=1.11.24.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
-      <HintPath>..\packages\HtmlAgilityPack.1.11.24\lib\Net45\HtmlAgilityPack.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="HtmlAgilityPack, Version=1.11.36.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
+      <HintPath>..\packages\HtmlAgilityPack.1.11.36\lib\Net45\HtmlAgilityPack.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.ApplicationInsights, Version=2.14.0.17971, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.ApplicationInsights.2.14.0\lib\net46\Microsoft.ApplicationInsights.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Microsoft.ApplicationInsights, Version=2.18.0.315, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.2.18.0\lib\net46\Microsoft.ApplicationInsights.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.AspNet.SignalR.Client, Version=2.4.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.SignalR.Client.2.4.1\lib\net45\Microsoft.AspNet.SignalR.Client.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Microsoft.AspNet.SignalR.Client, Version=2.4.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.Client.2.4.2\lib\net45\Microsoft.AspNet.SignalR.Client.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.1.1.1\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Win32.Primitives, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Win32.Primitives.4.3.0\lib\net46\Microsoft.Win32.Primitives.dll</HintPath>
@@ -239,9 +230,8 @@
       <HintPath>..\packages\MsgPack.Cli.1.0.1\lib\net46\MsgPack.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Msgpack, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Msgpack.0.1.11\lib\net461\Newtonsoft.Msgpack.dll</HintPath>
@@ -253,7 +243,6 @@
     <Reference Include="PresentationCore" />
     <Reference Include="RestSharp, Version=106.11.4.0, Culture=neutral, PublicKeyToken=598062e77f915f75, processorArchitecture=MSIL">
       <HintPath>..\packages\RestSharp.106.11.4\lib\net452\RestSharp.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="SlackClient, Version=0.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SlackClient.0.5.0.0\lib\net45\SlackClient.dll</HintPath>
@@ -273,7 +262,6 @@
     </Reference>
     <Reference Include="System.Collections.Immutable, Version=1.2.5.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Collections.Immutable.1.7.1\lib\net461\System.Collections.Immutable.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="System.Collections.Specialized, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Collections.Specialized.4.3.0\lib\net46\System.Collections.Specialized.dll</HintPath>
@@ -286,9 +274,8 @@
     </Reference>
     <Reference Include="System.Core" />
     <Reference Include="System.Data.Linq" />
-    <Reference Include="System.Diagnostics.DiagnosticSource, Version=4.0.5.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Diagnostics.DiagnosticSource.4.7.1\lib\net46\System.Diagnostics.DiagnosticSource.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="System.Diagnostics.DiagnosticSource, Version=5.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Diagnostics.DiagnosticSource.5.0.0\lib\net46\System.Diagnostics.DiagnosticSource.dll</HintPath>
     </Reference>
     <Reference Include="System.Globalization.Calendars, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Globalization.Calendars.4.3.0\lib\net46\System.Globalization.Calendars.dll</HintPath>
@@ -330,31 +317,24 @@
     </Reference>
     <Reference Include="System.Reactive, Version=4.4.0.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Reactive.4.4.1\lib\net46\System.Reactive.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="System.Reactive.Core, Version=3.0.3000.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Reactive.Core.4.4.1\lib\net46\System.Reactive.Core.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="System.Reactive.Interfaces, Version=3.0.3000.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Reactive.Interfaces.4.4.1\lib\net46\System.Reactive.Interfaces.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="System.Reactive.Linq, Version=3.0.3000.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Reactive.Linq.4.4.1\lib\net46\System.Reactive.Linq.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="System.Reactive.PlatformServices, Version=3.0.3000.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Reactive.PlatformServices.4.4.1\lib\net46\System.Reactive.PlatformServices.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="System.Reactive.Windows.Threading, Version=3.0.3000.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Reactive.Windows.Threading.4.4.1\lib\net46\System.Reactive.Windows.Threading.dll</HintPath>
-      <Private>True</Private>
     </Reference>
-    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.6.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.7.1\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.5.0.0\lib\net45\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
     <Reference Include="System.Runtime.InteropServices.RuntimeInformation, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Runtime.InteropServices.RuntimeInformation.4.3.0\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
@@ -378,15 +358,12 @@
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Text.Encodings.Web, Version=4.0.5.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Text.Encodings.Web.4.7.1\lib\net461\System.Text.Encodings.Web.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="System.Text.Json, Version=4.0.1.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Text.Json.4.7.2\lib\net461\System.Text.Json.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="System.Threading.Tasks.Dataflow, Version=4.6.5.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Threading.Tasks.Dataflow.4.11.1\lib\net461\System.Threading.Tasks.Dataflow.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
@@ -410,9 +387,8 @@
     <Reference Include="System.Xml.ReaderWriter, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Xml.ReaderWriter.4.3.1\lib\net46\System.Xml.ReaderWriter.dll</HintPath>
     </Reference>
-    <Reference Include="Telegram.Bot, Version=15.6.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Telegram.Bot.15.6.0\lib\net45\Telegram.Bot.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Telegram.Bot, Version=16.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Telegram.Bot.16.0.2\lib\net45\Telegram.Bot.dll</HintPath>
     </Reference>
     <Reference Include="Tinkoff.Trading.OpenApi, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Tinkoff.Trading.OpenApi.1.5.0\lib\netstandard2.0\Tinkoff.Trading.OpenApi.dll</HintPath>
@@ -428,12 +404,6 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AccounTradesCollectionForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="AccounTradesCollectionForm.Designer.cs">
-      <DependentUpon>AccounTradesCollectionForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="AnalyticsForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -460,6 +430,9 @@
     </Compile>
     <Compile Include="ConnectionForm.Designer.cs">
       <DependentUpon>ConnectionForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CustomControls\InvertedGridView.cs">
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="ExchangeCollectionForm.cs">
       <SubType>Form</SubType>
@@ -652,9 +625,6 @@
     <Compile Include="TrailngCollectionForm.Designer.cs">
       <DependentUpon>TrailngCollectionForm.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="AccounTradesCollectionForm.resx">
-      <DependentUpon>AccounTradesCollectionForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="AnalyticsForm.resx">
       <DependentUpon>AnalyticsForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -773,6 +743,7 @@
     <None Include="Properties\DataSources\Crypto.Core.Common.TickerNameInfo.datasource" />
     <None Include="Properties\DataSources\Exchange.datasource" />
     <None Include="Properties\DataSources\TickerBase.datasource" />
+    <None Include="Properties\DataSources\TradeInfo.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -855,17 +826,9 @@
     <Error Condition="!Exists('..\packages\CefSharp.Common.71.0.2\build\CefSharp.Common.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CefSharp.Common.71.0.2\build\CefSharp.Common.targets'))" />
     <Error Condition="!Exists('..\packages\CefSharp.WinForms.71.0.2\build\CefSharp.WinForms.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CefSharp.WinForms.71.0.2\build\CefSharp.WinForms.props'))" />
     <Error Condition="!Exists('..\packages\CefSharp.WinForms.71.0.2\build\CefSharp.WinForms.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CefSharp.WinForms.71.0.2\build\CefSharp.WinForms.targets'))" />
-    <Error Condition="!Exists('..\packages\cef.redist.x64.81.3.10\build\cef.redist.x64.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\cef.redist.x64.81.3.10\build\cef.redist.x64.props'))" />
-    <Error Condition="!Exists('..\packages\cef.redist.x86.81.3.10\build\cef.redist.x86.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\cef.redist.x86.81.3.10\build\cef.redist.x86.props'))" />
-    <Error Condition="!Exists('..\packages\CefSharp.Common.81.3.100\build\CefSharp.Common.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CefSharp.Common.81.3.100\build\CefSharp.Common.props'))" />
-    <Error Condition="!Exists('..\packages\CefSharp.Common.81.3.100\build\CefSharp.Common.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CefSharp.Common.81.3.100\build\CefSharp.Common.targets'))" />
-    <Error Condition="!Exists('..\packages\CefSharp.WinForms.81.3.100\build\CefSharp.WinForms.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CefSharp.WinForms.81.3.100\build\CefSharp.WinForms.props'))" />
-    <Error Condition="!Exists('..\packages\CefSharp.WinForms.81.3.100\build\CefSharp.WinForms.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CefSharp.WinForms.81.3.100\build\CefSharp.WinForms.targets'))" />
     <Error Condition="!Exists('..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets'))" />
   </Target>
   <Import Project="..\packages\CefSharp.Common.71.0.2\build\CefSharp.Common.targets" Condition="Exists('..\packages\CefSharp.Common.71.0.2\build\CefSharp.Common.targets')" />
   <Import Project="..\packages\CefSharp.WinForms.71.0.2\build\CefSharp.WinForms.targets" Condition="Exists('..\packages\CefSharp.WinForms.71.0.2\build\CefSharp.WinForms.targets')" />
-  <Import Project="..\packages\CefSharp.Common.81.3.100\build\CefSharp.Common.targets" Condition="Exists('..\packages\CefSharp.Common.81.3.100\build\CefSharp.Common.targets')" />
-  <Import Project="..\packages\CefSharp.WinForms.81.3.100\build\CefSharp.WinForms.targets" Condition="Exists('..\packages\CefSharp.WinForms.81.3.100\build\CefSharp.WinForms.targets')" />
   <Import Project="..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets" Condition="Exists('..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets')" />
 </Project>

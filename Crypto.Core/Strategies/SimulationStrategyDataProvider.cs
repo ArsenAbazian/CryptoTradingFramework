@@ -41,8 +41,7 @@ namespace Crypto.Core.Strategies {
 
                 if(ti.Ticker.CandleStickData != null)
                     ti.Ticker.CandleStickData.Clear();
-                if(ti.Ticker.TradeHistory != null)
-                    ti.Ticker.TradeHistory.Clear();
+                ti.Ticker.ClearTradeHistory();
 
                 ti.Ticker.Exchange.EnterSimulationMode();
                 ti.Ticker.Exchange.StartListenTickerStream(ti.Ticker);
@@ -583,7 +582,7 @@ namespace Crypto.Core.Strategies {
             if(CurrentTradeItemIndex == Trades.Count)
                 return;
             if(Trades[CurrentTradeItemIndex].Time == time) {
-                Ticker.UpdateTradeData(Trades[CurrentTradeItemIndex]);
+                Ticker.UpdateSimulationTradeData(Trades[CurrentTradeItemIndex]);
                 //CurrentTradeItemIndex++;
             }
         }

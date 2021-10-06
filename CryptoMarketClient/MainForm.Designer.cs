@@ -127,7 +127,6 @@
             this.logMessagesControl2 = new CryptoMarketClient.LogMessagesControl();
             this.ribbonPage7 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPage8 = new DevExpress.XtraBars.Ribbon.RibbonPage();
-            this.toastNotificationsManager1 = new DevExpress.XtraBars.ToastNotifications.ToastNotificationsManager(this.components);
             this.ribbonPage5 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemSpinEdit1)).BeginInit();
@@ -141,7 +140,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.dockManager1)).BeginInit();
             this.dpLog.SuspendLayout();
             this.controlContainer1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.toastNotificationsManager1)).BeginInit();
             this.SuspendLayout();
             // 
             // ribbonControl1
@@ -912,12 +910,6 @@
             this.ribbonPage8.Name = "ribbonPage8";
             this.ribbonPage8.Text = "ribbonPage8";
             // 
-            // toastNotificationsManager1
-            // 
-            this.toastNotificationsManager1.ApplicationId = "ab6decea-81d2-4ad9-b8b7-45653fe59087";
-            this.toastNotificationsManager1.Notifications.AddRange(new DevExpress.XtraBars.ToastNotifications.IToastNotificationProperties[] {
-            new DevExpress.XtraBars.ToastNotifications.ToastNotification("15cf67ee-0e4e-4010-88e0-6bcc0f80e947", global::CryptoMarketClient.Properties.Resources.notification_image3, "CryptoTraderAuto", "Application started", "", DevExpress.XtraBars.ToastNotifications.ToastNotificationTemplate.ImageAndText03)});
-            // 
             // ribbonPage5
             // 
             this.ribbonPage5.Name = "ribbonPage5";
@@ -951,7 +943,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.dockManager1)).EndInit();
             this.dpLog.ResumeLayout(false);
             this.controlContainer1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.toastNotificationsManager1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1039,7 +1030,6 @@
         private DevExpress.XtraBars.BarSubItem barSubItem1;
         private DevExpress.XtraBars.BarButtonItem biAnalyseSingleTrade;
         private DevExpress.XtraBars.BarButtonItem biDownloadManager;
-        private DevExpress.XtraBars.ToastNotifications.ToastNotificationsManager toastNotificationsManager1;
         private DevExpress.XtraBars.Ribbon.RibbonPage ribbonPage5;
         private DevExpress.XtraBars.BarSubItem barSubItem2;
         private DevExpress.XtraBars.BarButtonItem biGapDetector;

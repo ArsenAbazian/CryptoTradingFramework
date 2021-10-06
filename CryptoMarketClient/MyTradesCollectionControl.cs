@@ -29,7 +29,7 @@ namespace CryptoMarketClient {
         void OnTickerChanged() {
             if(Ticker == null)
                 return;
-            this.gcTrades.DataSource = Ticker.MyTradeHistory;
+            this.gcTrades.DataSource = Ticker.AccountTradeHistory;
             UpdateTrades();
         }
 
@@ -40,7 +40,7 @@ namespace CryptoMarketClient {
             if(Ticker == null)
                 return;
             Task t = Task.Factory.StartNew(() => {
-                if(Ticker.UpdateMyTrades() && this.gcTrades.IsHandleCreated) {
+                if(Ticker.UpdateAccountTrades() && this.gcTrades.IsHandleCreated) {
                     BeginInvoke(new MethodInvoker(() => this.gvTrades.RefreshData()));
                 }
             });

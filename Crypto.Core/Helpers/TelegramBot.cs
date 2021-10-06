@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Telegram.Bot;
@@ -38,7 +39,7 @@ namespace Crypto.Core.Helpers {
 
             //proxy.ResolveHostnamesLocally = true;
             //InnerClient = new Telegram.Bot.TelegramBotClient("410447550:AAGz1QRPgdoh5tuddcMleFYI9Ttw-Ytn9Fs", proxy);
-            InnerClient = new Telegram.Bot.TelegramBotClient("410447550:AAGz1QRPgdoh5tuddcMleFYI9Ttw-Ytn9Fs", (IWebProxy)null);
+            InnerClient = new Telegram.Bot.TelegramBotClient("410447550:AAGz1QRPgdoh5tuddcMleFYI9Ttw-Ytn9Fs", (HttpClient)null);
         }
         bool RegisterNewUsers(Update[] result) {
             bool registered = false;

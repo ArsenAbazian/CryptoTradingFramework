@@ -70,8 +70,19 @@ namespace Crypto.Core.Common {
             }
         }
 
+        public string completedString;
+        public string CompletedString {
+            get { return completedString; }
+            set {
+                if(CompletedString == value)
+                    return;
+                completedString = value;
+                this.completedCalculated = false;
+            }
+        }
+
         double value = 0, amount = 0, total;
-        bool valueCalculated, amountCalculated, totalCalculated;
+        bool valueCalculated, amountCalculated, totalCalculated, completedCalculated;
         public double Value {
             get {
                 if(!valueCalculated) {
@@ -107,6 +118,19 @@ namespace Crypto.Core.Common {
             }
         }
 
+        double completed;
+        public double Completed {
+            get {
+                if(!completedCalculated) {
+                    if(string.IsNullOrEmpty(CompletedString))
+                        return completed;
+                    completedCalculated = true;
+                    completed = FastValueConverter.Convert(CompletedString);
+                }
+                return completed;
+            }
+        }
+
         public DateTime OrderDate {
             get { return GetOrderDate(); }
         }
@@ -115,4 +139,13 @@ namespace Crypto.Core.Common {
             return Date;
         }
     }
+
+    public class CancelOrderEventArgs : EventArgs {
+        public Ticker Ticker { get; internal set; }
+        public OpenedOrderInfo Order { get; internal set; }
+        public bool Canceled { get; internal set; }
+        public string Status { get; internal set; }
+    }
+
+    public delegate void CancelOrderHandler(object sender, CancelOrderEventArgs e);
 }

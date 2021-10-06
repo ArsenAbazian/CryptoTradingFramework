@@ -332,14 +332,14 @@ namespace CryptoMarketClient {
             }));
         }
 
-        AccounTradesCollectionForm tradesForm;
-        protected AccounTradesCollectionForm TradesForm {
-            get {
-                if(tradesForm == null || tradesForm.IsDisposed)
-                    tradesForm = new AccounTradesCollectionForm(Exchange);
-                return tradesForm;
-            }
-        }
+        //AccounTradesCollectionForm tradesForm;
+        //protected AccounTradesCollectionForm TradesForm {
+        //    get {
+        //        if(tradesForm == null || tradesForm.IsDisposed)
+        //            tradesForm = new AccounTradesCollectionForm(Exchange);
+        //        return tradesForm;
+        //    }
+        //}
         private void barButtonItem2_ItemClick_1(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
             OrdersForm.MdiParent = MdiParent;
             OrdersForm.Show();
@@ -347,9 +347,9 @@ namespace CryptoMarketClient {
         }
 
         private void barButtonItem3_ItemClick(object sender, ItemClickEventArgs e) {
-            TradesForm.MdiParent = MdiParent;
-            TradesForm.Show();
-            TradesForm.Activate();
+            //TradesForm.MdiParent = MdiParent;
+            //TradesForm.Show();
+            //TradesForm.Activate();
         }
 
         private void bcShowOnlyFavorite_CheckedChanged(object sender, ItemClickEventArgs e) {

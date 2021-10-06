@@ -48,7 +48,7 @@ namespace Crypto.Core.Bittrex {
         public override bool SupportWebSocket(WebSocketType type) {
             if(type == WebSocketType.Tickers)
                 return true;
-            if(type == WebSocketType.Ticker)
+            if(type == WebSocketType.Ticker || type == WebSocketType.Trades || type == WebSocketType.OrderBook)
                 return true;
             return false;
         }
@@ -406,7 +406,7 @@ namespace Crypto.Core.Bittrex {
                     m.Created = Convert.ToDateTime(item[8]).ToLocalTime();
                     m.LogoUrl = item[11];
                     m.Index = Tickers.Count;
-                    Tickers.Add(m);
+                    AddTicker(m);
                 }
             }
             catch(Exception) {
@@ -671,19 +671,18 @@ namespace Crypto.Core.Bittrex {
             if(res == null)
                 return false;
             lock(ticker) {
-                ticker.TradeHistory.Clear();
+                ticker.ClearTradeHistory();
                 for(int i = 0; i < res.Count; i++) {
                     string[] obj = res[i];
                     TradeInfoItem item = new TradeInfoItem(null, ticker);
-                    item.Id = Convert.ToInt64(obj[0]);
-                    ;
-                    item.Time = Convert.ToDateTime(obj[1]).ToLocalTime();
+                    item.IdString = obj[0];
+                    item.TimeString = obj[1];
                     item.AmountString = obj[2];
                     item.RateString = obj[3];
-                    item.Total = FastValueConverter.Convert(obj[4]);
+                    item.TotalString = obj[4];
                     item.Type = obj[6].Length == 3 ? TradeType.Buy : TradeType.Sell;
                     item.Fill = obj[5].Length == 4 ? TradeFillType.Fill : TradeFillType.PartialFill;
-                    ticker.TradeHistory.Add(item);
+                    ticker.AddTradeHistoryItem(item);
                 }
             }
             if(ticker.HasTradeHistorySubscribers) {
@@ -738,14 +737,13 @@ namespace Crypto.Core.Bittrex {
             if(!JSonHelper.Default.SkipSymbol(bytes, ':', 3, ref startIndex))
                 return false;
 
-            List<TradeInfoItem> myTrades = ticker != null ? ticker.MyTradeHistory : account.MyTrades;
             List<string[]> res = JSonHelper.Default.DeserializeArrayOfObjects(bytes, ref startIndex, AccountTradeItems);
             if(res == null)
                 return false;
             if(res.Count == 0)
                 return true;
-            lock(myTrades) {
-                myTrades.Clear();
+            ticker.LockAccountTrades();
+            try {
                 for(int i = 0; i < res.Count; i++) {
                     string[] obj = res[i];
                     Ticker first = null;
@@ -763,11 +761,14 @@ namespace Crypto.Core.Bittrex {
                     item.Type = obj[3] == "LIMIT_BUY" ? TradeType.Buy : TradeType.Sell;
                     item.AmountString = obj[5];
                     item.RateString = obj[9];
-                    item.Fee = FastValueConverter.Convert(obj[7]);
-                    item.Total = FastValueConverter.Convert(obj[8]);
+                    item.FeeString = obj[7];
+                    item.TotalString = obj[8];
                     item.TimeString = obj[2];
-                    myTrades.Add(item);
+                    ticker.AddAccountTradeHistoryItem(item);
                 }
+            }
+            finally {
+                ticker.UnlockAccountTrades();
             }
             return true;
         }
@@ -791,33 +792,32 @@ namespace Crypto.Core.Bittrex {
             long lastId = info.TradeHistory.Count > 0 ? info.TradeHistory.First().Id : -1;
             string lastIdString = lastId.ToString();
             List<string[]> res = JSonHelper.Default.DeserializeArrayOfObjects(bytes, ref startIndex, new string[] { "Id", "TimeStamp", "Quantity", "Price", "Total", "FillType", "OrderType" },
-                (itemIndex, paramIndex, value) => {
-                    return paramIndex != 0 || lastIdString != value;
+                (itemIndex, props) => {
+                    return lastIdString != props[0];
                 });
             if(res == null || res.Count == 0)
                 return true;
 
-            int index = 0;
             ResizeableArray<TradeInfoItem> newItems = new ResizeableArray<TradeInfoItem>(res.Count);
             lock(info) {
+                info.LockTrades();
+                info.ClearTradeHistory();
                 for(int i = 0; i < res.Count; i++) {
                     string[] obj = res[i];
                     TradeInfoItem item = new TradeInfoItem(null, info);
-                    item.Id = Convert.ToInt64(obj[0]);
-                    item.Time = Convert.ToDateTime(obj[1]).ToLocalTime();
+                    item.IdString = obj[0];
+                    item.TimeString = obj[1];
                     item.AmountString = obj[2];
                     item.RateString = obj[3];
-                    item.Total = FastValueConverter.Convert(obj[4]);
+                    item.TotalString = obj[4];
                     item.Type = obj[6].Length == 3 ? TradeType.Buy : TradeType.Sell;
                     item.Fill = obj[5].Length == 4 ? TradeFillType.Fill : TradeFillType.PartialFill;
-                    info.TradeHistory.Insert(index, item);
-                    newItems.Insert(index, item);
-                    index++;
+                    info.AddTradeHistoryItem(item) ;//.InsertTradeHistoryItem(item);
                 }
+                info.UnlockTrades();
             }
-            if(info.HasTradeHistorySubscribers) {
+            if(info.HasTradeHistorySubscribers)
                 info.RaiseTradeHistoryChanged(new TradeHistoryChangedEventArgs() { NewItems = newItems });
-            }
             return true;
         }
         public bool UpdateTradesStatistic(BittrexTicker info, int depth) {
@@ -838,8 +838,8 @@ namespace Crypto.Core.Bittrex {
 
             string lastIdString = info.LastTradeId.ToString();
             List<string[]> res = JSonHelper.Default.DeserializeArrayOfObjects(bytes, ref startIndex, new string[] { "Id", "TimeStamp", "Quantity", "Price", "Total", "FillType", "OrderType" },
-                (itemIndex, paramIndex, value) => {
-                    return paramIndex != 0 || lastIdString != value;
+                (itemIndex, props) => {
+                    return lastIdString != props[0];
                 });
             if(res == null)
                 return false;
@@ -923,7 +923,7 @@ namespace Crypto.Core.Bittrex {
         public override TradingResult SellShort(AccountInfo account, Ticker ticker, double rate, double amount) {
             throw new NotImplementedException();
         }
-        public override bool Cancel(AccountInfo account, string orderId) {
+        public override bool Cancel(AccountInfo account, Ticker ticker, string orderId) {
             string address = string.Format("https://bittrex.com/api/v1.1/market/cancel?apikey={0}&nonce={1}&uuid={2}",
                 Uri.EscapeDataString(account.ApiKey),
                 GetNonce(),
@@ -1014,12 +1014,14 @@ namespace Crypto.Core.Bittrex {
         public TradingResult OnBuy(AccountInfo account, Ticker ticker, string result) {
             string res = OnUuidResult(result);
             TradingResult t = new TradingResult();
+            t.Ticker = ticker;
             t.Trades.Add(new TradeEntry() { Id = res });
             return t;
         }
         public TradingResult OnSell(AccountInfo account, Ticker ticker, string result) {
             string res = OnUuidResult(result);
             TradingResult t = new TradingResult();
+            t.Ticker = ticker;
             t.Trades.Add(new TradeEntry() { Id = res });
             return t;
         }
@@ -1065,6 +1067,8 @@ namespace Crypto.Core.Bittrex {
 
             List<string[]> res = JSonHelper.Default.DeserializeArrayOfObjects(bytes, ref startIndex, OpenedOrderItems);
             List<OpenedOrderInfo> openedOrders = ticker == null ? account.OpenedOrders : ticker.OpenedOrders;
+            if(ticker != null)
+                ticker.SaveOpenedOrders();
             openedOrders.Clear();
             if(res == null || res.Count == 0)
                 return true;

@@ -52,6 +52,36 @@ namespace Crypto.Core.Common {
                 PropertyChangedCore.Invoke(this, new PropertyChangedEventArgs(propName));
         }
 
+        double availableForBuy;
+        public double AvailableForBuy {
+            get{ return availableForBuy; }
+            set { 
+                if(AvailableForBuy == value)
+                    return;
+                availableForBuy = value;
+                OnAvailableForBuyChanged();
+            }
+        }
+
+        private void OnAvailableForBuyChanged() {
+            RaisePropertyChanged("AvailableForBuy");
+        }
+
+        double availableForSell;
+        public double AvailableForSell {
+            get{ return availableForSell; }
+            set { 
+                if(AvailableForSell == value)
+                    return;
+                availableForSell = value;
+                OnAvailableForSellChanged();
+            }
+        }
+
+        private void OnAvailableForSellChanged() {
+            RaisePropertyChanged("AvailableForSell");
+        }
+
         double buyPrice;
         public double BuyPrice {
             get { return buyPrice; }

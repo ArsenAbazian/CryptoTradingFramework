@@ -214,7 +214,7 @@ namespace Crypto.Core.Common {
                 }
                 else if(info.Type == SocketSubscribeType.TradeHistory) {
                     info.Ticker.IsTradeHistorySubscribed = true;
-                    info.Ticker.TradeHistory.Clear();
+                    info.Ticker.ClearTradeHistory();
                     Telemetry.Default.TrackEvent(LogType.Log, logOwner, "trade history channel subscibed", "");
                 }
                 else if(info.Type == SocketSubscribeType.Kline) {

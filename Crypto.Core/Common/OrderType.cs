@@ -9,4 +9,9 @@ namespace Crypto.Core.Common {
         Buy,
         Sell
     }
+
+    public enum PositionSide {
+        Long,
+        Short
+    }
 }

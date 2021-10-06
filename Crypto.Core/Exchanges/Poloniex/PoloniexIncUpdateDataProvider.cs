@@ -17,11 +17,10 @@ namespace Crypto.Core.Exchanges.Poloniex {
                     TradeInfoItem trade = new TradeInfoItem(null, ticker) {
                             Type = item[2][0] == '0' ? TradeType.Sell : TradeType.Buy, RateString = item[3], AmountString = item[4], Time = ticker.Exchange.FromUnixTimestamp(Convert.ToInt64(item[5]))
                     };
-                    if(trade.Time.Year == 1)
-                    {
+                    if(trade.Time.Year == 1) {
                         throw new InvalidOperationException();
                     }
-                    ticker.TradeHistory.Insert(0, trade);
+                    ticker.AddTradeHistoryItem(trade);//.InsertTradeHistoryItem(trade);
                     CandleStickChartHelper.UpdateVolumes(ticker.CandleStickData, trade, ticker.CandleStickPeriodMin);
                 }
             }

@@ -70,19 +70,19 @@ namespace CryptoMarketClient {
             this.colRate.MinWidth = 40;
             this.colRate.Name = "colRate";
             this.colRate.Visible = true;
-            this.colRate.VisibleIndex = 0;
-            this.colRate.Width = 685;
+            this.colRate.VisibleIndex = 1;
+            this.colRate.Width = 341;
             // 
             // gcTrades
             // 
             this.gcTrades.DataSource = this.tradeHistoryItemBindingSource;
             this.gcTrades.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gcTrades.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(12);
-            this.gcTrades.Location = new System.Drawing.Point(0, 60);
+            this.gcTrades.Location = new System.Drawing.Point(0, 46);
             this.gcTrades.MainView = this.gvTrades;
             this.gcTrades.Margin = new System.Windows.Forms.Padding(12);
             this.gcTrades.Name = "gcTrades";
-            this.gcTrades.Size = new System.Drawing.Size(2261, 876);
+            this.gcTrades.Size = new System.Drawing.Size(2261, 890);
             this.gcTrades.TabIndex = 1;
             this.gcTrades.UseDirectXPaint = DevExpress.Utils.DefaultBoolean.True;
             this.gcTrades.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
@@ -142,8 +142,8 @@ namespace CryptoMarketClient {
             this.colTime.MinWidth = 40;
             this.colTime.Name = "colTime";
             this.colTime.Visible = true;
-            this.colTime.VisibleIndex = 4;
-            this.colTime.Width = 1343;
+            this.colTime.VisibleIndex = 0;
+            this.colTime.Width = 885;
             // 
             // colAmount
             // 
@@ -153,8 +153,8 @@ namespace CryptoMarketClient {
             this.colAmount.MinWidth = 40;
             this.colAmount.Name = "colAmount";
             this.colAmount.Visible = true;
-            this.colAmount.VisibleIndex = 1;
-            this.colAmount.Width = 685;
+            this.colAmount.VisibleIndex = 2;
+            this.colAmount.Width = 341;
             // 
             // colTotal
             // 
@@ -162,8 +162,8 @@ namespace CryptoMarketClient {
             this.colTotal.MinWidth = 40;
             this.colTotal.Name = "colTotal";
             this.colTotal.Visible = true;
-            this.colTotal.VisibleIndex = 2;
-            this.colTotal.Width = 238;
+            this.colTotal.VisibleIndex = 3;
+            this.colTotal.Width = 228;
             // 
             // colFee
             // 
@@ -171,8 +171,8 @@ namespace CryptoMarketClient {
             this.colFee.MinWidth = 40;
             this.colFee.Name = "colFee";
             this.colFee.Visible = true;
-            this.colFee.VisibleIndex = 3;
-            this.colFee.Width = 477;
+            this.colFee.VisibleIndex = 4;
+            this.colFee.Width = 466;
             // 
             // colFill
             // 
@@ -230,7 +230,7 @@ namespace CryptoMarketClient {
             this.barDockControlTop.Location = new System.Drawing.Point(0, 0);
             this.barDockControlTop.Manager = this.barManager1;
             this.barDockControlTop.Margin = new System.Windows.Forms.Padding(6);
-            this.barDockControlTop.Size = new System.Drawing.Size(2261, 60);
+            this.barDockControlTop.Size = new System.Drawing.Size(2261, 46);
             // 
             // barDockControlBottom
             // 
@@ -245,19 +245,19 @@ namespace CryptoMarketClient {
             // 
             this.barDockControlLeft.CausesValidation = false;
             this.barDockControlLeft.Dock = System.Windows.Forms.DockStyle.Left;
-            this.barDockControlLeft.Location = new System.Drawing.Point(0, 60);
+            this.barDockControlLeft.Location = new System.Drawing.Point(0, 46);
             this.barDockControlLeft.Manager = this.barManager1;
             this.barDockControlLeft.Margin = new System.Windows.Forms.Padding(6);
-            this.barDockControlLeft.Size = new System.Drawing.Size(0, 876);
+            this.barDockControlLeft.Size = new System.Drawing.Size(0, 890);
             // 
             // barDockControlRight
             // 
             this.barDockControlRight.CausesValidation = false;
             this.barDockControlRight.Dock = System.Windows.Forms.DockStyle.Right;
-            this.barDockControlRight.Location = new System.Drawing.Point(2261, 60);
+            this.barDockControlRight.Location = new System.Drawing.Point(2261, 46);
             this.barDockControlRight.Manager = this.barManager1;
             this.barDockControlRight.Margin = new System.Windows.Forms.Padding(6);
-            this.barDockControlRight.Size = new System.Drawing.Size(0, 876);
+            this.barDockControlRight.Size = new System.Drawing.Size(0, 890);
             // 
             // MyTradesCollectionControl
             // 

@@ -24,12 +24,17 @@ using System.IO.Compression;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
+using Crypto.UI.Helpers;
 
 namespace CryptoMarketClient {
     public partial class MainForm : DevExpress.XtraBars.Ribbon.RibbonForm {
 
         public MainForm() {
             InitializeComponent();
+            NotificationManager.Provider = new NotificationProvider(this, global::CryptoMarketClient.Properties.Resources.notification_image3);
+            this.ribbonControl1.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonControlStyle.Office2019;
+            this.ribbonControl1.CommandLayout = DevExpress.XtraBars.Ribbon.CommandLayout.Simplified;
+            this.ribbonControl1.GetController().PropertiesRibbon.DefaultSimplifiedRibbonGlyphSize = 22;
             FormBorderEffect = FormBorderEffect.None;
         }
 
@@ -56,7 +61,7 @@ namespace CryptoMarketClient {
             //ExchangesForm.Show();
             //ExchangesForm.Activate();
 
-            this.toastNotificationsManager1.ShowNotification(this.toastNotificationsManager1.Notifications[0]);
+            NotificationManager.Notify("Application Started");
             AddExchangesForm();
         }
 

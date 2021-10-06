@@ -8,6 +8,7 @@ using System.Xml.Serialization;
 namespace Crypto.Core.Common {
     public class TradingResult {
         public string OrderId { get; set; }
+        public Ticker Ticker { get; set; }
         public List<TradeEntry> Trades { get; } = new List<TradeEntry>();
         public DateTime Date { get; set; }
         public double Amount { get; set; }
@@ -16,6 +17,7 @@ namespace Crypto.Core.Common {
         public string OrderStatus { get; set; }
         public bool Filled { get; set; }
         public OrderType Type { get; set; }
+        public PositionSide PositionSide { get; set; } = PositionSide.Long;
 
         public void Calculate() {
             Date = DateTime.UtcNow;

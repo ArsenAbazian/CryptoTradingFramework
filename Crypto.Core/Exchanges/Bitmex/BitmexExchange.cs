@@ -65,6 +65,7 @@ namespace Crypto.Core.Exchanges.Bitmex {
                     return null;
                 }
                 TradingResult res = new TradingResult();
+                res.Ticker = ticker;
                 res.OrderId = obj.Value<string>("orderID");
                 res.Date = Convert.ToDateTime(obj.Value<string>("transactTime"));
                 res.Amount = FastValueConverter.Convert(obj.Value<string>("orderQty"));
@@ -81,7 +82,7 @@ namespace Crypto.Core.Exchanges.Bitmex {
             }
         }
 
-        public override bool Cancel(AccountInfo account, string orderId) {
+        public override bool Cancel(AccountInfo account, Ticker ticker, string orderId) {
             throw new NotImplementedException();
         }
 
@@ -138,7 +139,7 @@ namespace Crypto.Core.Exchanges.Bitmex {
                     t.Change = ToDouble(obj, "lastChangePcnt");
                     t.Volume = ToDouble(obj, "volume24h");
                     t.Fee = ToDouble(obj, "takerFee") * 100;
-                    Tickers.Add(t);
+                    AddTicker(t);
                     index++;
                 }
             }
@@ -233,7 +234,7 @@ namespace Crypto.Core.Exchanges.Bitmex {
         }
 
         public override bool SupportWebSocket(WebSocketType type) {
-            if(type == WebSocketType.Ticker)
+            if(type == WebSocketType.Ticker || type == WebSocketType.Trades || type == WebSocketType.OrderBook)
                 return true;
             if(type == WebSocketType.Tickers)
                 return true;
@@ -374,6 +375,8 @@ namespace Crypto.Core.Exchanges.Bitmex {
             string text = UTF8Encoding.Default.GetString(data);
             JArray items = (JArray)JsonConvert.DeserializeObject(text);
             List<OpenedOrderInfo> openedOrders = ticker == null ? account.OpenedOrders : ticker.OpenedOrders;
+            if(ticker != null)
+                ticker.SaveOpenedOrders();
             lock(openedOrders) {
                 openedOrders.Clear();
 
@@ -513,12 +516,13 @@ namespace Crypto.Core.Exchanges.Bitmex {
         protected override int WebSocketAllowedDelayInterval { get { return 15000; } }
 
         protected internal override void OnTradeHistorySocketMessageReceived(object sender, MessageReceivedEventArgs e) {
-            base.OnTradeHistorySocketMessageReceived(sender, e);
             LastWebSocketRecvTime = DateTime.Now;
             SocketConnectionInfo info = TradeHistorySockets.FirstOrDefault(c => c.Key == sender);
             if(info == null)
                 return;
             Ticker t = info.Ticker;
+            if(t.IsUpdatingTrades)
+                return;
 
             if(t.CaptureData)
                 t.CaptureDataCore(CaptureStreamType.TradeHistory, CaptureMessageType.Incremental, e.Message);
@@ -533,11 +537,11 @@ namespace Crypto.Core.Exchanges.Bitmex {
                 ti.Type = item.Value<string>("side")[0] == 'S' ? TradeType.Sell : TradeType.Buy;
                 ti.AmountString = item.Value<string>("size");
                 ti.RateString = item.Value<string>("price");
-                t.TradeHistory.Insert(0, ti);
+                t.AddTradeHistoryItem(ti); //.InsertTradeHistoryItem(ti);
             }
 
             if(t.HasTradeHistorySubscribers) {
-                TradeHistoryChangedEventArgs ee = new TradeHistoryChangedEventArgs() { NewItem = t.TradeHistory[0] };
+                TradeHistoryChangedEventArgs ee = new TradeHistoryChangedEventArgs() { NewItem = t.TradeHistory.First() };
                 t.RaiseTradeHistoryChanged(ee);
             }
         }

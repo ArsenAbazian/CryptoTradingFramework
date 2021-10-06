@@ -21,7 +21,7 @@ namespace Crypto.Core.Exchanges.Bittrex {
                 TradeInfoItem trade = new TradeInfoItem(null, ticker) {
                         Type = item[1][0] == 'S' ? TradeType.Sell : TradeType.Buy, RateString = item[2], AmountString = item[3], Time = new DateTime(Convert.ToInt64(item[4])).ToLocalTime()
                 };
-                ticker.TradeHistory.Insert(0, trade);
+                ticker.AddTradeHistoryItem(trade);//.InsertTradeHistoryItem(trade);
                 CandleStickChartHelper.UpdateVolumes(ticker.CandleStickData, trade, ticker.CandleStickPeriodMin);
             }
             ticker.OnApplyIncrementalUpdate();
@@ -54,7 +54,7 @@ namespace Crypto.Core.Exchanges.Bittrex {
                 ticker.OrderBook.EndUpdate();
             }
 
-            ticker.TradeHistory.Clear();
+            ticker.ClearTradeHistory();
             JArray jtrades = jObject.Value<JArray>("f");
             foreach(JObject item in jtrades) {
                 TradeInfoItem t = new TradeInfoItem(null, ticker);
@@ -62,9 +62,8 @@ namespace Crypto.Core.Exchanges.Bittrex {
                 t.RateString = item.Value<string>("P");
                 t.Time = new DateTime(Convert.ToInt64(item.Value<string>("T"))).ToLocalTime();
                 t.TimeString = t.Time.ToLongTimeString();
-                t.Total = t.Rate * t.Amount;
                 t.Type = (item.Value<string>("OT")) == "BUY" ? TradeType.Buy : TradeType.Sell;
-                ticker.TradeHistory.Add(t);
+                ticker.AddTradeHistoryItem(t);
             }
 
             if(ticker.HasTradeHistorySubscribers) {

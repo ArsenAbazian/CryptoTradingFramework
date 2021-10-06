@@ -70,7 +70,6 @@ namespace CryptoMarketClient {
                 Ticker.CandleStickData.ThreadManager = ThreadManager;
                 Ticker.StopListenKlineStream();
                 SetCandleStickCheckItemValues();
-                UpdateOrderBook();
                 UpdateDataFromServer(false);
                 UpdateCandleStickMenu();
                 UpdateChart();
@@ -162,15 +161,15 @@ namespace CryptoMarketClient {
                 this.chartWalls.Series["Buy volume"].View.Color = Exchange.BidColor;
 
                 ConfigurateChart(ViewType.CandleStick);
-                ((XYDiagram)this.chartControl1.Diagram).AxisX.VisualRange.SetMinMaxValues(DateTime.UtcNow.AddMinutes(-Ticker.CandleStickPeriodMin * CalculateCandlestickBestFit()), DateTime.UtcNow);
-                ((XYDiagram)this.chartMarketDepth.Diagram).AxisX.VisualRange.SetMinMaxValues(0, 2 * GetMinRangeFromBidAsk());
-                ((XYDiagram)this.chartWalls.Diagram).AxisX.VisualRange.SetMinMaxValues(0, 2 * GetMinRangeFromBidAsk());
+                
                 UpdateEvents(null);
             }
             finally {
                 SuppressUpdateCandlestickData = false;
             }
         }
+
+        protected bool ShouldUpdateVisualRange { get; set; } = true; 
 
         private double GetMinRangeFromBidAsk()
         {
@@ -216,8 +215,8 @@ namespace CryptoMarketClient {
             this.chartControl1.Series["Current"].DataSource = null;
             if(type == ViewType.CandleStick || type == ViewType.Stock)
                 this.chartControl1.Series["Current"].BindToData(new RealTimeSource() { DataSource = Ticker.CandleStickData }, "Time", "Low", "High", "Open", "Close");
-            else
-                this.chartControl1.Series["Current"].BindToData(new RealTimeSource() { DataSource = Ticker.History }, "Time", "Current");
+            //else
+            //    this.chartControl1.Series["Current"].BindToData(new RealTimeSource() { DataSource = Ticker.History }, "Time", "Current"); TODO Change HeavyDataSource 
             UpdateChartProperties();
         }
         void InitializeCheckItems() {
@@ -392,6 +391,45 @@ namespace CryptoMarketClient {
             this.chartControl1.Series["Current"].DataSource = new RealTimeSource() { DataSource = data };
             this.chartControl1.Series["Volume"].DataSource = new RealTimeSource() { DataSource = data };
             this.chartControl1.Series["BuySellVolume"].DataSource = new RealTimeSource() { DataSource = data };
+
+            if(ShouldUpdateVisualRange) {
+                ShouldUpdateVisualRange = false;
+                
+                BeginInvoke(new MethodInvoker(() => { 
+                    UpdateCandleStickVisualRange();
+                    UpdateMarketDepthVisualRange();
+                    UpdateWallsVisualRange();
+                }));
+            }
+        }
+
+        private void UpdateWallsVisualRange() {
+             XYDiagram xYDiagram = (XYDiagram)this.chartWalls.Diagram;
+            double maxValue = Ticker.OrderBook.Asks.Count > 0? Ticker.OrderBook.Asks.Last().Value: 0;
+            double minValue = 0;
+            double bid = Ticker.OrderBook.Bids.Count > 0? Ticker.OrderBook.Bids[0].Value: 0;
+
+            //xYDiagram.AxisX.WholeRange.SetMinMaxValues(minValue, maxValue);
+            xYDiagram.AxisX.VisualRange.SetMinMaxValues(minValue, bid * 2);
+        }
+
+        private void UpdateCandleStickVisualRange() {
+            DateTime minValue = DateTime.UtcNow.AddMinutes(-Ticker.CandleStickPeriodMin * CalculateCandlestickBestFit());
+            DateTime maxValue = DateTime.UtcNow;
+                
+            XYDiagram xYDiagram = (XYDiagram)this.chartControl1.Diagram;
+            //xYDiagram.AxisX.WholeRange.SetMinMaxValues(minValue, maxValue);
+            xYDiagram.AxisX.VisualRange.SetMinMaxValues(minValue, maxValue);
+        }
+
+        private void UpdateMarketDepthVisualRange() {
+            XYDiagram xYDiagram = (XYDiagram)this.chartMarketDepth.Diagram;
+            double maxValue = Ticker.OrderBook.Asks.Count > 0? Ticker.OrderBook.Asks.Last().Value: 0;
+            double minValue = 0;
+            double bid = Ticker.OrderBook.Bids.Count > 0? Ticker.OrderBook.Bids[0].Value: 0;
+            
+            //xYDiagram.AxisX.WholeRange.SetMinMaxValues(minValue, maxValue);
+            xYDiagram.AxisX.VisualRange.SetMinMaxValues(minValue, bid * 2);
         }
 
         void UpdateCandleStickData(ResizeableArray<CandleStickData> data) {

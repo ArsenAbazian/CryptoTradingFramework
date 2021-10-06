@@ -397,11 +397,18 @@ namespace CryptoMarketClient.Strategies {
 
     public class ThreadManager : IThreadManager {
         public Control OwnerControl { get; set; }
+        public ThreadManager() { }
+        public ThreadManager(Control ownerControl) {
+            OwnerControl = ownerControl;
+        }
 
         bool IThreadManager.IsMultiThread => true;
 
         void IThreadManager.Invoke(Action<object, ListChangedEventArgs> a, object sender, ListChangedEventArgs e) {
-            OwnerControl.Invoke(a, sender, e);
+            if(OwnerControl.IsHandleCreated)
+                OwnerControl.Invoke(a, sender, e);
+            else 
+                a(sender, e);
         }
     }
 }

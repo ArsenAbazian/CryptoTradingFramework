@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Crypto.Core.Helpers {
-    public delegate bool IfDelegate2(int itemIndex, int paramIndex, string value);
+    public delegate bool IfDelegate2(int itemIndex, string[] props);
 
     public class JSonHelper {
         public static JSonHelper Default { get; set; }
@@ -42,6 +42,34 @@ namespace Crypto.Core.Helpers {
         }
         public List<string[]> DeserializeArrayOfObjects(byte[] bytes, ref int startIndex, string[] str) {
             return DeserializeArrayOfObjects(bytes, ref startIndex, str, null);
+        }
+        public JsonParseResult Deserialize(string schemeName, byte[] bytes) {
+            JsonParseResult res = new JsonParseResult();
+            if(bytes == null || bytes.Length < 2)
+                return res;
+            res.Scheme = GetObjectScheme(schemeName, bytes);
+            if(res.Scheme == null)
+                return res;
+            int startIndex = 0;
+            if(bytes[0] == '{') {
+                res.Object = DeserializeObject(bytes, ref startIndex, res.Scheme.Names);
+                res.Type = JsonObjectType.Object;
+            }
+            else if(bytes[0] == '[') {
+                if(bytes[1] == '{') {
+                    res.Array = DeserializeArrayOfObjects(bytes, ref startIndex, res.Scheme.Names);
+                    res.Type = JsonObjectType.ArrayOfObjects;
+                }
+            }
+
+            return res;
+        }
+        public string[] DeserializeObject(string schemeName, byte[] bytes, out JsonObjectScheme scheme) {
+            scheme = GetObjectScheme(schemeName, bytes);
+            if(scheme == null)
+                return null;
+            int startIndex = 0;
+            return DeserializeObject(bytes, ref startIndex, scheme.Names);
         }
         public string[] DeserializeObject(byte[] bytes, ref int startIndex, string[] str) {
             return DeserializeObject(bytes, ref startIndex, str, false);
@@ -77,12 +105,46 @@ namespace Crypto.Core.Helpers {
             startIndex = index;
             return props;
         }
+        protected JsonObjectScheme GetObjectSchemeCore(byte[] bytes, int startIndex) { 
+            int index = startIndex;
+            List<JsonPropertyInfo> items = new List<JsonPropertyInfo>();
+            List<string> props = new List<string>();
+            if(!FindChar(bytes, '{', ref index))
+                return null;
+            int propIndex = 0;
+            index++;
+            while(bytes[index] != '}') {
+                int nameStart = index;
+                if(!FindChar(bytes, ':', ref index))
+                    return null;
+                JsonPropertyInfo info = new JsonPropertyInfo();
+                info.Length = index - nameStart;
+                info.Index = propIndex;
+                propIndex++;
+                if(bytes[nameStart] == '"' || bytes[nameStart] == '\'') {
+                    info.HasQuotes = true;
+                    info.Name = ByteArray2String(bytes, nameStart + 1, info.Length - 2);
+                }
+                else
+                    info.Name = ByteArray2String(bytes, nameStart, info.Length);
+                items.Add(info);
+                index++;
+                FindChar(bytes, '}', ',', ref index);
+                if(bytes[index] == '}') 
+                    break;
+                index++; // skip ,
+            }
+            JsonObjectScheme res = new JsonObjectScheme();
+            res.Fields = items;
+            res.Names = items.Select(i => i.Name).ToArray();
+            return res;
+        }
         public List<string[]> DeserializeArrayOfObjects(byte[] bytes, ref int startIndex, string[] str, IfDelegate2 shouldContinue) {
             int index = startIndex;
             if(!FindChar(bytes, '[', ref index))
                 return null;
             index++;
-            List<string[]> items = new List<string[]>();
+            List<string[]> items = new List<string[]>(3000);
             if(bytes[index] == ']') {
                 startIndex = index + 1;
                 return items;
@@ -103,14 +165,16 @@ namespace Crypto.Core.Helpers {
                     int length = index;
                     if(bytes[index] == '"')
                         SkipString(bytes, ref length);
-                    else
+                    else {
+                        length ++;
                         FindChar(bytes, itemIndex == str.Length - 1 ? '}' : ',', ref length);
+                    }
                     length -= index;
                     props[itemIndex] = ByteArray2String(bytes, index, length);
                     index += length;
-                    if(shouldContinue != null && !shouldContinue(items.Count, itemIndex, props[itemIndex]))
-                        return items;
                 }
+                if(shouldContinue != null && !shouldContinue(items.Count, props))
+                    return items;
                 items.Add(props);
                 if(index == -1)
                     break;
@@ -197,10 +261,25 @@ namespace Crypto.Core.Helpers {
             startIndex = bytes.Length;
             return false;
         }
+        protected int FindHard(byte[] bytes, int startIndex, char symbol) {
+            for(int i = startIndex; i < bytes.Length; i++) {
+                if(bytes[i] == symbol)
+                    return i;
+            }
+            return bytes.Length;
+        }
         public bool FindChar(byte[] bytes, char symbol, char symbol2, ref int startIndex) {
             int count = 0;
             for(int i = startIndex; i < bytes.Length; i++) {
                 byte c = bytes[i];
+                if(c == '\'') { 
+                    i = FindHard(bytes, i + 1, '\'');
+                    continue;
+                }
+                if(c == '"') { 
+                    i = FindHard(bytes, i + 1, '"');
+                    continue;
+                }
                 if(c == '[')
                     count++;
                 if(c == ']' && count > 0) {
@@ -222,6 +301,14 @@ namespace Crypto.Core.Helpers {
         public bool FindChar(byte[] bytes, char symbol, ref int startIndex) {
             for(int i = startIndex; i < bytes.Length; i++) {
                 byte c = bytes[i];
+                if(c == '\'') { 
+                    i = FindHard(bytes, i + 1, '\'');
+                    continue;
+                }
+                if(c == '"') { 
+                    i = FindHard(bytes, i + 1, '"');
+                    continue;
+                }
                 if(c == symbol) {
                     startIndex = i;
                     return true;
@@ -278,6 +365,89 @@ namespace Crypto.Core.Helpers {
         public class JsonPropertyArrayOfObjects {
             public string Property { get; set; }
             public List<string[]> Items { get; set; }
+        }
+
+        public Dictionary<string, Dictionary<string, JsonObjectScheme>> Schemes { get; } = new Dictionary<string, Dictionary<string, JsonObjectScheme>>();
+        public JsonObjectScheme GetObjectScheme(string schemeName, byte[] bytes) {
+            Dictionary<string, JsonObjectScheme> dic = null;
+            if(!Schemes.TryGetValue(schemeName, out dic)) {
+                dic = new Dictionary<string, JsonObjectScheme>();
+                Schemes.Add(schemeName, dic);
+            }
+            string firstField = GetFirstField(bytes);
+            if(firstField == null)
+                return null;
+
+            JsonObjectScheme res = null;
+            if(dic.TryGetValue(firstField, out res))
+                return res;
+            res = GetObjectSchemeCore(bytes, 0);
+            if(res == null)
+                return null;
+            dic.Add(firstField, res);
+            return res;
+        }
+
+        string GetFirstField(byte[] bytes) {
+            if(bytes == null || bytes.Length < 3)
+                return null;
+            int index = 0;
+            while(index < bytes.Length && bytes[index] == '[' || bytes[index] == '{')
+                index++;
+            int start = index;
+            FindChar(bytes, ':', ref index);
+            return ByteArray2String(bytes, index, index - start);
+        }
+    }
+
+    public class JsonObjectScheme {
+        public List<JsonPropertyInfo> Fields { get; set; }
+        public string[] Names { get; set; }
+
+        Dictionary<string, int> indices;
+        protected Dictionary<string, int> Indices {
+            get {
+                if(indices != null)
+                    return indices;
+                if(Fields == null)
+                    return null;
+                indices = new Dictionary<string, int>();
+                for(int i = 0; i < Names.Length; i++)
+                    indices.Add(Names[i], i);
+                return indices;
+            }
+        }
+        public int GetIndex(string fieldName) {
+            if(Indices == null)
+                return -1;
+            return Indices[fieldName];
+        }
+    }
+
+    public class JsonPropertyInfo { 
+        public int Index { get; set; }
+        public string Name { get; set; }
+        public bool HasQuotes { get; set; }
+        public int Length { get; set; }
+    }
+
+    public enum JsonObjectType {
+        None,
+        Object,
+        ArrayOfObjects
+    }
+
+    public class JsonParseResult {
+        public JsonObjectScheme Scheme { get; internal set; }
+        public JsonObjectType Type { get; internal set; }
+        public string[] Object { get; internal set; }
+        public List<string[]> Array { get; internal set; }
+
+        public string GetValue(string name) {
+            return Object[Scheme.GetIndex(name)];
+        }
+        public string GetValue(int itemIndex, string name) {
+            return Array[itemIndex][Scheme.GetIndex(name)];
         }
     }
 }

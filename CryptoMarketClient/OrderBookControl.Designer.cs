@@ -35,7 +35,7 @@
             this.repositoryItemTextEdit2 = new DevExpress.XtraEditors.Repository.RepositoryItemTextEdit();
             this.askPanel = new DevExpress.XtraEditors.SidePanel();
             this.askGridControl = new DevExpress.XtraGrid.GridControl();
-            this.askGridView = new Crypto.UI.Controls.ThreadSafeGridView();
+            this.askGridView = new InvertedGridView();
             this.gcRate = new DevExpress.XtraGrid.Columns.GridColumn();
             this.repositoryItemTextEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemTextEdit();
             this.gcAmount = new DevExpress.XtraGrid.Columns.GridColumn();
@@ -61,9 +61,9 @@
             // gcVolume2
             // 
             this.gcVolume2.Caption = "Volume";
-            this.gcVolume2.DisplayFormat.FormatString = "0.00000000";
-            this.gcVolume2.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
-            this.gcVolume2.FieldName = "Volume";
+            //this.gcVolume2.DisplayFormat.FormatString = "0.00000000";
+            //this.gcVolume2.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+            this.gcVolume2.FieldName = "VolumeString";
             this.gcVolume2.MinWidth = 40;
             this.gcVolume2.Name = "gcVolume2";
             this.gcVolume2.Visible = true;
@@ -81,9 +81,9 @@
             // gcVolume
             // 
             this.gcVolume.Caption = "Volume";
-            this.gcVolume.DisplayFormat.FormatString = "0.00000000";
-            this.gcVolume.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
-            this.gcVolume.FieldName = "Volume";
+            //this.gcVolume.DisplayFormat.FormatString = "0.00000000";
+            //this.gcVolume.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+            this.gcVolume.FieldName = "VolumeString";
             this.gcVolume.MinWidth = 40;
             this.gcVolume.Name = "gcVolume";
             this.gcVolume.OptionsFilter.AllowFilter = false;
@@ -301,7 +301,7 @@
         private DevExpress.XtraGrid.Columns.GridColumn gcAmount2;
         private DevExpress.XtraEditors.SidePanel askPanel;
         private DevExpress.XtraGrid.GridControl askGridControl;
-        private DevExpress.XtraGrid.Views.Grid.GridView askGridView;
+        private InvertedGridView askGridView;
         private DevExpress.XtraGrid.Columns.GridColumn gcRate;
         private DevExpress.XtraGrid.Columns.GridColumn gcAmount;
         private DevExpress.XtraGrid.Columns.GridColumn gcVolume2;

@@ -1,15 +1,15 @@
 ﻿using Crypto.Core.Common;
+using Crypto.Core.Exchanges.Base;
 using Crypto.Core.Exchanges.Binance;
+using Crypto.Core.Helpers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using WebSocket4Net;
-using Crypto.Core.Helpers;
-using System.Security.Cryptography;
-using Crypto.Core.Exchanges.Base;
 
 namespace Crypto.Core.Binance {
     public class BinanceExchange : Exchange {
@@ -30,9 +30,9 @@ namespace Crypto.Core.Binance {
         protected virtual string AggTradesApiString => "https://api.binance.com/api/v1/aggTrades";
 
         protected override bool GetTradesCore(ResizeableArray<TradeInfoItem> list, Ticker ticker, DateTime start, DateTime end) {
-            string address = string.Format("{0}?symbol={1}&limit={2}&startTime={3}&endTime={4}", AggTradesApiString, 
+            string address = string.Format("{0}?symbol={1}&limit={2}&startTime={3}&endTime={4}", AggTradesApiString,
                 Uri.EscapeDataString(ticker.CurrencyPair), 1000, ToUnixTimestampMs(start), ToUnixTimestampMs(end));
-            byte[] data = ((Ticker)ticker).DownloadBytes(address);
+            byte[] data = ticker.DownloadBytes(address);
             if(data == null || data.Length == 0)
                 return false;
 
@@ -41,20 +41,13 @@ namespace Crypto.Core.Binance {
             for(int i = 0; i < items.Count; i++) {
                 string[] item = items[i];
                 DateTime time = FromUnixTimestampMs(FastValueConverter.ConvertPositiveLong(item[5]));
-                //if(time > end)
-                //    break;
-                int tradeId = FastValueConverter.ConvertPositiveInteger(item[0]);
-
                 TradeInfoItem t = new TradeInfoItem(null, ticker);
                 bool isBuy = item[6][0] != 't';
                 t.AmountString = item[2];
                 t.Time = time;
                 t.Type = isBuy ? TradeType.Buy : TradeType.Sell;
                 t.RateString = item[1];
-                t.Id = tradeId;
-                double price = t.Rate;
-                double amount = t.Amount;
-                t.Total = price * amount;
+                t.IdString = item[0];
                 if(list.Last() == null || list.Last().Time < time)
                     list.Add(t);
             }
@@ -68,13 +61,13 @@ namespace Crypto.Core.Binance {
         }
 
         public override void OnAccountRemoved(AccountInfo info) {
-            
+
         }
 
         public override string CreateDeposit(AccountInfo account, string currency) {
             throw new NotImplementedException();
         }
-        
+
         protected virtual string BalanceApiString { get { return "https://binance.com/api/v3/account"; } }
         public override bool GetBalance(AccountInfo account, string currency) {
             string queryString = string.Format("timestamp={0}", GetNonce());
@@ -99,13 +92,34 @@ namespace Crypto.Core.Binance {
             throw new NotImplementedException();
         }
 
-        protected TradingResult MakeTrade(AccountInfo account, Ticker ticker, double rate, double amount, string side, string positionSide) {
-            string queryString = string.Format("symbol={0}&side={1}&positionSide={2}&quantity={3:0.########}&price={4:0.########}&timestamp={5}&type=LIMIT&timeInForce=GTC&recvWindow=5000", 
-                ticker.Name, side, positionSide, amount, rate, GetNonce());
+        //public override TradingResult GetOrderStatus(AccountInfo account, TradingResult order) {
+        //    string queryString = string.Format("symbol={0}&orderId={1}&timestamp={2}&recvWindow=5000", 
+        //        order.Ticker.Name, order.OrderId, GetNonce());
+        //    string signature = account.GetSign(queryString);
+
+        //    string address = string.Format("{0}?{1}&signature={2}",
+        //        TradeApiString, queryString, signature);
+        //    MyWebClient client = GetWebClient();
+
+        //    client.Headers.Clear();
+        //    client.Headers.Add("X-MBX-APIKEY", account.ApiKey);
+
+        //    try {
+        //        return OnTradeResult(account, ticker, client.DownloadData(address, queryString));
+        //    }
+        //    catch(Exception e) {
+        //        LogManager.Default.Log(e.ToString());
+        //        return null;
+        //    }
+        //}
+
+        protected virtual TradingResult MakeTrade(AccountInfo account, Ticker ticker, double rate, double amount, string side, string positionSide) {
+            string queryString = string.Format("symbol={0}&side={1}&quantity={2:0.########}&price={3:0.########}&timestamp={4}&type=LIMIT&timeInForce=GTC&recvWindow=5000",
+                ticker.Name, side, amount, rate, GetNonce());
             string signature = account.GetSign(queryString);
 
-            string address = string.Format("https://api.binance.com/api/v3/order?{0}&signature={1}",
-                queryString, signature);
+            string address = string.Format("{0}?{1}&signature={2}",
+                TradeApiString, queryString, signature);
             MyWebClient client = GetWebClient();
 
             client.Headers.Clear();
@@ -119,6 +133,9 @@ namespace Crypto.Core.Binance {
                 return null;
             }
         }
+
+        protected virtual string TradeApiString => "https://api.binance.com/api/v3/order";
+        protected virtual string OrderStatusApiString => "https://api.binance.com/api/v3/order";
 
         public override TradingResult BuyLong(AccountInfo account, Ticker ticker, double rate, double amount) {
             return MakeTrade(account, ticker, rate, amount, "BUY", "LONG");
@@ -141,11 +158,16 @@ namespace Crypto.Core.Binance {
                 LogManager.Default.Error(this, "trade", text);
                 return null;
             }
+            return OnTradeResultCore(account, ticker, res);
 
+        }
+
+        protected virtual TradingResult OnTradeResultCore(AccountInfo account, Ticker ticker, JObject res) {
             TradingResult tr = new TradingResult();
+            tr.Ticker = ticker;
             tr.OrderId = res.Value<string>("orderId");
             tr.Amount = Convert.ToDouble(res.Value<string>("executedQty"));
-            tr.Value= Convert.ToDouble(res.Value<string>("price"));
+            tr.Value = Convert.ToDouble(res.Value<string>("price"));
             tr.Total = tr.Amount * tr.Value;
             tr.OrderStatus = res.Value<string>("status");
             tr.Filled = tr.OrderStatus == "FILLED";
@@ -174,11 +196,11 @@ namespace Crypto.Core.Binance {
         public override bool SupportWebSocket(WebSocketType type) {
             if(type == WebSocketType.Tickers)
                 return true;
-            if(type == WebSocketType.Ticker)
+            if(type == WebSocketType.Ticker || type == WebSocketType.Trades || type == WebSocketType.OrderBook)
                 return true;
             return false;
         }
-        
+
         protected override string GetKlineSocketAddress(Ticker ticker) {
             CandleStickIntervalInfo klineInfo = ticker.GetCandleStickIntervalInfo();
             string adress = "wss://stream.binance.com:9443/ws/" + ticker.Name.ToLower() + "@kline_" + klineInfo.Command;
@@ -279,14 +301,14 @@ namespace Crypto.Core.Binance {
                 ticker.UpdateCandleStickData(data);
             }
         }
-        
+
         public override void StartListenTickerStream(Ticker ticker) {
             base.StartListenTickerStream(ticker);
-            
+
         }
 
         //protected override void StartListenTradeHistoryCore(Ticker ticker) {
-            
+
         //}
 
         protected override string GetOrderBookSocketAddress(Ticker ticker) {
@@ -297,9 +319,9 @@ namespace Crypto.Core.Binance {
             return "wss://stream.binance.com:9443/ws/" + ticker.Name.ToLower() + "@trade";
         }
 
-        
 
-        protected string[] OrderBookStartItems { get; } = new string[] { "lastUpdateId"};
+
+        protected string[] OrderBookStartItems { get; } = new string[] { "lastUpdateId" };
 
         void OnIncrementalOrderBookUpdateRecv(Ticker ticker, byte[] bytes) {
             int startIndex = 0;
@@ -359,7 +381,7 @@ namespace Crypto.Core.Binance {
                 return;
             }
         }
-        
+
         string[] tradeItems;
         protected string[] TradeItems {
             get {
@@ -370,24 +392,28 @@ namespace Crypto.Core.Binance {
         }
 
         protected internal override void OnTradeHistorySocketMessageReceived(object sender, MessageReceivedEventArgs e) {
+            SocketConnectionInfo info = TradeHistorySockets.FirstOrDefault(c => c.Key == sender);
+            if(info == null)
+                return;
+            if(info.Ticker.IsUpdatingTrades)
+                return;
             byte[] bytes = Encoding.Default.GetBytes(e.Message);
             int startIndex = 0;
             string[] trades = JSonHelper.Default.DeserializeObject(bytes, ref startIndex, TradeItems);
-            SocketConnectionInfo info = TradeHistorySockets.FirstOrDefault(c => c.Key == sender);
-            if(info != null && info.Ticker.CaptureData)
+            if(info.Ticker.CaptureData)
                 info.Ticker.CaptureDataCore(CaptureStreamType.TradeHistory, CaptureMessageType.Incremental, e.Message);
             OnTradeHistoryItemRecv(info.Ticker, trades);
         }
-        
-        void OnTradeHistoryItemRecv(Ticker ticker, string[] str) {
+
+        protected virtual void OnTradeHistoryItemRecv(Ticker ticker, string[] str) {
             TradeInfoItem item = new TradeInfoItem(null, ticker);
-            item.Id = FastValueConverter.ConvertPositiveInteger(str[3]);
+            item.IdString = str[3];
             item.RateString = str[4];
             item.AmountString = str[5];
             item.Time = FromUnixTime(FastValueConverter.ConvertPositiveLong(str[8]));
             item.Type = str[9][0] == 't' ? TradeType.Sell : TradeType.Buy;
 
-            ticker.TradeHistory.Insert(0, item);
+            ticker.AddTradeHistoryItem(item);
             if(ticker.HasTradeHistorySubscribers) {
                 TradeHistoryChangedEventArgs e = new TradeHistoryChangedEventArgs() { NewItem = item };
                 ticker.RaiseTradeHistoryChanged(e);
@@ -396,9 +422,9 @@ namespace Crypto.Core.Binance {
 
         string[] webSocketTickersInfo;
         protected string[] WebSocketTickersInfo {
-            get { 
+            get {
                 if(webSocketTickersInfo == null)
-                    webSocketTickersInfo = CreateWebSocketTickersInfoStrings(); 
+                    webSocketTickersInfo = CreateWebSocketTickersInfoStrings();
                 return webSocketTickersInfo;
             }
         }
@@ -446,27 +472,21 @@ namespace Crypto.Core.Binance {
 
         protected virtual void On24HourTickerRecv(string[] item) {
             string symbolName = item[2];
-            Ticker first = null;
-            for(int i = 0; i < Tickers.Count; i++) {
-                Ticker tt = Tickers[i];
-                if(tt.Name == symbolName) {
-                    first = tt;
-                    break;
-                }
-            }
-            BinanceTicker t = (BinanceTicker)first;
-            On24HourTickerRecvCore(t, item);
-            
-            t.UpdateTrailings();
+            BinanceTicker ticker = (BinanceTicker)GetTicker(symbolName);
+            if(ticker == null)
+                return;
+            On24HourTickerRecvCore(ticker, item);
+            ticker.UpdateTrailings();
 
-            lock(t) {
-                RaiseTickerChanged(t);
+            lock(ticker) {
+                RaiseTickerChanged(ticker);
             }
         }
 
         protected virtual void On24HourTickerRecvCore(BinanceTicker t, string[] item) {
             if(t == null)
-                throw new DllNotFoundException("binance symbol not found " + item[2]);
+                return;
+            
             t.Change = FastValueConverter.Convert(item[4]);
             t.HighestBid = FastValueConverter.Convert(item[9]);
             t.LowestAsk = FastValueConverter.Convert(item[11]);
@@ -490,11 +510,15 @@ namespace Crypto.Core.Binance {
             string address = ExchangeSettingsApi;
             string text = string.Empty;
             try {
+                SuppressCheckRequestLimits = true;
                 text = GetDownloadString(address);
             }
             catch(Exception e) {
                 Telemetry.Default.TrackException(e);
                 return false;
+            }
+            finally {
+                SuppressCheckRequestLimits = false;
             }
             if(string.IsNullOrEmpty(text))
                 return false;
@@ -508,7 +532,7 @@ namespace Crypto.Core.Binance {
             DateTime serverTime = FromUnixTimestampMs(ms);
 
             for(int i = 0; i < rateLimits.Count; i++) {
-                JObject rateLimit = (JObject) rateLimits[i];
+                JObject rateLimit = (JObject)rateLimits[i];
                 string rateType = rateLimit.Value<string>("rateLimitType");
                 if(rateType == "REQUESTS" || rateType == "REQUEST_WEIGHT")
                     RequestRate.Add(GetRateLimit(rateLimit));
@@ -517,17 +541,17 @@ namespace Crypto.Core.Binance {
             }
             JArray symbols = settings.Value<JArray>("symbols");
             for(int i = 0; i < symbols.Count; i++) {
-                JObject s = (JObject) symbols[i];
+                JObject s = (JObject)symbols[i];
                 BinanceTicker t = new BinanceTicker(this);
                 t.CurrencyPair = s.Value<string>("symbol");
                 t.MarketCurrency = s.Value<string>("baseAsset");
                 t.BaseCurrency = s.Value<string>("quoteAsset");
                 if(Tickers.FirstOrDefault(tt => tt.CurrencyPair == t.CurrencyPair) != null)
                     continue;
-                Tickers.Add(t);
+                AddTicker(t);
                 JArray filters = s.Value<JArray>("filters");
                 for(int fi = 0; fi < filters.Count; fi++) {
-                    JObject filter = (JObject) filters[fi];
+                    JObject filter = (JObject)filters[fi];
                     string filterType = filter.Value<string>("filterType");
                     if(filterType == "PRICE_FILTER")
                         t.PriceFilter = new TickerFilter() { MinValue = filter.Value<double>("minPrice"), MaxValue = filter.Value<double>("maxPrice"), TickSize = filter.Value<double>("tickSize") };
@@ -546,24 +570,60 @@ namespace Crypto.Core.Binance {
                 return new RateLimit() { Limit = jObject.Value<int>("limit") - 1, Interval = TimeSpan.TicksPerDay };
             else if(jObject.Value<string>("interval") == "SECOND")
                 return new RateLimit() { Limit = jObject.Value<int>("limit") - 1, Interval = TimeSpan.TicksPerSecond };
-            return new RateLimit(); 
+            return new RateLimit();
         }
 
         public override bool AllowCandleStickIncrementalUpdate => true;
 
-        public override bool Cancel(AccountInfo account, string orderId) {
-            throw new NotImplementedException();
+        protected virtual string CancelOrderApiString => "https://api.binance.com/api/v3/order";
+        public override bool Cancel(AccountInfo account, Ticker ticker, string orderId) {
+            string queryString = string.Format("symbol={0}&orderId={1}&timestamp={2}&recvWindow=5000",
+                ticker.Name, orderId, GetNonce());
+            string signature = account.GetSign(queryString);
+
+            string address = string.Format("{0}?{1}&signature={2}",
+                CancelOrderApiString, queryString, signature);
+            MyWebClient client = GetWebClient();
+
+            client.Headers.Clear();
+            client.Headers.Add("X-MBX-APIKEY", account.ApiKey);
+
+            try {
+                return OnCancel(account, ticker, orderId, client.Delete(address));
+            }
+            catch(Exception e) {
+                LogManager.Default.Log(e.ToString());
+                return false;
+            }
+        }
+
+        protected virtual bool OnCancel(AccountInfo info, Ticker ticker, string orderId, byte[] data) {
+            var res = JSonHelper.Default.Deserialize(Type + "/cancelOrder", data);
+            if(res == null || res.Type == JsonObjectType.None)
+                return false;
+            if(res.Scheme.Names[0] == "code") {
+                LogManager.Default.Log("Cancel", res.GetValue("msg"));
+                return false;
+            }
+
+            string oid = res.GetValue("orderId");
+            string status = res.GetValue("status");
+            OpenedOrderInfo oi = ticker.OpenedOrders.FirstOrDefault(o => o.OrderId == oid);
+            bool canceled = status == "CANCELED";
+            ticker.RaiseOrderCanceled(new CancelOrderEventArgs() { Order = oi, Ticker = ticker, Status = status, Canceled = canceled });
+
+            return true;
         }
 
         public override List<CandleStickIntervalInfo> GetAllowedCandleStickIntervals() {
             List<CandleStickIntervalInfo> list = new List<CandleStickIntervalInfo>();
 
-            list.Add(new CandleStickIntervalInfo() { Text = "1 Minute", Command="1m", Interval = TimeSpan.FromSeconds(60) });
-            list.Add(new CandleStickIntervalInfo() { Text = "3 Minutes", Command="3m", Interval = TimeSpan.FromSeconds(180) });
-            list.Add(new CandleStickIntervalInfo() { Text = "5 Minutes", Command="5m", Interval = TimeSpan.FromSeconds(300) });
-            list.Add(new CandleStickIntervalInfo() { Text = "15 Minutes", Command="15m", Interval = TimeSpan.FromSeconds(900) });
-            list.Add(new CandleStickIntervalInfo() { Text = "30 Minutes", Command="30m", Interval = TimeSpan.FromSeconds(1800) });
-            list.Add(new CandleStickIntervalInfo() { Text = "1 Hour", Command="1h", Interval = TimeSpan.FromSeconds(3600) });
+            list.Add(new CandleStickIntervalInfo() { Text = "1 Minute", Command = "1m", Interval = TimeSpan.FromSeconds(60) });
+            list.Add(new CandleStickIntervalInfo() { Text = "3 Minutes", Command = "3m", Interval = TimeSpan.FromSeconds(180) });
+            list.Add(new CandleStickIntervalInfo() { Text = "5 Minutes", Command = "5m", Interval = TimeSpan.FromSeconds(300) });
+            list.Add(new CandleStickIntervalInfo() { Text = "15 Minutes", Command = "15m", Interval = TimeSpan.FromSeconds(900) });
+            list.Add(new CandleStickIntervalInfo() { Text = "30 Minutes", Command = "30m", Interval = TimeSpan.FromSeconds(1800) });
+            list.Add(new CandleStickIntervalInfo() { Text = "1 Hour", Command = "1h", Interval = TimeSpan.FromSeconds(3600) });
             list.Add(new CandleStickIntervalInfo() { Text = "2 Hours", Command = "2h", Interval = TimeSpan.FromSeconds(7200) });
             list.Add(new CandleStickIntervalInfo() { Text = "4 Hours", Command = "4h", Interval = TimeSpan.FromSeconds(14400) });
             list.Add(new CandleStickIntervalInfo() { Text = "6 Hour", Command = "6h", Interval = TimeSpan.FromSeconds(21600) });
@@ -641,7 +701,7 @@ namespace Crypto.Core.Binance {
         public List<TradeInfoItem> GetTradeVolumesForCandleStick(Ticker ticker, long start, long end) {
             List<TradeInfoItem> trades = new List<TradeInfoItem>();
             string address = string.Format("https://api.binance.com/api/v1/aggTrades?symbol={0}&limit={1}&startTime={2}&endTime={3}", Uri.EscapeDataString(ticker.CurrencyPair), 1000, start, end);
-            byte[] data = ((Ticker)ticker).DownloadBytes(address);
+            byte[] data = ticker.DownloadBytes(address);
             if(data == null || data.Length == 0)
                 return trades;
 
@@ -667,7 +727,7 @@ namespace Crypto.Core.Binance {
             IsInitialized = true;
             return result;
         }
-        
+
         public override bool ProcessOrderBook(Ticker tickerBase, string text) {
             return true;
         }
@@ -696,7 +756,7 @@ namespace Crypto.Core.Binance {
 
             string address = string.Format("{0}?{1}&signature={2}", BalanceApiString, queryString, signature);
             MyWebClient client = GetWebClient();
-            
+
             client.Headers.Clear();
             client.Headers.Add("X-MBX-APIKEY", account.ApiKey);
 
@@ -736,20 +796,133 @@ namespace Crypto.Core.Binance {
             //throw new NotImplementedException();
         }
 
+        protected virtual string UpdateAccountTradesApiString => "https://api.binance.com/api/v3/myTrades";
+
         public override bool UpdateAccountTrades(AccountInfo account, Ticker ticker) {
+            string queryString = string.Format("symbol={0}&limit={1}&timestamp={2}",
+                Uri.EscapeDataString(ticker.CurrencyPair), 1000, GetNonce());
+
+            string signature = account.GetSign(queryString);
+
+            string address = string.Format("{0}?{1}&signature={2}",
+                UpdateAccountTradesApiString, queryString, signature);
+
+            MyWebClient client = GetWebClient();
+
+            client.Headers.Clear();
+            client.Headers.Add("X-MBX-APIKEY", account.ApiKey);
+
+            byte[] data = ticker.DownloadBytes(address, client);
+            if(data == null || data.Length == 0)
+                return false;
+
+            var scheme = JSonHelper.Default.GetObjectScheme(Type + "/accounttrades", data);
+            if(scheme == null)
+                return false;
+
+            ResizeableArray<TradeInfoItem> newItems = null;
+            ticker.LockAccountTrades();
+            try {
+                ticker.ClearMyTradeHistory();
+                int parseIndex = 0;
+                List<string[]> items = JSonHelper.Default.DeserializeArrayOfObjects(data, ref parseIndex, scheme.Names);
+                newItems = new ResizeableArray<TradeInfoItem>(items.Count);
+                for(int i = 0; i < items.Count; i++) {
+                    string[] item = items[i];
+                    TradeInfoItem t = InitializeAccountTradeInfoItem(item, ticker);
+                    ticker.AddAccountTradeHistoryItem(t);
+                    newItems.Add(t);
+                }
+            }
+            finally {
+                ticker.UnlockAccountTrades();
+            }
+            if(ticker.HasAccountTradeHistorySubscribers)
+                ticker.RaiseAccountTradeHistoryChanged(new TradeHistoryChangedEventArgs() { NewItems = newItems });
+
             return true;
-            //throw new NotImplementedException();
         }
 
+        protected virtual TradeInfoItem InitializeAccountTradeInfoItem(string[] item, Ticker ticker) {
+            DateTime time = FromUnixTime(FastValueConverter.ConvertPositiveLong(item[9]));
+
+            TradeInfoItem t = new TradeInfoItem(null, ticker);
+            t.OrderNumber = item[2];
+            bool isBuy = item[10][0] != 't';
+            t.AmountString = item[5];
+            t.Time = time;
+            t.Type = isBuy ? TradeType.Buy : TradeType.Sell;
+            t.RateString = item[4];
+            t.IdString = item[1];
+
+            return t;
+        }
+
+        protected virtual string OpenOrdersApiString => "https://api.binance.com/api/v3/openOrders";
         public override bool UpdateOpenedOrders(AccountInfo account, Ticker ticker) {
+            string queryString = string.Format("symbol={0}&timestamp={1}&recvWindow=5000",
+                ticker.Name, GetNonce());
+            string signature = account.GetSign(queryString);
+
+            string address = string.Format("{0}?{1}&signature={2}",
+                OpenOrdersApiString, queryString, signature);
+            MyWebClient client = GetWebClient();
+
+            client.Headers.Clear();
+            client.Headers.Add("X-MBX-APIKEY", account.ApiKey);
+
+            try {
+                return OnUpdateOpenedOrders(account, ticker, client.DownloadData(address));
+            }
+            catch(Exception e) {
+                LogManager.Default.Log(e.ToString());
+                return false;
+            }
+        }
+
+        protected virtual OpenedOrderInfo InitializeOpenedOrderItem(string[] item, Ticker ticker) {
+            OpenedOrderInfo t = new OpenedOrderInfo(null, ticker);
+            t.OrderId = item[1];
+            t.Ticker = ticker;
+            t.ValueString = item[4];
+            t.AmountString = item[5];
+            t.TotalString = item[6];
+            if(item[11].Length > 0)
+                t.Type = item[11][0] == 'B' ? OrderType.Buy : OrderType.Sell;
+            t.Date = FromUnixTime(FastValueConverter.ConvertPositiveLong(item[14]));
+
+            return t;
+        }
+
+        protected virtual bool OnUpdateOpenedOrders(AccountInfo account, Ticker ticker, byte[] data) {
+            var scheme = JSonHelper.Default.GetObjectScheme(Type + "/openorders", data);
+            if(scheme == null)
+                return false;
+            ticker.LockOpenOrders();
+            try {
+                int parseIndex = 0;
+                List<string[]> items = JSonHelper.Default.DeserializeArrayOfObjects(data, ref parseIndex, scheme.Names);
+                if(items == null)
+                    return false;
+                ticker.OpenedOrders.Clear();
+                for(int i = 0; i < items.Count; i++) {
+                    string[] item = items[i];
+                    OpenedOrderInfo t = InitializeOpenedOrderItem(item, ticker);
+                    ticker.OpenedOrders.Add(t);
+                }
+            }
+            finally {
+                ticker.UnlockOpenOrders();
+            }
+            ticker.RaiseOpenedOrdersChanged();
+
             return true;
-            //throw new NotImplementedException();
         }
 
         protected virtual string UpdateOrderBookApiString => "https://api.binance.com/api/v1/depth";
-        
+
         public override bool UpdateOrderBook(Ticker ticker, int depth) {
-            string address = string.Format("{0}?symbol={1}&limit={2}", UpdateOrderBookApiString, 
+            string address = string.Format("{0}?symbol={1}&limit={2}", UpdateOrderBookApiString,
                 Uri.EscapeDataString(ticker.CurrencyPair), depth);
             byte[] bytes = GetDownloadBytes(address);
             if(bytes == null || bytes.Length == 0)
@@ -845,7 +1018,7 @@ namespace Crypto.Core.Binance {
                 return false;
             JArray res = JsonConvert.DeserializeObject<JArray>(text);
             for(int index = 0; index < res.Count; index++) {
-                JObject item = (JObject) res[index];
+                JObject item = (JObject)res[index];
                 string currencyPair = item.Value<string>("symbol");
                 Ticker first = null;
                 for(int i = 0; i < Tickers.Count; i++) {
@@ -855,14 +1028,14 @@ namespace Crypto.Core.Binance {
                         break;
                     }
                 }
-                UpdateTickerInfo((BinanceTicker) first, item);
+                UpdateTickerInfo((BinanceTicker)first, item);
             }
             return true;
         }
 
         protected virtual void UpdateTickerInfo(BinanceTicker t, JObject item) {
             if(t == null)
-                    return;
+                return;
             t.Last = item.Value<double>("lastPrice");
             t.LowestAsk = item.Value<double>("askPrice");
             t.HighestBid = item.Value<double>("bidPrice");
@@ -873,11 +1046,43 @@ namespace Crypto.Core.Binance {
             t.Hr24Low = item.Value<double>("lowPrice");
         }
 
+        string[] openedOrdersString;
+        protected string[] OpenendOrdersString {
+            get {
+                if(openedOrdersString == null)
+                    openedOrdersString = CreateOpenedOrdersString();
+                return openedOrdersString;
+            }
+        }
+
+        protected virtual string[] CreateOpenedOrdersString() {
+            return new string[] {
+                "symbol",
+                "orderId",
+                "orderListId", //Unless OCO, the value will always be -1
+                "clientOrderId",
+                "price",
+                "origQty",
+                "executedQty",
+                "cummulativeQuoteQty",
+                "status",
+                "timeInForce",
+                "type",
+                "side",
+                "stopPrice",
+                "icebergQty",
+                "time",
+                "updateTime",
+                "isWorking",
+                "origQuoteOrderQty"
+            };
+        }
+
         string[] tradeItemString;
         protected string[] TradeItemString {
             get {
                 if(tradeItemString == null)
-                    tradeItemString = CreateTradeItemString(); 
+                    tradeItemString = CreateTradeItemString();
                 return tradeItemString;
             }
         }
@@ -898,34 +1103,37 @@ namespace Crypto.Core.Binance {
         protected virtual string UpdateTradesApiString => "https://api.binance.com/api/v1/trades";
 
         public override bool UpdateTrades(Ticker ticker) {
-            string address = string.Format("{0}?symbol={1}&limit={2}", UpdateTradesApiString, 
+            string address = string.Format("{0}?symbol={1}&limit={2}", UpdateTradesApiString,
                 Uri.EscapeDataString(ticker.CurrencyPair), 1000);
-            byte[] data = ((Ticker)ticker).DownloadBytes(address);
+            byte[] data = ticker.DownloadBytes(address);
             if(data == null || data.Length == 0)
                 return false;
 
-            ticker.TradeHistory.Clear();
-            ticker.TradeStatistic.Clear();
-            
-            int index = 0, parseIndex = 0;
-            List<string[]> items = JSonHelper.Default.DeserializeArrayOfObjects(data, ref parseIndex, TradeItemString);
-            ResizeableArray<TradeInfoItem> newItems = new ResizeableArray<TradeInfoItem>(items.Count);
-            for(int i = items.Count - 1; i >= 0; i--) {
-                string[] item = items[i];
-                TradeInfoItem t = InitializeTradeInfoItem(item, ticker);
-                ticker.TradeHistory.Add(t);
-                newItems.Add(t);
-                index++;
+            ResizeableArray<TradeInfoItem> newItems = null;
+            ticker.LockTrades();
+            try {
+                ticker.ClearTradeHistory();
+                int parseIndex = 0;
+                List<string[]> items = JSonHelper.Default.DeserializeArrayOfObjects(data, ref parseIndex, TradeItemString);
+                newItems = new ResizeableArray<TradeInfoItem>(items.Count);
+                for(int i = 0; i < items.Count; i++) {
+                    string[] item = items[i];
+                    TradeInfoItem t = InitializeTradeInfoItem(item, ticker);
+                    ticker.AddTradeHistoryItem(t);
+                    newItems.Add(t);
+                }
             }
-            if(ticker.HasTradeHistorySubscribers) {
+            finally {
+                ticker.UnlockTrades();
+            }
+            if(ticker.HasTradeHistorySubscribers)
                 ticker.RaiseTradeHistoryChanged(new TradeHistoryChangedEventArgs() { NewItems = newItems });
-            }
+
             return true;
         }
 
-        private TradeInfoItem InitializeTradeInfoItem(string[] item, Ticker ticker) {
+        protected virtual TradeInfoItem InitializeTradeInfoItem(string[] item, Ticker ticker) {
             DateTime time = FromUnixTime(FastValueConverter.ConvertPositiveLong(item[3]));
-            int tradeId = FastValueConverter.ConvertPositiveInteger(item[0]);
 
             TradeInfoItem t = new TradeInfoItem(null, ticker);
             bool isBuy = item[4][0] != 't';
@@ -933,10 +1141,7 @@ namespace Crypto.Core.Binance {
             t.Time = time;
             t.Type = isBuy ? TradeType.Buy : TradeType.Sell;
             t.RateString = item[1];
-            t.Id = tradeId;
-            double price = t.Rate;
-            double amount = t.Amount;
-            t.Total = price * amount;
+            t.IdString = item[0];
 
             return t;
         }

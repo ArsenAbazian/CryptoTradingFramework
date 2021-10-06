@@ -173,13 +173,13 @@
             this.barManager1 = new DevExpress.XtraBars.BarManager(this.components);
             this.bar1 = new DevExpress.XtraBars.Bar();
             this.bcShowOnlyFavorite = new DevExpress.XtraBars.BarCheckItem();
-            this.biBestFit = new DevExpress.XtraBars.BarButtonItem();
             this.standaloneBarDockControl2 = new DevExpress.XtraBars.StandaloneBarDockControl();
             this.barAndDockingController1 = new DevExpress.XtraBars.BarAndDockingController(this.components);
             this.barDockControlTop = new DevExpress.XtraBars.BarDockControl();
             this.barDockControlBottom = new DevExpress.XtraBars.BarDockControl();
             this.barDockControlLeft = new DevExpress.XtraBars.BarDockControl();
             this.barDockControlRight = new DevExpress.XtraBars.BarDockControl();
+            this.biBestFit = new DevExpress.XtraBars.BarButtonItem();
             this.popupMenu1 = new DevExpress.XtraBars.PopupMenu(this.components);
             this.accordionControl1 = new DevExpress.XtraBars.Navigation.AccordionControl();
             ((System.ComponentModel.ISupportInitialize)(this.teValueWithChange)).BeginInit();
@@ -294,7 +294,7 @@
             // 
             this.gridControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gridControl1.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(24, 23, 24, 23);
-            this.gridControl1.Location = new System.Drawing.Point(446, 329);
+            this.gridControl1.Location = new System.Drawing.Point(446, 330);
             this.gridControl1.MainView = this.gridView1;
             this.gridControl1.Margin = new System.Windows.Forms.Padding(24, 23, 24, 23);
             this.gridControl1.Name = "gridControl1";
@@ -303,7 +303,7 @@
             this.repositoryItemCheckEdit1,
             this.repositoryItemTextEdit1,
             this.teValueWithChange});
-            this.gridControl1.Size = new System.Drawing.Size(1367, 611);
+            this.gridControl1.Size = new System.Drawing.Size(1367, 610);
             this.gridControl1.TabIndex = 0;
             this.gridControl1.UseDirectXPaint = DevExpress.Utils.DefaultBoolean.True;
             this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
@@ -525,7 +525,7 @@
             this.repositoryItemRibbonSearchEdit2,
             this.repositoryItemRibbonSearchEdit1});
             this.ribbonControl1.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonControlStyle.Office2013;
-            this.ribbonControl1.Size = new System.Drawing.Size(1813, 277);
+            this.ribbonControl1.Size = new System.Drawing.Size(1813, 292);
             this.ribbonControl1.StatusBar = this.ribbonStatusBar1;
             // 
             // svgImageCollection1
@@ -575,6 +575,7 @@
             this.barButtonItem1.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("barButtonItem1.ImageOptions.LargeImage")));
             this.barButtonItem1.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("barButtonItem1.ImageOptions.SvgImage")));
             this.barButtonItem1.Name = "barButtonItem1";
+            this.barButtonItem1.Visibility = DevExpress.XtraBars.BarItemVisibility.Never;
             this.barButtonItem1.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItem1_ItemClick_1);
             // 
             // bbAddQuickPanel
@@ -644,6 +645,7 @@
             this.biTradeHistory.Id = 25;
             this.biTradeHistory.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("biTradeHistory.ImageOptions.SvgImage")));
             this.biTradeHistory.Name = "biTradeHistory";
+            this.biTradeHistory.Visibility = DevExpress.XtraBars.BarItemVisibility.Never;
             this.biTradeHistory.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItem3_ItemClick);
             // 
             // ribbonPage1
@@ -835,24 +837,15 @@
             this.bcShowOnlyFavorite.PaintStyle = DevExpress.XtraBars.BarItemPaintStyle.Caption;
             this.bcShowOnlyFavorite.CheckedChanged += new DevExpress.XtraBars.ItemClickEventHandler(this.bcShowOnlyFavorite_CheckedChanged);
             // 
-            // biBestFit
-            // 
-            this.biBestFit.Caption = "Best Fit";
-            this.biBestFit.Id = 1;
-            this.biBestFit.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("biBestFit.ImageOptions.SvgImage")));
-            this.biBestFit.Name = "biBestFit";
-            this.biBestFit.PaintStyle = DevExpress.XtraBars.BarItemPaintStyle.CaptionGlyph;
-            this.biBestFit.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.biBestFit_ItemClick);
-            // 
             // standaloneBarDockControl2
             // 
             this.standaloneBarDockControl2.AutoSize = true;
             this.standaloneBarDockControl2.CausesValidation = false;
             this.standaloneBarDockControl2.Dock = System.Windows.Forms.DockStyle.Top;
-            this.standaloneBarDockControl2.Location = new System.Drawing.Point(446, 277);
+            this.standaloneBarDockControl2.Location = new System.Drawing.Point(446, 292);
             this.standaloneBarDockControl2.Manager = this.barManager1;
             this.standaloneBarDockControl2.Name = "standaloneBarDockControl2";
-            this.standaloneBarDockControl2.Size = new System.Drawing.Size(1367, 52);
+            this.standaloneBarDockControl2.Size = new System.Drawing.Size(1367, 38);
             this.standaloneBarDockControl2.Text = "standaloneBarDockControl2";
             // 
             // barAndDockingController1
@@ -900,6 +893,15 @@
             this.barDockControlRight.Margin = new System.Windows.Forms.Padding(16, 15, 16, 15);
             this.barDockControlRight.Size = new System.Drawing.Size(0, 994);
             // 
+            // biBestFit
+            // 
+            this.biBestFit.Caption = "Best Fit";
+            this.biBestFit.Id = 1;
+            this.biBestFit.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("biBestFit.ImageOptions.SvgImage")));
+            this.biBestFit.Name = "biBestFit";
+            this.biBestFit.PaintStyle = DevExpress.XtraBars.BarItemPaintStyle.CaptionGlyph;
+            this.biBestFit.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.biBestFit_ItemClick);
+            // 
             // popupMenu1
             // 
             this.popupMenu1.ItemLinks.Add(this.bbAddQuickPanel);
@@ -911,14 +913,13 @@
             // 
             this.accordionControl1.AllowItemSelection = true;
             this.accordionControl1.Dock = System.Windows.Forms.DockStyle.Left;
-            this.accordionControl1.Location = new System.Drawing.Point(0, 277);
+            this.accordionControl1.Location = new System.Drawing.Point(0, 292);
             this.accordionControl1.Name = "accordionControl1";
             this.accordionControl1.ScrollBarMode = DevExpress.XtraBars.Navigation.ScrollBarMode.Fluent;
             this.accordionControl1.ShowGroupExpandButtons = false;
             this.accordionControl1.ShowItemExpandButtons = false;
-            this.accordionControl1.Size = new System.Drawing.Size(446, 663);
+            this.accordionControl1.Size = new System.Drawing.Size(446, 648);
             this.accordionControl1.TabIndex = 7;
-            this.accordionControl1.Text = "accordionControl1";
             this.accordionControl1.ViewType = DevExpress.XtraBars.Navigation.AccordionControlViewType.HamburgerMenu;
             // 
             // TickersCollectionForm

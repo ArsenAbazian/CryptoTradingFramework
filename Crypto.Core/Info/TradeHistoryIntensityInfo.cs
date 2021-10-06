@@ -99,7 +99,7 @@ namespace Crypto.Core.Helpers {
                 return null;
             }
             LogManager.Default.Success("Downloaded trade history for " + ticker.Name);
-            ticker.TradeHistory.AddRange(trades);
+            ticker.AddTradeHistoryItem(trades);
 
             TickerDownloadData tradeInfo = new TickerDownloadData() { Ticker = ticker };
             tradeInfo.HistogrammIntervalSec = HistogrammIntervalSec;
@@ -168,13 +168,13 @@ namespace Crypto.Core.Helpers {
         public string MarketCurrency { get { return Ticker.MarketCurrency; } }
 
         public ResizeableArray<CandleStickData> CandleSticks { get { return Ticker.CandleStickData; } }
-        public ResizeableArray<TradeInfoItem> TradeHistory { get { return Ticker.TradeHistory; } }
+        public ResizeableArray<TradeInfoItem> GetTradeHistory() { return Ticker.GetTradeHistory(); }
 
         ResizeableArray<TimeBaseValue> histogrammPreview;
         public ResizeableArray<TimeBaseValue> HistogrammPreviewCore {
             get {
                 if(histogrammPreview == null)
-                    histogrammPreview = HistogrammCalculator.CalculateByTime(TradeHistory, "Time", TimeSpan.FromHours(4));
+                    histogrammPreview = HistogrammCalculator.CalculateByTime(GetTradeHistory(), "Time", TimeSpan.FromHours(4));
                 return histogrammPreview;
             }
         }
@@ -191,10 +191,11 @@ namespace Crypto.Core.Helpers {
         public int HistogrammIntervalSec { get; set; } = 2;
         
         ResizeableArray<TickerTradeHistoryInfoItem> CalcItems() {
-            if(TradeHistory.Count == 0)
+            ResizeableArray<TradeInfoItem> tradeHistory = GetTradeHistory();
+            if(tradeHistory.Count == 0)
                 return new ResizeableArray<TickerTradeHistoryInfoItem>();
-            DateTime min = TradeHistory[0].Time;
-            DateTime max = TradeHistory.Last().Time;
+            DateTime min = tradeHistory[0].Time;
+            DateTime max = tradeHistory.Last().Time;
             if(min > max) { 
                 DateTime tmp = min; min = max; max = tmp;
             }
@@ -210,15 +211,15 @@ namespace Crypto.Core.Helpers {
                 list[i].CloseTime = list[i].Time;
             }
 
-            for(int i = 0; i < TradeHistory.Count; i++) {
-                DateTime time = TradeHistory[i].Time;
+            for(int i = 0; i < tradeHistory.Count; i++) {
+                DateTime time = tradeHistory[i].Time;
                 int index = (int)((time - min).TotalMilliseconds * k);
                 TickerTradeHistoryInfoItem item = list[index];
-                TradeInfoItem trade = TradeHistory[i];
+                TradeInfoItem trade = tradeHistory[i];
                 item.TradeCount++;
                 item.TradeVolume += trade.Amount;
 
-                if(TradeHistory[i].Type == TradeType.Sell) {
+                if(tradeHistory[i].Type == TradeType.Sell) {
                     item.SellCount++;
                     item.SellVolume += trade.Amount;
                 }

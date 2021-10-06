@@ -18,9 +18,11 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Crypto.Core.Helpers;
+using CryptoMarketClient.Strategies;
 
 namespace CryptoMarketClient {
-    public partial class TickerForm : XtraForm {
+    public partial class TickerForm : ThreadUpdateForm {
         public TickerForm() {
             InitializeComponent();
             this.beHr24HighLow.EditHeight = ScaleUtils.ScaleValue(50);
@@ -37,42 +39,116 @@ namespace CryptoMarketClient {
         }
 
         public string MarketName { get; set; }
-        //protected override bool AllowUpdateInactive => true;
+        protected override bool AllowUpdateInactive => true;
+        protected DateTime LastUpdateTime { get; set; }
+        protected override bool AutoStartThread => true;
+        protected override int UpdateInervalMs => 2000;
+        protected override void OnThreadUpdate() {
+            Ticker t = Ticker;
+            if(t == null)
+                return;
+            if(t != null)
+                t.UpdateOpenedOrders();
+            if(!t.Exchange.SupportWebSocket(WebSocketType.Trades))
+                t.UpdateTrades();
+            //if(Ticker != null && !Ticker.IsUpdatingAccountTrades)
+            //    Ticker.UpdateAccountTrades();
+        }
         protected override void OnShown(EventArgs e) {
             base.OnShown(e);
-            try {
-                if(System.IO.File.Exists("TickerFormWorkspaceDefault.xml")) {
-                    if(this.workspaceManager1.LoadWorkspace("TickerFormDefault", "TickerFormWorkspaceDefault.xml")) {
-                        //this.workspaceManager1.ApplyWorkspace("TickerFormDefault");
-                        //UpdateDockPanels();
-                    }
-                }
-            }
-            catch(Exception ee) {
-                Telemetry.Default.TrackException(ee);
-            }
-            Ticker.UpdateTrades();
+            //try {
+            //    if(System.IO.File.Exists("TickerFormWorkspaceDefault.xml")) {
+            //        if(this.workspaceManager1.LoadWorkspace("TickerFormDefault", "TickerFormWorkspaceDefault.xml")) {
+            //            //this.workspaceManager1.ApplyWorkspace("TickerFormDefault");
+            //            //UpdateDockPanels();
+            //        }
+            //    }
+            //}
+            //catch(Exception ee) {
+            //    Telemetry.Default.TrackException(ee);
+            //}
+            if(Ticker == null)
+                return;
+            Icon = CurrencyLogoProvider.GetFormIcon(Ticker.MarketCurrency);
+            this.rpMain.Text = Ticker.Name;
+
+            ThreadManager manager = new ThreadManager();
+            manager.OwnerControl = this.gcTrades;
+            Ticker.AccountShortTradeHistory.ThreadManager = manager;
+            Ticker.ShortTradeHistory.ThreadManager = manager;
+            Ticker.OrderBook.SubscribeUpdateEntries(true);
+            Ticker.IsOpened = true;
+            UpdateText();
+            UpdateGrid();
+            UpdateChart();
+            UpdateDockPanels();
+            UpdateBuySellSettings();
+            UpdateBalances();
+            UpdateTrades();
+            UpdateAccountTrades();
+            
+            Ticker.StartListenTickerStream();
+            SubscribeEvents();
         }
-        protected void OnThreadUpdate(object state) {
+
+        private void UpdateTrades() {
+            Ticker.LockTrades();
             try {
-                if(Ticker != null && !Ticker.Exchange.SupportWebSocket(WebSocketType.Tickers))
-                    Ticker.UpdateTicker();
-                if(Ticker != null && !Ticker.Exchange.SupportWebSocket(WebSocketType.Ticker))
-                    Ticker.UpdateOrderBook();
-                if(Ticker != null && !Ticker.Exchange.SupportWebSocket(WebSocketType.Ticker))
-                    Ticker.UpdateTrades();
-                if(Ticker != null)
-                    Ticker.UpdateOpenedOrders();
-                if(Ticker != null)
-                    Ticker.UpdateTrailings();
-                if(Ticker != null)
-                    Ticker.Time = DateTime.UtcNow;
-                if(IsHandleCreated)
-                    BeginInvoke(new MethodInvoker(UpdateTickerInfoBarCore));
+                Ticker.ClearTradeHistory();
+                Ticker.Exchange.UpdateTrades(Ticker);
+                this.gvTrades.BestFitColumns();
             }
-            catch(Exception e) {
-                Telemetry.Default.TrackException(e);
+            finally {
+                Ticker.UnlockTrades();
             }
+        }
+
+        private void UpdateAccountTrades() {
+            Ticker.LockAccountTrades();
+            try {
+                Ticker.ClearMyTradeHistory();
+                Ticker.Exchange.UpdateAccountTrades(Ticker);
+                this.gvAccountTrades.BestFitColumns();
+            }
+            finally {
+                Ticker.UnlockAccountTrades();
+            }
+        }
+
+        protected bool UpdatingBalances { get; set; }
+        private void RunUpdateAccountTradesTask() {
+            if(Ticker.IsUpdatingAccountTrades)
+                return;
+            Task.Factory.StartNew(() => { 
+                Ticker.UpdateAccountTrades();
+            });
+        }
+        private void UpdateOpenedOrders() {
+            if(Ticker.IsUpdatingOpenedOrders)
+                return;
+            Task.Factory.StartNew(() => { 
+                Ticker.UpdateOpenedOrders();
+            });
+        }
+        private void UpdateBalances() {
+            if(UpdatingBalances)
+                return;
+            UpdatingBalances = true;
+            Task.Factory.StartNew(() => { 
+                Ticker.UpdateBalance(Ticker.BaseCurrency);
+                Ticker.UpdateBalance(Ticker.MarketCurrency);
+                UpdatingBalances = false;
+                BeginInvoke(new MethodInvoker(() => UpdateBalanceText()));
+            });
+        }
+
+        protected void UpdateBalanceText() {
+            this.buySettingsControl.Settings.AvailableForBuy = Ticker.BaseCurrencyBalance;
+            this.buySettingsControl.Settings.AvailableForSell = Ticker.MarketCurrencyBalance;
+            this.siBalance.Caption = 
+                        Ticker.BaseCurrency + ": " + Ticker.BaseCurrencyBalance.ToString("0.00000000") + "   " +
+                        Ticker.MarketCurrency + ": " + Ticker.MarketCurrencyBalance.ToString("0.00000000");
+            this.siUpdated.Caption = DateTime.Now.ToLongTimeString();
         }
 
         Ticker ticker;
@@ -102,6 +178,7 @@ namespace CryptoMarketClient {
         }
         void OnTickerChanged(Ticker prev) {
             if(prev != null) {
+                prev.ShortTradeHistory.ThreadManager = null;
                 prev.IsOpened = false;
                 prev.OrderBook.SubscribeUpdateEntries(false);
                 ClearText();
@@ -111,23 +188,8 @@ namespace CryptoMarketClient {
                 prev.StopListenTickerStream();
             }
             UpdateTickerInfoBar();
-            this.myTradesCollectionControl1.Ticker = Ticker;
             this.activeTrailingCollectionControl1.Ticker = Ticker;
             this.buySettingsControl.Ticker = Ticker;
-            if(Ticker == null)
-                return;
-            Ticker.OrderBook.SubscribeUpdateEntries(true);
-            Icon = CurrencyLogoProvider.GetFormIcon(Ticker.MarketCurrency);
-            this.rpMain.Text = Ticker.Name;
-            Ticker.IsOpened = true;
-            UpdateText();
-            UpdateGrid();
-            UpdateChart();
-            UpdateDockPanels();
-            UpdateBuySellSettings();
-            SubscribeEvents();
-            Ticker.UpdateBalance(Ticker.MarketCurrency);
-            Ticker.StartListenTickerStream();
         }
         void UpdateTickerInfoBar() {
             if(Ticker == null)
@@ -137,7 +199,21 @@ namespace CryptoMarketClient {
             this.siExchangeIcon.Caption = "<b><size=+3>" + Ticker.Exchange.Name + "</size></b>";
             UpdateTickerInfoBarCore();
         }
+        protected BindingList<ValueInfo> ValuesList { get; } = new BindingList<ValueInfo>();
+        protected Dictionary<string, ValueInfo> Values { get; } = new Dictionary<string, ValueInfo>();
         void UpdateTickerInfoBarCore() {
+            //if(ValuesList.Count == 0) {
+            //    ValuesList.Add(new ValueInfo() { Name = "last", Text = "Last Price:" });
+            //    ValuesList.Add(new ValueInfo() { Name = "bid", Text = "Highest Bid:" });
+            //    ValuesList.Add(new ValueInfo() { Name = "ask", Text = "Lowest Ask: " });
+            //    ValuesList.Add(new ValueInfo() { Name = "low", Text = "24h Low:" });
+            //    ValuesList.Add(new ValueInfo() { Name = "high", Text = "24h High:" });
+            //    ValuesList.Add(new ValueInfo() { Name = "volume", Text = "24h Volume:" });
+
+            //    foreach(var val in ValuesList)
+            //        Values.Add(val.Name, val);
+            //}
+
             int multiplier = 10000000;
             if(Ticker.Last >= 1000)
                 multiplier = 1;
@@ -146,11 +222,24 @@ namespace CryptoMarketClient {
             this.beHr24HighLow.EditValue = Ticker.Last * multiplier;
 
             this.siLast.Caption = "Last Price<br>" + Ticker.LastString;
-            this.siBid.Caption = "Highest Bid<br>" + Ticker.HighestBidString;
+            //this.siBid.Caption = "Highest Bid<br>" + Ticker.HighestBidString;
             this.si24High.Caption = "24h High<br><b>" + Ticker.Hr24High.ToString("0.########") + "<b>";
             this.siHr24Low.Caption = "24h Low<br><b>" + Ticker.Hr24Low.ToString("0.########") + "<b>";
-            this.siLowestAsk.Caption = "Lowest Ask<br>" + Ticker.LowestAskString;
+            //this.siLowestAsk.Caption = "Lowest Ask<br>" + Ticker.LowestAskString;
             this.si24Volume.Caption = "24h Volume<br>" + Ticker.Volume.ToString() + " " + Ticker.BaseCurrency;
+
+            //this.gvInfo.BeginDataUpdate();
+            //try {
+            //    Values["last"].Value = Ticker.LastString;
+            //    Values["bid"].Value = Ticker.HighestBidString;
+            //    Values["ask"].Value = Ticker.LowestAskString;
+            //    Values["high"].Value = Ticker.GetString(Ticker.Hr24High);
+            //    Values["low"].Value = Ticker.GetString(Ticker.Hr24Low);
+            //    Values["volume"].Value = Ticker.GetString(Ticker.Volume);
+            //}
+            //finally {
+            //    this.gvInfo.EndDataUpdate();
+            //}
         }
         void UpdateDockPanels() {
             if(Ticker == null)
@@ -188,34 +277,56 @@ namespace CryptoMarketClient {
             prev.OrderBook.Changed -= OnTickerOrderBookChanged;
             prev.Changed -= OnTickerChanged;
             prev.HistoryChanged -= OnTickerHistoryItemAdded;
-            prev.TradeHistoryChanged -= OnTickerTradeHistoryAdd;
+            prev.TradeHistoryChanged -= OnTickerTradeHistoryChanged;
+            prev.AccountTradeHistoryChanged -= OnAccountTradeHistoryChanged;
             prev.OpenedOrdersChanged -= OnTickerOpenedOrdersChanged;
         }
 
+        protected bool AllowUpdateUI { get { return Ticker != null && IsHandleCreated && !IsDisposed; } }
         private void OnTickerOpenedOrdersChanged(object sender, EventArgs e) {
-            BeginInvoke(new MethodInvoker(() => { this.gvOpenedOrders.RefreshData(); }));
+            if(!AllowUpdateUI)
+                return;
+            BeginInvoke(new MethodInvoker(() => {
+                RunUpdateAccountTradesTask();
+                this.gvOpenedOrders.RefreshData();
+                ShowNotifications(Ticker.GetOpenedOrdersChangeNotifications());
+            }));
+        }
+
+        //protected DevExpress.XtraBars.Alerter.AlertControl AlertControl { get; set; }
+        void ShowNotifications(List<string> notifications) {
+            foreach(string str in notifications) {
+                NotificationManager.Notify(str);
+            }
         }
 
         void UpdateGrid() {
             this.orderBookControl1.Bids = Ticker.OrderBook.Bids;
             this.orderBookControl1.Asks = Ticker.OrderBook.AsksInverted;
-            this.tradeHistoryItemBindingSource.DataSource = Ticker.TradeHistory;
+            this.gcTrades.DataSource = new SortedReadOnlyArray<TradeInfoItem>(Ticker.ShortTradeHistory);
+            this.gcAccountTrades.DataSource = new SortedReadOnlyArray<TradeInfoItem>(Ticker.AccountShortTradeHistory);
             this.gcOpenedOrders.DataSource = Ticker.OpenedOrders;
         }
         void SubscribeEvents() {
-            if(Ticker.Exchange.SupportWebSocket(WebSocketType.Ticker)) {
-                Ticker.TradeHistory.Clear();
-                Ticker.Exchange.UpdateTrades(Ticker);
-                Ticker.StartListenTickerStream();
-            }
             Ticker.OrderBook.Changed += OnTickerOrderBookChanged;
             Ticker.Changed += OnTickerChanged;
             Ticker.HistoryChanged += OnTickerHistoryItemAdded;
-            Ticker.TradeHistoryChanged += OnTickerTradeHistoryAdd;
+            Ticker.TradeHistoryChanged += OnTickerTradeHistoryChanged;
+            Ticker.AccountTradeHistoryChanged += OnAccountTradeHistoryChanged;
             Ticker.OpenedOrdersChanged += OnTickerOpenedOrdersChanged;
         }
 
-        private void OnTickerTradeHistoryAdd(object sender, EventArgs e) {
+        private void OnAccountTradeHistoryChanged(object sender, TradeHistoryChangedEventArgs e) {
+            if(IsHandleCreated) {
+                BeginInvoke(new Action(() => {
+                    if(!IsDisposed) {
+                        this.gvAccountTrades.RefreshData();
+                    }
+                }));
+            }
+        }
+
+        private void OnTickerTradeHistoryChanged(object sender, EventArgs e) {
             if(IsHandleCreated) {
                 BeginInvoke(new Action(() => {
                     if(!IsDisposed) {
@@ -229,14 +340,7 @@ namespace CryptoMarketClient {
         }
 
         private void OnTickerChanged(object sender, EventArgs e) {
-            if(IsHandleCreated) {
-                BeginInvoke(new Action(() => {
-                    if(!IsDisposed) {
-                        this.siBalance.Caption = "Balance: " + Ticker.MarketCurrencyBalance.ToString("0.00000000");
-                        this.siUpdated.Caption = "Updated: " + Ticker.LastUpdateTime;
-                    }
-                }));
-            }
+            
         }
 
         private void OnTickerOrderBookChanged(object sender, OrderBookEventArgs e) {
@@ -252,34 +356,6 @@ namespace CryptoMarketClient {
         void RefreshAskGrid() {
             this.orderBookControl1.Asks = Ticker.OrderBook.Asks;
             this.orderBookControl1.RefreshAsks();
-        }
-
-        private void biSell_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
-            //double price = 0;
-            //double amount = 0;
-            //try {
-            //    price = Convert.Todouble(this.bePrice.EditValue);
-            //}
-            //catch(Exception ee) {
-            //    XtraMessageBox.Show("Can't sell: get price = " + ee.ToString());
-            //    return;
-            //}
-            //if(Ticker.HighestBid / price > 10m) {
-            //    if(XtraMessageBox.Show("It seems that you made mistake on price?", "Sell", MessageBoxButtons.YesNo) == DialogResult.Yes)
-            //        return;
-            //}
-            //try {
-            //    amount = Convert.Todouble(this.beAmount.EditValue);
-            //}
-            //catch(Exception ee) {
-            //    XtraMessageBox.Show("Can't sell: get amount = " + ee.ToString());
-            //    return;
-            //}
-            //if(!Ticker.Sell(price, amount)) {
-            //    XtraMessageBox.Show("Error: can't place sell " + amount + " " + Ticker.MarketCurrency + " for " + price);
-            //    return;
-            //}
-            //XtraMessageBox.Show("Place sell " + amount + " " + Ticker.MarketCurrency + " for " + price);
         }
 
         private void biSellMarket_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
@@ -298,7 +374,7 @@ namespace CryptoMarketClient {
 
         private void dockManager1_ActivePanelChanged(object sender, ActivePanelChangedEventArgs e) {
             if(e.Panel == this.dpMyTrades) {
-                this.myTradesCollectionControl1.UpdateTrades();
+                RunUpdateAccountTradesTask();
             }
         }
 
@@ -314,7 +390,8 @@ namespace CryptoMarketClient {
             if(info == null)
                 return;
             if(!Ticker.Cancel(info)) {
-                XtraMessageBox.Show("Error canceling order. Try again later.");
+                NotificationManager.Notify("Cancel Order", "Error canceling order. Check Log for last errors.");
+                return;
             }
             Ticker.UpdateOpenedOrders();
             this.gvOpenedOrders.RefreshData();
@@ -332,6 +409,43 @@ namespace CryptoMarketClient {
                 this.gvOpenedOrders.FocusedRowHandle = hitInfo.RowHandle;
                 this.popupMenu1.ShowPopup(this.gcOpenedOrders.PointToScreen(e.Location));
             }
+        }
+
+        private void BiUpdate_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
+            UpdateBalances();
+        }
+
+        private void BuySettingsControl_Trade(object sender, TradeEventArgs e) {
+            UpdateOpenedOrders();
+        }
+
+        private void BarButtonItem1_ItemClick_1(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
+            RunUpdateAccountTradesTask();
+        }
+    }
+
+    public class ValueInfo : INotifyPropertyChanged {
+        event PropertyChangedEventHandler changed;
+        event PropertyChangedEventHandler INotifyPropertyChanged.PropertyChanged {
+            add { this.changed += value; }
+            remove { this.changed -= value; }
+        }
+
+        public string Name { get; set; }
+        public string Text { get; set; }
+        string valueCore;
+        public string Value {
+            get { return valueCore; }
+            set {
+                if(Value == value)
+                    return;
+                valueCore = value;
+                RaisePropertyChanged(nameof(Value));
+            }
+        }
+        protected virtual void RaisePropertyChanged(string name) {
+            if(this.changed != null)
+                this.changed.Invoke(this, new PropertyChangedEventArgs(name));
         }
     }
 }

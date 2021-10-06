@@ -19,7 +19,7 @@ namespace Crypto.Core.BitFinex {
 
         public override string WebPageAddress => "https://www.bitfinex.com/t/" + MarketCurrency + ":" + BaseCurrency;
 
-        public override bool UpdateMyTrades() {
+        public override bool UpdateAccountTrades() {
             return true;
         }
     }

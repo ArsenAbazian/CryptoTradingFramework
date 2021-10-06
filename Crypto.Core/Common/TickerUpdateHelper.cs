@@ -62,7 +62,7 @@ namespace Crypto.Core {
         public static void UpdateHistoryItem(Ticker item) {
             TickerHistoryItem last = item.History.Count == 0 ? null : item.History.Last();
             if(item.History.Count > 36000)
-                item.History.RemoveAt(0);
+                item.History.RemoveFirst();
             if(last != null) {
                 if(last.Ask == item.LowestAsk && last.Bid == item.HighestBid && last.Current == item.Last)
                     return;
@@ -76,7 +76,7 @@ namespace Crypto.Core {
                     Debug.WriteLine("error");
                 }
             }
-            item.History.Add(new TickerHistoryItem() { Time = item.Time, Ask = item.LowestAsk, Bid = item.HighestBid, Current = item.Last });
+            item.History.AddLast(new TickerHistoryItem() { Time = item.Time, Ask = item.LowestAsk, Bid = item.HighestBid, Current = item.Last });
             item.RaiseHistoryChanged();
         }
     }

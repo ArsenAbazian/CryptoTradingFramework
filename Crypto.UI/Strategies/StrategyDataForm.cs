@@ -123,13 +123,13 @@ namespace CryptoMarketClient.Strategies {
                 BarButtonItem bt = new BarButtonItem(this.barManager1, t.Exchange.Name + ": " + t.Name);
                 bt.ItemClick += (d, e) => {
                     StrategyDataItemInfo info = new StrategyDataItemInfo();
-                    info.DataSource = t.TradeHistory;
+                    info.DataSource = t.GetTradeHistory();
                     StrategyDataItemInfo time = StrategyDataItemInfo.TimeItem(info.Children, "Time");
-                    time.DataSource = t.TradeHistory;
+                    time.DataSource = t.GetTradeHistory();
                     time.FormatString = "dd.MM hh:mm:ss.fff";
-                    StrategyDataItemInfo.DataItem(info.Children, nameof(TradeInfoItem.Rate)).DataSource = t.TradeHistory;
+                    StrategyDataItemInfo.DataItem(info.Children, nameof(TradeInfoItem.Rate)).DataSource = t.GetTradeHistory();
                     StrategyDataItemInfo amount = StrategyDataItemInfo.DataItem(info.Children, nameof(TradeInfoItem.Amount));
-                    amount.Visibility = DataVisibility.Table; amount.DataSource = t.TradeHistory;
+                    amount.Visibility = DataVisibility.Table; amount.DataSource = t.GetTradeHistory();
                     ShowChartForm(info, new StrategyDataVisualiser(info), true);
                 };
                 this.sbTradeHistory.ItemLinks.Add(bt);
@@ -137,13 +137,13 @@ namespace CryptoMarketClient.Strategies {
                 bt = new BarButtonItem(this.barManager1, t.Exchange.Name + ": " + t.Name);
                 bt.ItemClick += (d, e) => {
                     StrategyDataItemInfo info = new StrategyDataItemInfo();
-                    info.DataSource = t.TradeHistory;
+                    info.DataSource = t.GetTradeHistory();
                     StrategyDataItemInfo time = StrategyDataItemInfo.TimeItem(info.Children, "Time");
-                    time.DataSource = t.TradeHistory;
+                    time.DataSource = t.GetTradeHistory();
                     time.FormatString = "dd.MM hh:mm:ss.fff";
-                    StrategyDataItemInfo.DataItem(info.Children, nameof(TradeInfoItem.Rate)).DataSource = t.TradeHistory;
+                    StrategyDataItemInfo.DataItem(info.Children, nameof(TradeInfoItem.Rate)).DataSource = t.GetTradeHistory();
                     StrategyDataItemInfo amount = StrategyDataItemInfo.DataItem(info.Children, nameof(TradeInfoItem.Amount));
-                    amount.Visibility = DataVisibility.Table; amount.DataSource = t.TradeHistory;
+                    amount.Visibility = DataVisibility.Table; amount.DataSource = t.GetTradeHistory();
                     ShowTableForm(info);
                 };
                 this.sbTradeHistoryTable.ItemLinks.Add(bt);

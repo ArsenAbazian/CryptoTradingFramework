@@ -1,9 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\cef.redist.x64.81.3.10\build\cef.redist.x64.props" Condition="Exists('..\packages\cef.redist.x64.81.3.10\build\cef.redist.x64.props')" />
-  <Import Project="..\packages\cef.redist.x86.81.3.10\build\cef.redist.x86.props" Condition="Exists('..\packages\cef.redist.x86.81.3.10\build\cef.redist.x86.props')" />
-  <Import Project="..\packages\CefSharp.Common.81.3.100\build\CefSharp.Common.props" Condition="Exists('..\packages\CefSharp.Common.81.3.100\build\CefSharp.Common.props')" />
-  <Import Project="..\packages\CefSharp.WinForms.81.3.100\build\CefSharp.WinForms.props" Condition="Exists('..\packages\CefSharp.WinForms.81.3.100\build\CefSharp.WinForms.props')" />
   <Import Project="..\packages\CefSharp.WinForms.71.0.2\build\CefSharp.WinForms.props" Condition="Exists('..\packages\CefSharp.WinForms.71.0.2\build\CefSharp.WinForms.props')" />
   <Import Project="..\packages\CefSharp.Common.71.0.2\build\CefSharp.Common.props" Condition="Exists('..\packages\CefSharp.Common.71.0.2\build\CefSharp.Common.props')" />
   <Import Project="..\packages\cef.redist.x86.3.3578.1870\build\cef.redist.x86.props" Condition="Exists('..\packages\cef.redist.x86.3.3578.1870\build\cef.redist.x86.props')" />
@@ -165,13 +161,11 @@
     <Reference Include="EnvDTE, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
-    <Reference Include="HtmlAgilityPack, Version=1.11.24.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
-      <HintPath>..\packages\HtmlAgilityPack.1.11.24\lib\Net45\HtmlAgilityPack.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="HtmlAgilityPack, Version=1.11.36.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
+      <HintPath>..\packages\HtmlAgilityPack.1.11.36\lib\Net45\HtmlAgilityPack.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="System" />
@@ -182,21 +176,40 @@
     <Reference Include="System.Deployment" />
     <Reference Include="System.Design" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http, Version=4.1.1.3, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Net.Http.4.3.4\lib\net46\System.Net.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.3\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
     <Reference Include="System.Runtime.Remoting" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Runtime.Serialization.Formatters.Soap" />
     <Reference Include="System.Security" />
+    <Reference Include="System.Security.Cryptography.Algorithms, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.Algorithms.4.3.0\lib\net461\System.Security.Cryptography.Algorithms.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Encoding, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.Encoding.4.3.0\lib\net46\System.Security.Cryptography.Encoding.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Primitives, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.Primitives.4.3.0\lib\net46\System.Security.Cryptography.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.X509Certificates, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.X509Certificates.4.3.0\lib\net461\System.Security.Cryptography.X509Certificates.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
     <Reference Include="System.Transactions" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="Telegram.Bot, Version=15.6.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Telegram.Bot.15.6.0\lib\net45\Telegram.Bot.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Telegram.Bot, Version=16.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Telegram.Bot.16.0.2\lib\net45\Telegram.Bot.dll</HintPath>
     </Reference>
     <Reference Include="UIAutomationClient" />
     <Reference Include="WindowsBase" />
@@ -280,6 +293,7 @@
     <Compile Include="Forms\TickerDataDownloadForm.Designer.cs">
       <DependentUpon>TickerDataDownloadForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\NotificationProvider.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -583,15 +597,7 @@
     <Error Condition="!Exists('..\packages\CefSharp.Common.71.0.2\build\CefSharp.Common.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CefSharp.Common.71.0.2\build\CefSharp.Common.targets'))" />
     <Error Condition="!Exists('..\packages\CefSharp.WinForms.71.0.2\build\CefSharp.WinForms.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CefSharp.WinForms.71.0.2\build\CefSharp.WinForms.props'))" />
     <Error Condition="!Exists('..\packages\CefSharp.WinForms.71.0.2\build\CefSharp.WinForms.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CefSharp.WinForms.71.0.2\build\CefSharp.WinForms.targets'))" />
-    <Error Condition="!Exists('..\packages\CefSharp.WinForms.81.3.100\build\CefSharp.WinForms.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CefSharp.WinForms.81.3.100\build\CefSharp.WinForms.props'))" />
-    <Error Condition="!Exists('..\packages\CefSharp.WinForms.81.3.100\build\CefSharp.WinForms.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CefSharp.WinForms.81.3.100\build\CefSharp.WinForms.targets'))" />
-    <Error Condition="!Exists('..\packages\CefSharp.Common.81.3.100\build\CefSharp.Common.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CefSharp.Common.81.3.100\build\CefSharp.Common.props'))" />
-    <Error Condition="!Exists('..\packages\CefSharp.Common.81.3.100\build\CefSharp.Common.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CefSharp.Common.81.3.100\build\CefSharp.Common.targets'))" />
-    <Error Condition="!Exists('..\packages\cef.redist.x86.81.3.10\build\cef.redist.x86.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\cef.redist.x86.81.3.10\build\cef.redist.x86.props'))" />
-    <Error Condition="!Exists('..\packages\cef.redist.x64.81.3.10\build\cef.redist.x64.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\cef.redist.x64.81.3.10\build\cef.redist.x64.props'))" />
   </Target>
   <Import Project="..\packages\CefSharp.Common.71.0.2\build\CefSharp.Common.targets" Condition="Exists('..\packages\CefSharp.Common.71.0.2\build\CefSharp.Common.targets')" />
   <Import Project="..\packages\CefSharp.WinForms.71.0.2\build\CefSharp.WinForms.targets" Condition="Exists('..\packages\CefSharp.WinForms.71.0.2\build\CefSharp.WinForms.targets')" />
-  <Import Project="..\packages\CefSharp.WinForms.81.3.100\build\CefSharp.WinForms.targets" Condition="Exists('..\packages\CefSharp.WinForms.81.3.100\build\CefSharp.WinForms.targets')" />
-  <Import Project="..\packages\CefSharp.Common.81.3.100\build\CefSharp.Common.targets" Condition="Exists('..\packages\CefSharp.Common.81.3.100\build\CefSharp.Common.targets')" />
 </Project>

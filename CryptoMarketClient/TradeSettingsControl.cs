@@ -91,19 +91,23 @@ namespace CryptoMarketClient {
                 }
                 return;
             }
+            TradingResult res = null;
             if(type == OrderType.Buy) {
-                if(Ticker.Buy(Settings.BuyPrice, Settings.BuyAmount) == null) {
-                    XtraMessageBox.Show("Error buying. Please try later again. Last Error: " + LogManager.Default.Messages.Last().Text);
+                res = Ticker.Buy(Settings.BuyPrice, Settings.BuyAmount);
+                if(res == null) {
+                    XtraMessageBox.Show("Error buying. " + LogManager.Default.Messages.Last().Description);
                     return;
                 }
             }
             else {
                 Settings.Enabled = false;
-                if(Ticker.Sell(Settings.BuyPrice, Settings.SellAmount) == null) {
-                    XtraMessageBox.Show("Error selling. Please try later again." + LogManager.Default.Messages.Last().Text);
+                res = Ticker.Sell(Settings.SellPrice, Settings.SellAmount);
+                if(res == null) {
+                    XtraMessageBox.Show("Error selling. " + LogManager.Default.Messages.Last().Description);
                     return;
                 }
             }
+            TradingResult = res;
             if(Settings.Enabled) {
                 Settings.Date = DateTime.UtcNow;
                 Ticker.Trailings.Add(Settings);
@@ -114,8 +118,20 @@ namespace CryptoMarketClient {
 
                 XtraMessageBox.Show("Trailing added!");
             }
+            RaiseOnTrade(res);
         }
 
+        private static readonly object onTrade = new object();
+        public event TradeEventHandler Trade {
+            add { Events.AddHandler(onTrade, value); }
+            remove { Events.RemoveHandler(onTrade, value); }
+        }
+        private void RaiseOnTrade(TradingResult trade) {
+            TradeEventHandler handler = (TradeEventHandler)Events[onTrade];
+            if(handler != null)
+                handler(this, new TradeEventArgs() { Trade = trade });
+        }
+        public TradingResult TradingResult { get; set; }
         private void OnBuyButtonClick(object sender, EventArgs e) {
             MakeTrade(OrderType.Buy);
         }
@@ -153,4 +169,9 @@ namespace CryptoMarketClient {
     public interface ITradingResultOperationsProvider {
         void ShowTradingResult(Ticker ticker);
     }
+
+    public class TradeEventArgs {
+        public TradingResult Trade { get; internal set; }
+    }
+    public delegate void TradeEventHandler(object sender, TradeEventArgs e);
 }

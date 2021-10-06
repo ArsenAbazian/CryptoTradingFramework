@@ -37,6 +37,21 @@ namespace Crypto.Core.Common {
                 return null;
             }
         }
+        public byte[] Delete(string adress) {
+            Task<HttpResponseMessage> t = this.DeleteAsync(adress);
+            try {
+                t.Wait(10000);
+                ResponseHeaders = t.Result.Headers;
+                OnRequestCompleted();
+                var t2 = t.Result.Content.ReadAsByteArrayAsync();
+                t2.Wait(10000);
+                return t2.Result;
+            }
+            catch(Exception e) {
+                Telemetry.Default.TrackException(e);
+                return null;
+            }
+        }
         public byte[] DownloadData(string adress) {
             Task<HttpResponseMessage> t = this.GetAsync(adress);
             try {

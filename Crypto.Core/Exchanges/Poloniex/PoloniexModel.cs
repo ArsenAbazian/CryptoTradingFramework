@@ -45,7 +45,7 @@ namespace Crypto.Core {
 
         public override bool SupportWebSocket(WebSocketType type) {
             return type == WebSocketType.Tickers ||
-                type == WebSocketType.Ticker;
+                type == WebSocketType.Ticker || type == WebSocketType.OrderBook;
         }
 
         private void OnGetTickerItem(PoloniexTicker item) {
@@ -311,12 +311,30 @@ namespace Crypto.Core {
             if(bytes == null || bytes.Length == 0)
                 return null;
 
+            var scheme = JSonHelper.Default.GetObjectScheme(Type + "/candlestickdata", bytes);
+            if(scheme == null)
+                return new ResizeableArray<CandleStickData>();
+
             DateTime startTime = new DateTime(1970, 1, 1);
 
-            ResizeableArray<CandleStickData> list = new ResizeableArray<CandleStickData>();
+            
             int startIndex = 0;
-            List<string[]> res = JSonHelper.Default.DeserializeArrayOfObjects(bytes, ref startIndex, new string[] { "date", "high", "low", "open", "close", "volume", "quoteVolume", "weightedAverage" });
-            if(res == null) return list;
+            List<string[]> res = JSonHelper.Default.DeserializeArrayOfObjects(bytes, ref startIndex, scheme.Names);
+            if(res == null) 
+                return new ResizeableArray<CandleStickData>();
+
+            ResizeableArray<CandleStickData> list = new ResizeableArray<CandleStickData>(res.Count);
+
+            //new string[] { "date", "high", "low", "open", "close", "volume", "quoteVolume", "weightedAverage" }
+            int i_date = scheme.GetIndex("date");
+            int i_high = scheme.GetIndex("high");
+            int i_low = scheme.GetIndex("low");
+            int i_open = scheme.GetIndex("open");
+            int i_close = scheme.GetIndex("close");
+            int i_volume = scheme.GetIndex("volume");
+            int i_quoteVolume = scheme.GetIndex("quoteVolume");
+            int i_wa = scheme.GetIndex("weightedAverage");
+
             for(int i = 0; i < res.Count; i++) {
                 string[] item = res[i];
                 CandleStickData data = new CandleStickData();
@@ -325,13 +343,13 @@ namespace Crypto.Core {
                     continue;
                 if(list.Count > 0 && list.Last().Time == data.Time)
                     continue;
-                data.High = FastValueConverter.Convert(item[1]);
-                data.Low = FastValueConverter.Convert(item[2]);
-                data.Open = FastValueConverter.Convert(item[3]);
-                data.Close = FastValueConverter.Convert(item[4]);
-                data.Volume = FastValueConverter.Convert(item[5]);
-                data.QuoteVolume = FastValueConverter.Convert(item[6]);
-                data.WeightedAverage = FastValueConverter.Convert(item[7]);
+                data.High = FastValueConverter.Convert(item[i_high]);
+                data.Low = FastValueConverter.Convert(item[i_low]);
+                data.Open = FastValueConverter.Convert(item[i_open]);
+                data.Close = FastValueConverter.Convert(item[i_close]);
+                data.Volume = FastValueConverter.Convert(item[i_volume]);
+                data.QuoteVolume = FastValueConverter.Convert(item[i_quoteVolume]);
+                data.WeightedAverage = FastValueConverter.Convert(item[i_wa]);
                 list.Add(data);
             }
             List<TradeInfoItem> trades = GetTradeVolumesForCandleStick(ticker, startSec, end);
@@ -398,7 +416,7 @@ namespace Crypto.Core {
                 t.IsFrozen = obj.Value<int>("isFrozen") != 0;
                 t.Hr24High = obj.Value<double>("high24hr");
                 t.Hr24Low = obj.Value<double>("low24hr");
-                Tickers.Add(t);
+                AddTicker(t);
                 index++;
             }
             IsInitialized = true;
@@ -571,7 +589,6 @@ namespace Crypto.Core {
             for(int i = 0; i < trades.Count; i++) {
                 JObject obj = (JObject)trades[i];
                 DateTime time = obj.Value<DateTime>("date");
-                int tradeId = obj.Value<int>("tradeID");
                 if(time < starTime)
                     break;
                 TradeInfoItem item = new TradeInfoItem(null, ticker);
@@ -580,10 +597,7 @@ namespace Crypto.Core {
                 item.Time = time;
                 item.Type = isBuy ? TradeType.Buy : TradeType.Sell;
                 item.RateString = obj.Value<string>("rate");
-                item.Id = tradeId;
-                double price = item.Rate;
-                double amount = item.Amount;
-                item.Total = price * amount;
+                item.IdString = obj.Value<string>("tradeID");
                 if(list.Last() == null || list.Last().Time < item.Time)
                     tmp.Add(item);
             }
@@ -599,11 +613,14 @@ namespace Crypto.Core {
         protected List<TradeInfoItem> GetTradeVolumesForCandleStick(Ticker ticker, long start, long end) {
             string address = string.Format("https://poloniex.com/public?command=returnTradeHistory&currencyPair={0}&start={1}&end={2}", Uri.EscapeDataString(ticker.CurrencyPair), start, end);
             byte[] bytes = GetDownloadBytes(address);
-            if(bytes == null)
+            if(bytes == null || bytes.Length <= 2)
                 return null;
 
+            var scheme = JSonHelper.Default.GetObjectScheme(Type + "/returnTradeHistory", bytes);
+
             int startIndex = 0;
-            List<string[]> trades = JSonHelper.Default.DeserializeArrayOfObjects(bytes, ref startIndex, new string[] { "globalTradeID", "tradeID", "date", "type", "rate", "amount", "total" });
+            List<string[]> trades = JSonHelper.Default.DeserializeArrayOfObjects(bytes, ref startIndex, scheme.Names);
+            //new string[] { "globalTradeID", "tradeID", "date", "type", "rate", "amount", "total" }
 
             List<TradeInfoItem> newTrades = new List<TradeInfoItem>();
             for(int i = 0; i < trades.Count; i++) {
@@ -622,31 +639,46 @@ namespace Crypto.Core {
             byte[] bytes = GetDownloadBytes(address);
             if(bytes == null)
                 return true;
+            
+            var scheme = JSonHelper.Default.GetObjectScheme(Type + "/returnTradeHistory" ,bytes);
+            if(scheme == null)
+                return false;
 
-            string lastGotTradeId = ticker.TradeHistory.Count > 0 ? ticker.TradeHistory.First().IdString : null;
+            string lastGotTradeId = ticker.TradeHistory.Count > 0 ? ticker.TradeHistory.Last().IdString : null;
 
+            //new string[] { "globalTradeID", "tradeID", "date", "type", "rate", "amount", "total" }
             int startIndex = 0;
-            List<string[]> trades = JSonHelper.Default.DeserializeArrayOfObjects(bytes, ref startIndex,
-                new string[] { "globalTradeID", "tradeID", "date", "type", "rate", "amount", "total" },
-                (itemIndex, paramIndex, value) => { return paramIndex != 1 || value != lastGotTradeId; });
+            List<string[]> trades = JSonHelper.Default.DeserializeArrayOfObjects(bytes, ref startIndex, scheme.Names, 
+                (itemIndex, props) => { return props[1] != lastGotTradeId; });
 
-            int index = 0;
             ResizeableArray<TradeInfoItem> newTrades = new ResizeableArray<TradeInfoItem>(trades.Count);
-            for(int i = 0; i < trades.Count; i++) {
-                string[] obj = trades[i];
-                TradeInfoItem item = new TradeInfoItem(null, ticker);
-                item.IdString = obj[1];
-                item.TimeString = obj[2];
-                bool isBuy = obj[3].Length == 3;
-                item.AmountString = obj[5];
-                item.Type = isBuy ? TradeType.Buy : TradeType.Sell;
-                item.RateString = obj[4];
-                double price = item.Rate;
-                double amount = item.Amount;
-                item.Total = price * amount;
-                newTrades.Add(item);
-                ticker.TradeHistory.Insert(index, item);
-                index++;
+            try {
+                ticker.LockTrades();
+                
+                int i_tradeId = scheme.GetIndex("tradeID");
+                int i_date = scheme.GetIndex("date");
+                int i_type = scheme.GetIndex("type");
+                int i_rate = scheme.GetIndex("rate");
+                int i_amount = scheme.GetIndex("amount");
+                int i_total = scheme.GetIndex("total");
+
+                //ticker.ClearTradeHistory(); We don't need to clear history because we use this for incremental update (Poloniex)
+                for(int i = trades.Count - 1; i >= 0; i--) {
+                    string[] obj = trades[i];
+                    TradeInfoItem item = new TradeInfoItem(null, ticker);
+                    item.IdString = obj[i_tradeId];
+                    item.TimeString = obj[i_date];
+                    bool isBuy = obj[i_type].Length == 3;
+                    item.Type = isBuy ? TradeType.Buy : TradeType.Sell;
+                    item.AmountString = obj[i_amount];
+                    item.RateString = obj[i_rate];
+                    item.TotalString = obj[i_total];
+                    newTrades.Add(item);
+                    ticker.AddTradeHistoryItem(item);
+                }
+            }
+            finally {
+                ticker.UnlockTrades();
             }
             if(trades.Count > 0 && ticker.HasTradeHistorySubscribers) {
                 TradeHistoryChangedEventArgs e = new TradeHistoryChangedEventArgs() { NewItems = newTrades };
@@ -682,73 +714,68 @@ namespace Crypto.Core {
             }
         }
 
-        string[] accountTradeItems;
-        protected string[] AccountTradeItems {
-            get {
-                if(accountTradeItems == null)
-                    accountTradeItems = new string[] { "globalTradeID", "tradeID", "date", "rate", "amount", "total", "fee", "orderNumber", "type", "category" };
-                return accountTradeItems;
-            }
-        }
-
         bool OnUpdateAccountTrades(AccountInfo account, Ticker ticker, byte[] data) {
             if(data == null)
                 return false;
 
-            List<TradeInfoItem> myTrades = ticker != null ? ticker.MyTradeHistory : account.MyTrades;
-            if(data.Length == 2) {
-                myTrades.Clear();
-                return true;
-            }
+            var scheme = JSonHelper.Default.GetObjectScheme(Type + "/accounttrades", data);
+            if(scheme == null)
+                return false;
 
-            string lastGotTradeId = null;
-            if(ticker != null)
-                lastGotTradeId = ticker.MyTradeHistory.Count > 0 ? ticker.MyTradeHistory.First().IdString : null;
-            else
-                lastGotTradeId = account.MyTrades.Count > 0 ? account.MyTrades.First().IdString : null;
-
-            int startIndex = 0;
-            if(ticker == null) {
-                myTrades.Clear();
-                var tickers = JSonHelper.Default.DeserializeInfiniteObjectWithArrayProperty(data, ref startIndex, AccountTradeItems);
-                for(int i = 0; i < tickers.Count; i++) {
-                    var t = tickers[i];
-                    Ticker tc = Tickers.FirstOrDefault(tt => tt.CurrencyPair == t.Property);
-                    for(int ii = 0; ii < t.Items.Count; ii++) {
-                        string[] item = t.Items[ii];
-                        myTrades.Add(CreateTradeInfo(account, tc, item));
-                    }
+            List<TradeInfoItem> newTrades = null;
+            ticker.LockAccountTrades();
+            try {
+                if(data.Length == 2) {
+                    ticker.ClearMyTradeHistory();
+                    return true; 
                 }
-            }
-            else {
-                List<string[]> trades = JSonHelper.Default.DeserializeArrayOfObjects(data, ref startIndex, AccountTradeItems,
-                    (itemIndex, paramIndex, value) => { return paramIndex != 1 || value != lastGotTradeId; });
-                if(trades == null)
+
+                string lastGotTradeId = ticker.AccountTradeHistory.Count > 0 ? ticker.AccountTradeHistory.Last().IdString : null;
+                int startIndex = 0;
+                
+                //new string[] { "globalTradeID", "tradeID", "date", "rate", "amount", "total", "fee", "orderNumber", "type", "category" };
+                List<string[]> trades = JSonHelper.Default.DeserializeArrayOfObjects(data, ref startIndex, scheme.Names,
+                    (itemIndex, props) => { return props[1] != lastGotTradeId; });
+                if(trades == null || trades.Count == 0)
                     return true;
+                
+                newTrades = new List<TradeInfoItem>(trades.Count);
 
-                int index = 0;
-                for(int ti = 0; ti < trades.Count; ti++) {
+                int i_globalId = scheme.GetIndex("globalTradeID");
+                int i_tradeId = scheme.GetIndex("tradeID");
+                int i_date = scheme.GetIndex("date");
+                int i_type = scheme.GetIndex("type");
+                int i_rate = scheme.GetIndex("rate");
+                int i_amount = scheme.GetIndex("amount");
+                int i_total = scheme.GetIndex("total");
+                int i_fee = scheme.GetIndex("fee");
+                int i_orderNumber = scheme.GetIndex("orderNumber");
+
+                for(int ti = trades.Count - 1; ti >= 0; ti--) {
                     string[] obj = trades[ti];
-                    myTrades.Insert(index, CreateTradeInfo(account, ticker, obj));
-                    index++;
+
+                    TradeInfoItem item = new TradeInfoItem(account, ticker);
+                    item.IdString = obj[i_tradeId];
+                    item.TimeString = obj[i_date];
+                    item.GlobalId = obj[i_globalId];
+                    item.OrderNumber = obj[i_orderNumber];
+
+                    bool isBuy = obj[i_type].Length == 3;
+                    item.Type = isBuy ? TradeType.Buy : TradeType.Sell;
+                    item.AmountString = obj[i_amount];
+                    item.RateString = obj[i_rate];
+                    item.TotalString = obj[i_total];
+                    item.FeeString = obj[i_fee];
+
+                    newTrades.Add(item);
+                    ticker.AddAccountTradeHistoryItem(item);
                 }
+            }
+            finally {
+                ticker.UnlockAccountTrades();
+                ticker.RaiseAccountTradeHistoryChanged(new TradeHistoryChangedEventArgs() { NewItems = newTrades });
             }
             return true;
-        }
-        protected TradeInfoItem CreateTradeInfo(AccountInfo account, Ticker ticker, string[] obj) {
-            TradeInfoItem item = new TradeInfoItem(account, ticker);
-            item.IdString = obj[1];
-            item.TimeString = obj[2];
-            item.GlobalId = obj[0];
-            item.OrderNumber = obj[7];
-
-            bool isBuy = obj[8].Length == 3;
-            item.AmountString = obj[4];
-            item.Type = isBuy ? TradeType.Buy : TradeType.Sell;
-            item.RateString = obj[3];
-            item.Total = FastValueConverter.Convert(obj[5]);
-            item.Fee = FastValueConverter.Convert(obj[6]);
-            return item;
         }
 
         public override bool UpdateBalances(AccountInfo account) {
@@ -919,6 +946,8 @@ namespace Crypto.Core {
                 return false;
 
             lock(openedOrders) {
+                if(ticker != null)
+                    ticker.SaveOpenedOrders();
                 openedOrders.Clear();
                 if(ticker == null) {
                     JObject res = JsonConvert.DeserializeObject<JObject>(text);
@@ -1067,6 +1096,7 @@ namespace Crypto.Core {
                 return null;
             JObject res = JsonConvert.DeserializeObject<JObject>(text);
             TradingResult tr = new TradingResult();
+            tr.Ticker = ticker;
             tr.OrderId = res.Value<string>("orderNumber");
             tr.Type = OrderType.Buy;
             JArray array = res.Value<JArray>("resultingTrades");
@@ -1105,11 +1135,12 @@ namespace Crypto.Core {
                 return null;
             JObject res = JsonConvert.DeserializeObject<JObject>(text);
             TradingResult t = new TradingResult();
+            t.Ticker = ticker;
             t.Trades.Add(new TradeEntry() { Id = res.Value<string>("orderNumber") });
             return t;
         }
 
-        public override bool Cancel(AccountInfo account, string orderId) {
+        public override bool Cancel(AccountInfo account, Ticker ticker, string orderId) {
             string address = string.Format("https://poloniex.com/tradingApi");
 
             HttpRequestParamsCollection coll = new HttpRequestParamsCollection();

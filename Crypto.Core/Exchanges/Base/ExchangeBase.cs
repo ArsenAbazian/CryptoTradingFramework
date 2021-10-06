@@ -200,6 +200,18 @@ namespace Crypto.Core {
 
         [XmlIgnore]
         public List<Ticker> Tickers { get; } = new List<Ticker>();
+        [XmlIgnore]
+        protected Dictionary<string, Ticker> TickerDictionary { get; } = new Dictionary<string, Ticker>();
+        public void AddTicker(Ticker t) {
+            Tickers.Add(t);
+            TickerDictionary.Add(t.Name, t);
+        }
+
+        public event CancelOrderHandler OrderCanceled;
+        protected internal void RaiseOrderCanceled(CancelOrderEventArgs e) {
+            if(OrderCanceled != null)
+                OrderCanceled.Invoke(this, e);
+        }
 
         public event TickerUpdateEventHandler TickerChanged;
         public event EventHandler TickersUpdate;
@@ -262,10 +274,14 @@ namespace Crypto.Core {
                 res = (Exchange)ci.Invoke(new object[] { });
             }
             string dir = res.TickersDirectory;
-            if(!Directory.Exists(dir))
-                Directory.CreateDirectory(dir);
-            if(!Directory.Exists(res.CaptureDataDirectory))
-                Directory.CreateDirectory(res.CaptureDataDirectory);
+            try {
+                if(!Directory.Exists(dir))
+                    Directory.CreateDirectory(dir);
+                if(!Directory.Exists(res.CaptureDataDirectory))
+                    Directory.CreateDirectory(res.CaptureDataDirectory);
+            }
+            catch(Exception) { 
+            }
             return res;
         }
 
@@ -638,6 +654,21 @@ namespace Crypto.Core {
                 return null;
             }
         }
+
+        protected internal byte[] GetDownloadBytes(string address, MyWebClient client) {
+            try {
+                CheckRequestRateLimits();
+                return client.DownloadData(address);
+            }
+            catch(Exception e) {
+                WebException we = e as WebException;
+                if(we != null && (we.Message.Contains("418") || we.Message.Contains("429")))
+                    IsInitialized = false;
+                Telemetry.Default.TrackException(e);
+                return null;
+            }
+        }
+
         protected internal async void GetDownloadBytesAsync(string address, Action<Task<byte[]>> continuationAction) {
             try {
                 CheckRequestRateLimits();
@@ -703,13 +734,18 @@ namespace Crypto.Core {
 
         public abstract TradingResult BuyShort(AccountInfo account, Ticker ticker, double rate, double amount);
         public abstract TradingResult SellShort(AccountInfo account, Ticker ticker, double rate, double amount);
+        //public virtual TradingResult GetOrderStatus(AccountInfo account, TradingResult order) { 
+        //    return order;    
+        //}
+        public virtual bool AllowCheckOrderStatus { get { return false; } }
         
-        public abstract bool Cancel(AccountInfo account, string orderId);
+        public abstract bool Cancel(AccountInfo account, Ticker ticker, string orderId);
         public virtual ResizeableArray<CandleStickData> GetCandleStickData(Ticker ticker, int candleStickPeriodMin, DateTime start, long periodInSeconds) {
             return new ResizeableArray<CandleStickData>();
         }
         public abstract bool Withdraw(AccountInfo account, string currency, string adress, string paymentId, double amount);
         public abstract bool UpdateAccountTrades(AccountInfo account, Ticker ticker);
+        public bool UpdateAccountTrades(Ticker ticker) { return UpdateAccountTrades(DefaultAccount, ticker); }
         public bool UpdateAccountTrades(AccountInfo account) { return UpdateAccountTrades(account, null); }
 
         public bool UpdateDefaultAccountBalances() { return UpdateBalances(DefaultAccount); }
@@ -728,15 +764,6 @@ namespace Crypto.Core {
                 if(!account.Active)
                     continue;
                 res &= UpdateAccountTrades(account);
-            }
-            return res;
-        }
-        public List<TradeInfoItem> GetAllAccountTrades() {
-            List<TradeInfoItem> res = new List<TradeInfoItem>();
-            foreach(AccountInfo account in Accounts) {
-                if(!account.Active)
-                    continue;
-                res.AddRange(account.MyTrades);
             }
             return res;
         }
@@ -882,7 +909,7 @@ namespace Crypto.Core {
         protected internal virtual void OnTradeHistorySocketOpened(object sender, EventArgs e) {
             SocketConnectionInfo info = TradeHistorySockets.FirstOrDefault(c => c.Key == sender);
             if(info != null) {
-                info.Ticker.TradeHistory.Clear();
+                info.Ticker.ClearTradeHistory();
                 LogManager.Default.Log(LogType.Success, info.Ticker, "trade history socket opened", e.ToString());
             }
             else
@@ -1006,8 +1033,6 @@ namespace Crypto.Core {
                 return false;
             if(!LoadTickers())
                 return false;
-            if(!UpdateTickersInfo())
-                return false;
             StartSocketTimer();
             IsConnected = true;
             return true;
@@ -1015,6 +1040,8 @@ namespace Crypto.Core {
         //public abstract Form CreateAccountForm();
         public abstract void OnAccountRemoved(AccountInfo info);
         public virtual void StartListenTickerStream(Ticker ticker) {
+            if(!SupportWebSocket(WebSocketType.Ticker))
+                return;
             StartListenOrderBook(ticker);
             StartListenTradeHistory(ticker);
             StartListenKline(ticker);
@@ -1370,7 +1397,9 @@ namespace Crypto.Core {
 
     public enum WebSocketType {
         Tickers,
-        Ticker
+        Ticker,
+        Trades,
+        OrderBook
     }
 
     public enum SocketConnectionState {
