@@ -312,7 +312,7 @@ namespace Crypto.Core {
                 return null;
 
             var scheme = JSonHelper.Default.GetObjectScheme(Type + "/candlestickdata", bytes);
-            if(scheme == null)
+            if(scheme == null || scheme.IsEmpty)
                 return new ResizeableArray<CandleStickData>();
 
             DateTime startTime = new DateTime(1970, 1, 1);
@@ -613,10 +613,12 @@ namespace Crypto.Core {
         protected List<TradeInfoItem> GetTradeVolumesForCandleStick(Ticker ticker, long start, long end) {
             string address = string.Format("https://poloniex.com/public?command=returnTradeHistory&currencyPair={0}&start={1}&end={2}", Uri.EscapeDataString(ticker.CurrencyPair), start, end);
             byte[] bytes = GetDownloadBytes(address);
-            if(bytes == null || bytes.Length <= 2)
+            if(bytes == null)
                 return null;
 
             var scheme = JSonHelper.Default.GetObjectScheme(Type + "/returnTradeHistory", bytes);
+            if(scheme.IsEmpty)
+                return null;
 
             int startIndex = 0;
             List<string[]> trades = JSonHelper.Default.DeserializeArrayOfObjects(bytes, ref startIndex, scheme.Names);
