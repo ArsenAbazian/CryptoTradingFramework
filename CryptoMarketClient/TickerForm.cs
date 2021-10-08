@@ -117,17 +117,21 @@ namespace CryptoMarketClient {
 
         protected bool UpdatingBalances { get; set; }
         private void RunUpdateAccountTradesTask() {
+            if(Ticker == null)
+                return;
             if(Ticker.IsUpdatingAccountTrades)
                 return;
             Task.Factory.StartNew(() => { 
-                Ticker.UpdateAccountTrades();
+                Ticker?.UpdateAccountTrades();
             });
         }
         private void UpdateOpenedOrders() {
+            if(Ticker == null)
+                return;
             if(Ticker.IsUpdatingOpenedOrders)
                 return;
             Task.Factory.StartNew(() => { 
-                Ticker.UpdateOpenedOrders();
+                Ticker?.UpdateOpenedOrders();
             });
         }
         private void UpdateBalances() {
@@ -135,8 +139,8 @@ namespace CryptoMarketClient {
                 return;
             UpdatingBalances = true;
             Task.Factory.StartNew(() => { 
-                Ticker.UpdateBalance(Ticker.BaseCurrency);
-                Ticker.UpdateBalance(Ticker.MarketCurrency);
+                Ticker?.UpdateBalance(Ticker.BaseCurrency);
+                Ticker?.UpdateBalance(Ticker.MarketCurrency);
                 UpdatingBalances = false;
                 BeginInvoke(new MethodInvoker(() => UpdateBalanceText()));
             });
@@ -421,6 +425,10 @@ namespace CryptoMarketClient {
 
         private void BarButtonItem1_ItemClick_1(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
             RunUpdateAccountTradesTask();
+        }
+
+        private void BsiStatis_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
+            ((MainForm)MdiParent.FindForm()).ShowLogPanel();
         }
     }
 

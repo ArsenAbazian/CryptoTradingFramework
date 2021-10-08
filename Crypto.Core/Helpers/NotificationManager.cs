@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Crypto.Core.Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,10 +10,15 @@ namespace Crypto.Core.Helpers {
         void Notify(string message);
         void Notify(string title, string message);
         void Notify(string title, string message, Action onClick);
+        void NotifyStatus(string title, string message);
     }
 
     public static class NotificationManager {
         public static INotificationProvider Provider { get; set; }
+        public static void NotifyStatus(string title, string message) {
+            if(Provider != null)
+                Provider.NotifyStatus(title, message);
+        }
         public static void Notify(string message) {
             if(Provider != null)
                 Provider.Notify(message);

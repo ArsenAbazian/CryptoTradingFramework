@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Crypto.Core.Helpers;
 using System.Windows.Forms;
 using System.Drawing;
+using DevExpress.XtraBars;
 
 namespace Crypto.UI.Helpers {
     public class NotificationProvider : INotificationProvider {
@@ -34,6 +35,17 @@ namespace Crypto.UI.Helpers {
         }
         public void Notify(string title, string message, Action onClick) { 
             AlertControl.Show(OwnerForm, title, message, Icon);
+        }
+        public BarItem StatusItem { get; set; }
+        public void NotifyStatus(string title, string message) {
+            if(StatusItem == null)
+                return;
+            Control form = StatusItem.Manager.Form;
+            if(form.InvokeRequired) {
+                form.BeginInvoke(new MethodInvoker(() => { 
+                    StatusItem.Caption = message;
+                    }));
+            }
         }
     }
 }

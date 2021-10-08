@@ -31,7 +31,9 @@ namespace CryptoMarketClient {
 
         public MainForm() {
             InitializeComponent();
-            NotificationManager.Provider = new NotificationProvider(this, global::CryptoMarketClient.Properties.Resources.notification_image3);
+            var provider = new NotificationProvider(this, global::CryptoMarketClient.Properties.Resources.notification_image3);
+            provider.StatusItem = this.bsiStatus;
+            NotificationManager.Provider = provider;
             this.ribbonControl1.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonControlStyle.Office2019;
             this.ribbonControl1.CommandLayout = DevExpress.XtraBars.Ribbon.CommandLayout.Simplified;
             this.ribbonControl1.GetController().PropertiesRibbon.DefaultSimplifiedRibbonGlyphSize = 22;
@@ -560,6 +562,10 @@ namespace CryptoMarketClient {
         }
 
         private void biLog_ItemClick(object sender, ItemClickEventArgs e) {
+            ShowLogPanel();
+        }
+
+        public void ShowLogPanel() {
             dpLog.Visibility = DockVisibility.Visible;
         }
 
@@ -769,6 +775,14 @@ namespace CryptoMarketClient {
         private void biDownloadManager_ItemClick(object sender, ItemClickEventArgs e) {
             DownloadForm.MdiParent = this;
             DownloadForm.Show();
+        }
+
+        private void BsiStatus_ItemClick(object sender, ItemClickEventArgs e) {
+            ShowLogPanel();
+        }
+
+        private void BsiStatus_ItemDoubleClick(object sender, ItemClickEventArgs e) {
+            ShowLogPanel();
         }
     }
 }
