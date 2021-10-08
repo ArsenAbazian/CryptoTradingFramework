@@ -577,7 +577,7 @@ namespace Crypto.Core.Binance {
 
         protected virtual string CancelOrderApiString => "https://api.binance.com/api/v3/order";
         public override bool Cancel(AccountInfo account, Ticker ticker, string orderId) {
-            string queryString = string.Format("symbol={0}&orderId={1}&timestamp={2}&recvWindow=5000",
+            string queryString = string.Format("symbol={0}&orderId={1}&timestamp={2}&recvWindow=50000",
                 ticker.Name, orderId, GetNonce());
             string signature = account.GetSign(queryString);
 
@@ -798,8 +798,17 @@ namespace Crypto.Core.Binance {
 
         protected virtual string UpdateAccountTradesApiString => "https://api.binance.com/api/v3/myTrades";
 
+        protected bool IsError(JsonObjectScheme scheme) {
+            if(scheme == null)
+                return true;
+            if(scheme.IsEmpty)
+                return false;
+            if(scheme.Fields.Count > 2) 
+                return false;
+            return scheme.Names[0] == "code";
+        }
         public override bool UpdateAccountTrades(AccountInfo account, Ticker ticker) {
-            string queryString = string.Format("symbol={0}&limit={1}&timestamp={2}",
+            string queryString = string.Format("symbol={0}&limit={1}&timestamp={2}&recvWindow=50000",
                 Uri.EscapeDataString(ticker.CurrencyPair), 1000, GetNonce());
 
             string signature = account.GetSign(queryString);
@@ -816,9 +825,13 @@ namespace Crypto.Core.Binance {
             if(data == null || data.Length == 0)
                 return false;
 
-            var scheme = JSonHelper.Default.GetObjectScheme(Type + "/accounttrades", data);
-            if(scheme == null)
+            JsonObjectScheme scheme = JSonHelper.Default.GetObjectScheme(Type + "/accounttrades", data);
+            if(IsError(scheme)) {
+                LogError(data, scheme);
                 return false;
+            }
+            if(scheme.IsEmpty)
+                return true;
 
             ResizeableArray<TradeInfoItem> newItems = null;
             ticker.LockAccountTrades();
@@ -827,9 +840,28 @@ namespace Crypto.Core.Binance {
                 int parseIndex = 0;
                 List<string[]> items = JSonHelper.Default.DeserializeArrayOfObjects(data, ref parseIndex, scheme.Names);
                 newItems = new ResizeableArray<TradeInfoItem>(items.Count);
+
+                int i_orderNumber = scheme.GetIndex("orderId");
+                int i_rate = scheme.GetIndex("price");
+                int i_amount = scheme.GetIndex("qty");
+                int i_type = scheme.GetIndex("side");
+                int i_tradeId = scheme.GetIndex("id");
+                int i_time = scheme.GetIndex("time");
+
                 for(int i = 0; i < items.Count; i++) {
                     string[] item = items[i];
-                    TradeInfoItem t = InitializeAccountTradeInfoItem(item, ticker);
+
+                    TradeInfoItem t = new TradeInfoItem(null, ticker);
+                    
+                    DateTime time = FromUnixTime(FastValueConverter.ConvertPositiveLong(item[i_time]));
+                    t.Time = time;
+                    t.OrderNumber = item[i_orderNumber];
+                    bool isBuy = item[i_type][0] != 'S';
+                    t.Type = isBuy ? TradeType.Buy : TradeType.Sell;
+                    t.AmountString = item[i_amount];
+                    t.RateString = item[i_rate];
+                    t.IdString = item[i_tradeId];
+                    
                     ticker.AddAccountTradeHistoryItem(t);
                     newItems.Add(t);
                 }
@@ -841,6 +873,22 @@ namespace Crypto.Core.Binance {
                 ticker.RaiseAccountTradeHistoryChanged(new TradeHistoryChangedEventArgs() { NewItems = newItems });
 
             return true;
+        }
+
+        private void LogError(byte[] data, JsonObjectScheme scheme) {
+            LogMessage msg = null;
+            if(scheme == null) {
+                msg = LogManager.Default.Error(Type.ToString(), "Cannot parse json data.");
+                NotificationManager.NotifyStatus(msg.Text, "<image=error;size=22,22>" + msg.Description);
+                return;
+            }
+            int parseIndex = 0;
+            string[] items = JSonHelper.Default.DeserializeObject(data, ref parseIndex, scheme.Names);
+            if(items == null)
+                msg = LogManager.Default.Error(scheme.Name, "Cannot parse json data.");
+            else 
+                msg = LogManager.Default.Error(scheme.Name, items[0] + ": " + items[1]);
+            NotificationManager.NotifyStatus(msg.Text, "<image=error;size=22,22>" + msg.Description);
         }
 
         protected virtual TradeInfoItem InitializeAccountTradeInfoItem(string[] item, Ticker ticker) {
@@ -860,7 +908,7 @@ namespace Crypto.Core.Binance {
 
         protected virtual string OpenOrdersApiString => "https://api.binance.com/api/v3/openOrders";
         public override bool UpdateOpenedOrders(AccountInfo account, Ticker ticker) {
-            string queryString = string.Format("symbol={0}&timestamp={1}&recvWindow=5000",
+            string queryString = string.Format("symbol={0}&timestamp={1}&recvWindow=50000",
                 ticker.Name, GetNonce());
             string signature = account.GetSign(queryString);
 
@@ -896,8 +944,12 @@ namespace Crypto.Core.Binance {
 
         protected virtual bool OnUpdateOpenedOrders(AccountInfo account, Ticker ticker, byte[] data) {
             var scheme = JSonHelper.Default.GetObjectScheme(Type + "/openorders", data);
-            if(scheme == null)
+            if(IsError(scheme)) {
+                LogError(data, scheme);
                 return false;
+            }
+            if(scheme.IsEmpty)
+                return true;
             ticker.LockOpenOrders();
             try {
                 int parseIndex = 0;
