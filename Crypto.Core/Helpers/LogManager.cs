@@ -50,40 +50,40 @@ namespace Crypto.Core.Common {
         }
 
         public ResizeableArray<LogMessage> Messages { get; } = new ResizeableArray<LogMessage>();
-        public void Log(string message) {
-            Add(LogType.Log, null, null, message, null);
+        public LogMessage Log(string message) {
+            return Add(LogType.Log, null, null, message, null);
         }
-        public void Success(string message) {
-            Add(LogType.Success, null, null, message, null);
+        public LogMessage Success(string message) {
+            return Add(LogType.Success, null, null, message, null);
         }
-        public void Log(string message, string description) {
-            Add(LogType.Log, null, null, message, description);
+        public LogMessage Log(string message, string description) {
+            return Add(LogType.Log, null, null, message, description);
         }
-        public void Error(string message) {
-            Add(LogType.Error, null, null, message, null);
+        public LogMessage Error(string message) {
+            return Add(LogType.Error, null, null, message, null);
         }
-        public void Warning(string message, string description) {
-            Add(LogType.Warning, null, null, message, description);
+        public LogMessage Warning(string message, string description) {
+            return Add(LogType.Warning, null, null, message, description);
         }
-        public void Warning(string message) {
-            Add(LogType.Warning, null, null, message, null);
+        public LogMessage Warning(string message) {
+            return Add(LogType.Warning, null, null, message, null);
         }
-        public void Error(object owner, string message, string description) {
-            Add(LogType.Error, owner, null, message, description);
+        public LogMessage Error(object owner, string message, string description) {
+            return Add(LogType.Error, owner, null, message, description);
         }
-        public void Warning(object owner, string message, string description) {
-            Add(LogType.Warning, owner, null, message, description);
+        public LogMessage Warning(object owner, string message, string description) {
+            return Add(LogType.Warning, owner, null, message, description);
         }
-        public void Log(object owner, string message, string description) {
-            Add(LogType.Log, owner, null, message, description);
+        public LogMessage Log(object owner, string message, string description) {
+            return Add(LogType.Log, owner, null, message, description);
         }
-        public void Error(string message, string description) {
-            Add(LogType.Error, null, null, message, description);
+        public LogMessage Error(string message, string description) {
+            return Add(LogType.Error, null, null, message, description);
         }
-        public void Add(string message) {
-            Add(LogType.Log, null, null, message, null);
+        public LogMessage Add(string message) {
+            return Add(LogType.Log, null, null, message, null);
         }
-        public void Add(LogType type, object owner, string name, string message, string description) {
+        public LogMessage Add(LogType type, object owner, string name, string message, string description) {
             lock(Messages) {
                 Messages.Add(new LogMessage() {
                     Type = type,
@@ -91,14 +91,15 @@ namespace Crypto.Core.Common {
                     Name = name,
                     Text = message,
                     Description = description,
-                    Time = DateTime.UtcNow
+                    Time = DateTime.Now
                 });
-                Debug.WriteLine(DateTime.UtcNow.ToLongTimeString() + ": " + message);
+                //Debug.WriteLine(DateTime.UtcNow.ToLongTimeString() + ": " + message);
             }
             lock(this) {
                 Save();
             }
             RefreshVisual();
+            return Messages[Messages.Count - 1];
         }
 
         public ILogVisualizer Visualiser { get; set; }
