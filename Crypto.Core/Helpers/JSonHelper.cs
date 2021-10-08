@@ -369,6 +369,8 @@ namespace Crypto.Core.Helpers {
 
         public Dictionary<string, Dictionary<string, JsonObjectScheme>> Schemes { get; } = new Dictionary<string, Dictionary<string, JsonObjectScheme>>();
         public JsonObjectScheme GetObjectScheme(string schemeName, byte[] bytes) {
+            if(bytes.Length <= 2)
+                return JsonObjectScheme.Empty;
             Dictionary<string, JsonObjectScheme> dic = null;
             if(!Schemes.TryGetValue(schemeName, out dic)) {
                 dic = new Dictionary<string, JsonObjectScheme>();
@@ -384,6 +386,7 @@ namespace Crypto.Core.Helpers {
             res = GetObjectSchemeCore(bytes, 0);
             if(res == null)
                 return null;
+            res.Name = schemeName;
             dic.Add(firstField, res);
             return res;
         }
@@ -401,6 +404,15 @@ namespace Crypto.Core.Helpers {
     }
 
     public class JsonObjectScheme {
+        static JsonObjectScheme empty;
+        public static JsonObjectScheme Empty {
+            get { 
+                if(empty == null)
+                    empty = new JsonObjectScheme();
+                return empty;
+            }
+        }
+        public bool IsEmpty => Fields == null || Fields.Count == 0;
         public List<JsonPropertyInfo> Fields { get; set; }
         public string[] Names { get; set; }
 
@@ -417,6 +429,9 @@ namespace Crypto.Core.Helpers {
                 return indices;
             }
         }
+
+        public string Name { get; internal set; }
+
         public int GetIndex(string fieldName) {
             if(Indices == null)
                 return -1;
