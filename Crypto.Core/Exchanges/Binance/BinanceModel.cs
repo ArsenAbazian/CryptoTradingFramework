@@ -654,7 +654,8 @@ namespace Crypto.Core.Binance {
             try {
                 bytes = GetDownloadBytes(address);
             }
-            catch(Exception) {
+            catch(Exception e) {
+                LogManager.Default.Error(Type.ToString() + "/GetCandleStickData", e.ToString());
                 return null;
             }
             if(bytes == null || bytes.Length == 0)
@@ -844,7 +845,8 @@ namespace Crypto.Core.Binance {
                 int i_orderNumber = scheme.GetIndex("orderId");
                 int i_rate = scheme.GetIndex("price");
                 int i_amount = scheme.GetIndex("qty");
-                int i_type = scheme.GetIndex("side");
+                //int i_type = scheme.GetIndex("side");
+                int i_type = scheme.GetIndex("isBuyer");
                 int i_tradeId = scheme.GetIndex("id");
                 int i_time = scheme.GetIndex("time");
 
@@ -856,8 +858,7 @@ namespace Crypto.Core.Binance {
                     DateTime time = FromUnixTime(FastValueConverter.ConvertPositiveLong(item[i_time]));
                     t.Time = time;
                     t.OrderNumber = item[i_orderNumber];
-                    bool isBuy = item[i_type][0] != 'S';
-                    t.Type = isBuy ? TradeType.Buy : TradeType.Sell;
+                    t.Type = String2TradeType(item[i_type]);
                     t.AmountString = item[i_amount];
                     t.RateString = item[i_rate];
                     t.IdString = item[i_tradeId];

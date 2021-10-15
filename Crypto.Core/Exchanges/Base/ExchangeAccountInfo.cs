@@ -1,4 +1,5 @@
 ﻿using Crypto.Core.Common;
+using Crypto.Core.Exchanges.Base;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -229,6 +230,8 @@ namespace Crypto.Core {
 
         [XmlIgnore]
         public List<BalanceBase> Balances { get; } = new List<BalanceBase>();
+        [XmlIgnore]
+        public List<PositionInfo> Positions { get; } = new List<PositionInfo>();
         [XmlIgnore]
         public List<OpenedOrderInfo> OpenedOrders { get; } = new List<OpenedOrderInfo>();
         [XmlIgnore]

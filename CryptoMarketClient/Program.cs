@@ -42,6 +42,10 @@ namespace CryptoMarketClient {
 
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             CheckShowApiKeysForm();
+
+            //Settings
+            Ticker.UseHtmlString = false;
+
             Application.Run(new MainForm());
         }
         static void CheckShowApiKeysForm() {

@@ -118,7 +118,18 @@ namespace Crypto.Core {
         protected virtual DateTime GetTradesRangeEndTime(DateTime start, DateTime end) {
             return end;
         }
-
+        protected TradeType String2TradeType(string s) {
+            if(s[0] == 'S' || s[0] == 's' || s[0] == 'f') // isBuyer
+                return TradeType.Sell;
+            return TradeType.Buy;
+        }
+        protected PositionSide String2PositionSide(string s) {
+            if(s[0] == 'S' || s[0] == 's')
+                return PositionSide.Short;
+            else if(s[0] == 'B' || s[0] == 'b')
+                return PositionSide.Both;
+            return PositionSide.Long;
+        }
         public virtual ResizeableArray<TradeInfoItem> GetTrades(Ticker ticker, DateTime start, DateTime end) {
             ResizeableArray<TradeInfoItem> res = new ResizeableArray<TradeInfoItem>();
             while(res.Last() == null || res.Last().Time < end) {
@@ -215,7 +226,7 @@ namespace Crypto.Core {
 
         public event TickerUpdateEventHandler TickerChanged;
         public event EventHandler TickersUpdate;
-        protected void RaiseTickerChanged(Ticker t) {
+        protected internal void RaiseTickerChanged(Ticker t) {
             TickerUpdateEventArgs e = new TickerUpdateEventArgs() { Ticker = t };
             if(TickerChanged != null)
                 TickerChanged(this, e);
@@ -725,6 +736,8 @@ namespace Crypto.Core {
         public abstract bool UpdateCurrencies();
         public abstract bool UpdateBalances(AccountInfo info);
         public abstract bool GetBalance(AccountInfo info, string currency);
+        public virtual bool SupportPositions => false;
+        public virtual bool UpdatePositions(AccountInfo account, Ticker ticker) { return true; }
         public abstract string CreateDeposit(AccountInfo account, string currency);
         public abstract bool GetDeposites(AccountInfo account);
         public TradingResult Buy(AccountInfo account, Ticker ticker, double rate, double amount) { return BuyLong(account, ticker, rate, amount); }

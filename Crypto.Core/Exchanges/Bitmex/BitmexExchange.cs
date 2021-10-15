@@ -178,7 +178,7 @@ namespace Crypto.Core.Exchanges.Bitmex {
                     item.Ticker = ticker;
                     item.RateString = obj.Value<string>("price");
                     item.AmountString = obj.Value<string>("size");
-                    item.Type = obj.Value<string>("side")[0] == 'S' ? TradeType.Sell : TradeType.Buy;
+                    item.Type = String2TradeType(obj.Value<string>("side"));
                     item.TimeString = obj.Value<string>("timestamp");
                     DateTime time = item.Time;
                     if(list.Last() == null || list.Last().Time <= time)
@@ -534,7 +534,7 @@ namespace Crypto.Core.Exchanges.Bitmex {
             foreach(JObject item in items) {
                 TradeInfoItem ti = new TradeInfoItem(null, t);
                 ti.TimeString = item.Value<string>("timestamp");
-                ti.Type = item.Value<string>("side")[0] == 'S' ? TradeType.Sell : TradeType.Buy;
+                ti.Type = String2TradeType(item.Value<string>("side"));
                 ti.AmountString = item.Value<string>("size");
                 ti.RateString = item.Value<string>("price");
                 t.AddTradeHistoryItem(ti); //.InsertTradeHistoryItem(ti);

@@ -24,7 +24,12 @@
         /// </summary>
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
-            DevExpress.Sparkline.LineSparklineView lineSparklineView2 = new DevExpress.Sparkline.LineSparklineView();
+            DevExpress.XtraGrid.GridFormatRule gridFormatRule3 = new DevExpress.XtraGrid.GridFormatRule();
+            DevExpress.XtraEditors.FormatConditionRuleDataUpdate formatConditionRuleDataUpdate3 = new DevExpress.XtraEditors.FormatConditionRuleDataUpdate();
+            DevExpress.XtraGrid.GridFormatRule gridFormatRule4 = new DevExpress.XtraGrid.GridFormatRule();
+            DevExpress.XtraEditors.FormatConditionRuleDataUpdate formatConditionRuleDataUpdate4 = new DevExpress.XtraEditors.FormatConditionRuleDataUpdate();
+            DevExpress.Sparkline.LineSparklineView lineSparklineView3 = new DevExpress.Sparkline.LineSparklineView();
+            DevExpress.Sparkline.LineSparklineView lineSparklineView4 = new DevExpress.Sparkline.LineSparklineView();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TickersCollectionForm));
             DevExpress.XtraEditors.Controls.EditorButtonImageOptions editorButtonImageOptions19 = new DevExpress.XtraEditors.Controls.EditorButtonImageOptions();
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject73 = new DevExpress.Utils.SerializableAppearanceObject();
@@ -116,31 +121,26 @@
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject142 = new DevExpress.Utils.SerializableAppearanceObject();
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject143 = new DevExpress.Utils.SerializableAppearanceObject();
             DevExpress.Utils.SerializableAppearanceObject serializableAppearanceObject144 = new DevExpress.Utils.SerializableAppearanceObject();
-            this.gcPercentChange = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.gcLast = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colLast = new DevExpress.XtraGrid.Columns.GridColumn();
             this.teValueWithChange = new DevExpress.XtraEditors.Repository.RepositoryItemTextEdit();
-            this.gcDeltaBid = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.gcHighestBid = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.gcDeltaAsk = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.gcLowestAsk = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.colIsActual = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.gcSecond = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colPercentChange = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colHighestBid = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colLowestAsk = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colMarketCurrency = new DevExpress.XtraGrid.Columns.GridColumn();
             this.repositoryItemTextEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemTextEdit();
-            this.gridControl1 = new DevExpress.XtraGrid.GridControl();
-            this.gridView1 = new DevExpress.XtraGrid.Views.Grid.GridView();
-            this.gridColumn1 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.gcTickers = new DevExpress.XtraGrid.GridControl();
+            this.gvTikers = new DevExpress.XtraGrid.Views.Grid.GridView();
+            this.colEmpty = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colIsSelected = new DevExpress.XtraGrid.Columns.GridColumn();
             this.repositoryItemCheckEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit();
-            this.gcLogo = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.gcCurrencyPair = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.gcBaseVolume = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.gcQuoteVolume = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.gcIsFrozen = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.gcHr24High = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.gcHr24Low = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.gcTime = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.gcFirst = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.colUpdateTimeMs = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colLogo = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colBaseVolume = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colQuoteVolume = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colIsFrozen = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colHr24High = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colHr24Low = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colSparkline = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.riSparklineTrend = new DevExpress.XtraEditors.Repository.RepositoryItemSparklineEdit();
             this.repositoryItemSparklineEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemSparklineEdit();
             this.ribbonControl1 = new DevExpress.XtraBars.Ribbon.RibbonControl();
             this.svgImageCollection1 = new DevExpress.Utils.SvgImageCollection(this.components);
@@ -158,6 +158,7 @@
             this.biConnectionStatus = new DevExpress.XtraBars.BarStaticItem();
             this.biReconnect = new DevExpress.XtraBars.BarButtonItem();
             this.biTradeHistory = new DevExpress.XtraBars.BarButtonItem();
+            this.bsCachedDataCount = new DevExpress.XtraBars.BarStaticItem();
             this.ribbonPage1 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPageGroup1 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.repositoryItemRibbonSearchEdit9 = new DevExpress.XtraBars.Ribbon.Internal.RepositoryItemRibbonSearchEdit();
@@ -173,6 +174,7 @@
             this.barManager1 = new DevExpress.XtraBars.BarManager(this.components);
             this.bar1 = new DevExpress.XtraBars.Bar();
             this.bcShowOnlyFavorite = new DevExpress.XtraBars.BarCheckItem();
+            this.biBestFitTable = new DevExpress.XtraBars.BarButtonItem();
             this.standaloneBarDockControl2 = new DevExpress.XtraBars.StandaloneBarDockControl();
             this.barAndDockingController1 = new DevExpress.XtraBars.BarAndDockingController(this.components);
             this.barDockControlTop = new DevExpress.XtraBars.BarDockControl();
@@ -184,9 +186,10 @@
             this.accordionControl1 = new DevExpress.XtraBars.Navigation.AccordionControl();
             ((System.ComponentModel.ISupportInitialize)(this.teValueWithChange)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemTextEdit1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gridView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gcTickers)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gvTikers)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.riSparklineTrend)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemSparklineEdit1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.svgImageCollection1)).BeginInit();
@@ -205,24 +208,19 @@
             ((System.ComponentModel.ISupportInitialize)(this.accordionControl1)).BeginInit();
             this.SuspendLayout();
             // 
-            // gcPercentChange
+            // colLast
             // 
-            this.gcPercentChange.Caption = "Percent Change";
-            this.gcPercentChange.FieldName = "PercentChange";
-            this.gcPercentChange.Name = "gcPercentChange";
-            this.gcPercentChange.OptionsColumn.AllowEdit = false;
-            this.gcPercentChange.Width = 86;
-            // 
-            // gcLast
-            // 
-            this.gcLast.Caption = "Last";
-            this.gcLast.ColumnEdit = this.teValueWithChange;
-            this.gcLast.FieldName = "LastString";
-            this.gcLast.Name = "gcLast";
-            this.gcLast.OptionsColumn.AllowEdit = false;
-            this.gcLast.Visible = true;
-            this.gcLast.VisibleIndex = 2;
-            this.gcLast.Width = 118;
+            this.colLast.AppearanceCell.Options.UseTextOptions = true;
+            this.colLast.AppearanceCell.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Far;
+            this.colLast.Caption = "Last";
+            this.colLast.ColumnEdit = this.teValueWithChange;
+            this.colLast.DisplayFormat.FormatString = "0.00000000";
+            this.colLast.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+            this.colLast.FieldName = "Last";
+            this.colLast.Name = "colLast";
+            this.colLast.OptionsColumn.AllowEdit = false;
+            this.colLast.Visible = true;
+            this.colLast.VisibleIndex = 2;
             // 
             // teValueWithChange
             // 
@@ -230,59 +228,47 @@
             this.teValueWithChange.AutoHeight = false;
             this.teValueWithChange.Name = "teValueWithChange";
             // 
-            // gcDeltaBid
+            // colPercentChange
             // 
-            this.gcDeltaBid.Caption = "Bid Change";
-            this.gcDeltaBid.FieldName = "DeltaBid";
-            this.gcDeltaBid.Name = "gcDeltaBid";
-            this.gcDeltaBid.Width = 74;
+            this.colPercentChange.Caption = "Percent Change";
+            this.colPercentChange.FieldName = "PercentChange";
+            this.colPercentChange.Name = "colPercentChange";
+            this.colPercentChange.OptionsColumn.AllowEdit = false;
+            this.colPercentChange.Width = 86;
             // 
-            // gcHighestBid
+            // colHighestBid
             // 
-            this.gcHighestBid.Caption = "Highest Bid";
-            this.gcHighestBid.ColumnEdit = this.teValueWithChange;
-            this.gcHighestBid.FieldName = "HighestBidString";
-            this.gcHighestBid.Name = "gcHighestBid";
-            this.gcHighestBid.OptionsColumn.AllowEdit = false;
-            this.gcHighestBid.Visible = true;
-            this.gcHighestBid.VisibleIndex = 3;
-            this.gcHighestBid.Width = 118;
+            this.colHighestBid.AppearanceCell.Options.UseTextOptions = true;
+            this.colHighestBid.AppearanceCell.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Far;
+            this.colHighestBid.Caption = "Highest Bid";
+            this.colHighestBid.ColumnEdit = this.teValueWithChange;
+            this.colHighestBid.FieldName = "HighestBidString";
+            this.colHighestBid.Name = "colHighestBid";
+            this.colHighestBid.OptionsColumn.AllowEdit = false;
+            this.colHighestBid.Visible = true;
+            this.colHighestBid.VisibleIndex = 3;
             // 
-            // gcDeltaAsk
+            // colLowestAsk
             // 
-            this.gcDeltaAsk.Caption = "Ask Change";
-            this.gcDeltaAsk.FieldName = "DeltaAsk";
-            this.gcDeltaAsk.Name = "gcDeltaAsk";
-            this.gcDeltaAsk.Width = 74;
+            this.colLowestAsk.AppearanceCell.Options.UseTextOptions = true;
+            this.colLowestAsk.AppearanceCell.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Far;
+            this.colLowestAsk.Caption = "Lowest Ask";
+            this.colLowestAsk.ColumnEdit = this.teValueWithChange;
+            this.colLowestAsk.FieldName = "LowestAskString";
+            this.colLowestAsk.Name = "colLowestAsk";
+            this.colLowestAsk.OptionsColumn.AllowEdit = false;
+            this.colLowestAsk.Visible = true;
+            this.colLowestAsk.VisibleIndex = 4;
             // 
-            // gcLowestAsk
+            // colMarketCurrency
             // 
-            this.gcLowestAsk.Caption = "Lowest Ask";
-            this.gcLowestAsk.ColumnEdit = this.teValueWithChange;
-            this.gcLowestAsk.FieldName = "LowestAskString";
-            this.gcLowestAsk.Name = "gcLowestAsk";
-            this.gcLowestAsk.OptionsColumn.AllowEdit = false;
-            this.gcLowestAsk.Visible = true;
-            this.gcLowestAsk.VisibleIndex = 4;
-            this.gcLowestAsk.Width = 118;
-            // 
-            // colIsActual
-            // 
-            this.colIsActual.Caption = "IsActual";
-            this.colIsActual.FieldName = "IsActual";
-            this.colIsActual.Name = "colIsActual";
-            this.colIsActual.Width = 74;
-            // 
-            // gcSecond
-            // 
-            this.gcSecond.Caption = "Market Currency";
-            this.gcSecond.ColumnEdit = this.repositoryItemTextEdit1;
-            this.gcSecond.FieldName = "MarketCurrency";
-            this.gcSecond.Name = "gcSecond";
-            this.gcSecond.OptionsColumn.AllowEdit = false;
-            this.gcSecond.Visible = true;
-            this.gcSecond.VisibleIndex = 1;
-            this.gcSecond.Width = 242;
+            this.colMarketCurrency.Caption = "Currency";
+            this.colMarketCurrency.ColumnEdit = this.repositoryItemTextEdit1;
+            this.colMarketCurrency.FieldName = "MarketCurrency";
+            this.colMarketCurrency.Name = "colMarketCurrency";
+            this.colMarketCurrency.OptionsColumn.AllowEdit = false;
+            this.colMarketCurrency.Visible = true;
+            this.colMarketCurrency.VisibleIndex = 1;
             // 
             // repositoryItemTextEdit1
             // 
@@ -290,83 +276,96 @@
             this.repositoryItemTextEdit1.Name = "repositoryItemTextEdit1";
             this.repositoryItemTextEdit1.Padding = new System.Windows.Forms.Padding(0, 5, 0, 5);
             // 
-            // gridControl1
+            // gcTickers
             // 
-            this.gridControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gridControl1.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(24, 23, 24, 23);
-            this.gridControl1.Location = new System.Drawing.Point(446, 330);
-            this.gridControl1.MainView = this.gridView1;
-            this.gridControl1.Margin = new System.Windows.Forms.Padding(24, 23, 24, 23);
-            this.gridControl1.Name = "gridControl1";
-            this.gridControl1.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
+            this.gcTickers.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gcTickers.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(24, 23, 24, 23);
+            this.gcTickers.Location = new System.Drawing.Point(308, 350);
+            this.gcTickers.MainView = this.gvTikers;
+            this.gcTickers.Margin = new System.Windows.Forms.Padding(24, 23, 24, 23);
+            this.gcTickers.Name = "gcTickers";
+            this.gcTickers.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repositoryItemSparklineEdit1,
             this.repositoryItemCheckEdit1,
             this.repositoryItemTextEdit1,
-            this.teValueWithChange});
-            this.gridControl1.Size = new System.Drawing.Size(1367, 610);
-            this.gridControl1.TabIndex = 0;
-            this.gridControl1.UseDirectXPaint = DevExpress.Utils.DefaultBoolean.True;
-            this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
-            this.gridView1});
-            this.gridControl1.Click += new System.EventHandler(this.gridControl1_Click);
+            this.teValueWithChange,
+            this.riSparklineTrend});
+            this.gcTickers.Size = new System.Drawing.Size(1505, 590);
+            this.gcTickers.TabIndex = 0;
+            this.gcTickers.UseDirectXPaint = DevExpress.Utils.DefaultBoolean.True;
+            this.gcTickers.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
+            this.gvTikers});
+            this.gcTickers.Click += new System.EventHandler(this.gridControl1_Click);
             // 
-            // gridView1
+            // gvTikers
             // 
-            this.gridView1.Appearance.Row.Font = new System.Drawing.Font("Segoe UI", 10.125F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.gridView1.Appearance.Row.Options.UseFont = true;
-            this.gridView1.Appearance.SelectedRow.Font = new System.Drawing.Font("Segoe UI", 7.875F);
-            this.gridView1.Appearance.SelectedRow.Options.UseFont = true;
-            this.gridView1.AutoFillColumn = this.gridColumn1;
-            this.gridView1.Columns.AddRange(new DevExpress.XtraGrid.Columns.GridColumn[] {
+            this.gvTikers.Appearance.HeaderPanel.Font = new System.Drawing.Font("Segoe UI Semibold", 10.125F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.gvTikers.Appearance.HeaderPanel.Options.UseFont = true;
+            this.gvTikers.Appearance.Row.Font = new System.Drawing.Font("Segoe UI Semibold", 10.125F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.gvTikers.Appearance.Row.Options.UseFont = true;
+            this.gvTikers.Appearance.SelectedRow.Font = new System.Drawing.Font("Segoe UI Semibold", 10.125F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.gvTikers.Appearance.SelectedRow.Options.UseFont = true;
+            this.gvTikers.AutoFillColumn = this.colEmpty;
+            this.gvTikers.Columns.AddRange(new DevExpress.XtraGrid.Columns.GridColumn[] {
             this.colIsSelected,
-            this.gcLogo,
-            this.gcCurrencyPair,
-            this.gcLast,
-            this.gcLowestAsk,
-            this.gcHighestBid,
-            this.gcPercentChange,
-            this.gcBaseVolume,
-            this.gcQuoteVolume,
-            this.gcIsFrozen,
-            this.gcHr24High,
-            this.gcHr24Low,
-            this.gcTime,
-            this.gcFirst,
-            this.gcSecond,
-            this.gcDeltaBid,
-            this.gcDeltaAsk,
-            this.colUpdateTimeMs,
-            this.colIsActual,
-            this.gridColumn1});
-            this.gridView1.FocusRectStyle = DevExpress.XtraGrid.Views.Grid.DrawFocusRectStyle.None;
-            this.gridView1.GridControl = this.gridControl1;
-            this.gridView1.LevelIndent = 0;
-            this.gridView1.Name = "gridView1";
-            this.gridView1.OptionsBehavior.AllowPixelScrolling = DevExpress.Utils.DefaultBoolean.True;
-            this.gridView1.OptionsDetail.EnableMasterViewMode = false;
-            this.gridView1.OptionsFind.AlwaysVisible = true;
-            this.gridView1.OptionsImageLoad.AnimationType = DevExpress.Utils.ImageContentAnimationType.SegmentedFade;
-            this.gridView1.OptionsImageLoad.AsyncLoad = true;
-            this.gridView1.OptionsSelection.EnableAppearanceFocusedCell = false;
-            this.gridView1.OptionsView.BestFitMode = DevExpress.XtraGrid.Views.Grid.GridBestFitMode.Full;
-            this.gridView1.OptionsView.EnableAppearanceEvenRow = true;
-            this.gridView1.OptionsView.ShowHorizontalLines = DevExpress.Utils.DefaultBoolean.False;
-            this.gridView1.OptionsView.ShowIndicator = false;
-            this.gridView1.OptionsView.ShowVerticalLines = DevExpress.Utils.DefaultBoolean.False;
-            this.gridView1.PreviewIndent = 0;
-            this.gridView1.RowHeight = 48;
-            this.gridView1.VertScrollVisibility = DevExpress.XtraGrid.Views.Base.ScrollVisibility.Always;
-            this.gridView1.GetThumbnailImage += new DevExpress.XtraGrid.Views.Grid.GridViewThumbnailImageEventHandler(this.gridView1_GetThumbnailImage);
-            this.gridView1.DoubleClick += new System.EventHandler(this.gridView1_DoubleClick);
+            this.colLogo,
+            this.colLast,
+            this.colLowestAsk,
+            this.colHighestBid,
+            this.colPercentChange,
+            this.colBaseVolume,
+            this.colQuoteVolume,
+            this.colIsFrozen,
+            this.colHr24High,
+            this.colHr24Low,
+            this.colMarketCurrency,
+            this.colSparkline,
+            this.colEmpty});
+            this.gvTikers.FocusRectStyle = DevExpress.XtraGrid.Views.Grid.DrawFocusRectStyle.None;
+            gridFormatRule3.ApplyToRow = true;
+            gridFormatRule3.Column = this.colLast;
+            gridFormatRule3.Name = "ValueIncreased";
+            formatConditionRuleDataUpdate3.Appearance.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
+            formatConditionRuleDataUpdate3.Appearance.Options.UseForeColor = true;
+            formatConditionRuleDataUpdate3.HighlightTime = 200;
+            gridFormatRule3.Rule = formatConditionRuleDataUpdate3;
+            gridFormatRule4.ApplyToRow = true;
+            gridFormatRule4.Column = this.colLast;
+            gridFormatRule4.Name = "ValueDecreased";
+            formatConditionRuleDataUpdate4.Appearance.ForeColor = System.Drawing.Color.Red;
+            formatConditionRuleDataUpdate4.Appearance.Options.UseForeColor = true;
+            formatConditionRuleDataUpdate4.HighlightTime = 200;
+            gridFormatRule4.Rule = formatConditionRuleDataUpdate4;
+            this.gvTikers.FormatRules.Add(gridFormatRule3);
+            this.gvTikers.FormatRules.Add(gridFormatRule4);
+            this.gvTikers.GridControl = this.gcTickers;
+            this.gvTikers.LevelIndent = 0;
+            this.gvTikers.Name = "gvTikers";
+            this.gvTikers.OptionsBehavior.AllowPixelScrolling = DevExpress.Utils.DefaultBoolean.True;
+            this.gvTikers.OptionsDetail.EnableMasterViewMode = false;
+            this.gvTikers.OptionsFind.AlwaysVisible = true;
+            this.gvTikers.OptionsImageLoad.AnimationType = DevExpress.Utils.ImageContentAnimationType.SegmentedFade;
+            this.gvTikers.OptionsImageLoad.AsyncLoad = true;
+            this.gvTikers.OptionsSelection.EnableAppearanceFocusedCell = false;
+            this.gvTikers.OptionsView.BestFitMaxRowCount = 100;
+            this.gvTikers.OptionsView.BestFitMode = DevExpress.XtraGrid.Views.Grid.GridBestFitMode.Fast;
+            this.gvTikers.OptionsView.ShowIndicator = false;
+            this.gvTikers.OptionsView.ShowVerticalLines = DevExpress.Utils.DefaultBoolean.False;
+            this.gvTikers.PreviewIndent = 0;
+            this.gvTikers.RowHeight = 96;
+            this.gvTikers.VertScrollVisibility = DevExpress.XtraGrid.Views.Base.ScrollVisibility.Always;
+            this.gvTikers.GetThumbnailImage += new DevExpress.XtraGrid.Views.Grid.GridViewThumbnailImageEventHandler(this.gridView1_GetThumbnailImage);
+            this.gvTikers.CustomRowCellEdit += new DevExpress.XtraGrid.Views.Grid.CustomRowCellEditEventHandler(this.GridView1_CustomRowCellEdit);
+            this.gvTikers.DoubleClick += new System.EventHandler(this.gridView1_DoubleClick);
             // 
-            // gridColumn1
+            // colEmpty
             // 
-            this.gridColumn1.MinWidth = 40;
-            this.gridColumn1.Name = "gridColumn1";
-            this.gridColumn1.UnboundType = DevExpress.Data.UnboundColumnType.Object;
-            this.gridColumn1.Visible = true;
-            this.gridColumn1.VisibleIndex = 8;
-            this.gridColumn1.Width = 150;
+            this.colEmpty.Caption = " _";
+            this.colEmpty.MinWidth = 40;
+            this.colEmpty.Name = "colEmpty";
+            this.colEmpty.Visible = true;
+            this.colEmpty.VisibleIndex = 9;
+            this.colEmpty.Width = 552;
             // 
             // colIsSelected
             // 
@@ -377,7 +376,7 @@
             this.colIsSelected.Name = "colIsSelected";
             this.colIsSelected.Visible = true;
             this.colIsSelected.VisibleIndex = 0;
-            this.colIsSelected.Width = 104;
+            this.colIsSelected.Width = 102;
             // 
             // repositoryItemCheckEdit1
             // 
@@ -386,106 +385,96 @@
             this.repositoryItemCheckEdit1.Name = "repositoryItemCheckEdit1";
             this.repositoryItemCheckEdit1.EditValueChanged += new System.EventHandler(this.repositoryItemCheckEdit1_EditValueChanged);
             // 
-            // gcLogo
+            // colLogo
             // 
-            this.gcLogo.Caption = "Logo";
-            this.gcLogo.FieldName = "Logo";
-            this.gcLogo.Name = "gcLogo";
-            this.gcLogo.Width = 74;
+            this.colLogo.Caption = "Logo";
+            this.colLogo.FieldName = "Logo";
+            this.colLogo.Name = "colLogo";
+            this.colLogo.Width = 74;
             // 
-            // gcCurrencyPair
+            // colBaseVolume
             // 
-            this.gcCurrencyPair.Caption = "Market Name";
-            this.gcCurrencyPair.FieldName = "CurrencyPair";
-            this.gcCurrencyPair.Name = "gcCurrencyPair";
-            this.gcCurrencyPair.OptionsColumn.AllowEdit = false;
-            this.gcCurrencyPair.Width = 206;
+            this.colBaseVolume.AppearanceCell.Options.UseTextOptions = true;
+            this.colBaseVolume.AppearanceCell.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Far;
+            this.colBaseVolume.Caption = "24 Hour Volume";
+            this.colBaseVolume.DisplayFormat.FormatString = "0.00000000";
+            this.colBaseVolume.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+            this.colBaseVolume.FieldName = "BaseVolume";
+            this.colBaseVolume.Name = "colBaseVolume";
+            this.colBaseVolume.OptionsColumn.AllowEdit = false;
+            this.colBaseVolume.Visible = true;
+            this.colBaseVolume.VisibleIndex = 7;
             // 
-            // gcBaseVolume
+            // colQuoteVolume
             // 
-            this.gcBaseVolume.Caption = "24 Hour Volume";
-            this.gcBaseVolume.DisplayFormat.FormatString = "0.00000000";
-            this.gcBaseVolume.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
-            this.gcBaseVolume.FieldName = "BaseVolume";
-            this.gcBaseVolume.Name = "gcBaseVolume";
-            this.gcBaseVolume.OptionsColumn.AllowEdit = false;
-            this.gcBaseVolume.Visible = true;
-            this.gcBaseVolume.VisibleIndex = 7;
-            this.gcBaseVolume.Width = 118;
+            this.colQuoteVolume.Caption = "Quote Volume";
+            this.colQuoteVolume.DisplayFormat.FormatString = "0.00000000";
+            this.colQuoteVolume.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+            this.colQuoteVolume.FieldName = "QuoteVolume";
+            this.colQuoteVolume.Name = "colQuoteVolume";
+            this.colQuoteVolume.OptionsColumn.AllowEdit = false;
+            this.colQuoteVolume.Width = 154;
             // 
-            // gcQuoteVolume
+            // colIsFrozen
             // 
-            this.gcQuoteVolume.Caption = "Quote Volume";
-            this.gcQuoteVolume.DisplayFormat.FormatString = "0.00000000";
-            this.gcQuoteVolume.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
-            this.gcQuoteVolume.FieldName = "QuoteVolume";
-            this.gcQuoteVolume.Name = "gcQuoteVolume";
-            this.gcQuoteVolume.OptionsColumn.AllowEdit = false;
-            this.gcQuoteVolume.Width = 154;
+            this.colIsFrozen.Caption = "Is Frozen";
+            this.colIsFrozen.FieldName = "IsFrozen";
+            this.colIsFrozen.Name = "colIsFrozen";
+            this.colIsFrozen.Width = 74;
             // 
-            // gcIsFrozen
+            // colHr24High
             // 
-            this.gcIsFrozen.Caption = "Is Frozen";
-            this.gcIsFrozen.FieldName = "IsFrozen";
-            this.gcIsFrozen.Name = "gcIsFrozen";
-            this.gcIsFrozen.Width = 74;
+            this.colHr24High.AppearanceCell.Options.UseTextOptions = true;
+            this.colHr24High.AppearanceCell.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Far;
+            this.colHr24High.Caption = "24 Hour High";
+            this.colHr24High.DisplayFormat.FormatString = "0.00000000";
+            this.colHr24High.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+            this.colHr24High.FieldName = "Hr24High";
+            this.colHr24High.Name = "colHr24High";
+            this.colHr24High.OptionsColumn.AllowEdit = false;
+            this.colHr24High.Visible = true;
+            this.colHr24High.VisibleIndex = 5;
             // 
-            // gcHr24High
+            // colHr24Low
             // 
-            this.gcHr24High.Caption = "24 Hour High";
-            this.gcHr24High.DisplayFormat.FormatString = "0.00000000";
-            this.gcHr24High.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
-            this.gcHr24High.FieldName = "Hr24High";
-            this.gcHr24High.Name = "gcHr24High";
-            this.gcHr24High.OptionsColumn.AllowEdit = false;
-            this.gcHr24High.Visible = true;
-            this.gcHr24High.VisibleIndex = 5;
-            this.gcHr24High.Width = 118;
+            this.colHr24Low.AppearanceCell.Options.UseTextOptions = true;
+            this.colHr24Low.AppearanceCell.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Far;
+            this.colHr24Low.Caption = "24 Hour Low";
+            this.colHr24Low.DisplayFormat.FormatString = "0.00000000";
+            this.colHr24Low.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+            this.colHr24Low.FieldName = "Hr24Low";
+            this.colHr24Low.Name = "colHr24Low";
+            this.colHr24Low.OptionsColumn.AllowEdit = false;
+            this.colHr24Low.Visible = true;
+            this.colHr24Low.VisibleIndex = 6;
             // 
-            // gcHr24Low
+            // colSparkline
             // 
-            this.gcHr24Low.Caption = "24 Hour Low";
-            this.gcHr24Low.DisplayFormat.FormatString = "0.00000000";
-            this.gcHr24Low.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
-            this.gcHr24Low.FieldName = "Hr24Low";
-            this.gcHr24Low.Name = "gcHr24Low";
-            this.gcHr24Low.OptionsColumn.AllowEdit = false;
-            this.gcHr24Low.Visible = true;
-            this.gcHr24Low.VisibleIndex = 6;
-            this.gcHr24Low.Width = 118;
+            this.colSparkline.Caption = "Trend";
+            this.colSparkline.ColumnEdit = this.riSparklineTrend;
+            this.colSparkline.FieldName = "Sparkline";
+            this.colSparkline.MinWidth = 150;
+            this.colSparkline.Name = "colSparkline";
+            this.colSparkline.UnboundType = DevExpress.Data.UnboundColumnType.Object;
+            this.colSparkline.Visible = true;
+            this.colSparkline.VisibleIndex = 8;
+            this.colSparkline.Width = 150;
             // 
-            // gcTime
+            // riSparklineTrend
             // 
-            this.gcTime.Caption = "Time";
-            this.gcTime.DisplayFormat.FormatString = "G";
-            this.gcTime.DisplayFormat.FormatType = DevExpress.Utils.FormatType.DateTime;
-            this.gcTime.FieldName = "Time";
-            this.gcTime.Name = "gcTime";
-            this.gcTime.Width = 74;
-            // 
-            // gcFirst
-            // 
-            this.gcFirst.Caption = "Base Currency";
-            this.gcFirst.FieldName = "BaseCurrency";
-            this.gcFirst.Name = "gcFirst";
-            this.gcFirst.Width = 74;
-            // 
-            // colUpdateTimeMs
-            // 
-            this.colUpdateTimeMs.Caption = "UpdateTimeMs";
-            this.colUpdateTimeMs.FieldName = "UpdateTimeMs";
-            this.colUpdateTimeMs.Name = "colUpdateTimeMs";
-            this.colUpdateTimeMs.OptionsColumn.AllowEdit = false;
-            this.colUpdateTimeMs.Width = 44;
+            this.riSparklineTrend.Name = "riSparklineTrend";
+            this.riSparklineTrend.Padding = new System.Windows.Forms.Padding(10);
+            lineSparklineView3.ScaleFactor = 2F;
+            this.riSparklineTrend.View = lineSparklineView3;
             // 
             // repositoryItemSparklineEdit1
             // 
             this.repositoryItemSparklineEdit1.EditValueMember = "Current";
             this.repositoryItemSparklineEdit1.Name = "repositoryItemSparklineEdit1";
             this.repositoryItemSparklineEdit1.PointValueMember = "Time";
-            lineSparklineView2.Color = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
-            lineSparklineView2.ScaleFactor = 1F;
-            this.repositoryItemSparklineEdit1.View = lineSparklineView2;
+            lineSparklineView4.Color = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
+            lineSparklineView4.ScaleFactor = 1F;
+            this.repositoryItemSparklineEdit1.View = lineSparklineView4;
             // 
             // ribbonControl1
             // 
@@ -507,10 +496,11 @@
             this.biDisconnected,
             this.biConnectionStatus,
             this.biReconnect,
-            this.biTradeHistory});
+            this.biTradeHistory,
+            this.bsCachedDataCount});
             this.ribbonControl1.Location = new System.Drawing.Point(0, 0);
             this.ribbonControl1.Margin = new System.Windows.Forms.Padding(24, 23, 24, 23);
-            this.ribbonControl1.MaxItemId = 26;
+            this.ribbonControl1.MaxItemId = 27;
             this.ribbonControl1.Name = "ribbonControl1";
             this.ribbonControl1.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
             this.ribbonPage1});
@@ -655,6 +645,14 @@
             this.biTradeHistory.Visibility = DevExpress.XtraBars.BarItemVisibility.Never;
             this.biTradeHistory.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItem3_ItemClick);
             // 
+            // bsCachedDataCount
+            // 
+            this.bsCachedDataCount.Alignment = DevExpress.XtraBars.BarItemLinkAlignment.Right;
+            this.bsCachedDataCount.Id = 26;
+            this.bsCachedDataCount.ItemAppearance.Normal.FontSizeDelta = 2;
+            this.bsCachedDataCount.ItemAppearance.Normal.Options.UseFont = true;
+            this.bsCachedDataCount.Name = "bsCachedDataCount";
+            // 
             // ribbonPage1
             // 
             this.ribbonPage1.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] {
@@ -793,6 +791,7 @@
             this.ribbonStatusBar1.AutoHeight = true;
             this.ribbonStatusBar1.ItemLinks.Add(this.biConnectionStatus);
             this.ribbonStatusBar1.ItemLinks.Add(this.biReconnect);
+            this.ribbonStatusBar1.ItemLinks.Add(this.bsCachedDataCount);
             this.ribbonStatusBar1.Location = new System.Drawing.Point(0, 940);
             this.ribbonStatusBar1.Margin = new System.Windows.Forms.Padding(6);
             this.ribbonStatusBar1.Name = "ribbonStatusBar1";
@@ -812,8 +811,9 @@
             this.barManager1.Form = this;
             this.barManager1.Items.AddRange(new DevExpress.XtraBars.BarItem[] {
             this.bcShowOnlyFavorite,
-            this.biBestFit});
-            this.barManager1.MaxItemId = 2;
+            this.biBestFit,
+            this.biBestFitTable});
+            this.barManager1.MaxItemId = 3;
             this.barManager1.OptionsStubGlyphs.AllowStubGlyphs = DevExpress.Utils.DefaultBoolean.True;
             this.barManager1.OptionsStubGlyphs.CaseMode = DevExpress.Utils.Drawing.GlyphTextCaseMode.UpperCase;
             this.barManager1.OptionsStubGlyphs.CornerRadius = 3;
@@ -822,13 +822,15 @@
             // 
             // bar1
             // 
+            this.bar1.BarItemVertIndent = 6;
             this.bar1.BarName = "Custom 4";
             this.bar1.DockCol = 0;
             this.bar1.DockRow = 0;
             this.bar1.DockStyle = DevExpress.XtraBars.BarDockStyle.Standalone;
             this.bar1.FloatLocation = new System.Drawing.Point(605, 618);
             this.bar1.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
-            new DevExpress.XtraBars.LinkPersistInfo(this.bcShowOnlyFavorite)});
+            new DevExpress.XtraBars.LinkPersistInfo(this.bcShowOnlyFavorite),
+            new DevExpress.XtraBars.LinkPersistInfo(this.biBestFitTable)});
             this.bar1.OptionsBar.DrawBorder = false;
             this.bar1.OptionsBar.UseWholeRow = true;
             this.bar1.StandaloneBarDockControl = this.standaloneBarDockControl2;
@@ -836,23 +838,32 @@
             // 
             // bcShowOnlyFavorite
             // 
-            this.bcShowOnlyFavorite.Caption = "Show only favorite";
-            this.bcShowOnlyFavorite.CheckBoxVisibility = DevExpress.XtraBars.CheckBoxVisibility.BeforeText;
+            this.bcShowOnlyFavorite.Caption = "Filter Favorite";
             this.bcShowOnlyFavorite.Id = 0;
             this.bcShowOnlyFavorite.ImageOptions.AllowStubGlyph = DevExpress.Utils.DefaultBoolean.False;
+            this.bcShowOnlyFavorite.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("bcShowOnlyFavorite.ImageOptions.SvgImage")));
             this.bcShowOnlyFavorite.Name = "bcShowOnlyFavorite";
-            this.bcShowOnlyFavorite.PaintStyle = DevExpress.XtraBars.BarItemPaintStyle.Caption;
+            this.bcShowOnlyFavorite.PaintStyle = DevExpress.XtraBars.BarItemPaintStyle.CaptionGlyph;
             this.bcShowOnlyFavorite.CheckedChanged += new DevExpress.XtraBars.ItemClickEventHandler(this.bcShowOnlyFavorite_CheckedChanged);
+            // 
+            // biBestFitTable
+            // 
+            this.biBestFitTable.Caption = "Best Fit Table";
+            this.biBestFitTable.Id = 2;
+            this.biBestFitTable.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("biBestFitTable.ImageOptions.SvgImage")));
+            this.biBestFitTable.Name = "biBestFitTable";
+            this.biBestFitTable.PaintStyle = DevExpress.XtraBars.BarItemPaintStyle.CaptionGlyph;
+            this.biBestFitTable.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.BiBestFitTable_ItemClick);
             // 
             // standaloneBarDockControl2
             // 
             this.standaloneBarDockControl2.AutoSize = true;
             this.standaloneBarDockControl2.CausesValidation = false;
             this.standaloneBarDockControl2.Dock = System.Windows.Forms.DockStyle.Top;
-            this.standaloneBarDockControl2.Location = new System.Drawing.Point(446, 292);
+            this.standaloneBarDockControl2.Location = new System.Drawing.Point(308, 292);
             this.standaloneBarDockControl2.Manager = this.barManager1;
             this.standaloneBarDockControl2.Name = "standaloneBarDockControl2";
-            this.standaloneBarDockControl2.Size = new System.Drawing.Size(1367, 38);
+            this.standaloneBarDockControl2.Size = new System.Drawing.Size(1505, 58);
             this.standaloneBarDockControl2.Text = "standaloneBarDockControl2";
             // 
             // barAndDockingController1
@@ -863,6 +874,7 @@
             this.barAndDockingController1.AppearancesBar.BarAppearance.Normal.Options.UseFont = true;
             this.barAndDockingController1.AppearancesBar.BarAppearance.Pressed.FontStyleDelta = System.Drawing.FontStyle.Bold;
             this.barAndDockingController1.AppearancesBar.BarAppearance.Pressed.Options.UseFont = true;
+            this.barAndDockingController1.PropertiesBar.AllowLinkLighting = false;
             // 
             // barDockControlTop
             // 
@@ -925,7 +937,7 @@
             this.accordionControl1.ScrollBarMode = DevExpress.XtraBars.Navigation.ScrollBarMode.Fluent;
             this.accordionControl1.ShowGroupExpandButtons = false;
             this.accordionControl1.ShowItemExpandButtons = false;
-            this.accordionControl1.Size = new System.Drawing.Size(446, 648);
+            this.accordionControl1.Size = new System.Drawing.Size(308, 648);
             this.accordionControl1.TabIndex = 7;
             this.accordionControl1.ViewType = DevExpress.XtraBars.Navigation.AccordionControlViewType.HamburgerMenu;
             // 
@@ -934,7 +946,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1813, 994);
-            this.Controls.Add(this.gridControl1);
+            this.Controls.Add(this.gcTickers);
             this.Controls.Add(this.standaloneBarDockControl2);
             this.Controls.Add(this.accordionControl1);
             this.Controls.Add(this.ribbonStatusBar1);
@@ -948,9 +960,10 @@
             this.Text = "Tickers";
             ((System.ComponentModel.ISupportInitialize)(this.teValueWithChange)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemTextEdit1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gcTickers)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gvTikers)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.riSparklineTrend)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemSparklineEdit1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.svgImageCollection1)).EndInit();
@@ -974,28 +987,23 @@
 
         #endregion
 
-        private DevExpress.XtraGrid.GridControl gridControl1;
-        private DevExpress.XtraGrid.Views.Grid.GridView gridView1;
-        private DevExpress.XtraGrid.Columns.GridColumn gcCurrencyPair;
-        private DevExpress.XtraGrid.Columns.GridColumn gcLast;
-        private DevExpress.XtraGrid.Columns.GridColumn gcLowestAsk;
-        private DevExpress.XtraGrid.Columns.GridColumn gcHighestBid;
-        private DevExpress.XtraGrid.Columns.GridColumn gcPercentChange;
-        private DevExpress.XtraGrid.Columns.GridColumn gcBaseVolume;
-        private DevExpress.XtraGrid.Columns.GridColumn gcQuoteVolume;
-        private DevExpress.XtraGrid.Columns.GridColumn gcIsFrozen;
-        private DevExpress.XtraGrid.Columns.GridColumn gcHr24High;
-        private DevExpress.XtraGrid.Columns.GridColumn gcHr24Low;
-        private DevExpress.XtraGrid.Columns.GridColumn gcTime;
-        private DevExpress.XtraGrid.Columns.GridColumn gcFirst;
-        private DevExpress.XtraGrid.Columns.GridColumn gcSecond;
+        private DevExpress.XtraGrid.GridControl gcTickers;
+        private DevExpress.XtraGrid.Views.Grid.GridView gvTikers;
+        private DevExpress.XtraGrid.Columns.GridColumn colLast;
+        private DevExpress.XtraGrid.Columns.GridColumn colLowestAsk;
+        private DevExpress.XtraGrid.Columns.GridColumn colHighestBid;
+        private DevExpress.XtraGrid.Columns.GridColumn colPercentChange;
+        private DevExpress.XtraGrid.Columns.GridColumn colBaseVolume;
+        private DevExpress.XtraGrid.Columns.GridColumn colQuoteVolume;
+        private DevExpress.XtraGrid.Columns.GridColumn colIsFrozen;
+        private DevExpress.XtraGrid.Columns.GridColumn colHr24High;
+        private DevExpress.XtraGrid.Columns.GridColumn colHr24Low;
+        private DevExpress.XtraGrid.Columns.GridColumn colMarketCurrency;
         private DevExpress.XtraBars.Ribbon.RibbonControl ribbonControl1;
         private DevExpress.XtraBars.Ribbon.RibbonPage ribbonPage1;
         private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup1;
         private DevExpress.XtraBars.BarCheckItem barCheckItem1;
         private DevExpress.XtraBars.BarCheckItem barCheckItem2;
-        private DevExpress.XtraGrid.Columns.GridColumn gcDeltaBid;
-        private DevExpress.XtraGrid.Columns.GridColumn gcDeltaAsk;
         private DevExpress.XtraEditors.Repository.RepositoryItemSparklineEdit repositoryItemSparklineEdit1;
         private DevExpress.XtraBars.BarButtonItem ShowDetailsForSelectedItem;
         private DevExpress.XtraBars.BarButtonItem bbShowBalances;
@@ -1012,11 +1020,9 @@
         private DevExpress.XtraBars.PopupMenu popupMenu1;
         private DevExpress.XtraBars.BarButtonItem barButtonItem2;
         private DevExpress.XtraBars.BarButtonItem bbRemoveByRightClick;
-        private DevExpress.XtraGrid.Columns.GridColumn colUpdateTimeMs;
-        private DevExpress.XtraGrid.Columns.GridColumn colIsActual;
         private DevExpress.XtraEditors.Repository.RepositoryItemTextEdit repositoryItemTextEdit1;
         private DevExpress.XtraEditors.Repository.RepositoryItemTextEdit teValueWithChange;
-        private DevExpress.XtraGrid.Columns.GridColumn gcLogo;
+        private DevExpress.XtraGrid.Columns.GridColumn colLogo;
         private DevExpress.XtraBars.Ribbon.RibbonStatusBar ribbonStatusBar1;
         private DevExpress.XtraBars.BarStaticItem biConnected;
         private DevExpress.XtraBars.BarStaticItem biDisconnected;
@@ -1026,7 +1032,7 @@
         private DevExpress.XtraBars.BarButtonItem biTradeHistory;
         private DevExpress.XtraBars.Ribbon.Internal.RepositoryItemRibbonSearchEdit repositoryItemRibbonSearchEdit1;
         private DevExpress.XtraBars.Ribbon.Internal.RepositoryItemRibbonSearchEdit repositoryItemRibbonSearchEdit2;
-        private DevExpress.XtraGrid.Columns.GridColumn gridColumn1;
+        private DevExpress.XtraGrid.Columns.GridColumn colSparkline;
         private DevExpress.XtraBars.Ribbon.Internal.RepositoryItemRibbonSearchEdit repositoryItemRibbonSearchEdit3;
         private DevExpress.XtraBars.Ribbon.Internal.RepositoryItemRibbonSearchEdit repositoryItemRibbonSearchEdit4;
         private DevExpress.XtraBars.BarAndDockingController barAndDockingController1;
@@ -1040,5 +1046,9 @@
         private DevExpress.XtraBars.Bar bar1;
         private DevExpress.XtraBars.Navigation.AccordionControl accordionControl1;
         private DevExpress.XtraBars.StandaloneBarDockControl standaloneBarDockControl2;
+        private DevExpress.XtraEditors.Repository.RepositoryItemSparklineEdit riSparklineTrend;
+        private DevExpress.XtraBars.BarButtonItem biBestFitTable;
+        private DevExpress.XtraGrid.Columns.GridColumn colEmpty;
+        private DevExpress.XtraBars.BarStaticItem bsCachedDataCount;
     }
 }

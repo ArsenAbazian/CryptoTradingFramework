@@ -35,6 +35,7 @@ namespace Crypto.Core.Exchanges.Binance.Futures {
         protected override string ServerTimeApi { get { return "https://fapi.binance.com/fapi/v1/time"; } }
 
         protected override string BalanceApiString => "https://fapi.binance.com/fapi/v2/balance";
+        protected virtual string PositionApiString => "https://fapi.binance.com/fapi/v2/account";
         protected override string TradeApiString => "https://fapi.binance.com/fapi/v1/order";
         protected override string OrderStatusApiString => "https://fapi.binance.com/fapi/v1/order";
         public override bool AllowCheckOrderStatus => true;
@@ -46,7 +47,7 @@ namespace Crypto.Core.Exchanges.Binance.Futures {
             tr.Amount = Convert.ToDouble(res.Value<string>("executedQty"));
             tr.Value= Convert.ToDouble(res.Value<string>("price"));
             tr.Type = res.Value<string>("side")[0] == 'B'? OrderType.Buy: OrderType.Sell; 
-            tr.PositionSide = res.Value<string>("positionSide")[0] == 'S'? PositionSide.Short: PositionSide.Long;
+            tr.PositionSide = String2PositionSide(res.Value<string>("positionSide"));
             tr.Total = tr.Amount * tr.Value;
             tr.OrderStatus = res.Value<string>("status");
             tr.Filled = res.Value<bool>("closePosition") == true;
@@ -70,6 +71,61 @@ namespace Crypto.Core.Exchanges.Binance.Futures {
                 LogManager.Default.Log(e.ToString());
                 return false;
             }
+        }
+
+        public override bool UpdatePositions(AccountInfo account, Ticker ticker) {
+            string queryString = string.Format("timestamp={0}&recvWindow=50000", GetNonce());
+            string signature = account.GetSign(queryString);
+
+            string address = string.Format("{0}?{1}&signature={2}", PositionApiString, queryString, signature);
+            MyWebClient client = GetWebClient();
+            
+            client.Headers.Clear();
+            client.Headers.Add("X-MBX-APIKEY", account.ApiKey);
+
+            try {
+                return OnGetPositions(account, client.DownloadData(address));
+            }
+            catch(Exception e) {
+                LogManager.Default.Log(e.ToString());
+                return false;
+            }
+        }
+
+        protected virtual bool OnGetPositions(AccountInfo account, byte[] data) {
+            string text = UTF8Encoding.Default.GetString(data);
+            object conv = JsonConvert.DeserializeObject(text);
+            JObject root = conv as JObject;
+            if(conv == null) { 
+                LogManager.Default.Error(this, "error on get positions", "empty text return");
+                return false;
+            }
+            if(root != null && root.Value<string>("code") != null) {
+                LogManager.Default.Error(this, "error on get positions", root.Value<string>("message"));
+                return false;
+            }
+            JArray positions = root.Value<JArray>("positions");
+            if(positions == null)
+                return false;
+            account.Positions.Clear();
+            foreach(JObject obj in positions) {
+                string symbol = obj.Value<string>("symbol");
+                PositionInfo p = new PositionInfo() { Account = account, Ticker = GetTicker(symbol) };
+                p.InitialMarginString = obj.Value<string>("initialMargin");
+                p.MaintMarginString = obj.Value<string>("maintMargin");
+                p.UnrealizedProfitString = obj.Value<string>("unrealizedProfit");
+                p.PositionInitialMarginString = obj.Value<string>("positionInitialMargin");
+                p.OpenOrderInitialMarginString = obj.Value<string>("openOrderInitialMargin"); 
+                p.LeverageString = obj.Value<string>("leverage");
+                p.Isolated = obj.Value<bool>("isolated");
+                p.EntryPriceString = obj.Value<string>("entryPrice");
+                p.MaxNotionalString = obj.Value<string>("maxNotional"); 
+                p.Side = String2PositionSide(obj.Value<string>("positionSide"));
+                p.PositionAmountString = obj.Value<string>("positionAmt");
+                p.UpdateTime = FromUnixTimestampMs(obj.Value<long>("updateTime"));
+                account.Positions.Add(p);
+            }
+            return true;
         }
 
         public override bool GetBalance(AccountInfo account, string currency) {
@@ -243,10 +299,9 @@ namespace Crypto.Core.Exchanges.Binance.Futures {
 
             TradeInfoItem t = new TradeInfoItem(null, ticker);
             t.OrderNumber = item[5];
-            bool isBuy = item[10][0] != 'S';
             t.AmountString = item[7];
             t.Time = time;
-            t.Type = isBuy ? TradeType.Buy : TradeType.Sell;
+            t.Type = String2TradeType(item[10]);
             t.RateString = item[6];
             t.IdString = item[3];
             return t;

@@ -35,7 +35,7 @@
             this.repositoryItemTextEdit2 = new DevExpress.XtraEditors.Repository.RepositoryItemTextEdit();
             this.askPanel = new DevExpress.XtraEditors.SidePanel();
             this.askGridControl = new DevExpress.XtraGrid.GridControl();
-            this.askGridView = new InvertedGridView();
+            this.askGridView = new CryptoMarketClient.InvertedGridView();
             this.gcRate = new DevExpress.XtraGrid.Columns.GridColumn();
             this.repositoryItemTextEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemTextEdit();
             this.gcAmount = new DevExpress.XtraGrid.Columns.GridColumn();
@@ -60,9 +60,9 @@
             // 
             // gcVolume2
             // 
+            this.gcVolume2.AppearanceCell.Options.UseTextOptions = true;
+            this.gcVolume2.AppearanceCell.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Far;
             this.gcVolume2.Caption = "Volume";
-            //this.gcVolume2.DisplayFormat.FormatString = "0.00000000";
-            //this.gcVolume2.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.gcVolume2.FieldName = "VolumeString";
             this.gcVolume2.MinWidth = 40;
             this.gcVolume2.Name = "gcVolume2";
@@ -80,9 +80,9 @@
             // 
             // gcVolume
             // 
+            this.gcVolume.AppearanceCell.Options.UseTextOptions = true;
+            this.gcVolume.AppearanceCell.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Far;
             this.gcVolume.Caption = "Volume";
-            //this.gcVolume.DisplayFormat.FormatString = "0.00000000";
-            //this.gcVolume.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
             this.gcVolume.FieldName = "VolumeString";
             this.gcVolume.MinWidth = 40;
             this.gcVolume.Name = "gcVolume";
@@ -120,7 +120,7 @@
             // 
             // bidGridView
             // 
-            this.bidGridView.Appearance.Row.Font = new System.Drawing.Font("Segoe UI", 7.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.bidGridView.Appearance.Row.Font = new System.Drawing.Font("Segoe UI Semibold", 7.875F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.bidGridView.Appearance.Row.Options.UseFont = true;
             this.bidGridView.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
             this.bidGridView.Columns.AddRange(new DevExpress.XtraGrid.Columns.GridColumn[] {
@@ -149,6 +149,8 @@
             // 
             this.gcRate2.AppearanceCell.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
             this.gcRate2.AppearanceCell.Options.UseForeColor = true;
+            this.gcRate2.AppearanceCell.Options.UseTextOptions = true;
+            this.gcRate2.AppearanceCell.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Far;
             this.gcRate2.Caption = "Rate";
             this.gcRate2.FieldName = "ValueString";
             this.gcRate2.MinWidth = 40;
@@ -159,6 +161,8 @@
             // 
             // gcAmount2
             // 
+            this.gcAmount2.AppearanceCell.Options.UseTextOptions = true;
+            this.gcAmount2.AppearanceCell.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Far;
             this.gcAmount2.Caption = "Amount";
             this.gcAmount2.FieldName = "AmountString";
             this.gcAmount2.MinWidth = 40;
@@ -203,7 +207,7 @@
             // 
             // askGridView
             // 
-            this.askGridView.Appearance.Row.Font = new System.Drawing.Font("Segoe UI", 7.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.askGridView.Appearance.Row.Font = new System.Drawing.Font("Segoe UI Semibold", 7.875F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.askGridView.Appearance.Row.Options.UseFont = true;
             this.askGridView.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
             this.askGridView.Columns.AddRange(new DevExpress.XtraGrid.Columns.GridColumn[] {
@@ -233,6 +237,8 @@
             // 
             this.gcRate.AppearanceCell.ForeColor = System.Drawing.Color.Red;
             this.gcRate.AppearanceCell.Options.UseForeColor = true;
+            this.gcRate.AppearanceCell.Options.UseTextOptions = true;
+            this.gcRate.AppearanceCell.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Far;
             this.gcRate.Caption = "Rate";
             this.gcRate.ColumnEdit = this.repositoryItemTextEdit1;
             this.gcRate.FieldName = "ValueString";
@@ -250,6 +256,8 @@
             // 
             // gcAmount
             // 
+            this.gcAmount.AppearanceCell.Options.UseTextOptions = true;
+            this.gcAmount.AppearanceCell.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Far;
             this.gcAmount.Caption = "Amount";
             this.gcAmount.FieldName = "AmountString";
             this.gcAmount.MinWidth = 40;
@@ -296,7 +304,6 @@
 
         private DevExpress.XtraEditors.SidePanel bidPanel;
         private DevExpress.XtraGrid.GridControl bidGridControl;
-        private DevExpress.XtraGrid.Views.Grid.GridView bidGridView;
         private DevExpress.XtraGrid.Columns.GridColumn gcRate2;
         private DevExpress.XtraGrid.Columns.GridColumn gcAmount2;
         private DevExpress.XtraEditors.SidePanel askPanel;
@@ -311,5 +318,6 @@
         private DevExpress.XtraEditors.Repository.RepositoryItemTextEdit repositoryItemTextEdit1;
         private DevExpress.XtraEditors.Repository.RepositoryItemTextEdit repositoryItemTextEdit2;
         private System.Windows.Forms.Panel panel1;
+        private Crypto.UI.Controls.ThreadSafeGridView bidGridView;
     }
 }

@@ -13,7 +13,7 @@ using System.Xml.Serialization;
 
 namespace Crypto.Core {
     [Serializable]
-    public abstract class Ticker : ISupportSerialization, IComparable {
+    public abstract class Ticker : ISupportSerialization, IComparable, ICachedDataOwner {
         public static bool UseHtmlString { get; set; } = true;
         public Ticker(Exchange exchange) {
             Exchange = exchange;
@@ -328,9 +328,8 @@ namespace Crypto.Core {
         public virtual string GetStringWithChangePercent(double value, double change) {
             if(value == 0)
                 return "NO DATA YET";
-            if(!UseHtmlString) {
+            if(!UseHtmlString)
                 return string.Format("{0:0.00000000}", value);
-            }
             if(change == 0)
                 return string.Format("<b>{0:0.00000000}</b>", value);
             if (change >= 0) 
@@ -755,6 +754,27 @@ namespace Crypto.Core {
             RaiseChanged();
         }
 
+        void ICachedDataOwner.OnDataUpdated() {
+            RaiseChanged();
+            Exchange?.RaiseTickerChanged(this);
+        }
+
+        public double[] GetSparkline() {
+            ResizeableArray<CandleStickData> dt = GetCandleStickData(30, DateTime.Now.AddHours(-12), 12 * 60 * 60);
+            if(dt == null)
+                return this.sparklineNullValue;
+            double[] data = new double[dt.Count];
+            for(int i = 0; i < dt.Count; i++)
+                data[i] = (dt[i].Open + dt[i].Close + dt[i].High + dt[i].Low) / 4;
+            return data;
+        }
+
+        double[] sparklineNullValue = new double[0];
+        public double[] Sparkline { 
+            get { 
+                return (double[])DataCacheManager.GetData(this, nameof(Sparkline), TimeSpan.FromHours(1), this.sparklineNullValue, () => GetSparkline());
+            }    
+        }
 
         ObservableCollection<TickerEvent> events;
         public ObservableCollection<TickerEvent> Events {
@@ -977,4 +997,109 @@ namespace Crypto.Core {
     public delegate void TradeHistoryChangedEventHandler(object sender, TradeHistoryChangedEventArgs e);
 
     public enum TickerDataStatus { Invalid, Actual }
+
+    public static class DataCacheManager {
+        public static int MaxAllowedTaskCount { get; set; } = 3;
+        
+        public static Dictionary<string, Task> Tasks { get; private set; } = new Dictionary<string, Task>();
+        public static Dictionary<object, Dictionary<string, object>> Data { get; set; } = new Dictionary<object, Dictionary<string, object>>();
+        public static object GetData(object owner, string dataName, TimeSpan updateInterval, object nullValue, Func<object> getData) {
+            Dictionary<string, object> props = GetProperties(owner);
+            object res = nullValue;
+            if(!props.TryGetValue(dataName, out res)) {
+                props.Add(dataName, nullValue);
+                res = nullValue;
+            }
+            if(!object.Equals(res, nullValue))
+                return res;
+            if(!HasTask(owner, dataName))
+                CreateTask(owner, dataName, getData);
+            UpdateTasks();
+            return nullValue;
+        }
+        private static string GetKey(object owner, string dataName) {
+            string key = string.Format("{0}{1}", owner.GetHashCode(), dataName);
+            return key;
+        }
+        private static bool HasTask(object owner, string dataName) {
+            string key = GetKey(owner, dataName);
+            return Tasks.ContainsKey(key);
+        }
+        public static void SetValue(object owner, string dataName, object value) {
+            Dictionary<string, object> props = GetProperties(owner);
+            if(props.ContainsKey(dataName))
+                props[dataName] = value;
+            else 
+                props.Add(dataName, value);
+        }
+        private static void CreateTask(object owner, string dataName, Func<object> getData) {
+            string key = GetKey(owner, dataName);
+            Task<object> t = new Task<object>(() => { 
+                object res = getData();
+                SetValue(owner, dataName, res);
+                OnTaskCompleted(owner);
+                return res;
+            });
+            Tasks.Add(GetKey(owner, dataName), t);
+            if(GetRunningTaskCount() < MaxAllowedTaskCount)
+                t.Start();
+        }
+        private static int GetRunningTaskCount() {
+            int count = 0;
+            var tasks = Tasks.Values.ToList();
+            for(int i = 0; i < tasks.Count; i++) {
+                Task t = tasks[i];
+                if(t == null)
+                    continue;
+                if(t.Status == TaskStatus.Canceled || t.Status == TaskStatus.Faulted)
+                    continue;
+                if(t.Status == TaskStatus.Created || t.Status == TaskStatus.WaitingForActivation)
+                    continue;
+                if(t.Status == TaskStatus.RanToCompletion)
+                    continue;
+                count++;
+            }
+            return count;
+        }
+        public static void UpdateTasks() {
+            int count = GetRunningTaskCount();
+            if(count >= MaxAllowedTaskCount)
+                return;
+            List<KeyValuePair<string, Task>> tasks = Tasks.ToList();
+            foreach(var pair in tasks) {
+                Task task = pair.Value;
+                if(task.Status == TaskStatus.Canceled || task.Status == TaskStatus.Faulted || task.Status == TaskStatus.RanToCompletion) {
+                    Tasks.Remove(pair.Key);
+                    continue;
+                }
+                if(task.Status == TaskStatus.Created || task.Status == TaskStatus.WaitingForActivation) {
+                    task.Start();
+                    count++;
+                    if(count >= MaxAllowedTaskCount)
+                        break;
+                }
+            }
+        }
+        private static void OnTaskCompleted(object owner) {
+            if(owner is ICachedDataOwner)
+                ((ICachedDataOwner)owner).OnDataUpdated();
+        }
+        private static Dictionary<string, object> GetProperties(object owner) {
+            Dictionary<string, object> props = null;
+            if(Data.TryGetValue(owner, out props))
+                return props;
+            props = new Dictionary<string, object>();
+            Data.Add(owner, props);
+            return props;
+        }
+    }
+
+    internal class DataTask {
+        public string Name { get; set; }
+        public object Owner { get; set; }
+    }
+
+    interface ICachedDataOwner {
+        void OnDataUpdated();
+    }
 }

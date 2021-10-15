@@ -12,6 +12,7 @@ namespace Crypto.Core.Common {
 
     public enum PositionSide {
         Long,
-        Short
+        Short,
+        Both
     }
 }

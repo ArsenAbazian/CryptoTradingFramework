@@ -8,11 +8,7 @@ namespace Crypto.Core {
     public enum OrderBookEntryType { Bid, Ask }
     public class OrderBookEntry {
         protected string ToStringCore(double value) {
-            if(value <= 10)
-                return value.ToString("0.00000000");
-            if(value >= 1000)
-                return value.ToString("0.00");
-            return value.ToString("0.000");
+            return value.ToString("0.00000000");
         }
         public string valueString;
         public string ValueString {

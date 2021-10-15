@@ -372,22 +372,26 @@ namespace Crypto.Core.Helpers {
             if(bytes.Length <= 2)
                 return JsonObjectScheme.Empty;
             Dictionary<string, JsonObjectScheme> dic = null;
-            if(!Schemes.TryGetValue(schemeName, out dic)) {
-                dic = new Dictionary<string, JsonObjectScheme>();
-                Schemes.Add(schemeName, dic);
+            lock(Schemes) {
+                if(!Schemes.TryGetValue(schemeName, out dic)) {
+                    dic = new Dictionary<string, JsonObjectScheme>();
+                    Schemes.Add(schemeName, dic);
+                }
             }
             string firstField = GetFirstField(bytes);
             if(firstField == null)
                 return null;
 
             JsonObjectScheme res = null;
-            if(dic.TryGetValue(firstField, out res))
-                return res;
-            res = GetObjectSchemeCore(bytes, 0);
-            if(res == null)
-                return null;
-            res.Name = schemeName;
-            dic.Add(firstField, res);
+            lock(dic) {
+                if(dic.TryGetValue(firstField, out res))
+                    return res;
+                res = GetObjectSchemeCore(bytes, 0);
+                if(res == null)
+                    return null;
+                res.Name = schemeName;
+                dic.Add(firstField, res);
+            }
             return res;
         }
 
@@ -399,7 +403,7 @@ namespace Crypto.Core.Helpers {
                 index++;
             int start = index;
             FindChar(bytes, ':', ref index);
-            return ByteArray2String(bytes, index, index - start);
+            return ByteArray2String(bytes, start, index - start);
         }
     }
 

@@ -19,7 +19,10 @@ namespace Crypto.Core.Exchanges.Bittrex {
             for(int i = 0; i < info.TradeUpdates.Count; i++) {
                 string[] item = info.TradeUpdates[i];
                 TradeInfoItem trade = new TradeInfoItem(null, ticker) {
-                        Type = item[1][0] == 'S' ? TradeType.Sell : TradeType.Buy, RateString = item[2], AmountString = item[3], Time = new DateTime(Convert.ToInt64(item[4])).ToLocalTime()
+                        Type = item[1][0] == 'S' ? TradeType.Sell : TradeType.Buy, 
+                        RateString = item[2], 
+                        AmountString = item[3], 
+                        Time = new DateTime(Convert.ToInt64(item[4])).ToLocalTime()
                 };
                 ticker.AddTradeHistoryItem(trade);//.InsertTradeHistoryItem(trade);
                 CandleStickChartHelper.UpdateVolumes(ticker.CandleStickData, trade, ticker.CandleStickPeriodMin);
