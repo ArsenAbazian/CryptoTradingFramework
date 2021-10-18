@@ -1,3 +1,4 @@
+![CryptoTraderAuto](https://github.com/ArsenAbazian/CryptoTradingFramework/blob/master/Help/CryptoTraderAuto-TickerScreen.png)
 ![CryptoTraderAuto](https://github.com/ArsenAbazian/CryptoTradingFramework/blob/master/Help/CryptoTraderAuto-AtGlance.png)
 
 CryptoTradingFramework allows you to create various applications for crypto exchanges.
