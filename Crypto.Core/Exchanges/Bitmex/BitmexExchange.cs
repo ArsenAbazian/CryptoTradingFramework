@@ -106,13 +106,28 @@ namespace Crypto.Core.Exchanges.Bitmex {
             return true;
         }
 
+        protected bool IsError(byte[] data) {
+            if(data == null || data.Length == 0)
+                return true;
+            if(data.Length > 2 && data[0] == '<' && data[1] == 'h' && data[2] == 't')
+                return true;
+            return false;
+        }
+
+        protected bool IsError(string text) {
+            if(string.IsNullOrEmpty(text))
+                return true;
+            if(text.StartsWith("<html>"))
+                return true;
+            return false;
+        }
+
         public override bool GetTickersInfo() {
             string address = "https://www.bitmex.com/api/v1/instrument?columns=typ,symbol,rootSymbol,quoteCurrency,highPrice,lowPrice,bidPrice,askPrice,lastChangePcnt,hasLiquidity,volume,tickSize,takerFee&start=0&count=500";
             string text = string.Empty;
             try {
                 text = GetDownloadString(address);
-
-                if(string.IsNullOrEmpty(text))
+                if(IsError(text))
                     return false;
                 Tickers.Clear();
                 JArray res = JsonConvert.DeserializeObject<JArray>(text);
@@ -164,8 +179,7 @@ namespace Crypto.Core.Exchanges.Bitmex {
 
             try {
                 text = GetDownloadString(address);
-
-                if(string.IsNullOrEmpty(text))
+                if(IsError(text))
                     return false;
                 if(text[0] == '{') {
                     JObject obj = JsonConvert.DeserializeObject<JObject>(text);
@@ -228,7 +242,7 @@ namespace Crypto.Core.Exchanges.Bitmex {
         public override TradingResult SellLong(AccountInfo account, Ticker ticker, double rate, double amount) {
             string text = DownloadPrivateString(account, "POST",
                 string.Format("/api/v1/order?symbol={0}&orderQty={1}&price={2}&ordType=Market&side=Sell", ticker.MarketName, amount, rate));
-            if(string.IsNullOrEmpty(text))
+            if(IsError(text))
                 return null;
             return OnTradingResult(account, ticker, text);
         }
@@ -403,14 +417,14 @@ namespace Crypto.Core.Exchanges.Bitmex {
         public override bool UpdateOrderBook(Ticker ticker, int depth) {
             string address = GetOrderBookString(ticker, depth);
             byte[] data = GetDownloadBytes(address);
-            if(data == null)
+            if(IsError(data))
                 return false;
             return OnUpdateOrderBook(ticker, data);
         }
         public override bool UpdateOrderBook(Ticker ticker) {
             string address = GetOrderBookString(ticker, OrderBook.Depth);
             byte[] data = GetDownloadBytes(address);
-            if(data == null)
+            if(IsError(data))
                 return false;
             return OnUpdateOrderBook(ticker, data);
         }
@@ -425,7 +439,7 @@ namespace Crypto.Core.Exchanges.Bitmex {
         protected string[] OrderBookItems { get; } = new string[] { "symbol", "id", "side", "size", "price" };
 
         bool OnUpdateOrderBook(Ticker ticker, byte[] bytes) {
-            if(bytes == null)
+            if(IsError(bytes))
                 return false;
 
             int startIndex = 0; // skip {

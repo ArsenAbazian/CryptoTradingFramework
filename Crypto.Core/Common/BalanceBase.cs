@@ -36,6 +36,8 @@ namespace Crypto.Core.Common {
                     return double.NaN;
                 if(UsdtTicker != null)
                     return UsdtTicker.HighestBid;
+                if(BtcTicker != null)
+                    return BtcValue * BtcTicker.HighestBid * BtcTicker.UsdTicker.HighestBid;
                 return double.NaN;
             }
         }

@@ -2,6 +2,7 @@
 using Crypto.Core.Common;
 using CryptoMarketClient;
 using DevExpress.Data.Filtering;
+using DevExpress.XtraGrid.Views.Base;
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
@@ -30,7 +31,12 @@ namespace Crypto.Core.Common {
         protected override void OnThreadUpdate() {
             UpdateBalances();
         }
-        
+
+        private void OnAccountBalancesCustomColumnDisplayText(object sender, CustomColumnDisplayTextEventArgs e) {
+            if(e.Column == this.colUsdtPrice && double.IsNaN((double)e.Value))
+                e.DisplayText = "<b><color=red>NO DATA</color></b>";
+        }
+
         private void OnInfoItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
             LogManager.Default.ShowLogForm();
         }
@@ -96,6 +102,10 @@ namespace Crypto.Core.Common {
 
         private void bcShowNonZero_CheckedChanged(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
             UpdateFilter();
+        }
+
+        private void gridControl1_Click(object sender, EventArgs e) {
+
         }
     }
 }

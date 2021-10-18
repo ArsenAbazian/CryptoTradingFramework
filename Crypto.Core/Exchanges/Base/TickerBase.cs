@@ -1001,7 +1001,7 @@ namespace Crypto.Core {
     public static class DataCacheManager {
         public static int MaxAllowedTaskCount { get; set; } = 3;
         
-        public static Dictionary<string, Task> Tasks { get; private set; } = new Dictionary<string, Task>();
+        public static Dictionary<string, DataTask> Tasks { get; private set; } = new Dictionary<string, DataTask>();
         public static Dictionary<object, Dictionary<string, object>> Data { get; set; } = new Dictionary<object, Dictionary<string, object>>();
         public static object GetData(object owner, string dataName, TimeSpan updateInterval, object nullValue, Func<object> getData) {
             Dictionary<string, object> props = GetProperties(owner);
@@ -1012,8 +1012,11 @@ namespace Crypto.Core {
             }
             if(!object.Equals(res, nullValue))
                 return res;
-            if(!HasTask(owner, dataName))
+            DataTask dt = null;
+            if(!Tasks.TryGetValue(GetKey(owner, dataName), out dt))
                 CreateTask(owner, dataName, getData);
+            else
+                dt.Priority++;
             UpdateTasks();
             return nullValue;
         }
@@ -1034,13 +1037,14 @@ namespace Crypto.Core {
         }
         private static void CreateTask(object owner, string dataName, Func<object> getData) {
             string key = GetKey(owner, dataName);
-            Task<object> t = new Task<object>(() => { 
+            Task<object> t = new Task<object>(() => {
                 object res = getData();
                 SetValue(owner, dataName, res);
                 OnTaskCompleted(owner);
                 return res;
             });
-            Tasks.Add(GetKey(owner, dataName), t);
+            DataTask dt = new DataTask() { Task = t, Priority = 1 };
+            Tasks.Add(GetKey(owner, dataName), dt);
             if(GetRunningTaskCount() < MaxAllowedTaskCount)
                 t.Start();
         }
@@ -1048,9 +1052,10 @@ namespace Crypto.Core {
             int count = 0;
             var tasks = Tasks.Values.ToList();
             for(int i = 0; i < tasks.Count; i++) {
-                Task t = tasks[i];
-                if(t == null)
+                DataTask dt = tasks[i];
+                if(dt == null)
                     continue;
+                Task t = dt.Task;
                 if(t.Status == TaskStatus.Canceled || t.Status == TaskStatus.Faulted)
                     continue;
                 if(t.Status == TaskStatus.Created || t.Status == TaskStatus.WaitingForActivation)
@@ -1065,9 +1070,9 @@ namespace Crypto.Core {
             int count = GetRunningTaskCount();
             if(count >= MaxAllowedTaskCount)
                 return;
-            List<KeyValuePair<string, Task>> tasks = Tasks.ToList();
+            List<KeyValuePair<string, DataTask>> tasks = Tasks.OrderByDescending( tt => tt.Value.Priority).ToList();
             foreach(var pair in tasks) {
-                Task task = pair.Value;
+                Task task = pair.Value.Task;
                 if(task.Status == TaskStatus.Canceled || task.Status == TaskStatus.Faulted || task.Status == TaskStatus.RanToCompletion) {
                     Tasks.Remove(pair.Key);
                     continue;
@@ -1094,9 +1099,9 @@ namespace Crypto.Core {
         }
     }
 
-    internal class DataTask {
-        public string Name { get; set; }
-        public object Owner { get; set; }
+    public class DataTask {
+        public Task Task { get; set; }
+        public int Priority { get; set; }
     }
 
     interface ICachedDataOwner {
