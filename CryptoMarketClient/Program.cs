@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Crypto.Core.Common;
 using Crypto.Core;
+using DevExpress.Utils;
 
 namespace CryptoMarketClient {
     static class Program {
