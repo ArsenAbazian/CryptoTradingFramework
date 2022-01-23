@@ -20,7 +20,7 @@ namespace Crypto.Core.Strategies.Listeners {
         public bool CaptureData { get; set; } = true;
 
         public static TickerDataCaptureStrategy LoadFromFile(string fileName) {
-            return (TickerDataCaptureStrategy) SerializationHelper.FromFile(fileName, typeof(TickerDataCaptureStrategy));
+                return (TickerDataCaptureStrategy)SerializationHelper.FromFile(fileName, typeof(TickerDataCaptureStrategy));
         }
 
         public override void Assign(StrategyBase from) {

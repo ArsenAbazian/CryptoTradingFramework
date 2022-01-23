@@ -7,6 +7,7 @@ using Crypto.Core.Common;
 
 namespace Crypto.Core.Binance {
     public class BinanceTicker : Ticker {
+        public BinanceTicker() : this(null) { }
         public BinanceTicker(BinanceExchange exchange) : base(exchange) {
             // https://github.com/binance-exchange/binance-official-api-docs/blob/master/web-socket-streams.md
             // Receiving an event that removes a price level that is not in your local order book can happen and is normal.

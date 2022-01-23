@@ -14,6 +14,9 @@ using Crypto.Core.Helpers;
 namespace Crypto.Core.Common {
     [Serializable]
     public class TradingSettings : INotifyPropertyChanged {
+        public TradingSettings() {
+            Enabled = false;
+        }
         public TradingSettings(Ticker ticker) {
             Enabled = false;
             Ticker = ticker;
@@ -23,7 +26,7 @@ namespace Crypto.Core.Common {
         [XmlIgnore]
         public Ticker Ticker {
             get { return ticker; }
-            private set {
+            internal set {
                 if (Ticker == value)
                     return;
                 ticker = value;
@@ -282,16 +285,31 @@ namespace Crypto.Core.Common {
     public enum TrailingType { Buy, Sell }
     public enum TrailingState { Analyze, TakeProfit, Done } 
 
+    public enum TickerEventType { Default, }
+
     [Serializable]
     public class TickerEvent {
         public TickerEvent() {
             Color = Color.Pink;
         }
 
+        public TickerEventType Type { get; set; }
         public string Text { get; set; }
         public DateTime Time { get; set; }
         public double Current { get; set; }
         public Color Color { get; set; }
+
+        public void Assign(TickerEvent ev) {
+            Type = ev.Type;
+            Text = ev.Text;
+            Time = ev.Time;
+            Current = ev.Current;
+            Color = ev.Color;
+        }
+
+        public TickerEvent Clone() {
+            return (TickerEvent)MemberwiseClone();
+        }
     }
 }
 

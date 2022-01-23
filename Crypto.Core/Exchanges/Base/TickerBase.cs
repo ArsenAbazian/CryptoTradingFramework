@@ -15,6 +15,9 @@ namespace Crypto.Core {
     [Serializable]
     public abstract class Ticker : ISupportSerialization, IComparable, ICachedDataOwner {
         public static bool UseHtmlString { get; set; } = true;
+        public Ticker() : this(null) {
+
+        }
         public Ticker(Exchange exchange) {
             Exchange = exchange;
             OrderBook = new OrderBook(this);
@@ -25,7 +28,7 @@ namespace Crypto.Core {
         public int Code { get; set; }
 
         public string FileName {
-            get { return Exchange.TickersDirectory + "\\" + Name.ToLower() + ".xml"; }
+            get { return Exchange == null? string.Empty : Exchange.TickersDirectory + "\\" + Name.ToLower() + ".xml"; }
             set { }
         }
 
@@ -45,10 +48,23 @@ namespace Crypto.Core {
             }
         }
 
+        public double GetCurrent(DateTime time) {
+            if(CandleStickData == null || CandleStickData.Count == 0)
+                return Last;
+            if(CandleStickData.Last().Time < time)
+                return Last;
+            for(int i = CandleStickData.Count - 1; i >= 0; i--) {
+                if(CandleStickData[i].Time < time)
+                    return CandleStickData[i + 1].High;
+            }
+            return Last;
+        }
+
         protected int SaveCount { get; set; }
         protected string GetCaptureFileName() {
             return CaptureDirectory + "\\" + Exchange.Type + "_" + Name.ToLower() + "_" + DateTime.Now.ToString("dd_MM_yyyy_") + SaveCount.ToString("D3") + ".xml";
         }
+
         private void SaveCaptureData() {
             CaptureDataHistory.Exchange = Exchange.Type;
             CaptureDataHistory.TickerName = Name;
@@ -120,6 +136,7 @@ namespace Crypto.Core {
                 amount = value * QuantityFilter.TickSize;
             }
         }
+        [XmlIgnore]
         public Exchange Exchange { get; private set; }
         public int Index { get; set; }
         public virtual string MarketName { get; set; }
@@ -160,7 +177,9 @@ namespace Crypto.Core {
 
         public List<TradingSettings> Trailings { get; } = new List<TradingSettings>();
 
+        [XmlIgnore]
         public List<TradingResult> Trades { get; } = new List<TradingResult>();
+        [XmlIgnore]
         public LinkedList<TradeInfoItem> AccountTradeHistory { get; } = new LinkedList<TradeInfoItem>();
         public ResizeableArray<TradeInfoItem> GetAccountTradeHistory() {
             ResizeableArray<TradeInfoItem> res = new ResizeableArray<TradeInfoItem>(AccountTradeHistory.Count);
@@ -170,6 +189,7 @@ namespace Crypto.Core {
         }
 
         CycleArray<TradeInfoItem> accountShortTradeHistory;
+        [XmlIgnore]
         public CycleArray<TradeInfoItem> AccountShortTradeHistory { 
             get {
                 if(accountShortTradeHistory == null)
@@ -178,7 +198,9 @@ namespace Crypto.Core {
             }    
         }
         protected internal OpenedOrderInfo[] PrevOpenedOrders { get; set; }
+        [XmlIgnore]
         public List<OpenedOrderInfo> OpenedOrders { get; } = new List<OpenedOrderInfo>();
+        [XmlIgnore]
         public LinkedList<TickerHistoryItem> History { get; } = new LinkedList<TickerHistoryItem>();
 
         public event CancelOrderHandler OrderCanceled;
@@ -189,6 +211,7 @@ namespace Crypto.Core {
                 Exchange.RaiseOrderCanceled(e);
         }
 
+        [XmlIgnore]
         public LinkedList<TradeInfoItem> TradeHistory { get; } = new LinkedList<TradeInfoItem>();
         public ResizeableArray<TradeInfoItem> GetTradeHistory() { 
             ResizeableArray<TradeInfoItem> res = new ResizeableArray<TradeInfoItem>(TradeHistory.Count);
@@ -198,6 +221,7 @@ namespace Crypto.Core {
         } 
 
         CycleArray<TradeInfoItem> shortTradeHistory;
+        [XmlIgnore]
         public CycleArray<TradeInfoItem> ShortTradeHistory { 
             get { 
                 if(shortTradeHistory == null)
@@ -205,13 +229,15 @@ namespace Crypto.Core {
                 return shortTradeHistory;
             }    
         }
-        
+
+        [XmlIgnore]
         public BindingList<TradeStatisticsItem> TradeStatistic { get; } = new BindingList<TradeStatisticsItem>();
 
         ResizeableArray<CandleStickData> candleStickData;
         protected void OnCandleStickDataItemsChanged(object sender, ListChangedEventArgs e) {
             RaiseCandleStickChanged(e);
         }
+        [XmlIgnore]
         public ResizeableArray<CandleStickData> CandleStickData {
             get {
                 if(candleStickData == null) {
@@ -231,6 +257,7 @@ namespace Crypto.Core {
         }
         public BindingList<CurrencyStatusHistoryItem> MarketCurrencyStatusHistory { get; set; } = new BindingList<CurrencyStatusHistoryItem>();
 
+        [XmlIgnore]
         public OrderBook OrderBook { get; private set; }
         public abstract string Name { get; }
 
@@ -371,18 +398,20 @@ namespace Crypto.Core {
         }
 
         BalanceBase firstInfo, secondInfo;
+        [XmlIgnore]
         public BalanceBase BaseBalanceInfo {
             get {
-                if(Exchange.DefaultAccount == null)
+                if(Exchange == null || Exchange.DefaultAccount == null)
                     return null;
                 if(firstInfo == null)
                     firstInfo = Exchange.DefaultAccount.Balances.FirstOrDefault((b) => b.Currency == BaseCurrency);
                 return firstInfo;
             }
         }
+        [XmlIgnore]
         public BalanceBase MarketBalanceInfo {
             get {
-                if(Exchange.DefaultAccount == null)
+                if(Exchange == null || Exchange.DefaultAccount == null)
                     return null;
                 if(secondInfo == null)
                     secondInfo = Exchange.DefaultAccount.Balances.FirstOrDefault((b) => b.Currency == MarketCurrency);
@@ -758,7 +787,7 @@ namespace Crypto.Core {
             RaiseChanged();
             Exchange?.RaiseTickerChanged(this);
         }
-
+        
         public double[] GetSparkline() {
             ResizeableArray<CandleStickData> dt = GetCandleStickData(30, DateTime.Now.AddHours(-12), 12 * 60 * 60);
             if(dt == null)
@@ -770,6 +799,7 @@ namespace Crypto.Core {
         }
 
         double[] sparklineNullValue = new double[0];
+        [XmlIgnore]
         public double[] Sparkline { 
             get { 
                 return (double[])DataCacheManager.GetData(this, nameof(Sparkline), TimeSpan.FromHours(1), this.sparklineNullValue, () => GetSparkline());
@@ -813,13 +843,23 @@ namespace Crypto.Core {
             TradeHistory.AddLast(tradeInfoItem);
         }
 
+        protected event NotifyCollectionChangedEventHandler eventsChanged;
         public event NotifyCollectionChangedEventHandler EventsChanged {
-            add { Events.CollectionChanged += value; }
-            remove { Events.CollectionChanged -= value; }
+            add {
+                eventsChanged += value;
+                Events.CollectionChanged += value; 
+            }
+            remove {
+                eventsChanged -= value;
+                Events.CollectionChanged -= value; 
+            }
         }
 
         private void OnEventsChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) {
+            if(Exchange == null)
+                return;
             Save();
+            RaiseChanged();
         }
 
         protected internal bool IsOpenedOrdersChanged(byte[] newBytes) {
@@ -897,7 +937,9 @@ namespace Crypto.Core {
         }
 
         public virtual void OnEndDeserialize() {
-
+            foreach(var s in Trailings) {
+                s.Ticker = this;
+            }
         }
         public double GetActualBidByAmount(double amount) {
             var bids = OrderBook.Bids;
@@ -926,9 +968,10 @@ namespace Crypto.Core {
         public virtual bool IsListeningKline { get; }
 
         IncrementalUpdateQueue updates;
+        [XmlIgnore]
         public IncrementalUpdateQueue Updates {
             get {
-                if(updates == null)
+                if(updates == null && Exchange != null)
                     updates = new IncrementalUpdateQueue(Exchange.CreateIncrementalUpdateDataProvider());
                 return updates;
             }
@@ -966,6 +1009,10 @@ namespace Crypto.Core {
             PrevOpenedOrders = new OpenedOrderInfo[OpenedOrders.Count];
             OpenedOrders.CopyTo(PrevOpenedOrders);
             return res;
+        }
+        public void RaiseEventsChanged() {
+            if(eventsChanged != null)
+                eventsChanged.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
         }
     }
 

@@ -129,7 +129,7 @@ namespace Crypto.Core.Exchanges.Bitmex {
                 text = GetDownloadString(address);
                 if(IsError(text))
                     return false;
-                Tickers.Clear();
+                ClearTickers();
                 JArray res = JsonConvert.DeserializeObject<JArray>(text);
                 int index = 0;
                 foreach(JObject obj in res.Children()) {

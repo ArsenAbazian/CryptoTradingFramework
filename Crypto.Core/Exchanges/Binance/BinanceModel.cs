@@ -520,7 +520,7 @@ namespace Crypto.Core.Binance {
             finally {
                 SuppressCheckRequestLimits = false;
             }
-            if(string.IsNullOrEmpty(text))
+            if(IsError(text))
                 return false;
 
             JObject settings = JsonConvert.DeserializeObject<JObject>(text);
@@ -799,6 +799,11 @@ namespace Crypto.Core.Binance {
 
         protected virtual string UpdateAccountTradesApiString => "https://api.binance.com/api/v3/myTrades";
 
+        protected bool IsError(string text) {
+            if (string.IsNullOrEmpty(text))
+                return true;
+            return text.StartsWith("<!DO");
+        }
         protected bool IsError(JsonObjectScheme scheme) {
             if(scheme == null)
                 return true;
@@ -985,7 +990,7 @@ namespace Crypto.Core.Binance {
         }
 
         public override void UpdateOrderBookAsync(Ticker ticker, int depth, Action<OperationResultEventArgs> onOrderBookUpdated) {
-            string address = string.Format("{0}?symbol={0}&limit={1}", UpdateOrderBookApiString,
+            string address = string.Format("{0}?symbol={1}&limit={2}", UpdateOrderBookApiString,
                 Uri.EscapeDataString(ticker.CurrencyPair), depth);
             GetDownloadBytesAsync(address, t => {
                 OnUpdateOrderBook(ticker, t.Result);

@@ -194,6 +194,8 @@ namespace CryptoMarketClient {
             UpdateTickerInfoBar();
             this.activeTrailingCollectionControl1.Ticker = Ticker;
             this.buySettingsControl.Ticker = Ticker;
+            //this.eventsCollectionControl1.Ticker = Ticker;
+            this.dpPositions.Visibility = Ticker != null && Ticker.Exchange.SupportPositions ? DockVisibility.Visible : DockVisibility.Hidden;
         }
         void UpdateTickerInfoBar() {
             if(Ticker == null)
@@ -273,6 +275,7 @@ namespace CryptoMarketClient {
             this.orderBookControl1.Asks = null;
             this.orderBookControl1.Bids = null;
             this.tradeHistoryItemBindingSource.DataSource = null;
+            this.eventsCollectionControl1.Ticker = null;
             this.gcOpenedOrders.DataSource = null;
         }
         void UnsubscribeEvents(Ticker prev) {

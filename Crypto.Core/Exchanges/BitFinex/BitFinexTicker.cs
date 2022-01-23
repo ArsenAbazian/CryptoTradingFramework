@@ -7,6 +7,7 @@ using Crypto.Core.Common;
 
 namespace Crypto.Core.BitFinex {
     public class BitFinexTicker : Ticker {
+        public BitFinexTicker() : this(null) { }
         public BitFinexTicker(BitFinexExchange exchange) : base(exchange) { }
 
         public override string CurrencyPair { get; set; }

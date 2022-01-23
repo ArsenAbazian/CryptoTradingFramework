@@ -425,6 +425,18 @@
     <Compile Include="CustomControls\InvertedGridView.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="EventEditForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EventEditForm.Designer.cs">
+      <DependentUpon>EventEditForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EventsCollectionControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="EventsCollectionControl.Designer.cs">
+      <DependentUpon>EventsCollectionControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="ExchangeCollectionForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -625,6 +637,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ConnectionErrorHistoryForm.resx">
       <DependentUpon>ConnectionErrorHistoryForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EventEditForm.resx">
+      <DependentUpon>EventEditForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EventsCollectionControl.resx">
+      <DependentUpon>EventsCollectionControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="OpenedOrdersForm.resx">
       <DependentUpon>OpenedOrdersForm.cs</DependentUpon>

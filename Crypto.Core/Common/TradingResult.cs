@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 namespace Crypto.Core.Common {
+    [Serializable]
     public class TradingResult {
         public string OrderId { get; set; }
+        [XmlIgnore]
         public Ticker Ticker { get; set; }
         public List<TradeEntry> Trades { get; } = new List<TradeEntry>();
         public DateTime Date { get; set; }
@@ -33,6 +35,7 @@ namespace Crypto.Core.Common {
         }
     }
 
+    [Serializable]
     public class TradeEntry {
         [XmlIgnore]
         public Ticker Ticker { get; set; }

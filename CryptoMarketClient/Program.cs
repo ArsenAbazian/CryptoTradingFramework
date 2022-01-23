@@ -25,9 +25,11 @@ namespace CryptoMarketClient {
             DevExpress.Data.CurrencyDataController.DisableThreadingProblemsDetection = true;
             //SettingsStore.ApplicationDirectory = Path.GetDirectoryName(Application.ExecutablePath);
             WindowsFormsSettings.DefaultFont = new System.Drawing.Font("Segoe UI", 9);
-            WindowsFormsSettings.ScrollUIMode = ScrollUIMode.Desktop;
+            //WindowsFormsSettings.ScrollUIMode = ScrollUIMode.Desktop;
             UserLookAndFeel.Default.SetSkinStyle(SettingsStore.Default.SelectedThemeName);
             WindowsFormsSettings.FormThickBorder = true;
+            WindowsFormsSettings.UseAdvancedTextEdit = DefaultBoolean.True;
+            WindowsFormsSettings.ScrollUIMode = ScrollUIMode.Fluent;
             if(UserLookAndFeel.Default.SkinName == "The Bezier") {
                 if(string.IsNullOrEmpty(SettingsStore.Default.SelectedPaletteName))
                     SettingsStore.Default.SelectedPaletteName = "VS Light";

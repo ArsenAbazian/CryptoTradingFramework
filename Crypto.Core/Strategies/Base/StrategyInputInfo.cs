@@ -20,7 +20,7 @@ namespace Crypto.Core.Strategies {
             Exchanges.Clear();
             Tickers.Clear();
 
-            foreach(ExchangeInputInfo e in info.Exchanges) {
+            foreach (ExchangeInputInfo e in info.Exchanges) {
                 Exchanges.Add((ExchangeInputInfo)e.Clone());
             }
             for(int i = 0; i < info.Tickers.Count; i++) {

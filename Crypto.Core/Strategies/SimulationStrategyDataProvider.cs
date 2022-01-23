@@ -252,7 +252,7 @@ namespace Crypto.Core.Strategies {
                 return Exchanges[exchange];
 
             Exchange e = Exchange.CreateExchange(exchange);
-            if(!e.GetTickersInfo())
+            if(e.Tickers.Count == 0 && !e.GetTickersInfo())
                 return null;
 
             Exchanges.Add(exchange, e);

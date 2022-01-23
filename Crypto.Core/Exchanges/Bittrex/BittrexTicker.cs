@@ -3,6 +3,7 @@ using System;
 
 namespace Crypto.Core.Bittrex {
     public class BittrexTicker : Ticker {
+        public BittrexTicker() : this(null) { }
         public BittrexTicker(Exchange exchange) : base(exchange) { }
 
         public string MarketCurrencyLong { get; set; }

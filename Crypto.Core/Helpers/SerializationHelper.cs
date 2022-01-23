@@ -18,7 +18,7 @@ namespace Crypto.Core.Helpers {
             if(res == null)
                 return false;
 
-            PropertyInfo[] props = obj.GetType().GetProperties(System.Reflection.BindingFlags.Public);
+            PropertyInfo[] props = obj.GetType().GetProperties(System.Reflection.BindingFlags.Public | BindingFlags.Instance);
             foreach(var prop in props) {
                 if(!prop.CanRead)
                     continue;
@@ -28,6 +28,8 @@ namespace Crypto.Core.Helpers {
                     prop.SetValue(obj, prop.GetValue(res, null));
                 }
                 else {
+                    if(prop.PropertyType.IsValueType)
+                        continue;
                     object value = prop.GetValue(res, null);
                     if(value is IList) {
                         IList srcList = (IList)value;

@@ -1,4 +1,5 @@
 ﻿using Crypto.Core;
+using Crypto.Core.Binance;
 using Crypto.Core.Bittrex;
 using Crypto.Core.Common;
 using Crypto.Core.Helpers;
@@ -328,10 +329,10 @@ namespace CryptoMarketClient {
         public TickerCollectionUpdateHelper UpdateHelper { get; private set; }
         void BuildCurrenciesList() {
             PoloniexExchange.Default.Connect();
-            BittrexExchange.Default.Connect();
+            BinanceExchange.Default.Connect();
             UpdateHelper = new TickerCollectionUpdateHelper();
             UpdateHelper.Exchanges.Add(PoloniexExchange.Default);
-            UpdateHelper.Exchanges.Add(BittrexExchange.Default);
+            UpdateHelper.Exchanges.Add(BinanceExchange.Default);
 
             UpdateHelper.Initialize();
             ArbitrageList = UpdateHelper.Items;

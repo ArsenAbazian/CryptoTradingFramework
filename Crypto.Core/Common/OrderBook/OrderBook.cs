@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace Crypto.Core {
     public class OrderBook {
@@ -19,11 +20,19 @@ namespace Crypto.Core {
                 AsksInverted = CreateOrderBookEntries();
             IsDirty = true;
             EnableValidationOnRemove = true;
-            if(Owner != null)
-                Updates = new IncrementalUpdateQueue(owner.Exchange.CreateIncrementalUpdateDataProvider());
         }
 
-        public IncrementalUpdateQueue Updates { get; set; }
+        IncrementalUpdateQueue updates;
+        [XmlIgnore]
+        public IncrementalUpdateQueue Updates {
+            get { 
+                if(updates == null) {
+                    if(Owner != null && Owner.Exchange != null)
+                        updates = new IncrementalUpdateQueue(Owner.Exchange.CreateIncrementalUpdateDataProvider());
+                }
+                return updates;
+            }
+        }
 
         public Ticker Owner { get; private set; }
         public List<OrderBookEntry> Bids { get; private set; }

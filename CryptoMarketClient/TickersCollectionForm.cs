@@ -4,6 +4,7 @@ using CryptoMarketClient.Helpers;
 using CryptoMarketClient.Poloniex;
 using DevExpress.Data.Filtering;
 using DevExpress.Skins;
+using DevExpress.Sparkline;
 using DevExpress.Utils;
 using DevExpress.Utils.Drawing;
 using DevExpress.XtraBars;
@@ -365,18 +366,18 @@ namespace CryptoMarketClient {
         }
 
         protected void BestFitColumns() {
-            this.gvTikers.BestFitColumns();
-            //this.gridView1.BeginUpdate();
-            //try {
-            //    foreach(GridColumn c in this.gridView1.Columns) {
-            //        if(!c.Visible)
-            //            continue;
-            //        c.Width = CalcColumnBestWidth(this.gridView1, c);
-            //    }
-            //}
-            //finally {
-            //    this.gridView1.EndUpdate();
-            //}
+            var cols = this.gvTikers.Columns.Where(c => c.VisibleIndex > -1).OrderBy(cc => cc.VisibleIndex).ToList();
+            //this.gvTikers.BeginUpdate();
+            try {
+                foreach(GridColumn c in cols) {
+                    if(!c.Visible)
+                        continue;
+                    c.Width = c.GetBestWidth();// CalcColumnBestWidth(this.gvTikers, c);
+                }
+            }
+            finally {
+                //this.gvTikers.EndUpdate();
+            }
         }
 
         private int CalcColumnBestWidth(GridView view, GridColumn c) {
@@ -398,14 +399,18 @@ namespace CryptoMarketClient {
             if(e.Column != this.colSparkline)
                 return;
             Ticker t = (Ticker)this.gvTikers.GetRow(e.RowHandle);
+            if(t == null)
+                return;
             if(this.greenSparkline == null) {
                 this.greenSparkline = (RepositoryItemSparklineEdit)e.RepositoryItem.Clone();
                 this.greenSparkline.View.Color = Exchange.BidColor;
+                ((AreaSparklineView)this.greenSparkline.View).AreaOpacity = 0x20;
                 this.gcTickers.RepositoryItems.Add(this.greenSparkline);
             }
             if(this.redSparkline == null) {
                 this.redSparkline = (RepositoryItemSparklineEdit)e.RepositoryItem.Clone();
                 this.redSparkline.View.Color = Exchange.AskColor;
+                ((AreaSparklineView)this.redSparkline.View).AreaOpacity = 0x20;
                 this.gcTickers.RepositoryItems.Add(this.redSparkline);
             }
             if(t.Sparkline.Length < 2)

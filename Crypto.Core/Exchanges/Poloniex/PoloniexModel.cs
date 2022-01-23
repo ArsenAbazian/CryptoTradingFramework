@@ -316,7 +316,6 @@ namespace Crypto.Core {
                 return new ResizeableArray<CandleStickData>();
 
             DateTime startTime = new DateTime(1970, 1, 1);
-
             
             int startIndex = 0;
             List<string[]> res = JSonHelper.Default.DeserializeArrayOfObjects(bytes, ref startIndex, scheme.Names);
@@ -396,7 +395,7 @@ namespace Crypto.Core {
             }
             if(string.IsNullOrEmpty(text))
                 return false;
-            Tickers.Clear();
+            ClearTickers();
             JObject res = JsonConvert.DeserializeObject<JObject>(text);
             int index = 0;
             foreach(JProperty prop in res.Children()) {
@@ -625,6 +624,8 @@ namespace Crypto.Core {
             //new string[] { "globalTradeID", "tradeID", "date", "type", "rate", "amount", "total" }
 
             List<TradeInfoItem> newTrades = new List<TradeInfoItem>();
+            if(trades == null)
+                return newTrades;
             for(int i = 0; i < trades.Count; i++) {
                 string[] obj = trades[i];
                 TradeInfoItem item = new TradeInfoItem(null, ticker);

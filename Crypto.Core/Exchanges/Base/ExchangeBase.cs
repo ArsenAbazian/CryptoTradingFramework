@@ -45,13 +45,14 @@ namespace Crypto.Core {
         }
 
         public static Color AskColor {
-            get { return Color.Red; }
+            get { return Color.FromArgb(255, 227, 82, 89); }
         }
 
         public static Color BidColor {
-            get { return Color.Green; }
+            get { return Color.FromArgb(255, 97, 176, 165); }
         }
 
+        public virtual bool SupportPositions { get { return false; } }
         protected List<Ticker> KLineListeners { get; } = new List<Crypto.Core.Ticker>();
         protected abstract bool ShouldAddKlineListener { get; }
         public void AddKLineListener(Ticker t) {
@@ -214,8 +215,14 @@ namespace Crypto.Core {
         [XmlIgnore]
         protected Dictionary<string, Ticker> TickerDictionary { get; } = new Dictionary<string, Ticker>();
         public void AddTicker(Ticker t) {
+            if(TickerDictionary.ContainsKey(t.Name) || Tickers.Contains(t))
+                return;
             Tickers.Add(t);
             TickerDictionary.Add(t.Name, t);
+        }
+        public void ClearTickers() {
+            TickerDictionary.Clear();
+            Tickers.Clear();
         }
 
         public event CancelOrderHandler OrderCanceled;
@@ -736,7 +743,6 @@ namespace Crypto.Core {
         public abstract bool UpdateCurrencies();
         public abstract bool UpdateBalances(AccountInfo info);
         public abstract bool GetBalance(AccountInfo info, string currency);
-        public virtual bool SupportPositions => false;
         public virtual bool UpdatePositions(AccountInfo account, Ticker ticker) { return true; }
         public abstract string CreateDeposit(AccountInfo account, string currency);
         public abstract bool GetDeposites(AccountInfo account);

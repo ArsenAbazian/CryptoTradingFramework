@@ -23,6 +23,7 @@ namespace Crypto.Core.Exchanges.Binance.Futures {
             }
         }
 
+        public override bool SupportPositions => true;
         public override ExchangeType Type => ExchangeType.BinanceFutures;
         public override string BaseWebSocketAdress => "wss://fstream.binance.com/ws/!ticker@arr";
 

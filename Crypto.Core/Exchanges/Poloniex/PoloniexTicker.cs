@@ -2,19 +2,20 @@
 
 namespace Crypto.Core {
     public class PoloniexTicker : Ticker {
+        public PoloniexTicker() : this(null) { }
         public PoloniexTicker(PoloniexExchange exchange) : base(exchange) {
             CandleStickPeriodMin = 5;
         }
 
         PoloniexExchange Poloniex { get { return (PoloniexExchange)Exchange; } }
         public override bool IsListeningOrderBook {
-            get { return Poloniex.TickersSocketState == SocketConnectionState.Connected && IsOrderBookSubscribed; }
+            get { return Poloniex != null && Poloniex.TickersSocketState == SocketConnectionState.Connected && IsOrderBookSubscribed; }
         }
         public override bool IsListeningTradingHistory {
-            get { return Poloniex.TickersSocketState == SocketConnectionState.Connected && IsTradeHistorySubscribed; }
+            get { return Poloniex != null && Poloniex.TickersSocketState == SocketConnectionState.Connected && IsTradeHistorySubscribed; }
         }
         public override bool IsListeningKline {
-            get { return Poloniex.TickersSocketState == SocketConnectionState.Connected && IsKlineSubscribed; }
+            get { return Poloniex != null && Poloniex.TickersSocketState == SocketConnectionState.Connected && IsKlineSubscribed; }
         }
 
         public int Id { get; set; }

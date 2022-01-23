@@ -58,13 +58,13 @@ namespace CryptoMarketClient {
         void OnTickerChanged(Ticker prev) {
             if(prev != null) {
                 prev.CandleStickChanged -= OnTickerCandleStickChanged;
-                prev.EventsChanged -= Settings_EventsChanged;
+                prev.EventsChanged -= EventsChanged;
                 prev.StopListenKlineStream();
                 prev.CandleStickData.ThreadManager = null;
             }
             if(Ticker != null) {
                 Ticker.CandleStickChanged += OnTickerCandleStickChanged;
-                Ticker.EventsChanged += Settings_EventsChanged;
+                Ticker.EventsChanged += EventsChanged;
             }
             if(Ticker != null) {
                 Ticker.CandleStickData.ThreadManager = ThreadManager;
@@ -122,8 +122,7 @@ namespace CryptoMarketClient {
                 return;
             SuppressUpdateCandlestickData = true;
             try {
-                if (!Ticker.Exchange.SupportBuySellVolume)
-                {
+                if (!Ticker.Exchange.SupportBuySellVolume) {
                     this.chartControl1.Series["BuySellVolume"].DataSource = null;
                     ((XYDiagram)this.chartControl1.Diagram).Panes["Volume Pane"].Visibility = ChartElementVisibility.Hidden;
                 }
@@ -141,6 +140,10 @@ namespace CryptoMarketClient {
 
                 this.chartControl1.Series["Volume"].ArgumentDataMember = "Time";
                 this.chartControl1.Series["Volume"].ValueDataMembers.AddRange("Volume");
+
+                //this.chartControl1.Series["Events"].DataSource = Ticker.Events;
+                this.chartControl1.Series["Events"].ArgumentDataMember = "Time";
+                this.chartControl1.Series["Events"].ValueDataMembers.AddRange("Current");
 
                 this.chartMarketDepth.Series["TotalVolumeBuy"].DataSource = Ticker.OrderBook.Bids;
                 this.chartMarketDepth.Series["TotalVolumeBuy"].ArgumentDataMember = "Value";
@@ -270,7 +273,7 @@ namespace CryptoMarketClient {
             UpdateEvents(null);
         }
 
-        private void Settings_EventsChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) {
+        private void EventsChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) {
             UpdateEvents(e);
         }
 
@@ -279,22 +282,40 @@ namespace CryptoMarketClient {
             pt.ToolTipHint = ev.Text;
             pt.Tag = ev;
             pt.Color = ev.Color;
+
             return pt;
         }
 
         void UpdateEvents(System.Collections.Specialized.NotifyCollectionChangedEventArgs e) {
             //Series s = this.chartControl1.Series["Events"];
-            //if(e == null || e.Action != System.Collections.Specialized.NotifyCollectionChangedAction.Add) {
-            //    s.Points.Clear();
+            //s.Points.BeginUpdate();
+            //this.chartControl1.Annotations.BeginUpdate();
+            //s.Points.Clear();
+            //this.chartControl1.Annotations.Clear();
+            //try {
+            //    ResizeableArray<CandleStickData> cd = Ticker.CandleStickData;
+            //    DateTime endTime = cd.Count == 0 ? DateTime.MinValue : cd.Last().Time;
+            //    DateTime startTime = cd.Count == 0 ? DateTime.MaxValue : cd.First().Time;
             //    for(int i = 0; i < Ticker.Events.Count; i++) {
-            //        s.Points.Add(CreateEventPoint(Ticker.Events[i]));
+            //        TickerEvent ev = Ticker.Events[i];
+            //        if(ev.Time <= endTime && ev.Time >= startTime) {
+            //            SeriesPoint sp = CreateEventPoint(Ticker.Events[i]);
+            //            s.Points.Add(sp);
+            //            CreateAnnotation(sp);
+            //        }
             //    }
             //}
-            //else {
-            //    for(int i = 0; i < e.NewItems.Count; i++) {
-            //        s.Points.Add(CreateEventPoint((TickerEvent) e.NewItems[i]));
-            //    }
+            //finally {
+            //    s.Points.EndUpdate();
+            //    this.chartControl1.Annotations.EndUpdate();
             //}
+        }
+
+        private void CreateAnnotation(SeriesPoint sp) {
+            TickerEvent ev = (TickerEvent)sp.Tag;
+            TextAnnotation ta = this.chartControl1.Annotations.AddTextAnnotation("Event" + ev.Time.Ticks, ev.Text);
+            ta.AnchorPoint = new SeriesPointAnchorPoint(sp);
+            ta.ShapePosition = new RelativePosition(60, 100);
         }
 
         public void RemoveIndicator(TradingSettings settings) {
@@ -437,6 +458,7 @@ namespace CryptoMarketClient {
                 data.Add(Ticker.CandleStickData[i]);
             }
             Ticker.CandleStickData = data;
+            UpdateEvents(null);
         }
 
         void ciShowWalls_CheckedChanged(object sender, ItemClickEventArgs e) {
