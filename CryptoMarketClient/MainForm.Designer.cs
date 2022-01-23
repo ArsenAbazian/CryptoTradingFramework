@@ -486,7 +486,7 @@
             // 
             // skinPaletteRibbonGalleryBarItem1
             // 
-            this.skinPaletteRibbonGalleryBarItem1.Caption = "skinPaletteRibbonGalleryBarItem1";
+            this.skinPaletteRibbonGalleryBarItem1.Caption = "Pelettes";
             this.skinPaletteRibbonGalleryBarItem1.Id = 35;
             this.skinPaletteRibbonGalleryBarItem1.Name = "skinPaletteRibbonGalleryBarItem1";
             // 
