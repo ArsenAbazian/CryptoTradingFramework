@@ -1,6 +1,7 @@
-DevExpress.XtraBars.Docking.DockManager, DevExpress.XtraBars.v21.1, Version=21.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4
-DevExpress.XtraBars.Ribbon.RibbonControl, DevExpress.XtraBars.v21.1, Version=21.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4
-DevExpress.XtraEditors.Repository.RepositoryItemTextEdit, DevExpress.XtraEditors.v21.1, Version=21.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4
 DevExpress.XtraBars.BarManager, DevExpress.XtraBars.v21.1, Version=21.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4
+DevExpress.XtraEditors.Repository.RepositoryItemTextEdit, DevExpress.XtraEditors.v21.1, Version=21.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4
+DevExpress.XtraEditors.Repository.RepositoryItemComboBox, DevExpress.XtraEditors.v21.1, Version=21.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4
 DevExpress.XtraEditors.Repository.RepositoryItemButtonEdit, DevExpress.XtraEditors.v21.1, Version=21.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4
 DevExpress.XtraGrid.GridControl, DevExpress.XtraGrid.v21.1, Version=21.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4
+DevExpress.XtraBars.Ribbon.RibbonControl, DevExpress.XtraBars.v21.1, Version=21.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4
+DevExpress.XtraBars.Docking.DockManager, DevExpress.XtraBars.v21.1, Version=21.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4

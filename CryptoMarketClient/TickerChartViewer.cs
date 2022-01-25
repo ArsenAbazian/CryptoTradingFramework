@@ -31,6 +31,7 @@ namespace CryptoMarketClient {
             InitializeComponent();
             InitializeCheckItems();
             this.barManager1.ForceInitialize();
+            this.chartControl1.RuntimeHitTesting = true;
         }
 
         protected Form MdiParentForm { get; set; }
@@ -287,35 +288,35 @@ namespace CryptoMarketClient {
         }
 
         void UpdateEvents(System.Collections.Specialized.NotifyCollectionChangedEventArgs e) {
-            //Series s = this.chartControl1.Series["Events"];
-            //s.Points.BeginUpdate();
-            //this.chartControl1.Annotations.BeginUpdate();
-            //s.Points.Clear();
-            //this.chartControl1.Annotations.Clear();
-            //try {
-            //    ResizeableArray<CandleStickData> cd = Ticker.CandleStickData;
-            //    DateTime endTime = cd.Count == 0 ? DateTime.MinValue : cd.Last().Time;
-            //    DateTime startTime = cd.Count == 0 ? DateTime.MaxValue : cd.First().Time;
-            //    for(int i = 0; i < Ticker.Events.Count; i++) {
-            //        TickerEvent ev = Ticker.Events[i];
-            //        if(ev.Time <= endTime && ev.Time >= startTime) {
-            //            SeriesPoint sp = CreateEventPoint(Ticker.Events[i]);
-            //            s.Points.Add(sp);
-            //            CreateAnnotation(sp);
-            //        }
-            //    }
-            //}
-            //finally {
-            //    s.Points.EndUpdate();
-            //    this.chartControl1.Annotations.EndUpdate();
-            //}
+            Series s = this.chartControl1.Series["Events"];
+            s.Points.BeginUpdate();
+            this.chartControl1.Annotations.BeginUpdate();
+            s.Points.Clear();
+            this.chartControl1.Annotations.Clear();
+            try {
+                ResizeableArray<CandleStickData> cd = Ticker.CandleStickData;
+                DateTime endTime = cd.Count == 0 ? DateTime.MinValue : cd.Last().Time;
+                DateTime startTime = cd.Count == 0 ? DateTime.MaxValue : cd.First().Time;
+                for(int i = 0; i < Ticker.Events.Count; i++) {
+                    TickerEvent ev = Ticker.Events[i];
+                    if(ev.Time <= endTime && ev.Time >= startTime) {
+                        SeriesPoint sp = CreateEventPoint(Ticker.Events[i]);
+                        s.Points.Add(sp);
+                        CreateAnnotation(sp);
+                    }
+                }
+            }
+            finally {
+                s.Points.EndUpdate();
+                this.chartControl1.Annotations.EndUpdate();
+            }
         }
 
         private void CreateAnnotation(SeriesPoint sp) {
             TickerEvent ev = (TickerEvent)sp.Tag;
             TextAnnotation ta = this.chartControl1.Annotations.AddTextAnnotation("Event" + ev.Time.Ticks, ev.Text);
             ta.AnchorPoint = new SeriesPointAnchorPoint(sp);
-            ta.ShapePosition = new RelativePosition(60, 100);
+            ta.ShapePosition = new RelativePosition(90, 100);
         }
 
         public void RemoveIndicator(TradingSettings settings) {
@@ -424,8 +425,19 @@ namespace CryptoMarketClient {
             }
         }
 
+        public void NavigateTo(DateTime time) {
+            XYDiagram xy = (XYDiagram)this.chartControl1.Diagram;
+
+            DateTime start = (DateTime)xy.AxisX.VisualRange.MinValue;
+            DateTime end = (DateTime)xy.AxisX.VisualRange.MaxValue;
+            var delta = end - start;
+            start = time;
+            end = start + delta;
+            xy.AxisX.VisualRange.SetMinMaxValues(start, end);
+        }
+
         private void UpdateWallsVisualRange() {
-             XYDiagram xYDiagram = (XYDiagram)this.chartWalls.Diagram;
+            XYDiagram xYDiagram = (XYDiagram)this.chartWalls.Diagram;
             double maxValue = Ticker.OrderBook.Asks.Count > 0? Ticker.OrderBook.Asks.Last().Value: 0;
             double minValue = 0;
             double bid = Ticker.OrderBook.Bids.Count > 0? Ticker.OrderBook.Bids[0].Value: 0;
@@ -505,6 +517,58 @@ namespace CryptoMarketClient {
         {
             XYDiagram d = (XYDiagram)this.chartControl1.Diagram;
             ((XYDiagram)this.chartWalls.Diagram).AxisX.VisualRange.SetMinMaxValues(d.AxisY.VisualRange.MinValue, d.AxisY.VisualRange.MaxValue);
+        }
+
+        private void biAddEvent_ItemClick(object sender, ItemClickEventArgs e) {
+            TickerEvent ev = new TickerEvent();
+            ev.Time = Time;
+            EventEditForm form = new EventEditForm();
+            form.Event = ev;
+            if(form.ShowDialog() != DialogResult.OK)
+                return;
+            ev.Current = Ticker.GetCurrent(ev.Time);
+            Ticker.Events.Add(ev);
+        }
+
+        private void biEditEvent_ItemClick(object sender, ItemClickEventArgs e) {
+            if(Ticker == null)
+                return;
+            TickerEvent ev = SelectedEvent.Clone();
+            EventEditForm form = new EventEditForm();
+            form.Event = ev;
+            if(form.ShowDialog() != DialogResult.OK)
+                return;
+            SelectedEvent.Assign(ev);
+            Ticker.OnEventsChanged();
+        }
+
+        private void biRemoveEvent_ItemClick(object sender, ItemClickEventArgs e) {
+            if(XtraMessageBox.Show("Do you really want to remove event?", "Delete", MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
+                return;
+            Ticker.Events.Remove(SelectedEvent);
+        }
+
+        protected DateTime Time { get; set; }
+        protected TickerEvent SelectedEvent { get; set; }
+        private void chartControl1_MouseClick(object sender, MouseEventArgs e) {
+            if(e.Button != MouseButtons.Right)
+                return;
+
+            ChartHitInfo info = this.chartControl1.CalcHitInfo(e.Location);
+            Series evSeries = (Series)info.HitObjects.FirstOrDefault(s => s is Series && ((Series)s).Name == "Events");
+            Series crSeries = (Series)info.HitObjects.FirstOrDefault(s => s is Series && ((Series)s).Name == "Current");
+            
+            DiagramCoordinates coor = ((XYDiagram)this.chartControl1.Diagram).PointToDiagram(info.HitPoint);
+            Time = coor.DateTimeArgument;
+
+            SelectedEvent = null;
+            if(info.InSeriesPoint)
+                SelectedEvent = info.SeriesPoint.Tag as TickerEvent;
+
+            this.biRemoveEvent.Visibility = SelectedEvent == null ? BarItemVisibility.Never : BarItemVisibility.Always;
+            this.biEditEvent.Visibility = SelectedEvent == null ? BarItemVisibility.Never : BarItemVisibility.Always;
+
+            this.pmChartMenu.ShowPopup(Control.MousePosition);
         }
     }
 }

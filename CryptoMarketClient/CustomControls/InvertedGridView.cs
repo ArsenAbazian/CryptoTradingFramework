@@ -157,7 +157,10 @@ namespace CryptoMarketClient {
     public class InvertedScrollInfo : ScrollInfo {
         public InvertedScrollInfo(BaseView view) : base(view) { }
         protected override VCrkScrollBar CreateVScroll() {
-            return new InvertedVCrkScrollBar(this);
+            VCrkScrollBar res = new InvertedVCrkScrollBar(this);
+            ScrollBarBase.ApplyUIMode(res);
+            res.RightToLeft = RightToLeft.No;
+            return res;
         }
     }
 

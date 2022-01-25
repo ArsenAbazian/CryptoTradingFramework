@@ -20,12 +20,18 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Crypto.Core.Helpers;
 using CryptoMarketClient.Strategies;
+using Crypto.UI.Helpers;
 
 namespace CryptoMarketClient {
     public partial class TickerForm : ThreadUpdateForm {
         public TickerForm() {
             InitializeComponent();
             this.beHr24HighLow.EditHeight = ScaleUtils.ScaleValue(50);
+            GridTransparentRowHelper.Apply(this.gvAccountTrades);
+            GridTransparentRowHelper.Apply(this.gvInfo);
+            GridTransparentRowHelper.Apply(this.gvOpenedOrders);
+            GridTransparentRowHelper.Apply(this.gvPositions);
+            GridTransparentRowHelper.Apply(this.gvTrades);
         }
 
         protected virtual void DisposeCore() {
@@ -194,7 +200,7 @@ namespace CryptoMarketClient {
             UpdateTickerInfoBar();
             this.activeTrailingCollectionControl1.Ticker = Ticker;
             this.buySettingsControl.Ticker = Ticker;
-            //this.eventsCollectionControl1.Ticker = Ticker;
+            this.eventsCollectionControl1.Ticker = Ticker;
             this.dpPositions.Visibility = Ticker != null && Ticker.Exchange.SupportPositions ? DockVisibility.Visible : DockVisibility.Hidden;
         }
         void UpdateTickerInfoBar() {
@@ -227,12 +233,12 @@ namespace CryptoMarketClient {
             this.repositoryItemTrackBar1.Maximum = (int)(Ticker.Hr24High * multiplier);
             this.beHr24HighLow.EditValue = Ticker.Last * multiplier;
 
-            this.siLast.Caption = "Last Price<br>" + Ticker.LastString;
+            this.siLast.Caption = "Last Price<br><b>" + Ticker.LastString + "</b>";
             //this.siBid.Caption = "Highest Bid<br>" + Ticker.HighestBidString;
             this.si24High.Caption = "24h High<br><b>" + Ticker.Hr24High.ToString("0.########") + "<b>";
             this.siHr24Low.Caption = "24h Low<br><b>" + Ticker.Hr24Low.ToString("0.########") + "<b>";
             //this.siLowestAsk.Caption = "Lowest Ask<br>" + Ticker.LowestAskString;
-            this.si24Volume.Caption = "24h Volume<br>" + Ticker.Volume.ToString() + " " + Ticker.BaseCurrency;
+            this.si24Volume.Caption = "24h Volume<br><b>" + Ticker.Volume.ToString() + " " + Ticker.BaseCurrency + "</b>";
 
             //this.gvInfo.BeginDataUpdate();
             //try {
@@ -432,6 +438,15 @@ namespace CryptoMarketClient {
 
         private void BsiStatis_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
             ((MainForm)MdiParent.FindForm()).ShowLogPanel();
+        }
+
+        private void eventsCollectionControl1_EventDoubleClick(object sender, TickerEventArgs e) {
+            CandleStickData cd = Ticker.GetCandleStickItem(e.Event);
+            if(cd == null) {
+                XtraMessageBox.Show("This event is out of exist candlestick data. Please scroll to this time manually.", "Event");
+                return;
+            }
+            this.tickerChartViewer1.NavigateTo(cd.Time);
         }
     }
 

@@ -91,6 +91,7 @@ namespace CryptoMarketClient {
             this.colCurrent,
             this.colColor,
             this.colType});
+            this.gvEvents.FocusRectStyle = DevExpress.XtraGrid.Views.Grid.DrawFocusRectStyle.None;
             gridFormatRule1.Name = "FormatSell";
             formatConditionRuleValue1.Appearance.ForeColor = System.Drawing.Color.Red;
             formatConditionRuleValue1.Appearance.Options.UseForeColor = true;
@@ -107,11 +108,13 @@ namespace CryptoMarketClient {
             this.gvEvents.LevelIndent = 0;
             this.gvEvents.Name = "gvEvents";
             this.gvEvents.OptionsBehavior.Editable = false;
+            this.gvEvents.OptionsSelection.EnableAppearanceFocusedCell = false;
             this.gvEvents.OptionsView.ShowGroupPanel = false;
             this.gvEvents.OptionsView.ShowHorizontalLines = DevExpress.Utils.DefaultBoolean.False;
             this.gvEvents.OptionsView.ShowIndicator = false;
             this.gvEvents.OptionsView.ShowVerticalLines = DevExpress.Utils.DefaultBoolean.False;
             this.gvEvents.PreviewIndent = 0;
+            this.gvEvents.DoubleClick += new System.EventHandler(this.gvEvents_DoubleClick);
             // 
             // colText
             // 

@@ -1,5 +1,6 @@
 ﻿using Crypto.Core;
 using Crypto.Core.Common;
+using Crypto.UI.Helpers;
 using DevExpress.XtraEditors;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,7 @@ namespace CryptoMarketClient {
     public partial class EventsCollectionControl : UserControl {
         public EventsCollectionControl() {
             InitializeComponent();
+            GridTransparentRowHelper.Apply(this.gvEvents);
         }
 
         Ticker ticker;
@@ -71,7 +73,7 @@ namespace CryptoMarketClient {
             if (form.ShowDialog() != DialogResult.OK)
                 return;
             focused.Assign(ev);
-            Ticker.RaiseEventsChanged();
+            Ticker.OnEventsChanged();
         }
 
         private void biRemove_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
@@ -92,5 +94,33 @@ namespace CryptoMarketClient {
                 return;
             Ticker.Events.Clear();
         }
+
+        private void gvEvents_DoubleClick(object sender, EventArgs e) {
+            RaiseEventDoubleClick();
+        }
+
+        private readonly object eventDoubleClick = new object();
+        public event TickerEventHandler EventDoubleClick {
+            add { Events.AddHandler(eventDoubleClick, value); }
+            remove { Events.RemoveHandler(eventDoubleClick, value); }
+        }
+
+        protected void RaiseEventDoubleClick() {
+            TickerEvent ev = (TickerEvent)this.gvEvents.GetFocusedRow();
+            if(ev == null)
+                return;
+            TickerEventHandler handler = (TickerEventHandler)Events[eventDoubleClick];
+            if(handler != null)
+                handler(this, new TickerEventArgs(ev));
+        }
+    }
+
+
+    public delegate void TickerEventHandler(object sender, TickerEventArgs e);
+    public class TickerEventArgs : EventArgs {
+        public TickerEventArgs(TickerEvent ev) {
+            Event = ev;
+        }
+        public TickerEvent Event { get; private set; }
     }
 }

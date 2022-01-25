@@ -32,8 +32,15 @@ namespace Crypto.Core {
             set { }
         }
 
+        protected bool IsLoading { get; set; }
         public bool Load() {
-            return SerializationHelper.Load(this, GetType());
+            IsLoading = true;
+            try {
+                return SerializationHelper.Load(this, GetType());
+            }
+            finally {
+                IsLoading = false;
+            }
         }
 
         public TickerDataStatus OrderBookStatus { get { return OrderBook.IsDirty ? TickerDataStatus.Invalid : TickerDataStatus.Actual; } }
@@ -110,6 +117,8 @@ namespace Crypto.Core {
             return (Ticker)SerializationHelper.FromFile(fileName, tickerType);
         }
         public bool Save() {
+            if(IsLoading)
+                return false;
             return SerializationHelper.Save(this, GetType(), null);
         }
 
@@ -463,6 +472,26 @@ namespace Crypto.Core {
                     baseCurrencyInfo = Exchange.Currencies.FirstOrDefault(c => c.Currency == MarketCurrency);
                 return baseCurrencyInfo;
             }
+        }
+
+        public CandleStickData GetCandleStickItem(DateTime dt) {
+            if(dt < CandleStickData.First().Time)
+                return null;
+            if(dt > CandleStickData.Last().Time)
+                return null;
+            DateTime startTime = CandleStickData.First().Time;
+            DateTime time = dt;
+
+            int index = (int)((time - startTime).TotalMinutes / CandleStickPeriodMin);
+            if(index >= CandleStickData.Count)
+                return null;
+            return CandleStickData[index];
+        }
+        
+        public CandleStickData GetCandleStickItem(TickerEvent ev) {
+            if(CandleStickData == null)
+                return null;
+            return GetCandleStickItem(ev.Time);
         }
 
         public double BaseCurrencyBalance { get { return BaseBalanceInfo == null ? 0 : BaseBalanceInfo.Available; } }
@@ -845,21 +874,15 @@ namespace Crypto.Core {
 
         protected event NotifyCollectionChangedEventHandler eventsChanged;
         public event NotifyCollectionChangedEventHandler EventsChanged {
-            add {
-                eventsChanged += value;
-                Events.CollectionChanged += value; 
-            }
-            remove {
-                eventsChanged -= value;
-                Events.CollectionChanged -= value; 
-            }
+            add { eventsChanged += value; }
+            remove { eventsChanged -= value; }
         }
 
         private void OnEventsChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) {
-            if(Exchange == null)
+            if(Exchange == null || IsLoading)
                 return;
             Save();
-            RaiseChanged();
+            RaiseEventsChanged(e);
         }
 
         protected internal bool IsOpenedOrdersChanged(byte[] newBytes) {
@@ -1010,9 +1033,13 @@ namespace Crypto.Core {
             OpenedOrders.CopyTo(PrevOpenedOrders);
             return res;
         }
-        public void RaiseEventsChanged() {
+
+        public void OnEventsChanged() {
+            OnEventsChanged(Events, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+        }
+        protected void RaiseEventsChanged(NotifyCollectionChangedEventArgs e) {
             if(eventsChanged != null)
-                eventsChanged.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+                eventsChanged.Invoke(this, e);
         }
     }
 

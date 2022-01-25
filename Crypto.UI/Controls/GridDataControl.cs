@@ -26,6 +26,7 @@ namespace Crypto.UI.Forms {
         private void gvData_RowStyle(object sender, RowStyleEventArgs e) {
             if(this.gvData.FocusedRowHandle != e.RowHandle)
                 return;
+            e.Appearance.ForeColor = this.gvData.PaintAppearance.Row.ForeColor;
             e.Appearance.BackColor = Color.FromArgb(0x10, this.gvData.PaintAppearance.FocusedRow.BackColor);
             e.HighPriority = true;
         }

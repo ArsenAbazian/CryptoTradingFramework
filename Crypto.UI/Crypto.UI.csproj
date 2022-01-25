@@ -313,6 +313,7 @@
     <Compile Include="Forms\TickerDataDownloadForm.Designer.cs">
       <DependentUpon>TickerDataDownloadForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\GridTransparentRowHelper.cs" />
     <Compile Include="Helpers\NotificationProvider.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>

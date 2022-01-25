@@ -1,4 +1,5 @@
-﻿using Crypto.Core.Common;
+﻿using Crypto.Core;
+using Crypto.Core.Common;
 using DevExpress.Utils.DirectXPaint;
 using DevExpress.XtraCharts;
 using System;
@@ -26,7 +27,12 @@ namespace CryptoMarketClient {
             //    }
             //}
             //else {
+            try {
                 base.OnPaint(e);
+            }
+            catch(Exception ee) {
+                Telemetry.Default.TrackException(ee);
+            }
             //}
         }
         protected override bool DisableCustomDrawEventsOptimization => false;

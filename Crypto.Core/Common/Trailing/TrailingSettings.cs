@@ -284,32 +284,5 @@ namespace Crypto.Core.Common {
     public enum ActionMode { Execute, Notify }
     public enum TrailingType { Buy, Sell }
     public enum TrailingState { Analyze, TakeProfit, Done } 
-
-    public enum TickerEventType { Default, }
-
-    [Serializable]
-    public class TickerEvent {
-        public TickerEvent() {
-            Color = Color.Pink;
-        }
-
-        public TickerEventType Type { get; set; }
-        public string Text { get; set; }
-        public DateTime Time { get; set; }
-        public double Current { get; set; }
-        public Color Color { get; set; }
-
-        public void Assign(TickerEvent ev) {
-            Type = ev.Type;
-            Text = ev.Text;
-            Time = ev.Time;
-            Current = ev.Current;
-            Color = ev.Color;
-        }
-
-        public TickerEvent Clone() {
-            return (TickerEvent)MemberwiseClone();
-        }
-    }
 }
 

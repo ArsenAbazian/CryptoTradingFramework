@@ -233,6 +233,7 @@
     <Compile Include="Common\EncryptHelper.cs" />
     <Compile Include="Common\OpenPositionInfo.cs" />
     <Compile Include="Common\OrderGrid\OrderGridInfo.cs" />
+    <Compile Include="Common\TickerEvent.cs" />
     <Compile Include="Common\TickerNameInfo.cs" />
     <Compile Include="Exchanges\Base\PositionInfo.cs" />
     <Compile Include="Exchanges\Base\TickerCaptureDataInfo.cs" />

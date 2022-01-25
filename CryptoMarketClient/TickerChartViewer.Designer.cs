@@ -245,6 +245,9 @@ namespace CryptoMarketClient {
             this.selectAxisMeasureUnitRepositoryItemComboBox1 = new DevExpress.XtraCharts.UI.SelectAxisMeasureUnitRepositoryItemComboBox();
             this.selectPeriodBarItem1 = new DevExpress.XtraCharts.UI.SelectPeriodBarItem();
             this.selectPeriodRepositoryItemComboBox1 = new DevExpress.XtraCharts.UI.SelectPeriodRepositoryItemComboBox();
+            this.biAddEvent = new DevExpress.XtraBars.BarButtonItem();
+            this.biEditEvent = new DevExpress.XtraBars.BarButtonItem();
+            this.biRemoveEvent = new DevExpress.XtraBars.BarButtonItem();
             this.repositoryItemCheckedComboBoxEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemCheckedComboBoxEdit();
             this.repositoryItemComboBox1 = new DevExpress.XtraEditors.Repository.RepositoryItemComboBox();
             this.commandBarGalleryDropDown7 = new DevExpress.XtraBars.Commands.CommandBarGalleryDropDown(this.components);
@@ -256,6 +259,7 @@ namespace CryptoMarketClient {
             this.xtraTabPage2 = new DevExpress.XtraTab.XtraTabPage();
             this.chartMarketDepth = new CryptoMarketClient.MyChartControl();
             this.chartBarController1 = new DevExpress.XtraCharts.UI.ChartBarController(this.components);
+            this.pmChartMenu = new DevExpress.XtraBars.PopupMenu(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.chartControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(xyDiagram1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(xyDiagramPane1)).BeginInit();
@@ -311,12 +315,18 @@ namespace CryptoMarketClient {
             ((System.ComponentModel.ISupportInitialize)(areaSeriesView2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(areaSeriesView3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chartBarController1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pmChartMenu)).BeginInit();
             this.SuspendLayout();
             // 
             // chartControl1
             // 
             this.chartControl1.AutoLayout = false;
             this.chartControl1.BorderOptions.Visibility = DevExpress.Utils.DefaultBoolean.False;
+            this.chartControl1.CrosshairOptions.ContentShowMode = DevExpress.XtraCharts.CrosshairContentShowMode.Legend;
+            this.chartControl1.CrosshairOptions.ShowGroupHeaders = false;
+            this.chartControl1.CrosshairOptions.ShowValueLabels = true;
+            this.chartControl1.CrosshairOptions.ShowValueLine = true;
+            xyDiagram1.AxisX.CrosshairAxisLabelOptions.Visibility = DevExpress.Utils.DefaultBoolean.True;
             xyDiagram1.AxisX.DateTimeScaleOptions.MeasureUnit = DevExpress.XtraCharts.DateTimeMeasureUnit.Minute;
             xyDiagram1.AxisX.Label.Font = new System.Drawing.Font("Segoe UI", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             xyDiagram1.AxisX.Label.ResolveOverlappingOptions.AllowRotate = false;
@@ -327,13 +337,14 @@ namespace CryptoMarketClient {
             xyDiagram1.AxisX.VisualRange.Auto = false;
             xyDiagram1.AxisX.VisualRange.AutoSideMargins = false;
             xyDiagram1.AxisX.VisualRange.EndSideMargin = 0D;
-            xyDiagram1.AxisX.VisualRange.MaxValueSerializable = "01/23/2022 15:52:00.000";
-            xyDiagram1.AxisX.VisualRange.MinValueSerializable = "01/23/2022 15:43:00.000";
+            xyDiagram1.AxisX.VisualRange.MaxValueSerializable = "01/25/2022 18:50:00.000";
+            xyDiagram1.AxisX.VisualRange.MinValueSerializable = "01/25/2022 18:41:00.000";
             xyDiagram1.AxisX.VisualRange.StartSideMargin = 0D;
             xyDiagram1.AxisX.WholeRange.AutoSideMargins = false;
             xyDiagram1.AxisX.WholeRange.EndSideMargin = 0D;
             xyDiagram1.AxisX.WholeRange.StartSideMargin = 0D;
             xyDiagram1.AxisY.Alignment = DevExpress.XtraCharts.AxisAlignment.Far;
+            xyDiagram1.AxisY.CrosshairAxisLabelOptions.Visibility = DevExpress.Utils.DefaultBoolean.True;
             xyDiagram1.AxisY.Label.Font = new System.Drawing.Font("Segoe UI", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             xyDiagram1.AxisY.Label.TextPattern = "{V:f8}";
             xyDiagram1.AxisY.VisibleInPanesSerializable = "-1";
@@ -369,7 +380,6 @@ namespace CryptoMarketClient {
             this.chartControl1.Legend.Direction = DevExpress.XtraCharts.LegendDirection.LeftToRight;
             this.chartControl1.Legend.MarkerMode = DevExpress.XtraCharts.LegendMarkerMode.CheckBoxAndMarker;
             this.chartControl1.Legend.Name = "Default Legend";
-            this.chartControl1.Legend.Visibility = DevExpress.Utils.DefaultBoolean.False;
             legend1.AlignmentHorizontal = DevExpress.XtraCharts.LegendAlignmentHorizontal.Left;
             legend1.AlignmentVertical = DevExpress.XtraCharts.LegendAlignmentVertical.TopOutside;
             legend1.Direction = DevExpress.XtraCharts.LegendDirection.LeftToRight;
@@ -382,7 +392,9 @@ namespace CryptoMarketClient {
             this.chartControl1.Location = new System.Drawing.Point(0, 0);
             this.chartControl1.Margin = new System.Windows.Forms.Padding(6);
             this.chartControl1.Name = "chartControl1";
+            series1.CrosshairEnabled = DevExpress.Utils.DefaultBoolean.False;
             series1.Name = "Volume";
+            series1.ShowInLegend = false;
             sideBySideBarSeriesView1.AxisYName = "Secondary AxisY 2";
             sideBySideBarSeriesView1.BarWidth = 0.9D;
             sideBySideBarSeriesView1.Color = System.Drawing.Color.FromArgb(((int)(((byte)(150)))), ((int)(((byte)(181)))), ((int)(((byte)(200)))), ((int)(((byte)(201)))));
@@ -407,6 +419,7 @@ namespace CryptoMarketClient {
             series3.View = sideBySideBarSeriesView2;
             series4.ArgumentScaleType = DevExpress.XtraCharts.ScaleType.DateTime;
             series4.Name = "Events";
+            series4.ShowInLegend = false;
             pointSeriesView1.PointMarkerOptions.Size = 16;
             series4.View = pointSeriesView1;
             this.chartControl1.SeriesSerializable = new DevExpress.XtraCharts.Series[] {
@@ -419,6 +432,7 @@ namespace CryptoMarketClient {
             this.chartControl1.TabIndex = 4;
             this.chartControl1.CustomDrawSeriesPoint += new DevExpress.XtraCharts.CustomDrawSeriesPointEventHandler(this.chartControl1_CustomDrawSeriesPoint);
             this.chartControl1.AxisVisualRangeChanged += new System.EventHandler<DevExpress.XtraCharts.AxisRangeChangedEventArgs>(this.chartControl1_AxisVisualRangeChanged);
+            this.chartControl1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.chartControl1_MouseClick);
             // 
             // barManager1
             // 
@@ -484,8 +498,11 @@ namespace CryptoMarketClient {
             this.selectAxisMeasureUnitBarItem1,
             this.selectPeriodBarItem1,
             this.biSyncWalls,
-            this.barSubItem2});
-            this.barManager1.MaxItemId = 68;
+            this.barSubItem2,
+            this.biAddEvent,
+            this.biEditEvent,
+            this.biRemoveEvent});
+            this.barManager1.MaxItemId = 71;
             this.barManager1.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repositoryItemCheckedComboBoxEdit1,
             this.repositoryItemComboBox1,
@@ -1289,6 +1306,30 @@ namespace CryptoMarketClient {
             this.selectPeriodRepositoryItemComboBox1.Name = "selectPeriodRepositoryItemComboBox1";
             this.selectPeriodRepositoryItemComboBox1.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
             // 
+            // biAddEvent
+            // 
+            this.biAddEvent.Caption = "Add Event";
+            this.biAddEvent.Id = 68;
+            this.biAddEvent.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("biAddEvent.ImageOptions.SvgImage")));
+            this.biAddEvent.Name = "biAddEvent";
+            this.biAddEvent.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.biAddEvent_ItemClick);
+            // 
+            // biEditEvent
+            // 
+            this.biEditEvent.Caption = "Edit Event";
+            this.biEditEvent.Id = 69;
+            this.biEditEvent.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("biEditEvent.ImageOptions.SvgImage")));
+            this.biEditEvent.Name = "biEditEvent";
+            this.biEditEvent.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.biEditEvent_ItemClick);
+            // 
+            // biRemoveEvent
+            // 
+            this.biRemoveEvent.Caption = "Remove Event";
+            this.biRemoveEvent.Id = 70;
+            this.biRemoveEvent.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("biRemoveEvent.ImageOptions.SvgImage")));
+            this.biRemoveEvent.Name = "biRemoveEvent";
+            this.biRemoveEvent.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.biRemoveEvent_ItemClick);
+            // 
             // repositoryItemCheckedComboBoxEdit1
             // 
             this.repositoryItemCheckedComboBoxEdit1.AutoHeight = false;
@@ -1579,6 +1620,15 @@ namespace CryptoMarketClient {
             this.chartBarController1.BarItems.Add(this.selectPeriodBarItem1);
             this.chartBarController1.Control = this.chartControl1;
             // 
+            // pmChartMenu
+            // 
+            this.pmChartMenu.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
+            new DevExpress.XtraBars.LinkPersistInfo(this.biAddEvent),
+            new DevExpress.XtraBars.LinkPersistInfo(this.biEditEvent),
+            new DevExpress.XtraBars.LinkPersistInfo(this.biRemoveEvent)});
+            this.pmChartMenu.Manager = this.barManager1;
+            this.pmChartMenu.Name = "pmChartMenu";
+            // 
             // TickerChartViewer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
@@ -1648,6 +1698,7 @@ namespace CryptoMarketClient {
             ((System.ComponentModel.ISupportInitialize)(areaSeriesView3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.chartMarketDepth)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.chartBarController1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pmChartMenu)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1740,5 +1791,9 @@ namespace CryptoMarketClient {
         private DevExpress.XtraCharts.UI.ChartBarController chartBarController1;
         private BarSubItem barSubItem2;
         private BarButtonItem biSyncWalls;
+        private BarButtonItem biAddEvent;
+        private BarButtonItem biEditEvent;
+        private BarButtonItem biRemoveEvent;
+        private PopupMenu pmChartMenu;
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Crypto.Core;
 using Crypto.Core.Common;
+using Crypto.UI.Helpers;
 using CryptoMarketClient.Helpers;
 using CryptoMarketClient.Poloniex;
 using DevExpress.Data.Filtering;
@@ -36,6 +37,7 @@ namespace CryptoMarketClient {
             this.ribbonPage1.Text = "Exchanges";
             this.ribbonPageGroup1.Text = exchange.Name;
             this.colIsSelected.MaxWidth = this.gvTikers.RowHeight;
+            GridTransparentRowHelper.Apply(this.gvTikers);
         }
 
         public Exchange Exchange { get; set; }
