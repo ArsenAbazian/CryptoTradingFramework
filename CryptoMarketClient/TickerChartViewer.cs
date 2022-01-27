@@ -376,11 +376,8 @@ namespace CryptoMarketClient {
                     int seconds = CalculateTotalIntervalInSeconds();
                     ResizeableArray<CandleStickData> data = Ticker.GetCandleStickData(Ticker.CandleStickPeriodMin, date.AddSeconds(-seconds), seconds);
                     if(data != null) {
-                        lock(Ticker.CandleStickData) {
-                            UpdateCandleStickData(data);
-                        }
-
                         BeginInvoke(new Action<ResizeableArray<CandleStickData>>((d) => {
+                            UpdateCandleStickData(data);
                             UpdateChartSeries(d);
                             this.isCandleSticksUpdate = false;
                         }), new object[] { data });

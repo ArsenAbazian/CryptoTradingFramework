@@ -14,6 +14,8 @@ namespace CryptoMarketClient {
     public partial class MyTradesCollectionControl : XtraUserControl {
         public MyTradesCollectionControl() {
             InitializeComponent();
+            ((FormatConditionRuleValue)this.gvTrades.FormatRules[0].Rule).Appearance.ForeColor = Exchange.BidColor;
+            ((FormatConditionRuleValue)this.gvTrades.FormatRules[1].Rule).Appearance.ForeColor = Exchange.AskColor;
         }
 
         Ticker ticker;

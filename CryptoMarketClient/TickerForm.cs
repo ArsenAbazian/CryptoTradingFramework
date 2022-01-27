@@ -27,11 +27,21 @@ namespace CryptoMarketClient {
         public TickerForm() {
             InitializeComponent();
             this.beHr24HighLow.EditHeight = ScaleUtils.ScaleValue(50);
+
             GridTransparentRowHelper.Apply(this.gvAccountTrades);
             GridTransparentRowHelper.Apply(this.gvInfo);
             GridTransparentRowHelper.Apply(this.gvOpenedOrders);
             GridTransparentRowHelper.Apply(this.gvPositions);
             GridTransparentRowHelper.Apply(this.gvTrades);
+
+            ((FormatConditionRuleValue)this.gvTrades.FormatRules[0].Rule).Appearance.ForeColor = Exchange.BidColor;
+            ((FormatConditionRuleValue)this.gvTrades.FormatRules[1].Rule).Appearance.ForeColor = Exchange.AskColor;
+
+            ((FormatConditionRuleValue)this.gvOpenedOrders.FormatRules[0].Rule).Appearance.ForeColor = Exchange.BidColor;
+            ((FormatConditionRuleValue)this.gvOpenedOrders.FormatRules[1].Rule).Appearance.ForeColor = Exchange.AskColor;
+
+            ((FormatConditionRuleValue)this.gvAccountTrades.FormatRules[0].Rule).Appearance.ForeColor = Exchange.BidColor;
+            ((FormatConditionRuleValue)this.gvAccountTrades.FormatRules[1].Rule).Appearance.ForeColor = Exchange.AskColor;
         }
 
         protected virtual void DisposeCore() {
