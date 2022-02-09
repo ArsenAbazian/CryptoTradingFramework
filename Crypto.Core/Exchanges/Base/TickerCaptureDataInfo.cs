@@ -44,6 +44,8 @@ namespace Crypto.Core.Exchanges.Base {
             return SerializationHelper.Save(this, GetType(), path);
         }
 
+        void ISupportSerialization.OnStartSerialize() { }
+
         void ISupportSerialization.OnEndDeserialize() {
         }
 

@@ -595,6 +595,8 @@ namespace Crypto.Core.Strategies {
             return (CachedCandleStickData)SerializationHelper.FromFile(fileName, typeof(CachedCandleStickData));
         }
 
+        void ISupportSerialization.OnStartSerialize() { }
+
         void ISupportSerialization.OnEndDeserialize() {
             
         }
@@ -670,6 +672,8 @@ namespace Crypto.Core.Strategies {
         public static CachedTradeHistory FromFile(string fileName) {
             return (CachedTradeHistory)SerializationHelper.FromFile(fileName, typeof(CachedTradeHistory));
         }
+
+        void ISupportSerialization.OnStartSerialize() { }
 
         void ISupportSerialization.OnEndDeserialize() {
 

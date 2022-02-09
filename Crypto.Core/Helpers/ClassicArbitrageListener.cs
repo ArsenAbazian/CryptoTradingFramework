@@ -203,12 +203,12 @@ namespace Crypto.Core {
         //}
 
         public ResizeableArray<TickerCollection> ArbitrageList { get; private set; }
-        public TickerCollectionUpdateHelper UpdateHelper { get; private set; }
+        public ClassicArbitrageManager UpdateHelper { get; private set; }
         void BuildCurrenciesList() {
             PoloniexExchange.Default.Connect();
             BinanceExchange.Default.Connect();
             //BittrexExchange.Default.Connect();
-            UpdateHelper = new TickerCollectionUpdateHelper();
+            UpdateHelper = new ClassicArbitrageManager();
             UpdateHelper.Exchanges.Add(PoloniexExchange.Default);
             UpdateHelper.Exchanges.Add(BinanceExchange.Default);
             //UpdateHelper.Exchanges.Add(BittrexExchange.Default);

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Crypto.Core.Helpers;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -47,6 +48,7 @@ namespace Crypto.Core {
         }
         protected internal void RaiseOnChanged(IncrementalUpdateInfo info) {
             OrderBookEventArgs e = new OrderBookEventArgs() { Update = info };
+            e.Ticker = Owner;
             if(Changed != null)
                 Changed(this, e);
         }
@@ -96,12 +98,49 @@ namespace Crypto.Core {
 
         public List<OrderBookStatisticItem> VolumeHistory { get; } = new List<OrderBookStatisticItem>();
 
-        public void UpdateHistory() {
+        CycleArray<OrderBookStatisticItem> shortHistory;
+        public CycleArray<OrderBookStatisticItem> ShortHistory {
+            get {
+                if(shortHistory == null)
+                    shortHistory = new CycleArray<OrderBookStatisticItem>(50000);
+                return shortHistory;
+            }
+        }
+
+        public void UpdateShortHistory() {
+            if(Asks.Count == 0 || Bids.Count == 0)
+                return;
+            while(ShortHistory.ThreadLock) ;
+            ShortHistory.ThreadLock = true;
+            try {
+                ShortHistory.Add(new OrderBookStatisticItem() {
+                    Ask = Asks[0].Value,
+                    Bid = Bids[0].Value,
+                    BidVolume = BidVolume,
+                    AskVolume = AskVolume,
+                    BidExpectation = BidExpectation,
+                    AskExpectation = AskExpectation,
+                    BidDispersion = BidDispersion,
+                    AskDispersion = AskDispersion,
+                    BidEnergy = BidEnergy,
+                    AskEnergy = AskEnergy,
+                    BidHipe = BidHipe,
+                    AskHipe = AskHipe,
+                    TradeInfo = TradeInfo,
+                    Time = DateTime.UtcNow
+                });
+            }
+            finally {
+                ShortHistory.ThreadLock = false;
+            }
+        }
+        
+        public void UpdateVolumeHistory() {
             if(Asks.Count == 0 || Bids.Count == 0)
                 return;
             VolumeHistory.Add(new OrderBookStatisticItem() {
-                LowestAsk = Asks[0].Value,
-                HighestBid = Bids[0].Value,
+                Ask = Asks[0].Value,
+                Bid = Bids[0].Value,
                 BidVolume = BidVolume,
                 AskVolume = AskVolume,
                 BidExpectation = BidExpectation,
@@ -601,6 +640,7 @@ namespace Crypto.Core {
     public delegate void OrderBookEventHandler(object sender, OrderBookEventArgs e);
 
     public class OrderBookEventArgs : EventArgs {
+        public Ticker Ticker { get; set; }
         public IncrementalUpdateInfo Update { get; set; }
     }
     
@@ -608,8 +648,8 @@ namespace Crypto.Core {
         public OrderBookEntry[] Bids { get; set; }
         public OrderBookEntry[] Asks { get; set; }
 
-        public double LowestAsk { get; set; }
-        public double HighestBid { get; set; }
+        public double Ask { get; set; }
+        public double Bid { get; set; }
         public double BidVolume { get; set; }
         public double AskVolume { get; set; }
         public double BidExpectation { get; set; }

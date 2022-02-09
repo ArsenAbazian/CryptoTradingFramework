@@ -27,6 +27,8 @@ namespace CryptoMarketClient {
             }
         }
         void OnTickerChanged() {
+            if(ticker == null)
+                return;
             orderBookVolumeHistoryItemBindingSource.DataSource = ticker.OrderBook.VolumeHistory;
         }
 

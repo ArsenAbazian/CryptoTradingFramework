@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace Crypto.Core {
     public class TickerCollection {
@@ -22,7 +23,7 @@ namespace Crypto.Core {
         public Task UpdateTask { get; set; }
         public bool RequestOverdue { get; set; }
 
-        public Ticker[] Tickers { get; private set; } = new Ticker[16];
+        public List<Ticker> Tickers { get; private set; } = new List<Ticker>();
         Ticker usdTicker;
         public Ticker UsdTicker {
             get { return usdTicker; }
@@ -31,7 +32,7 @@ namespace Crypto.Core {
                 Arbitrage.UsdTicker = value;
             }
         }
-        public int Count { get; private set; }
+        public int Count { get { return Tickers.Count; } }
         public string ShortName { get { return BaseCurrency + "-" + MarketCurrency; } }
         public string Name { get { return ShortName; } }
                 
@@ -46,14 +47,20 @@ namespace Crypto.Core {
         public int ObtainDataSuccessCount { get; set; }
 
         public void Add(Ticker ticker) {
-            Tickers[Count] = ticker;
-            Count++;
+            Tickers.Add(ticker);
         }
         public void CalcTotalBalance() {
             TotalBalance = 0;
             for(int i = 0; i < Count; i++) {
                 TotalBalance += Tickers[i].MarketCurrencyTotalBalance;
             }
+        }
+        public bool CheckWebSocket() {
+            foreach(Ticker t in Tickers) {
+                if(!t.IsListeningOrderBook)
+                    return false;
+            }
+            return true;
         }
 
         public ArbitrageInfo Arbitrage { get; private set; }

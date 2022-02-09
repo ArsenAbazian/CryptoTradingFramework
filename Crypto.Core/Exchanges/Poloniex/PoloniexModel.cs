@@ -28,7 +28,7 @@ namespace Crypto.Core {
 
         public PoloniexExchange() : base() {
             RequestRate = new List<RateLimit>();
-            RequestRate.Add(new RateLimit() { Limit = 6, Interval = TimeSpan.TicksPerSecond});
+            RequestRate.Add(new RateLimit(this) { Limit = 6, Interval = TimeSpan.TicksPerSecond});
         }
 
         protected override bool ShouldAddKlineListener => true;

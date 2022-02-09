@@ -460,7 +460,7 @@ namespace Crypto.Core {
         protected CurrencyInfoBase MarketCurrencyInfo {
             get {
                 if(marketCurrencyInfo == null)
-                    marketCurrencyInfo = Exchange.Currencies.FirstOrDefault(c => c.Currency == MarketCurrency);
+                    marketCurrencyInfo = Exchange.GetCurrency(MarketCurrency);
                 return marketCurrencyInfo;
             }
         }
@@ -469,7 +469,7 @@ namespace Crypto.Core {
         protected CurrencyInfoBase BaseCurrencyInfo {
             get {
                 if(baseCurrencyInfo == null)
-                    baseCurrencyInfo = Exchange.Currencies.FirstOrDefault(c => c.Currency == MarketCurrency);
+                    baseCurrencyInfo = Exchange.GetCurrency(BaseCurrency);
                 return baseCurrencyInfo;
             }
         }
@@ -959,6 +959,8 @@ namespace Crypto.Core {
             Exchange.StopListenTradeHistory(this);
         }
 
+        void ISupportSerialization.OnStartSerialize() { }
+
         public virtual void OnEndDeserialize() {
             foreach(var s in Trailings) {
                 s.Ticker = this;
@@ -1004,6 +1006,8 @@ namespace Crypto.Core {
         public bool CaptureData { get; set; }
         public virtual bool ContractTicker { get; set; }
         public virtual double ContractValue { get; set; }
+        [XmlIgnore]
+        public ArbitrageInfo ArbitrageInfo { get; set; }
 
         internal void SaveOpenedOrders() {
             PrevOpenedOrders = new OpenedOrderInfo[OpenedOrders.Count];

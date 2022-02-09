@@ -59,7 +59,7 @@ namespace Crypto.Core.Strategies.Arbitrages.AltBtcUsdt {
                 if(current.IsUpdating)
                     continue;
                 if(!current.ObtainingData) {
-                    TickerCollectionUpdateHelper.Default.Update(current, this);
+                    ClassicArbitrageManager.Default.Update(current, this);
                     continue;
                 }
             }

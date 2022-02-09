@@ -565,12 +565,12 @@ namespace Crypto.Core.Binance {
         }
         protected RateLimit GetRateLimit(JObject jObject) {
             if(jObject.Value<string>("interval") == "MINUTE")
-                return new RateLimit() { Limit = jObject.Value<int>("limit") - 1, Interval = TimeSpan.TicksPerMinute };
+                return new RateLimit(this) { Limit = jObject.Value<int>("limit") - 1, Interval = TimeSpan.TicksPerMinute };
             else if(jObject.Value<string>("interval") == "DAY")
-                return new RateLimit() { Limit = jObject.Value<int>("limit") - 1, Interval = TimeSpan.TicksPerDay };
+                return new RateLimit(this) { Limit = jObject.Value<int>("limit") - 1, Interval = TimeSpan.TicksPerDay };
             else if(jObject.Value<string>("interval") == "SECOND")
-                return new RateLimit() { Limit = jObject.Value<int>("limit") - 1, Interval = TimeSpan.TicksPerSecond };
-            return new RateLimit();
+                return new RateLimit(this) { Limit = jObject.Value<int>("limit") - 1, Interval = TimeSpan.TicksPerSecond };
+            return new RateLimit(this);
         }
 
         public override bool AllowCandleStickIncrementalUpdate => true;

@@ -21,6 +21,9 @@ namespace Crypto.Core.Common {
         }
 
         protected bool Saving { get; set; }
+
+        void ISupportSerialization.OnStartSerialize() { }
+
         public virtual void OnEndDeserialize() { }
         public string FileName { get; set; }
 

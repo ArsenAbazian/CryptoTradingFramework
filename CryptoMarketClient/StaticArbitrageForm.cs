@@ -78,7 +78,7 @@ namespace CryptoMarketClient {
                     if(current.IsUpdating)
                         continue;
                     if(!current.ObtainingData) {
-                        TickerCollectionUpdateHelper.Default.Update(current, this);
+                        ClassicArbitrageManager.Default.Update(current, this);
                         continue;
                     }
                     int currentUpdateTimeMS = (int)(timer.ElapsedMilliseconds - current.StartUpdateMs);
@@ -98,7 +98,7 @@ namespace CryptoMarketClient {
         }
         async Task UpdateArbitrageInfoTask(TriplePairArbitrageInfo info) {
             Task task = Task.Factory.StartNew(() => {
-                TickerCollectionUpdateHelper.Default.Update(info, this);
+                ClassicArbitrageManager.Default.Update(info, this);
             });
             await task;
         }

@@ -4,22 +4,27 @@ using Crypto.Core.Bittrex;
 using Crypto.Core.Common;
 using Crypto.Core.Helpers;
 using Crypto.Core.Strategies;
+using Crypto.UI.Forms;
+using Crypto.UI.Helpers;
 using DevExpress.Data.Filtering;
 using DevExpress.XtraBars;
+using DevExpress.XtraBars.Ribbon;
 using DevExpress.XtraEditors;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace CryptoMarketClient {
-    public partial class TickerArbitrageForm : ThreadUpdateForm, ITickerCollectionUpdateListener {
-        public TickerArbitrageForm() {
+    public partial class ClassicArbitrageForm : ThreadUpdateForm, ITickerCollectionUpdateListener {
+        public ClassicArbitrageForm() {
             InitializeComponent();
+            AllowWorkThread = false;
             this.repositoryItemProgressBar1.DrawBackground = DevExpress.XtraEditors.Repository.RepositoryItemBaseProgressBar.DrawBackgroundType.True;
             UpdateGridFilter(!this.bbAllCurrencies.Checked);
 
@@ -34,55 +39,38 @@ namespace CryptoMarketClient {
             //this.repositoryItemSparklineEdit1.ValueRange.IsAuto = false;
             //this.repositoryItemSparklineEdit1.ValueRange.Limit1 = 0;
             //this.repositoryItemSparklineEdit1.ValueRange.Limit1 = 100;
+
+            Text = SettingsStore.Default.ClassicArbitrageLastFileName;
+            SettingsStore.Default.SettingsChanged += Default_SettingsChanged;
         }
+
+        protected override void OnClosed(EventArgs e) {
+            base.OnClosed(e);
+            SettingsStore.Default.SettingsChanged -= Default_SettingsChanged;
+        }
+
+        private void Default_SettingsChanged(object sender, PropertyChangedEventArgs e) {
+            Text = Path.GetFileName(ArbitrageManager.FileName);
+        }
+
         protected override bool AllowUpdateInactive => true;
-        protected override void OnShown(EventArgs e) {
-            BuildCurrenciesList();
-            InitializeTickersMenu();
-            base.OnShown(e);
-        }
         protected Thread UpdateCurrenciesThread { get; set; }
+        protected override bool AutoStartThread => false;
         protected override void StartUpdateThread() {
-            base.StartUpdateThread();
-            UpdateCurrenciesThread = CheckStartThread(UpdateCurrenciesThread, UpdateCurrencies);
+        }
+        protected override void StopUpdateThread() {
+            base.StopUpdateThread();
         }
         protected bool UpdateBalanceNotification { get; set; }
         void UpdateCurrencies() {
             UpdateBalanceNotification = true;
             while(AllowWorkThread) {
-                foreach(Exchange exchange in UpdateHelper.Exchanges) {
+                foreach(Exchange exchange in ArbitrageManager.Exchanges) {
                     for(int i = 0; i < 3; i++) {
                         if(exchange.UpdateCurrencies())
                             break;
                     }
                 }
-
-                //foreach(Exchange exchange in UpdateHelper.Exchanges) {
-                //    for(int i = 0; i < 3; i++) {
-                //        if(exchange.UpdateDefaultAccountBalances())
-                //            break;
-                //    }
-                //}
-
-                //if(UpdateBalanceNotification) {
-                //    UpdateBalanceNotification = false;
-                //    foreach(Exchange exchange in UpdateHelper.Exchanges) {
-                //        foreach(BalanceBase info in exchange.DefaultAccount.Balances) {
-                //            TelegramBot.Default.SendNotification(exchange.Name + " balance " + info.Currency + " = <b>" + info.Available.ToString("0.00000000") + "</b>");
-                //        }
-                //    }
-
-                //    foreach(Exchange exchange in UpdateHelper.Exchanges) {
-                //        foreach(BalanceBase info in exchange.DefaultAccount.Balances) {
-                //            if(info.DepositChanged > 0.05) {
-                //                TelegramBot.Default.SendNotification(exchange.Name + " deposit changed: " + info.Currency + " = " + info.Available);
-                //            }
-                //        }
-                //    }
-                //}
-                //for(int i = 0; i < ArbitrageList.Count; i++) {
-                //    ArbitrageList[i].CalcTotalBalance();
-                //}
                 for(int ii = 0; ii < ArbitrageList.Count; ii++) {
                     var coll = ArbitrageList[ii];
                     for(int i = 0; i < coll.Count; i++) {
@@ -121,7 +109,7 @@ namespace CryptoMarketClient {
                     if(!current.ObtainingData) {
                         while(concurrentTickersCount > 8)
                             Thread.Sleep(1);
-                        UpdateHelper.Update(current, this);
+                        ArbitrageManager.Update(current, this);
                         continue;
                     }
                     int currentUpdateTimeMS = (int)(timer.ElapsedMilliseconds - current.StartUpdateMs);
@@ -138,9 +126,23 @@ namespace CryptoMarketClient {
         }
         async Task UpdateArbitrageInfoTask(TickerCollection info) {
             Task task = Task.Factory.StartNew(() => {
-                UpdateHelper.Update(info, this);
+                ArbitrageManager.Update(info, this);
             });
             await task;
+        }
+
+        protected override void OnShown(EventArgs e) {
+            base.OnShown(e);
+            ArbitrageManager = ClassicArbitrageManager.FromFile(SettingsStore.Default.ClassicArbitrageLastFileName);
+            if(ArbitrageManager != null) {
+                Exchanges = ArbitrageManager.Exchanges;
+                Markets = ArbitrageManager.Markets;
+
+                ArbitrageManager.Listener = this;
+                ArbitrageManager.Initialize();
+                ArbitrageList = ArbitrageManager.Items;
+                tickerArbitrageInfoBindingSource.DataSource = ArbitrageList;
+            }
         }
 
         protected override void OnThreadUpdate() {
@@ -214,6 +216,10 @@ namespace CryptoMarketClient {
         }
         void ITickerCollectionUpdateListener.OnUpdateTickerCollection(TickerCollection collection, bool useInvokeForUI) {
             ArbitrageInfo info = collection.Arbitrage;
+            if(!collection.IsActual) {
+                RefreshGridRow(collection);
+                return;
+            }
 
             double prevProfits = info.MaxProfitUSD;
             double prevSpread = info.Spread;
@@ -326,17 +332,16 @@ namespace CryptoMarketClient {
         }
 
         public ResizeableArray<TickerCollection> ArbitrageList { get; private set; }
-        public TickerCollectionUpdateHelper UpdateHelper { get; private set; }
-        void BuildCurrenciesList() {
-            PoloniexExchange.Default.Connect();
-            BinanceExchange.Default.Connect();
-            UpdateHelper = new TickerCollectionUpdateHelper();
-            UpdateHelper.Exchanges.Add(PoloniexExchange.Default);
-            UpdateHelper.Exchanges.Add(BinanceExchange.Default);
-
-            UpdateHelper.Initialize();
-            ArbitrageList = UpdateHelper.Items;
-            tickerArbitrageInfoBindingSource.DataSource = ArbitrageList;
+        public ClassicArbitrageManager ArbitrageManager { get; private set; }
+        protected bool BuildCurrenciesList() {
+            foreach(Exchange e in Exchanges) {
+                if(!e.Connect()) {
+                    XtraMessageBox.Show("Cannot connect exchange: " + e.Name);
+                    Stop();
+                    return false;
+                }
+            }
+            return true;
         }
 
         private void bbAllCurrencies_CheckedChanged(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
@@ -357,6 +362,11 @@ namespace CryptoMarketClient {
             bbTryArbitrage.Caption = "Try Arbitrage on " + info.ShortName;
         }
 
+        public override void OnRibbonMerged(RibbonControl ownerRibbon) {
+            base.OnRibbonMerged(ownerRibbon);
+            ownerRibbon.SelectedPage = ownerRibbon.TotalPageCategory.GetPageByText(this.rpArbitrage.Text); 
+        }
+
         private void TickerArbitrageForm_Load(object sender, EventArgs e) {
 
         }
@@ -365,6 +375,7 @@ namespace CryptoMarketClient {
         private void bbTryArbitrage_ItemClick(object sender, ItemClickEventArgs e) {
             SelectedCollection = (TickerCollection)bbTryArbitrage.Tag;
             ShouldProcessArbitrage = SelectedCollection != null;
+            ProcessSelectedArbitrageInfo();
         }
 
         private void bbOpenWeb_ItemClick(object sender, ItemClickEventArgs e) {
@@ -539,6 +550,7 @@ namespace CryptoMarketClient {
 
         private void repositoryItemCheckEdit1_EditValueChanged(object sender, EventArgs e) {
             gridView1.CloseEditor();
+            //ArbitrageManager.Save();
         }
 
         private void bbShowHistory_ItemClick(object sender, ItemClickEventArgs e) {
@@ -553,9 +565,10 @@ namespace CryptoMarketClient {
                 return;
             CombinedBidAskForm form = new CombinedBidAskForm();
             form.MdiParent = MdiParent;
-            for(int i = 0; i < info.Count; i++) {
-                form.AddTicker(info.Tickers[i]);
-            }
+            form.Arbitrage = info.Arbitrage;
+            //for(int i = 0; i < info.Count; i++) {
+            //    form.AddTicker(info.Tickers[i]);
+            //}
             form.Text = info.Name;
             form.Show();
         }
@@ -573,10 +586,17 @@ namespace CryptoMarketClient {
 
         private void repositoryItemCheckEdit4_EditValueChanged(object sender, EventArgs e) {
             gridView1.CloseEditor();
+            //ArbitrageManager.Save();
         }
 
         private void bbMinimalProfitSpread_ItemClick(object sender, ItemClickEventArgs e) {
             TickerCollection collection = (TickerCollection)this.bbTryArbitrage.Tag;
+            if(collection == null)
+                collection = (TickerCollection)this.gridView1.GetFocusedRow();
+            if(collection == null) {
+                XtraMessageBox.Show("Nothing Selected... :)");
+                return;
+            }
             ArbitrageInfo info = collection.Arbitrage;
             CalculatorForm form = new CalculatorForm();
             if(info != null && info.LowestAskTicker != null) {
@@ -584,7 +604,7 @@ namespace CryptoMarketClient {
                 form.Amount = Convert.ToDouble(info.LowestAskTicker.MarketCurrencyBalance);
                 form.BuyPrice = Convert.ToDouble(info.LowestAskTicker.LowestAsk);
                 form.SellPrice = Convert.ToDouble(info.LowestAskTicker.HighestBid);
-                form.UsdRate = Convert.ToDouble(info.UsdTicker.Last);
+                form.UsdRate = info.UsdTicker == null? 0: Convert.ToDouble(info.UsdTicker.Last);
             }
             form.Show();
         }
@@ -602,7 +622,7 @@ namespace CryptoMarketClient {
         void AddEnterMarketMenuItems() {
             int index = 0;
             if(ArbitrageList.Count > 0) {
-                for(int i = 0; i < ArbitrageList[0].Tickers.Length; i++) {
+                for(int i = 0; i < ArbitrageList[0].Tickers.Count; i++) {
                     Ticker ticker = ArbitrageList[0].Tickers[i];
                     if(ticker == null)
                         break;
@@ -638,7 +658,7 @@ namespace CryptoMarketClient {
                 return;
             TickerForm form;
             if(e.Item.Tag == null) {
-                for(int i = 0; i < collection.Tickers.Length; i++) {
+                for(int i = 0; i < collection.Tickers.Count; i++) {
                     Ticker ticker = collection.Tickers[i];
                     if(ticker == null)
                         return;
@@ -707,6 +727,163 @@ namespace CryptoMarketClient {
                 this.gridView1.ActiveFilterString = null;
             else
                 this.gridView1.ActiveFilterCriteria = new BinaryOperator("TotalBalance", 0, BinaryOperatorType.Greater);
+        }
+
+        private void biStart_ItemClick(object sender, ItemClickEventArgs e) {
+            Start();
+        }
+
+        private void biStop_ItemClick(object sender, ItemClickEventArgs e) {
+            Stop();
+        }
+
+        protected void Stop() {
+            if(ArbitrageManager == null || !ArbitrageManager.IsStarted) {
+                XtraMessageBox.Show("Already Stopped!");
+                return;
+            }
+            ArbitrageManager.StopWebSockets();
+        }
+
+        protected void Start() {
+            if(ArbitrageManager != null && ArbitrageManager.IsStarted) {
+                XtraMessageBox.Show("Already Started!");
+                return;
+            }
+            if(!BuildCurrenciesList())
+                return;
+            InitializeTickersMenu();
+
+            ArbitrageManager.StartWebSockets();
+
+            //AllowWorkThread = true;
+            //UpdateThread = CheckStartThread(UpdateThread, ThreadWork);
+            //UpdateCurrenciesThread = CheckStartThread(UpdateCurrenciesThread, UpdateCurrencies);
+        }
+
+        protected List<Exchange> Exchanges { get; set; } = new List<Exchange>();
+        protected List<string> Markets { get; set; } = new List<string>();
+
+        private void biSelectExchanges_ItemClick(object sender, ItemClickEventArgs e) {
+            if(AllowWorkThread) {
+                XtraMessageBox.Show("Before select another exchange configuration, please stop listening current classic arbitrage.");
+                return;
+            }
+            using(ExchangesForm form = new ExchangesForm()) {
+                form.SelectedExchanges = Exchanges;
+                form.SelectedMarktes = Markets;
+                if(form.ShowDialog() != DialogResult.OK)
+                    return;
+
+                Exchanges = form.SelectedExchanges;
+                Markets = form.SelectedMarktes;
+
+                ArbitrageManager = new ClassicArbitrageManager();
+                Exchanges.ForEach(ee => ArbitrageManager.Exchanges.Add(ee));
+                Markets.ForEach(m => ArbitrageManager.Markets.Add(m));
+
+                ArbitrageManager.Listener = this;
+                ArbitrageManager.Initialize();
+                ArbitrageList = ArbitrageManager.Items;
+                tickerArbitrageInfoBindingSource.DataSource = ArbitrageList;
+
+                //ArbitrageManager.Save();
+            }
+        }
+
+        private void biShowLog_ItemClick(object sender, ItemClickEventArgs e) {
+            ((MainForm)MdiParent).ShowLogPanel();
+        }
+
+        void UpdateGridFilterBySelected(bool filter) {
+            if(!filter)
+                this.gridView1.ActiveFilterString = null;
+            else
+                this.gridView1.ActiveFilterCriteria = new BinaryOperator("IsSelected", true, BinaryOperatorType.Equal);
+        }
+
+        private void bcShowOnlySelected_CheckedChanged(object sender, ItemClickEventArgs e) {
+            UpdateGridFilterBySelected(this.bcShowOnlySelected.Checked);
+        }
+
+        private void biRemoveUnselected_ItemClick(object sender, ItemClickEventArgs e) {
+            if(XtraMessageBox.Show("Do you really want to remove unselected items from list?", "Remove", MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
+                return;
+            List<TickerCollection> sel = GetSelectedRows();
+            ArbitrageManager.ClearSelection();
+            ArbitrageManager.Select(sel);
+            ArbitrageManager.RemoveNonSelectedTickers();
+
+            ArbitrageList = ArbitrageManager.Items;
+            tickerArbitrageInfoBindingSource.DataSource = ArbitrageList;
+
+            //ArbitrageManager.Save();
+        }
+
+        private List<TickerCollection> GetSelectedRows() {
+            return ArbitrageList.Where(a => a.IsSelected).ToList();
+        }
+
+        private void biOpen_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
+            if(this.xtraOpenFileDialog1.ShowDialog() != DialogResult.OK)
+                return;
+            ClassicArbitrageManager manager = ClassicArbitrageManager.FromFile(this.xtraOpenFileDialog1.FileName);
+            if(manager == null) {
+                XtraMessageBox.Show("Error loading classic arbitrage configuration.");
+                return;
+            }
+            using(WithProgressPanel panel = new WithProgressPanel(this)) {
+                ArbitrageManager = manager;
+                ArbitrageManager.Listener = this;
+                ArbitrageManager.Initialize();
+                Text = Path.GetFileName(ArbitrageManager.FileName);
+                ArbitrageList = ArbitrageManager.Items;
+                tickerArbitrageInfoBindingSource.DataSource = ArbitrageList;
+            }
+        }
+
+        private void biNew_ItemClick(object sender, ItemClickEventArgs e) {
+            ArbitrageManager = new ClassicArbitrageManager();
+            ArbitrageManager.Listener = this;
+            ArbitrageManager.FileName = "New ClassicArbitrage.xml";
+            Text = Path.GetFileName(ArbitrageManager.FileName);
+            ArbitrageList = null;
+            tickerArbitrageInfoBindingSource.DataSource = null;
+        }
+
+        private void biSave_ItemClick(object sender, ItemClickEventArgs e) {
+            if(string.IsNullOrEmpty(ArbitrageManager.FileName)) {
+                biSaveAs_ItemClick(sender, e);
+                return;
+            }
+            ArbitrageManager.Save();
+        }
+
+        private void biSaveAs_ItemClick(object sender, ItemClickEventArgs e) {
+            this.xtraSaveFileDialog1.FileName = ArbitrageManager.FileName;
+            if(this.xtraSaveFileDialog1.ShowDialog() != DialogResult.OK)
+                return;
+            ArbitrageManager.FileName = this.xtraSaveFileDialog1.FileName;
+            ArbitrageManager.Save();
+        }
+
+        private void barButtonItem4_ItemClick(object sender, ItemClickEventArgs e) {
+            ArbitrageHistoryForm form = new ArbitrageHistoryForm();
+            form.MdiParent = MdiParent;
+            form.Show();
+        }
+
+        private void biRemoveSelected_ItemClick(object sender, ItemClickEventArgs e) {
+            if(XtraMessageBox.Show("Do you really want to remove selected items from list?", "Remove", MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
+                return;
+            
+            List<TickerCollection> sel = GetSelectedRows();
+            foreach(TickerCollection coll in sel)
+                ArbitrageManager.UnselectTicker(coll);
+            ArbitrageManager.RemoveSelectedTickers();
+
+            ArbitrageList = ArbitrageManager.Items;
+            tickerArbitrageInfoBindingSource.DataSource = ArbitrageList;
         }
     }
 }

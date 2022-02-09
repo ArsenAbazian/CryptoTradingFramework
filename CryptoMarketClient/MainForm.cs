@@ -266,11 +266,11 @@ namespace CryptoMarketClient {
         //    SettingsStore.Default.Save();
         //}
 
-        TickerArbitrageForm arbitrageForm;
-        public TickerArbitrageForm ArbitrageForm {
+        ClassicArbitrageForm arbitrageForm;
+        public ClassicArbitrageForm ArbitrageForm {
             get {
                 if(arbitrageForm == null || arbitrageForm.IsDisposed) {
-                    arbitrageForm = new TickerArbitrageForm();
+                    arbitrageForm = new ClassicArbitrageForm();
                     arbitrageForm.MdiParent = this;
                 }
                 return arbitrageForm;

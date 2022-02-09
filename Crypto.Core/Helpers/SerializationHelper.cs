@@ -82,6 +82,7 @@ namespace Crypto.Core.Helpers {
             if(string.IsNullOrEmpty(obj.FileName))
                 return false;
             try {
+                obj.OnStartSerialize();
                 XmlSerializer formatter = new XmlSerializer(t);
                 using(FileStream fs = new FileStream(tmpFile, FileMode.Create)) {
                     formatter.Serialize(fs, obj);
@@ -102,5 +103,6 @@ namespace Crypto.Core.Helpers {
     public interface ISupportSerialization {
         string FileName { get; set; }
         void OnEndDeserialize();
+        void OnStartSerialize();
     }
 }

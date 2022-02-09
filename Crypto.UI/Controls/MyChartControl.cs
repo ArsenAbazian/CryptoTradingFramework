@@ -1,5 +1,6 @@
 ﻿using Crypto.Core;
 using Crypto.Core.Common;
+using Crypto.Core.Helpers;
 using DevExpress.Utils.DirectXPaint;
 using DevExpress.XtraCharts;
 using System;
@@ -27,11 +28,20 @@ namespace CryptoMarketClient {
             //    }
             //}
             //else {
+            IThreadLock tl = DataSource as IThreadLock;
+            if(tl != null) {
+                while(tl.ThreadLock) ;
+                tl.ThreadLock = true;
+            }
             try {
                 base.OnPaint(e);
             }
             catch(Exception ee) {
                 Telemetry.Default.TrackException(ee);
+            }
+            finally {
+                if(tl != null)
+                    tl.ThreadLock = false;
             }
             //}
         }

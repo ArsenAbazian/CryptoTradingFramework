@@ -72,7 +72,6 @@
             this.bciAllowDirectXGrid = new DevExpress.XtraBars.BarCheckItem();
             this.bciAllowDirectXCharts = new DevExpress.XtraBars.BarCheckItem();
             this.bbRegister = new DevExpress.XtraBars.BarButtonItem();
-            this.barButtonItem4 = new DevExpress.XtraBars.BarButtonItem();
             this.bcBinance = new DevExpress.XtraBars.BarCheckItem();
             this.biBitFinex = new DevExpress.XtraBars.BarCheckItem();
             this.skinPaletteRibbonGalleryBarItem1 = new DevExpress.XtraBars.SkinPaletteRibbonGalleryBarItem();
@@ -83,8 +82,6 @@
             this.biDependencyArbitrageAnalitics = new DevExpress.XtraBars.BarButtonItem();
             this.biLog = new DevExpress.XtraBars.BarButtonItem();
             this.biStrategiesItem = new DevExpress.XtraBars.BarButtonItem();
-            this.bsiInstruments = new DevExpress.XtraBars.BarSubItem();
-            this.bWalletInvestorStatistics = new DevExpress.XtraBars.BarButtonItem();
             this.bsTools = new DevExpress.XtraBars.BarSubItem();
             this.bsCapture = new DevExpress.XtraBars.BarSubItem();
             this.bbGrabData = new DevExpress.XtraBars.BarButtonItem();
@@ -101,15 +98,15 @@
             this.biGapDetector = new DevExpress.XtraBars.BarButtonItem();
             this.bsiStatus = new DevExpress.XtraBars.BarButtonItem();
             this.ribbonPageCategory1 = new DevExpress.XtraBars.Ribbon.RibbonPageCategory();
+            this.ribbonPage1 = new DevExpress.XtraBars.Ribbon.RibbonPage();
+            this.ribbonPageGroup12 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.ribbonPage2 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPageGroup2 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.ribbonPageGroup4 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
-            this.ribbonPageGroup5 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.rpPoloniex = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.rpgConnect = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.ribbonPageGroup7 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.ribbonPageGroup9 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
-            this.ribbonPageGroup12 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.ribbonPage3 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPageGroup1 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.ribbonPageGroup3 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
@@ -179,7 +176,6 @@
             this.bciAllowDirectXGrid,
             this.bciAllowDirectXCharts,
             this.bbRegister,
-            this.barButtonItem4,
             this.bcBinance,
             this.biBitFinex,
             this.skinPaletteRibbonGalleryBarItem1,
@@ -190,8 +186,6 @@
             this.biDependencyArbitrageAnalitics,
             this.biLog,
             this.biStrategiesItem,
-            this.bsiInstruments,
-            this.bWalletInvestorStatistics,
             this.bsTools,
             this.bbGrabData,
             this.bbCompressAndSend,
@@ -208,13 +202,15 @@
             this.biGapDetector,
             this.bsiStatus});
             this.ribbonControl1.Location = new System.Drawing.Point(0, 0);
-            this.ribbonControl1.Margin = new System.Windows.Forms.Padding(12);
+            this.ribbonControl1.Margin = new System.Windows.Forms.Padding(12, 12, 12, 12);
             this.ribbonControl1.MaxItemId = 61;
             this.ribbonControl1.MdiMergeStyle = DevExpress.XtraBars.Ribbon.RibbonMdiMergeStyle.Always;
             this.ribbonControl1.Name = "ribbonControl1";
             this.ribbonControl1.OptionsPageCategories.Alignment = DevExpress.XtraBars.Ribbon.RibbonPageCategoryAlignment.Right;
             this.ribbonControl1.PageCategories.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageCategory[] {
             this.ribbonPageCategory1});
+            this.ribbonControl1.PageHeaderItemLinks.Add(this.bbShowYourTotalDeposit);
+            this.ribbonControl1.PageHeaderItemLinks.Add(this.biLog);
             this.ribbonControl1.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
             this.rpPoloniex,
             this.ribbonPage3});
@@ -458,16 +454,6 @@
             this.bbRegister.Name = "bbRegister";
             this.bbRegister.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bbRegister_ItemClick);
             // 
-            // barButtonItem4
-            // 
-            this.barButtonItem4.Caption = "Download Crypto Icons";
-            this.barButtonItem4.Id = 31;
-            this.barButtonItem4.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("barButtonItem4.ImageOptions.Image")));
-            this.barButtonItem4.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("barButtonItem4.ImageOptions.LargeImage")));
-            this.barButtonItem4.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("barButtonItem4.ImageOptions.SvgImage")));
-            this.barButtonItem4.Name = "barButtonItem4";
-            this.barButtonItem4.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItem4_ItemClick);
-            // 
             // bcBinance
             // 
             this.bcBinance.Caption = "Binance";
@@ -545,41 +531,19 @@
             this.biStrategiesItem.Name = "biStrategiesItem";
             this.biStrategiesItem.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.biStrategiesItem_ItemClick);
             // 
-            // bsiInstruments
-            // 
-            this.bsiInstruments.Caption = "Instruments";
-            this.bsiInstruments.Id = 43;
-            this.bsiInstruments.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("bsiInstruments.ImageOptions.SvgImage")));
-            this.bsiInstruments.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
-            new DevExpress.XtraBars.LinkPersistInfo(this.bWalletInvestorStatistics),
-            new DevExpress.XtraBars.LinkPersistInfo(this.biCalculator),
-            new DevExpress.XtraBars.LinkPersistInfo(this.bbRegister),
-            new DevExpress.XtraBars.LinkPersistInfo(this.barButtonItem4)});
-            this.bsiInstruments.Name = "bsiInstruments";
-            // 
-            // bWalletInvestorStatistics
-            // 
-            this.bWalletInvestorStatistics.Caption = "WalletInvestor Statistics";
-            this.bWalletInvestorStatistics.Id = 44;
-            this.bWalletInvestorStatistics.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("bWalletInvestorStatistics.ImageOptions.SvgImage")));
-            this.bWalletInvestorStatistics.Name = "bWalletInvestorStatistics";
-            this.bWalletInvestorStatistics.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bWalletInvestorStatistics_ItemClick);
-            // 
             // bsTools
             // 
-            this.bsTools.Caption = "Tools";
+            this.bsTools.Caption = "Advanced Tools";
             this.bsTools.Id = 45;
             this.bsTools.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("bsTools.ImageOptions.SvgImage")));
             this.bsTools.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
-            new DevExpress.XtraBars.LinkPersistInfo(this.bbShowYourTotalDeposit),
-            new DevExpress.XtraBars.LinkPersistInfo(this.btShowApiKeys),
             new DevExpress.XtraBars.LinkPersistInfo(this.bsCapture),
             new DevExpress.XtraBars.LinkPersistInfo(this.biActiveConnections),
-            new DevExpress.XtraBars.LinkPersistInfo(this.biLog),
             new DevExpress.XtraBars.LinkPersistInfo(this.biCheckTelegram),
             new DevExpress.XtraBars.LinkPersistInfo(this.barSubItem1),
             new DevExpress.XtraBars.LinkPersistInfo(this.biDownloadManager),
-            new DevExpress.XtraBars.LinkPersistInfo(this.barSubItem2)});
+            new DevExpress.XtraBars.LinkPersistInfo(this.barSubItem2),
+            new DevExpress.XtraBars.LinkPersistInfo(this.bbRegister)});
             this.bsTools.Name = "bsTools";
             // 
             // bsCapture
@@ -698,17 +662,36 @@
             // 
             this.ribbonPageCategory1.Name = "ribbonPageCategory1";
             this.ribbonPageCategory1.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
+            this.ribbonPage1,
             this.ribbonPage2});
             this.ribbonPageCategory1.Text = "Tools";
+            // 
+            // ribbonPage1
+            // 
+            this.ribbonPage1.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] {
+            this.ribbonPageGroup12});
+            this.ribbonPage1.Name = "ribbonPage1";
+            this.ribbonPage1.Text = "Tools";
+            // 
+            // ribbonPageGroup12
+            // 
+            this.ribbonPageGroup12.AllowTextClipping = false;
+            this.ribbonPageGroup12.CaptionButtonVisible = DevExpress.Utils.DefaultBoolean.False;
+            this.ribbonPageGroup12.ItemLinks.Add(this.bbShowYourTotalDeposit);
+            this.ribbonPageGroup12.ItemLinks.Add(this.biLog);
+            this.ribbonPageGroup12.ItemLinks.Add(this.btShowApiKeys);
+            this.ribbonPageGroup12.ItemLinks.Add(this.biCalculator);
+            this.ribbonPageGroup12.ItemLinks.Add(this.bsTools);
+            this.ribbonPageGroup12.Name = "ribbonPageGroup12";
+            this.ribbonPageGroup12.Text = "Tools";
             // 
             // ribbonPage2
             // 
             this.ribbonPage2.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] {
             this.ribbonPageGroup2,
-            this.ribbonPageGroup4,
-            this.ribbonPageGroup5});
+            this.ribbonPageGroup4});
             this.ribbonPage2.Name = "ribbonPage2";
-            this.ribbonPage2.Text = "Options & Tools";
+            this.ribbonPage2.Text = "Options";
             // 
             // ribbonPageGroup2
             // 
@@ -728,19 +711,12 @@
             this.ribbonPageGroup4.Name = "ribbonPageGroup4";
             this.ribbonPageGroup4.Text = "Settings";
             // 
-            // ribbonPageGroup5
-            // 
-            this.ribbonPageGroup5.ItemLinks.Add(this.bsiInstruments);
-            this.ribbonPageGroup5.Name = "ribbonPageGroup5";
-            this.ribbonPageGroup5.Text = "Instruments";
-            // 
             // rpPoloniex
             // 
             this.rpPoloniex.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] {
             this.rpgConnect,
             this.ribbonPageGroup7,
-            this.ribbonPageGroup9,
-            this.ribbonPageGroup12});
+            this.ribbonPageGroup9});
             this.rpPoloniex.Name = "rpPoloniex";
             this.rpPoloniex.Text = "Exchanges";
             // 
@@ -768,14 +744,6 @@
             this.ribbonPageGroup9.ItemLinks.Add(this.biStrategiesItem);
             this.ribbonPageGroup9.Name = "ribbonPageGroup9";
             this.ribbonPageGroup9.Text = "Automated Trading";
-            // 
-            // ribbonPageGroup12
-            // 
-            this.ribbonPageGroup12.AllowTextClipping = false;
-            this.ribbonPageGroup12.CaptionButtonVisible = DevExpress.Utils.DefaultBoolean.False;
-            this.ribbonPageGroup12.ItemLinks.Add(this.bsTools);
-            this.ribbonPageGroup12.Name = "ribbonPageGroup12";
-            this.ribbonPageGroup12.Text = "Tools";
             // 
             // ribbonPage3
             // 
@@ -846,7 +814,7 @@
             this.ribbonStatusBar1.AutoHeight = true;
             this.ribbonStatusBar1.ItemLinks.Add(this.bsiStatus);
             this.ribbonStatusBar1.Location = new System.Drawing.Point(0, 1050);
-            this.ribbonStatusBar1.Margin = new System.Windows.Forms.Padding(6);
+            this.ribbonStatusBar1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.ribbonStatusBar1.Name = "ribbonStatusBar1";
             this.ribbonStatusBar1.Ribbon = this.ribbonControl1;
             this.ribbonStatusBar1.Size = new System.Drawing.Size(1930, 48);
@@ -897,7 +865,7 @@
             this.dpLog.Dock = DevExpress.XtraBars.Docking.DockingStyle.Bottom;
             this.dpLog.ID = new System.Guid("ab52e2ec-cacf-43f0-968e-9697a64dcdd0");
             this.dpLog.Location = new System.Drawing.Point(0, 1246);
-            this.dpLog.Margin = new System.Windows.Forms.Padding(6);
+            this.dpLog.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.dpLog.Name = "dpLog";
             this.dpLog.OriginalSize = new System.Drawing.Size(200, 388);
             this.dpLog.SavedDock = DevExpress.XtraBars.Docking.DockingStyle.Bottom;
@@ -910,7 +878,7 @@
             // 
             this.controlContainer1.Controls.Add(this.logMessagesControl2);
             this.controlContainer1.Location = new System.Drawing.Point(16, 98);
-            this.controlContainer1.Margin = new System.Windows.Forms.Padding(6);
+            this.controlContainer1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.controlContainer1.Name = "controlContainer1";
             this.controlContainer1.Size = new System.Drawing.Size(3828, 633);
             this.controlContainer1.TabIndex = 0;
@@ -919,7 +887,7 @@
             // 
             this.logMessagesControl2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.logMessagesControl2.Location = new System.Drawing.Point(0, 0);
-            this.logMessagesControl2.Margin = new System.Windows.Forms.Padding(4);
+            this.logMessagesControl2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.logMessagesControl2.Name = "logMessagesControl2";
             this.logMessagesControl2.Size = new System.Drawing.Size(3828, 633);
             this.logMessagesControl2.TabIndex = 0;
@@ -948,7 +916,7 @@
             this.Controls.Add(this.ribbonStatusBar1);
             this.Controls.Add(this.ribbonControl1);
             this.IsMdiContainer = true;
-            this.Margin = new System.Windows.Forms.Padding(12);
+            this.Margin = new System.Windows.Forms.Padding(12, 12, 12, 12);
             this.Name = "MainForm";
             this.Ribbon = this.ribbonControl1;
             this.StatusBar = this.ribbonStatusBar1;
@@ -1017,13 +985,11 @@
         private DevExpress.XtraBars.BarCheckItem bciAllowDirectXGrid;
         private DevExpress.XtraBars.BarCheckItem bciAllowDirectXCharts;
         private DevExpress.XtraBars.BarButtonItem bbRegister;
-        private DevExpress.XtraBars.BarButtonItem barButtonItem4;
         private DevExpress.XtraBars.BarCheckItem bcBinance;
         private DevExpress.XtraBars.BarCheckItem biBitFinex;
         private DevExpress.XtraBars.SkinPaletteRibbonGalleryBarItem skinPaletteRibbonGalleryBarItem1;
         private DevExpress.XtraBars.BarButtonItem bbShowSettings;
         private DevExpress.XtraBars.BarButtonItem biCalculator;
-        private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup5;
         private DevExpress.XtraBars.BarButtonItem biFuturesArbitrage;
         private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup3;
         private DevExpress.XtraBars.BarButtonItem biFuturesSettings;
@@ -1032,8 +998,6 @@
         private DevExpress.XtraBars.Docking.DockManager dockManager1;
         private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup9;
         private DevExpress.XtraBars.BarButtonItem biStrategiesItem;
-        private DevExpress.XtraBars.BarSubItem bsiInstruments;
-        private DevExpress.XtraBars.BarButtonItem bWalletInvestorStatistics;
         private DevExpress.XtraBars.Ribbon.Internal.RepositoryItemRibbonSearchEdit repositoryItemRibbonSearchEdit1;
         private DevExpress.XtraBars.Ribbon.RibbonPage ribbonPage7;
         private DevExpress.XtraBars.Ribbon.Internal.RepositoryItemRibbonSearchEdit repositoryItemRibbonSearchEdit2;
@@ -1060,6 +1024,7 @@
         private DevExpress.XtraBars.BarButtonItem biGapDetector;
         private DevExpress.XtraBars.BarButtonItem bsiStatus;
         private DevExpress.Utils.SvgImageCollection svgImageCollection1;
+        private DevExpress.XtraBars.Ribbon.RibbonPage ribbonPage1;
     }
 }
 

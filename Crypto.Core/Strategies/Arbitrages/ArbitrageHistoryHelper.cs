@@ -64,6 +64,8 @@ namespace Crypto.Core.Common {
         }
         #endregion
 
+        void ISupportSerialization.OnStartSerialize() { }
+
         public BindingList<ArbitrageStatisticsItem> History { get; } = new BindingList<ArbitrageStatisticsItem>();
     }
 

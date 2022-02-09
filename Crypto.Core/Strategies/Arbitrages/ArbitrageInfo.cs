@@ -29,7 +29,7 @@ namespace Crypto.Core.Common {
                 OnLowestAskTickerChanged();
             }
         }
-        protected Ticker[] Tickers { get; private set; }
+        protected List<Ticker> Tickers { get; private set; }
         public Ticker HighestBidTicker {
             get { return highestBidTicker; }
             set {
@@ -150,6 +150,9 @@ namespace Crypto.Core.Common {
                 }
             }
             if(MaxProfit == InvalidValue) {
+                LowestAsk = LowestAskTicker.OrderBook.Asks[0].Value;
+                HighestBid = HighestBidTicker.OrderBook.Bids[0].Value;
+                Spread = HighestBid - LowestAsk;
                 MaxProfit = 0;
                 Amount = 0;
             }
@@ -162,7 +165,8 @@ namespace Crypto.Core.Common {
             AvailableProfit = Spread * AvailableAmount - (HighestBid + LowestAsk) * AvailableAmount * 0.0025;
             AvailableProfitUSD = CalcProfitUSD(AvailableProfit);
 
-            if(LowestAskTicker.OrderBook.Bids[0].Value != 0) {
+            List<OrderBookEntry> labids = LowestAskTicker.OrderBook.Bids;
+            if(labids.Count != 0 && labids[0].Value != 0) {
                 double lowestBid = LowestAskTicker.OrderBook.Bids[0].Value;
                 BidShift = HighestBidTicker.OrderBook.Bids[0].Value - lowestBid;
                 BidShift /= lowestBid;
@@ -239,12 +243,19 @@ namespace Crypto.Core.Common {
                 }
                 lock(History) {
                     History.Add(st);
+                    RaiseHistoryChanged();
                 }
             }
         }
 
+        private void RaiseHistoryChanged() {
+            if(HistoryChanged != null)
+                HistoryChanged(this, EventArgs.Empty);
+        }
+
         public ResizeableArray<ArbitrageStatisticsItem> History { get; } = new ResizeableArray<ArbitrageStatisticsItem>();
         public DateTime Time { get; set; }
+        public event EventHandler HistoryChanged;
 
         void OnLowestAskTickerChanged() {
             if(LowestAskTicker != null) {

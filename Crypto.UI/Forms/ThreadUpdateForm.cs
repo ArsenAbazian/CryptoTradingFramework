@@ -1,4 +1,5 @@
-﻿using DevExpress.XtraBars.Ribbon;
+﻿using Crypto.Core.Common;
+using DevExpress.XtraBars.Ribbon;
 using DevExpress.XtraEditors;
 using System;
 using System.Collections.Generic;
@@ -17,7 +18,7 @@ namespace CryptoMarketClient {
 
         protected virtual int UpdateInervalMs { get { return 1000; } }
         protected virtual bool AllowUpdateInactive { get { return false; } }
-        protected Thread UpdateThread { get; private set; }
+        protected Thread UpdateThread { get; set; }
         protected bool AllowWorkThread { get; set; }
 
         protected virtual Thread CheckStartThread(Thread current, ThreadStart method) {
@@ -25,6 +26,7 @@ namespace CryptoMarketClient {
                 return current;
             current = new Thread(method);
             current.Start();
+            LogManager.Default.Add(GetType().Name + ": Start Thread");
             return current;
         } 
         protected virtual void StartUpdateThread() {
@@ -58,13 +60,14 @@ namespace CryptoMarketClient {
             AllowWorkThread = false;
         }
 
-        void ThreadWork() {
+        protected void ThreadWork() {
             Stopwatch w = new Stopwatch();
             w.Start();
             while(AllowWorkThread) {
                 OnThreadUpdate();
                 Thread.Sleep(UpdateInervalMs);
             }
+            LogManager.Default.Add(GetType().Name + ": Stop Thread");
         }
         protected virtual void OnThreadUpdate() {
             

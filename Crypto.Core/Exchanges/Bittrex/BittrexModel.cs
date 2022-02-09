@@ -28,7 +28,8 @@ namespace Crypto.Core.Bittrex {
 
         public BittrexExchange() {
             RequestRate = new List<RateLimit>();
-            RequestRate.Add(new RateLimit() { Limit = 25, Interval = TimeSpan.TicksPerMinute });
+            RequestRate.Add(new RateLimit(this) { Limit = 60, Interval = TimeSpan.TicksPerMinute });
+            //RequestRate.Add(new RateLimit(this) { Limit = 1, Interval = TimeSpan.TicksPerSecond });
         }
 
         protected override bool ShouldAddKlineListener => true;
@@ -81,18 +82,24 @@ namespace Crypto.Core.Bittrex {
 
         public override void StopListenOrderBook(Ticker ticker) {
             base.StopListenOrderBook(ticker);
+            if(TickersSocket == null)
+                return;
             TickersSocket.Unsubscribe(new WebSocketSubscribeInfo(SocketSubscribeType.OrderBook, ticker));
             LogManager.Default.Warning(ticker, "unsubscribe method not supported by bittrex", "");
         }
 
         public override void StopListenTradeHistory(Ticker ticker) {
             base.StopListenTradeHistory(ticker);
+            if(TickersSocket == null)
+                return;
             TickersSocket.Unsubscribe(new WebSocketSubscribeInfo(SocketSubscribeType.TradeHistory, ticker));
             LogManager.Default.Warning(ticker, "unsubscribe method not supported by bittrex", "");
         }
 
         public override void StopListenKline(Ticker ticker) {
             base.StopListenKline(ticker);
+            if(TickersSocket == null)
+                return;
             TickersSocket.Unsubscribe(new WebSocketSubscribeInfo(SocketSubscribeType.Kline, ticker));
             LogManager.Default.Warning(ticker, "unsubscribe method not supported by bittrex", "");
         }

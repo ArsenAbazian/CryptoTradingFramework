@@ -243,6 +243,7 @@
     <Compile Include="Exchanges\Binance\Futures\BinanceFuturesIncUpdateDataProvider.cs.cs" />
     <Compile Include="Exchanges\Bitmex\BitmexAccountBalanceInfo.cs" />
     <Compile Include="Helpers\BindingHelper.cs" />
+    <Compile Include="Helpers\ChainArray.cs" />
     <Compile Include="Helpers\ClassicArbitrageListener.cs" />
     <Compile Include="Helpers\CycleArray.cs" />
     <Compile Include="Helpers\FileNameAttribute.cs" />
@@ -250,7 +251,7 @@
     <Compile Include="Helpers\NotificationManager.cs" />
     <Compile Include="Helpers\SerializationHelper.cs" />
     <Compile Include="Helpers\SortedArray.cs" />
-    <Compile Include="Helpers\Stack.cs" />
+    <Compile Include="Helpers\Arrays.cs" />
     <Compile Include="Info\TickersVolatilityInfo.cs" />
     <Compile Include="Info\TradeHistoryIntensityInfo.cs" />
     <Compile Include="Helpers\Utils.cs" />
@@ -292,7 +293,7 @@
     <Compile Include="Helpers\TelegramBot.cs" />
     <Compile Include="Common\TickerCollection\TickerCollectionHelper.cs" />
     <Compile Include="Common\TickerCollection\TickerCollectionInfo.cs" />
-    <Compile Include="Common\TickerCollection\TickerCollectionUpdateHelper.cs" />
+    <Compile Include="Common\TickerCollection\ClassicArbitrageManager.cs" />
     <Compile Include="Common\TickerHistoryItem.cs" />
     <Compile Include="Common\TickerUpdateHelper.cs" />
     <Compile Include="Common\TradeInfoItem.cs" />
@@ -356,6 +357,7 @@
     <Compile Include="Strategies\StrategyValidationError.cs" />
     <Compile Include="Strategies\Stupid\MarketMakingStrategy.cs" />
     <Compile Include="Strategies\Stupid\SimpleBuyLowSellHighStrategy.cs" />
+    <Compile Include="Tests\ChainArrayTests.cs" />
     <Compile Include="Tests\CycleArrayTests.cs" />
   </ItemGroup>
   <ItemGroup>

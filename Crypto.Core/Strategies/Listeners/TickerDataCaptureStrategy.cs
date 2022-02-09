@@ -23,6 +23,8 @@ namespace Crypto.Core.Strategies.Listeners {
                 return (TickerDataCaptureStrategy)SerializationHelper.FromFile(fileName, typeof(TickerDataCaptureStrategy));
         }
 
+        void ISupportSerialization.OnStartSerialize() { }
+
         public override void Assign(StrategyBase from) {
             base.Assign(from);
             TickerDataCaptureStrategy s = from as TickerDataCaptureStrategy;

@@ -547,11 +547,11 @@
     <Compile Include="StaticArbitrageHistoryForm.Designer.cs">
       <DependentUpon>StaticArbitrageHistoryForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="TickerArbitrageForm.cs">
+    <Compile Include="ClassicArbitrageForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="TickerArbitrageForm.Designer.cs">
-      <DependentUpon>TickerArbitrageForm.cs</DependentUpon>
+    <Compile Include="ClassicArbitrageForm.Designer.cs">
+      <DependentUpon>ClassicArbitrageForm.cs</DependentUpon>
     </Compile>
     <Compile Include="TickerChartViewer.cs">
       <SubType>UserControl</SubType>
@@ -699,8 +699,8 @@
     <EmbeddedResource Include="StaticArbitrageHistoryForm.resx">
       <DependentUpon>StaticArbitrageHistoryForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="TickerArbitrageForm.resx">
-      <DependentUpon>TickerArbitrageForm.cs</DependentUpon>
+    <EmbeddedResource Include="ClassicArbitrageForm.resx">
+      <DependentUpon>ClassicArbitrageForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="TickerChartViewer.resx">
       <DependentUpon>TickerChartViewer.cs</DependentUpon>

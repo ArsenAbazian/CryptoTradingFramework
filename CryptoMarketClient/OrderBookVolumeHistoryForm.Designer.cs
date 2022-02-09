@@ -116,7 +116,7 @@
             // 
             this.colLowestAsk.DisplayFormat.FormatString = "0.00000000";
             this.colLowestAsk.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
-            this.colLowestAsk.FieldName = "LowestAsk";
+            this.colLowestAsk.FieldName = "Ask";
             this.colLowestAsk.Name = "colLowestAsk";
             this.colLowestAsk.Visible = true;
             this.colLowestAsk.VisibleIndex = 1;
@@ -125,7 +125,7 @@
             // 
             this.colHighestBid.DisplayFormat.FormatString = "0.00000000";
             this.colHighestBid.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
-            this.colHighestBid.FieldName = "HighestBid";
+            this.colHighestBid.FieldName = "Bid";
             this.colHighestBid.Name = "colHighestBid";
             this.colHighestBid.Visible = true;
             this.colHighestBid.VisibleIndex = 2;

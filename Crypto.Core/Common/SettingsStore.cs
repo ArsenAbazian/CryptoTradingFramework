@@ -1,6 +1,7 @@
 ﻿using Crypto.Core.Helpers;
 using Crypto.Core.Strategies;
 using System;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -28,6 +29,9 @@ namespace Crypto.Core.Common {
         public bool Save() {
             return SerializationHelper.Save(this, GetType(), null);
         }
+
+        void ISupportSerialization.OnStartSerialize() { }
+
         public void OnEndDeserialize() {
             TelegramBot.Default.TryAddClient(TelegramBotBroadcastId, TelegramBotActive, TelegramBotRegistrationCode, 0);
         }
@@ -61,7 +65,7 @@ namespace Crypto.Core.Common {
         
         public SettingsStore() {
             SelectedThemeName = "The Bezier";
-            SelectedPaletteName = "Witch Rave";
+            SelectedPaletteName = "Grasshopper";
             UseDirectXForGrid = true;
             UseDirectXForCharts = true;
 
@@ -72,6 +76,8 @@ namespace Crypto.Core.Common {
             Bitmex = false;
 
             SimulationSettings = new SimulationSettings() { KLineHistoryIntervalDays = 30 };
+
+            ClassicArbitrageLastFileName = ClassicArbitrageManager.DefaultFileName;
         }
         
         public string SelectedThemeName {
@@ -97,6 +103,24 @@ namespace Crypto.Core.Common {
         public bool Binance { get; set; }
         public bool BitFinex { get; set; }
         public bool Bitmex { get; set; }
+
+        string classicArbitrageLastFileName;
+        public string ClassicArbitrageLastFileName {
+            get { return classicArbitrageLastFileName; }
+            set {
+                if(ClassicArbitrageLastFileName == value)
+                    return;
+                classicArbitrageLastFileName = value;
+                RaiseSettingsChanged(nameof(ClassicArbitrageLastFileName));
+            }
+        }
+
+        private void RaiseSettingsChanged(string name) {
+            if(SettingsChanged != null)
+                SettingsChanged(this, new PropertyChangedEventArgs(name));
+        }
+
+        public event PropertyChangedEventHandler SettingsChanged;
     }
 }
 

@@ -1,37 +1,40 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Collections;
+using System.Xml.Serialization;
 
 namespace Crypto.Core.Helpers {
-    public interface IThreadLock {
-        bool ThreadLock { get; set; }
-    }
-    public class CycleArray<T> : IEnumerable<T>, IList<T>, IResizeableArray, IListSource, IList, IBindingList, IThreadLock {
-        public CycleArray(int capacity) { 
-            Items = new T[capacity];
+    public class ChainArray<T> : IEnumerable<T>, IList<T>, IResizeableArray, IListSource, IList, IBindingList {
+        public ChainArray() {
+            Groups = new List<T[]>(100);
+            ChainBitsCount = 10;
         }
 
-        public bool ThreadLock { get; set; }
+        protected int ChainBitsCount { get; set; }
+        protected int ChainSize { get { return 2 << ChainBitsCount; } }
+
+        [XmlIgnore]
         public IThreadManager ThreadManager { get; set; }
 
         object IResizeableArray.GetItem(int index) {
-            if(index >= Count)
-                return null;
-            return Items[index];
+            return GetItem(index);
         }
         int IResizeableArray.Count {
             get { return Count; }
         }
 
+        protected int GetGroupIndex(int index) { return index >> ChainBitsCount; }
+        protected int GetIndex(int index) { return index - ((index >> ChainBitsCount) << ChainBitsCount); }
+
         event ListChangedEventHandler listChanged;
         public event ListChangedEventHandler ListChanged {
             add {
                 for(int i = 0; i < Count; i++)
-                    SubscribeEvents(Items[i]);
+                    SubscribeEvents(this[i]);
                 AllowNotifyPropertyChanged = true;
                 listChanged += value;
             }
@@ -41,12 +44,17 @@ namespace Crypto.Core.Helpers {
         }
 
         event ListChangedEventHandler IBindingList.ListChanged {
-            add { ListChanged += value; }
-            remove { ListChanged -= value; }
+            add {
+                ListChanged += value;
+            }
+
+            remove {
+                ListChanged -= value;
+            }
         }
 
-        public static CycleArray<T> FromList(List<T> list) {
-            CycleArray<T> res = new CycleArray<T>(list.Count);
+        public static ResizeableArray<T> FromList(List<T> list) {
+            ResizeableArray<T> res = new ResizeableArray<T>(list.Count);
             foreach(T item in list) {
                 res.Add(item);
             }
@@ -58,44 +66,27 @@ namespace Crypto.Core.Helpers {
                 if(ThreadManager != null && ThreadManager.IsMultiThread) {
                     ThreadManager.Invoke((sender, ee) => listChanged(sender, ee), this, e);
                 }
-                else 
+                else
                     listChanged(this, e);
             }
         }
 
-        protected int End { get; private set; } = -1;
-        protected int Start { get; private set; } = 0;
-        
         public int Count { get; private set; }
-        public T[] Items { get; private set; }
-
-        public void AddFirst(T item) {
-            Start--;
-            if(Start < 0)
-                Start = Items.Length - 1;
-            if(Count == Items.Length && Start == End) 
-                End--;
-            if(End < 0)
-                End = Items.Length - 1;
-            Count = Math.Min(Count + 1, Items.Length);
-            Items[Start] = item;
-            OnInsert(item, Start);
-        }
+        protected List<T[]> Groups { get; private set; }
 
         public void Add(T item) {
-            End++;
-            if(End >= Items.Length)
-                End = 0;
-            if(Count == Items.Length && End == Start)
-                Start++;
-            if(Start >= Items.Length)
-                Start = 0;
-            Count = Math.Min(Count + 1, Items.Length);
-            Items[End] = item;
-            OnInsert(item, End);
+            int gi = GetGroupIndex(Count);
+            if(gi >= Groups.Count)
+                Groups.Add(new T[ChainSize]);
+            this[Count] = item;
+            Count++;
+            OnInsert(item, Count - 1);
+
         }
-        
+
         public bool AllowNotifyPropertyChanged { get; set; }
+        public bool SearchFromEnd { get; set; } = true;
+
         private void SubscribeEvents(object item) {
             if(!AllowNotifyPropertyChanged)
                 return;
@@ -114,9 +105,8 @@ namespace Crypto.Core.Helpers {
 
         private void OnInsert(T item, int index) {
             //RaiseListChanged(new ListChangedEventArgs(ListChangedType.Reset, index));
-            RaiseListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
-            //RaiseListChanged(new ListChangedEventArgs(ListChangedType.ItemAdded, index));
-            SubscribeEvents(item);   
+            RaiseListChanged(new ListChangedEventArgs(ListChangedType.ItemAdded, index));
+            SubscribeEvents(item);
         }
 
         protected virtual void OnItemPropertyChanged(object sender, PropertyChangedEventArgs e) {
@@ -124,7 +114,6 @@ namespace Crypto.Core.Helpers {
             RaiseListChanged(new ListChangedEventArgs(ListChangedType.ItemChanged, index));
         }
 
-        public bool SearchFromEnd { get; set; } = true;
         protected int GetItemIndex(T item, bool searchFromEnd) {
             if(searchFromEnd) {
                 for(int i = Count - 1; i >= 0; i--) {
@@ -143,18 +132,29 @@ namespace Crypto.Core.Helpers {
 
         public void Clear() {
             for(int i = 0; i < Count; i++)
-                UnsubscribeEvents(Items[i]);
+                UnsubscribeEvents(this[i]);
             Count = 0;
-            End = -1;
             RaiseListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
         }
 
+        public void Insert(int index, T item) {
+            throw new NotImplementedException("Inset cannot be implemented normally in ChainArray");
+        }
+
+        public void RemoveAt(int index) {
+            throw new NotImplementedException("RemoveAt cannot be implemented normally in ChainArray");
+        }
+
+        public bool Remove(T item) {
+            throw new NotImplementedException("Remove cannot be implemented normally in ChainArray");
+        }
+
         IEnumerator<T> IEnumerable<T>.GetEnumerator() {
-            return new CycleArrayEnumerator<T>(this);
+            return new ChainArrayEnumerator<T>(this);
         }
 
         IEnumerator IEnumerable.GetEnumerator() {
-            return new CycleArrayEnumeratorObject<T>(this);
+            return new ChainArrayEnumeratorObject<T>(this);
         }
 
         int ICollection<T>.Count => Count;
@@ -177,7 +177,7 @@ namespace Crypto.Core.Helpers {
 
         bool IBindingList.AllowEdit => true;
 
-        bool IBindingList.AllowRemove => true;
+        bool IBindingList.AllowRemove => false;
 
         bool IBindingList.SupportsChangeNotification => true;
 
@@ -191,63 +191,55 @@ namespace Crypto.Core.Helpers {
 
         ListSortDirection IBindingList.SortDirection => throw new NotSupportedException();
 
-        object IList.this[int index] { 
-            get { return this[index]; } 
-            set {  this[index] = (T)value; }
-        }
-
-        protected int GetActualIndex(int index) {
-            int resIndex = Start + index;
-            if(resIndex >= Items.Length)
-                resIndex -= Items.Length;
-            return resIndex;
-        }
+        object IList.this[int index] { get => this[index]; set => this[index] = (T)value; }
 
         T IList<T>.this[int index] {
-            get { 
-                if(index >= Count)
-                    return default(T);
-                return Items[GetActualIndex(index)]; 
-                }
+            get { return GetItem(index); }
             set {
-                if(index >= Count)
+                if(index >= Count) {
+                    Add(value);
                     return;
-                Items[GetActualIndex(index)] = value;
+                }
+                Groups[GetGroupIndex(index)][GetIndex(index)] = value;
+                RaiseListChanged(new ListChangedEventArgs(ListChangedType.ItemChanged, index));
+            }
+        }
+        public T this[int index] {
+            get { return GetItem(index); }
+            set {
+                if(index >= Count) {
+                    Add(value);
+                    return;
+                }
+                Groups[GetGroupIndex(index)][GetIndex(index)] = value;
                 RaiseListChanged(new ListChangedEventArgs(ListChangedType.ItemChanged, index));
             }
         }
 
-        public T this[int index] {
-            get { 
-                if(index >= Count)
-                    return default(T);
-                return Items[GetActualIndex(index)]; 
-                }
-            set {
-                if(index >= Count)
-                    return;
-                Items[GetActualIndex(index)] = value;
-                RaiseListChanged(new ListChangedEventArgs(ListChangedType.ItemChanged, index));
-            }
+        public T GetItem(int index) {
+            if(index >= Count)
+                return default(T);
+            return Groups[GetGroupIndex(index)][GetIndex(index)];
         }
 
         public int IndexOf(T item) {
             for(int i = 0; i < Count; i++) {
-                if(object.Equals(this[i], item))
+                if(object.Equals(GetItem(i), item))
                     return i;
             }
             return -1;
         }
+
         int IList<T>.IndexOf(T item) {
             return IndexOf(item);
         }
 
         void IList<T>.Insert(int index, T item) {
-            throw new NotImplementedException();
+            Insert(index, item);
         }
 
         void IList<T>.RemoveAt(int index) {
-            throw new NotImplementedException();
+            RemoveAt(index);
         }
 
         void ICollection<T>.Add(T item) {
@@ -259,27 +251,34 @@ namespace Crypto.Core.Helpers {
         }
 
         bool ICollection<T>.Contains(T item) {
-            return ((IList<T>)this).IndexOf(item) != -1;
+            return IndexOf(item) != -1;
         }
 
         void ICollection<T>.CopyTo(T[] array, int arrayIndex) {
             for(int i = 0; i < Count; i++)
-                array[i + arrayIndex] = this[i];
+                array[i + arrayIndex] = GetItem(i);
         }
 
         bool ICollection<T>.Remove(T item) {
-            throw new NotImplementedException();
+            return Remove(item);
+        }
+        public void Push(T item) {
+            Add(item);
+        }
+        public void Pop() {
+            if(Count > 0)
+                Count--;
         }
 
-        public T Last() { return Count == 0? default(T): Items[Count - 1]; }
+        public T Last() { return Count == 0 ? default(T) : GetItem(Count - 1); }
         public void AddRange(ResizeableArray<T> data) {
             for(int i = 0; i < data.Count; i++) {
-                Add(data[i]);
+                Add(data.Items[i]);
             }
         }
         public void AddRangeReversed(ResizeableArray<T> data) {
             for(int i = data.Count - 1; i >= 0; i--) {
-                Add(data[i]);
+                Add(data.Items[i]);
             }
         }
 
@@ -293,7 +292,7 @@ namespace Crypto.Core.Helpers {
         }
 
         bool IList.Contains(object value) {
-            return Items.Contains((T)value);
+            return IndexOf((T)value) != -1;
         }
 
         void IList.Clear() {
@@ -305,20 +304,20 @@ namespace Crypto.Core.Helpers {
         }
 
         void IList.Insert(int index, object value) {
-            throw new NotImplementedException();
+            Insert(index, (T)value);
         }
 
         void IList.Remove(object value) {
-            throw new NotImplementedException();
+            Remove((T)value);
         }
 
         void IList.RemoveAt(int index) {
-            throw new NotImplementedException();
+            RemoveAt(index);
         }
 
         void ICollection.CopyTo(Array array, int index) {
             for(int i = 0; i < Count; i++)
-                array.SetValue(this[i], index + i);
+                array.SetValue(GetItem(i), index + i);
         }
 
         object IBindingList.AddNew() {
@@ -346,21 +345,21 @@ namespace Crypto.Core.Helpers {
         }
     }
 
-    public class CycleArrayEnumerator<T> : IEnumerator<T> {
-        public CycleArrayEnumerator(CycleArray<T> owner) {
+    public class ChainArrayEnumerator<T> : IEnumerator<T> {
+        public ChainArrayEnumerator(ChainArray<T> owner) {
             Owner = owner;
             CurrentIndex = -1;
         }
 
         protected int CurrentIndex { get; private set; }
-        protected CycleArray<T> Owner { get; private set; }
+        protected ChainArray<T> Owner { get; private set; }
         T IEnumerator<T>.Current {
             get {
                 if(CurrentIndex == -1)
                     return default(T);
                 if(CurrentIndex >= Owner.Count)
                     return default(T);
-                return Owner[CurrentIndex];
+                return Owner.GetItem(CurrentIndex);
             }
         }
 
@@ -370,12 +369,12 @@ namespace Crypto.Core.Helpers {
                     return default(T);
                 if(CurrentIndex >= Owner.Count)
                     return default(T);
-                return Owner[CurrentIndex];
+                return Owner.GetItem(CurrentIndex);
             }
         }
 
         void IDisposable.Dispose() {
-            
+
         }
 
         bool IEnumerator.MoveNext() {
@@ -390,14 +389,14 @@ namespace Crypto.Core.Helpers {
         }
     }
 
-    public class CycleArrayEnumeratorObject<T> : IEnumerator {
-        public CycleArrayEnumeratorObject(CycleArray<T> owner) {
+    public class ChainArrayEnumeratorObject<T> : IEnumerator {
+        public ChainArrayEnumeratorObject(ChainArray<T> owner) {
             Owner = owner;
             CurrentIndex = -1;
         }
 
         protected int CurrentIndex { get; private set; }
-        protected CycleArray<T> Owner { get; private set; }
+        protected ChainArray<T> Owner { get; private set; }
 
         object IEnumerator.Current {
             get {
@@ -405,7 +404,7 @@ namespace Crypto.Core.Helpers {
                     return default(T);
                 if(CurrentIndex >= Owner.Count)
                     return default(T);
-                return Owner[CurrentIndex];
+                return Owner.GetItem(CurrentIndex);
             }
         }
 

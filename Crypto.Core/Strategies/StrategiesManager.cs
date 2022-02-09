@@ -59,6 +59,8 @@ namespace Crypto.Core.Strategies {
             return res;
         }
 
+        void ISupportSerialization.OnStartSerialize() { }
+
         public void OnEndDeserialize() {
             foreach(var s in Strategies)
                 s.Manager = this;

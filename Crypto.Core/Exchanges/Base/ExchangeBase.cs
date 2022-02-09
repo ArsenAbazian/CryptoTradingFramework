@@ -308,6 +308,8 @@ namespace Crypto.Core {
             return SerializationHelper.Save(this, GetType(), null);
         }
 
+        void ISupportSerialization.OnStartSerialize() { }
+
         public virtual void OnEndDeserialize() {
             foreach(AccountInfo info in Accounts) {
                 info.Exchange = this;
@@ -1386,6 +1388,13 @@ namespace Crypto.Core {
                     markets.Add(t.BaseCurrency);
             }
             return markets.ToArray();
+        }
+        public CurrencyInfoBase GetCurrency(string currency) {
+            for(int i = 0; i < Currencies.Count; i++) {
+                if(Currencies[i].Currency == currency)
+                    return Currencies[i];
+            }
+            return null;
         }
 
         List<CandleStickIntervalInfo> allowedCandleStickIntervals;

@@ -209,7 +209,7 @@ namespace Crypto.Core.Exchanges.Bitmex {
 
         public override bool ObtainExchangeSettings() {
             RequestRate = new List<RateLimit>();
-            RequestRate.Add(new RateLimit() { Interval = TimeSpan.TicksPerMinute, Limit = 60 });
+            RequestRate.Add(new RateLimit(this) { Interval = TimeSpan.TicksPerMinute, Limit = 60 });
             return true;
         }
 
