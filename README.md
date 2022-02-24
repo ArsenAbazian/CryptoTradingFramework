@@ -1,8 +1,10 @@
 ![CryptoTraderAuto](https://github.com/ArsenAbazian/CryptoTradingFramework/blob/master/Help/WhatsNew_01_25_2022.png)
 ![CryptoTraderAuto](https://github.com/ArsenAbazian/CryptoTradingFramework/blob/master/Help/CryptoTraderAuto-AtGlance.png)
 
-Latest Updates 
+##Latest Updates 
+
 https://github.com/ArsenAbazian/CryptoTradingFramework/wiki/Update-From-01-25-2022
+https://github.com/ArsenAbazian/CryptoTradingFramework/wiki/Update-From-09-02-2022
 
 CryptoTradingFramework allows you to create various applications for crypto exchanges.
 * Monitoring
