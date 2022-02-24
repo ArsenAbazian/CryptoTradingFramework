@@ -2,7 +2,7 @@
 ![CryptoTraderAuto](https://github.com/ArsenAbazian/CryptoTradingFramework/blob/master/Help/CryptoTraderAuto-AtGlance.png)
 ![CryptoTraderAuto](https://github.com/ArsenAbazian/CryptoTradingFramework/blob/master/Help/ExchangesForm.png)
 
-##Latest Updates 
+## Latest Updates 
 
 https://github.com/ArsenAbazian/CryptoTradingFramework/wiki/Update-From-24-02-2022
 https://github.com/ArsenAbazian/CryptoTradingFramework/wiki/Update-From-01-25-2022
