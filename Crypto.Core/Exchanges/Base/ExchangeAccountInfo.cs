@@ -218,14 +218,14 @@ namespace Crypto.Core {
         }
         #endregion
 
-        public string GetSign(string text) {
-            byte[] data = Encoding.ASCII.GetBytes(text);
-            byte[] hash = HmacSha.ComputeHash(data);
-            return BitConverter.ToString(hash).Replace("-", string.Empty).ToLower();
-            //StringBuilder builder = new StringBuilder();
-            //for(int i = 0; i < hash.Length; i++)
-            //    builder.Append(hash[i].ToString("x2", CultureInfo.InvariantCulture));
-            //return builder.ToString();
+        public virtual string GetSign(string text) {
+            return Exchange.GetSign(text, this);
+        }
+        public virtual string GetSign(string path, string text, string nonce) {
+            return Exchange.GetSign(path, text, nonce, this);
+        }
+        public virtual string GetSign(HttpRequestParamsCollection coll) {
+            return Exchange.GetSign(coll, this);
         }
 
         [XmlIgnore]
@@ -262,6 +262,7 @@ namespace Crypto.Core {
         Binance,
         Yobit,
         Bitmex,
-        BinanceFutures
+        BinanceFutures,
+        Kraken
     }
 }

@@ -242,6 +242,12 @@
     <Compile Include="Exchanges\Binance\Futures\BinanceFuturesTicker.cs" />
     <Compile Include="Exchanges\Binance\Futures\BinanceFuturesIncUpdateDataProvider.cs.cs" />
     <Compile Include="Exchanges\Bitmex\BitmexAccountBalanceInfo.cs" />
+    <Compile Include="Exchanges\Kraken\KrakenAccountBalanceInfo.cs" />
+    <Compile Include="Exchanges\Kraken\KrakenCurrencyInfo.cs" />
+    <Compile Include="Exchanges\Kraken\KrakenExchange.cs" />
+    <Compile Include="Exchanges\Kraken\KrakenIncUpdateDataProvider.cs" />
+    <Compile Include="Exchanges\Kraken\KrakenSocketConnectionInfo.cs" />
+    <Compile Include="Exchanges\Kraken\KrakenTicker.cs" />
     <Compile Include="Helpers\BindingHelper.cs" />
     <Compile Include="Helpers\ChainArray.cs" />
     <Compile Include="Helpers\ClassicArbitrageListener.cs" />
@@ -329,7 +335,7 @@
     <Compile Include="Exchanges\Poloniex\PoloniexModel.cs" />
     <Compile Include="Exchanges\Poloniex\PoloniexTicker.cs" />
     <Compile Include="Exchanges\Poloniex\PoloniexTickerCodesProvider.cs" />
-    <Compile Include="Helpers\JSonHelper.cs" />
+    <Compile Include="Helpers\JsonHelper.cs" />
     <Compile Include="Helpers\SlackBot.cs" />
     <Compile Include="Helpers\Telemetry.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

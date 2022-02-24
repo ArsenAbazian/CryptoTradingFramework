@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Crypto.Core.Helpers;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,24 +9,30 @@ using System.Threading.Tasks;
 namespace Crypto.Core.Exchanges.Bittrex {
     public class BittrexIncrementalUpdateDataProvider : IIncrementalUpdateDataProvider {
         public void Update(Ticker ticker, IncrementalUpdateInfo info) {
-            for(int i = 0; i < info.BidsUpdates.Count; i++) {
-                string[] item = info.BidsUpdates[i];
-                ticker.OrderBook.ApplyIncrementalUpdate(OrderBookEntryType.Bid, item[1], item[2]);
+            if(info.BidsUpdates != null) {
+                for(int i = 0; i < info.BidsUpdates.Count; i++) {
+                    string[] item = info.BidsUpdates[i];
+                    ticker.OrderBook.ApplyIncrementalUpdate(OrderBookEntryType.Bid, item[0], item[1]);
+                }
             }
-            for(int i = 0; i < info.AsksUpdates.Count; i++) {
-                string[] item = info.AsksUpdates[i];
-                ticker.OrderBook.ApplyIncrementalUpdate(OrderBookEntryType.Ask, item[1], item[2]);
+            if(info.AsksUpdates != null) {
+                for(int i = 0; i < info.AsksUpdates.Count; i++) {
+                    string[] item = info.AsksUpdates[i];
+                    ticker.OrderBook.ApplyIncrementalUpdate(OrderBookEntryType.Ask, item[0], item[1]);
+                }
             }
-            for(int i = 0; i < info.TradeUpdates.Count; i++) {
-                string[] item = info.TradeUpdates[i];
-                TradeInfoItem trade = new TradeInfoItem(null, ticker) {
-                        Type = item[1][0] == 'S' ? TradeType.Sell : TradeType.Buy, 
-                        RateString = item[2], 
-                        AmountString = item[3], 
+            if(info.TradeUpdates != null) {
+                for(int i = 0; i < info.TradeUpdates.Count; i++) {
+                    string[] item = info.TradeUpdates[i];
+                    TradeInfoItem trade = new TradeInfoItem(null, ticker) {
+                        Type = item[1][0] == 'S' ? TradeType.Sell : TradeType.Buy,
+                        RateString = item[2],
+                        AmountString = item[3],
                         Time = new DateTime(Convert.ToInt64(item[4])).ToLocalTime()
-                };
-                ticker.AddTradeHistoryItem(trade);//.InsertTradeHistoryItem(trade);
-                CandleStickChartHelper.UpdateVolumes(ticker.CandleStickData, trade, ticker.CandleStickPeriodMin);
+                    };
+                    ticker.AddTradeHistoryItem(trade);//.InsertTradeHistoryItem(trade);
+                    CandleStickChartHelper.UpdateVolumes(ticker.CandleStickData, trade, ticker.CandleStickPeriodMin);
+                }
             }
             ticker.OnApplyIncrementalUpdate();
         }
@@ -72,6 +79,9 @@ namespace Crypto.Core.Exchanges.Bittrex {
             if(ticker.HasTradeHistorySubscribers) {
                 ticker.RaiseTradeHistoryChanged(new TradeHistoryChangedEventArgs() { NewItems = ticker.TradeHistory });
             }
+        }
+        public void ApplySnapshot(JsonHelperToken root, Ticker ticker) {
+            throw new NotImplementedException();
         }
     }
 }

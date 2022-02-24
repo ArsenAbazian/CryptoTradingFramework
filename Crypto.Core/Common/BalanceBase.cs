@@ -19,6 +19,7 @@ namespace Crypto.Core.Common {
         public double Available { get; set; }
         public double LastAvailable { get; set; }
         public double OnOrders { get; set; }
+        public string Status { get; set; }
         double btcValue;
         public double BtcValue {
             get {
@@ -36,7 +37,7 @@ namespace Crypto.Core.Common {
                     return double.NaN;
                 if(UsdtTicker != null)
                     return UsdtTicker.HighestBid;
-                if(BtcTicker != null)
+                if(BtcTicker != null && BtcTicker.UsdTicker != null)
                     return BtcValue * BtcTicker.HighestBid * BtcTicker.UsdTicker.HighestBid;
                 return double.NaN;
             }
@@ -45,6 +46,8 @@ namespace Crypto.Core.Common {
             get {
                 if(ExchangeCore == null)
                     return double.NaN;
+                if(Currency == "USDT")
+                    return Available + OnOrders;
                 if(UsdtTicker != null)
                     return UsdtTicker.HighestBid * (Available + OnOrders);
                 if(ExchangeCore.BtcUsdtTicker == null)
@@ -69,6 +72,7 @@ namespace Crypto.Core.Common {
             }
         }
         public string DepositAddress { get; set; }
+        public string DepositTag { get; set; }
         public double DepositChanged {
             get {
                 double max = Math.Max(Available, LastAvailable);
@@ -77,6 +81,13 @@ namespace Crypto.Core.Common {
                     return 0;
                 return (delta / max);
             }
+        }
+        public void Clear() {
+            Balance = 0;
+            Available = 0;
+            LastAvailable = 0;
+            OnOrders = 0;
+            DepositAddress = null;
         }
     }
 }

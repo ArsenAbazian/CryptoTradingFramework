@@ -79,17 +79,17 @@
             this.dataLayoutControl1.Margin = new System.Windows.Forms.Padding(5);
             this.dataLayoutControl1.Name = "dataLayoutControl1";
             this.dataLayoutControl1.Root = this.layoutControlGroup1;
-            this.dataLayoutControl1.Size = new System.Drawing.Size(777, 334);
+            this.dataLayoutControl1.Size = new System.Drawing.Size(992, 609);
             this.dataLayoutControl1.TabIndex = 0;
             this.dataLayoutControl1.Text = "dataLayoutControl1";
             // 
             // btCancel
             // 
             this.btCancel.AutoWidthInLayoutControl = true;
-            this.btCancel.Location = new System.Drawing.Point(567, 278);
+            this.btCancel.Location = new System.Drawing.Point(786, 553);
             this.btCancel.Name = "btCancel";
             this.btCancel.Padding = new System.Windows.Forms.Padding(52, 0, 52, 0);
-            this.btCancel.Size = new System.Drawing.Size(198, 44);
+            this.btCancel.Size = new System.Drawing.Size(194, 44);
             this.btCancel.StyleController = this.dataLayoutControl1;
             this.btCancel.TabIndex = 11;
             this.btCancel.Text = "Cancel";
@@ -98,10 +98,10 @@
             // btOk
             // 
             this.btOk.AutoWidthInLayoutControl = true;
-            this.btOk.Location = new System.Drawing.Point(408, 278);
+            this.btOk.Location = new System.Drawing.Point(611, 553);
             this.btOk.Name = "btOk";
             this.btOk.Padding = new System.Windows.Forms.Padding(52, 0, 52, 0);
-            this.btOk.Size = new System.Drawing.Size(155, 44);
+            this.btOk.Size = new System.Drawing.Size(151, 44);
             this.btOk.StyleController = this.dataLayoutControl1;
             this.btOk.TabIndex = 10;
             this.btOk.Text = "OK";
@@ -110,9 +110,9 @@
             // NameTextEdit
             // 
             this.NameTextEdit.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.exchangeAccountInfoBindingSource, "Name", true));
-            this.NameTextEdit.Location = new System.Drawing.Point(101, 62);
+            this.NameTextEdit.Location = new System.Drawing.Point(110, 72);
             this.NameTextEdit.Name = "NameTextEdit";
-            this.NameTextEdit.Size = new System.Drawing.Size(664, 46);
+            this.NameTextEdit.Size = new System.Drawing.Size(870, 46);
             this.NameTextEdit.StyleController = this.dataLayoutControl1;
             this.NameTextEdit.TabIndex = 4;
             // 
@@ -123,32 +123,32 @@
             // TypeImageComboBoxEdit
             // 
             this.TypeImageComboBoxEdit.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.exchangeAccountInfoBindingSource, "Type", true));
-            this.TypeImageComboBoxEdit.Location = new System.Drawing.Point(101, 12);
+            this.TypeImageComboBoxEdit.Location = new System.Drawing.Point(110, 12);
             this.TypeImageComboBoxEdit.Name = "TypeImageComboBoxEdit";
             this.TypeImageComboBoxEdit.Properties.Appearance.Options.UseTextOptions = true;
             this.TypeImageComboBoxEdit.Properties.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Far;
             this.TypeImageComboBoxEdit.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
             this.TypeImageComboBoxEdit.Properties.UseCtrlScroll = true;
-            this.TypeImageComboBoxEdit.Size = new System.Drawing.Size(664, 46);
+            this.TypeImageComboBoxEdit.Size = new System.Drawing.Size(870, 46);
             this.TypeImageComboBoxEdit.StyleController = this.dataLayoutControl1;
             this.TypeImageComboBoxEdit.TabIndex = 7;
             // 
             // ApiKeyTextEdit
             // 
             this.ApiKeyTextEdit.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.exchangeAccountInfoBindingSource, "ApiKey", true));
-            this.ApiKeyTextEdit.Location = new System.Drawing.Point(101, 112);
+            this.ApiKeyTextEdit.Location = new System.Drawing.Point(110, 132);
             this.ApiKeyTextEdit.Name = "ApiKeyTextEdit";
-            this.ApiKeyTextEdit.Size = new System.Drawing.Size(664, 46);
+            this.ApiKeyTextEdit.Size = new System.Drawing.Size(870, 46);
             this.ApiKeyTextEdit.StyleController = this.dataLayoutControl1;
             this.ApiKeyTextEdit.TabIndex = 8;
             // 
             // SecretTextEdit
             // 
             this.SecretTextEdit.DataBindings.Add(new System.Windows.Forms.Binding("EditValue", this.exchangeAccountInfoBindingSource, "Secret", true));
-            this.SecretTextEdit.Location = new System.Drawing.Point(101, 162);
+            this.SecretTextEdit.Location = new System.Drawing.Point(110, 192);
             this.SecretTextEdit.Name = "SecretTextEdit";
-            this.SecretTextEdit.Size = new System.Drawing.Size(664, 46);
+            this.SecretTextEdit.Size = new System.Drawing.Size(870, 46);
             this.SecretTextEdit.StyleController = this.dataLayoutControl1;
             this.SecretTextEdit.TabIndex = 9;
             // 
@@ -162,7 +162,7 @@
             this.layoutControlItem1,
             this.emptySpaceItem2});
             this.layoutControlGroup1.Name = "layoutControlGroup1";
-            this.layoutControlGroup1.Size = new System.Drawing.Size(777, 334);
+            this.layoutControlGroup1.Size = new System.Drawing.Size(992, 609);
             this.layoutControlGroup1.TextVisible = false;
             // 
             // layoutControlGroup2
@@ -179,41 +179,44 @@
             this.ItemForType});
             this.layoutControlGroup2.Location = new System.Drawing.Point(0, 0);
             this.layoutControlGroup2.Name = "autoGeneratedGroup0";
-            this.layoutControlGroup2.Size = new System.Drawing.Size(757, 266);
+            this.layoutControlGroup2.Size = new System.Drawing.Size(972, 541);
             // 
             // ItemForName
             // 
             this.ItemForName.Control = this.NameTextEdit;
-            this.ItemForName.Location = new System.Drawing.Point(0, 50);
+            this.ItemForName.Location = new System.Drawing.Point(0, 60);
             this.ItemForName.Name = "ItemForName";
-            this.ItemForName.Size = new System.Drawing.Size(757, 50);
+            this.ItemForName.Padding = new DevExpress.XtraLayout.Utils.Padding(2, 2, 2, 12);
+            this.ItemForName.Size = new System.Drawing.Size(972, 60);
             this.ItemForName.Text = "Name";
             this.ItemForName.TextSize = new System.Drawing.Size(86, 31);
             // 
             // ItemForApiKey
             // 
             this.ItemForApiKey.Control = this.ApiKeyTextEdit;
-            this.ItemForApiKey.Location = new System.Drawing.Point(0, 100);
+            this.ItemForApiKey.Location = new System.Drawing.Point(0, 120);
             this.ItemForApiKey.Name = "ItemForApiKey";
-            this.ItemForApiKey.Size = new System.Drawing.Size(757, 50);
+            this.ItemForApiKey.Padding = new DevExpress.XtraLayout.Utils.Padding(2, 2, 2, 12);
+            this.ItemForApiKey.Size = new System.Drawing.Size(972, 60);
             this.ItemForApiKey.Text = "Api Key";
             this.ItemForApiKey.TextSize = new System.Drawing.Size(86, 31);
             // 
             // ItemForSecret
             // 
             this.ItemForSecret.Control = this.SecretTextEdit;
-            this.ItemForSecret.Location = new System.Drawing.Point(0, 150);
+            this.ItemForSecret.Location = new System.Drawing.Point(0, 180);
             this.ItemForSecret.Name = "ItemForSecret";
-            this.ItemForSecret.Size = new System.Drawing.Size(757, 50);
+            this.ItemForSecret.Padding = new DevExpress.XtraLayout.Utils.Padding(2, 2, 2, 12);
+            this.ItemForSecret.Size = new System.Drawing.Size(972, 60);
             this.ItemForSecret.Text = "Secret";
             this.ItemForSecret.TextSize = new System.Drawing.Size(86, 31);
             // 
             // emptySpaceItem1
             // 
             this.emptySpaceItem1.AllowHotTrack = false;
-            this.emptySpaceItem1.Location = new System.Drawing.Point(0, 200);
+            this.emptySpaceItem1.Location = new System.Drawing.Point(0, 240);
             this.emptySpaceItem1.Name = "emptySpaceItem1";
-            this.emptySpaceItem1.Size = new System.Drawing.Size(757, 66);
+            this.emptySpaceItem1.Size = new System.Drawing.Size(972, 301);
             this.emptySpaceItem1.TextSize = new System.Drawing.Size(0, 0);
             // 
             // ItemForType
@@ -221,34 +224,36 @@
             this.ItemForType.Control = this.TypeImageComboBoxEdit;
             this.ItemForType.Location = new System.Drawing.Point(0, 0);
             this.ItemForType.Name = "ItemForType";
-            this.ItemForType.Size = new System.Drawing.Size(757, 50);
+            this.ItemForType.Padding = new DevExpress.XtraLayout.Utils.Padding(2, 2, 2, 12);
+            this.ItemForType.Size = new System.Drawing.Size(972, 60);
             this.ItemForType.Text = "Type";
             this.ItemForType.TextSize = new System.Drawing.Size(86, 31);
             // 
             // layoutControlItem2
             // 
             this.layoutControlItem2.Control = this.btCancel;
-            this.layoutControlItem2.Location = new System.Drawing.Point(555, 266);
+            this.layoutControlItem2.Location = new System.Drawing.Point(774, 541);
             this.layoutControlItem2.Name = "layoutControlItem2";
-            this.layoutControlItem2.Size = new System.Drawing.Size(202, 48);
+            this.layoutControlItem2.Size = new System.Drawing.Size(198, 48);
             this.layoutControlItem2.TextSize = new System.Drawing.Size(0, 0);
             this.layoutControlItem2.TextVisible = false;
             // 
             // layoutControlItem1
             // 
             this.layoutControlItem1.Control = this.btOk;
-            this.layoutControlItem1.Location = new System.Drawing.Point(396, 266);
+            this.layoutControlItem1.Location = new System.Drawing.Point(599, 541);
             this.layoutControlItem1.Name = "layoutControlItem1";
-            this.layoutControlItem1.Size = new System.Drawing.Size(159, 48);
+            this.layoutControlItem1.Padding = new DevExpress.XtraLayout.Utils.Padding(2, 22, 2, 2);
+            this.layoutControlItem1.Size = new System.Drawing.Size(175, 48);
             this.layoutControlItem1.TextSize = new System.Drawing.Size(0, 0);
             this.layoutControlItem1.TextVisible = false;
             // 
             // emptySpaceItem2
             // 
             this.emptySpaceItem2.AllowHotTrack = false;
-            this.emptySpaceItem2.Location = new System.Drawing.Point(0, 266);
+            this.emptySpaceItem2.Location = new System.Drawing.Point(0, 541);
             this.emptySpaceItem2.Name = "emptySpaceItem2";
-            this.emptySpaceItem2.Size = new System.Drawing.Size(396, 48);
+            this.emptySpaceItem2.Size = new System.Drawing.Size(599, 48);
             this.emptySpaceItem2.TextSize = new System.Drawing.Size(0, 0);
             // 
             // dxErrorProvider1
@@ -259,11 +264,11 @@
             // 
             this.Appearance.FontSizeDelta = 2;
             this.Appearance.Options.UseFont = true;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(965F, 2125F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(968F, 2131F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(777, 334);
+            this.ClientSize = new System.Drawing.Size(992, 609);
             this.Controls.Add(this.dataLayoutControl1);
-            this.Font = new System.Drawing.Font("Tahoma", 659.875F);
+            this.Font = new System.Drawing.Font("Tahoma", 661.875F);
             this.Margin = new System.Windows.Forms.Padding(5);
             this.Name = "AccountEditingForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;

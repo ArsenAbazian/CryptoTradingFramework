@@ -117,7 +117,7 @@ namespace Crypto.Core {
                 return;
             }
 
-            List<string[]> items = JSonHelper.Default.DeserializeArrayOfArrays(Encoding.Default.GetBytes(message), ref startIndex, 6);
+            List<string[]> items = JsonHelper.Default.DeserializeArrayOfArrays(Encoding.Default.GetBytes(message), ref startIndex, 6);
             if(!ticker.Updates.Push(seqNumber, ticker, items)) {
                 Reconnect();
                 return;
@@ -295,6 +295,10 @@ namespace Crypto.Core {
             return null;
         }
 
+        public override CurrencyInfoBase CreateCurrency(string currency) {
+            return new PoloniexCurrencyInfo(currency);
+        }
+
         public override ResizeableArray<CandleStickData> GetCandleStickData(Ticker ticker, int candleStickPeriodMin, DateTime start, long periodInSeconds) {
             long startSec = (long)(start.Subtract(epoch)).TotalSeconds;
             long end = startSec + periodInSeconds;
@@ -311,14 +315,14 @@ namespace Crypto.Core {
             if(bytes == null || bytes.Length == 0)
                 return null;
 
-            var scheme = JSonHelper.Default.GetObjectScheme(Type + "/candlestickdata", bytes);
+            var scheme = JsonHelper.Default.GetObjectScheme(Type + "/candlestickdata", bytes);
             if(scheme == null || scheme.IsEmpty)
                 return new ResizeableArray<CandleStickData>();
 
             DateTime startTime = new DateTime(1970, 1, 1);
             
             int startIndex = 0;
-            List<string[]> res = JSonHelper.Default.DeserializeArrayOfObjects(bytes, ref startIndex, scheme.Names);
+            List<string[]> res = JsonHelper.Default.DeserializeArrayOfObjects(bytes, ref startIndex, scheme.Names);
             if(res == null) 
                 return new ResizeableArray<CandleStickData>();
 
@@ -373,7 +377,7 @@ namespace Crypto.Core {
                 JObject obj = (JObject)prop.Value;
                 PoloniexCurrencyInfo c = (PoloniexCurrencyInfo)Currencies.FirstOrDefault(curr => curr.Currency == currency);
                 if(c == null) {
-                    c = new PoloniexCurrencyInfo();
+                    c = (PoloniexCurrencyInfo)CreateCurrency(currency);
                     c.Currency = currency;
                     c.MaxDailyWithdrawal = obj.Value<double>("maxDailyWithdrawal");
                     c.TxFee = obj.Value<double>("txFee");
@@ -406,15 +410,15 @@ namespace Crypto.Core {
                     t.Code = PoloniexTickerCodesProvider.Codes[t.CurrencyPair];
                 JObject obj = (JObject)prop.Value;
                 t.Id = obj.Value<int>("id");
-                t.Last = obj.Value<double>("last");
-                t.LowestAsk = obj.Value<double>("lowestAsk");
-                t.HighestBid = obj.Value<double>("highestBid");
+                t.LastString = obj.Value<string>("last");
+                t.LowestAskString = obj.Value<string>("lowestAsk");
+                t.HighestBidString = obj.Value<string>("highestBid");
                 //t.Change = obj.Value<double>("percentChange");
-                t.BaseVolume = obj.Value<double>("baseVolume");
-                t.Volume = obj.Value<double>("quoteVolume");
+                t.BaseVolumeString = obj.Value<string>("baseVolume");
+                t.VolumeString = obj.Value<string>("quoteVolume");
                 t.IsFrozen = obj.Value<int>("isFrozen") != 0;
-                t.Hr24High = obj.Value<double>("high24hr");
-                t.Hr24Low = obj.Value<double>("low24hr");
+                t.Hr24HighString = obj.Value<string>("high24hr");
+                t.Hr24LowString = obj.Value<string>("low24hr");
                 AddTicker(t);
                 index++;
             }
@@ -472,17 +476,17 @@ namespace Crypto.Core {
                 return false;
 
             int startIndex = 1; // skip {
-            if(!JSonHelper.Default.FindChar(bytes, ':', ref startIndex))
+            if(!JsonHelper.Default.FindChar(bytes, ':', ref startIndex))
                 return false;
             startIndex++;
-            List<string[]> jasks = JSonHelper.Default.DeserializeArrayOfArrays(bytes, ref startIndex, 2);
-            if(!JSonHelper.Default.FindChar(bytes, ',', ref startIndex))
+            List<string[]> jasks = JsonHelper.Default.DeserializeArrayOfArrays(bytes, ref startIndex, 2);
+            if(!JsonHelper.Default.FindChar(bytes, ',', ref startIndex))
                 return false;
             startIndex++;
-            if(!JSonHelper.Default.FindChar(bytes, ':', ref startIndex))
+            if(!JsonHelper.Default.FindChar(bytes, ':', ref startIndex))
                 return false;
             startIndex++;
-            List<string[]> jbids = JSonHelper.Default.DeserializeArrayOfArrays(bytes, ref startIndex, 2);
+            List<string[]> jbids = JsonHelper.Default.DeserializeArrayOfArrays(bytes, ref startIndex, 2);
 
             ticker.OrderBook.BeginUpdate();
             try {
@@ -559,11 +563,6 @@ namespace Crypto.Core {
         public override bool UpdateOrderBook(Ticker ticker) {
             return GetOrderBook(ticker, OrderBook.Depth);
         }
-        public override bool ProcessOrderBook(Ticker tickerBase, string text) {
-            OnUpdateOrderBook(tickerBase, Encoding.Default.GetBytes(text));
-            //UpdateOrderBook(tickerBase, text);
-            return true;
-        }
         public bool GetOrderBook(Ticker ticker, int depth) {
             string address = string.Format("https://poloniex.com/public?command=returnOrderBook&currencyPair={0}&depth={1}",
                 Uri.EscapeDataString(ticker.CurrencyPair), depth);
@@ -615,12 +614,12 @@ namespace Crypto.Core {
             if(bytes == null)
                 return null;
 
-            var scheme = JSonHelper.Default.GetObjectScheme(Type + "/returnTradeHistory", bytes);
+            var scheme = JsonHelper.Default.GetObjectScheme(Type + "/returnTradeHistory", bytes);
             if(scheme.IsEmpty)
                 return null;
 
             int startIndex = 0;
-            List<string[]> trades = JSonHelper.Default.DeserializeArrayOfObjects(bytes, ref startIndex, scheme.Names);
+            List<string[]> trades = JsonHelper.Default.DeserializeArrayOfObjects(bytes, ref startIndex, scheme.Names);
             //new string[] { "globalTradeID", "tradeID", "date", "type", "rate", "amount", "total" }
 
             List<TradeInfoItem> newTrades = new List<TradeInfoItem>();
@@ -643,7 +642,7 @@ namespace Crypto.Core {
             if(bytes == null)
                 return true;
             
-            var scheme = JSonHelper.Default.GetObjectScheme(Type + "/returnTradeHistory" ,bytes);
+            var scheme = JsonHelper.Default.GetObjectScheme(Type + "/returnTradeHistory" ,bytes);
             if(scheme == null)
                 return false;
 
@@ -651,7 +650,7 @@ namespace Crypto.Core {
 
             //new string[] { "globalTradeID", "tradeID", "date", "type", "rate", "amount", "total" }
             int startIndex = 0;
-            List<string[]> trades = JSonHelper.Default.DeserializeArrayOfObjects(bytes, ref startIndex, scheme.Names, 
+            List<string[]> trades = JsonHelper.Default.DeserializeArrayOfObjects(bytes, ref startIndex, scheme.Names, 
                 (itemIndex, props) => { return props[1] != lastGotTradeId; });
 
             ResizeableArray<TradeInfoItem> newTrades = new ResizeableArray<TradeInfoItem>(trades.Count);
@@ -721,7 +720,7 @@ namespace Crypto.Core {
             if(data == null)
                 return false;
 
-            var scheme = JSonHelper.Default.GetObjectScheme(Type + "/accounttrades", data);
+            var scheme = JsonHelper.Default.GetObjectScheme(Type + "/accounttrades", data);
             if(scheme == null)
                 return false;
 
@@ -737,7 +736,7 @@ namespace Crypto.Core {
                 int startIndex = 0;
                 
                 //new string[] { "globalTradeID", "tradeID", "date", "rate", "amount", "total", "fee", "orderNumber", "type", "category" };
-                List<string[]> trades = JSonHelper.Default.DeserializeArrayOfObjects(data, ref startIndex, scheme.Names,
+                List<string[]> trades = JsonHelper.Default.DeserializeArrayOfObjects(data, ref startIndex, scheme.Names,
                     (itemIndex, props) => { return props[1] != lastGotTradeId; });
                 if(trades == null || trades.Count == 0)
                     return true;
@@ -844,9 +843,13 @@ namespace Crypto.Core {
             return true;
         }
 
+        public override bool GetDeposite(AccountInfo account, string currency) {
+            return GetDeposites(account);
+        }
+
         public override bool GetDeposites(AccountInfo account) {
             Task<byte[]> task = GetDepositesAsync(account);
-            task.Wait();
+            task.Wait(10000);
             return OnGetDeposites(account, task.Result);
         }
         public Task<byte[]> GetDepositesAsync(AccountInfo account) {
@@ -1119,17 +1122,17 @@ namespace Crypto.Core {
             return tr;
         }
 
-        public string OnCreateDeposit(AccountInfo account, string currency, byte[] data) {
+        protected virtual bool OnCreateDeposit(AccountInfo account, string currency, byte[] data) {
             string text = System.Text.Encoding.ASCII.GetString(data);
             if(string.IsNullOrEmpty(text))
-                return null;
+                return false;
             JObject res = JsonConvert.DeserializeObject<JObject>(text);
             if(res.Value<int>("success") != 1)
-                return null;
+                return false;
             string deposit = res.Value<string>("response");
             PoloniexAccountBalanceInfo info = (PoloniexAccountBalanceInfo)account.Balances.FirstOrDefault(b => b.Currency == currency);
             info.DepositAddress = deposit;
-            return deposit;
+            return true;
         }
 
         public TradingResult OnSell(AccountInfo account, Ticker ticker, byte[] data) {
@@ -1240,7 +1243,7 @@ namespace Crypto.Core {
         public override bool GetBalance(AccountInfo info, string str) {
             return UpdateDefaultAccountBalances();
         }
-        public override string CreateDeposit(AccountInfo account, string currency) {
+        public override bool CreateDeposit(AccountInfo account, string currency) {
             string address = string.Format("https://poloniex.com/tradingApi");
 
             HttpRequestParamsCollection coll = new HttpRequestParamsCollection();
@@ -1257,8 +1260,8 @@ namespace Crypto.Core {
                 return OnCreateDeposit(account, currency, data);
             }
             catch(Exception e) {
-                Debug.WriteLine(e.ToString());
-                return null;
+                Telemetry.Default.TrackException(e);
+                return false;
             }
         }
         protected override void AddRefOrderBook(Ticker ticker) {

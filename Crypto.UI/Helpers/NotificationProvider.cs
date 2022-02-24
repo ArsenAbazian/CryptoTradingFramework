@@ -27,14 +27,29 @@ namespace Crypto.UI.Helpers {
         protected DevExpress.XtraBars.Alerter.AlertControl AlertControl {
             get; private set;
         }
-        public void Notify(string message) { 
-            AlertControl.Show(OwnerForm, "Notification", message, Icon);
+        public void Notify(string message) {
+            if(OwnerForm.InvokeRequired)
+                OwnerForm.BeginInvoke(new MethodInvoker(() => {
+                    AlertControl.Show(OwnerForm, "Notification", message, Icon);
+                }));
+            else 
+                AlertControl.Show(OwnerForm, "Notification", message, Icon);
         }
-        public void Notify(string title, string message) { 
-            AlertControl.Show(OwnerForm, title, message, Icon);
+        public void Notify(string title, string message) {
+            if(OwnerForm.InvokeRequired)
+                OwnerForm.BeginInvoke(new MethodInvoker(() => {
+                    AlertControl.Show(OwnerForm, title, message, Icon);
+                }));
+            else 
+                AlertControl.Show(OwnerForm, title, message, Icon);
         }
-        public void Notify(string title, string message, Action onClick) { 
-            AlertControl.Show(OwnerForm, title, message, Icon);
+        public void Notify(string title, string message, Action onClick) {
+            if(OwnerForm.InvokeRequired)
+                OwnerForm.BeginInvoke(new MethodInvoker(() => {
+                    AlertControl.Show(OwnerForm, title, message, Icon);
+                }));
+            else
+                AlertControl.Show(OwnerForm, title, message, Icon);
         }
         public BarItem StatusItem { get; set; }
         public void NotifyStatus(string title, string message) {

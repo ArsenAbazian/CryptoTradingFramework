@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
+using System.Text;
 using WebSocket4Net;
 using static Crypto.Core.Exchanges.Bittrex.SignalWebSocket;
 
@@ -30,11 +31,7 @@ namespace Crypto.Core.Common {
             Type = type;
         }
 
-        public SignalCallback UpdateExchangeState { get; set; }
-        public SignalCallback UpdateOrderState { get; set; }
-        public SignalCallback UpdateBalanceState { get; set; }
-        public SignalCallback UpdateSummaryState { get; set; }
-
+        public Action<string, object> OnMessage { get; set; }
         public string Address { get; set; }
         public Exchange Exchange { get; set; }
         [DisplayName("Exchange")]
@@ -132,6 +129,7 @@ namespace Crypto.Core.Common {
             //LastActiveTime = DateTime.Now;
             if(!Reconnecting)
                 ForceUpdateSubscribtions();
+            LastActiveTime = DateTime.Now; // set for first time
         }
 
         private void OnSocketMessageReceived(object sender, MessageReceivedEventArgs e) {
@@ -173,8 +171,18 @@ namespace Crypto.Core.Common {
             IsOpened = false;
         }
 
-        public void SubscribeToMarketsState(Action action) {
-            Signal.SubscribeToMarketsState().ContinueWith((x) => { action(); });
+        public void SubscribeToMarketsState(Action<object> action) {
+            Signal.SubscribeToMarketsState().ContinueWith((x) => { action(x.Result); });
+        }
+
+        protected void SubscribeSignal(string channel, string message, Action<string, object> action, Action<List<SocketResponse>> onResult) {
+            if(action != null)
+                Signal.AddMessageHandler<object>(message, action);
+            Signal.Subscribe(new string[] { channel }).ContinueWith(x => onResult(x.Result));
+        }
+
+        protected void UnsubscribeSignal(string channel, Action<List<SocketResponse>> onResult) {
+            Signal.Unsubscribe(new string[] { channel }).ContinueWith(x => onResult(x.Result));
         }
 
         public void Dispose() {
@@ -197,6 +205,24 @@ namespace Crypto.Core.Common {
             info.AddRef();
             SubscribeCore(info);
         }
+
+        protected virtual string SerializeCommand(WebSocketSubscribeInfo info) {
+            return JsonConvert.SerializeObject(info.Command);
+        }
+
+        string CheckResult(List<SocketResponse> result) {
+            StringBuilder b = new StringBuilder();
+            foreach(var r in result) {
+                if(!string.IsNullOrEmpty(r.ErrorCode)) {
+                    b.Append(r.ErrorCode);
+                    b.Append(' ');
+                }
+            }
+            if(b.Length > 0)
+                return b.ToString();
+            return null;
+        }
+
         void SubscribeCore(WebSocketSubscribeInfo info) {
             object logOwner = info.Ticker == null ? (object)Exchange : (object)info.Ticker;
             if(!info.ShouldUpdateSubscribtion)
@@ -210,48 +236,33 @@ namespace Crypto.Core.Common {
                 if(info.Type == SocketSubscribeType.OrderBook) {
                     info.Ticker.IsOrderBookSubscribed = true;
                     info.Ticker.OrderBook.Clear();
-                    Telemetry.Default.TrackEvent(LogType.Log, logOwner, "order book channel subscibed", "");
+                    LogManager.Default.Add(LogType.Log, logOwner, Convert.ToString(logOwner), "OrderBook channel subscibed", "");
                 }
                 else if(info.Type == SocketSubscribeType.TradeHistory) {
                     info.Ticker.IsTradeHistorySubscribed = true;
                     info.Ticker.ClearTradeHistory();
-                    Telemetry.Default.TrackEvent(LogType.Log, logOwner, "trade history channel subscibed", "");
+                    LogManager.Default.Add(LogType.Log, logOwner, Convert.ToString(logOwner), "TradeHistory channel subscibed", "");
                 }
                 else if(info.Type == SocketSubscribeType.Kline) {
                     info.Ticker.IsKlineSubscribed = true;
                     info.Ticker.CandleStickData.Clear();
-                    Telemetry.Default.TrackEvent(LogType.Log, logOwner, "kline channel subscibed", "");
+                    LogManager.Default.Add(LogType.Log, logOwner, Convert.ToString(logOwner), "Kline channel subscibed", "");
                 }
-                string command = JsonConvert.SerializeObject(info.Command);
-                Debug.WriteLine("send command = " + command);
+                string command = SerializeCommand(info);
                 Socket.Send(command);
             }
             else {
-                if(info.Type == SocketSubscribeType.Tickers) {
-                    SubscribeToMarketsState(() => {
-                        Telemetry.Default.TrackEvent(LogType.Log, Exchange, "tickers channel subscibed", "");
-                        if(info.AfterConnect != null)
-                            info.AfterConnect();
+                SubscribeSignal(info.channel, info.messageToHandle, info.OnMessage,
+                    res => {
+                        string error = CheckResult(res);
+                        if(error != null)
+                            LogManager.Default.Add(LogType.Error, this, info.Type.ToString(), "SignalR Scribe Error", error);
+                        else {
+                            LogManager.Default.Add(LogType.Log, Exchange, Exchange.Type.ToString(), "Channel subscribed", info.channel);
+                            if(info.AfterConnect != null)
+                                info.AfterConnect();
+                        }
                     });
-                }
-                else if(info.Type == SocketSubscribeType.OrderBook) {
-                    SubscribeToExchangeDeltas(info.Ticker, (t) => {
-                        t.IsOrderBookSubscribed = true;
-                        QueryExchangeState(t.Name);
-                        Telemetry.Default.TrackEvent(LogType.Log, logOwner, "order book channel subscibed", "");
-                        if(info.AfterConnect != null)
-                            info.AfterConnect();
-                    });
-                }
-                else if(info.Type == SocketSubscribeType.TradeHistory) {
-                    SubscribeToExchangeDeltas(info.Ticker, (t) => {
-                        t.IsOrderBookSubscribed = true;
-                        QueryExchangeState(t.Name);
-                        Telemetry.Default.TrackEvent(LogType.Log, logOwner, "trade history channel subscibed", "");
-                        if(info.AfterConnect != null)
-                            info.AfterConnect();
-                    });
-                }
             }
         }
 
@@ -259,32 +270,40 @@ namespace Crypto.Core.Common {
             object logOwner = info.Ticker == null ? (object)Exchange : (object)info.Ticker;
             if(info.Type == SocketSubscribeType.OrderBook) {
                 info.Ticker.IsOrderBookSubscribed = false;
-                Telemetry.Default.TrackEvent(LogType.Log, logOwner, "order book channel unsubscibed", "");
+                LogManager.Default.Add(LogType.Log, logOwner, Exchange.Type.ToString(), "OrderBook channel unsubscibed", "");
             }
             else if(info.Type == SocketSubscribeType.TradeHistory) {
                 info.Ticker.IsTradeHistorySubscribed = false;
-                Telemetry.Default.TrackEvent(LogType.Log, logOwner, "trade history channel unsubscibed", "");
+                LogManager.Default.Add(LogType.Log, logOwner, Exchange.Type.ToString(), "TradeHistory channel unsubscibed", "");
             }
             else if(info.Type == SocketSubscribeType.Kline) {
                 info.Ticker.IsKlineSubscribed = false;
-                Telemetry.Default.TrackEvent(LogType.Log, logOwner, "kline channel unsubscibed", "");
+                LogManager.Default.Add(LogType.Log, logOwner, Exchange.Type.ToString(), "Kline channel unsubscibed", "");
             }
 
             if(SocketType == SocketType.WebSocket) {
-                string command = JsonConvert.SerializeObject(info.Command);
+                string command = SerializeCommand(info); // JsonConvert.SerializeObject(info.Command);
                 Debug.WriteLine("send command = " + command);
                 Socket.Send(command);
             }
             else {
-                if(info.Type == SocketSubscribeType.OrderBook) {
-                    info.Ticker.IsOrderBookSubscribed = false;
-                }
-                if(info.Type == SocketSubscribeType.TradeHistory) {
-                    info.Ticker.IsTradeHistorySubscribed = false;
-                }
-                if(info.Type == SocketSubscribeType.Kline) {
-                    info.Ticker.IsKlineSubscribed = false;
-                }
+                UnsubscribeSignal(info.channel,
+                    res => {
+                        string error = CheckResult(res);
+                        if(error != null)
+                            LogManager.Default.Add(LogType.Error, this, info.Type.ToString(), "SignalR Unsubscribe Error", error);
+                        else {
+                            if(info.Type == SocketSubscribeType.OrderBook) {
+                                info.Ticker.IsOrderBookSubscribed = false;
+                            }
+                            if(info.Type == SocketSubscribeType.TradeHistory) {
+                                info.Ticker.IsTradeHistorySubscribed = false;
+                            }
+                            if(info.Type == SocketSubscribeType.Kline) {
+                                info.Ticker.IsKlineSubscribed = false;
+                            }
+                        }
+                    });
             }
         }
 
@@ -309,10 +328,6 @@ namespace Crypto.Core.Common {
                 return;
             Subscribtions.Remove(found);
             UnsubscribeCore(info);
-        }
-
-        public void QueryExchangeState(string name) {
-            Signal.QueryExchangeState(name);
         }
 
         private void SubscribeToExchangeDeltas(Ticker ticker, Action<Ticker> action) {
@@ -474,10 +489,10 @@ namespace Crypto.Core.Common {
             }
             else {
                 Signal = new SignalWebSocket(Address);
-                Signal.UpdateBalanceState = UpdateBalanceState;
-                Signal.UpdateExchangeState = UpdateExchangeState;
-                Signal.UpdateOrderState = UpdateOrderState;
-                Signal.UpdateSummaryState = UpdateSummaryState;
+                //Signal.UpdateBalanceState = UpdateBalanceState;
+                //Signal.UpdateExchangeState = UpdateExchangeState;
+                //Signal.UpdateOrderState = UpdateOrderState;
+                //Signal.UpdateSummaryState = UpdateSummaryState;
             }
         }
         protected object LogObject { get { return Ticker != null ? (object)Ticker : Exchange; } }
@@ -485,7 +500,7 @@ namespace Crypto.Core.Common {
             if(Reconnecting)
                 return;
             ConnectionLostCount++;
-            Telemetry.Default.TrackEvent(LogType.Warning, LogObject, "reconnecting", Type.ToString());
+            LogManager.Default.Add(LogType.Warning, LogObject, Exchange.Type.ToString(), "Reconnecting", Type.ToString());
             Reconnecting = true;
             try {
                 Close();
@@ -497,7 +512,7 @@ namespace Crypto.Core.Common {
                 ForceUpdateSubscribtions();
             }
             catch(Exception e) {
-                Telemetry.Default.TrackEvent(LogType.Error, LogObject, "exception while reconnecting", Type.ToString());
+                Telemetry.Default.TrackEvent(LogType.Error, LogObject, "Exception while reconnecting", Type.ToString());
                 Telemetry.Default.TrackException(e);
             }
             finally {
@@ -509,14 +524,14 @@ namespace Crypto.Core.Common {
             for(int i = 0; i < Subscribtions.Count; i++) {
                 WebSocketSubscribeInfo info = Subscribtions[i];
                 info.ShouldUpdateSubscribtion = true;
-                Telemetry.Default.TrackEvent(LogType.Warning, LogObject, "updating subscribtion", info.Type.ToString());
+                LogManager.Default.Add(LogType.Warning, LogObject, Exchange.ToString(), "Updating subscribtion", info.Type.ToString());
                 SubscribeCore(info);
             }
         }
         public void UpdateSubscribtions() {
             for(int i = 0; i < Subscribtions.Count; i++) {
                 WebSocketSubscribeInfo info = Subscribtions[i];
-                Telemetry.Default.TrackEvent(LogType.Warning, LogObject, "updating subscribtion", info.Type.ToString());
+                LogManager.Default.Add(LogType.Log, LogObject, Exchange.ToString(), "Updating subscribtion", info.Type.ToString());
                 SubscribeCore(info);
             }
         }
@@ -538,10 +553,16 @@ namespace Crypto.Core.Common {
         public string command { get; set; }
         public string channel { get; set; }
         public string userID { get; set; }
+        public string messageToHandle { get; set; }
     }
 
     public class WebSocketSubscribeInfo {
         public WebSocketSubscribeInfo() { }
+        public WebSocketSubscribeInfo(SocketSubscribeType type, Ticker ticker, string channelName, string messageToHandle) : 
+            this(type, ticker) {
+            this.channel = channelName;
+            this.messageToHandle = messageToHandle;
+        }
         public WebSocketSubscribeInfo(SocketSubscribeType type, Ticker ticker) {
             Type = type;
             Ticker = ticker;
@@ -551,6 +572,7 @@ namespace Crypto.Core.Common {
         }
         public bool ShouldUpdateSubscribtion { get; set; }
         public Action AfterConnect { get; set; }
+        public Action<string, object> OnMessage { get; set; }
         public Ticker Ticker { get; set; }
         public SocketSubscribeType Type { get; set; }
         public WebSocketCommandInfo Command { get; set; }
@@ -558,6 +580,7 @@ namespace Crypto.Core.Common {
         public string command { get { return Command.command; } set { Command.command = value; } }
         public string channel { get { return Command.channel; } set { Command.channel = value; } }
         public string userID { get { return Command.userID; } set { Command.userID = value; } }
+        public string messageToHandle { get { return Command.messageToHandle; } set { Command.messageToHandle = value; } }
 
         public int RefCount { get; private set; }
 

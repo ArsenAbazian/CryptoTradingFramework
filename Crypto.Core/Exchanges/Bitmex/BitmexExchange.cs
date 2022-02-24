@@ -90,7 +90,7 @@ namespace Crypto.Core.Exchanges.Bitmex {
         //    return new AccountBalancesForm(this);
         //}
 
-        public override string CreateDeposit(AccountInfo account, string currency) {
+        public override bool CreateDeposit(AccountInfo account, string currency) {
             throw new NotImplementedException();
         }
 
@@ -103,6 +103,10 @@ namespace Crypto.Core.Exchanges.Bitmex {
         }
 
         public override bool GetDeposites(AccountInfo account) {
+            return true;
+        }
+
+        public override bool GetDeposite(AccountInfo account, string currency) {
             return true;
         }
 
@@ -233,10 +237,6 @@ namespace Crypto.Core.Exchanges.Bitmex {
 
         public override void OnAccountRemoved(AccountInfo info) {
             DefaultAccount = Accounts.FirstOrDefault(a => a.Default);
-        }
-
-        public override bool ProcessOrderBook(Ticker tickerBase, string text) {
-            throw new NotImplementedException();
         }
 
         public override TradingResult SellLong(AccountInfo account, Ticker ticker, double rate, double amount) {
@@ -444,7 +444,7 @@ namespace Crypto.Core.Exchanges.Bitmex {
 
             int startIndex = 0; // skip {
 
-            List<string[]> items = JSonHelper.Default.DeserializeArrayOfObjects(bytes, ref startIndex, OrderBookItems);
+            List<string[]> items = JsonHelper.Default.DeserializeArrayOfObjects(bytes, ref startIndex, OrderBookItems);
 
             ticker.OrderBook.BeginUpdate();
             try {
@@ -613,7 +613,7 @@ namespace Crypto.Core.Exchanges.Bitmex {
                 int index = incrementalUpdateStartString.Length;
                 if(e.Message[index] == 'u') { // update
                     index = e.Message.IndexOf("[{");
-                    List<string[]> jsItems = JSonHelper.Default.DeserializeArrayOfObjects(Encoding.ASCII.GetBytes(e.Message), ref index, UpdateItems);
+                    List<string[]> jsItems = JsonHelper.Default.DeserializeArrayOfObjects(Encoding.ASCII.GetBytes(e.Message), ref index, UpdateItems);
                     foreach(string[] item in jsItems) {
                         OrderBookEntryType entryType = item[2][0] == 'S' ? OrderBookEntryType.Ask : OrderBookEntryType.Bid;
                         t.OrderBook.ApplyIncrementalUpdate(entryType, OrderBookUpdateType.Modify, FastValueConverter.ConvertPositiveLong(item[1]), null, item[3]);
@@ -631,7 +631,7 @@ namespace Crypto.Core.Exchanges.Bitmex {
                 //}
                 else if(e.Message[index] == 'd') { // delete
                     index = e.Message.IndexOf("[{");
-                    List<string[]> jsItems = JSonHelper.Default.DeserializeArrayOfObjects(Encoding.ASCII.GetBytes(e.Message), ref index, DeleteItems);
+                    List<string[]> jsItems = JsonHelper.Default.DeserializeArrayOfObjects(Encoding.ASCII.GetBytes(e.Message), ref index, DeleteItems);
                     foreach(string[] item in jsItems) {
                         OrderBookEntryType entryType = item[2][0] == 'S' ? OrderBookEntryType.Ask : OrderBookEntryType.Bid;
                         t.OrderBook.ApplyIncrementalUpdate(entryType, OrderBookUpdateType.Remove, FastValueConverter.ConvertPositiveLong(item[1]), null, null);

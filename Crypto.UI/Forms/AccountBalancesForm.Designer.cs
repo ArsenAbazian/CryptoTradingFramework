@@ -47,6 +47,7 @@ namespace Crypto.Core.Common {
             DevExpress.XtraEditors.FormatConditionIconSetIcon formatConditionIconSetIcon9 = new DevExpress.XtraEditors.FormatConditionIconSetIcon();
             DevExpress.XtraGrid.GridFormatRule gridFormatRule4 = new DevExpress.XtraGrid.GridFormatRule();
             DevExpress.XtraEditors.FormatConditionRuleDataBar formatConditionRuleDataBar1 = new DevExpress.XtraEditors.FormatConditionRuleDataBar();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AccountBalancesForm));
             this.colUsdtValue = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gridControl1 = new DevExpress.XtraGrid.GridControl();
             this.poloniexAccountBalanceInfoBindingSource = new System.Windows.Forms.BindingSource(this.components);
@@ -59,16 +60,24 @@ namespace Crypto.Core.Common {
             this.colBtcValue = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colExchange = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colDepositAddress = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.colDepositTag = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colNonZero = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colAccount = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colUsdtPrice = new DevExpress.XtraGrid.Columns.GridColumn();
             this.repositoryItemTextEdit2 = new DevExpress.XtraEditors.Repository.RepositoryItemTextEdit();
-            this.barManager1 = new DevExpress.XtraBars.BarManager(this.components);
-            this.bar1 = new DevExpress.XtraBars.Bar();
             this.bcShowNonZero = new DevExpress.XtraBars.BarCheckItem();
             this.bcDeposites = new DevExpress.XtraBars.BarCheckItem();
-            this.bar3 = new DevExpress.XtraBars.Bar();
-            this.bsInfo = new DevExpress.XtraBars.BarStaticItem();
+            this.bsiStatus = new DevExpress.XtraBars.BarButtonItem();
+            this.ribbonControl1 = new DevExpress.XtraBars.Ribbon.RibbonControl();
+            this.barAndDockingController1 = new DevExpress.XtraBars.BarAndDockingController(this.components);
+            this.biUpdateDeposite = new DevExpress.XtraBars.BarButtonItem();
+            this.biUpdateBalance = new DevExpress.XtraBars.BarButtonItem();
+            this.biCreateDeposit = new DevExpress.XtraBars.BarButtonItem();
+            this.ribbonStatusBar1 = new DevExpress.XtraBars.Ribbon.RibbonStatusBar();
+            this.popupMenu1 = new DevExpress.XtraBars.PopupMenu(this.components);
+            this.standaloneBarDockControl1 = new DevExpress.XtraBars.StandaloneBarDockControl();
+            this.barManager1 = new DevExpress.XtraBars.BarManager(this.components);
+            this.bar1 = new DevExpress.XtraBars.Bar();
             this.barDockControlTop = new DevExpress.XtraBars.BarDockControl();
             this.barDockControlBottom = new DevExpress.XtraBars.BarDockControl();
             this.barDockControlLeft = new DevExpress.XtraBars.BarDockControl();
@@ -78,6 +87,9 @@ namespace Crypto.Core.Common {
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemTextEdit1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemTextEdit2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.barAndDockingController1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.popupMenu1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.barManager1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -99,19 +111,20 @@ namespace Crypto.Core.Common {
             this.gridControl1.DataSource = this.poloniexAccountBalanceInfoBindingSource;
             this.gridControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gridControl1.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(0);
-            this.gridControl1.Location = new System.Drawing.Point(0, 44);
+            this.gridControl1.Location = new System.Drawing.Point(0, 56);
             this.gridControl1.MainView = this.gridView1;
             this.gridControl1.Margin = new System.Windows.Forms.Padding(2);
             this.gridControl1.Name = "gridControl1";
             this.gridControl1.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repositoryItemTextEdit1,
             this.repositoryItemTextEdit2});
-            this.gridControl1.Size = new System.Drawing.Size(1541, 789);
+            this.gridControl1.Size = new System.Drawing.Size(1541, 761);
             this.gridControl1.TabIndex = 3;
             this.gridControl1.UseDirectXPaint = DevExpress.Utils.DefaultBoolean.True;
             this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridView1});
             this.gridControl1.Click += new System.EventHandler(this.gridControl1_Click);
+            this.gridControl1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.gridControl1_MouseUp);
             // 
             // poloniexAccountBalanceInfoBindingSource
             // 
@@ -136,6 +149,7 @@ namespace Crypto.Core.Common {
             this.colBtcValue,
             this.colExchange,
             this.colDepositAddress,
+            this.colDepositTag,
             this.colNonZero,
             this.colAccount,
             this.colUsdtPrice,
@@ -313,6 +327,16 @@ namespace Crypto.Core.Common {
             this.colDepositAddress.VisibleIndex = 8;
             this.colDepositAddress.Width = 335;
             // 
+            // colDepositTag
+            // 
+            this.colDepositTag.Caption = "Deposit Address Tag";
+            this.colDepositTag.FieldName = "DepositTag";
+            this.colDepositTag.MinWidth = 40;
+            this.colDepositTag.Name = "colDepositTag";
+            this.colDepositTag.Visible = true;
+            this.colDepositTag.VisibleIndex = 9;
+            this.colDepositTag.Width = 150;
+            // 
             // colNonZero
             // 
             this.colNonZero.FieldName = "NonZero";
@@ -347,41 +371,6 @@ namespace Crypto.Core.Common {
             this.repositoryItemTextEdit2.AutoHeight = false;
             this.repositoryItemTextEdit2.Name = "repositoryItemTextEdit2";
             // 
-            // barManager1
-            // 
-            this.barManager1.Bars.AddRange(new DevExpress.XtraBars.Bar[] {
-            this.bar1,
-            this.bar3});
-            this.barManager1.DockControls.Add(this.barDockControlTop);
-            this.barManager1.DockControls.Add(this.barDockControlBottom);
-            this.barManager1.DockControls.Add(this.barDockControlLeft);
-            this.barManager1.DockControls.Add(this.barDockControlRight);
-            this.barManager1.Form = this;
-            this.barManager1.Items.AddRange(new DevExpress.XtraBars.BarItem[] {
-            this.bcShowNonZero,
-            this.bsInfo,
-            this.bcDeposites});
-            this.barManager1.MaxItemId = 3;
-            // 
-            // bar1
-            // 
-            this.bar1.BarAppearance.Hovered.FontSizeDelta = 2;
-            this.bar1.BarAppearance.Hovered.Options.UseFont = true;
-            this.bar1.BarAppearance.Normal.FontSizeDelta = 2;
-            this.bar1.BarAppearance.Normal.Options.UseFont = true;
-            this.bar1.BarAppearance.Pressed.FontSizeDelta = 2;
-            this.bar1.BarAppearance.Pressed.Options.UseFont = true;
-            this.bar1.BarName = "Tools";
-            this.bar1.DockCol = 0;
-            this.bar1.DockRow = 0;
-            this.bar1.DockStyle = DevExpress.XtraBars.BarDockStyle.Top;
-            this.bar1.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
-            new DevExpress.XtraBars.LinkPersistInfo(this.bcShowNonZero),
-            new DevExpress.XtraBars.LinkPersistInfo(this.bcDeposites)});
-            this.bar1.OptionsBar.DrawBorder = false;
-            this.bar1.OptionsBar.UseWholeRow = true;
-            this.bar1.Text = "Tools";
-            // 
             // bcShowNonZero
             // 
             this.bcShowNonZero.BindableChecked = true;
@@ -394,31 +383,130 @@ namespace Crypto.Core.Common {
             // 
             // bcDeposites
             // 
+            this.bcDeposites.BindableChecked = true;
             this.bcDeposites.Caption = "Update Deposites";
             this.bcDeposites.CheckBoxVisibility = DevExpress.XtraBars.CheckBoxVisibility.BeforeText;
+            this.bcDeposites.Checked = true;
             this.bcDeposites.Id = 2;
             this.bcDeposites.Name = "bcDeposites";
             // 
-            // bar3
+            // bsiStatus
             // 
-            this.bar3.BarName = "Status bar";
-            this.bar3.CanDockStyle = DevExpress.XtraBars.BarCanDockStyle.Bottom;
-            this.bar3.DockCol = 0;
-            this.bar3.DockRow = 0;
-            this.bar3.DockStyle = DevExpress.XtraBars.BarDockStyle.Bottom;
-            this.bar3.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
-            new DevExpress.XtraBars.LinkPersistInfo(this.bsInfo)});
-            this.bar3.OptionsBar.AllowQuickCustomization = false;
-            this.bar3.OptionsBar.DrawBorder = false;
-            this.bar3.OptionsBar.DrawDragBorder = false;
-            this.bar3.OptionsBar.UseWholeRow = true;
-            this.bar3.Text = "Status bar";
+            this.bsiStatus.AllowHtmlText = DevExpress.Utils.DefaultBoolean.True;
+            this.bsiStatus.Id = 1;
+            this.bsiStatus.Name = "bsiStatus";
             // 
-            // bsInfo
+            // ribbonControl1
             // 
-            this.bsInfo.AllowHtmlText = DevExpress.Utils.DefaultBoolean.True;
-            this.bsInfo.Id = 1;
-            this.bsInfo.Name = "bsInfo";
+            this.ribbonControl1.Controller = this.barAndDockingController1;
+            this.ribbonControl1.ExpandCollapseItem.Id = 0;
+            this.ribbonControl1.Items.AddRange(new DevExpress.XtraBars.BarItem[] {
+            this.ribbonControl1.ExpandCollapseItem,
+            this.ribbonControl1.SearchEditItem,
+            this.bsiStatus,
+            this.biUpdateDeposite,
+            this.biUpdateBalance,
+            this.biCreateDeposit});
+            this.ribbonControl1.Location = new System.Drawing.Point(0, 0);
+            this.ribbonControl1.MaxItemId = 4;
+            this.ribbonControl1.Name = "ribbonControl1";
+            this.ribbonControl1.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonControlStyle.OfficeUniversal;
+            this.ribbonControl1.ShowPageHeadersMode = DevExpress.XtraBars.Ribbon.ShowPageHeadersMode.Hide;
+            this.ribbonControl1.Size = new System.Drawing.Size(1541, 0);
+            this.ribbonControl1.StatusBar = this.ribbonStatusBar1;
+            // 
+            // barAndDockingController1
+            // 
+            this.barAndDockingController1.AppearancesRibbon.Item.FontSizeDelta = 1;
+            this.barAndDockingController1.AppearancesRibbon.Item.Options.UseFont = true;
+            // 
+            // biUpdateDeposite
+            // 
+            this.biUpdateDeposite.Caption = "Get Deposite Address";
+            this.biUpdateDeposite.Id = 1;
+            this.biUpdateDeposite.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("biUpdateDeposite.ImageOptions.SvgImage")));
+            this.biUpdateDeposite.Name = "biUpdateDeposite";
+            this.biUpdateDeposite.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.biUpdateDeposite_ItemClick);
+            // 
+            // biUpdateBalance
+            // 
+            this.biUpdateBalance.Caption = "Update Balance";
+            this.biUpdateBalance.Id = 2;
+            this.biUpdateBalance.Name = "biUpdateBalance";
+            this.biUpdateBalance.Visibility = DevExpress.XtraBars.BarItemVisibility.Never;
+            this.biUpdateBalance.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.biUpdateBalance_ItemClick);
+            // 
+            // biCreateDeposit
+            // 
+            this.biCreateDeposit.Caption = "Create Deposit Address";
+            this.biCreateDeposit.Id = 3;
+            this.biCreateDeposit.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("biCreateDeposit.ImageOptions.SvgImage")));
+            this.biCreateDeposit.Name = "biCreateDeposit";
+            this.biCreateDeposit.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.biCreateDeposit_ItemClick);
+            // 
+            // ribbonStatusBar1
+            // 
+            this.ribbonStatusBar1.ItemLinks.Add(this.bsiStatus);
+            this.ribbonStatusBar1.Location = new System.Drawing.Point(0, 817);
+            this.ribbonStatusBar1.Name = "ribbonStatusBar1";
+            this.ribbonStatusBar1.Ribbon = this.ribbonControl1;
+            this.ribbonStatusBar1.Size = new System.Drawing.Size(1541, 54);
+            // 
+            // popupMenu1
+            // 
+            this.popupMenu1.ItemLinks.Add(this.biUpdateDeposite);
+            this.popupMenu1.ItemLinks.Add(this.biCreateDeposit);
+            this.popupMenu1.ItemLinks.Add(this.biUpdateBalance);
+            this.popupMenu1.Name = "popupMenu1";
+            this.popupMenu1.Ribbon = this.ribbonControl1;
+            // 
+            // standaloneBarDockControl1
+            // 
+            this.standaloneBarDockControl1.AutoSize = true;
+            this.standaloneBarDockControl1.CausesValidation = false;
+            this.standaloneBarDockControl1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.standaloneBarDockControl1.Location = new System.Drawing.Point(0, 0);
+            this.standaloneBarDockControl1.Manager = this.barManager1;
+            this.standaloneBarDockControl1.Name = "standaloneBarDockControl1";
+            this.standaloneBarDockControl1.Size = new System.Drawing.Size(1541, 56);
+            this.standaloneBarDockControl1.Text = "standaloneBarDockControl1";
+            // 
+            // barManager1
+            // 
+            this.barManager1.Bars.AddRange(new DevExpress.XtraBars.Bar[] {
+            this.bar1});
+            this.barManager1.Controller = this.barAndDockingController1;
+            this.barManager1.DockControls.Add(this.barDockControlTop);
+            this.barManager1.DockControls.Add(this.barDockControlBottom);
+            this.barManager1.DockControls.Add(this.barDockControlLeft);
+            this.barManager1.DockControls.Add(this.barDockControlRight);
+            this.barManager1.DockControls.Add(this.standaloneBarDockControl1);
+            this.barManager1.Form = this;
+            this.barManager1.Items.AddRange(new DevExpress.XtraBars.BarItem[] {
+            this.bcShowNonZero,
+            this.bcDeposites});
+            // 
+            // bar1
+            // 
+            this.bar1.BarAppearance.Hovered.FontSizeDelta = 2;
+            this.bar1.BarAppearance.Hovered.Options.UseFont = true;
+            this.bar1.BarAppearance.Normal.FontSizeDelta = 2;
+            this.bar1.BarAppearance.Normal.Options.UseFont = true;
+            this.bar1.BarAppearance.Pressed.FontSizeDelta = 2;
+            this.bar1.BarAppearance.Pressed.Options.UseFont = true;
+            this.bar1.BarItemVertIndent = 6;
+            this.bar1.BarName = "Tools";
+            this.bar1.DockCol = 0;
+            this.bar1.DockRow = 0;
+            this.bar1.DockStyle = DevExpress.XtraBars.BarDockStyle.Standalone;
+            this.bar1.FloatLocation = new System.Drawing.Point(113, 322);
+            this.bar1.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
+            new DevExpress.XtraBars.LinkPersistInfo(this.bcShowNonZero),
+            new DevExpress.XtraBars.LinkPersistInfo(this.bcDeposites)});
+            this.bar1.OptionsBar.DrawBorder = false;
+            this.bar1.OptionsBar.UseWholeRow = true;
+            this.bar1.StandaloneBarDockControl = this.standaloneBarDockControl1;
+            this.bar1.Text = "Tools";
             // 
             // barDockControlTop
             // 
@@ -426,35 +514,31 @@ namespace Crypto.Core.Common {
             this.barDockControlTop.Dock = System.Windows.Forms.DockStyle.Top;
             this.barDockControlTop.Location = new System.Drawing.Point(0, 0);
             this.barDockControlTop.Manager = this.barManager1;
-            this.barDockControlTop.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
-            this.barDockControlTop.Size = new System.Drawing.Size(1541, 44);
+            this.barDockControlTop.Size = new System.Drawing.Size(1541, 0);
             // 
             // barDockControlBottom
             // 
             this.barDockControlBottom.CausesValidation = false;
             this.barDockControlBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.barDockControlBottom.Location = new System.Drawing.Point(0, 833);
+            this.barDockControlBottom.Location = new System.Drawing.Point(0, 871);
             this.barDockControlBottom.Manager = this.barManager1;
-            this.barDockControlBottom.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
-            this.barDockControlBottom.Size = new System.Drawing.Size(1541, 38);
+            this.barDockControlBottom.Size = new System.Drawing.Size(1541, 0);
             // 
             // barDockControlLeft
             // 
             this.barDockControlLeft.CausesValidation = false;
             this.barDockControlLeft.Dock = System.Windows.Forms.DockStyle.Left;
-            this.barDockControlLeft.Location = new System.Drawing.Point(0, 44);
+            this.barDockControlLeft.Location = new System.Drawing.Point(0, 0);
             this.barDockControlLeft.Manager = this.barManager1;
-            this.barDockControlLeft.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
-            this.barDockControlLeft.Size = new System.Drawing.Size(0, 789);
+            this.barDockControlLeft.Size = new System.Drawing.Size(0, 871);
             // 
             // barDockControlRight
             // 
             this.barDockControlRight.CausesValidation = false;
             this.barDockControlRight.Dock = System.Windows.Forms.DockStyle.Right;
-            this.barDockControlRight.Location = new System.Drawing.Point(1541, 44);
+            this.barDockControlRight.Location = new System.Drawing.Point(1541, 0);
             this.barDockControlRight.Manager = this.barManager1;
-            this.barDockControlRight.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
-            this.barDockControlRight.Size = new System.Drawing.Size(0, 789);
+            this.barDockControlRight.Size = new System.Drawing.Size(0, 871);
             // 
             // AccountBalancesForm
             // 
@@ -463,6 +547,9 @@ namespace Crypto.Core.Common {
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1541, 871);
             this.Controls.Add(this.gridControl1);
+            this.Controls.Add(this.standaloneBarDockControl1);
+            this.Controls.Add(this.ribbonStatusBar1);
+            this.Controls.Add(this.ribbonControl1);
             this.Controls.Add(this.barDockControlLeft);
             this.Controls.Add(this.barDockControlRight);
             this.Controls.Add(this.barDockControlBottom);
@@ -476,6 +563,9 @@ namespace Crypto.Core.Common {
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemTextEdit1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemTextEdit2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.barAndDockingController1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.popupMenu1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.barManager1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -493,15 +583,8 @@ namespace Crypto.Core.Common {
         private DevExpress.XtraGrid.Columns.GridColumn colBtcValue;
         private DevExpress.XtraGrid.Columns.GridColumn colDepositAddress;
         private DevExpress.XtraGrid.Columns.GridColumn colNonZero;
-        private DevExpress.XtraBars.BarManager barManager1;
-        private DevExpress.XtraBars.Bar bar1;
         private DevExpress.XtraBars.BarCheckItem bcShowNonZero;
-        private DevExpress.XtraBars.Bar bar3;
-        private DevExpress.XtraBars.BarDockControl barDockControlTop;
-        private DevExpress.XtraBars.BarDockControl barDockControlBottom;
-        private DevExpress.XtraBars.BarDockControl barDockControlLeft;
-        private DevExpress.XtraBars.BarDockControl barDockControlRight;
-        private DevExpress.XtraBars.BarStaticItem bsInfo;
+        private DevExpress.XtraBars.BarButtonItem bsiStatus;
         private DevExpress.XtraGrid.Columns.GridColumn colAccount;
         private DevExpress.XtraGrid.Columns.GridColumn colUsdtValue;
         private DevExpress.XtraEditors.Repository.RepositoryItemTextEdit repositoryItemTextEdit1;
@@ -510,5 +593,20 @@ namespace Crypto.Core.Common {
         private DevExpress.XtraGrid.Columns.GridColumn colUsdtPrice;
         private DevExpress.XtraGrid.Columns.GridColumn colBalance;
         private DevExpress.XtraEditors.Repository.RepositoryItemTextEdit repositoryItemTextEdit2;
+        private DevExpress.XtraBars.Ribbon.RibbonControl ribbonControl1;
+        private DevExpress.XtraBars.Ribbon.RibbonStatusBar ribbonStatusBar1;
+        private DevExpress.XtraBars.BarButtonItem biUpdateDeposite;
+        private DevExpress.XtraBars.BarButtonItem biUpdateBalance;
+        private DevExpress.XtraBars.PopupMenu popupMenu1;
+        private DevExpress.XtraBars.BarAndDockingController barAndDockingController1;
+        private DevExpress.XtraBars.StandaloneBarDockControl standaloneBarDockControl1;
+        private DevExpress.XtraBars.BarManager barManager1;
+        private DevExpress.XtraBars.Bar bar1;
+        private DevExpress.XtraBars.BarDockControl barDockControlTop;
+        private DevExpress.XtraBars.BarDockControl barDockControlBottom;
+        private DevExpress.XtraBars.BarDockControl barDockControlLeft;
+        private DevExpress.XtraBars.BarDockControl barDockControlRight;
+        private DevExpress.XtraGrid.Columns.GridColumn colDepositTag;
+        private DevExpress.XtraBars.BarButtonItem biCreateDeposit;
     }
 }

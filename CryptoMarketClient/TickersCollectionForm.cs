@@ -43,6 +43,8 @@ namespace CryptoMarketClient {
         public Exchange Exchange { get; set; }
 
         private void UpdateConnectionStatus() {
+            if(!Exchange.SupportWebSocket(WebSocketType.Ticker))
+                return;
             if(Exchange.TickersSocketState == SocketConnectionState.None) {
                 this.biConnectionStatus.ImageOptions.SvgImage = this.svgImageCollection1["information"];
                 this.biConnectionStatus.Caption = "Initializing...";
@@ -184,11 +186,12 @@ namespace CryptoMarketClient {
                 return;
             IsUpdating = true;
             try {
-                if(!Exchange.SupportWebSocket(WebSocketType.Tickers))
-                    Exchange.UpdateTickersInfo();
+                if(!Exchange.SupportWebSocket(WebSocketType.Tickers)) {
+                    if(Exchange.SupportCummulativeTickersUpdate)
+                        Exchange.UpdateTickersInfo();
+                }
+                UpdateVisibleTickers(GetVisibleTickers());
                 DataCacheManager.UpdateTasks();
-                for(int i = 0; i < Exchange.Tickers.Count; i++)
-                    Exchange.Tickers[i].UpdateTrailings();
             }
             finally {
                 IsUpdating = false;
@@ -201,6 +204,39 @@ namespace CryptoMarketClient {
                         this.gvTikers.RefreshData();
                 }));
             }
+        }
+
+        protected List<Ticker> PrevVisibleTickers { get; set; }
+        private void UpdateVisibleTickers(List<Ticker> tickers) {
+            bool supportWebSocket = Exchange.SupportWebSocket(WebSocketType.Tickers);
+            if(PrevVisibleTickers != null) {
+                foreach(Ticker ticker in PrevVisibleTickers) {
+                    if(!tickers.Contains(ticker)) {
+                        ticker.CancelSparkline();
+                        if(!supportWebSocket && !Exchange.SupportCummulativeTickersUpdate)
+                            ticker.CancelTickerInfo();
+                    }
+                }
+            }
+            foreach(Ticker ticker in tickers) {
+                if(ticker.Sparkline == null)
+                    ticker.QuerySparkline();
+                if(!supportWebSocket && !Exchange.SupportCummulativeTickersUpdate)
+                    ticker.QueryTickerInfo();
+            }
+            PrevVisibleTickers = tickers;
+        }
+
+        private List<Ticker> GetVisibleTickers() {
+            var info = (GridViewInfo)this.gvTikers.GetViewInfo();
+            List<Ticker> res = new List<Ticker>();
+            foreach(var rowInfo in info.RowsInfo) {
+                int rowHandle = rowInfo.RowHandle;
+                Ticker t = this.gvTikers.GetRow(rowHandle) as Ticker;
+                if(t != null)
+                    res.Add(t);
+            }
+            return res;
         }
         void UpdateRow(Ticker t) {
             UpdateCachedDataCountInfo();
@@ -239,15 +275,6 @@ namespace CryptoMarketClient {
         private void gridView1_DoubleClick(object sender, EventArgs e) {
             ShowDetailsForSelectedItemCore();
         }
-
-        //PoloniexAccountBalancesForm accountForm;
-        //protected PoloniexAccountBalancesForm AccountForm {
-        //    get {
-        //        if(accountForm == null || accountForm.IsDisposed)
-        //            accountForm = new PoloniexAccountBalancesForm();
-        //        return accountForm;
-        //    }
-        //}
 
         Form accountForm;
         protected Form AccountForm {
@@ -296,6 +323,7 @@ namespace CryptoMarketClient {
                 PinnedTickerInfo info = Exchange.PinnedTickers.FirstOrDefault(p => p.BaseCurrency == ticker.BaseCurrency && p.MarketCurrency == ticker.MarketCurrency);
                 Exchange.PinnedTickers.Remove(info);
             }
+            Exchange.Save();
         }
         
         bool IsTickerPinned(Ticker t) {
@@ -397,6 +425,12 @@ namespace CryptoMarketClient {
             return maxWidth;
         }
 
+        private void biVolumesMap_ItemClick(object sender, ItemClickEventArgs e) {
+            ExchangeMarketCapacityForm form = new ExchangeMarketCapacityForm();
+            form.Exchange = Exchange;
+            form.Show();
+        }
+
         private void GridView1_CustomRowCellEdit(object sender, DevExpress.XtraGrid.Views.Grid.CustomRowCellEditEventArgs e) {
             if(e.Column != this.colSparkline)
                 return;
@@ -415,7 +449,7 @@ namespace CryptoMarketClient {
                 ((AreaSparklineView)this.redSparkline.View).AreaOpacity = 0x20;
                 this.gcTickers.RepositoryItems.Add(this.redSparkline);
             }
-            if(t.Sparkline.Length < 2)
+            if(t.Sparkline == null || t.Sparkline.Length < 2)
                 return;
             if(t.Sparkline[t.Sparkline.Length - 1] > t.Sparkline[0]) {
                 e.RepositoryItem = this.greenSparkline;

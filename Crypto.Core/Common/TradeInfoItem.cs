@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Crypto.Core.Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -37,7 +38,9 @@ namespace Crypto.Core {
         }
         public string AmountString { get; set; }
         public string RateString { get; set; }
+        
         public string TotalString { get; set; }
+        
         public string FeeString { get; set; }
         double rate = 0;
         [XmlIgnore]
@@ -74,6 +77,12 @@ namespace Crypto.Core {
                         total = Rate * Amount;
                 }
                 return total;
+            }
+            set {
+                if(Total == value)
+                    return;
+                total = value;
+                TotalString = total.ToString("0.00000000");
             }
         }
         double fee = double.NaN;

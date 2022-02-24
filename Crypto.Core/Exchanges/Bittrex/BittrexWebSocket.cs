@@ -1,5 +1,8 @@
 ﻿using Crypto.Core.Common;
 using Microsoft.AspNet.SignalR.Client;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -13,22 +16,23 @@ namespace Crypto.Core.Exchanges.Bittrex {
     public sealed class SignalWebSocket {
         public delegate void SignalCallback(SignalSocketCommand command, string marketName, string info);
 
-        private HubConnection _hubConnection { get; }
-        private IHubProxy _hubProxy { get; }
+        private string _url;
+        private HubConnection _hubConnection;
+        private IHubProxy _hubProxy;
 
-        public SignalCallback UpdateExchangeState { get; set; }
-        public SignalCallback UpdateOrderState { get; set; }
-        public SignalCallback UpdateBalanceState { get; set; }
-        public SignalCallback UpdateSummaryState { get; set; }
+        //public SignalCallback UpdateExchangeState { get; set; }
+        //public SignalCallback UpdateOrderState { get; set; }
+        //public SignalCallback UpdateBalanceState { get; set; }
+        //public SignalCallback UpdateSummaryState { get; set; }
+        
         public DateTime LastActiveTime { get; set; }
 
         public SignalWebSocket(string connectionUrl) {
-            // Set delegates
-
-            // Create connection to c2 SignalR hub
             LastActiveTime = DateTime.Now;
-            _hubConnection = new HubConnection(connectionUrl);
-            _hubProxy = _hubConnection.CreateHubProxy("c2");
+            this._hubConnection = new HubConnection(connectionUrl);
+            this._hubProxy = _hubConnection.CreateHubProxy("c3");
+            this._url = connectionUrl;
+            
             Received += OnReceived;
         }
 
@@ -41,39 +45,51 @@ namespace Crypto.Core.Exchanges.Bittrex {
         IDisposable OnBalanceStateDelta { get; set; }
         IDisposable OnSummaryDelta { get; set; }
 
-        public void Shutdown() => _hubConnection.Stop();
+        public IDisposable AddMessageHandler<Tmessage>(string messageName, Action<string, Tmessage> handler) {
+            if(this.handlers.ContainsKey(messageName))
+                return this.handlers[messageName];
+            IDisposable res = _hubProxy.On(messageName, message => {
+                handler(messageName, message);
+            });
+            this.handlers.Add(messageName, res);
+            return res;
+        }
+
+        Dictionary<string, IDisposable> handlers = new Dictionary<string, IDisposable>();
+
+        public async void Shutdown() {
+            await Task.Run(() => {
+                _hubConnection.Stop();
+            });
+        }
         public void Connect() {
-            if(UpdateExchangeState != null) {
-                // Register callback for uE (exchange state delta) events
-                OnExchangeStateDelta = _hubProxy.On("uE", exchangeStateDelta => {
-                    LastActiveTime = DateTime.Now;
-                    UpdateExchangeState?.Invoke(SignalSocketCommand.IncrementalUpdate, null, exchangeStateDelta);
-                });
-            }
+            //if(UpdateExchangeState != null) {
+            //    OnExchangeStateDelta = _hubProxy.On("uE", exchangeStateDelta => {
+            //        LastActiveTime = DateTime.Now;
+            //        UpdateExchangeState?.Invoke(SignalSocketCommand.IncrementalUpdate, null, exchangeStateDelta);
+            //    });
+            //}
 
-            if(UpdateOrderState != null) {
-                // Register callback for uO (order status change) events
-                OnOrderStateDelta = _hubProxy.On("uO", orderStateDelta => {
-                    LastActiveTime = DateTime.Now;
-                    UpdateOrderState?.Invoke(SignalSocketCommand.IncrementalUpdate, null, orderStateDelta);
-                });
-            }
+            //if(UpdateOrderState != null) {
+            //    OnOrderStateDelta = _hubProxy.On("uO", orderStateDelta => {
+            //        LastActiveTime = DateTime.Now;
+            //        UpdateOrderState?.Invoke(SignalSocketCommand.IncrementalUpdate, null, orderStateDelta);
+            //    });
+            //}
 
-            if(UpdateBalanceState != null) {
-                // Register callback for uB (balance status change) events
-                OnBalanceStateDelta = _hubProxy.On("uB", balanceStateDelta => {
-                    LastActiveTime = DateTime.Now;
-                    UpdateBalanceState?.Invoke(SignalSocketCommand.IncrementalUpdate, null, balanceStateDelta);
-                });
-            }
+            //if(UpdateBalanceState != null) {
+            //    OnBalanceStateDelta = _hubProxy.On("uB", balanceStateDelta => {
+            //        LastActiveTime = DateTime.Now;
+            //        UpdateBalanceState?.Invoke(SignalSocketCommand.IncrementalUpdate, null, balanceStateDelta);
+            //    });
+            //}
 
-            if(UpdateSummaryState != null) {
-                // Register callback for uB (balance status change) events
-                OnSummaryDelta = _hubProxy.On("uS", summaryDelta => {
-                    LastActiveTime = DateTime.Now;
-                    UpdateSummaryState?.Invoke(SignalSocketCommand.IncrementalUpdate, null, summaryDelta);
-                });
-            }
+            //if(UpdateSummaryState != null) {
+            //    OnSummaryDelta = _hubProxy.On("uS", summaryDelta => {
+            //        LastActiveTime = DateTime.Now;
+            //        UpdateSummaryState?.Invoke(SignalSocketCommand.IncrementalUpdate, null, summaryDelta);
+            //    });
+            //}
             _hubConnection.Start().Wait();
         }
 
@@ -94,28 +110,62 @@ namespace Crypto.Core.Exchanges.Bittrex {
             remove { this._hubConnection.Received -= value; }
         }
 
+        public void SetHeartbeatHandler(Action handler) {
+            if(this.handlers.ContainsKey("heartbeat"))
+                return;
+            this.handlers.Add("heartbeat", _hubProxy.On("heartbeat", handler));
+        }
+
+        public void SetAuthExpiringHandler(Action handler) {
+            if(this.handlers.ContainsKey("authenticationExpiring"))
+                return;
+            this.handlers.Add("authenticationExpiring", _hubProxy.On("authenticationExpiring", handler));
+        }
+
+        private static string CreateSignature(string apiSecret, string data) {
+            var hmacSha512 = new HMACSHA512(Encoding.ASCII.GetBytes(apiSecret));
+            var hash = hmacSha512.ComputeHash(Encoding.ASCII.GetBytes(data));
+            return BitConverter.ToString(hash).Replace("-", string.Empty);
+        }
+
+        public async Task<List<SocketResponse>> Subscribe(string[] channels) {
+            return await _hubProxy.Invoke<List<SocketResponse>>("Subscribe", (object)channels);
+        }
+
+        public async Task<List<SocketResponse>> Unsubscribe(string[] channels) {
+            return await _hubProxy.Invoke<List<SocketResponse>>("Unsubscribe", (object)channels);
+        }
+
+        public async Task<SocketResponse> Authenticate(string apiKey, string apiKeySecret) {
+            var timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+            var randomContent = $"{ Guid.NewGuid() }";
+            var content = string.Join("", timestamp, randomContent);
+            var signedContent = CreateSignature(apiKeySecret, content);
+            var result = await _hubProxy.Invoke<SocketResponse>(
+                "Authenticate",
+                apiKey,
+                timestamp,
+                randomContent,
+                signedContent);
+            return result;
+        }
+
         // marketName example: "BTC-LTC"
-        public async Task<bool> SubscribeToExchangeDeltas(string marketName) { 
-            return await _hubProxy.Invoke<bool>("SubscribeToExchangeDeltas", marketName);
+        public async Task<List<SocketResponse>> SubscribeToExchangeDeltas(string marketName) { 
+            return await _hubProxy.Invoke<List<SocketResponse>>("SubscribeToExchangeDeltas", marketName);
         }
-        public async Task<bool> SubscribeToMarketsState() {
-            return await _hubProxy.Invoke<bool>("SubscribeToSummaryDeltas");
+        public async Task<List<SocketResponse>> SubscribeToMarketsState() {
+            return await _hubProxy.Invoke<List<SocketResponse>>("market_summaries");
         }
-        public void QueryExchangeState(string marketName) {
-            _hubProxy.Invoke<string>("QueryExchangeState", marketName).ContinueWith(s => {
-                LastActiveTime = DateTime.Now;
-                if(UpdateExchangeState != null)
-                    UpdateExchangeState(SignalSocketCommand.QueryExchangeState, marketName, s.Result);
-                else
-                    Telemetry.Default.TrackEvent(LogType.Warning, marketName, "signal socket", "UpdateExchangeState == null");
-            });
-        }
-
-        // The return of GetAuthContext is a challenge string. Call CreateSignature(apiSecret, challenge)
-        // for the response to the challenge, and pass it to Authenticate().
-        public async Task<string> GetAuthContext(string apiKey) => await _hubProxy.Invoke<string>("GetAuthContext", apiKey);
-
-        public async Task<bool> Authenticate(string apiKey, string signedChallenge) => await _hubProxy.Invoke<bool>("Authenticate", apiKey, signedChallenge);
+        //public void QueryExchangeState(string marketName) {
+        //    _hubProxy.Invoke<string>("QueryExchangeState", marketName).ContinueWith(s => {
+        //        LastActiveTime = DateTime.Now;
+        //        if(UpdateExchangeState != null)
+        //            UpdateExchangeState(SignalSocketCommand.QueryExchangeState, marketName, s.Result);
+        //        else
+        //            Telemetry.Default.TrackEvent(LogType.Warning, marketName, "signal socket", "UpdateExchangeState == null");
+        //    });
+        //}
 
         // Decode converts Bittrex CoreHub2 socket wire protocol data into JSON.
         // Data goes from base64 encoded to gzip (byte[]) to minifed JSON.
@@ -149,18 +199,52 @@ namespace Crypto.Core.Exchanges.Bittrex {
                 return decompressedStream.GetBuffer();
             }
         }
-
-        public static string CreateSignature(string apiSecret, string challenge) {
-            // Get hash by using apiSecret as key, and challenge as data
-            var hmacSha512 = new HMACSHA512(Encoding.ASCII.GetBytes(apiSecret));
-            var hash = hmacSha512.ComputeHash(Encoding.ASCII.GetBytes(challenge));
-            return BitConverter.ToString(hash).Replace("-", string.Empty);
-        }
     }
 
     public enum SignalSocketCommand {
         Undefined,
         IncrementalUpdate,
         QueryExchangeState
+    }
+
+    //public static class DataConverter {
+    //    private static JsonSerializerSettings _jsonSerializerSettings = new JsonSerializerSettings {
+    //        ContractResolver = new CamelCasePropertyNamesContractResolver(),
+    //        DateFormatHandling = DateFormatHandling.IsoDateFormat,
+    //        DateTimeZoneHandling = DateTimeZoneHandling.Utc,
+    //        FloatParseHandling = FloatParseHandling.Decimal,
+    //        MissingMemberHandling = MissingMemberHandling.Ignore,
+    //        NullValueHandling = NullValueHandling.Ignore,
+    //        Converters = new List<JsonConverter>
+    //        {
+    //            new StringEnumConverter(),
+    //        }
+    //    };
+
+    //    public static T Decode<T>(string wireData) {
+    //        // Step 1: Base64 decode the wire data into a gzip blob
+    //        byte[] gzipData = Convert.FromBase64String(wireData);
+
+    //        // Step 2: Decompress gzip blob into JSON
+    //        string json = null;
+
+    //        using(var decompressedStream = new MemoryStream())
+    //        using(var compressedStream = new MemoryStream(gzipData))
+    //        using(var deflateStream = new DeflateStream(compressedStream, CompressionMode.Decompress)) {
+    //            deflateStream.CopyTo(decompressedStream);
+    //            decompressedStream.Position = 0;
+    //            using(var streamReader = new StreamReader(decompressedStream)) {
+    //                json = streamReader.ReadToEnd();
+    //            }
+    //        }
+
+    //        // Step 3: Deserialize the JSON string into a strongly-typed object
+    //        return JsonConvert.DeserializeObject<T>(json, _jsonSerializerSettings);
+    //    }
+    //}
+
+    public class SocketResponse {
+        public bool Success { get; set; }
+        public string ErrorCode { get; set; }
     }
 }

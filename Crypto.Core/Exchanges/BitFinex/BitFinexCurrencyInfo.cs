@@ -7,5 +7,6 @@ using System.Threading.Tasks;
 
 namespace Crypto.Core.BitFinex {
     public class BitFinexCurrencyInfo : CurrencyInfoBase {
+        public BitFinexCurrencyInfo(string currency) : base(currency) { }
     }
 }

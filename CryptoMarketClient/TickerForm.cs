@@ -37,8 +37,8 @@ namespace CryptoMarketClient {
             ((FormatConditionRuleValue)this.gvTrades.FormatRules[0].Rule).Appearance.ForeColor = Exchange.BidColor;
             ((FormatConditionRuleValue)this.gvTrades.FormatRules[1].Rule).Appearance.ForeColor = Exchange.AskColor;
 
-            ((FormatConditionRuleValue)this.gvOpenedOrders.FormatRules[0].Rule).Appearance.ForeColor = Exchange.BidColor;
-            ((FormatConditionRuleValue)this.gvOpenedOrders.FormatRules[1].Rule).Appearance.ForeColor = Exchange.AskColor;
+            ((FormatConditionRuleValue)this.gvOpenedOrders.FormatRules[0].Rule).Appearance.ForeColor = Exchange.AskColor;
+            ((FormatConditionRuleValue)this.gvOpenedOrders.FormatRules[1].Rule).Appearance.ForeColor = Exchange.BidColor;
 
             ((FormatConditionRuleValue)this.gvAccountTrades.FormatRules[0].Rule).Appearance.ForeColor = Exchange.BidColor;
             ((FormatConditionRuleValue)this.gvAccountTrades.FormatRules[1].Rule).Appearance.ForeColor = Exchange.AskColor;
@@ -100,7 +100,8 @@ namespace CryptoMarketClient {
             UpdateDockPanels();
             UpdateBuySellSettings();
             UpdateBalances();
-            UpdateTrades();
+            if(!Ticker.Exchange.SupportWebSocket(WebSocketType.Trades))
+                UpdateTrades();
             UpdateAccountTrades();
             
             Ticker.StartListenTickerStream();

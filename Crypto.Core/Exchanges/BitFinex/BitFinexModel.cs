@@ -36,10 +36,10 @@ namespace Crypto.Core.BitFinex {
                 return false;
 
             int startIndex = 1;
-            if(!JSonHelper.Default.SkipSymbol(bytes, ':', 3, ref startIndex))
+            if(!JsonHelper.Default.SkipSymbol(bytes, ':', 3, ref startIndex))
                 return false;
 
-            List<string[]> res = JSonHelper.Default.DeserializeArrayOfObjects(bytes, ref startIndex, new string[] { "Id", "TimeStamp", "Quantity", "Price", "Total", "FillType", "OrderType" },
+            List<string[]> res = JsonHelper.Default.DeserializeArrayOfObjects(bytes, ref startIndex, new string[] { "Id", "TimeStamp", "Quantity", "Price", "Total", "FillType", "OrderType" },
                 (itemIndex, props) => {
                     return Convert.ToDateTime(props[1]) >= start;
                 });
@@ -93,15 +93,15 @@ namespace Crypto.Core.BitFinex {
             return true;
         }
 
-        //public override Form CreateAccountForm() {
-        //    return new AccountBalancesForm(this);
-        //}
+        public override bool GetDeposite(AccountInfo account, string currency) {
+            return true;
+        }
 
         public override bool ObtainExchangeSettings() { return true; }
 
         protected internal override void OnTickersSocketOpened(object sender, EventArgs e) {
             base.OnTickersSocketOpened(sender, e);
-            ((WebSocket)sender).Send(JSonHelper.Default.Serialize(new string[] { "event", "subscribe", "channel", "ticker" }));
+            ((WebSocket)sender).Send(JsonHelper.Default.Serialize(new string[] { "event", "subscribe", "channel", "ticker" }));
         }
 
         public override bool AllowCandleStickIncrementalUpdate => false;
@@ -150,10 +150,10 @@ namespace Crypto.Core.BitFinex {
             ResizeableArray<CandleStickData> list = new ResizeableArray<CandleStickData>();
 
             int startIndex = 1;
-            if(!JSonHelper.Default.SkipSymbol(bytes, ':', 3, ref startIndex))
+            if(!JsonHelper.Default.SkipSymbol(bytes, ':', 3, ref startIndex))
                 return list;
 
-            List<string[]> res = JSonHelper.Default.DeserializeArrayOfObjects(bytes, ref startIndex, new string[] { "O", "H", "L", "C", "V", "T", "BV" });
+            List<string[]> res = JsonHelper.Default.DeserializeArrayOfObjects(bytes, ref startIndex, new string[] { "O", "H", "L", "C", "V", "T", "BV" });
             if(res == null) return list;
             for(int i = 0; i < res.Count; i++) {
                 string[] item = res[i];
@@ -230,17 +230,16 @@ namespace Crypto.Core.BitFinex {
                 return false;
 
             int startIndex = 1;
-            if(!JSonHelper.Default.SkipSymbol(bytes, ':', 3, ref startIndex))
+            if(!JsonHelper.Default.SkipSymbol(bytes, ':', 3, ref startIndex))
                 return false;
 
-            List<string[]> res = JSonHelper.Default.DeserializeArrayOfObjects(bytes, ref startIndex, new string[] { "Currency", "CurrencyLong", "MinConfirmation", "TxFee", "IsActive", "CoinType", "BaseAddress", "Notice" });
+            List<string[]> res = JsonHelper.Default.DeserializeArrayOfObjects(bytes, ref startIndex, new string[] { "Currency", "CurrencyLong", "MinConfirmation", "TxFee", "IsActive", "CoinType", "BaseAddress", "Notice" });
             for(int i = 0; i < res.Count; i++) {
                 string[] item = res[i];
                 string currency = item[0];
                 BitFinexCurrencyInfo c = (BitFinexCurrencyInfo)Currencies.FirstOrDefault(curr => curr.Currency == currency);
                 if(c == null) {
-                    c = new BitFinexCurrencyInfo();
-                    c.Currency = item[0];
+                    c = (BitFinexCurrencyInfo)CreateCurrency(item[0]);
                     c.CurrencyLong = item[1];
                     c.MinConfirmation = int.Parse(item[2]);
                     c.TxFee = FastValueConverter.Convert(item[3]);
@@ -252,6 +251,11 @@ namespace Crypto.Core.BitFinex {
             }
             return true;
         }
+
+        public override CurrencyInfoBase CreateCurrency(string currency) {
+            return new BitFinexCurrencyInfo(currency);
+        }
+
         public bool GetCurrenciesInfo() {
             Currencies.Clear();
             return UpdateCurrencies();
@@ -269,10 +273,10 @@ namespace Crypto.Core.BitFinex {
                 return;
 
             int startIndex = 1;
-            if(!JSonHelper.Default.SkipSymbol(bytes, ':', 3, ref startIndex))
+            if(!JsonHelper.Default.SkipSymbol(bytes, ':', 3, ref startIndex))
                 return;
 
-            string[] res = JSonHelper.Default.DeserializeObject(bytes, ref startIndex, new string[] { "Bid", "Ask", "Last" });
+            string[] res = JsonHelper.Default.DeserializeObject(bytes, ref startIndex, new string[] { "Bid", "Ask", "Last" });
             if(res == null)
                 return;
             info.HighestBid = FastValueConverter.Convert(res[0]);
@@ -294,7 +298,7 @@ namespace Crypto.Core.BitFinex {
                 return false;
 
             int startIndex = 0;
-            string[] item = JSonHelper.Default.DeserializeArray(bytes, ref startIndex, 9);
+            string[] item = JsonHelper.Default.DeserializeArray(bytes, ref startIndex, 9);
 
             BitFinexTicker ticker = (BitFinexTicker)tickerBase;
             ticker.HighestBid = FastValueConverter.Convert(item[0]);
@@ -322,7 +326,7 @@ namespace Crypto.Core.BitFinex {
                 return false;
 
             int startIndex = 0;
-            List<string[]> list = JSonHelper.Default.DeserializeArrayOfArrays(bytes, ref startIndex, 11);
+            List<string[]> list = JsonHelper.Default.DeserializeArrayOfArrays(bytes, ref startIndex, 11);
             for(int i = 0; i < list.Count; i++) {
                 string[] item = list[i];
                 BitFinexTicker ticker = (BitFinexTicker)Tickers.FirstOrDefault(t => t.CurrencyPair == item[0]);
@@ -365,9 +369,7 @@ namespace Crypto.Core.BitFinex {
         public string GetOrderBookString(Ticker info, int depth) {
             return string.Format("https://api.bitfinex.com/v2/book/{0}/P0", Uri.EscapeDataString(info.MarketName));
         }
-        public override bool ProcessOrderBook(Ticker tickerBase, string text) {
-            throw new NotImplementedException();
-        }
+        
         public bool UpdateOrderBook(BitFinexTicker info, byte[] data, int depth) {
             return OnUpdateOrderBook(info, data, true, depth);
         }
@@ -380,7 +382,7 @@ namespace Crypto.Core.BitFinex {
 
             int startIndex = 0;
 
-            List<string[]> items = JSonHelper.Default.DeserializeArrayOfArrays(bytes, ref startIndex, 3);
+            List<string[]> items = JsonHelper.Default.DeserializeArrayOfArrays(bytes, ref startIndex, 3);
 
             ticker.OrderBook.BeginUpdate();
             try {
@@ -432,10 +434,10 @@ namespace Crypto.Core.BitFinex {
                 return false;
 
             int startIndex = 1;
-            if(!JSonHelper.Default.SkipSymbol(bytes, ':', 3, ref startIndex))
+            if(!JsonHelper.Default.SkipSymbol(bytes, ':', 3, ref startIndex))
                 return false;
 
-            List<string[]> res = JSonHelper.Default.DeserializeArrayOfObjects(bytes, ref startIndex, new string[] { "Id", "TimeStamp", "Quantity", "Price", "Total", "FillType", "OrderType" });
+            List<string[]> res = JsonHelper.Default.DeserializeArrayOfObjects(bytes, ref startIndex, new string[] { "Id", "TimeStamp", "Quantity", "Price", "Total", "FillType", "OrderType" });
             if(res == null)
                 return false;
             lock(info) {
@@ -480,11 +482,11 @@ namespace Crypto.Core.BitFinex {
                 return false;
 
             int startIndex = 1;
-            if(!JSonHelper.Default.SkipSymbol(bytes, ':', 3, ref startIndex))
+            if(!JsonHelper.Default.SkipSymbol(bytes, ':', 3, ref startIndex))
                 return false;
 
             string tradeUuid = ticker.AccountTradeHistory.Count == 0 ? null : ticker.AccountTradeHistory.First().IdString;
-            List<string[]> res = JSonHelper.Default.DeserializeArrayOfObjects(bytes, ref startIndex, new string[] {
+            List<string[]> res = JsonHelper.Default.DeserializeArrayOfObjects(bytes, ref startIndex, new string[] {
                 "OrderUuid", // 0
                 "Exchange",  // 1
                 "TimeStamp",  // 2
@@ -535,12 +537,12 @@ namespace Crypto.Core.BitFinex {
                 return false;
 
             int startIndex = 1;
-            if(!JSonHelper.Default.SkipSymbol(bytes, ':', 3, ref startIndex))
+            if(!JsonHelper.Default.SkipSymbol(bytes, ':', 3, ref startIndex))
                 return false;
 
             long lastId = info.TradeHistory.Count > 0 ? info.TradeHistory.First().Id : -1;
             string lastIdString = lastId.ToString();
-            List<string[]> res = JSonHelper.Default.DeserializeArrayOfObjects(bytes, ref startIndex, new string[] { "Id", "TimeStamp", "Quantity", "Price", "Total", "FillType", "OrderType" },
+            List<string[]> res = JsonHelper.Default.DeserializeArrayOfObjects(bytes, ref startIndex, new string[] { "Id", "TimeStamp", "Quantity", "Price", "Total", "FillType", "OrderType" },
                 (itemIndex, props) => {
                     return lastIdString != props[0];
                 });
@@ -583,11 +585,11 @@ namespace Crypto.Core.BitFinex {
                 return false;
 
             int startIndex = 1;
-            if(!JSonHelper.Default.SkipSymbol(bytes, ':', 3, ref startIndex))
+            if(!JsonHelper.Default.SkipSymbol(bytes, ':', 3, ref startIndex))
                 return false;
 
             string lastIdString = info.LastTradeId.ToString();
-            List<string[]> res = JSonHelper.Default.DeserializeArrayOfObjects(bytes, ref startIndex, new string[] { "Id", "TimeStamp", "Quantity", "Price", "Total", "FillType", "OrderType" },
+            List<string[]> res = JsonHelper.Default.DeserializeArrayOfObjects(bytes, ref startIndex, new string[] { "Id", "TimeStamp", "Quantity", "Price", "Total", "FillType", "OrderType" },
                 (itemIndex, props) => {
                     return lastIdString != props[0];
                 });
@@ -791,12 +793,12 @@ namespace Crypto.Core.BitFinex {
                 return false;
 
             int startIndex = 1;
-            if(!JSonHelper.Default.SkipSymbol(bytes, ':', 3, ref startIndex)) {
+            if(!JsonHelper.Default.SkipSymbol(bytes, ':', 3, ref startIndex)) {
                 Telemetry.Default.TrackEvent("bittrex.onupdateorders", new string[] { "data", UTF8Encoding.Default.GetString(bytes) }, true);
                 return false;
             }
 
-            List<string[]> res = JSonHelper.Default.DeserializeArrayOfObjects(bytes, ref startIndex, new string[] {
+            List<string[]> res = JsonHelper.Default.DeserializeArrayOfObjects(bytes, ref startIndex, new string[] {
                 "Uuid",
                 "OrderUuid",
                 "Exchange",
@@ -911,10 +913,10 @@ namespace Crypto.Core.BitFinex {
                     return false;
 
                 int startIndex = 1;
-                if(!JSonHelper.Default.SkipSymbol(bytes, ':', 3, ref startIndex))
+                if(!JsonHelper.Default.SkipSymbol(bytes, ':', 3, ref startIndex))
                     return false;
 
-                List<string[]> res = JSonHelper.Default.DeserializeArrayOfObjects(bytes, ref startIndex, new string[] {
+                List<string[]> res = JsonHelper.Default.DeserializeArrayOfObjects(bytes, ref startIndex, new string[] {
                 "Currency",
                 "Balance",
                 "Available",
@@ -1033,16 +1035,16 @@ namespace Crypto.Core.BitFinex {
             return OnUuidResult(result);
         }
 
-        public override string CreateDeposit(AccountInfo account, string currency) {
+        public override bool CreateDeposit(AccountInfo account, string currency) {
             string address = string.Format("https://bittrex.com/api/v1.1/account/getdepositaddress?apikey={0}&nonce={1}&currency={2}", Uri.EscapeDataString(account.ApiKey), GetNonce(), currency);
             MyWebClient client = GetWebClient();
             client.Headers.Clear();
             client.Headers.Add("apisign", account.GetSign(address));
-            return OnGetDeposit(account, currency, client.DownloadString(address));
+            return OnCreateDeposit(account, currency, client.DownloadString(address));
         }
-        string OnGetDeposit(AccountInfo account, string currency, string text) {
+        protected virtual bool OnCreateDeposit(AccountInfo account, string currency, string text) {
             if(string.IsNullOrEmpty(text))
-                return null;
+                return false;
             JObject res = JsonConvert.DeserializeObject<JObject>(text);
             if(res.Value<bool>("success") == false) {
                 string error = res.Value<string>("message");
@@ -1050,12 +1052,12 @@ namespace Crypto.Core.BitFinex {
                     LogManager.Default.Warning(this, "OnGetDeposit fails: " + error + ". Try again later after deposit address generate.", "Currency = " + currency);
                 else
                     LogManager.Default.Error(this, "OnGetDeposit fails: " + error, "Currency = " + currency);
-                return null;
+                return false;
             }
             JObject addr = res.Value<JObject>("result");
             BitFinexAccountBalanceInfo info = (BitFinexAccountBalanceInfo)account.Balances.FirstOrDefault(b => b.Currency == currency);
             info.Currency = addr.Value<string>("Address");
-            return info.Currency;
+            return true;
         }
 
         string GetNonce() {

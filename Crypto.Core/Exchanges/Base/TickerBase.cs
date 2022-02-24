@@ -16,13 +16,14 @@ namespace Crypto.Core {
     public abstract class Ticker : ISupportSerialization, IComparable, ICachedDataOwner {
         public static bool UseHtmlString { get; set; } = true;
         public Ticker() : this(null) {
-
+            
         }
         public Ticker(Exchange exchange) {
             Exchange = exchange;
             OrderBook = new OrderBook(this);
             UpdateMode = TickerUpdateMode.Self;
             IsActual = true;
+            CandleStickPeriodMin = 30; //default
         }
 
         public int Code { get; set; }
@@ -125,8 +126,8 @@ namespace Crypto.Core {
         public bool SelectedInDependencyArbitrage { get; set; }
 
         public TickerFilter PriceFilter { get; set; }
-        public TickerFilter QuantityFilter { get; set; }
-        public TickerFilter NotionalFilter { get; set; }
+        public TickerFilter QuantityFilter { get; set; } = new TickerFilter() { TickSize = 0 };
+        public TickerFilter NotionalFilter { get; set; } = new TickerFilter() { MinValue = 0 };
         public virtual string ValidateTrade(double rate, double amount) {
             if(NotionalFilter.MinValue != 0 && NotionalFilter.MinValue > rate * amount)
                 return "NotionalFilter not passed. MinValue = " + NotionalFilter.MinValue + " greater than " + (rate * amount).ToString("0.########") + " (total spent)";
@@ -195,6 +196,10 @@ namespace Crypto.Core {
             foreach(var item in AccountTradeHistory)
                 res.Add(item);
             return res; 
+        }
+
+        public string GetCandleStickCommandName() {
+            return Exchange.GetCandleStickCommandName(CandleStickPeriodMin);
         }
 
         CycleArray<TradeInfoItem> accountShortTradeHistory;
@@ -293,6 +298,12 @@ namespace Crypto.Core {
                     lowestAskString = GetString(LowestAsk);
                 return lowestAskString;
             }
+            set {
+                if(LowestAskString == value)
+                    return;
+                lowestAskString = value;
+                lowestAsk = 0;
+            }
         }
         string highestBidString = null;
         public string HighestBidString {
@@ -301,10 +312,23 @@ namespace Crypto.Core {
                     highestBidString = GetString(HighestBid);
                 return highestBidString;
             }
+            set {
+                if(HighestBidString == value)
+                    return;
+                highestBidString = value;
+                highestBid = 0;
+            }
         }
         double lowestAsk;
         public double LowestAsk {
-            get { return lowestAsk; }
+            get { 
+                if(lowestAsk == 0) {
+                    if(lowestAskString != null)
+                        lowestAsk = FastValueConverter.Convert(lowestAskString);
+                    return lowestAsk;
+                }
+                return lowestAsk; 
+            }
             set {
                 if(value == LowestAsk)
                     return;
@@ -314,9 +338,15 @@ namespace Crypto.Core {
                 lowestAsk = value;
             }
         }
-        double highestBid;
+        double highestBid = 0;
         public double HighestBid {
-            get { return highestBid; }
+            get { 
+                if(highestBid == 0) {
+                    if(highestBidString != null)
+                        highestBid = FastValueConverter.Convert(highestBidString);
+                }
+                return highestBid; 
+            }
             set {
                 if(value == HighestBid)
                     return;
@@ -329,7 +359,13 @@ namespace Crypto.Core {
         public bool IsFrozen { get; set; }
         double last;
         public double Last {
-            get { return last; }
+            get { 
+                if(last == 0) {
+                    if(lastString != null)
+                        last = FastValueConverter.Convert(lastString);
+                }
+                return last; 
+            }
             set {
                 if(value == Last)
                     return;
@@ -360,6 +396,12 @@ namespace Crypto.Core {
                     lastString = GetString(Last);
                 return lastString;
             }
+            set {
+                if(LastString == value)
+                    return;
+                lastString = value;
+                last = 0;
+            }
         }
         public virtual string GetStringWithChangePercent(double value, double change) {
             if(value == 0)
@@ -382,10 +424,137 @@ namespace Crypto.Core {
         public virtual string GetString(double value) {
             return GetStringWithChangePercent(value, 0);
         }
-        public double BaseVolume { get; set; }
-        public double Volume { get; set; }
-        public double Hr24High { get; set; }
-        public double Hr24Low { get; set; }
+
+        public double BaseVolumeInUSD {
+            get {
+                if(UsdTicker != null)
+                    return UsdTicker.HighestBid * BaseVolume;
+                return 0;
+            }
+        }
+
+        double baseVolume;
+        public double BaseVolume {
+            get {
+                if(baseVolume == 0 && baseVolumeString != null)
+                    baseVolume = FastValueConverter.Convert(baseVolumeString);
+                return baseVolume;
+            }
+            set {
+                if(baseVolume == value)
+                    return;
+                baseVolume = value;
+                baseVolumeString = null;
+            }
+        }
+
+        string baseVolumeString;
+        public string BaseVolumeString {
+            get { 
+                if(baseVolumeString == null && baseVolume != 0)
+                    baseVolumeString = GetString(baseVolume);
+                return baseVolumeString;
+            }
+            set {
+                if(BaseVolumeString == value)
+                    return;
+                baseVolumeString = value;
+                baseVolume = 0;
+            }
+        }
+
+        double volume;
+        public double Volume {
+            get {
+                if(volume == 0 && volumeString != null)
+                    volume = FastValueConverter.Convert(volumeString);
+                return volume;
+            }
+            set {
+                if(volume == value)
+                    return;
+                volume = value;
+                volumeString = null;
+            }
+        }
+
+        string volumeString;
+        public string VolumeString {
+            get {
+                if(volumeString == null && volume != 0)
+                    volumeString = GetString(volume);
+                return volumeString;
+            }
+            set {
+                if(VolumeString == value)
+                    return;
+                volumeString = value;
+                volume = 0;
+            }
+        }
+
+        double hr24High;
+        public double Hr24High {
+            get {
+                if(hr24High == 0 && hr24HighString != null)
+                    hr24High = FastValueConverter.Convert(hr24HighString);
+                return hr24High;
+            }
+            set {
+                if(hr24High == value)
+                    return;
+                hr24High = value;
+                hr24HighString = null;
+            }
+        }
+
+        string hr24HighString;
+        public string Hr24HighString {
+            get {
+                if(hr24HighString == null && hr24High != 0)
+                    hr24HighString = GetString(hr24High);
+                return hr24HighString;
+            }
+            set {
+                if(Hr24HighString == value)
+                    return;
+                hr24HighString = value;
+                hr24High = 0;
+            }
+        }
+
+        double hr24Low;
+        public double Hr24Low {
+            get {
+                if(hr24Low == 0 && hr24LowString != null)
+                    hr24Low = FastValueConverter.Convert(hr24LowString);
+                return hr24Low;
+            }
+            set {
+                if(hr24Low == value)
+                    return;
+                hr24Low = value;
+                hr24LowString = null;
+            }
+        }
+
+        string hr24LowString;
+        public string Hr24LowString {
+            get {
+                if(hr24LowString == null && hr24Low != 0)
+                    hr24LowString = GetString(hr24Low);
+                return hr24LowString;
+            }
+            set {
+                if(Hr24LowString == value)
+                    return;
+                hr24LowString = value;
+                hr24Low = 0;
+            }
+        }
+
+
+
         public double Change { get; set; }
         public double Spread { get { return LowestAsk - HighestBid; } }
         public double BidChange { get; set; }
@@ -404,6 +573,16 @@ namespace Crypto.Core {
 
         protected virtual Ticker FindUsdTicker() {
             return null;
+        }
+
+        public double ConvertTo(double value, string[] currencyNames) {
+            if(currencyNames.Contains(MarketCurrency))
+                return value;
+            foreach(string name in currencyNames) {
+                Ticker t = Exchange.Ticker(name, BaseCurrency);
+                if(t != null) return t.LowestAsk * value;
+            }
+            return value;
         }
 
         BalanceBase firstInfo, secondInfo;
@@ -459,7 +638,7 @@ namespace Crypto.Core {
         CurrencyInfoBase marketCurrencyInfo;
         protected CurrencyInfoBase MarketCurrencyInfo {
             get {
-                if(marketCurrencyInfo == null)
+                if(marketCurrencyInfo == null && Exchange != null)
                     marketCurrencyInfo = Exchange.GetCurrency(MarketCurrency);
                 return marketCurrencyInfo;
             }
@@ -468,7 +647,7 @@ namespace Crypto.Core {
         CurrencyInfoBase baseCurrencyInfo;
         protected CurrencyInfoBase BaseCurrencyInfo {
             get {
-                if(baseCurrencyInfo == null)
+                if(baseCurrencyInfo == null && Exchange != null)
                     baseCurrencyInfo = Exchange.GetCurrency(BaseCurrency);
                 return baseCurrencyInfo;
             }
@@ -541,8 +720,23 @@ namespace Crypto.Core {
             UpdateHistoryItem();
         }
 
-        public bool ProcessOrderBook(string text) { return Exchange.ProcessOrderBook(this, text); }
         protected bool IsUpdatingTicker { get; set; }
+        public async Task<bool> UpdateAsync() {
+            if(IsUpdatingTicker)
+                return false;
+
+            IsUpdatingTicker = true;
+            Task<bool> t = Task.Run(() => {
+                bool res = Exchange.UpdateTicker(this);
+                if(res) {
+                    Time = DateTime.UtcNow;
+                    UpdateHistoryItem();
+                }
+                IsUpdatingTicker = false;
+                return res;
+            });
+            return await t;
+        }
         public bool UpdateTicker() {
             if(IsUpdatingTicker)
                 return true;
@@ -571,11 +765,13 @@ namespace Crypto.Core {
 
         public void LockTrades() {
             TradesUpdateCount++;
+            ShortTradeHistory.BeginUpdate();
         }
         public void UnlockTrades() {
             if(TradesUpdateCount == 0)
                 return;
             TradesUpdateCount--;
+            ShortTradeHistory.EndUpdate();
         }
         public void LockOpenOrders() {
             OpenOrdersUpdateCount++;
@@ -772,6 +968,8 @@ namespace Crypto.Core {
         public bool PrevMarketCurrencyEnabled { get; set; }
 
         public void UpdateHistoryItem() {
+            if(!Exchange.AllowTickerHistory)
+                return;
             TickerHistoryItem last = History.Count == 0 ? null : History.Last();
             if(last != null) {
                 if(last.Ask == LowestAsk && last.Bid == HighestBid && last.Current == Last)
@@ -794,8 +992,11 @@ namespace Crypto.Core {
                 return;
             MarketCurrencyStatusHistory.Add(new CurrencyStatusHistoryItem() { Enabled = MarketCurrencyEnabled, Time = DateTime.UtcNow });
         }
-        public ResizeableArray<CandleStickData> GetCandleStickData(int candleStickPeriodMin, DateTime start, int periodInSeconds) {
-            return Exchange.GetCandleStickData(this, candleStickPeriodMin, start, periodInSeconds);
+        public ResizeableArray<CandleStickData> GetCandleStickData(int candleStickPeriodMin, DateTime start, int rangeInSeconds) {
+            return Exchange.GetCandleStickData(this, candleStickPeriodMin, start, rangeInSeconds);
+        }
+        public ResizeableArray<CandleStickData> GetRecentCandleStickData(int candleStickPeriodMin) {
+            return Exchange.GetRecentCandleStickData(this, candleStickPeriodMin);
         }
         public virtual bool UpdateAccountTrades() {
             if(Exchange.DefaultAccount == null)
@@ -816,9 +1017,10 @@ namespace Crypto.Core {
             RaiseChanged();
             Exchange?.RaiseTickerChanged(this);
         }
-        
+
+        protected virtual int DefaultCandlestickInterval => 60;
         public double[] GetSparkline() {
-            ResizeableArray<CandleStickData> dt = GetCandleStickData(30, DateTime.Now.AddHours(-12), 12 * 60 * 60);
+            ResizeableArray<CandleStickData> dt = GetRecentCandleStickData(DefaultCandlestickInterval);
             if(dt == null)
                 return this.sparklineNullValue;
             double[] data = new double[dt.Count];
@@ -828,11 +1030,35 @@ namespace Crypto.Core {
         }
 
         double[] sparklineNullValue = new double[0];
+        double[] sparkline;
         [XmlIgnore]
         public double[] Sparkline { 
-            get { 
-                return (double[])DataCacheManager.GetData(this, nameof(Sparkline), TimeSpan.FromHours(1), this.sparklineNullValue, () => GetSparkline());
-            }    
+            get { return sparkline; }
+            set {
+                sparkline = value;
+                RaiseChanged();
+            }
+        }
+
+        public void CancelSparkline() {
+            DataCacheManager.RemoveTask(this, nameof(Sparkline));
+        }
+
+        public void QuerySparkline() {
+            DataCacheManager.GetData(this, nameof(Sparkline), TimeSpan.FromHours(1), this.sparklineNullValue, () => {
+                this.sparkline = GetSparkline();
+                return this.sparkline;
+            });
+        }
+
+        public void CancelTickerInfo() {
+            DataCacheManager.RemoveTask(this, "TickerInfo");
+        }
+
+        public void QueryTickerInfo() {
+            DataCacheManager.GetData(this, "TickerInfo", TimeSpan.FromHours(1), false, () => {
+                return UpdateTicker();
+            });
         }
 
         ObservableCollection<TickerEvent> events;
@@ -847,13 +1073,13 @@ namespace Crypto.Core {
         }
         
         protected internal virtual void InsertTradeHistoryItem(TradeInfoItem item) {
-            if(TradeHistory.Count > 0) {
-                TradeInfoItem first = TradeHistory.First();
-                if(first.Time > item.Time)
-                    throw new Exception("Invalid Trade History Items Order By Time");
-                if(first.Id != 0 && first.Id != item.Id - 1)
-                    throw new Exception("Invalid Trade History Items Order By Id");
-            }
+            //if(TradeHistory.Count > 0) {
+            //    TradeInfoItem first = TradeHistory.First();
+            //    if(first.Time > item.Time)
+            //        throw new Exception("Invalid Trade History Items Order By Time");
+            //    if(first.Id != 0 && first.Id != item.Id - 1)
+            //        throw new Exception("Invalid Trade History Items Order By Id");
+            //}
             TradeHistory.AddFirst(item);
             ShortTradeHistory.AddFirst(item);
         }
@@ -1122,6 +1348,10 @@ namespace Crypto.Core {
                 return res;
             });
             DataTask dt = new DataTask() { Task = t, Priority = 1 };
+            if(owner is Exchange)
+                dt.Exchange = (Exchange)owner;
+            if(owner is Ticker)
+                dt.Exchange = ((Ticker)owner).Exchange;
             Tasks.Add(GetKey(owner, dataName), dt);
             if(GetRunningTaskCount() < MaxAllowedTaskCount)
                 t.Start();
@@ -1150,7 +1380,11 @@ namespace Crypto.Core {
                 return;
             List<KeyValuePair<string, DataTask>> tasks = Tasks.OrderByDescending( tt => tt.Value.Priority).ToList();
             foreach(var pair in tasks) {
+                DataTask dataTask = pair.Value;
+                if(dataTask.Exchange != null && dataTask.Exchange.GetRequestFillPercent() > 30)
+                    continue;
                 Task task = pair.Value.Task;
+                
                 if(task.Status == TaskStatus.Canceled || task.Status == TaskStatus.Faulted || task.Status == TaskStatus.RanToCompletion) {
                     Tasks.Remove(pair.Key);
                     continue;
@@ -1175,11 +1409,24 @@ namespace Crypto.Core {
             Data.Add(owner, props);
             return props;
         }
+
+        internal static void RemoveTask(object owner, string dataName) {
+            string key = GetKey(owner, dataName);
+            if(Tasks.ContainsKey(key)) {
+                DataTask task = Tasks[key];
+                if(task.Task == null)
+                    Tasks.Remove(key);
+                if(task.Task != null && (task.Task.Status == TaskStatus.Created || task.Task.Status == TaskStatus.WaitingForActivation)) {
+                    Tasks.Remove(key);
+                }
+            }
+        }
     }
 
     public class DataTask {
         public Task Task { get; set; }
         public int Priority { get; set; }
+        public Exchange Exchange { get; set; }
     }
 
     interface ICachedDataOwner {

@@ -139,5 +139,18 @@ namespace Crypto.Core.Common {
         public void Add(string key, string value) {
             this.Add(new KeyValuePair<string, string>(key, value));
         }
+        public override string ToString() {
+            StringBuilder b = new StringBuilder();
+            int index = 0;
+            foreach(KeyValuePair<string, string> p in this) {
+                if(index > 0)
+                    b.Append('&');
+                b.Append(p.Key);
+                b.Append('=');
+                b.Append(p.Value);
+                index++;
+            }
+            return base.ToString();
+        }
     }
 }

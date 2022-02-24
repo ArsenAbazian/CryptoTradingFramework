@@ -102,6 +102,8 @@ namespace Crypto.Core.Common {
                 Save();
             }
             RefreshVisual();
+            if(type == LogType.Error || type == LogType.Warning)
+                NotificationManager.Notify(name, string.Format("{0}\n{1}", message, description));
             return Messages[Messages.Count - 1];
         }
 
@@ -115,6 +117,10 @@ namespace Crypto.Core.Common {
 
         public void Log(LogType log, object owner, string message, string description) {
             Add(LogType.Log, owner, null, message, description);
+        }
+
+        public void ShowNotification(LogType messageType, string owner, string message, string description) {
+            
         }
     }
 

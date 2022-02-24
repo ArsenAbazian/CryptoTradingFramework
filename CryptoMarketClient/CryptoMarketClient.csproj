@@ -111,96 +111,85 @@
     <Reference Include="Crypto.UI">
       <HintPath>..\Bin\Crypto.UI.dll</HintPath>
     </Reference>
-    <Reference Include="DevExpress.Charts.v21.1.Core, Version=21.1.0.0 ">
+    <Reference Include="DevExpress.Charts.v21.2.Core, Version=21.2.0.0 ">
       <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.Data.v21.1, Version=21.1.0.0 ">
+    <Reference Include="DevExpress.Data.v21.2, Version=21.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4" />
+    <Reference Include="DevExpress.Dialogs.v21.2.Core, Version=21.2.0.0 ">
       <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.Dialogs.v21.1.Core, Version=21.1.0.0 ">
+    <Reference Include="DevExpress.Images.v21.2, Version=21.2.0.0 ">
       <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.Images.v21.1, Version=21.1.0.0 ">
+    <Reference Include="DevExpress.Office.v21.2.Core, Version=21.2.0.0 ">
       <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.Office.v21.1.Core, Version=21.1.0.0 ">
+    <Reference Include="DevExpress.Pdf.v21.2.Core, Version=21.2.0.0 ">
       <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.Pdf.v21.1.Core, Version=21.1.0.0 ">
+    <Reference Include="DevExpress.Printing.v21.2.Core, Version=21.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4" />
+    <Reference Include="DevExpress.RichEdit.v21.2.Core, Version=21.2.0.0 ">
       <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.Printing.v21.1.Core, Version=21.1.0.0 ">
+    <Reference Include="DevExpress.Sparkline.v21.2.Core, Version=21.2.0.0 ">
       <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.RichEdit.v21.1.Core, Version=21.1.0.0 ">
+    <Reference Include="DevExpress.Data.Desktop.v21.2, Version=21.2.0.0 ">
       <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.Sparkline.v21.1.Core, Version=21.1.0.0 ">
+    <Reference Include="DevExpress.TreeMap.v21.2.Core, Version=21.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4" />
+    <Reference Include="DevExpress.Tutorials.v21.2, Version=21.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Development\2021.2\Bin\Framework4\DevExpress.Tutorials.v21.2.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Utils.v21.2, Version=21.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4" />
+    <Reference Include="DevExpress.Xpo.v21.2, Version=21.2.0.0 ">
       <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.Data.Desktop.v21.1, Version=21.1.0.0 ">
+    <Reference Include="DevExpress.XtraBars.v21.2, Version=21.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4" />
+    <Reference Include="DevExpress.XtraCharts.v21.2, Version=21.2.0.0 ">
       <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.Utils.v21.1, Version=21.1.0.0 ">
+    <Reference Include="DevExpress.XtraCharts.v21.2.Extensions, Version=21.2.0.0 " />
+    <Reference Include="DevExpress.XtraCharts.v21.2.UI, Version=21.2.0.0 ">
       <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.Xpo.v21.1, Version=21.1.0.0 ">
+    <Reference Include="DevExpress.XtraCharts.v21.2.Wizard, Version=21.2.0.0 ">
       <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.XtraBars.v21.1, Version=21.1.0.0 ">
+    <Reference Include="DevExpress.XtraDialogs.v21.2, Version=21.2.0.0 ">
       <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.XtraCharts.v21.1, Version=21.1.0.0 ">
+    <Reference Include="DevExpress.XtraEditors.v21.2, Version=21.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4" />
+    <Reference Include="DevExpress.XtraGrid.v21.2, Version=21.2.0.0 ">
       <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.XtraCharts.v21.1.Extensions, Version=21.1.0.0 " />
-    <Reference Include="DevExpress.XtraCharts.v21.1.UI, Version=21.1.0.0 ">
+    <Reference Include="DevExpress.XtraLayout.v21.2, Version=21.2.0.0 ">
       <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.XtraCharts.v21.1.Wizard, Version=21.1.0.0 ">
+    <Reference Include="DevExpress.XtraPrinting.v21.2, Version=21.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4" />
+    <Reference Include="DevExpress.XtraTreeList.v21.2, Version=21.2.0.0 ">
       <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.XtraDialogs.v21.1, Version=21.1.0.0 ">
-      <SpecificVersion>False</SpecificVersion>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="DevExpress.XtraEditors.v21.1, Version=21.1.0.0 ">
-      <SpecificVersion>False</SpecificVersion>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="DevExpress.XtraGrid.v21.1, Version=21.1.0.0 ">
-      <SpecificVersion>False</SpecificVersion>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="DevExpress.XtraLayout.v21.1, Version=21.1.0.0 ">
-      <SpecificVersion>False</SpecificVersion>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="DevExpress.XtraPrinting.v21.1, Version=21.1.0.0 ">
-      <SpecificVersion>False</SpecificVersion>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="DevExpress.XtraTreeList.v21.1, Version=21.1.0.0 ">
-      <SpecificVersion>False</SpecificVersion>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="DevExpress.XtraVerticalGrid.v21.1, Version=21.1.0.0 ">
+    <Reference Include="DevExpress.XtraTreeMap.v21.2, Version=21.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4" />
+    <Reference Include="DevExpress.XtraTreeMap.v21.2.UI, Version=21.2.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4" />
+    <Reference Include="DevExpress.XtraVerticalGrid.v21.2, Version=21.2.0.0 ">
       <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
@@ -439,6 +428,12 @@
     <Compile Include="ExchangeCollectionForm.Designer.cs">
       <DependentUpon>ExchangeCollectionForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="ExchangeMarketCapacityForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ExchangeMarketCapacityForm.Designer.cs">
+      <DependentUpon>ExchangeMarketCapacityForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="OpenedOrdersForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -640,6 +635,9 @@
     <EmbeddedResource Include="EventsCollectionControl.resx">
       <DependentUpon>EventsCollectionControl.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="ExchangeMarketCapacityForm.resx">
+      <DependentUpon>ExchangeMarketCapacityForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="OpenedOrdersForm.resx">
       <DependentUpon>OpenedOrdersForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -746,6 +744,7 @@
     <None Include="app.manifest" />
     <None Include="packages.config" />
     <None Include="Properties\DataSources\Crypto.Core.Common.TickerNameInfo.datasource" />
+    <None Include="Properties\DataSources\Crypto.Core.Ticker.datasource" />
     <None Include="Properties\DataSources\Exchange.datasource" />
     <None Include="Properties\DataSources\TickerBase.datasource" />
     <None Include="Properties\DataSources\TradeInfo.datasource" />
@@ -780,6 +779,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\ExchangeImages\BitmexIcon.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ExchangeImages\Kraken.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\ExchangeImages\Poloniex.png">

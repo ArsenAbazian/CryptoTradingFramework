@@ -34,6 +34,11 @@ namespace Crypto.Core.Common {
             LastRequestTime = DateTime.Now.Ticks;
         }
         public bool IsAllow { get { return !Exceeded || Elapsed; } }
+        public int GetFillPercent() {
+            if(Elapsed)
+                Reset();
+            return (100 * Count) / Limit;
+        }
         public void CheckAllow() {
             if(Exceeded) {
                 if(!Elapsed) {

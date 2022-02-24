@@ -22,6 +22,7 @@ using Crypto.Core.Strategies;
 using Crypto.Core.BitFinex;
 using System.Threading.Tasks;
 using Crypto.Core.Exchanges.Binance.Futures;
+using Crypto.Core.Exchanges.Kraken;
 
 namespace Crypto.Core {
     public abstract class Exchange : ISupportSerialization {
@@ -35,6 +36,7 @@ namespace Crypto.Core {
             Registered.Add(BinanceExchange.Default);
             Registered.Add(BitmexExchange.Default);
             Registered.Add(BinanceFuturesExchange.Default);
+            Registered.Add(KrakenExchange.Default);
         }
 
         protected internal virtual void OnRequestCompleted(MyWebClient myWebClient) {
@@ -82,6 +84,14 @@ namespace Crypto.Core {
             }
             sb.Remove(0, 1);
             return sb.ToString();
+        }
+
+        public bool GetAllAccountsAddresses() {
+            bool res = true;
+            foreach(AccountInfo a in Accounts) {
+                res &= UpdateAddresses(a);
+            }
+            return res;
         }
 
         public static List<TickerNameInfo> GetTickersNameInfo() {
@@ -194,9 +204,9 @@ namespace Crypto.Core {
 
         public bool LoadTickers() {
             if(GetTickersInfo()) {
-                for(int i = 0; i < Tickers.Count; i++) {
+                for(int i = 0; i < Tickers.Count; i++)
                     Tickers[i].Load();
-                }
+                UpdateTickersInfo();
                 Save();
                 return true;
             }
@@ -204,6 +214,12 @@ namespace Crypto.Core {
         }
         public abstract bool GetTickersInfo();
         public abstract bool UpdateTickersInfo();
+        public virtual bool SupportCummulativeTickersUpdate { get { return true; } }
+
+        public string GetCandleStickCommandName(int candleStickPeriodMin) {
+            var info = AllowedCandleStickIntervals.FirstOrDefault(i => i.TotalMinutes == candleStickPeriodMin);
+            return info?.Command;
+        }
 
         public List<AccountInfo> Accounts { get; } = new List<AccountInfo>();
 
@@ -524,16 +540,16 @@ namespace Crypto.Core {
         }
 
         protected virtual void OnOrderBookConnectionLost(SocketConnectionInfo info, WebSocketSubscribeInfo s) {
-            LogManager.Default.Log(LogType.Error, s.Ticker, "subscription connection lost", s.Type.ToString());
+            LogManager.Default.Log(LogType.Error, s.Ticker, "Subscription connection lost", s.Type.ToString());
             s.Ticker.OrderBook.IsDirty = true;
             Reconnect(info);
         }
 
         protected virtual void OnConnectionLost(SocketConnectionInfo info) {
-            LogManager.Default.Log(LogType.Error, info.Ticker, "ticker socket connection lost", info.Type.ToString());
+            LogManager.Default.Log(LogType.Error, info.Ticker, "Ticker socket connection lost", info.Type.ToString());
             if(info.Subscribtions.Count > 0) {
                 foreach(var item in info.Subscribtions) {
-                    LogManager.Default.Log(LogType.Error, item.Ticker, "socket channel subscribtion lost", info.Type.ToString());
+                    LogManager.Default.Log(LogType.Error, item.Ticker, "Socket channel subscribtion lost", info.Type.ToString());
                 }
             }
             Reconnect(info);
@@ -734,7 +750,6 @@ namespace Crypto.Core {
         public abstract bool UpdateOrderBook(Ticker tickerBase);
         public abstract bool UpdateOrderBook(Ticker tickerBase, int depth);
         public abstract void UpdateOrderBookAsync(Ticker tickerBase, int depth, Action<OperationResultEventArgs> onOrderBookUpdated);
-        public abstract bool ProcessOrderBook(Ticker tickerBase, string text);
         public abstract bool UpdateTicker(Ticker tickerBase);
         public abstract bool UpdateTrades(Ticker tickerBase);
         public ResizeableArray<TradeInfoItem> GetTrades(Ticker ticker, DateTime startTime) { 
@@ -743,11 +758,14 @@ namespace Crypto.Core {
         public abstract bool UpdateOpenedOrders(AccountInfo account, Ticker ticker);
         public bool UpdateOpenedOrders(AccountInfo account) { return UpdateOpenedOrders(account, null); }
         public abstract bool UpdateCurrencies();
+        public virtual CurrencyInfoBase CreateCurrency(string currency) { return new CurrencyInfoBase(currency); }
         public abstract bool UpdateBalances(AccountInfo info);
+        public virtual bool UpdateAddresses(AccountInfo account) { return true; }
         public abstract bool GetBalance(AccountInfo info, string currency);
         public virtual bool UpdatePositions(AccountInfo account, Ticker ticker) { return true; }
-        public abstract string CreateDeposit(AccountInfo account, string currency);
+        public abstract bool CreateDeposit(AccountInfo account, string currency);
         public abstract bool GetDeposites(AccountInfo account);
+        public abstract bool GetDeposite(AccountInfo account, string currency);
         public TradingResult Buy(AccountInfo account, Ticker ticker, double rate, double amount) { return BuyLong(account, ticker, rate, amount); }
         public TradingResult Sell(AccountInfo account, Ticker ticker, double rate, double amount) { return SellLong(account, ticker, rate, amount); }
         public abstract TradingResult BuyLong(AccountInfo account, Ticker ticker, double rate, double amount);
@@ -761,6 +779,9 @@ namespace Crypto.Core {
         public virtual bool AllowCheckOrderStatus { get { return false; } }
         
         public abstract bool Cancel(AccountInfo account, Ticker ticker, string orderId);
+        public virtual ResizeableArray<CandleStickData> GetRecentCandleStickData(Ticker ticker, int candleStickPeriodMin) {
+            return GetCandleStickData(ticker, candleStickPeriodMin, DateTime.Now.AddHours(-12), 12 * 60 * 60);
+        }
         public virtual ResizeableArray<CandleStickData> GetCandleStickData(Ticker ticker, int candleStickPeriodMin, DateTime start, long periodInSeconds) {
             return new ResizeableArray<CandleStickData>();
         }
@@ -792,7 +813,12 @@ namespace Crypto.Core {
             BalanceBase b = account.Balances.FirstOrDefault(bb => bb.Currency == currency);
             if(!string.IsNullOrEmpty(b.DepositAddress))
                 return b.DepositAddress;
-            return CreateDeposit(account, currency);
+            if(CreateDeposit(account, currency)) {
+                var info = account.Balances.FirstOrDefault(bb => bb.Currency == currency);
+                if(info != null)
+                    return info.DepositAddress;
+            }
+            return null;
         }
         
         public abstract List<CandleStickIntervalInfo> GetAllowedCandleStickIntervals();
@@ -902,14 +928,14 @@ namespace Crypto.Core {
         protected internal virtual void OnKlineSocketClosed(object sender, EventArgs e) {
             SocketConnectionInfo info = KlineSockets.FirstOrDefault(c => c.Key == sender);
             if(info != null)
-                LogManager.Default.Log(LogType.Log, info.Ticker, "kline socket closed", "");
+                LogManager.Default.Log(LogType.Log, info.Ticker, "Kline socket closed", "");
             else
-                LogManager.Default.Log(LogType.Log, this, "kline socket closed", "");
+                LogManager.Default.Log(LogType.Log, this, "Kline socket closed", "");
         }
 
         protected internal virtual void OnKlineSocketOpened(object sender, EventArgs e) {
             SocketConnectionInfo info = KlineSockets.FirstOrDefault(c => c.Key == sender);
-            LogManager.Default.Log(LogType.Success, info.Ticker, "kline socket opened", "");
+            LogManager.Default.Log(LogType.Success, info.Ticker, "Kline socket opened", "");
         }
 
         protected internal virtual void OnKlineSocketError(object sender, SuperSocket.ClientEngine.ErrorEventArgs e) {
@@ -917,7 +943,7 @@ namespace Crypto.Core {
             if(info != null) {
                 bool isReconnecting = info.Reconnecting;
                 info.Reconnecting = false;
-                LogManager.Default.Log(LogType.Error, info.Ticker, "kline socket error", e.Exception.Message);
+                LogManager.Default.Log(LogType.Error, info.Ticker, "Kline socket error", e.Exception.Message);
                 if(!isReconnecting)
                     info.Reconnect();
                 else
@@ -1058,6 +1084,21 @@ namespace Crypto.Core {
             IsConnected = true;
             return true;
         }
+
+        public virtual string GetSign(HttpRequestParamsCollection coll, AccountInfo info) {
+            return GetSign(coll.ToString(), info);
+        }
+
+        public virtual string GetSign(string path, string text, string nonce, AccountInfo info) {
+            return GetSign(text, info);
+        }
+
+        public virtual string GetSign(string text, AccountInfo info) {
+            byte[] data = Encoding.ASCII.GetBytes(text);
+            byte[] hash = info.HmacSha.ComputeHash(data);
+            return BitConverter.ToString(hash).Replace("-", string.Empty).ToLower();
+        }
+
         //public abstract Form CreateAccountForm();
         public abstract void OnAccountRemoved(AccountInfo info);
         public virtual void StartListenTickerStream(Ticker ticker) {
@@ -1225,6 +1266,17 @@ namespace Crypto.Core {
             }
             return null;
         }
+
+        public int GetRequestFillPercent() {
+            int maxValue = 0;
+            if(RequestRate == null)
+                return 0;
+            foreach(RateLimit limit in RequestRate) {
+                maxValue = Math.Max(maxValue, limit.GetFillPercent());
+            }
+            return maxValue;
+        }
+
         public Ticker Ticker(string baseCurrency, string marketCurrency) {
             for(int i = 0; i < Tickers.Count; i++) {
                 Ticker t = Tickers[i];
@@ -1411,6 +1463,8 @@ namespace Crypto.Core {
         public static Color CandleStickReductionColor { get { return AskColor; } }
 
         public virtual bool SupportBuySellVolume { get { return false; } }
+
+        public bool AllowTickerHistory { get; set; } = false;
     }
 
     public class CandleStickIntervalInfo {

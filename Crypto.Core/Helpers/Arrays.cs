@@ -381,6 +381,28 @@ namespace Crypto.Core.Helpers {
         void IBindingList.RemoveSort() {
             throw new NotSupportedException();
         }
+
+        public void Insert(int startIndex, ResizeableArray<T> data) {
+            T[] prevItems = Items;
+            int prevCount = Count;
+
+            int maxCount = data.Count + Count > Items.Length ? data.Count + Count : Items.Length;
+            Items = new T[maxCount];
+            
+            for(int i = 0; i < startIndex; i++)
+                Items[i] = prevItems[i];
+
+            int count = data.Count;
+            for(int i = 0; i < count; i++) {
+                Items[startIndex + i] = data[i];
+            }
+
+            startIndex += count;
+            for(int i = prevCount - 1; i >= startIndex; i--)
+                Items[startIndex + i] = prevItems[i];
+            
+            RaiseListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
+        }
     }
 
     public class StackEnumerator<T> : IEnumerator<T> {

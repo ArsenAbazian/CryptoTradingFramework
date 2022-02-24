@@ -5,6 +5,7 @@ using DevExpress.Data.Filtering;
 using DevExpress.XtraGrid.Views.Base;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Crypto.Core.Common {
@@ -44,26 +45,35 @@ namespace Crypto.Core.Common {
         List<BalanceBase> total = new List<BalanceBase>();
         Dictionary<ExchangeType, bool> balanceObtained = new Dictionary<ExchangeType, bool>();
         bool shouldExpandGroups = true;
+        void SetStatus(string text) {
+            if(!IsHandleCreated)
+                return;
+            if(InvokeRequired)
+                BeginInvoke(new MethodInvoker(() => this.bsiStatus.Caption = text));
+        }
         void UpdateBalances() {
             foreach(Exchange e in Exchanges) {
-                this.bsInfo.Caption = "<color=green><b>Updating "+ e.Name + "</color></b>";
+                SetStatus("<color=green><b>Updating "+ e.Name + "</color></b>");
                 if(!e.IsConnected) {
                     if(!e.Connect()) {
-                        this.bsInfo.Caption = "<color=red><b>Update failed.</color></b>";
+                        SetStatus("<color=red><b>Update failed.</color></b>");
                         continue;
                     }
                 }
                 if(!e.UpdateAllAccountsBalances()) {
-                    this.bsInfo.Caption = "<color=red><b>UpdateBalances failed.</color></b>";
+                    SetStatus("<color=red><b>UpdateBalances failed.</color></b>");
                     continue;
                 }
                 if(this.bcDeposites.Checked) {
+                    if(!e.GetAllAccountsAddresses()) {
+                        SetStatus("<color=red><b>GetAddresses failed</color></b>");
+                    }
                     if(!e.GetAllAccountsDeposites()) {
-                        this.bsInfo.Caption = "<color=red><b>GetDeposites failed</color></b>";
+                        SetStatus("<color=red><b>GetDeposites failed</color></b>");
                         //continue;
                     }
                 }
-                this.bsInfo.Caption = "";
+                SetStatus("");
                 if(!this.balanceObtained.ContainsKey(e.Type)) {
                     this.balanceObtained.Add(e.Type, true);
                     total.AddRange(e.GetAllBalances());
@@ -105,7 +115,42 @@ namespace Crypto.Core.Common {
         }
 
         private void gridControl1_Click(object sender, EventArgs e) {
+            
+        }
 
+        private void gridControl1_MouseUp(object sender, MouseEventArgs e) {
+            if(e.Button != MouseButtons.Right)
+                return;
+            var info = this.gridView1.CalcHitInfo(e.Location);
+            if(!info.InRowCell)
+                return;
+            BalanceBase b = this.gridView1.GetRow(info.RowHandle) as BalanceBase;
+            if(b == null)
+                return;
+            this.popupMenu1.Tag = b;
+            this.popupMenu1.ShowPopup(this.gridControl1.PointToScreen(e.Location));
+        }
+
+        private void biUpdateDeposite_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
+            BalanceBase b = (BalanceBase)this.popupMenu1.Tag;
+            var task = Task.Run(() => { b.Account.Exchange.GetDeposite(b.Account, b.Currency); }).
+                ContinueWith(t => {
+                    if(IsHandleCreated)
+                        BeginInvoke(new MethodInvoker(() => this.gridView1.RefreshData()));
+                });
+        }
+
+        private void biUpdateBalance_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
+
+        }
+
+        private void biCreateDeposit_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
+            BalanceBase b = (BalanceBase)this.popupMenu1.Tag;
+            var task = Task.Run(() => { b.Account.Exchange.CheckCreateDeposit(b.Account, b.Currency); }).
+                ContinueWith(t => {
+                    if(IsHandleCreated)
+                        BeginInvoke(new MethodInvoker(() => this.gridView1.RefreshData()));
+                });
         }
     }
 }

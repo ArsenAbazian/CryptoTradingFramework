@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Crypto.Core.Helpers;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -15,6 +16,7 @@ namespace Crypto.Core {
     public interface IIncrementalUpdateDataProvider {
         void Update(Ticker ticker, IncrementalUpdateInfo info);
         void ApplySnapshot(JObject jObject, Ticker ticker);
+        void ApplySnapshot(JsonHelperToken root, Ticker ticker);
     }
 
     public class IncrementalUpdateInfo {

@@ -71,10 +71,15 @@ namespace CryptoMarketClient {
                 Ticker.CandleStickData.ThreadManager = ThreadManager;
                 Ticker.StopListenKlineStream();
                 SetCandleStickCheckItemValues();
-                UpdateDataFromServer(false);
-                UpdateCandleStickMenu();
                 UpdateChart();
-                Ticker.StartListenKlineStream();
+                UpdateCandleStickMenu();
+                UpdateDataDromServerAsync().ContinueWith(t => {
+                    Ticker.StartListenKlineStream();
+                });
+                //UpdateDataFromServer(false);
+                //UpdateCandleStickMenu();
+                //UpdateChart();
+                //Ticker.StartListenKlineStream();
             }
             else {
                 for(int i = 0; i < this.chartControl1.Series.Count; i++) {
@@ -118,7 +123,7 @@ namespace CryptoMarketClient {
         protected Series CurrentSeries { get; set; }
         protected bool SuppressUpdateCandlestickData { get; set; }
 
-        void UpdateChart() {
+        protected void UpdateChart() {
             if(Ticker == null)
                 return;
             SuppressUpdateCandlestickData = true;
@@ -195,7 +200,7 @@ namespace CryptoMarketClient {
             }
         }
 
-        private void OnIntervalItemCheckedChanged(object sender, ItemClickEventArgs e) {
+        private async void OnIntervalItemCheckedChanged(object sender, ItemClickEventArgs e) {
             BarCheckItem item = (BarCheckItem)sender;
             if(!item.Checked)
                 return;
@@ -206,7 +211,9 @@ namespace CryptoMarketClient {
             Ticker.CandleStickPeriodMin = (int)((TimeSpan)item.Tag).TotalMinutes;
             Ticker.CandleStickData.Clear();
             Ticker.StartListenKlineStream();
-            UpdateDataFromServer(true);
+
+            await UpdateDataDromServerAsync();
+            //UpdateDataFromServer(true);
         }
 
         private void OnChartTypeChanged(object sender, ItemClickEventArgs e) {
@@ -216,13 +223,13 @@ namespace CryptoMarketClient {
         }
         void ConfigurateChart(ViewType type) {
             this.chartControl1.Series["Current"].ChangeView(type);
+            
             this.chartControl1.Series["Current"].DataSource = null;
             if(type == ViewType.CandleStick || type == ViewType.Stock)
                 this.chartControl1.Series["Current"].BindToData(new RealTimeSource() { DataSource = Ticker.CandleStickData }, "Time", "Low", "High", "Open", "Close");
-            //else
-            //    this.chartControl1.Series["Current"].BindToData(new RealTimeSource() { DataSource = Ticker.History }, "Time", "Current"); TODO Change HeavyDataSource 
             UpdateChartProperties();
         }
+
         void InitializeCheckItems() {
             this.bcStock.Tag = ViewType.Stock;
             this.bcLine.Tag = ViewType.Line;
@@ -242,17 +249,31 @@ namespace CryptoMarketClient {
             return candleStickCount * screenCount * interval;
         }
 
-        protected void UpdateDataFromServer(bool inBackgroundThread) {
-            int totalWidth = this.chartControl1.ClientRectangle.Width;
-            int screenCount = 3;
-            int candleStickCount = (int)(totalWidth / (5 * DpiProvider.Default.DpiScaleFactor));
-            int interval = Ticker.CandleStickPeriodMin * 60;
-            int totalInterval = candleStickCount * screenCount * interval;
+        //protected void UpdateDataFromServer(bool inBackgroundThread) {
+        //    int totalWidth = this.chartControl1.ClientRectangle.Width;
+        //    int screenCount = 3;
+        //    int candleStickCount = (int)(totalWidth / (5 * DpiProvider.Default.DpiScaleFactor));
+        //    int interval = Ticker.CandleStickPeriodMin * 60;
+        //    int totalInterval = candleStickCount * screenCount * interval;
+
+        //    DateTime start = DateTime.UtcNow; //.Subtract(TimeSpan.FromSeconds(totalInterval));
+        //    BackgroundUpdateCandleSticks(start, inBackgroundThread);
+        //    UpdateChartProperties();
+        //}
+
+        protected async Task UpdateDataDromServerAsync() {
+            if(this.isCandleSticksUpdate)
+                return;
+            //int totalWidth = this.chartControl1.ClientRectangle.Width;
+            //int screenCount = 3;
+            //int candleStickCount = (int)(totalWidth / (5 * DpiProvider.Default.DpiScaleFactor));
+            //int interval = Ticker.CandleStickPeriodMin * 60;
+            //int totalInterval = candleStickCount * screenCount * interval;
 
             DateTime start = DateTime.UtcNow; //.Subtract(TimeSpan.FromSeconds(totalInterval));
-            BackgroundUpdateCandleSticks(start, inBackgroundThread);
-            UpdateChartProperties();
+            await UpdateCandleSticksAsync(start).ContinueWith(t => { UpdateChartProperties(); });
         }
+
         protected void UpdateChartProperties() {
             ((BarSeriesView)this.chartControl1.Series["Volume"].View).BarWidth = 0.6 * Ticker.CandleStickPeriodMin;
             ((BarSeriesView)this.chartControl1.Series["Volume"].View).Border.Visibility = DevExpress.Utils.DefaultBoolean.False;
@@ -265,8 +286,9 @@ namespace CryptoMarketClient {
                 f.LevelLineLength = 0.6 / 2 * Ticker.CandleStickPeriodMin;
         }
 
-        private void barButtonItem3_ItemClick(object sender, ItemClickEventArgs e) {
-            UpdateDataFromServer(true);
+        private async void barButtonItem3_ItemClick(object sender, ItemClickEventArgs e) {
+            await UpdateDataDromServerAsync();
+            //UpdateDataFromServer(true);
         }
         public void AddIndicator(TradingSettings settings) {
             if(Ticker == null)
@@ -327,7 +349,7 @@ namespace CryptoMarketClient {
 
         Thread UpdateCandleStickThread { get; set; }
         protected bool LastChangeLeadsToUpdate { get; set; }
-        private void chartControl1_AxisVisualRangeChanged(object sender, AxisRangeChangedEventArgs e) {
+        private async void chartControl1_AxisVisualRangeChanged(object sender, AxisRangeChangedEventArgs e) {
             if(Ticker == null || SuppressUpdateCandlestickData || !Ticker.Exchange.AllowCandleStickIncrementalUpdate)
                 return;
             if(!(e.Axis.VisualRange.MinValue is DateTime))
@@ -336,15 +358,39 @@ namespace CryptoMarketClient {
                 return;
             if(!LastChangeLeadsToUpdate && object.Equals(e.Axis.VisualRange.MinValue, e.Axis.WholeRange.MinValue)) {
                 LastChangeLeadsToUpdate = true;
-                BackgroundUpdateCandleSticks((DateTime)e.Axis.VisualRange.MinValue);
+                await UpdateCandleSticksAsync((DateTime)e.Axis.VisualRange.MinValue);
+                //BackgroundUpdateCandleSticks((DateTime)e.Axis.VisualRange.MinValue);
                 return;
             }
             LastChangeLeadsToUpdate = false;
         }
 
-        void BackgroundUpdateCandleSticks(DateTime date) {
-            BackgroundUpdateCandleSticks(date, true);
+        //void BackgroundUpdateCandleSticks(DateTime date) {
+        //    BackgroundUpdateCandleSticks(date, true);
+        //}
+
+        protected async Task UpdateCandleSticksAsync(DateTime date) {
+            if(this.isCandleSticksUpdate)
+                return;
+            this.isCandleSticksUpdate = true;
+
+            await Task.Run(() => {
+                int seconds = CalculateTotalIntervalInSeconds();
+                ResizeableArray<CandleStickData> data = null;
+                if(date.Date == DateTime.UtcNow.Date)
+                    data = Ticker.GetRecentCandleStickData(Ticker.CandleStickPeriodMin);
+                else
+                    data = Ticker.GetCandleStickData(Ticker.CandleStickPeriodMin, date.AddSeconds(-seconds), seconds);
+            if(data != null) {
+                this.isCandleSticksUpdate = false;
+                    BeginInvoke(new MethodInvoker(() => {
+                        UpdateCandleStickData(data);
+                        UpdateChartSeries(data);
+                    }));
+                }
+            });
         }
+
         void BackgroundUpdateCandleSticks(DateTime date, bool inBackgroundThread) {
             if (this.isCandleSticksUpdate)
                 return;
@@ -353,15 +399,15 @@ namespace CryptoMarketClient {
             if(!inBackgroundThread) {
                 try {
                     int seconds = CalculateTotalIntervalInSeconds();
-                    ResizeableArray<CandleStickData> data = Ticker.GetCandleStickData(Ticker.CandleStickPeriodMin, date.AddSeconds(-seconds), seconds);
+                    ResizeableArray<CandleStickData> data = null;
+                    if(date.Date == DateTime.UtcNow.Date)
+                        data = Ticker.GetRecentCandleStickData(Ticker.CandleStickPeriodMin);
+                    else 
+                        data = Ticker.GetCandleStickData(Ticker.CandleStickPeriodMin, date.AddSeconds(-seconds), seconds);
                     if(data != null) {
                         UpdateCandleStickData(data);
                         UpdateChartSeries(data);
                         this.isCandleSticksUpdate = false;
-                    }
-                    else
-                    {
-
                     }
                 }
                 catch(Exception e) {
@@ -374,7 +420,11 @@ namespace CryptoMarketClient {
             UpdateCandleStickThread = new Thread(() => {
                 try {
                     int seconds = CalculateTotalIntervalInSeconds();
-                    ResizeableArray<CandleStickData> data = Ticker.GetCandleStickData(Ticker.CandleStickPeriodMin, date.AddSeconds(-seconds), seconds);
+                    ResizeableArray<CandleStickData> data = null;
+                    if(date.Date == DateTime.UtcNow.Date)
+                        data = Ticker.GetRecentCandleStickData(Ticker.CandleStickPeriodMin);
+                    else
+                        data = Ticker.GetCandleStickData(Ticker.CandleStickPeriodMin, date.AddSeconds(-seconds), seconds);
                     if(data != null) {
                         BeginInvoke(new Action<ResizeableArray<CandleStickData>>((d) => {
                             UpdateCandleStickData(data);
@@ -463,10 +513,8 @@ namespace CryptoMarketClient {
         }
 
         void UpdateCandleStickData(ResizeableArray<CandleStickData> data) {
-            for(int i = 0; i < Ticker.CandleStickData.Count; i++) {
-                data.Add(Ticker.CandleStickData[i]);
-            }
-            Ticker.CandleStickData = data;
+            Ticker.CandleStickData.Insert(0, data);
+            UpdateChartProperties();
             UpdateEvents(null);
         }
 

@@ -784,5 +784,11 @@ namespace CryptoMarketClient {
         private void BsiStatus_ItemDoubleClick(object sender, ItemClickEventArgs e) {
             ShowLogPanel();
         }
+
+        private void biExchangeMarketVolumes_ItemClick(object sender, ItemClickEventArgs e) {
+            ExchangeMarketCapacityForm form = new ExchangeMarketCapacityForm();
+            form.Exchange = Exchange.Get(ExchangeType.Poloniex);
+            form.Show();
+        }
     }
 }

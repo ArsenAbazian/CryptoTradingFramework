@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Crypto.Core.Exchanges.Base {
     public class CurrencyInfoBase {
+        public CurrencyInfoBase(string currency) {
+            Currency = currency;
+        }
         public string Currency { get; set; }
         public double MaxDailyWithdrawal { get; set; }
         public double TxFee { get; set; }

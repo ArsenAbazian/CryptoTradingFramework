@@ -157,6 +157,7 @@
             this.biReconnect = new DevExpress.XtraBars.BarButtonItem();
             this.biTradeHistory = new DevExpress.XtraBars.BarButtonItem();
             this.bsCachedDataCount = new DevExpress.XtraBars.BarStaticItem();
+            this.biVolumesMap = new DevExpress.XtraBars.BarButtonItem();
             this.ribbonPage1 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPageGroup1 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.repositoryItemRibbonSearchEdit9 = new DevExpress.XtraBars.Ribbon.Internal.RepositoryItemRibbonSearchEdit();
@@ -362,6 +363,7 @@
             this.colEmpty.Visible = true;
             this.colEmpty.VisibleIndex = 9;
             this.colEmpty.Width = 523;
+            this.colEmpty.OptionsColumn.ReadOnly = true;
             // 
             // colIsSelected
             // 
@@ -454,6 +456,7 @@
             this.colSparkline.UnboundType = DevExpress.Data.UnboundColumnType.Object;
             this.colSparkline.Visible = true;
             this.colSparkline.VisibleIndex = 8;
+            this.colSparkline.OptionsColumn.ReadOnly = true;
             this.colSparkline.Width = 300;
             // 
             // riSparklineTrend
@@ -484,10 +487,11 @@
             this.biConnectionStatus,
             this.biReconnect,
             this.biTradeHistory,
-            this.bsCachedDataCount});
+            this.bsCachedDataCount,
+            this.biVolumesMap});
             this.ribbonControl1.Location = new System.Drawing.Point(0, 0);
             this.ribbonControl1.Margin = new System.Windows.Forms.Padding(24, 23, 24, 23);
-            this.ribbonControl1.MaxItemId = 27;
+            this.ribbonControl1.MaxItemId = 28;
             this.ribbonControl1.Name = "ribbonControl1";
             this.ribbonControl1.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
             this.ribbonPage1});
@@ -640,6 +644,14 @@
             this.bsCachedDataCount.ItemAppearance.Normal.Options.UseFont = true;
             this.bsCachedDataCount.Name = "bsCachedDataCount";
             // 
+            // biVolumesMap
+            // 
+            this.biVolumesMap.Caption = "Volumes Map";
+            this.biVolumesMap.Id = 27;
+            this.biVolumesMap.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("biVolumesMap.ImageOptions.SvgImage")));
+            this.biVolumesMap.Name = "biVolumesMap";
+            this.biVolumesMap.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.biVolumesMap_ItemClick);
+            // 
             // ribbonPage1
             // 
             this.ribbonPage1.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] {
@@ -653,6 +665,7 @@
             this.ribbonPageGroup1.ItemLinks.Add(this.bbShowBalances);
             this.ribbonPageGroup1.ItemLinks.Add(this.barButtonItem1);
             this.ribbonPageGroup1.ItemLinks.Add(this.biTradeHistory);
+            this.ribbonPageGroup1.ItemLinks.Add(this.biVolumesMap);
             this.ribbonPageGroup1.Name = "ribbonPageGroup1";
             this.ribbonPageGroup1.Text = "Market";
             // 
@@ -1035,5 +1048,6 @@
         private DevExpress.XtraBars.BarButtonItem biBestFitTable;
         private DevExpress.XtraGrid.Columns.GridColumn colEmpty;
         private DevExpress.XtraBars.BarStaticItem bsCachedDataCount;
+        private DevExpress.XtraBars.BarButtonItem biVolumesMap;
     }
 }

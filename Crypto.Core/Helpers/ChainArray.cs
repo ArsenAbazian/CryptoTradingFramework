@@ -9,6 +9,15 @@ using System.Xml.Serialization;
 
 namespace Crypto.Core.Helpers {
     public class ChainArray<T> : IEnumerable<T>, IList<T>, IResizeableArray, IListSource, IList, IBindingList {
+        public ChainArray(int chainCapacity) {
+            int bc = 0;
+            while(chainCapacity > 0) {
+                chainCapacity >>= 1;
+                bc++;
+            }
+            Groups = new List<T[]>(2);
+            ChainBitsCount = bc;
+        }
         public ChainArray() {
             Groups = new List<T[]>(100);
             ChainBitsCount = 10;

@@ -383,10 +383,11 @@ namespace CryptoMarketClient {
                 GridRowInfo cached = CheckRowCache(row.RowHandle, row.VisibleIndex, bottom);
                 GridRowInfo ri;
                 GridRow nextRow = (n + 1 < visibleCount ? RowsLoadInfo.ResultRows[n + 1] : null);
+                int nextRowLevel = nextRow == null ? -1 : nextRow.Level;
                 int rowLineHeight = -1;
                 if(cached == null) {
                     rowLineHeight = CalcRowHeight(GInfo.Graphics, row.RowHandle, row.VisibleIndex, row.Level);
-                    cached = CheckRowCacheReusable(row, bottom - rowLineHeight, rowLineHeight);
+                    cached = CheckRowCacheReusable(row, nextRowLevel, bottom - rowLineHeight, rowLineHeight);
                 }
                 if(cached != null && row.RowHandle == View.FocusedRowHandle && View.IsEditFormVisible) {
                     cached = null;

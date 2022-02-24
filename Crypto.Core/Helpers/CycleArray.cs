@@ -344,6 +344,19 @@ namespace Crypto.Core.Helpers {
         void IBindingList.RemoveSort() {
             throw new NotSupportedException();
         }
+
+        int updateCount = 0;
+        public void BeginUpdate() {
+            this.updateCount++;
+        }
+
+        public void EndUpdate() {
+            if(this.updateCount == 0)
+                return;
+            this.updateCount--;
+            if(this.updateCount == 0)
+                RaiseListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
+        }
     }
 
     public class CycleArrayEnumerator<T> : IEnumerator<T> {

@@ -87,6 +87,7 @@
             this.tileViewSelector.OptionsTiles.HighlightFocusedTileStyle = DevExpress.XtraGrid.Views.Tile.HighlightFocusedTileStyle.None;
             this.tileViewSelector.OptionsTiles.ItemPadding = new System.Windows.Forms.Padding(0);
             this.tileViewSelector.OptionsTiles.ItemSize = new System.Drawing.Size(300, 220);
+            this.tileViewSelector.OptionsTiles.Orientation = System.Windows.Forms.Orientation.Vertical;
             tableColumnDefinition1.Length.Type = DevExpress.XtraEditors.TableLayout.TableDefinitionLengthType.Pixel;
             tableColumnDefinition1.Length.Value = 24D;
             tableColumnDefinition2.Length.Value = 258D;

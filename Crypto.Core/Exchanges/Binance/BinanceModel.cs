@@ -37,7 +37,7 @@ namespace Crypto.Core.Binance {
                 return false;
 
             int parseIndex = 0;
-            List<string[]> items = JSonHelper.Default.DeserializeArrayOfObjects(data, ref parseIndex, AggTradeItemString);
+            List<string[]> items = JsonHelper.Default.DeserializeArrayOfObjects(data, ref parseIndex, AggTradeItemString);
             for(int i = 0; i < items.Count; i++) {
                 string[] item = items[i];
                 DateTime time = FromUnixTimestampMs(FastValueConverter.ConvertPositiveLong(item[5]));
@@ -64,8 +64,8 @@ namespace Crypto.Core.Binance {
 
         }
 
-        public override string CreateDeposit(AccountInfo account, string currency) {
-            throw new NotImplementedException();
+        public override bool CreateDeposit(AccountInfo account, string currency) {
+            return false;
         }
 
         protected virtual string BalanceApiString { get { return "https://binance.com/api/v3/account"; } }
@@ -254,15 +254,15 @@ namespace Crypto.Core.Binance {
             //Debug.WriteLine(e.Message);
             byte[] bytes = Encoding.Default.GetBytes(e.Message);
             int startIndex = 0;
-            string[] startItems = JSonHelper.Default.StartDeserializeObject(bytes, ref startIndex, KlineStartItems);
+            string[] startItems = JsonHelper.Default.StartDeserializeObject(bytes, ref startIndex, KlineStartItems);
             startIndex++; // skip,
-            if(!JSonHelper.Default.FindChar(bytes, ':', ref startIndex))
+            if(!JsonHelper.Default.FindChar(bytes, ':', ref startIndex))
                 return;
             startIndex++; // skip :
-            if(!JSonHelper.Default.FindChar(bytes, '{', ref startIndex))
+            if(!JsonHelper.Default.FindChar(bytes, '{', ref startIndex))
                 return;
 
-            string[] kline = JSonHelper.Default.DeserializeObject(bytes, ref startIndex, KlineItems);
+            string[] kline = JsonHelper.Default.DeserializeObject(bytes, ref startIndex, KlineItems);
             SocketConnectionInfo info = null;
             for(int i = 0; i < KlineSockets.Count; i++) {
                 SocketConnectionInfo c = KlineSockets[i];
@@ -326,10 +326,10 @@ namespace Crypto.Core.Binance {
         void OnIncrementalOrderBookUpdateRecv(Ticker ticker, byte[] bytes) {
             int startIndex = 0;
 
-            JSonHelper.Default.SkipSymbol(bytes, ':', 4, ref startIndex);
-            long startId = JSonHelper.Default.ReadPositiveInteger(bytes, ref startIndex);
-            JSonHelper.Default.SkipSymbol(bytes, ':', 1, ref startIndex);
-            long endId = JSonHelper.Default.ReadPositiveInteger(bytes, ref startIndex);
+            JsonHelper.Default.SkipSymbol(bytes, ':', 4, ref startIndex);
+            long startId = JsonHelper.Default.ReadPositiveInteger(bytes, ref startIndex);
+            JsonHelper.Default.SkipSymbol(bytes, ':', 1, ref startIndex);
+            long endId = JsonHelper.Default.ReadPositiveInteger(bytes, ref startIndex);
             startIndex++;
 
             if(endId < ticker.OrderBook.Updates.SeqNumber)
@@ -343,10 +343,10 @@ namespace Crypto.Core.Binance {
             // Receiving an event that removes a price level that is not in your local order book can happen and is normal.
             ticker.OrderBook.EnableValidationOnRemove = false;
 
-            JSonHelper.Default.SkipSymbol(bytes, ':', 1, ref startIndex);
-            List<string[]> jbids = JSonHelper.Default.DeserializeArrayOfArrays(bytes, ref startIndex, 2);
-            JSonHelper.Default.SkipSymbol(bytes, ':', 1, ref startIndex);
-            List<string[]> jasks = JSonHelper.Default.DeserializeArrayOfArrays(bytes, ref startIndex, 2);
+            JsonHelper.Default.SkipSymbol(bytes, ':', 1, ref startIndex);
+            List<string[]> jbids = JsonHelper.Default.DeserializeArrayOfArrays(bytes, ref startIndex, 2);
+            JsonHelper.Default.SkipSymbol(bytes, ':', 1, ref startIndex);
+            List<string[]> jasks = JsonHelper.Default.DeserializeArrayOfArrays(bytes, ref startIndex, 2);
 
             long hackedNextSeqNumber = ticker.OrderBook.Updates.SeqNumber;
             ticker.OrderBook.Updates.Push(hackedNextSeqNumber, ticker, jbids, jasks, null);
@@ -399,7 +399,7 @@ namespace Crypto.Core.Binance {
                 return;
             byte[] bytes = Encoding.Default.GetBytes(e.Message);
             int startIndex = 0;
-            string[] trades = JSonHelper.Default.DeserializeObject(bytes, ref startIndex, TradeItems);
+            string[] trades = JsonHelper.Default.DeserializeObject(bytes, ref startIndex, TradeItems);
             if(info.Ticker.CaptureData)
                 info.Ticker.CaptureDataCore(CaptureStreamType.TradeHistory, CaptureMessageType.Incremental, e.Message);
             OnTradeHistoryItemRecv(info.Ticker, trades);
@@ -461,7 +461,7 @@ namespace Crypto.Core.Binance {
             base.OnTickersSocketMessageReceived(sender, e);
             byte[] data = Encoding.Default.GetBytes(e.Message);
             int startIndex = 0;
-            List<string[]> items = JSonHelper.Default.DeserializeArrayOfObjects(data, ref startIndex, WebSocketTickersInfo);
+            List<string[]> items = JsonHelper.Default.DeserializeArrayOfObjects(data, ref startIndex, WebSocketTickersInfo);
             for(int i = 0; i < items.Count; i++) {
                 string[] item = items[i];
                 string eventType = item[0];
@@ -488,15 +488,19 @@ namespace Crypto.Core.Binance {
                 return;
             
             t.Change = FastValueConverter.Convert(item[4]);
-            t.HighestBid = FastValueConverter.Convert(item[9]);
-            t.LowestAsk = FastValueConverter.Convert(item[11]);
-            t.Hr24High = FastValueConverter.Convert(item[14]);
-            t.Hr24Low = FastValueConverter.Convert(item[15]);
-            t.BaseVolume = FastValueConverter.Convert(item[16]);
-            t.Volume = FastValueConverter.Convert(item[17]);
+            t.HighestBidString = item[9];
+            t.LowestAskString = item[11];
+            t.Hr24HighString = item[14];
+            t.Hr24LowString = item[15];
+            t.BaseVolumeString = item[16];
+            t.VolumeString = item[17];
         }
 
         public override bool GetDeposites(AccountInfo account) {
+            return true;
+        }
+
+        public override bool GetDeposite(AccountInfo account, string currency) {
             return true;
         }
 
@@ -598,7 +602,7 @@ namespace Crypto.Core.Binance {
         }
 
         protected virtual bool OnCancel(AccountInfo info, Ticker ticker, string orderId, byte[] data) {
-            var res = JSonHelper.Default.Deserialize(Type + "/cancelOrder", data);
+            var res = JsonHelper.Default.Deserialize(Type + "/cancelOrder", data);
             if(res == null || res.Type == JsonObjectType.None)
                 return false;
             if(res.Scheme.Names[0] == "code") {
@@ -665,7 +669,7 @@ namespace Crypto.Core.Binance {
 
             ResizeableArray<CandleStickData> list = new ResizeableArray<CandleStickData>();
             int startIndex = 0;
-            List<string[]> res = JSonHelper.Default.DeserializeArrayOfArrays(bytes, ref startIndex, 12);
+            List<string[]> res = JsonHelper.Default.DeserializeArrayOfArrays(bytes, ref startIndex, 12);
             if(res == null) return list;
             for(int i = 0; i < res.Count; i++) {
                 string[] item = res[i];
@@ -707,7 +711,7 @@ namespace Crypto.Core.Binance {
                 return trades;
 
             int parseIndex = 0;
-            List<string[]> items = JSonHelper.Default.DeserializeArrayOfObjects(data, ref parseIndex, AggTradesItem);
+            List<string[]> items = JsonHelper.Default.DeserializeArrayOfObjects(data, ref parseIndex, AggTradesItem);
 
             for(int i = items.Count - 1; i >= 0; i--) {
                 string[] item = items[i];
@@ -727,10 +731,6 @@ namespace Crypto.Core.Binance {
             bool result = UpdateTickersInfo();
             IsInitialized = true;
             return result;
-        }
-
-        public override bool ProcessOrderBook(Ticker tickerBase, string text) {
-            return true;
         }
 
         protected string GetNonce() {
@@ -831,7 +831,7 @@ namespace Crypto.Core.Binance {
             if(data == null || data.Length == 0)
                 return false;
 
-            JsonObjectScheme scheme = JSonHelper.Default.GetObjectScheme(Type + "/accounttrades", data);
+            JsonObjectScheme scheme = JsonHelper.Default.GetObjectScheme(Type + "/accounttrades", data);
             if(IsError(scheme)) {
                 LogError(data, scheme);
                 return false;
@@ -844,7 +844,7 @@ namespace Crypto.Core.Binance {
             try {
                 ticker.ClearMyTradeHistory();
                 int parseIndex = 0;
-                List<string[]> items = JSonHelper.Default.DeserializeArrayOfObjects(data, ref parseIndex, scheme.Names);
+                List<string[]> items = JsonHelper.Default.DeserializeArrayOfObjects(data, ref parseIndex, scheme.Names);
                 newItems = new ResizeableArray<TradeInfoItem>(items.Count);
 
                 int i_orderNumber = scheme.GetIndex("orderId");
@@ -889,7 +889,7 @@ namespace Crypto.Core.Binance {
                 return;
             }
             int parseIndex = 0;
-            string[] items = JSonHelper.Default.DeserializeObject(data, ref parseIndex, scheme.Names);
+            string[] items = JsonHelper.Default.DeserializeObject(data, ref parseIndex, scheme.Names);
             if(items == null)
                 msg = LogManager.Default.Error(scheme.Name, "Cannot parse json data.");
             else 
@@ -949,7 +949,7 @@ namespace Crypto.Core.Binance {
         }
 
         protected virtual bool OnUpdateOpenedOrders(AccountInfo account, Ticker ticker, byte[] data) {
-            var scheme = JSonHelper.Default.GetObjectScheme(Type + "/openorders", data);
+            var scheme = JsonHelper.Default.GetObjectScheme(Type + "/openorders", data);
             if(IsError(scheme)) {
                 LogError(data, scheme);
                 return false;
@@ -959,7 +959,7 @@ namespace Crypto.Core.Binance {
             ticker.LockOpenOrders();
             try {
                 int parseIndex = 0;
-                List<string[]> items = JSonHelper.Default.DeserializeArrayOfObjects(data, ref parseIndex, scheme.Names);
+                List<string[]> items = JsonHelper.Default.DeserializeArrayOfObjects(data, ref parseIndex, scheme.Names);
                 if(items == null)
                     return false;
                 ticker.OpenedOrders.Clear();
@@ -1010,7 +1010,7 @@ namespace Crypto.Core.Binance {
 
         internal void OnUpdateOrderBook(Ticker ticker, byte[] bytes) {
             int startIndex = 0;
-            string[] updateId = JSonHelper.Default.StartDeserializeObject(bytes, ref startIndex, OrderBookStartItems);
+            string[] updateId = JsonHelper.Default.StartDeserializeObject(bytes, ref startIndex, OrderBookStartItems);
 
             if(ticker.CaptureData)
                 ticker.CaptureDataCore(CaptureStreamType.OrderBook, CaptureMessageType.Snapshot, System.Text.ASCIIEncoding.Default.GetString(bytes));
@@ -1019,9 +1019,9 @@ namespace Crypto.Core.Binance {
             const string askString = "\"asks\":";
 
             startIndex += bidString.Length + 1;
-            List<string[]> jbids = JSonHelper.Default.DeserializeArrayOfArrays(bytes, ref startIndex, 2);
+            List<string[]> jbids = JsonHelper.Default.DeserializeArrayOfArrays(bytes, ref startIndex, 2);
             startIndex += askString.Length + 1;
-            List<string[]> jasks = JSonHelper.Default.DeserializeArrayOfArrays(bytes, ref startIndex, 2);
+            List<string[]> jasks = JsonHelper.Default.DeserializeArrayOfArrays(bytes, ref startIndex, 2);
 
             ticker.OrderBook.BeginUpdate();
             try {
@@ -1094,14 +1094,14 @@ namespace Crypto.Core.Binance {
         protected virtual void UpdateTickerInfo(BinanceTicker t, JObject item) {
             if(t == null)
                 return;
-            t.Last = item.Value<double>("lastPrice");
-            t.LowestAsk = item.Value<double>("askPrice");
-            t.HighestBid = item.Value<double>("bidPrice");
+            t.LastString = item.Value<string>("lastPrice");
+            t.LowestAskString = item.Value<string>("askPrice");
+            t.HighestBidString = item.Value<string>("bidPrice");
             t.Change = item.Value<double>("priceChangePercent");
-            t.BaseVolume = item.Value<double>("volume");
-            t.Volume = item.Value<double>("quoteVolume");
-            t.Hr24High = item.Value<double>("highPrice");
-            t.Hr24Low = item.Value<double>("lowPrice");
+            t.VolumeString = item.Value<string>("volume");
+            t.BaseVolumeString = item.Value<string>("quoteVolume");
+            t.Hr24HighString = item.Value<string>("highPrice");
+            t.Hr24LowString = item.Value<string>("lowPrice");
         }
 
         string[] openedOrdersString;
@@ -1172,7 +1172,7 @@ namespace Crypto.Core.Binance {
             try {
                 ticker.ClearTradeHistory();
                 int parseIndex = 0;
-                List<string[]> items = JSonHelper.Default.DeserializeArrayOfObjects(data, ref parseIndex, TradeItemString);
+                List<string[]> items = JsonHelper.Default.DeserializeArrayOfObjects(data, ref parseIndex, TradeItemString);
                 newItems = new ResizeableArray<TradeInfoItem>(items.Count);
                 for(int i = 0; i < items.Count; i++) {
                     string[] item = items[i];

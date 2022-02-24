@@ -337,8 +337,8 @@ namespace CryptoMarketClient {
             xyDiagram1.AxisX.VisualRange.Auto = false;
             xyDiagram1.AxisX.VisualRange.AutoSideMargins = false;
             xyDiagram1.AxisX.VisualRange.EndSideMargin = 0D;
-            xyDiagram1.AxisX.VisualRange.MaxValueSerializable = "01/25/2022 18:50:00.000";
-            xyDiagram1.AxisX.VisualRange.MinValueSerializable = "01/25/2022 18:41:00.000";
+            xyDiagram1.AxisX.VisualRange.MaxValueSerializable = "02/19/2022 10:18:00.000";
+            xyDiagram1.AxisX.VisualRange.MinValueSerializable = "02/19/2022 10:09:00.000";
             xyDiagram1.AxisX.VisualRange.StartSideMargin = 0D;
             xyDiagram1.AxisX.WholeRange.AutoSideMargins = false;
             xyDiagram1.AxisX.WholeRange.EndSideMargin = 0D;

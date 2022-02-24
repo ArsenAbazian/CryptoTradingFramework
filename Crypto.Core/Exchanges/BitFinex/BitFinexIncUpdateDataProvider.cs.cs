@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Crypto.Core.Helpers;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,9 @@ namespace Crypto.Core.Exchanges.BitFinex {
             throw new NotImplementedException();
         }
         public void ApplySnapshot(JObject jObject, Ticker ticker) {
+            throw new NotImplementedException();
+        }
+        public void ApplySnapshot(JsonHelperToken root, Ticker ticker) {
             throw new NotImplementedException();
         }
     }

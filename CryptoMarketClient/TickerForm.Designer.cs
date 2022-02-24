@@ -546,7 +546,7 @@ namespace CryptoMarketClient {
             // 
             // colTime
             // 
-            this.colTime.DisplayFormat.FormatString = "hh:mm:ss.fff";
+            this.colTime.DisplayFormat.FormatString = "HH:mm:ss.fff";
             this.colTime.DisplayFormat.FormatType = DevExpress.Utils.FormatType.DateTime;
             this.colTime.FieldName = "Time";
             this.colTime.MinWidth = 21;
@@ -1318,7 +1318,7 @@ namespace CryptoMarketClient {
             // colMyTradesTime
             // 
             this.colMyTradesTime.Caption = "Time";
-            this.colMyTradesTime.DisplayFormat.FormatString = "yyyy.MM.dd hh:mm:ss.fff";
+            this.colMyTradesTime.DisplayFormat.FormatString = "yyyy.MM.dd HH:mm:ss.fff";
             this.colMyTradesTime.DisplayFormat.FormatType = DevExpress.Utils.FormatType.DateTime;
             this.colMyTradesTime.FieldName = "Time";
             this.colMyTradesTime.MinWidth = 39;

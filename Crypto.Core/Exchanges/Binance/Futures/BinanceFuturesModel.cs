@@ -29,7 +29,7 @@ namespace Crypto.Core.Exchanges.Binance.Futures {
 
         protected override string CancelOrderApiString => "https://fapi.binance.com/fapi/v1/order";
 
-        public override string CreateDeposit(AccountInfo account, string currency) {
+        public override bool CreateDeposit(AccountInfo account, string currency) {
             throw new NotImplementedException();
         }
 
@@ -235,10 +235,10 @@ namespace Crypto.Core.Exchanges.Binance.Futures {
             t.LowestAsk = 0;
             t.HighestBid = 0;
             t.Change = item.Value<double>("priceChangePercent");
-            t.BaseVolume = item.Value<double>("volume");
-            t.Volume = item.Value<double>("quoteVolume");
-            t.Hr24High = item.Value<double>("highPrice");
-            t.Hr24Low = item.Value<double>("lowPrice");
+            t.BaseVolumeString = item.Value<string>("volume");
+            t.VolumeString = item.Value<string>("quoteVolume");
+            t.Hr24HighString = item.Value<string>("highPrice");
+            t.Hr24LowString = item.Value<string>("lowPrice");
         }
 
          protected override string[] CreateWebSocketTickersInfoStrings() {
@@ -270,11 +270,11 @@ namespace Crypto.Core.Exchanges.Binance.Futures {
             t.Change = FastValueConverter.Convert(item[4]);
             t.HighestBid = 0;
             t.LowestAsk = 0;
-            t.Last = FastValueConverter.Convert(item[6]);
-            t.Hr24High = FastValueConverter.Convert(item[9]);
-            t.Hr24Low = FastValueConverter.Convert(item[10]);
-            t.BaseVolume = FastValueConverter.Convert(item[11]);
-            t.Volume = FastValueConverter.Convert(item[12]);
+            t.LastString = item[6];
+            t.Hr24HighString = item[9];
+            t.Hr24LowString = item[10];
+            t.BaseVolumeString = item[11];
+            t.VolumeString = item[12];
         }
 
         public override bool GetDeposites(AccountInfo account) {
@@ -288,10 +288,6 @@ namespace Crypto.Core.Exchanges.Binance.Futures {
         protected override string ExchangeSettingsApi { get { return "https://binance.com/fapi/v1/exchangeInfo"; } }
 
         public override void OnAccountRemoved(AccountInfo info) {
-        }
-
-        public override bool ProcessOrderBook(Ticker tickerBase, string text) {
-            return true;
         }
 
         protected override string UpdateAccountTradesApiString => "https://fapi.binance.com/fapi/v1/userTrades";

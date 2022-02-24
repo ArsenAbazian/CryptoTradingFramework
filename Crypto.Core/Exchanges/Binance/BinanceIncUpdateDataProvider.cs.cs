@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Crypto.Core.Helpers;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,6 +24,9 @@ namespace Crypto.Core.Exchanges.Binance {
         }
         public void ApplySnapshot(JObject jObject, Ticker ticker) {
             
+        }
+        public void ApplySnapshot(JsonHelperToken root, Ticker ticker) {
+            throw new NotImplementedException();
         }
     }
 }

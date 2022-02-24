@@ -3,8 +3,12 @@ using System;
 
 namespace Crypto.Core.Bittrex {
     public class BittrexTicker : Ticker {
-        public BittrexTicker() : this(null) { }
-        public BittrexTicker(Exchange exchange) : base(exchange) { }
+        public BittrexTicker() : this(null) {
+            CandleStickPeriodMin = 5; //default
+        }
+        public BittrexTicker(Exchange exchange) : base(exchange) {
+            CandleStickPeriodMin = 5; //default
+        }
 
         public string MarketCurrencyLong { get; set; }
         public string BaseCurrencyLong { get; set; }
@@ -56,5 +60,6 @@ namespace Crypto.Core.Bittrex {
     }
 
     public class BittrexCurrencyInfo : CurrencyInfoBase {
+        public BittrexCurrencyInfo(string currency) : base(currency) { }
     }
 }
