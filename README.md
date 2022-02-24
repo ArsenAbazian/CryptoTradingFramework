@@ -14,6 +14,8 @@ CryptoTradingFramework allows you to create various applications for crypto exch
 * Backtesting
 * Analysis
 * Trading Bots
+* Classic Arbitrage
+* Manual Trading
 * e.t.c
 
 It supports exchanges: (actively developing)
