@@ -4,9 +4,9 @@
 
 ## Latest Updates 
 
-https://github.com/ArsenAbazian/CryptoTradingFramework/wiki/Update-From-24-02-2022
-https://github.com/ArsenAbazian/CryptoTradingFramework/wiki/Update-From-01-25-2022
-https://github.com/ArsenAbazian/CryptoTradingFramework/wiki/Update-From-09-02-2022
+[Update From 24-02-2022](https://github.com/ArsenAbazian/CryptoTradingFramework/wiki/Update-From-24-02-2022)
+[Update From 09-02-2022](https://github.com/ArsenAbazian/CryptoTradingFramework/wiki/Update-From-09-02-2022)
+[Update From 25-01-2022](https://github.com/ArsenAbazian/CryptoTradingFramework/wiki/Update-From-01-25-2022)
 
 ## About 
 CryptoTradingFramework allows you to create various applications for crypto exchanges.
