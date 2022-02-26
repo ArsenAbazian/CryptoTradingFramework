@@ -224,7 +224,15 @@ namespace Crypto.Core {
         public List<AccountInfo> Accounts { get; } = new List<AccountInfo>();
 
         [XmlIgnore]
-        public List<CurrencyInfoBase> Currencies { get; } = new List<CurrencyInfoBase>();
+        public Dictionary<string, CurrencyInfoBase> Currencies { get; } = new Dictionary<string, CurrencyInfoBase>();
+
+        public void AddCurrency(CurrencyInfoBase currency) {
+            if(Currencies.ContainsKey(currency.Currency)) {
+                Currencies[currency.Currency] = currency;
+                return;
+            }
+            Currencies.Add(currency.Currency, currency);
+        }
 
         [XmlIgnore]
         public List<Ticker> Tickers { get; } = new List<Ticker>();
@@ -758,14 +766,16 @@ namespace Crypto.Core {
         public abstract bool UpdateOpenedOrders(AccountInfo account, Ticker ticker);
         public bool UpdateOpenedOrders(AccountInfo account) { return UpdateOpenedOrders(account, null); }
         public abstract bool UpdateCurrencies();
-        public virtual CurrencyInfoBase CreateCurrency(string currency) { return new CurrencyInfoBase(currency); }
+        public virtual CurrencyInfoBase CreateCurrency(string currency) { return new CurrencyInfoBase(this, currency); }
+        public abstract BalanceBase CreateAccountBalance(AccountInfo info, string currency);
         public abstract bool UpdateBalances(AccountInfo info);
         public virtual bool UpdateAddresses(AccountInfo account) { return true; }
         public abstract bool GetBalance(AccountInfo info, string currency);
         public virtual bool UpdatePositions(AccountInfo account, Ticker ticker) { return true; }
         public abstract bool CreateDeposit(AccountInfo account, string currency);
         public abstract bool GetDeposites(AccountInfo account);
-        public abstract bool GetDeposite(AccountInfo account, string currency);
+        public bool GetDeposit(BalanceBase b) { return GetDeposit(b.Account, b.CurrencyInfo); }
+        public abstract bool GetDeposit(AccountInfo account, CurrencyInfoBase currency);
         public TradingResult Buy(AccountInfo account, Ticker ticker, double rate, double amount) { return BuyLong(account, ticker, rate, amount); }
         public TradingResult Sell(AccountInfo account, Ticker ticker, double rate, double amount) { return SellLong(account, ticker, rate, amount); }
         public abstract TradingResult BuyLong(AccountInfo account, Ticker ticker, double rate, double amount);
@@ -1100,7 +1110,12 @@ namespace Crypto.Core {
         }
 
         //public abstract Form CreateAccountForm();
-        public abstract void OnAccountRemoved(AccountInfo info);
+        public virtual void OnAccountRemoved(AccountInfo info) {
+            DefaultAccount = Accounts.FirstOrDefault(a => a.Default);
+            if(AccountsChanged != null)
+                AccountsChanged(this, EventArgs.Empty);
+        }
+        public event EventHandler AccountsChanged;
         public virtual void StartListenTickerStream(Ticker ticker) {
             if(!SupportWebSocket(WebSocketType.Ticker))
                 return;
@@ -1441,13 +1456,20 @@ namespace Crypto.Core {
             }
             return markets.ToArray();
         }
-        public CurrencyInfoBase GetCurrency(string currency) {
-            for(int i = 0; i < Currencies.Count; i++) {
-                if(Currencies[i].Currency == currency)
-                    return Currencies[i];
-            }
-            return null;
+        public CurrencyInfoBase GetOrCreateCurrency(string currency) {
+            CurrencyInfoBase c = null;
+            if(Currencies.TryGetValue(currency, out c))
+                return c;
+            c = CreateCurrency(currency);
+            Currencies.Add(currency, c);
+            return c;
         }
+
+        public virtual bool GetDepositMethods(AccountInfo account, CurrencyInfoBase currency) {
+            return false;
+        }
+
+        public virtual bool SupportMultipleDepositMethods { get { return false; } }
 
         List<CandleStickIntervalInfo> allowedCandleStickIntervals;
         [XmlIgnore]

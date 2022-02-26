@@ -262,7 +262,7 @@
             // 
             this.colMarketCurrency.Caption = "Currency";
             this.colMarketCurrency.ColumnEdit = this.repositoryItemTextEdit1;
-            this.colMarketCurrency.FieldName = "MarketCurrency";
+            this.colMarketCurrency.FieldName = "MarketCurrencyDisplayName";
             this.colMarketCurrency.Name = "colMarketCurrency";
             this.colMarketCurrency.OptionsColumn.AllowEdit = false;
             this.colMarketCurrency.Visible = true;

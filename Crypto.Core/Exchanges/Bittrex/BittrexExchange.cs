@@ -24,6 +24,10 @@ namespace Crypto.Core.Bittrex {
             }
         }
 
+        public override BalanceBase CreateAccountBalance(AccountInfo info, string currency) {
+            return new BittrexAccountBalanceInfo(info, GetOrCreateCurrency(currency));
+        }
+
         protected override bool GetTradesCore(ResizeableArray<TradeInfoItem>  list, Ticker ticker, DateTime start, DateTime end) {
             throw new NotImplementedException();
         }
@@ -42,10 +46,6 @@ namespace Crypto.Core.Bittrex {
 
         protected internal override IIncrementalUpdateDataProvider CreateIncrementalUpdateDataProvider() {
             return new BittrexIncrementalUpdateDataProvider();
-        }
-
-        public override void OnAccountRemoved(AccountInfo info) {
-
         }
 
         public override string BaseWebSocketAdress => "https://socket-v3.bittrex.com/signalr";
@@ -85,20 +85,15 @@ namespace Crypto.Core.Bittrex {
             int itemsCount = root.ItemsCount;
             for(int i = 0; i < itemsCount; i++) {
                 JsonHelperToken[] item = root.Items[i].Properties;
-                BittrexAccountBalanceInfo binfo = (BittrexAccountBalanceInfo)account.Balances.FirstOrDefault(b => b.Currency == item[1].Value);
-                if(binfo == null) {
-                    binfo = new BittrexAccountBalanceInfo(account);
-                    binfo.Currency = item[0].Value;
-                    account.Balances.Add(binfo);
-                }
+                var binfo = account.GetOrCreateBalanceInfo(item[1].Value);
                 binfo.DepositAddress = item[3].Value;
                 binfo.DepositTag = item[5].Value;
             }
             return true;
         }
 
-        public override bool GetDeposite(AccountInfo account, string currency) {
-            string address = "https://api.bittrex.com/v3/deposits/open?currencySymbol=" + currency;
+        public override bool GetDeposit(AccountInfo account, CurrencyInfoBase currency) {
+            string address = "https://api.bittrex.com/v3/deposits/open?currencySymbol=" + currency.Currency;
             try {
                 return OnGetDeposites(account, DownloadPrivateData(address, account));
             }
@@ -580,7 +575,7 @@ namespace Crypto.Core.Bittrex {
         }
 
         public override CurrencyInfoBase CreateCurrency(string currency) {
-            return new BittrexCurrencyInfo(currency);
+            return new BittrexCurrencyInfo(this, currency);
         }
 
         public override bool UpdateCurrencies() {
@@ -600,11 +595,7 @@ namespace Crypto.Core.Bittrex {
             for(int i = 0; i < itemsCount; i++) {
                 JsonHelperToken obj = root.Items[i];
                 string name = obj.Properties[0].Value;
-                BittrexCurrencyInfo c = (BittrexCurrencyInfo)Currencies.FirstOrDefault(curr => curr.Currency == name);
-                if(c == null) {
-                    c = (BittrexCurrencyInfo)CreateCurrency(name);
-                    Currencies.Add(c);
-                }
+                var c = GetOrCreateCurrency(name);
                 c.CurrencyLong = obj.Properties[1].Value;
                 c.CoinType = obj.Properties[2].Value;
                 c.IsActive = obj.Properties[3].Value != "OFFLINE";
@@ -1186,12 +1177,7 @@ namespace Crypto.Core.Bittrex {
                 }
 
                 JsonHelperToken[] item = root.Properties;
-                BittrexAccountBalanceInfo binfo = (BittrexAccountBalanceInfo)account.Balances.FirstOrDefault(b => b.Currency == item[0].Value);
-                if(binfo == null) {
-                    binfo = new BittrexAccountBalanceInfo(account);
-                    binfo.Currency = item[0].Value;
-                    account.Balances.Add(binfo);
-                }
+                var binfo = account.GetOrCreateBalanceInfo(item[0].Value);
                 binfo.Balance = item[1].ValueDouble;
                 binfo.Available = item[2].ValueDouble;
                 binfo.OnOrders = binfo.Balance - binfo.Available;
@@ -1206,14 +1192,8 @@ namespace Crypto.Core.Bittrex {
             if(Currencies.Count == 0) {
                 if(!GetCurrenciesInfo())
                     return false;
-                foreach(var currency in Currencies) {
-                    BalanceBase b = account.Balances.FirstOrDefault(bb => bb.Currency == currency.Currency);
-                    if(b == null) {
-                        b = new BittrexAccountBalanceInfo(account);
-                        b.Currency = currency.Currency;
-                        account.Balances.Add(b);
-                    }
-                }
+                foreach(var currency in Currencies.Values)
+                    account.GetOrCreateBalanceInfo(currency.Currency);
             }
             try {
                 byte[] bytes = DownloadPrivateData("https://api.bittrex.com/v3/balances", account);
@@ -1231,12 +1211,7 @@ namespace Crypto.Core.Bittrex {
                 int itemsCount = root.ItemsCount;
                 for(int i = 0; i < itemsCount; i++) {
                     JsonHelperToken[] item = root.Items[i].Properties;
-                    BittrexAccountBalanceInfo binfo = (BittrexAccountBalanceInfo) account.Balances.FirstOrDefault(b => b.Currency == item[0].Value);
-                    if(binfo == null) {
-                        binfo = new BittrexAccountBalanceInfo(account);
-                        binfo.Currency = item[0].Value;
-                        account.Balances.Add(binfo);
-                    }
+                    var binfo = account.GetOrCreateBalanceInfo(item[0].Value);
                     binfo.Balance = item[1].ValueDouble;
                     binfo.Available = item[2].ValueDouble;
                     binfo.OnOrders = binfo.Balance - binfo.Available;
@@ -1299,14 +1274,14 @@ namespace Crypto.Core.Bittrex {
 
             JsonHelperToken root = JsonHelper.Default.Deserialize(bytes);
             if(root.GetProperty("status") != null) {
-                LogManager.Default.ShowNotification(LogType.Success, Type.ToString(), "Create Deposite", root.GetProperty("stauts").Value);
-                NotificationManager.Notify(Type.ToString(), "Create Deposite\n" + root.GetProperty("stauts").Value);
+                LogManager.Default.ShowNotification(LogType.Success, Type.ToString(), "Create Deposit", root.GetProperty("stauts").Value);
+                NotificationManager.Notify(Type.ToString(), "Create Deposit\n" + root.GetProperty("stauts").Value);
                 return true;
             }
 
             if(root.PropertiesCount > 0 && root.Properties[0].Name == "code") {
                 if(root.Properties[0].Value == "CRYPTO_ADDRESS_ALREADY_EXISTS") {
-                    LogManager.Default.Add(LogType.Warning, this, Type.ToString(), "Create Deposite", "Crypto deposit address already exists");
+                    LogManager.Default.Add(LogType.Warning, this, Type.ToString(), "Create Deposit", "Crypto deposit address already exists");
                     return true;
                 }
                 else {

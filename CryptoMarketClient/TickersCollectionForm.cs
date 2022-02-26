@@ -104,7 +104,7 @@ namespace CryptoMarketClient {
         }
 
         protected virtual void InitializeBaseCurrencies() {
-            var groups = Exchange.Tickers.GroupBy(t => t.BaseCurrency);
+            var groups = Exchange.Tickers.GroupBy(t => t.BaseCurrencyDisplayName);
             AccordionControlElement groupElement = new AccordionControlElement() { Style = ElementStyle.Group };
             groupElement.Text = "Markets";
             this.accordionControl1.Elements.Add(groupElement);
@@ -113,7 +113,7 @@ namespace CryptoMarketClient {
                 AccordionControlElement item = new AccordionControlElement() { Style = ElementStyle.Item };
                 item.Text = group.Key;
                 item.Click += OnBaseCurrencyItemClick;
-                if(group.Key == "BTC")
+                if(group.Key == "BTC" || group.Key == "XBT")
                     SelectedAccordionItem = item;
                 groupElement.Elements.Add(item);
             }
@@ -136,7 +136,7 @@ namespace CryptoMarketClient {
 
         protected virtual void UpdateTickersAccordingBaseCurrency() {
             string baseCurrency = GetSelectedBaseCurrency();
-            List<Ticker> list = Exchange.Tickers.Where(t => t.BaseCurrency == baseCurrency).ToList();
+            List<Ticker> list = Exchange.Tickers.Where(t => t.BaseCurrencyDisplayName == baseCurrency).ToList();
             this.gcTickers.DataSource = list;
             BestFitColumns();
         }

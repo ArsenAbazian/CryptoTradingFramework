@@ -19,13 +19,9 @@ namespace Crypto.Core.Exchanges.Kraken {
 
         public override string WebPageAddress => "https://trade.kraken.com/charts/KRAKEN:" + CurrencyPair + "?period=1d";
 
-        string standardName;
-        public string StandardName { 
-            get { 
-                if(standardName == null && MarketCurrency != null)
-                    standardName = MarketCurrency + "/" + BaseCurrency;
-                return standardName;
-            } 
-        }
+        public override string BaseCurrencyDisplayName { get; set; }
+        public override string MarketCurrencyDisplayName { get; set; }
+
+        public string WebSocketName { get; set; }
     }
 }

@@ -65,6 +65,9 @@ namespace Crypto.Core.Common {
             this.colAccount = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colUsdtPrice = new DevExpress.XtraGrid.Columns.GridColumn();
             this.repositoryItemTextEdit2 = new DevExpress.XtraEditors.Repository.RepositoryItemTextEdit();
+            this.gcMethod = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.repositoryItemComboBox1 = new DevExpress.XtraEditors.Repository.RepositoryItemComboBox();
+            this.repositoryItemLookUpEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemLookUpEdit();
             this.bcShowNonZero = new DevExpress.XtraBars.BarCheckItem();
             this.bcDeposites = new DevExpress.XtraBars.BarCheckItem();
             this.bsiStatus = new DevExpress.XtraBars.BarButtonItem();
@@ -87,6 +90,8 @@ namespace Crypto.Core.Common {
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemTextEdit1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemTextEdit2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemComboBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemLookUpEdit1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.barAndDockingController1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.popupMenu1)).BeginInit();
@@ -100,6 +105,7 @@ namespace Crypto.Core.Common {
             this.colUsdtValue.FieldName = "UsdtValue";
             this.colUsdtValue.MinWidth = 16;
             this.colUsdtValue.Name = "colUsdtValue";
+            this.colUsdtValue.OptionsColumn.AllowEdit = false;
             this.colUsdtValue.Summary.AddRange(new DevExpress.XtraGrid.GridSummaryItem[] {
             new DevExpress.XtraGrid.GridColumnSummaryItem(DevExpress.Data.SummaryItemType.Sum, "UsdtValue", "SUM={0:0.00000000}")});
             this.colUsdtValue.Visible = true;
@@ -117,8 +123,10 @@ namespace Crypto.Core.Common {
             this.gridControl1.Name = "gridControl1";
             this.gridControl1.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repositoryItemTextEdit1,
-            this.repositoryItemTextEdit2});
-            this.gridControl1.Size = new System.Drawing.Size(1541, 761);
+            this.repositoryItemTextEdit2,
+            this.repositoryItemLookUpEdit1,
+            this.repositoryItemComboBox1});
+            this.gridControl1.Size = new System.Drawing.Size(2133, 761);
             this.gridControl1.TabIndex = 3;
             this.gridControl1.UseDirectXPaint = DevExpress.Utils.DefaultBoolean.True;
             this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
@@ -153,7 +161,8 @@ namespace Crypto.Core.Common {
             this.colNonZero,
             this.colAccount,
             this.colUsdtPrice,
-            this.colUsdtValue});
+            this.colUsdtValue,
+            this.gcMethod});
             this.gridView1.DetailHeight = 143;
             this.gridView1.FixedLineWidth = 1;
             this.gridView1.FooterPanelHeight = 0;
@@ -236,7 +245,6 @@ namespace Crypto.Core.Common {
             this.gridView1.Name = "gridView1";
             this.gridView1.OptionsBehavior.AllowPixelScrolling = DevExpress.Utils.DefaultBoolean.True;
             this.gridView1.OptionsBehavior.AllowSortAnimation = DevExpress.Utils.DefaultBoolean.True;
-            this.gridView1.OptionsBehavior.Editable = false;
             this.gridView1.OptionsDetail.EnableMasterViewMode = false;
             this.gridView1.OptionsView.ShowFooter = true;
             this.gridView1.OptionsView.ShowVerticalLines = DevExpress.Utils.DefaultBoolean.False;
@@ -245,14 +253,17 @@ namespace Crypto.Core.Common {
             this.gridView1.SortInfo.AddRange(new DevExpress.XtraGrid.Columns.GridColumnSortInfo[] {
             new DevExpress.XtraGrid.Columns.GridColumnSortInfo(this.colExchange, DevExpress.Data.ColumnSortOrder.Ascending)});
             this.gridView1.ViewCaptionHeight = 0;
+            this.gridView1.ShownEditor += new System.EventHandler(this.gridView1_ShownEditor);
+            this.gridView1.CellValueChanged += new DevExpress.XtraGrid.Views.Base.CellValueChangedEventHandler(this.gridView1_CellValueChanged);
             this.gridView1.CustomColumnDisplayText += new DevExpress.XtraGrid.Views.Base.CustomColumnDisplayTextEventHandler(this.OnAccountBalancesCustomColumnDisplayText);
             // 
             // colCurrency
             // 
             this.colCurrency.ColumnEdit = this.repositoryItemTextEdit1;
-            this.colCurrency.FieldName = "Currency";
+            this.colCurrency.FieldName = "DisplayName";
             this.colCurrency.MinWidth = 10;
             this.colCurrency.Name = "colCurrency";
+            this.colCurrency.OptionsColumn.AllowEdit = false;
             this.colCurrency.Visible = true;
             this.colCurrency.VisibleIndex = 0;
             this.colCurrency.Width = 133;
@@ -270,6 +281,7 @@ namespace Crypto.Core.Common {
             this.colBalance.FieldName = "Balance";
             this.colBalance.MinWidth = 40;
             this.colBalance.Name = "colBalance";
+            this.colBalance.OptionsColumn.AllowEdit = false;
             this.colBalance.Visible = true;
             this.colBalance.VisibleIndex = 2;
             this.colBalance.Width = 150;
@@ -281,6 +293,7 @@ namespace Crypto.Core.Common {
             this.colAvailable.FieldName = "Available";
             this.colAvailable.MinWidth = 10;
             this.colAvailable.Name = "colAvailable";
+            this.colAvailable.OptionsColumn.AllowEdit = false;
             this.colAvailable.Visible = true;
             this.colAvailable.VisibleIndex = 3;
             this.colAvailable.Width = 133;
@@ -292,6 +305,7 @@ namespace Crypto.Core.Common {
             this.colOnOrders.FieldName = "OnOrders";
             this.colOnOrders.MinWidth = 10;
             this.colOnOrders.Name = "colOnOrders";
+            this.colOnOrders.OptionsColumn.AllowEdit = false;
             this.colOnOrders.Visible = true;
             this.colOnOrders.VisibleIndex = 4;
             this.colOnOrders.Width = 133;
@@ -303,6 +317,7 @@ namespace Crypto.Core.Common {
             this.colBtcValue.FieldName = "BtcValue";
             this.colBtcValue.MinWidth = 10;
             this.colBtcValue.Name = "colBtcValue";
+            this.colBtcValue.OptionsColumn.AllowEdit = false;
             this.colBtcValue.Summary.AddRange(new DevExpress.XtraGrid.GridSummaryItem[] {
             new DevExpress.XtraGrid.GridColumnSummaryItem(DevExpress.Data.SummaryItemType.Sum, "BtcValue", "SUM={0:0.00000000}")});
             this.colBtcValue.Visible = true;
@@ -323,16 +338,18 @@ namespace Crypto.Core.Common {
             this.colDepositAddress.FieldName = "DepositAddress";
             this.colDepositAddress.MinWidth = 10;
             this.colDepositAddress.Name = "colDepositAddress";
+            this.colDepositAddress.OptionsColumn.AllowEdit = false;
             this.colDepositAddress.Visible = true;
             this.colDepositAddress.VisibleIndex = 8;
             this.colDepositAddress.Width = 335;
             // 
             // colDepositTag
             // 
-            this.colDepositTag.Caption = "Deposit Address Tag";
+            this.colDepositTag.Caption = "Dest. Tag";
             this.colDepositTag.FieldName = "DepositTag";
             this.colDepositTag.MinWidth = 40;
             this.colDepositTag.Name = "colDepositTag";
+            this.colDepositTag.OptionsColumn.AllowEdit = false;
             this.colDepositTag.Visible = true;
             this.colDepositTag.VisibleIndex = 9;
             this.colDepositTag.Width = 150;
@@ -349,6 +366,7 @@ namespace Crypto.Core.Common {
             this.colAccount.FieldName = "Account";
             this.colAccount.MinWidth = 16;
             this.colAccount.Name = "colAccount";
+            this.colAccount.OptionsColumn.AllowEdit = false;
             this.colAccount.Visible = true;
             this.colAccount.VisibleIndex = 1;
             this.colAccount.Width = 116;
@@ -361,6 +379,7 @@ namespace Crypto.Core.Common {
             this.colUsdtPrice.FieldName = "UsdtPrice";
             this.colUsdtPrice.MinWidth = 40;
             this.colUsdtPrice.Name = "colUsdtPrice";
+            this.colUsdtPrice.OptionsColumn.AllowEdit = false;
             this.colUsdtPrice.Visible = true;
             this.colUsdtPrice.VisibleIndex = 6;
             this.colUsdtPrice.Width = 164;
@@ -370,6 +389,32 @@ namespace Crypto.Core.Common {
             this.repositoryItemTextEdit2.AllowHtmlDraw = DevExpress.Utils.DefaultBoolean.True;
             this.repositoryItemTextEdit2.AutoHeight = false;
             this.repositoryItemTextEdit2.Name = "repositoryItemTextEdit2";
+            // 
+            // gcMethod
+            // 
+            this.gcMethod.Caption = "Deposit Method";
+            this.gcMethod.ColumnEdit = this.repositoryItemComboBox1;
+            this.gcMethod.FieldName = "CurrentMethod";
+            this.gcMethod.MinWidth = 40;
+            this.gcMethod.Name = "gcMethod";
+            this.gcMethod.Visible = true;
+            this.gcMethod.VisibleIndex = 10;
+            this.gcMethod.Width = 150;
+            // 
+            // repositoryItemComboBox1
+            // 
+            this.repositoryItemComboBox1.AutoHeight = false;
+            this.repositoryItemComboBox1.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.repositoryItemComboBox1.Name = "repositoryItemComboBox1";
+            this.repositoryItemComboBox1.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+            // 
+            // repositoryItemLookUpEdit1
+            // 
+            this.repositoryItemLookUpEdit1.AutoHeight = false;
+            this.repositoryItemLookUpEdit1.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.repositoryItemLookUpEdit1.Name = "repositoryItemLookUpEdit1";
             // 
             // bcShowNonZero
             // 
@@ -412,7 +457,7 @@ namespace Crypto.Core.Common {
             this.ribbonControl1.Name = "ribbonControl1";
             this.ribbonControl1.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonControlStyle.OfficeUniversal;
             this.ribbonControl1.ShowPageHeadersMode = DevExpress.XtraBars.Ribbon.ShowPageHeadersMode.Hide;
-            this.ribbonControl1.Size = new System.Drawing.Size(1541, 0);
+            this.ribbonControl1.Size = new System.Drawing.Size(2133, 0);
             this.ribbonControl1.StatusBar = this.ribbonStatusBar1;
             // 
             // barAndDockingController1
@@ -450,7 +495,7 @@ namespace Crypto.Core.Common {
             this.ribbonStatusBar1.Location = new System.Drawing.Point(0, 817);
             this.ribbonStatusBar1.Name = "ribbonStatusBar1";
             this.ribbonStatusBar1.Ribbon = this.ribbonControl1;
-            this.ribbonStatusBar1.Size = new System.Drawing.Size(1541, 54);
+            this.ribbonStatusBar1.Size = new System.Drawing.Size(2133, 54);
             // 
             // popupMenu1
             // 
@@ -468,7 +513,7 @@ namespace Crypto.Core.Common {
             this.standaloneBarDockControl1.Location = new System.Drawing.Point(0, 0);
             this.standaloneBarDockControl1.Manager = this.barManager1;
             this.standaloneBarDockControl1.Name = "standaloneBarDockControl1";
-            this.standaloneBarDockControl1.Size = new System.Drawing.Size(1541, 56);
+            this.standaloneBarDockControl1.Size = new System.Drawing.Size(2133, 56);
             this.standaloneBarDockControl1.Text = "standaloneBarDockControl1";
             // 
             // barManager1
@@ -514,7 +559,7 @@ namespace Crypto.Core.Common {
             this.barDockControlTop.Dock = System.Windows.Forms.DockStyle.Top;
             this.barDockControlTop.Location = new System.Drawing.Point(0, 0);
             this.barDockControlTop.Manager = this.barManager1;
-            this.barDockControlTop.Size = new System.Drawing.Size(1541, 0);
+            this.barDockControlTop.Size = new System.Drawing.Size(2133, 0);
             // 
             // barDockControlBottom
             // 
@@ -522,7 +567,7 @@ namespace Crypto.Core.Common {
             this.barDockControlBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.barDockControlBottom.Location = new System.Drawing.Point(0, 871);
             this.barDockControlBottom.Manager = this.barManager1;
-            this.barDockControlBottom.Size = new System.Drawing.Size(1541, 0);
+            this.barDockControlBottom.Size = new System.Drawing.Size(2133, 0);
             // 
             // barDockControlLeft
             // 
@@ -536,7 +581,7 @@ namespace Crypto.Core.Common {
             // 
             this.barDockControlRight.CausesValidation = false;
             this.barDockControlRight.Dock = System.Windows.Forms.DockStyle.Right;
-            this.barDockControlRight.Location = new System.Drawing.Point(1541, 0);
+            this.barDockControlRight.Location = new System.Drawing.Point(2133, 0);
             this.barDockControlRight.Manager = this.barManager1;
             this.barDockControlRight.Size = new System.Drawing.Size(0, 871);
             // 
@@ -545,7 +590,7 @@ namespace Crypto.Core.Common {
             this.Appearance.Options.UseFont = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(15F, 37F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1541, 871);
+            this.ClientSize = new System.Drawing.Size(2133, 871);
             this.Controls.Add(this.gridControl1);
             this.Controls.Add(this.standaloneBarDockControl1);
             this.Controls.Add(this.ribbonStatusBar1);
@@ -563,6 +608,8 @@ namespace Crypto.Core.Common {
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemTextEdit1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemTextEdit2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemComboBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemLookUpEdit1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.barAndDockingController1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.popupMenu1)).EndInit();
@@ -608,5 +655,8 @@ namespace Crypto.Core.Common {
         private DevExpress.XtraBars.BarDockControl barDockControlRight;
         private DevExpress.XtraGrid.Columns.GridColumn colDepositTag;
         private DevExpress.XtraBars.BarButtonItem biCreateDeposit;
+        private DevExpress.XtraGrid.Columns.GridColumn gcMethod;
+        private DevExpress.XtraEditors.Repository.RepositoryItemComboBox repositoryItemComboBox1;
+        private DevExpress.XtraEditors.Repository.RepositoryItemLookUpEdit repositoryItemLookUpEdit1;
     }
 }

@@ -1,13 +1,9 @@
 ﻿using Crypto.Core.Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Crypto.Core.Exchanges.Base;
 
 namespace Crypto.Core.Bittrex {
     public class BittrexAccountBalanceInfo : BalanceBase {
-        public BittrexAccountBalanceInfo(AccountInfo info) : base(info) { }
+        public BittrexAccountBalanceInfo(AccountInfo info, CurrencyInfoBase currency) : base(info, currency) { }
 
         public double Pending { get; set; }
         public bool Requested { get; set; }

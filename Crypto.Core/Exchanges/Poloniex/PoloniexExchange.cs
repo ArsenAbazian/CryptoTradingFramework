@@ -31,14 +31,14 @@ namespace Crypto.Core {
             RequestRate.Add(new RateLimit(this) { Limit = 6, Interval = TimeSpan.TicksPerSecond});
         }
 
+        public override BalanceBase CreateAccountBalance(AccountInfo info, string currency) {
+            return new PoloniexAccountBalanceInfo(info, GetOrCreateCurrency(currency));
+        }
+
         protected override bool ShouldAddKlineListener => true;
 
         protected internal override IIncrementalUpdateDataProvider CreateIncrementalUpdateDataProvider() {
             return new PoloniexIncrementalUpdateDataProvider();
-        }
-
-        public override void OnAccountRemoved(AccountInfo info) {
-
         }
 
         public override ExchangeType Type => ExchangeType.Poloniex;
@@ -48,17 +48,6 @@ namespace Crypto.Core {
                 type == WebSocketType.Ticker || type == WebSocketType.OrderBook;
         }
 
-        private void OnGetTickerItem(PoloniexTicker item) {
-            lock(item) {
-                item.UpdateHistoryItem();
-                RaiseTickerChanged(item);
-            }
-        }
-
-        //public override Form CreateAccountForm() {
-        //    return new AccountBalancesForm(this);
-        //}
-        
         public override string BaseWebSocketAdress { get { return "wss://api2.poloniex.com"; } }
 
         protected internal override void OnTickersSocketMessageReceived(object sender, MessageReceivedEventArgs e) {
@@ -296,7 +285,7 @@ namespace Crypto.Core {
         }
 
         public override CurrencyInfoBase CreateCurrency(string currency) {
-            return new PoloniexCurrencyInfo(currency);
+            return new PoloniexCurrencyInfo(this, currency);
         }
 
         public override ResizeableArray<CandleStickData> GetCandleStickData(Ticker ticker, int candleStickPeriodMin, DateTime start, long periodInSeconds) {
@@ -375,15 +364,10 @@ namespace Crypto.Core {
             foreach(JProperty prop in res.Children()) {
                 string currency = prop.Name;
                 JObject obj = (JObject)prop.Value;
-                PoloniexCurrencyInfo c = (PoloniexCurrencyInfo)Currencies.FirstOrDefault(curr => curr.Currency == currency);
-                if(c == null) {
-                    c = (PoloniexCurrencyInfo)CreateCurrency(currency);
-                    c.Currency = currency;
-                    c.MaxDailyWithdrawal = obj.Value<double>("maxDailyWithdrawal");
-                    c.TxFee = obj.Value<double>("txFee");
-                    c.MinConfirmation = obj.Value<double>("minConf");
-                    Currencies.Add(c);
-                }
+                PoloniexCurrencyInfo c = (PoloniexCurrencyInfo)GetOrCreateCurrency(currency);
+                c.MaxDailyWithdrawal = obj.Value<double>("maxDailyWithdrawal");
+                c.TxFee = obj.Value<double>("txFee");
+                c.MinConfirmation = obj.Value<double>("minConf");
                 c.Disabled = obj.Value<int>("disabled") != 0;
             }
             return true;
@@ -826,24 +810,17 @@ namespace Crypto.Core {
                         return false;
                     }
                     JObject obj = (JObject)prop.Value;
-                    PoloniexAccountBalanceInfo binfo = (PoloniexAccountBalanceInfo)account.Balances.FirstOrDefault(b => b.Currency == prop.Name);
-                    if(binfo == null) {
-                        binfo = new PoloniexAccountBalanceInfo(account);
-                        binfo.Currency = prop.Name;
-                        account.Balances.Add(binfo);
-                    }
-                    binfo.Currency = prop.Name;
+                    var binfo = account.GetOrCreateBalanceInfo(prop.Name);
                     binfo.LastAvailable = binfo.Available;
                     binfo.Available = obj.Value<double>("available");
                     binfo.OnOrders = obj.Value<double>("onOrders");
                     binfo.Balance = binfo.Available + binfo.OnOrders;
-                    binfo.BtcValue = obj.Value<double>("btcValue");
                 }
             }
             return true;
         }
 
-        public override bool GetDeposite(AccountInfo account, string currency) {
+        public override bool GetDeposit(AccountInfo account, CurrencyInfoBase currency) {
             return GetDeposites(account);
         }
 

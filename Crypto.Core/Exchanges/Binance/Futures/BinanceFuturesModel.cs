@@ -165,9 +165,8 @@ namespace Crypto.Core.Exchanges.Binance.Futures {
                 return false;
             account.Balances.Clear();
             foreach(JObject obj in balances) {
-                BinanceAccountBalanceInfo b = new BinanceAccountBalanceInfo(account);
+                BalanceBase b = account.GetOrCreateBalanceInfo(obj.Value<string>("asset"));
                 b.Balance = obj.Value<double>("balance");
-                b.Currency = obj.Value<string>("asset");
                 b.Available = obj.Value<double>("availableBalance");
                 b.OnOrders = b.Balance - b.Available;
                 account.Balances.Add(b);
@@ -286,9 +285,6 @@ namespace Crypto.Core.Exchanges.Binance.Futures {
         }
 
         protected override string ExchangeSettingsApi { get { return "https://binance.com/fapi/v1/exchangeInfo"; } }
-
-        public override void OnAccountRemoved(AccountInfo info) {
-        }
 
         protected override string UpdateAccountTradesApiString => "https://fapi.binance.com/fapi/v1/userTrades";
         protected override TradeInfoItem InitializeAccountTradeInfoItem(string[] item, Ticker ticker) {

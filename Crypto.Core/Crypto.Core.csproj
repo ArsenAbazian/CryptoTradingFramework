@@ -312,7 +312,7 @@
     <Compile Include="Exchanges\Base\OrderInfo.cs" />
     <Compile Include="Exchanges\Base\TickerBase.cs" />
     <Compile Include="Exchanges\Binance\BinanceIncUpdateDataProvider.cs.cs" />
-    <Compile Include="Exchanges\Binance\BinanceModel.cs" />
+    <Compile Include="Exchanges\Binance\BinanceExchange.cs" />
     <Compile Include="Exchanges\Binance\BinanceTicker.cs" />
     <Compile Include="Exchanges\BitFinex\BitFinexAccountBalanceInfo.cs" />
     <Compile Include="Exchanges\BitFinex\BitFinexCurrencyInfo.cs" />
@@ -325,14 +325,14 @@
     <Compile Include="Exchanges\Bitmex\BitmexTicker.cs" />
     <Compile Include="Exchanges\Bittrex\BittrexAccountBalanceInfo.cs" />
     <Compile Include="Exchanges\Bittrex\BittrexIncUpdateDataProvider.cs.cs" />
-    <Compile Include="Exchanges\Bittrex\BittrexModel.cs" />
+    <Compile Include="Exchanges\Bittrex\BittrexExchange.cs" />
     <Compile Include="Exchanges\Bittrex\BittrexOrderInfo.cs" />
     <Compile Include="Exchanges\Bittrex\BittrexTicker.cs" />
     <Compile Include="Exchanges\Bittrex\BittrexWebSocket.cs" />
     <Compile Include="Exchanges\Poloniex\PoloniexAccountBalanceInfo.cs" />
     <Compile Include="Exchanges\Poloniex\PoloniexCurrencyInfo.cs" />
     <Compile Include="Exchanges\Poloniex\PoloniexIncUpdateDataProvider.cs" />
-    <Compile Include="Exchanges\Poloniex\PoloniexModel.cs" />
+    <Compile Include="Exchanges\Poloniex\PoloniexExchange.cs" />
     <Compile Include="Exchanges\Poloniex\PoloniexTicker.cs" />
     <Compile Include="Exchanges\Poloniex\PoloniexTickerCodesProvider.cs" />
     <Compile Include="Helpers\JsonHelper.cs" />

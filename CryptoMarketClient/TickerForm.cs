@@ -63,8 +63,13 @@ namespace CryptoMarketClient {
             Ticker t = Ticker;
             if(t == null)
                 return;
-            if(t != null)
+            if(t != null) {
                 t.UpdateOpenedOrders();
+                if(this.gcOpenedOrders.DataSource != t.OpenedOrders) {
+                    BeginInvoke(new MethodInvoker(() => this.gcOpenedOrders.DataSource = t.OpenedOrders ));
+                }
+
+            }
             if(!t.Exchange.SupportWebSocket(WebSocketType.Trades))
                 t.UpdateTrades();
             //if(Ticker != null && !Ticker.IsUpdatingAccountTrades)
@@ -167,8 +172,8 @@ namespace CryptoMarketClient {
             this.buySettingsControl.Settings.AvailableForBuy = Ticker.BaseCurrencyBalance;
             this.buySettingsControl.Settings.AvailableForSell = Ticker.MarketCurrencyBalance;
             this.siBalance.Caption = 
-                        Ticker.BaseCurrency + ": " + Ticker.BaseCurrencyBalance.ToString("0.00000000") + "   " +
-                        Ticker.MarketCurrency + ": " + Ticker.MarketCurrencyBalance.ToString("0.00000000");
+                        Ticker.BaseCurrencyDisplayName + ": " + Ticker.BaseCurrencyBalance.ToString("0.00000000") + "   " +
+                        Ticker.MarketCurrencyDisplayName + ": " + Ticker.MarketCurrencyBalance.ToString("0.00000000");
             this.siUpdated.Caption = DateTime.Now.ToLongTimeString();
         }
 
@@ -329,8 +334,9 @@ namespace CryptoMarketClient {
             this.orderBookControl1.Asks = Ticker.OrderBook.AsksInverted;
             this.gcTrades.DataSource = new SortedReadOnlyArray<TradeInfoItem>(Ticker.ShortTradeHistory);
             this.gcAccountTrades.DataSource = new SortedReadOnlyArray<TradeInfoItem>(Ticker.AccountShortTradeHistory);
-            this.gcOpenedOrders.DataSource = Ticker.OpenedOrders;
+            //this.gcOpenedOrders.DataSource = Ticker.OpenedOrders;
         }
+
         void SubscribeEvents() {
             Ticker.OrderBook.Changed += OnTickerOrderBookChanged;
             Ticker.Changed += OnTickerChanged;

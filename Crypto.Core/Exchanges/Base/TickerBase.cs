@@ -213,7 +213,9 @@ namespace Crypto.Core {
         }
         protected internal OpenedOrderInfo[] PrevOpenedOrders { get; set; }
         [XmlIgnore]
-        public List<OpenedOrderInfo> OpenedOrders { get; } = new List<OpenedOrderInfo>();
+        public List<OpenedOrderInfo> OpenedOrders {
+            get { return Exchange.DefaultAccount.OpenedOrders; }
+        }
         [XmlIgnore]
         public LinkedList<TickerHistoryItem> History { get; } = new LinkedList<TickerHistoryItem>();
 
@@ -592,7 +594,7 @@ namespace Crypto.Core {
                 if(Exchange == null || Exchange.DefaultAccount == null)
                     return null;
                 if(firstInfo == null)
-                    firstInfo = Exchange.DefaultAccount.Balances.FirstOrDefault((b) => b.Currency == BaseCurrency);
+                    Exchange.DefaultAccount.BalancesHash.TryGetValue(BaseCurrency, out firstInfo);
                 return firstInfo;
             }
         }
@@ -602,7 +604,7 @@ namespace Crypto.Core {
                 if(Exchange == null || Exchange.DefaultAccount == null)
                     return null;
                 if(secondInfo == null)
-                    secondInfo = Exchange.DefaultAccount.Balances.FirstOrDefault((b) => b.Currency == MarketCurrency);
+                    Exchange.DefaultAccount.BalancesHash.TryGetValue(MarketCurrency, out secondInfo);
                 return secondInfo;
             }
         }
@@ -639,7 +641,7 @@ namespace Crypto.Core {
         protected CurrencyInfoBase MarketCurrencyInfo {
             get {
                 if(marketCurrencyInfo == null && Exchange != null)
-                    marketCurrencyInfo = Exchange.GetCurrency(MarketCurrency);
+                    marketCurrencyInfo = Exchange.GetOrCreateCurrency(MarketCurrency);
                 return marketCurrencyInfo;
             }
         }
@@ -648,7 +650,7 @@ namespace Crypto.Core {
         protected CurrencyInfoBase BaseCurrencyInfo {
             get {
                 if(baseCurrencyInfo == null && Exchange != null)
-                    baseCurrencyInfo = Exchange.GetCurrency(BaseCurrency);
+                    baseCurrencyInfo = Exchange.GetOrCreateCurrency(BaseCurrency);
                 return baseCurrencyInfo;
             }
         }
@@ -680,6 +682,10 @@ namespace Crypto.Core {
 
         public virtual string BaseCurrency { get; set; }
         public virtual string MarketCurrency { get; set; }
+        
+        public virtual string BaseCurrencyDisplayName { get { return BaseCurrency; } set { } }
+        public virtual string MarketCurrencyDisplayName { get { return MarketCurrency; } set { } }
+
         public abstract string HostName { get; }
         public DateTime Time { get; set; }
         public int CandleStickPeriodMin { get; set; } = 1;

@@ -1352,7 +1352,6 @@ namespace CryptoMarketClient {
         private DevExpress.XtraGrid.Columns.GridColumn colBidShift;
         private DevExpress.XtraGrid.Columns.GridColumn colAskShift;
         private DevExpress.XtraBars.BarButtonItem bbGridStrategy;
-        private DevExpress.XtraBars.Ribbon.RibbonPage rpStrategies;
         private BarButtonItem bbShowTickerStrategies;
         private BarButtonItem bbUpdateBot;
         private DevExpress.XtraGrid.Columns.GridColumn colHipe;

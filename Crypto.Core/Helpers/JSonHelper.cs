@@ -689,6 +689,7 @@ namespace Crypto.Core.Helpers {
                 JsonHelperToken item = new JsonHelperToken();
                 index = DeserializeName(message, item, index);
                 index = Deserialize(message, item, index);
+                item.Type = JsonObjectType.Property;
                 list.AddLast(item);
             }
             token.Properties = new JsonHelperToken[list.Count];
@@ -780,9 +781,8 @@ namespace Crypto.Core.Helpers {
                 b.Append((char)c);
                 index++;
             }
-            if(item.Value == null) {
-
-            }
+            if(item.Value == null)
+                item.Type = JsonObjectType.Error;
             return index;
         }
 
@@ -807,9 +807,8 @@ namespace Crypto.Core.Helpers {
                 b.Append((char)c);
                 index++;
             }
-            if(item.Value == null) {
-
-            }
+            if(item.Value == null)
+                item.Type = JsonObjectType.Error;
             return index;
         }
 
@@ -906,7 +905,8 @@ namespace Crypto.Core.Helpers {
         ArrayOfObjects,
         String,
         Value,
-        Property
+        Property,
+        Error
     }
 
     public class JsonParseResult {
@@ -924,11 +924,13 @@ namespace Crypto.Core.Helpers {
     }
 
     public class JsonHelperToken {
-        public JsonObjectType Type { get; internal set; }
+        public JsonObjectType Type { get; internal set; } = JsonObjectType.None;
         public string Name { get; internal set; }
         public JsonHelperToken ObjectValue { get; internal set; }
 
         public override string ToString() {
+            if(!string.IsNullOrEmpty(Name))
+                return Name + "=" + Value;
             return Value;
         }
 
@@ -936,6 +938,14 @@ namespace Crypto.Core.Helpers {
             if(Properties == null)
                 return null;
             return Properties.FirstOrDefault(p => p.Name == name);
+        }
+
+        public int GetPropertyIndex(string name) {
+            for(int i = 0; i < Properties.Length; i++) {
+                if(Properties[i].Name == name)
+                    return i;
+            }
+            return -1;
         }
 
         string val;

@@ -231,6 +231,8 @@ namespace Crypto.Core {
         [XmlIgnore]
         public List<BalanceBase> Balances { get; } = new List<BalanceBase>();
         [XmlIgnore]
+        public Dictionary<string, BalanceBase> BalancesHash { get; } = new Dictionary<string, BalanceBase>();
+        [XmlIgnore]
         public List<PositionInfo> Positions { get; } = new List<PositionInfo>();
         [XmlIgnore]
         public List<OpenedOrderInfo> OpenedOrders { get; } = new List<OpenedOrderInfo>();
@@ -252,6 +254,23 @@ namespace Crypto.Core {
                 Telemetry.Default.TrackException(e);
                 return -1;
             }
+        }
+
+        public BalanceBase GetBalanceInfo(string currency) {
+            BalanceBase b = null;
+            if(BalancesHash.TryGetValue(currency, out b))
+                return b;
+            return null;
+        }
+
+        public BalanceBase GetOrCreateBalanceInfo(string currency) {
+            BalanceBase b = GetBalanceInfo(currency);
+            if(b != null)
+                return b;
+            b = Exchange.CreateAccountBalance(this, currency);
+            BalancesHash.Add(currency, b);
+            Balances.Add(b);
+            return b;
         }
     }
 

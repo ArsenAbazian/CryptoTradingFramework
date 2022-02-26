@@ -1,7 +1,9 @@
 ﻿using Crypto.Core;
 using Crypto.Core.Common;
+using Crypto.Core.Exchanges.Base;
 using CryptoMarketClient;
 using DevExpress.Data.Filtering;
+using DevExpress.XtraEditors;
 using DevExpress.XtraGrid.Views.Base;
 using System;
 using System.Collections.Generic;
@@ -16,6 +18,8 @@ namespace Crypto.Core.Common {
             Exchange = exchange;
             Exchanges.Add(Exchange);
             UpdateFilter();
+            if(!Exchange.SupportMultipleDepositMethods)
+                this.gridView1.Columns.Remove(this.gcMethod);
         }
 
         public AccountBalancesForm() {
@@ -26,7 +30,7 @@ namespace Crypto.Core.Common {
         protected Exchange Exchange { get; set; }
         public List<Exchange> Exchanges { get; } = new List<Exchange>();
 
-        protected override int UpdateInervalMs => 5000;
+        protected override int UpdateInervalMs => 30000;
         protected override bool AllowUpdateInactive => false;
 
         protected override void OnThreadUpdate() {
@@ -133,7 +137,7 @@ namespace Crypto.Core.Common {
 
         private void biUpdateDeposite_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
             BalanceBase b = (BalanceBase)this.popupMenu1.Tag;
-            var task = Task.Run(() => { b.Account.Exchange.GetDeposite(b.Account, b.Currency); }).
+            var task = Task.Run(() => { b.GetDeposit(); }).
                 ContinueWith(t => {
                     if(IsHandleCreated)
                         BeginInvoke(new MethodInvoker(() => this.gridView1.RefreshData()));
@@ -151,6 +155,34 @@ namespace Crypto.Core.Common {
                     if(IsHandleCreated)
                         BeginInvoke(new MethodInvoker(() => this.gridView1.RefreshData()));
                 });
+        }
+
+        private void gridView1_ShownEditor(object sender, EventArgs e) {
+            if(this.gridView1.FocusedColumn != this.gcMethod)
+                return;
+            BalanceBase b = (BalanceBase)this.gridView1.GetFocusedRow();
+            if(b.CurrencyInfo.Methods.Count == 0)
+                b.CurrencyInfo.GetDepositMethods();
+            ComboBoxEdit cb = (ComboBoxEdit)this.gridView1.ActiveEditor;
+            cb.Properties.Items.BeginUpdate();
+            cb.Properties.Items.Clear();
+            cb.Properties.ReadOnly = false;
+            try {
+                
+                foreach(DepositMethod m in b.CurrencyInfo.Methods.Values) {
+                    cb.Properties.Items.Add(m);
+                }
+            }
+            finally {
+                cb.Properties.Items.EndUpdate();
+            }
+        }
+
+        private void gridView1_CellValueChanged(object sender, CellValueChangedEventArgs e) {
+            if(e.Column == this.gcMethod) {
+                BalanceBase b = (BalanceBase)this.gridView1.GetFocusedRow();
+                b.GetDeposit();
+            }
         }
     }
 }

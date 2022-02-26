@@ -23,6 +23,10 @@ namespace Crypto.Core.Binance {
             }
         }
 
+        public override BalanceBase CreateAccountBalance(AccountInfo info, string currency) {
+            return new BinanceAccountBalanceInfo(info, GetOrCreateCurrency(currency));
+        }
+
         protected override DateTime GetTradesRangeEndTime(DateTime start, DateTime end) {
             return start.AddMinutes(59);
         }
@@ -58,10 +62,6 @@ namespace Crypto.Core.Binance {
 
         protected internal override IIncrementalUpdateDataProvider CreateIncrementalUpdateDataProvider() {
             return new BinanceIncrementalUpdateDataProvider();
-        }
-
-        public override void OnAccountRemoved(AccountInfo info) {
-
         }
 
         public override bool CreateDeposit(AccountInfo account, string currency) {
@@ -500,7 +500,7 @@ namespace Crypto.Core.Binance {
             return true;
         }
 
-        public override bool GetDeposite(AccountInfo account, string currency) {
+        public override bool GetDeposit(AccountInfo account, CurrencyInfoBase currency) {
             return true;
         }
 
@@ -782,8 +782,7 @@ namespace Crypto.Core.Binance {
                 return false;
             account.Balances.Clear();
             foreach(JObject obj in balances) {
-                BinanceAccountBalanceInfo b = new BinanceAccountBalanceInfo(account);
-                b.Currency = obj.Value<string>("asset");
+                BalanceBase b = account.GetOrCreateBalanceInfo(obj.Value<string>("asset"));
                 b.Available = obj.Value<double>("free");
                 b.OnOrders = obj.Value<double>("locked");
                 b.Balance = b.Available + b.OnOrders;

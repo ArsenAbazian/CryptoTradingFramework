@@ -23,6 +23,10 @@ namespace Crypto.Core.BitFinex {
             }
         }
 
+        public override BalanceBase CreateAccountBalance(AccountInfo info, string currency) {
+            return new BitFinexAccountBalanceInfo(info, GetOrCreateCurrency(currency));
+        }
+
         protected override bool GetTradesCore(ResizeableArray<TradeInfoItem> list, Ticker ticker, DateTime start, DateTime end) {
             string address = string.Format("https://bittrex.com/api/v1.1/public/getmarkethistory?market={0}", Uri.EscapeDataString(ticker.MarketName));
             byte[] bytes = null;
@@ -75,10 +79,6 @@ namespace Crypto.Core.BitFinex {
             return new BitFinexIncrementalUpdateDataProvider();
         }
 
-        public override void OnAccountRemoved(AccountInfo info) {
-
-        }
-
         public override string BaseWebSocketAdress => "wss://api.bitfinex.com/ws/2";
 
         public override ExchangeType Type => ExchangeType.BitFinex;
@@ -93,7 +93,7 @@ namespace Crypto.Core.BitFinex {
             return true;
         }
 
-        public override bool GetDeposite(AccountInfo account, string currency) {
+        public override bool GetDeposit(AccountInfo account, CurrencyInfoBase currency) {
             return true;
         }
 
@@ -237,23 +237,19 @@ namespace Crypto.Core.BitFinex {
             for(int i = 0; i < res.Count; i++) {
                 string[] item = res[i];
                 string currency = item[0];
-                BitFinexCurrencyInfo c = (BitFinexCurrencyInfo)Currencies.FirstOrDefault(curr => curr.Currency == currency);
-                if(c == null) {
-                    c = (BitFinexCurrencyInfo)CreateCurrency(item[0]);
-                    c.CurrencyLong = item[1];
-                    c.MinConfirmation = int.Parse(item[2]);
-                    c.TxFee = FastValueConverter.Convert(item[3]);
-                    c.CoinType = item[5];
-                    c.BaseAddress = item[6];
-                    Currencies.Add(c);
-                }
+                var c = GetOrCreateCurrency(currency);
+                c.CurrencyLong = item[1];
+                c.MinConfirmation = int.Parse(item[2]);
+                c.TxFee = FastValueConverter.Convert(item[3]);
+                c.CoinType = item[5];
+                c.BaseAddress = item[6];
                 c.IsActive = item[4].Length == 4;
             }
             return true;
         }
 
         public override CurrencyInfoBase CreateCurrency(string currency) {
-            return new BitFinexCurrencyInfo(currency);
+            return new BitFinexCurrencyInfo(this, currency);
         }
 
         public bool GetCurrenciesInfo() {
@@ -880,14 +876,9 @@ namespace Crypto.Core.BitFinex {
             JObject obj = res.Value<JObject>("result");
             lock(account.Balances) {
                 string currency = obj.Value<string>("Currency");
-                BitFinexAccountBalanceInfo info = (BitFinexAccountBalanceInfo)account.Balances.FirstOrDefault((b) => b.Currency == currency);
-                if(info == null) {
-                    info = new BitFinexAccountBalanceInfo(account);
-                    info.Currency = obj.Value<string>("Currency");
-                    //info.Requested = obj.Value<bool>("Requested");
-                    //info.Uuid = obj.Value<string>("Uuid");
-                    account.Balances.Add(info);
-                }
+                BalanceBase info = account.GetOrCreateBalanceInfo(currency);
+                //info.Requested = obj.Value<bool>("Requested");
+                //info.Uuid = obj.Value<string>("Uuid");
                 info.LastAvailable = info.Available;
                 info.Available = obj.Value<string>("Available") == null ? 0 : obj.Value<double>("Available");
                 //info.Balance = obj.Value<string>("Balance") == null ? 0 : obj.Value<double>("Balance");
@@ -925,12 +916,7 @@ namespace Crypto.Core.BitFinex {
             });
                 for(int i = 0; i < res.Count; i++) {
                     string[] item = res[i];
-                    BitFinexAccountBalanceInfo binfo = (BitFinexAccountBalanceInfo) account.Balances.FirstOrDefault(b => b.Currency == item[0]);
-                    if(binfo == null) {
-                        binfo = new BitFinexAccountBalanceInfo(account);
-                        binfo.Currency = item[0];
-                        account.Balances.Add(binfo);
-                    }
+                    BalanceBase binfo = account.GetOrCreateBalanceInfo(item[0]);
                     //info.Balance = FastDoubleConverter.Convert(item[1]);
                     binfo.Available = FastValueConverter.Convert(item[2]);
                     //info.Pending = FastDoubleConverter.Convert(item[3]);
@@ -961,8 +947,7 @@ namespace Crypto.Core.BitFinex {
             lock(account.Balances) {
                 account.Balances.Clear();
                 foreach(JObject obj in balances) {
-                    BitFinexAccountBalanceInfo item = new BitFinexAccountBalanceInfo(account);
-                    item.Currency = obj.Value<string>("Currency");
+                    var item = account.GetOrCreateBalanceInfo(obj.Value<string>("Currency"));
                     //item.Balance = obj.Value<double>("Balance");
                     item.Available = obj.Value<double>("Available");
                     item.Balance = item.Available;
@@ -1055,8 +1040,8 @@ namespace Crypto.Core.BitFinex {
                 return false;
             }
             JObject addr = res.Value<JObject>("result");
-            BitFinexAccountBalanceInfo info = (BitFinexAccountBalanceInfo)account.Balances.FirstOrDefault(b => b.Currency == currency);
-            info.Currency = addr.Value<string>("Address");
+            var info = account.GetBalanceInfo(currency);
+            info.DepositAddress = addr.Value<string>("Address");
             return true;
         }
 

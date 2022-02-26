@@ -24,6 +24,10 @@ namespace Crypto.Core.Exchanges.Bitmex {
             }
         }
 
+        public override BalanceBase CreateAccountBalance(AccountInfo info, string currency) {
+            return new BitmexAccountBalanceInfo(info, GetOrCreateCurrency(currency));
+        }
+
         protected override bool ShouldAddKlineListener => false;
 
         protected internal override HMAC CreateHmac(string secret) {
@@ -106,7 +110,7 @@ namespace Crypto.Core.Exchanges.Bitmex {
             return true;
         }
 
-        public override bool GetDeposite(AccountInfo account, string currency) {
+        public override bool GetDeposit(AccountInfo account, CurrencyInfoBase currency) {
             return true;
         }
 
@@ -235,10 +239,6 @@ namespace Crypto.Core.Exchanges.Bitmex {
             }
         }
 
-        public override void OnAccountRemoved(AccountInfo info) {
-            DefaultAccount = Accounts.FirstOrDefault(a => a.Default);
-        }
-
         public override TradingResult SellLong(AccountInfo account, Ticker ticker, double rate, double amount) {
             string text = DownloadPrivateString(account, "POST",
                 string.Format("/api/v1/order?symbol={0}&orderQty={1}&price={2}&ordType=Market&side=Sell", ticker.MarketName, amount, rate));
@@ -354,8 +354,7 @@ namespace Crypto.Core.Exchanges.Bitmex {
             }
             JObject obj = (JObject)JsonConvert.DeserializeObject(text);
             account.Balances.Clear();
-            BitmexAccountBalanceInfo b = new BitmexAccountBalanceInfo(account);
-            b.Currency = obj.Value<string>("currency");
+            var b = account.GetOrCreateBalanceInfo(obj.Value<string>("currency"));
             b.Available = obj.Value<double>("amount");
             b.Balance = b.Available;
             b.OnOrders = 0;// obj.Value<double>("locked");

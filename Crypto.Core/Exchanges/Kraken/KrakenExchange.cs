@@ -25,6 +25,10 @@ namespace Crypto.Core.Exchanges.Kraken {
             }
         }
 
+        public override BalanceBase CreateAccountBalance(AccountInfo info, string currency) {
+            return new KrakenAccountBalanceInfo(info, GetOrCreateCurrency(currency));
+        }
+
         public override bool AllowCandleStickIncrementalUpdate => true;
 
         public override ExchangeType Type => ExchangeType.Kraken;
@@ -92,7 +96,19 @@ namespace Crypto.Core.Exchanges.Kraken {
         }
 
         public override TradingResult BuyLong(AccountInfo account, Ticker ticker, double rate, double amount) {
-            throw new NotImplementedException();
+            try {
+                string parameters = string.Format(
+                    "pair={0}" +
+                    "&type=buy" +
+                    "&ordertype=limit" +
+                    "&price={1}" +
+                    "&volume={2}", ticker.CurrencyPair, rate, amount);
+                return OnOrderResult(account, ticker, OrderType.Buy, UploadPrivateData(account, AddOrderApiString, AddOrderApiPathString, parameters));
+            }
+            catch(Exception e) {
+                LogManager.Default.Log(e.ToString());
+                return null;
+            }
         }
 
         public override TradingResult BuyShort(AccountInfo account, Ticker ticker, double rate, double amount) {
@@ -100,11 +116,28 @@ namespace Crypto.Core.Exchanges.Kraken {
         }
 
         public override bool Cancel(AccountInfo account, Ticker ticker, string orderId) {
-            throw new NotImplementedException();
+            try {
+                string parameters = string.Format(
+                    "txid={0}", orderId);
+                return OnCancelOrder(account, ticker, UploadPrivateData(account, CancelOrderApiString, CancelOrderApiPathString, parameters));
+            }
+            catch(Exception e) {
+                LogManager.Default.Log(e.ToString());
+                return false;
+            }
+        }
+
+        protected virtual bool OnCancelOrder(AccountInfo account, Ticker ticker, byte[] bytes) {
+            var root = JsonHelper.Default.Deserialize(bytes);
+            if(HasError(account, root, nameof(OnOrderResult), bytes))
+                return false;
+            var result = root.GetProperty("result");
+            return result != null;
         }
 
         public override bool CreateDeposit(AccountInfo account, string currency) {
-            throw new NotImplementedException();
+            LogManager.Default.Warning(this, "CreateDeposit not supported by Kraken", "");
+            return true;
         }
 
         public override List<CandleStickIntervalInfo> GetAllowedCandleStickIntervals() {
@@ -125,14 +158,30 @@ namespace Crypto.Core.Exchanges.Kraken {
             return UpdateBalances(info);
         }
 
-        public override bool GetDeposite(AccountInfo account, string currency) {
-            return GetDepositeMethods(account, currency);
-            //return true;
+        public override bool GetDeposit(AccountInfo account, CurrencyInfoBase currency) {
+            if(!GetDepositMethods(account, currency))
+                return false;
+            try {
+                KrakenCurrencyInfo info = (KrakenCurrencyInfo)currency;
+                if(info.CurrentMethod == null) {
+                    LogManager.Default.Error(this, nameof(GetDeposit), "No Funding Method Found");
+                    return false;
+                }
+                string parameters = string.Format("asset={0}&method={1}", info.AltName, info.CurrentMethod.CurrencyName);
+                return OnGetDeposites(account, UploadPrivateData(account, DepositAddressesApiString, DepositAddressesApiPathString, parameters));
+            }
+            catch(Exception e) {
+                LogManager.Default.Log(e.ToString());
+                return false;
+            }
         }
 
-        public bool GetDepositeMethods(AccountInfo account, string currency) {
+        public override bool SupportMultipleDepositMethods { get { return true; } }
+
+        public override bool GetDepositMethods(AccountInfo account, CurrencyInfoBase currency) {
             try {
-                return OnGetDepositeMethods(account, currency, UploadPrivateData(account, DepositMethodsApiString, DepositMethodsApiPathString, "asset=" + currency));
+                string currName = ((KrakenCurrencyInfo)currency).AltName;
+                return OnGetDepositMethods(account, (KrakenCurrencyInfo)currency, UploadPrivateData(account, DepositMethodsApiString, DepositMethodsApiPathString, "asset=" + currName));
             }
             catch(Exception e) {
                 LogManager.Default.Log(e.ToString());
@@ -141,80 +190,86 @@ namespace Crypto.Core.Exchanges.Kraken {
 
         }
 
-        protected bool HasError(AccountInfo account, JsonHelperToken root, string methodName) {
+        protected bool HasError(AccountInfo account, JsonHelperToken root, string methodName, byte[] bytes) {
             string accountName = account == null ? "any account" : account.Name;
-
-            if(root.PropertiesCount == 0 && root.ItemsCount == 0 && root.Type == JsonObjectType.Value) {
-                LogManager.Default.Error(this, "Failed:" + methodName, "Account: " + accountName + ", message=unknown error");
+            string errors = CheckForErrors(root);
+            
+            if(errors != null) {
+                LogManager.Default.Error(this, "Failed:" + methodName, "Account: " + accountName + ", message = " + errors);
                 return true;
             }
-            if(root.Properties[0].ItemsCount > 0) {
-                LogManager.Default.Error(this, "Failed:" + methodName, "Account: " + accountName + ", message=" + root.Properties[0].Items[0].Value);
+            if(root.Type == JsonObjectType.None || root.Type == JsonObjectType.Error) {
+                errors = Encoding.UTF8.GetString(bytes);
+                LogManager.Default.Error(this, "Failed:" + methodName, "Account: " + accountName + ", message = " + errors);
+                return true;
+            }
+            return false;
+        }
+
+        protected bool HasError(JsonHelperToken root, string methodName) {
+            string errors = CheckForErrors(root);
+
+            if(errors != null) {
+                LogManager.Default.Error(this, "Failed:" + methodName, errors);
+                return true;
+            }
+            if(root.Type == JsonObjectType.None || root.Type == JsonObjectType.Error) {
+                errors = "unknown error";
+                LogManager.Default.Error(this, "Failed:" + methodName, errors);
                 return true;
             }
             return false;
         }
 
         public override CurrencyInfoBase CreateCurrency(string currency) {
-            return new KrakenCurrencyInfo(currency);
+            return new KrakenCurrencyInfo(this, currency);
         }
 
-        protected virtual bool OnGetDepositeMethods(AccountInfo account, string currency, byte[] data) {
+        protected virtual bool OnGetDepositMethods(AccountInfo account, KrakenCurrencyInfo currInfo, byte[] data) {
             JsonHelperToken root = JsonHelper.Default.Deserialize(data);
-            if(HasError(account, root, nameof(OnGetDepositeMethods)))
+            if(HasError(account, root, nameof(OnGetDepositMethods), data))
                 return false;
-            if(root.Properties.Length < 2)
-                return true;
 
             JsonHelperToken methods = root.Properties[1];
             if(methods == null)
                 return false;
 
-            KrakenCurrencyInfo currInfo = (KrakenCurrencyInfo)Currencies.FirstOrDefault(c => c.Currency == currency);
-            if(currInfo == null) {
-                currInfo = (KrakenCurrencyInfo)CreateCurrency(currency);
-                Currencies.Add(currInfo);
-            }
+            if(methods.ItemsCount == 0)
+                return true;
 
             foreach(var method in methods.Items) {
-                string name = method.Properties[0].Value;
-                KrakenCurrencyMethod m = currInfo.Methods.FirstOrDefault(mm => mm.Name == name);
-                if(m == null) {
-                    m = new KrakenCurrencyMethod();
-                    currInfo.Methods.Add(m);
-                }
-                m.Name = name;
-                m.Limit = method.Properties[1].ValueBool;
-                m.Fee = method.Properties[2].ValueDouble;
-                m.GenAddress = method.Properties[3].ValueBool;
+                string name = method.GetProperty("method").Value;
+                currInfo.GetOrCreateMethod(name);
+                DepositMethod m = currInfo.GetOrCreateMethod(name);
+                m.Limit = method.GetProperty("limit").ValueBool;
+                m.GenAddress = method.GetProperty("gen-address").ValueBool;
+                string[] items = name.Split(' ');
+                m.Currency = items[items.Length - 1];
+                m.CurrencyName = items[0];
             }
-
+            
             return true;
         }
 
         public override bool GetDeposites(AccountInfo account) {
-            try {
-                return OnGetDeposites(account, UploadPrivateData(account, DepositAddressesApiString, DepositAddressesApiPathString, null));
-            }
-            catch(Exception e) {
-                LogManager.Default.Log(e.ToString());
-                return false;
-            }
+            return true;
         }
 
         protected virtual bool OnGetDeposites(AccountInfo account, byte[] data) {
             JsonHelperToken root = JsonHelper.Default.Deserialize(data);
-            if(HasError(account, root, nameof(OnGetDeposites)))
+            if(HasError(account, root, nameof(OnGetDeposites), data))
                 return false;
-            if(root.Properties.Length < 2)
-                return true;
-            JsonHelperToken balances = root.Properties[1];
+            JsonHelperToken balances = root.GetProperty("result");
             if(balances == null)
                 return false;
             account.Balances.Clear();
-            foreach(JsonHelperToken prop in balances.Properties) {
-                KrakenAccountBalanceInfo b = new KrakenAccountBalanceInfo(account);
-                b.Currency = prop.Name;
+            if(balances.PropertiesCount == 0) {
+                LogManager.Default.Warning(this, nameof(OnGetDeposites), "No Deposit Address Found");
+                return true;
+            }
+            for(int i = 0; i < balances.Properties.Length; i++) {
+                JsonHelperToken prop = balances.Properties[i];
+                var b = account.GetOrCreateBalanceInfo(prop.Name);
                 b.OnOrders = 0;
                 b.Available = b.Balance = prop.ValueDouble;
                 account.Balances.Add(b);
@@ -226,35 +281,35 @@ namespace Crypto.Core.Exchanges.Kraken {
             if(Tickers.Count > 0)
                 return true;
             string adress = "https://api.kraken.com/0/public/AssetPairs";
-            string text = null;
+            byte[] bytes = null;
             try {
-                text = GetDownloadString(adress);
+                bytes = GetDownloadBytes(adress);
+
                 
-                if(string.IsNullOrEmpty(text))
+                JsonHelperToken root = JsonHelper.Default.Deserialize(bytes);
+                if(HasError(root, nameof(GetTickersInfo)))
                     return false;
 
                 ClearTickers();
-                JObject res = JsonConvert.DeserializeObject<JObject>(text);
 
-                if(res.Value<JArray>("error").Count > 0)
-                    return false;
-
-                JObject tickers = res.Value<JObject>("result");
+                JsonHelperToken tickers = root.GetProperty("result");
                 if(tickers == null)
                     return true;
-                foreach(var pair in tickers) {
-                    JObject item = (JObject)pair.Value;
+                foreach(var item in tickers.Properties) {
                     KrakenTicker ticker = new KrakenTicker(this);
 
-                    string name = item.Value<string>("wsname");
+                    string name = item.GetProperty("wsname").Value;
                     string[] items = name.Split('/');
-                    ticker.BaseCurrency = items[1]; // item.Value<string>("quote");
-                    ticker.MarketCurrency = items[0]; // item.Value<string>("base");
-                    ticker.CurrencyPair = item.Value<string>("altname");
+                    ticker.WebSocketName = name;
+                    ticker.BaseCurrency = item.GetProperty("quote").Value;
+                    ticker.MarketCurrency = item.GetProperty("base").Value;
+                    ticker.BaseCurrencyDisplayName = items[1];
+                    ticker.MarketCurrencyDisplayName = items[0];
+                    ticker.CurrencyPair = item.GetProperty("altname").Value;
 
-                    JArray fees = item.Value<JArray>("fees");
-                    if(fees != null)
-                        ticker.Fee = Convert.ToDouble(((JArray)fees[0])[1]);
+                    JsonHelperToken fees = item.GetProperty("fees");
+                    if(fees != null && fees.ItemsCount > 0)
+                        ticker.Fee = fees.Items[0].ValueDouble;
 
                     Tickers.Add(ticker);
                 }
@@ -273,12 +328,35 @@ namespace Crypto.Core.Exchanges.Kraken {
             return true;
         }
 
-        public override void OnAccountRemoved(AccountInfo info) {
-            
+        public override TradingResult SellLong(AccountInfo account, Ticker ticker, double rate, double amount) {
+            try {
+                string parameters = string.Format(
+                    "pair={0}" +
+                    "&type=sell" +
+                    "&ordertype=limit" +
+                    "&price={1}" +
+                    "&volume={2}", ticker.CurrencyPair, rate, amount);
+                return OnOrderResult(account, ticker, OrderType.Sell, UploadPrivateData(account, AddOrderApiString, AddOrderApiPathString, parameters));
+            }
+            catch(Exception e) {
+                LogManager.Default.Log(e.ToString());
+                return null;
+            }
         }
 
-        public override TradingResult SellLong(AccountInfo account, Ticker ticker, double rate, double amount) {
-            throw new NotImplementedException();
+        protected virtual TradingResult OnOrderResult(AccountInfo account, Ticker ticker, OrderType type, byte[] bytes) {
+            var root = JsonHelper.Default.Deserialize(bytes);
+            if(HasError(account, root, nameof(OnOrderResult), bytes))
+                return null;
+            var result = root.GetProperty("result");
+            if(result == null)
+                return null;
+            var descr = result.GetProperty("descr");
+            var txid = result.GetProperty("txid");
+
+            if(descr == null || txid == null)
+                return null;
+            return new TradingResult() { Date = DateTime.Now, OrderId = txid.Items[0].Value, Ticker = ticker, Type = type };
         }
 
         public override TradingResult SellShort(AccountInfo account, Ticker ticker, double rate, double amount) {
@@ -307,14 +385,14 @@ namespace Crypto.Core.Exchanges.Kraken {
                 if(!WaitUntil(5000, () => { return TickersSocketState == SocketConnectionState.Connected; }))
                     return;
             }
-            TickersSocket.Subscribe(new WebSocketSubscribeInfo(SocketSubscribeType.OrderBook, ticker) { command = "{ \"event\":\"subscribe\", \"pair\": [ \"" + ((KrakenTicker)ticker).StandardName + "\" ], \"subscription\": { \"name\": \"book\", \"depth\": 1000 } }" });
+            TickersSocket.Subscribe(new WebSocketSubscribeInfo(SocketSubscribeType.OrderBook, ticker) { command = "{ \"event\":\"subscribe\", \"pair\": [ \"" + ((KrakenTicker)ticker).WebSocketName + "\" ], \"subscription\": { \"name\": \"book\", \"depth\": 1000 } }" });
         }
 
         public override void StopListenOrderBook(Ticker ticker) {
             base.StopListenOrderBook(ticker);
             if(TickersSocket == null)
                 return;
-            TickersSocket.Unsubscribe(new WebSocketSubscribeInfo(SocketSubscribeType.OrderBook, ticker) { command = "{ \"event\":\"unsubscribe\", \"pair\": [ \"" + ((KrakenTicker)ticker).StandardName + "\" ], \"subscription\": { \"name\": \"book\", \"depth\": 1000 } }" });
+            TickersSocket.Unsubscribe(new WebSocketSubscribeInfo(SocketSubscribeType.OrderBook, ticker) { command = "{ \"event\":\"unsubscribe\", \"pair\": [ \"" + ((KrakenTicker)ticker).WebSocketName + "\" ], \"subscription\": { \"name\": \"book\", \"depth\": 1000 } }" });
         }
 
         protected override void StartListenTradeHistoryCore(Ticker ticker) {
@@ -323,8 +401,8 @@ namespace Crypto.Core.Exchanges.Kraken {
                 if(!WaitUntil(5000, () => { return TickersSocketState == SocketConnectionState.Connected; }))
                     return;
             }
-            TickersSocket.Subscribe(new WebSocketSubscribeInfo(SocketSubscribeType.TradeHistory, ticker) { command = "{ \"event\":\"subscribe\", \"pair\": [ \"" + ((KrakenTicker)ticker).StandardName + "\" ], \"subscription\": { \"name\": \"ticker\" } }" });
-            TickersSocket.Subscribe(new WebSocketSubscribeInfo(SocketSubscribeType.TradeHistory, ticker) { command = "{ \"event\":\"subscribe\", \"pair\": [ \"" + ((KrakenTicker)ticker).StandardName + "\" ], \"subscription\": { \"name\": \"trade\" } }" });
+            TickersSocket.Subscribe(new WebSocketSubscribeInfo(SocketSubscribeType.TradeHistory, ticker) { command = "{ \"event\":\"subscribe\", \"pair\": [ \"" + ((KrakenTicker)ticker).WebSocketName + "\" ], \"subscription\": { \"name\": \"ticker\" } }" });
+            TickersSocket.Subscribe(new WebSocketSubscribeInfo(SocketSubscribeType.TradeHistory, ticker) { command = "{ \"event\":\"subscribe\", \"pair\": [ \"" + ((KrakenTicker)ticker).WebSocketName + "\" ], \"subscription\": { \"name\": \"trade\" } }" });
             UpdateTrades(ticker);
         }
 
@@ -332,8 +410,8 @@ namespace Crypto.Core.Exchanges.Kraken {
             base.StopListenOrderBook(ticker);
             if(TickersSocket == null)
                 return;
-            TickersSocket.Unsubscribe(new WebSocketSubscribeInfo(SocketSubscribeType.TradeHistory, ticker) { command = "{ \"event\":\"unsubscribe\", \"pair\": [ \"" + ((KrakenTicker)ticker).StandardName + "\" ], \"subscription\": { \"name\": \"ticker\" } }" });
-            TickersSocket.Unsubscribe(new WebSocketSubscribeInfo(SocketSubscribeType.TradeHistory, ticker) { command = "{ \"event\":\"unsubscribe\", \"pair\": [ \"" + ((KrakenTicker)ticker).StandardName + "\" ], \"subscription\": { \"name\": \"trade\" } }" });
+            TickersSocket.Unsubscribe(new WebSocketSubscribeInfo(SocketSubscribeType.TradeHistory, ticker) { command = "{ \"event\":\"unsubscribe\", \"pair\": [ \"" + ((KrakenTicker)ticker).WebSocketName + "\" ], \"subscription\": { \"name\": \"ticker\" } }" });
+            TickersSocket.Unsubscribe(new WebSocketSubscribeInfo(SocketSubscribeType.TradeHistory, ticker) { command = "{ \"event\":\"unsubscribe\", \"pair\": [ \"" + ((KrakenTicker)ticker).WebSocketName + "\" ], \"subscription\": { \"name\": \"trade\" } }" });
         }
 
         protected internal override void OnTickersSocketOpened(object sender, EventArgs e) {
@@ -342,7 +420,6 @@ namespace Crypto.Core.Exchanges.Kraken {
 
         protected internal override void OnTickersSocketMessageReceived(object sender, MessageReceivedEventArgs e) {
             base.OnTickersSocketMessageReceived(sender, e);
-            System.Diagnostics.Debug.WriteLine(e.Message);
 
             JsonHelperToken root = JsonHelper.Default.Deserialize(e.Message);
             if(root.Type != JsonObjectType.Array)
@@ -358,7 +435,7 @@ namespace Crypto.Core.Exchanges.Kraken {
             Ticker ticker;
 
             if(channelName == "book-1000") {
-                ticker = Tickers.FirstOrDefault(tt => ((KrakenTicker)tt).StandardName == tickerName);
+                ticker = Tickers.FirstOrDefault(tt => ((KrakenTicker)tt).WebSocketName == tickerName);
                 if(ticker == null) {
                     LogManager.Default.Log(LogType.Error, this, "cannot find ticker", tickerName);
                     return;
@@ -366,7 +443,7 @@ namespace Crypto.Core.Exchanges.Kraken {
                 OnOrderBookSocketMessageReceived(ticker, e.Message, root);
             }
             else if(channelName == "trade") {
-                ticker = Tickers.FirstOrDefault(tt => ((KrakenTicker)tt).StandardName == tickerName);
+                ticker = Tickers.FirstOrDefault(tt => ((KrakenTicker)tt).WebSocketName == tickerName);
                 if(ticker == null) {
                     LogManager.Default.Log(LogType.Error, this, "cannot find ticker", tickerName);
                     return;
@@ -374,7 +451,7 @@ namespace Crypto.Core.Exchanges.Kraken {
                 OnTradeSocketMessageReceived(ticker, e.Message, root);
             }
             else if(channelName == "ticker") {
-                ticker = Tickers.FirstOrDefault(tt => ((KrakenTicker)tt).StandardName == tickerName);
+                ticker = Tickers.FirstOrDefault(tt => ((KrakenTicker)tt).WebSocketName == tickerName);
                 if(ticker == null) {
                     LogManager.Default.Log(LogType.Error, this, "cannot find ticker", tickerName);
                     return;
@@ -481,17 +558,23 @@ namespace Crypto.Core.Exchanges.Kraken {
         protected virtual string BalanceApiString { get { return "https://api.kraken.com/0/private/Balance"; } }
         protected virtual string BalanceApiPathString { get { return "/0/private/Balance"; } }
 
-        protected virtual string DepositAddressesApiString { get { return "http://api.kraken.com/0/private/DepositAddresses"; } }
+        protected virtual string DepositAddressesApiString { get { return "https://api.kraken.com/0/private/DepositAddresses"; } }
         protected virtual string DepositAddressesApiPathString { get { return "/0/private/DepositAddresses"; } }
 
-        protected virtual string DepositMethodsApiString { get { return "http://api.kraken.com/0/private/DepositMethods"; } }
+        protected virtual string DepositMethodsApiString { get { return "https://api.kraken.com/0/private/DepositMethods"; } }
         protected virtual string DepositMethodsApiPathString { get { return "/0/private/DepositMethods"; } }
 
         protected virtual string OpenedOrdersApiString { get { return "https://api.kraken.com/0/private/OpenOrders"; } }
         protected virtual string OpenedOrdersApiPathString { get { return "/0/private/OpenOrders"; } }
 
-        protected virtual string AccountTradesApiString { get { return "http://api.kraken.com/0/private/TradesHistory"; } }
+        protected virtual string AccountTradesApiString { get { return "https://api.kraken.com/0/private/TradesHistory"; } }
         protected virtual string AccountTradesApiPathString { get { return "/0/private/TradesHistory"; } }
+
+        protected virtual string AddOrderApiString { get { return "https://api.kraken.com/0/private/AddOrder"; } }
+        protected virtual string AddOrderApiPathString { get { return "/0/private/AddOrder"; } }
+
+        protected virtual string CancelOrderApiString { get { return "https://api.kraken.com/0/private/CancelOrder"; } }
+        protected virtual string CancelOrderApiPathString { get { return "/0/private/CancelOrder"; } }
 
         SHA256 sha;
         protected SHA256 Sha {
@@ -515,14 +598,14 @@ namespace Crypto.Core.Exchanges.Kraken {
             return Convert.ToBase64String(hash);
         }
 
-        protected virtual byte[] UploadPrivateData(AccountInfo info, string adress, string path, string parameters) {
+        protected virtual byte[] UploadPrivateData(AccountInfo info, string address, string path, string parameters) {
             MyWebClient client = GetWebClient();
 
             string nonce = GetNonce();
             string queryString = null;
             if(string.IsNullOrEmpty(parameters))
                 queryString = string.Format("nonce={0}", nonce);
-            else 
+            else
                 queryString = string.Format("nonce={0}&{1}", nonce, parameters);
             string signature = info.GetSign(path, queryString, nonce);
 
@@ -531,7 +614,12 @@ namespace Crypto.Core.Exchanges.Kraken {
             client.DefaultRequestHeaders.Add("API-Sign", signature);
             client.DefaultRequestHeaders.Add("User-Agent", "KrakenDotNet Client");
 
-            return client.UploadData(adress, queryString);
+            StringContent data = new StringContent(queryString, Encoding.UTF8, "application/x-www-form-urlencoded");
+            Task<HttpResponseMessage> response = client.PostAsync(address, data);
+            response.Wait(10000);
+            Task<byte[]> bytes = response.Result.Content.ReadAsByteArrayAsync();
+            bytes.Wait(10000);
+            return bytes.Result;
         }
 
         public override bool UpdateBalances(AccountInfo info) {
@@ -546,61 +634,56 @@ namespace Crypto.Core.Exchanges.Kraken {
         }
 
         private void InitializeDefaultBalances(AccountInfo info) {
+            if(Currencies.Count == 0)
+                UpdateCurrencies();
             if(info.Balances == null || info.Balances.Count == 0) {
-                info.Balances.Add(new KrakenAccountBalanceInfo(info) { Currency = "ZUSD" });
-                info.Balances.Add(new KrakenAccountBalanceInfo(info) { Currency = "XXBT" });
-                info.Balances.Add(new KrakenAccountBalanceInfo(info) { Currency = "XXRP" });
-                info.Balances.Add(new KrakenAccountBalanceInfo(info) { Currency = "XLTC" });
-                info.Balances.Add(new KrakenAccountBalanceInfo(info) { Currency = "XETH" });
-                info.Balances.Add(new KrakenAccountBalanceInfo(info) { Currency = "XETC" });
-                info.Balances.Add(new KrakenAccountBalanceInfo(info) { Currency = "XREP" });
-                info.Balances.Add(new KrakenAccountBalanceInfo(info) { Currency = "XXMR" });
-                info.Balances.Add(new KrakenAccountBalanceInfo(info) { Currency = "USDT" });
-                info.Balances.Add(new KrakenAccountBalanceInfo(info) { Currency = "DASH" });
-                info.Balances.Add(new KrakenAccountBalanceInfo(info) { Currency = "GNO" });
-                info.Balances.Add(new KrakenAccountBalanceInfo(info) { Currency = "EOS" });
-                info.Balances.Add(new KrakenAccountBalanceInfo(info) { Currency = "BCH" });
-                info.Balances.Add(new KrakenAccountBalanceInfo(info) { Currency = "ADA" });
-                info.Balances.Add(new KrakenAccountBalanceInfo(info) { Currency = "QTUM" });
-                info.Balances.Add(new KrakenAccountBalanceInfo(info) { Currency = "XTZ" });
-                info.Balances.Add(new KrakenAccountBalanceInfo(info) { Currency = "ATOM" });
-                info.Balances.Add(new KrakenAccountBalanceInfo(info) { Currency = "SC" });
-                info.Balances.Add(new KrakenAccountBalanceInfo(info) { Currency = "LSK" });
-                info.Balances.Add(new KrakenAccountBalanceInfo(info) { Currency = "WAVES" });
-                info.Balances.Add(new KrakenAccountBalanceInfo(info) { Currency = "ICX" });
-                info.Balances.Add(new KrakenAccountBalanceInfo(info) { Currency = "BAT" });
-                info.Balances.Add(new KrakenAccountBalanceInfo(info) { Currency = "OMG" });
-                info.Balances.Add(new KrakenAccountBalanceInfo(info) { Currency = "LINK" });
-                info.Balances.Add(new KrakenAccountBalanceInfo(info) { Currency = "DAI" });
-                info.Balances.Add(new KrakenAccountBalanceInfo(info) { Currency = "PAXG" });
-                info.Balances.Add(new KrakenAccountBalanceInfo(info) { Currency = "ALGO" });
-                info.Balances.Add(new KrakenAccountBalanceInfo(info) { Currency = "USDC" });
-                info.Balances.Add(new KrakenAccountBalanceInfo(info) { Currency = "TRX" });
-                info.Balances.Add(new KrakenAccountBalanceInfo(info) { Currency = "DOT" });
-                info.Balances.Add(new KrakenAccountBalanceInfo(info) { Currency = "OXT" });
-                info.Balances.Add(new KrakenAccountBalanceInfo(info) { Currency = "ETH2.S" });
-                info.Balances.Add(new KrakenAccountBalanceInfo(info) { Currency = "EHT2" });
-                info.Balances.Add(new KrakenAccountBalanceInfo(info) { Currency = "USD.M" });
+                info.GetOrCreateBalanceInfo("ZUSD");
+                info.GetOrCreateBalanceInfo("XXBT");
+                info.GetOrCreateBalanceInfo("XXRP");
+                info.GetOrCreateBalanceInfo("XLTC");
+                info.GetOrCreateBalanceInfo("XETH");
+                info.GetOrCreateBalanceInfo("XETC");
+                info.GetOrCreateBalanceInfo("XREP");
+                info.GetOrCreateBalanceInfo("XXMR");
+                info.GetOrCreateBalanceInfo("USDT");
+                info.GetOrCreateBalanceInfo("DASH");
+                info.GetOrCreateBalanceInfo("GNO");
+                info.GetOrCreateBalanceInfo("EOS");
+                info.GetOrCreateBalanceInfo("BCH");
+                info.GetOrCreateBalanceInfo("ADA");
+                info.GetOrCreateBalanceInfo("QTUM");
+                info.GetOrCreateBalanceInfo("XTZ");
+                info.GetOrCreateBalanceInfo("ATOM");
+                info.GetOrCreateBalanceInfo("SC");
+                info.GetOrCreateBalanceInfo("LSK");
+                info.GetOrCreateBalanceInfo("WAVES");
+                info.GetOrCreateBalanceInfo("ICX");
+                info.GetOrCreateBalanceInfo("BAT");
+                info.GetOrCreateBalanceInfo("OMG");
+                info.GetOrCreateBalanceInfo("LINK");
+                info.GetOrCreateBalanceInfo("DAI");
+                info.GetOrCreateBalanceInfo("PAXG");
+                info.GetOrCreateBalanceInfo("ALGO");
+                info.GetOrCreateBalanceInfo("USDC");
+                info.GetOrCreateBalanceInfo("TRX");
+                info.GetOrCreateBalanceInfo("DOT");
+                info.GetOrCreateBalanceInfo("OXT");
+                info.GetOrCreateBalanceInfo("ETH2.S");
+                info.GetOrCreateBalanceInfo("EHT2");
+                info.GetOrCreateBalanceInfo("USD.M");
             }
         }
 
         public virtual bool OnGetBalances(AccountInfo account, byte[] data) {
             JsonHelperToken root = JsonHelper.Default.Deserialize(data);
-            if(HasError(account, root, nameof(OnGetBalances)))
+            if(HasError(account, root, nameof(OnGetBalances), data))
                 return false;
-            if(root.Properties.Length < 2)
-                return true;
             JsonHelperToken balances = root.Properties[1];
             if(balances == null)
                 return false;
             account.Balances.ForEach(b => b.Clear() );
             foreach(JsonHelperToken prop in balances.Properties) {
-                KrakenAccountBalanceInfo b = (KrakenAccountBalanceInfo)account.Balances.FirstOrDefault(bb => bb.Currency == prop.Name);
-                if(b == null) {
-                    b = new KrakenAccountBalanceInfo(account);
-                    account.Balances.Add(b);
-                }
-                b.Currency = prop.Name;
+                var b = account.GetOrCreateBalanceInfo(prop.Name);
                 b.OnOrders = 0;
                 b.Available = b.Balance = prop.ValueDouble;
             }
@@ -608,12 +691,51 @@ namespace Crypto.Core.Exchanges.Kraken {
         }
 
         public override bool UpdateCurrencies() {
+            if(Tickers.Count == 0)
+                return false;
+            string adress = "https://api.kraken.com/0/public/Assets";
+            byte[] bytes = null;
+            try {
+                bytes = GetDownloadBytes(adress);
+                return OnUpdateCurrencies(bytes);
+            }
+            catch(Exception e) {
+                Telemetry.Default.TrackException(e);
+                return false;
+            }
+        }
+
+        protected virtual string CheckForErrors(JsonHelperToken root) {
+            JsonHelperToken errors = root.GetProperty("error");
+            if(errors == null || errors.ItemsCount == 0)
+                return null;
+            StringBuilder b = new StringBuilder();
+            for(int i = 0; i < errors.ItemsCount; i++) {
+                b.Append(errors.Items[i].Value);
+                b.Append(' ');
+            }
+            return b.ToString();
+        }
+
+        protected virtual bool OnUpdateCurrencies(byte[] bytes) {
+            JsonHelperToken root = JsonHelper.Default.Deserialize(bytes);
+            string errors = CheckForErrors(root);
+            if(errors != null) {
+                LogManager.Default.Add(LogType.Error, this, Type.ToString(), "Failed" + nameof(OnUpdateCurrencies), errors);
+                return false;
+            }
+            var res = root.GetProperty("result");
+            for(int i = 0; i < res.PropertiesCount; i++) {
+                KrakenCurrencyInfo info = (KrakenCurrencyInfo)GetOrCreateCurrency(res.Properties[i].Name);
+                info.AltName = res.Properties[i].GetProperty("altname").Value;
+            }
+            
             return true;
         }
 
         public override bool UpdateOpenedOrders(AccountInfo info, Ticker ticker) {
             try {
-                return OnGetOpenedOrders(info, UploadPrivateData(info, OpenedOrdersApiString, OpenedOrdersApiPathString, null));
+                return OnGetOpenedOrders(info, ticker, UploadPrivateData(info, OpenedOrdersApiString, OpenedOrdersApiPathString, null));
             }
             catch(Exception e) {
                 LogManager.Default.Log(e.ToString());
@@ -623,11 +745,42 @@ namespace Crypto.Core.Exchanges.Kraken {
 
         protected override int WebSocketAllowedDelayInterval => 10000;
 
-        protected virtual bool OnGetOpenedOrders(AccountInfo info, byte[] data) {
+        protected virtual bool OnGetOpenedOrders(AccountInfo account, Ticker ticker, byte[] data) {
+            if(!ticker.IsOpenedOrdersChanged(data))
+                return true;
+            ticker.SaveOpenedOrders();
+            ticker.OpenedOrdersData = data;
+
             string text = UTF8Encoding.Default.GetString(data);
             JsonHelperToken root = JsonHelper.Default.Deserialize(data);
-            if(HasError(info, root, nameof(OnGetOpenedOrders)))
+            if(HasError(account, root, nameof(OnGetOpenedOrders), data))
                 return false;
+            var result = root.GetProperty("result");
+            if(result == null)
+                return true;
+            var open = result.GetProperty("open");
+            if(open == null)
+                return true;
+            try {
+                account.OpenedOrders.Clear();
+                for(int i = 0; i < open.PropertiesCount; i++) {
+                    var order = open.Properties[i];
+                    OpenedOrderInfo info = new OpenedOrderInfo(account, ticker);
+                    info.OrderId = order.Name;
+                    info.Date = epoch.AddSeconds(order.GetProperty("opentm").ValueDouble).ToLocalTime();
+
+                    var descr = order.GetProperty("descr");
+                    info.Type = descr.GetProperty("type").Value[0] == 's' ? OrderType.Sell : OrderType.Buy;
+                    info.ValueString = descr.GetProperty("price").Value;
+                    info.AmountString = order.GetProperty("vol").Value;
+
+                    account.OpenedOrders.Add(info);
+                }
+            }
+            finally {
+                if(ticker != null)
+                    ticker.RaiseOpenedOrdersChanged();
+            }
             return true;
         }
 
@@ -772,9 +925,7 @@ namespace Crypto.Core.Exchanges.Kraken {
             if(data == null)
                 return false;
             JsonHelperToken root = JsonHelper.Default.Deserialize(data);
-            if(HasError(null, root, nameof(OnUpdateTrades)))
-                return false;
-            if(root.PropertiesCount < 2)
+            if(HasError(null, root, nameof(OnUpdateTrades), data))
                 return false;
             JsonHelperToken[] items = root.Properties[1].Properties;
             if(items == null)

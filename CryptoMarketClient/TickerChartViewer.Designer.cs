@@ -25,7 +25,6 @@ namespace CryptoMarketClient {
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
-            this.components = new System.ComponentModel.Container();
             DevExpress.XtraCharts.XYDiagram xyDiagram1 = new DevExpress.XtraCharts.XYDiagram();
             DevExpress.XtraCharts.XYDiagramPane xyDiagramPane1 = new DevExpress.XtraCharts.XYDiagramPane();
             DevExpress.XtraCharts.SecondaryAxisY secondaryAxisY1 = new DevExpress.XtraCharts.SecondaryAxisY();
@@ -172,7 +171,7 @@ namespace CryptoMarketClient {
             DevExpress.XtraCharts.AreaSeriesView areaSeriesView2 = new DevExpress.XtraCharts.AreaSeriesView();
             DevExpress.XtraCharts.AreaSeriesView areaSeriesView3 = new DevExpress.XtraCharts.AreaSeriesView();
             this.chartControl1 = new CryptoMarketClient.MyChartControl();
-            this.barManager1 = new DevExpress.XtraBars.BarManager(this.components);
+            this.barManager1 = new DevExpress.XtraBars.BarManager();
             this.bar2 = new DevExpress.XtraBars.Bar();
             this.biCustomize2 = new DevExpress.XtraBars.BarButtonItem();
             this.biResetDefaults2 = new DevExpress.XtraBars.BarButtonItem();
@@ -193,7 +192,7 @@ namespace CryptoMarketClient {
             this.drawFibonacciRetracementIndicatorBarItem1 = new DevExpress.XtraCharts.UI.DrawFibonacciRetracementIndicatorBarItem();
             this.removeIndicatorBarItem1 = new DevExpress.XtraCharts.UI.RemoveIndicatorBarItem();
             this.addIndicatorBarItem1 = new DevExpress.XtraCharts.UI.AddIndicatorBarItem();
-            this.commandBarGalleryDropDown9 = new DevExpress.XtraBars.Commands.CommandBarGalleryDropDown(this.components);
+            this.commandBarGalleryDropDown9 = new DevExpress.XtraBars.Commands.CommandBarGalleryDropDown();
             this.printPreviewChartItem1 = new DevExpress.XtraCharts.UI.PrintPreviewChartItem();
             this.printChartItem1 = new DevExpress.XtraCharts.UI.PrintChartItem();
             this.createExportBaseItem1 = new DevExpress.XtraCharts.UI.CreateExportBaseItem();
@@ -228,19 +227,19 @@ namespace CryptoMarketClient {
             this.bcArea = new DevExpress.XtraBars.BarCheckItem();
             this.barSubItem1 = new DevExpress.XtraBars.BarSubItem();
             this.createBarBaseItem1 = new DevExpress.XtraCharts.UI.CreateBarBaseItem();
-            this.commandBarGalleryDropDown1 = new DevExpress.XtraBars.Commands.CommandBarGalleryDropDown(this.components);
+            this.commandBarGalleryDropDown1 = new DevExpress.XtraBars.Commands.CommandBarGalleryDropDown();
             this.createLineBaseItem1 = new DevExpress.XtraCharts.UI.CreateLineBaseItem();
-            this.commandBarGalleryDropDown2 = new DevExpress.XtraBars.Commands.CommandBarGalleryDropDown(this.components);
+            this.commandBarGalleryDropDown2 = new DevExpress.XtraBars.Commands.CommandBarGalleryDropDown();
             this.createPieBaseItem1 = new DevExpress.XtraCharts.UI.CreatePieBaseItem();
-            this.commandBarGalleryDropDown3 = new DevExpress.XtraBars.Commands.CommandBarGalleryDropDown(this.components);
+            this.commandBarGalleryDropDown3 = new DevExpress.XtraBars.Commands.CommandBarGalleryDropDown();
             this.createRotatedBarBaseItem1 = new DevExpress.XtraCharts.UI.CreateRotatedBarBaseItem();
-            this.commandBarGalleryDropDown4 = new DevExpress.XtraBars.Commands.CommandBarGalleryDropDown(this.components);
+            this.commandBarGalleryDropDown4 = new DevExpress.XtraBars.Commands.CommandBarGalleryDropDown();
             this.createAreaBaseItem1 = new DevExpress.XtraCharts.UI.CreateAreaBaseItem();
-            this.commandBarGalleryDropDown5 = new DevExpress.XtraBars.Commands.CommandBarGalleryDropDown(this.components);
+            this.commandBarGalleryDropDown5 = new DevExpress.XtraBars.Commands.CommandBarGalleryDropDown();
             this.createOtherSeriesTypesBaseItem1 = new DevExpress.XtraCharts.UI.CreateOtherSeriesTypesBaseItem();
-            this.commandBarGalleryDropDown6 = new DevExpress.XtraBars.Commands.CommandBarGalleryDropDown(this.components);
+            this.commandBarGalleryDropDown6 = new DevExpress.XtraBars.Commands.CommandBarGalleryDropDown();
             this.changeAppearanceGalleryBaseBarManagerItem1 = new DevExpress.XtraCharts.UI.ChangeAppearanceGalleryBaseBarManagerItem();
-            this.commandBarGalleryDropDown8 = new DevExpress.XtraBars.Commands.CommandBarGalleryDropDown(this.components);
+            this.commandBarGalleryDropDown8 = new DevExpress.XtraBars.Commands.CommandBarGalleryDropDown();
             this.selectAxisMeasureUnitBarItem1 = new DevExpress.XtraCharts.UI.SelectAxisMeasureUnitBarItem();
             this.selectAxisMeasureUnitRepositoryItemComboBox1 = new DevExpress.XtraCharts.UI.SelectAxisMeasureUnitRepositoryItemComboBox();
             this.selectPeriodBarItem1 = new DevExpress.XtraCharts.UI.SelectPeriodBarItem();
@@ -250,7 +249,7 @@ namespace CryptoMarketClient {
             this.biRemoveEvent = new DevExpress.XtraBars.BarButtonItem();
             this.repositoryItemCheckedComboBoxEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemCheckedComboBoxEdit();
             this.repositoryItemComboBox1 = new DevExpress.XtraEditors.Repository.RepositoryItemComboBox();
-            this.commandBarGalleryDropDown7 = new DevExpress.XtraBars.Commands.CommandBarGalleryDropDown(this.components);
+            this.commandBarGalleryDropDown7 = new DevExpress.XtraBars.Commands.CommandBarGalleryDropDown();
             this.sidePanel1 = new DevExpress.XtraEditors.SidePanel();
             this.xtraTabControl1 = new DevExpress.XtraTab.XtraTabControl();
             this.xtraTabPage1 = new DevExpress.XtraTab.XtraTabPage();
@@ -258,8 +257,8 @@ namespace CryptoMarketClient {
             this.chartWalls = new CryptoMarketClient.MyChartControl();
             this.xtraTabPage2 = new DevExpress.XtraTab.XtraTabPage();
             this.chartMarketDepth = new CryptoMarketClient.MyChartControl();
-            this.chartBarController1 = new DevExpress.XtraCharts.UI.ChartBarController(this.components);
-            this.pmChartMenu = new DevExpress.XtraBars.PopupMenu(this.components);
+            this.chartBarController1 = new DevExpress.XtraCharts.UI.ChartBarController();
+            this.pmChartMenu = new DevExpress.XtraBars.PopupMenu();
             ((System.ComponentModel.ISupportInitialize)(this.chartControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(xyDiagram1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(xyDiagramPane1)).BeginInit();
@@ -337,8 +336,8 @@ namespace CryptoMarketClient {
             xyDiagram1.AxisX.VisualRange.Auto = false;
             xyDiagram1.AxisX.VisualRange.AutoSideMargins = false;
             xyDiagram1.AxisX.VisualRange.EndSideMargin = 0D;
-            xyDiagram1.AxisX.VisualRange.MaxValueSerializable = "02/19/2022 10:18:00.000";
-            xyDiagram1.AxisX.VisualRange.MinValueSerializable = "02/19/2022 10:09:00.000";
+            xyDiagram1.AxisX.VisualRange.MaxValueSerializable = "02/25/2022 13:04:00.000";
+            xyDiagram1.AxisX.VisualRange.MinValueSerializable = "02/25/2022 12:55:00.000";
             xyDiagram1.AxisX.VisualRange.StartSideMargin = 0D;
             xyDiagram1.AxisX.WholeRange.AutoSideMargins = false;
             xyDiagram1.AxisX.WholeRange.EndSideMargin = 0D;

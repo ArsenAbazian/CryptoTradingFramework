@@ -60,6 +60,6 @@ namespace Crypto.Core.Bittrex {
     }
 
     public class BittrexCurrencyInfo : CurrencyInfoBase {
-        public BittrexCurrencyInfo(string currency) : base(currency) { }
+        public BittrexCurrencyInfo(Exchange e, string currency) : base(e, currency) { }
     }
 }

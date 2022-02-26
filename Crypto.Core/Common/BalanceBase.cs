@@ -1,78 +1,101 @@
-﻿using System;
+﻿using Crypto.Core.Exchanges.Base;
+using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Crypto.Core.Common {
     public abstract class BalanceBase {
-        public BalanceBase(AccountInfo info) {
+        public BalanceBase(AccountInfo info, CurrencyInfoBase currency) {
             Account = info;
+            CurrencyInfo = currency;
         }
+
+        public CurrencyInfoBase CurrencyInfo { get; set; }
         public bool NonZero { get { return Available != 0; } }
         public string Exchange { get { return Account.Exchange.Name; } }
         public AccountInfo Account { get; set; }
         public Exchange ExchangeCore { get { return Account == null ? null : Account.Exchange; } }
         public string AccountName { get { return Account == null ? "undefined" : Account.Name; } }
-        public string Currency { get; set; }
+        public virtual string DisplayName { get { return CurrencyInfo?.Currency; } }
+        public string Currency { get { return CurrencyInfo?.Currency; } }
         public double Balance { get; set; }
         public double Available { get; set; }
         public double LastAvailable { get; set; }
         public double OnOrders { get; set; }
         public string Status { get; set; }
-        double btcValue;
         public double BtcValue {
             get {
-                if(Currency == "BTC")
+                if(Currency == "BTC" || Currency == "XBT")
                     return Available + OnOrders;
-                if(BtcTicker != null)
-                    return BtcTicker.HighestBid * (Available + OnOrders);
-                return btcValue;
+                return GetValueInf((Available + OnOrders), "BTC", "XBT");
             }
-            set { btcValue = value; }
         }
+
+        private double GetValueInf(double value, params string[] curr) {
+            for(int i = 0; i < curr.Length; i++) {
+                Ticker tiker = GetTicker(curr[i]);
+                if(tiker != null)
+                    return tiker.HighestBid * (Available + OnOrders);
+            }
+            return value;
+        }
+
         public double UsdtPrice {
             get {
                 if(ExchangeCore == null)
                     return double.NaN;
-                if(UsdtTicker != null)
-                    return UsdtTicker.HighestBid;
-                if(BtcTicker != null && BtcTicker.UsdTicker != null)
-                    return BtcValue * BtcTicker.HighestBid * BtcTicker.UsdTicker.HighestBid;
-                return double.NaN;
+                if(Currency == "USD" || Currency == "USDT" || Currency == "USDC")
+                    return 1.0;
+                return GetValueInf(1.0, "USDT", "USDC", "USD");
             }
         }
+
         public double UsdtValue {
             get {
                 if(ExchangeCore == null)
                     return double.NaN;
-                if(Currency == "USDT")
-                    return Available + OnOrders;
-                if(UsdtTicker != null)
-                    return UsdtTicker.HighestBid * (Available + OnOrders);
-                if(ExchangeCore.BtcUsdtTicker == null)
-                    return double.NaN;
-                return BtcValue * ExchangeCore.BtcUsdtTicker.HighestBid;
+                if(Currency == "USD" || Currency == "USDT" || Currency == "USDC")
+                    return (Available + OnOrders);
+                return GetValueInf((Available + OnOrders), "USDT", "USDC", "USD");
             }
         }
-        Ticker btcTicker;
-        public Ticker BtcTicker {
+
+        Dictionary<string, Ticker> tickers = new Dictionary<string, Ticker>();
+        public Ticker GetTicker(string baseCurrency) {
+            if(this.tickers.ContainsKey(baseCurrency))
+                return this.tickers[baseCurrency];
+            Ticker tt = ExchangeCore.Tickers.FirstOrDefault(t => t.MarketCurrency == Currency && t.BaseCurrency == baseCurrency);
+            this.tickers.Add(baseCurrency, tt);
+            return tt;
+        }
+
+        string depositAddress;
+        public string DepositAddress {
             get {
-                if(btcTicker == null && ExchangeCore != null)
-                    btcTicker = ExchangeCore.Tickers.FirstOrDefault(t => t.MarketCurrency == Currency && t.BaseCurrency == "BTC");
-                return btcTicker;
+                if(CurrencyInfo.CurrentMethod != null)
+                    return CurrencyInfo.CurrentMethod.DepositAddress;
+                return depositAddress;
+            }
+            set {
+                depositAddress = value;
             }
         }
-        Ticker usdtTicker;
-        public Ticker UsdtTicker {
+
+        string depositTag;
+        public string DepositTag {
             get {
-                if(usdtTicker == null && ExchangeCore != null)
-                    usdtTicker = ExchangeCore.Tickers.FirstOrDefault(t => t.MarketCurrency == Currency && t.BaseCurrency == "USDT");
-                return usdtTicker;
+                if(CurrencyInfo.CurrentMethod != null)
+                    return CurrencyInfo.CurrentMethod.DepositTag;
+                return depositTag;
+            }
+            set {
+                depositTag = value;
             }
         }
-        public string DepositAddress { get; set; }
-        public string DepositTag { get; set; }
+        
         public double DepositChanged {
             get {
                 double max = Math.Max(Available, LastAvailable);
@@ -82,12 +105,22 @@ namespace Crypto.Core.Common {
                 return (delta / max);
             }
         }
+
         public void Clear() {
             Balance = 0;
             Available = 0;
             LastAvailable = 0;
             OnOrders = 0;
             DepositAddress = null;
+        }
+
+        public bool GetDeposit() {
+            return Account.Exchange.GetDeposit(this);
+        }
+
+        public DepositMethod CurrentMethod {
+            get { return CurrencyInfo.CurrentMethod; }
+            set { CurrencyInfo.CurrentMethod = value; }
         }
     }
 }

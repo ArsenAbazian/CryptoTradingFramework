@@ -1,12 +1,11 @@
 ﻿using Crypto.Core.Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Crypto.Core.Exchanges.Base;
 
 namespace Crypto.Core.Exchanges.Kraken {
     public class KrakenAccountBalanceInfo : BalanceBase {
-        public KrakenAccountBalanceInfo(AccountInfo info) : base(info) { }
+        public KrakenAccountBalanceInfo(AccountInfo info, CurrencyInfoBase currency) : base(info, currency) { 
+        }
+        public string AltName { get { return ((KrakenCurrencyInfo)CurrencyInfo)?.AltName; } }
+        public override string DisplayName => AltName;
     }
 }

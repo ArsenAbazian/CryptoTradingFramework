@@ -1,4 +1,5 @@
 ﻿using Crypto.Core.Common;
+using Crypto.Core.Exchanges.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,6 +8,6 @@ using System.Threading.Tasks;
 
 namespace Crypto.Core.Poloniex {
     public class PoloniexAccountBalanceInfo : BalanceBase {
-        public PoloniexAccountBalanceInfo(AccountInfo info): base(info) { } 
+        public PoloniexAccountBalanceInfo(AccountInfo info, CurrencyInfoBase currency) : base(info, currency) { } 
     }
 }
