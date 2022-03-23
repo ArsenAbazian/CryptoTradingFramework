@@ -8,6 +8,6 @@ using System.Threading.Tasks;
 
 namespace Crypto.Core.BitFinex {
     public class BitFinexAccountBalanceInfo : BalanceBase {
-        public BitFinexAccountBalanceInfo(AccountInfo info, CurrencyInfoBase currency) : base(info, currency) { }
+        public BitFinexAccountBalanceInfo(AccountInfo info, CurrencyInfo currency) : base(info, currency) { }
     }
 }

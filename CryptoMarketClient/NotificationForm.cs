@@ -214,6 +214,10 @@ namespace CryptoMarketClient {
         }
 
         protected int Offset { get { return Bounds.Width / 5; } }
+
+        private void NotificationForm_SizeChanged(object sender, EventArgs e) {
+
+        }
     }
 
     public enum TrendNotification { New, TrendUp, TrendDown }

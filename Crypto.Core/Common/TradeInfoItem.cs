@@ -66,6 +66,9 @@ namespace Crypto.Core {
                 }
                 return amount;
             }
+            set {
+                amount = value;
+            }
         }
         double total = double.NaN;
         public double Total { 

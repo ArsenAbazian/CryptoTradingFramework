@@ -114,14 +114,16 @@ namespace Crypto.Core.Helpers {
 
         private void OnInsert(T item, int index) {
             //RaiseListChanged(new ListChangedEventArgs(ListChangedType.Reset, index));
-            RaiseListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
+            if(this.updateCount == 0)
+                RaiseListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
             //RaiseListChanged(new ListChangedEventArgs(ListChangedType.ItemAdded, index));
             SubscribeEvents(item);   
         }
 
         protected virtual void OnItemPropertyChanged(object sender, PropertyChangedEventArgs e) {
             int index = GetItemIndex((T)sender, SearchFromEnd);
-            RaiseListChanged(new ListChangedEventArgs(ListChangedType.ItemChanged, index));
+            if(this.updateCount == 0)
+                RaiseListChanged(new ListChangedEventArgs(ListChangedType.ItemChanged, index));
         }
 
         public bool SearchFromEnd { get; set; } = true;
@@ -146,6 +148,8 @@ namespace Crypto.Core.Helpers {
                 UnsubscribeEvents(Items[i]);
             Count = 0;
             End = -1;
+            if(this.updateCount > 0)
+                return;
             RaiseListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
         }
 

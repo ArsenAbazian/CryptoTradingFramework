@@ -34,14 +34,14 @@
             // pictureEdit1
             // 
             this.pictureEdit1.Cursor = System.Windows.Forms.Cursors.Default;
-            this.pictureEdit1.Location = new System.Drawing.Point(23, 24);
-            this.pictureEdit1.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
+            this.pictureEdit1.Location = new System.Drawing.Point(27, 30);
+            this.pictureEdit1.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
             this.pictureEdit1.Name = "pictureEdit1";
             this.pictureEdit1.Properties.Appearance.BackColor = System.Drawing.Color.Transparent;
             this.pictureEdit1.Properties.Appearance.Options.UseBackColor = true;
             this.pictureEdit1.Properties.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
             this.pictureEdit1.Properties.SizeMode = DevExpress.XtraEditors.Controls.PictureSizeMode.Squeeze;
-            this.pictureEdit1.Size = new System.Drawing.Size(85, 85);
+            this.pictureEdit1.Size = new System.Drawing.Size(99, 105);
             this.pictureEdit1.TabIndex = 0;
             // 
             // labelControl1
@@ -54,10 +54,10 @@
             this.labelControl1.Appearance.TextOptions.VAlignment = DevExpress.Utils.VertAlignment.Top;
             this.labelControl1.Appearance.TextOptions.WordWrap = DevExpress.Utils.WordWrap.Wrap;
             this.labelControl1.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.Horizontal;
-            this.labelControl1.Location = new System.Drawing.Point(134, 81);
-            this.labelControl1.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
+            this.labelControl1.Location = new System.Drawing.Point(156, 100);
+            this.labelControl1.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
             this.labelControl1.Name = "labelControl1";
-            this.labelControl1.Size = new System.Drawing.Size(191, 45);
+            this.labelControl1.Size = new System.Drawing.Size(119, 28);
             this.labelControl1.TabIndex = 1;
             this.labelControl1.Text = "labelControl1";
             // 
@@ -81,10 +81,10 @@
             this.labelControl2.AppearancePressed.Options.UseForeColor = true;
             this.labelControl2.AppearancePressed.Options.UseImage = true;
             this.labelControl2.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None;
-            this.labelControl2.Location = new System.Drawing.Point(731, 9);
+            this.labelControl2.Location = new System.Drawing.Point(853, 11);
             this.labelControl2.Margin = new System.Windows.Forms.Padding(0);
             this.labelControl2.Name = "labelControl2";
-            this.labelControl2.Size = new System.Drawing.Size(63, 54);
+            this.labelControl2.Size = new System.Drawing.Size(73, 66);
             this.labelControl2.TabIndex = 2;
             this.labelControl2.Click += new System.EventHandler(this.labelControl2_Click);
             // 
@@ -98,26 +98,27 @@
             this.labelControl3.Appearance.TextOptions.VAlignment = DevExpress.Utils.VertAlignment.Top;
             this.labelControl3.Appearance.TextOptions.WordWrap = DevExpress.Utils.WordWrap.Wrap;
             this.labelControl3.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.Horizontal;
-            this.labelControl3.Location = new System.Drawing.Point(134, 24);
-            this.labelControl3.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
+            this.labelControl3.Location = new System.Drawing.Point(156, 30);
+            this.labelControl3.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
             this.labelControl3.Name = "labelControl3";
-            this.labelControl3.Size = new System.Drawing.Size(222, 45);
+            this.labelControl3.Size = new System.Drawing.Size(140, 28);
             this.labelControl3.TabIndex = 3;
             this.labelControl3.Text = "Processing File";
             // 
             // NotificationForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(803, 154);
+            this.ClientSize = new System.Drawing.Size(931, 190);
             this.Controls.Add(this.labelControl3);
             this.Controls.Add(this.labelControl2);
             this.Controls.Add(this.labelControl1);
             this.Controls.Add(this.pictureEdit1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
+            this.Margin = new System.Windows.Forms.Padding(6, 7, 6, 7);
             this.Name = "NotificationForm";
             this.Text = "AddFileInfoForm";
+            this.SizeChanged += new System.EventHandler(this.NotificationForm_SizeChanged);
             ((System.ComponentModel.ISupportInitialize)(this.pictureEdit1.Properties)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

@@ -54,12 +54,11 @@ namespace Crypto.Core.Bittrex {
         //    return BittrexExchange.Default.CheckCreateDeposit(MarketCurrency);
         //}
         
-        public override string HostName { get { return "Bittrex"; } }
         public override string WebPageAddress { get { return "https://bittrex.com/Market/Index?MarketName=" + Name; } }
         public string TradeResult { get; set; }
     }
 
-    public class BittrexCurrencyInfo : CurrencyInfoBase {
+    public class BittrexCurrencyInfo : CurrencyInfo {
         public BittrexCurrencyInfo(Exchange e, string currency) : base(e, currency) { }
     }
 }

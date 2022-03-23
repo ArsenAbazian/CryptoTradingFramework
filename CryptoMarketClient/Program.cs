@@ -52,13 +52,16 @@ namespace CryptoMarketClient {
             Application.Run(new MainForm());
         }
         static void CheckShowApiKeysForm() {
-            foreach(Exchange exchange in Exchange.Registered) {
-                if (exchange.DefaultAccount != null)
-                    continue;
-                
+            int count = Exchange.Registered.Count(e => e.DefaultAccount != null);
+            if(count == 0)
                 Application.Run(new AccountCollectionForm());
-                break;
-            }
+            //foreach(Exchange exchange in Exchange.Registered) {
+            //    if (exchange.DefaultAccount != null)
+            //        continue;
+                
+            //    Application.Run(new AccountCollectionForm());
+            //    break;
+            //}
         }
     }
 }

@@ -38,12 +38,9 @@ namespace Crypto.Core.Exchanges.Poloniex {
                 JObject bids = ob[1].Value<JObject>();
 
                 List<OrderBookEntry> entries = orderBook.Asks;
-                List<OrderBookEntry> entriesInverted = orderBook.AsksInverted;
                 lock(entries) {
                     foreach(JProperty item in asks.Children()) {
                         entries.Add(new OrderBookEntry() { ValueString = item.Name, AmountString = item.Value.Value<string>() });
-                        if(entriesInverted != null)
-                            entriesInverted.Insert(0, new OrderBookEntry() { ValueString = item.Name, AmountString = item.Value.Value<string>() });
                     }
                 }
                 entries = orderBook.Bids;

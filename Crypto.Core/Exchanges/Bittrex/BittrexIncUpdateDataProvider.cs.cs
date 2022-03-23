@@ -46,12 +46,9 @@ namespace Crypto.Core.Exchanges.Bittrex {
                 JArray jasks = jObject.Value<JArray>("S");
 
                 List<OrderBookEntry> entries = orderBook.Asks;
-                List<OrderBookEntry> entriesInverted = orderBook.AsksInverted;
                 for(int i = 0; i < jasks.Count; i++) {
                     JObject item = (JObject)jasks[i];
                     entries.Add(new OrderBookEntry() { ValueString = item.Value<string>("R"), AmountString = item.Value<string>("Q") });
-                    if(entriesInverted != null)
-                        entriesInverted.Insert(0, new OrderBookEntry() { ValueString = item.Value<string>("R"), AmountString = item.Value<string>("Q") });
                 }
                 entries = orderBook.Bids;
                 for(int i = 0; i < jbids.Count; i++) {

@@ -46,42 +46,42 @@ namespace CryptoMarketClient {
             if(!Exchange.SupportWebSocket(WebSocketType.Ticker))
                 return;
             if(Exchange.TickersSocketState == SocketConnectionState.None) {
-                this.biConnectionStatus.ImageOptions.SvgImage = this.svgImageCollection1["information"];
-                this.biConnectionStatus.Caption = "Initializing...";
+                this.bsiStatus.ImageOptions.SvgImage = this.svgImageCollection1["information"];
+                this.bsiStatus.Caption = "Initializing...";
             }
             else if(Exchange.TickersSocketState == SocketConnectionState.Connecting) {
-                this.biConnectionStatus.ImageOptions.SvgImage = this.svgImageCollection1["connecting"];
-                this.biConnectionStatus.Caption = "Connecting...";
+                this.bsiStatus.ImageOptions.SvgImage = this.svgImageCollection1["connecting"];
+                this.bsiStatus.Caption = "Connecting...";
             }
             else if(Exchange.TickersSocketState == SocketConnectionState.DelayRecv) {
-                this.biConnectionStatus.ImageOptions.SvgImage = this.svgImageCollection1["datadelay"];
-                this.biConnectionStatus.Caption = "No Data...";
+                this.bsiStatus.ImageOptions.SvgImage = this.svgImageCollection1["datadelay"];
+                this.bsiStatus.Caption = "No Data...";
                 this.biReconnect.Visibility = BarItemVisibility.Always;
             }
             else if(Exchange.TickersSocketState == SocketConnectionState.Disconnected) {
-                this.biConnectionStatus.ImageOptions.SvgImage = this.svgImageCollection1["disconnected"];
-                this.biConnectionStatus.Caption = "Disconnected.";
+                this.bsiStatus.ImageOptions.SvgImage = this.svgImageCollection1["disconnected"];
+                this.bsiStatus.Caption = "Disconnected.";
                 this.biReconnect.Visibility = BarItemVisibility.Always;
             }
             else if(Exchange.TickersSocketState == SocketConnectionState.Error) {
-                this.biConnectionStatus.ImageOptions.SvgImage = this.svgImageCollection1["disconnected"];
-                this.biConnectionStatus.Caption = "Socket Error.";
+                this.bsiStatus.ImageOptions.SvgImage = this.svgImageCollection1["disconnected"];
+                this.bsiStatus.Caption = "Socket Error.";
                 this.biReconnect.Visibility = BarItemVisibility.Always;
             }
             else if(Exchange.TickersSocketState == SocketConnectionState.TooLongQue) {
-                this.biConnectionStatus.ImageOptions.SvgImage = this.svgImageCollection1["disconnected"];
-                this.biConnectionStatus.Caption = "Missing incremental update.";
+                this.bsiStatus.ImageOptions.SvgImage = this.svgImageCollection1["disconnected"];
+                this.bsiStatus.Caption = "Missing incremental update.";
                 this.biReconnect.Visibility = BarItemVisibility.Always;
             }
             else if((DateTime.Now - Exchange.LastWebSocketRecvTime).TotalSeconds > 5) {
                 if((DateTime.Now - Exchange.LastWebSocketRecvTime).TotalSeconds > 20) {
-                    this.biConnectionStatus.ImageOptions.SvgImage = this.svgImageCollection1["disconnected"];
-                    this.biConnectionStatus.Caption = "Connection Interrupted.";
+                    this.bsiStatus.ImageOptions.SvgImage = this.svgImageCollection1["disconnected"];
+                    this.bsiStatus.Caption = "Connection Interrupted.";
                     this.biReconnect.Visibility = BarItemVisibility.Always;
                 }
                 else {
-                    this.biConnectionStatus.ImageOptions.SvgImage = this.svgImageCollection1["datadelay"];
-                    this.biConnectionStatus.Caption = "Waiting...";
+                    this.bsiStatus.ImageOptions.SvgImage = this.svgImageCollection1["datadelay"];
+                    this.bsiStatus.Caption = "Waiting...";
                 }
             }
             else
@@ -93,8 +93,8 @@ namespace CryptoMarketClient {
         }
 
         private void SetInfoConnected() {
-            this.biConnectionStatus.ImageOptions.SvgImage = this.biConnected.ImageOptions.SvgImage;
-            this.biConnectionStatus.Caption = "Connected.";
+            this.bsiStatus.ImageOptions.SvgImage = this.biConnected.ImageOptions.SvgImage;
+            this.bsiStatus.Caption = "Connected.";
             this.biReconnect.Visibility = BarItemVisibility.Never;
         }
 
@@ -429,6 +429,10 @@ namespace CryptoMarketClient {
             ExchangeMarketCapacityForm form = new ExchangeMarketCapacityForm();
             form.Exchange = Exchange;
             form.Show();
+        }
+
+        private void bsiStatus_ItemClick(object sender, ItemClickEventArgs e) {
+            ((MainForm)MdiParent).ShowLogPanel();
         }
 
         private void GridView1_CustomRowCellEdit(object sender, DevExpress.XtraGrid.Views.Grid.CustomRowCellEditEventArgs e) {

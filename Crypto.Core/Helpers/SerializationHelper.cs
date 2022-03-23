@@ -58,7 +58,7 @@ namespace Crypto.Core.Helpers {
                 return null;
             try {
                 ISupportSerialization obj = null;
-                    XmlSerializer formatter = new XmlSerializer(t);
+                XmlSerializer formatter = new XmlSerializer(t);
                 using(FileStream fs = new FileStream(fileName, FileMode.OpenOrCreate)) {
                     obj = (ISupportSerialization)formatter.Deserialize(fs);
                 }

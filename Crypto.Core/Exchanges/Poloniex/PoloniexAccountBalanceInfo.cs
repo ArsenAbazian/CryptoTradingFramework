@@ -8,6 +8,6 @@ using System.Threading.Tasks;
 
 namespace Crypto.Core.Poloniex {
     public class PoloniexAccountBalanceInfo : BalanceBase {
-        public PoloniexAccountBalanceInfo(AccountInfo info, CurrencyInfoBase currency) : base(info, currency) { } 
+        public PoloniexAccountBalanceInfo(AccountInfo info, CurrencyInfo currency) : base(info, currency) { } 
     }
 }

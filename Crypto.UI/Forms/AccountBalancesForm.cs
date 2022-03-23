@@ -89,6 +89,7 @@ namespace Crypto.Core.Common {
                 BeginInvoke(new MethodInvoker(() => {
                     if(!this.gridControl1.IsHandleCreated || this.gridControl1.IsDisposed)
                         return;
+                    total.RemoveAll(b => b.Account == null);
                     if(this.poloniexAccountBalanceInfoBindingSource.DataSource is Type) {
                         this.poloniexAccountBalanceInfoBindingSource.DataSource = total;
                         UpdateFilter();
@@ -183,6 +184,10 @@ namespace Crypto.Core.Common {
                 BalanceBase b = (BalanceBase)this.gridView1.GetFocusedRow();
                 b.GetDeposit();
             }
+        }
+
+        private void bsiStatus_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
+            
         }
     }
 }

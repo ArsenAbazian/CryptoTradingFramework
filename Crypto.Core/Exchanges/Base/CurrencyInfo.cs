@@ -5,8 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Crypto.Core.Exchanges.Base {
-    public class CurrencyInfoBase {
-        public CurrencyInfoBase(Exchange e, string currency) {
+    public class CurrencyInfo {
+        public CurrencyInfo(Exchange e, string currency) {
             Currency = currency;
             Exchange = e;
         }

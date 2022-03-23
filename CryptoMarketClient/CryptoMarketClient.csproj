@@ -805,6 +805,7 @@
     <Content Include="Images\ExchangeImages\PoloniexIcon.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="Resources\notification_image4.jpg" />
     <None Include="Resources\notification_image3.jpg" />
     <None Include="Resources\notification_image2.jpg" />
   </ItemGroup>

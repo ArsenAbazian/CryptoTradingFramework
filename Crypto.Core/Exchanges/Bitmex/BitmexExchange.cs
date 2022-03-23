@@ -24,6 +24,10 @@ namespace Crypto.Core.Exchanges.Bitmex {
             }
         }
 
+        public override Ticker CreateTicker(string name) {
+            return new BitmexTicker(this) { CurrencyPair = name };
+        }
+
         public override BalanceBase CreateAccountBalance(AccountInfo info, string currency) {
             return new BitmexAccountBalanceInfo(info, GetOrCreateCurrency(currency));
         }
@@ -110,7 +114,7 @@ namespace Crypto.Core.Exchanges.Bitmex {
             return true;
         }
 
-        public override bool GetDeposit(AccountInfo account, CurrencyInfoBase currency) {
+        public override bool GetDeposit(AccountInfo account, CurrencyInfo currency) {
             return true;
         }
 
@@ -144,8 +148,7 @@ namespace Crypto.Core.Exchanges.Bitmex {
                     if(!obj.Value<bool>("hasLiquidity"))
                         continue;
                     string pair = obj.Value<string>("symbol");
-                    BitmexTicker t = (BitmexTicker)Tickers.FirstOrDefault(tt => tt.CurrencyPair == pair);
-                    if(t == null) t = new BitmexTicker(this);
+                    BitmexTicker t = (BitmexTicker)GetOrCreateTicker(pair);
                     t.Index = index;
                     t.ContractTicker = true;
                     t.ContractValue = 1; // 1 USD
@@ -349,13 +352,17 @@ namespace Crypto.Core.Exchanges.Bitmex {
         public bool OnGetBalances(AccountInfo account, byte[] data) {
             string text = UTF8Encoding.Default.GetString(data);
             if(string.IsNullOrEmpty(text) || text.StartsWith("<html>")) { 
-                LogManager.Default.Error(this, "error on get balance", text);
+                LogManager.Default.Error(this, "Error on get balance.", text);
                 return false;    
             }
-            JObject obj = (JObject)JsonConvert.DeserializeObject(text);
+            var obj = JsonHelper.Default.Deserialize(text); 
+            if(obj.GetProperty("error") != null) {
+                LogManager.Default.Error(this, nameof(OnGetBalances), obj.GetProperty("error").Value);
+                return false;
+            }
             account.Balances.Clear();
-            var b = account.GetOrCreateBalanceInfo(obj.Value<string>("currency"));
-            b.Available = obj.Value<double>("amount");
+            var b = account.GetOrCreateBalanceInfo(obj.GetProperty("currency").Value);
+            b.Available = obj.GetProperty("amount").ValueDouble;
             b.Balance = b.Available;
             b.OnOrders = 0;// obj.Value<double>("locked");
             account.Balances.Add(b);
@@ -449,7 +456,6 @@ namespace Crypto.Core.Exchanges.Bitmex {
             try {
                 List<OrderBookEntry> bids = ticker.OrderBook.Bids;
                 List<OrderBookEntry> asks = ticker.OrderBook.Asks;
-                List<OrderBookEntry> iasks = ticker.OrderBook.AsksInverted;
                 for(int i = 0; i < items.Count; i++) {
                     string[] item = items[i];
                     OrderBookEntry entry = new OrderBookEntry();
@@ -457,8 +463,6 @@ namespace Crypto.Core.Exchanges.Bitmex {
                     entry.ValueString = item[4];
                     entry.AmountString = item[3];
                     if(item[2][0] == 'S') {
-                        if(iasks != null)
-                            iasks.Add(entry);
                         asks.Insert(0, entry);
                     }
                     else

@@ -23,6 +23,10 @@ namespace Crypto.Core.Binance {
             }
         }
 
+        public override Ticker CreateTicker(string name) {
+            return new BinanceTicker(this) { CurrencyPair = name };
+        }
+
         public override BalanceBase CreateAccountBalance(AccountInfo info, string currency) {
             return new BinanceAccountBalanceInfo(info, GetOrCreateCurrency(currency));
         }
@@ -196,7 +200,7 @@ namespace Crypto.Core.Binance {
         public override bool SupportWebSocket(WebSocketType type) {
             if(type == WebSocketType.Tickers)
                 return true;
-            if(type == WebSocketType.Ticker || type == WebSocketType.Trades || type == WebSocketType.OrderBook)
+            if(type == WebSocketType.Ticker || type == WebSocketType.Trades || type == WebSocketType.OrderBook || type == WebSocketType.Kline)
                 return true;
             return false;
         }
@@ -500,7 +504,7 @@ namespace Crypto.Core.Binance {
             return true;
         }
 
-        public override bool GetDeposit(AccountInfo account, CurrencyInfoBase currency) {
+        public override bool GetDeposit(AccountInfo account, CurrencyInfo currency) {
             return true;
         }
 
@@ -546,7 +550,7 @@ namespace Crypto.Core.Binance {
             JArray symbols = settings.Value<JArray>("symbols");
             for(int i = 0; i < symbols.Count; i++) {
                 JObject s = (JObject)symbols[i];
-                BinanceTicker t = new BinanceTicker(this);
+                BinanceTicker t = (BinanceTicker)GetOrCreateTicker(s.Value<string>("symbol"));
                 t.CurrencyPair = s.Value<string>("symbol");
                 t.MarketCurrency = s.Value<string>("baseAsset");
                 t.BaseCurrency = s.Value<string>("quoteAsset");
@@ -786,7 +790,6 @@ namespace Crypto.Core.Binance {
                 b.Available = obj.Value<double>("free");
                 b.OnOrders = obj.Value<double>("locked");
                 b.Balance = b.Available + b.OnOrders;
-                account.Balances.Add(b);
             }
             return true;
         }
@@ -1026,12 +1029,9 @@ namespace Crypto.Core.Binance {
             try {
                 List<OrderBookEntry> bids = ticker.OrderBook.Bids;
                 List<OrderBookEntry> asks = ticker.OrderBook.Asks;
-                List<OrderBookEntry> iasks = ticker.OrderBook.AsksInverted;
 
                 bids.Clear();
                 asks.Clear();
-                if(iasks != null)
-                    iasks.Clear();
                 if(jbids != null) {
                     for(int i = 0; i < jbids.Count; i++) {
                         string[] item = jbids[i];
@@ -1043,8 +1043,6 @@ namespace Crypto.Core.Binance {
                         string[] item = jasks[i];
                         OrderBookEntry e = new OrderBookEntry() { ValueString = item[0], AmountString = item[1] };
                         asks.Add(e);
-                        if(iasks != null)
-                            iasks.Insert(0, e);
                     }
                 }
                 ticker.OrderBook.Updates.Clear(FastValueConverter.ConvertPositiveLong(updateId[0]) + 1);

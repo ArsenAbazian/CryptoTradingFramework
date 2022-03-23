@@ -22,8 +22,6 @@ namespace Crypto.Core.Exchanges.Bitmex {
 
         public override double Fee { get; set; } = 0.0075;
 
-        public override string HostName => Exchange.Name;
-
         public override string WebPageAddress => throw new NotImplementedException();
 
         public override bool IsListeningOrderBook {

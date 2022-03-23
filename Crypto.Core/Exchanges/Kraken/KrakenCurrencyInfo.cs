@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Crypto.Core.Exchanges.Kraken {
-    public class KrakenCurrencyInfo : CurrencyInfoBase {
+    public class KrakenCurrencyInfo : CurrencyInfo {
         public KrakenCurrencyInfo(Exchange e, string currency) : base(e, currency) { }
         
         public string AltName { get; set; }

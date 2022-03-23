@@ -242,12 +242,17 @@
     <Compile Include="Exchanges\Binance\Futures\BinanceFuturesTicker.cs" />
     <Compile Include="Exchanges\Binance\Futures\BinanceFuturesIncUpdateDataProvider.cs.cs" />
     <Compile Include="Exchanges\Bitmex\BitmexAccountBalanceInfo.cs" />
+    <Compile Include="Exchanges\Exmo\ExmoAccountBalanceInfo.cs" />
+    <Compile Include="Exchanges\Exmo\ExmoCurrencyInfo.cs" />
+    <Compile Include="Exchanges\Exmo\ExmoExchange.cs" />
+    <Compile Include="Exchanges\Exmo\ExmoIncUpdateDataProvider.cs" />
+    <Compile Include="Exchanges\Exmo\ExmoTicker.cs" />
     <Compile Include="Exchanges\Kraken\KrakenAccountBalanceInfo.cs" />
     <Compile Include="Exchanges\Kraken\KrakenCurrencyInfo.cs" />
     <Compile Include="Exchanges\Kraken\KrakenExchange.cs" />
     <Compile Include="Exchanges\Kraken\KrakenIncUpdateDataProvider.cs" />
-    <Compile Include="Exchanges\Kraken\KrakenSocketConnectionInfo.cs" />
     <Compile Include="Exchanges\Kraken\KrakenTicker.cs" />
+    <Compile Include="Exchanges\Poloniex\PoloniexWebSocketRequest.cs" />
     <Compile Include="Helpers\BindingHelper.cs" />
     <Compile Include="Helpers\ChainArray.cs" />
     <Compile Include="Helpers\ClassicArbitrageListener.cs" />
@@ -306,7 +311,7 @@
     <Compile Include="Common\TradingResult.cs" />
     <Compile Include="Common\Trailing\TrailingManager.cs" />
     <Compile Include="Common\Trailing\TrailingSettings.cs" />
-    <Compile Include="Exchanges\Base\CurrencyInfoBase.cs" />
+    <Compile Include="Exchanges\Base\CurrencyInfo.cs" />
     <Compile Include="Exchanges\Base\ExchangeAccountInfo.cs" />
     <Compile Include="Exchanges\Base\ExchangeBase.cs" />
     <Compile Include="Exchanges\Base\OrderInfo.cs" />
@@ -317,7 +322,7 @@
     <Compile Include="Exchanges\BitFinex\BitFinexAccountBalanceInfo.cs" />
     <Compile Include="Exchanges\BitFinex\BitFinexCurrencyInfo.cs" />
     <Compile Include="Exchanges\BitFinex\BitFinexIncUpdateDataProvider.cs.cs" />
-    <Compile Include="Exchanges\BitFinex\BitFinexModel.cs" />
+    <Compile Include="Exchanges\BitFinex\BitFinexExchange.cs" />
     <Compile Include="Exchanges\BitFinex\BitFinexOrderInfo.cs" />
     <Compile Include="Exchanges\BitFinex\BitFinexTicker.cs" />
     <Compile Include="Exchanges\Bitmex\BitmexExchange.cs" />

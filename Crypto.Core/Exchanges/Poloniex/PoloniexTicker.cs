@@ -34,7 +34,6 @@ namespace Crypto.Core {
             MarketCurrency = curr[1];
         }
 
-        public override string HostName { get { return "Poloniex"; } }
         public override double Fee { get { return 0.25 * 0.01; } set { } }
         public override string Name { get { return CurrencyPair; } }
         public override string MarketName { get { return CurrencyPair; } set { } }

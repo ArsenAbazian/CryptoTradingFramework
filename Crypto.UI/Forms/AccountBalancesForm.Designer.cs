@@ -117,7 +117,7 @@ namespace Crypto.Core.Common {
             this.gridControl1.DataSource = this.poloniexAccountBalanceInfoBindingSource;
             this.gridControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gridControl1.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(0);
-            this.gridControl1.Location = new System.Drawing.Point(0, 56);
+            this.gridControl1.Location = new System.Drawing.Point(0, 34);
             this.gridControl1.MainView = this.gridView1;
             this.gridControl1.Margin = new System.Windows.Forms.Padding(2);
             this.gridControl1.Name = "gridControl1";
@@ -126,7 +126,7 @@ namespace Crypto.Core.Common {
             this.repositoryItemTextEdit2,
             this.repositoryItemLookUpEdit1,
             this.repositoryItemComboBox1});
-            this.gridControl1.Size = new System.Drawing.Size(2133, 761);
+            this.gridControl1.Size = new System.Drawing.Size(1940, 804);
             this.gridControl1.TabIndex = 3;
             this.gridControl1.UseDirectXPaint = DevExpress.Utils.DefaultBoolean.True;
             this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
@@ -439,7 +439,9 @@ namespace Crypto.Core.Common {
             // 
             this.bsiStatus.AllowHtmlText = DevExpress.Utils.DefaultBoolean.True;
             this.bsiStatus.Id = 1;
+            this.bsiStatus.MergeType = DevExpress.XtraBars.BarMenuMerge.Replace;
             this.bsiStatus.Name = "bsiStatus";
+            this.bsiStatus.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.bsiStatus_ItemClick);
             // 
             // ribbonControl1
             // 
@@ -457,13 +459,14 @@ namespace Crypto.Core.Common {
             this.ribbonControl1.Name = "ribbonControl1";
             this.ribbonControl1.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonControlStyle.OfficeUniversal;
             this.ribbonControl1.ShowPageHeadersMode = DevExpress.XtraBars.Ribbon.ShowPageHeadersMode.Hide;
-            this.ribbonControl1.Size = new System.Drawing.Size(2133, 0);
+            this.ribbonControl1.Size = new System.Drawing.Size(1940, 0);
             this.ribbonControl1.StatusBar = this.ribbonStatusBar1;
             // 
             // barAndDockingController1
             // 
             this.barAndDockingController1.AppearancesRibbon.Item.FontSizeDelta = 1;
             this.barAndDockingController1.AppearancesRibbon.Item.Options.UseFont = true;
+            this.barAndDockingController1.PropertiesBar.AllowLinkLighting = false;
             // 
             // biUpdateDeposite
             // 
@@ -492,10 +495,10 @@ namespace Crypto.Core.Common {
             // ribbonStatusBar1
             // 
             this.ribbonStatusBar1.ItemLinks.Add(this.bsiStatus);
-            this.ribbonStatusBar1.Location = new System.Drawing.Point(0, 817);
+            this.ribbonStatusBar1.Location = new System.Drawing.Point(0, 838);
             this.ribbonStatusBar1.Name = "ribbonStatusBar1";
             this.ribbonStatusBar1.Ribbon = this.ribbonControl1;
-            this.ribbonStatusBar1.Size = new System.Drawing.Size(2133, 54);
+            this.ribbonStatusBar1.Size = new System.Drawing.Size(1940, 33);
             // 
             // popupMenu1
             // 
@@ -513,7 +516,7 @@ namespace Crypto.Core.Common {
             this.standaloneBarDockControl1.Location = new System.Drawing.Point(0, 0);
             this.standaloneBarDockControl1.Manager = this.barManager1;
             this.standaloneBarDockControl1.Name = "standaloneBarDockControl1";
-            this.standaloneBarDockControl1.Size = new System.Drawing.Size(2133, 56);
+            this.standaloneBarDockControl1.Size = new System.Drawing.Size(1940, 34);
             this.standaloneBarDockControl1.Text = "standaloneBarDockControl1";
             // 
             // barManager1
@@ -559,7 +562,7 @@ namespace Crypto.Core.Common {
             this.barDockControlTop.Dock = System.Windows.Forms.DockStyle.Top;
             this.barDockControlTop.Location = new System.Drawing.Point(0, 0);
             this.barDockControlTop.Manager = this.barManager1;
-            this.barDockControlTop.Size = new System.Drawing.Size(2133, 0);
+            this.barDockControlTop.Size = new System.Drawing.Size(1940, 0);
             // 
             // barDockControlBottom
             // 
@@ -567,7 +570,7 @@ namespace Crypto.Core.Common {
             this.barDockControlBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.barDockControlBottom.Location = new System.Drawing.Point(0, 871);
             this.barDockControlBottom.Manager = this.barManager1;
-            this.barDockControlBottom.Size = new System.Drawing.Size(2133, 0);
+            this.barDockControlBottom.Size = new System.Drawing.Size(1940, 0);
             // 
             // barDockControlLeft
             // 
@@ -581,16 +584,16 @@ namespace Crypto.Core.Common {
             // 
             this.barDockControlRight.CausesValidation = false;
             this.barDockControlRight.Dock = System.Windows.Forms.DockStyle.Right;
-            this.barDockControlRight.Location = new System.Drawing.Point(2133, 0);
+            this.barDockControlRight.Location = new System.Drawing.Point(1940, 0);
             this.barDockControlRight.Manager = this.barManager1;
             this.barDockControlRight.Size = new System.Drawing.Size(0, 871);
             // 
             // AccountBalancesForm
             // 
             this.Appearance.Options.UseFont = true;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(15F, 37F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 23F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(2133, 871);
+            this.ClientSize = new System.Drawing.Size(1940, 871);
             this.Controls.Add(this.gridControl1);
             this.Controls.Add(this.standaloneBarDockControl1);
             this.Controls.Add(this.ribbonStatusBar1);

@@ -24,6 +24,10 @@ namespace Crypto.Core.Bittrex {
             }
         }
 
+        public override Ticker CreateTicker(string name) {
+            return new BittrexTicker(this) { CurrencyPair = name };
+        }
+
         public override BalanceBase CreateAccountBalance(AccountInfo info, string currency) {
             return new BittrexAccountBalanceInfo(info, GetOrCreateCurrency(currency));
         }
@@ -55,7 +59,7 @@ namespace Crypto.Core.Bittrex {
         public override bool SupportWebSocket(WebSocketType type) {
             if(type == WebSocketType.Tickers)
                 return true;
-            if(type == WebSocketType.Ticker || type == WebSocketType.Trades || type == WebSocketType.OrderBook)
+            if(type == WebSocketType.Ticker || type == WebSocketType.Trades || type == WebSocketType.OrderBook || type == WebSocketType.Kline)
                 return true;
             return false;
         }
@@ -92,7 +96,7 @@ namespace Crypto.Core.Bittrex {
             return true;
         }
 
-        public override bool GetDeposit(AccountInfo account, CurrencyInfoBase currency) {
+        public override bool GetDeposit(AccountInfo account, CurrencyInfo currency) {
             string address = "https://api.bittrex.com/v3/deposits/open?currencySymbol=" + currency.Currency;
             try {
                 return OnGetDeposites(account, DownloadPrivateData(address, account));
@@ -105,7 +109,7 @@ namespace Crypto.Core.Bittrex {
 
         public override bool ObtainExchangeSettings() { return true; }
 
-        protected override SocketConnectionInfo CreateTickersSocket() {
+        protected override SocketConnectionInfo CreateTickersWebSocket() {
             return new SocketConnectionInfo(this, null, BaseWebSocketAdress, SocketType.Signal, SocketSubscribeType.Tickers);
         }
 
@@ -164,8 +168,8 @@ namespace Crypto.Core.Bittrex {
             return ((BittrexTicker)ticker).IsListeningOrderBook;
         }
 
-        public override void StopListenOrderBook(Ticker ticker) {
-            base.StopListenOrderBook(ticker);
+        public override void StopListenOrderBook(Ticker ticker, bool force) {
+            base.StopListenOrderBook(ticker, force);
             if(TickersSocket == null)
                 return;
             string marketSymbol = ticker.MarketName;
@@ -173,16 +177,16 @@ namespace Crypto.Core.Bittrex {
             TickersSocket.Unsubscribe(new WebSocketSubscribeInfo(SocketSubscribeType.OrderBook, ticker, string.Format("orderbook_{0}_{1}", ticker.MarketName, depth), "orderBook"));
         }
 
-        public override void StopListenTradeHistory(Ticker ticker) {
-            base.StopListenTradeHistory(ticker);
+        public override void StopListenTradeHistory(Ticker ticker, bool force) {
+            base.StopListenTradeHistory(ticker, force);
             if(TickersSocket == null)
                 return;
             string channel = string.Format("trade_{0}", ticker.MarketName);
             TickersSocket.Unsubscribe(new WebSocketSubscribeInfo(SocketSubscribeType.TradeHistory, ticker, channel, "trade"));
         }
 
-        public override void StopListenKline(Ticker ticker) {
-            base.StopListenKline(ticker);
+        public override void StopListenKline(Ticker ticker, bool force) {
+            base.StopListenKline(ticker, force);
             if(TickersSocket == null)
                 return;
             TickersSocket.Unsubscribe(new WebSocketSubscribeInfo(SocketSubscribeType.Kline, ticker, string.Format("candle_{0}_{1}", ticker.MarketName, ticker.GetCandleStickCommandName()), "candle"));
@@ -524,7 +528,9 @@ namespace Crypto.Core.Bittrex {
 
                 JsonHelperToken array = JsonHelper.Default.Deserialize(bytes);
                 for(int i = 0; i < array.ItemsCount; i++) {
-                    BittrexTicker m = new BittrexTicker(this);
+                    var info = array.Items[i];
+                    string name = info.Properties[0].Value;
+                    BittrexTicker m = (BittrexTicker)GetOrCreateTicker(name);
 
                     /*
                     "symbol": "string",
@@ -533,8 +539,8 @@ namespace Crypto.Core.Bittrex {
                     "askRate": "number (double)"
                     */
 
-                    var info = array.Items[i];
-                    m.CurrencyPair = info.Properties[0].Value;
+                    
+                    m.CurrencyPair = name;
                     string[] pairs = m.CurrencyPair.Split('-');
                     if(pairs.Length != 2)
                         continue;
@@ -574,7 +580,7 @@ namespace Crypto.Core.Bittrex {
             return true;
         }
 
-        public override CurrencyInfoBase CreateCurrency(string currency) {
+        public override CurrencyInfo CreateCurrency(string currency) {
             return new BittrexCurrencyInfo(this, currency);
         }
 
@@ -661,8 +667,13 @@ namespace Crypto.Core.Bittrex {
             bticker.Hr24LowString = root.Properties[2].Value;
             bticker.BaseVolumeString = root.Properties[3].Value;
             bticker.VolumeString = root.Properties[4].Value;
-            bticker.Change = root.Properties[5].ValueDouble;
-            bticker.Time = Convert.ToDateTime(root.Properties[6].Value);
+            if(root.Properties[5].Name == "updatedAt") {
+                bticker.Time = Convert.ToDateTime(root.Properties[5].Value);
+            }
+            else {
+                bticker.Change = root.Properties[5].ValueDouble;
+                bticker.Time = Convert.ToDateTime(root.Properties[6].Value);
+            }
             bticker.DisplayMarketName = root.Properties[0].Value;
 
             //int startIndex = 1;
@@ -891,9 +902,11 @@ namespace Crypto.Core.Bittrex {
                 return false;
             }
         }
-        bool OnGetAccountTrades(AccountInfo account, Ticker ticker, byte[] bytes) {
-            if(bytes == null)
+        protected virtual bool OnGetAccountTrades(AccountInfo account, Ticker ticker, byte[] bytes) {
+            if(bytes == null) {
+                LogManager.Default.Error(this, nameof(OnGetAccountTrades), "No data received.");
                 return false;
+            }
 
             JsonHelperToken root = JsonHelper.Default.Deserialize(bytes);
             if(root.PropertiesCount > 0) {
@@ -935,11 +948,14 @@ namespace Crypto.Core.Bittrex {
             try {
                 bytes = GetDownloadBytes(address);
             }
-            catch(Exception) {
+            catch(Exception e) {
+                Telemetry.Default.TrackException(e);
                 return false;
             }
-            if(bytes == null)
+            if(bytes == null) {
+                LogManager.Default.Error(this, nameof(UpdateTrades), "No data received");
                 return false;
+            }
 
             JsonHelperToken root = JsonHelper.Default.Deserialize(bytes);
             lock(ticker) {

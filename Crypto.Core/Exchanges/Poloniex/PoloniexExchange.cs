@@ -31,6 +31,10 @@ namespace Crypto.Core {
             RequestRate.Add(new RateLimit(this) { Limit = 6, Interval = TimeSpan.TicksPerSecond});
         }
 
+        public override Ticker CreateTicker(string name) {
+            return new PoloniexTicker(this) { CurrencyPair = name };
+        }
+
         public override BalanceBase CreateAccountBalance(AccountInfo info, string currency) {
             return new PoloniexAccountBalanceInfo(info, GetOrCreateCurrency(currency));
         }
@@ -45,7 +49,7 @@ namespace Crypto.Core {
 
         public override bool SupportWebSocket(WebSocketType type) {
             return type == WebSocketType.Tickers ||
-                type == WebSocketType.Ticker || type == WebSocketType.OrderBook;
+                type == WebSocketType.Ticker || type == WebSocketType.OrderBook || type == WebSocketType.Kline;
         }
 
         public override string BaseWebSocketAdress { get { return "wss://api2.poloniex.com"; } }
@@ -186,8 +190,12 @@ namespace Crypto.Core {
         protected internal override void OnTickersSocketOpened(object sender, EventArgs e) {
             base.OnTickersSocketOpened(sender, e);
             //TickersSocket.State = SocketConnectionState.Connecting;
-            TickersSocket.Subscribe(new WebSocketSubscribeInfo(SocketSubscribeType.Hearthbeat, null) { channel = "1010", command = "subscribe" });
-            TickersSocket.Subscribe(new WebSocketSubscribeInfo(SocketSubscribeType.Tickers, null) { channel = "1002", command = "subscribe" });
+            TickersSocket.Subscribe(new WebSocketSubscribeInfo(SocketSubscribeType.Hearthbeat, null) {
+                Request = new PoloniexWebSocketRequest() { channel = "1010", command = "subscribe" }
+            });
+            TickersSocket.Subscribe(new WebSocketSubscribeInfo(SocketSubscribeType.Tickers, null) {
+                Request = new PoloniexWebSocketRequest() { channel = "1002", command = "subscribe" }
+            }) ;
             //TickersSocket.State = SocketConnectionState.Connected;
         }
         
@@ -200,19 +208,23 @@ namespace Crypto.Core {
             base.OnWebSocketCheckTimer(state);
         }
 
-        public override void StopListenOrderBook(Ticker ticker) {
+        public override void StopListenOrderBook(Ticker ticker, bool force) {
             if(TickersSocket == null)
                 return;
-            TickersSocket.Unsubscribe(new WebSocketSubscribeInfo(SocketSubscribeType.OrderBook, ticker) { channel = ticker.CurrencyPair, command = "unsubscribe" });
+            TickersSocket.Unsubscribe(new WebSocketSubscribeInfo(SocketSubscribeType.OrderBook, ticker) { 
+                Request = new PoloniexWebSocketRequest() { channel = ticker.CurrencyPair, command = "unsubscribe" }
+            });
         }
 
-        public override void StopListenTradeHistory(Ticker ticker) {
+        public override void StopListenTradeHistory(Ticker ticker, bool force) {
             if(TickersSocket == null)
                 return;
-            TickersSocket.Unsubscribe(new WebSocketSubscribeInfo(SocketSubscribeType.TradeHistory, ticker) { channel = ticker.CurrencyPair, command = "unsubscribe" });
+            TickersSocket.Unsubscribe(new WebSocketSubscribeInfo(SocketSubscribeType.TradeHistory, ticker) {
+                Request = new PoloniexWebSocketRequest() { channel = ticker.CurrencyPair, command = "unsubscribe" } 
+            });
         }
 
-        public override void StopListenKline(Ticker ticker) {
+        public override void StopListenKline(Ticker ticker, bool force) {
             RemoveKLineListener(ticker);
             //if(TickersSocket == null)
             //    return;
@@ -225,7 +237,9 @@ namespace Crypto.Core {
                 if(!WaitUntil(5000, () => { return TickersSocketState == SocketConnectionState.Connected; }))
                     return;
             }
-            TickersSocket.Subscribe(new WebSocketSubscribeInfo(SocketSubscribeType.TradeHistory, ticker) { Command = new Common.WebSocketCommandInfo() { channel = ticker.CurrencyPair, command = "subscribe" } });
+            TickersSocket.Subscribe(new WebSocketSubscribeInfo(SocketSubscribeType.TradeHistory, ticker) { 
+                Request = new PoloniexWebSocketRequest() { channel = ticker.CurrencyPair, command = "subscribe" } }
+            );
         }
 
         protected override void StartListenKlineCore(Ticker ticker) {
@@ -245,7 +259,9 @@ namespace Crypto.Core {
                     return;
             }
             if(!SimulationMode)
-                TickersSocket.Subscribe(new WebSocketSubscribeInfo(SocketSubscribeType.OrderBook, ticker) { Command = new Common.WebSocketCommandInfo() { channel = ticker.CurrencyPair, command = "subscribe" } });
+                TickersSocket.Subscribe(new WebSocketSubscribeInfo(SocketSubscribeType.OrderBook, ticker) { 
+                    Request = new PoloniexWebSocketRequest() { channel = ticker.CurrencyPair, command = "subscribe" } }
+                );
         }
         
         protected override bool IsListeningOrderBook(Ticker ticker) {
@@ -257,7 +273,9 @@ namespace Crypto.Core {
             ticker.IsOrderBookSubscribed = false;
             ticker.IsTradeHistorySubscribed = false;
             ticker.IsKlineSubscribed = false;
-            TickersSocket.Unsubscribe(new WebSocketSubscribeInfo(SocketSubscribeType.OrderBook, ticker) { channel = ticker.CurrencyPair, command = "unsubscribe" });
+            TickersSocket.Unsubscribe(new WebSocketSubscribeInfo(SocketSubscribeType.OrderBook, ticker) {
+                Request = new PoloniexWebSocketRequest { channel = ticker.CurrencyPair, command = "unsubscribe" }
+            });
         }
 
         public override bool ObtainExchangeSettings() {
@@ -284,7 +302,7 @@ namespace Crypto.Core {
             return null;
         }
 
-        public override CurrencyInfoBase CreateCurrency(string currency) {
+        public override CurrencyInfo CreateCurrency(string currency) {
             return new PoloniexCurrencyInfo(this, currency);
         }
 
@@ -387,7 +405,7 @@ namespace Crypto.Core {
             JObject res = JsonConvert.DeserializeObject<JObject>(text);
             int index = 0;
             foreach(JProperty prop in res.Children()) {
-                PoloniexTicker t = new PoloniexTicker(this);
+                PoloniexTicker t = (PoloniexTicker)GetOrCreateTicker(prop.Name);
                 t.Index = index;
                 t.CurrencyPair = prop.Name;
                 if(PoloniexTickerCodesProvider.Codes.ContainsKey(t.CurrencyPair))
@@ -478,17 +496,13 @@ namespace Crypto.Core {
 
                 List<OrderBookEntry> bids = ticker.OrderBook.Bids;
                 List<OrderBookEntry> asks = ticker.OrderBook.Asks;
-                List<OrderBookEntry> iasks = ticker.OrderBook.AsksInverted;
                 for(int i = 0; i < jbids.Count; i++) {
                     string[] item = jbids[i];
                     bids.Add(new OrderBookEntry() { ValueString = item[0], AmountString = item[1] });
                 }
                 for(int i = 0; i < jasks.Count; i++) {
                     string[] item = jasks[i];
-                    OrderBookEntry e = new OrderBookEntry() { ValueString = item[0], AmountString = item[1] };
-                    asks.Add(e);
-                    if(iasks != null)
-                        iasks.Insert(0, e);
+                    asks.Add(new OrderBookEntry() { ValueString = item[0], AmountString = item[1] });
                 }
             }
             finally {
@@ -820,7 +834,7 @@ namespace Crypto.Core {
             return true;
         }
 
-        public override bool GetDeposit(AccountInfo account, CurrencyInfoBase currency) {
+        public override bool GetDeposit(AccountInfo account, CurrencyInfo currency) {
             return GetDeposites(account);
         }
 

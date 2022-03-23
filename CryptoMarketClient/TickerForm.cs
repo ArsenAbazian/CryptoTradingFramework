@@ -303,6 +303,8 @@ namespace CryptoMarketClient {
         void UnsubscribeEvents(Ticker prev) {
             if(prev.Exchange.SupportWebSocket(WebSocketType.Ticker))
                 prev.StopListenTickerStream();
+            if(prev.Exchange.SupportWebSocket(WebSocketType.Kline))
+                prev.StopListenKlineStream();
             prev.OrderBook.Changed -= OnTickerOrderBookChanged;
             prev.Changed -= OnTickerChanged;
             prev.HistoryChanged -= OnTickerHistoryItemAdded;
@@ -331,7 +333,7 @@ namespace CryptoMarketClient {
 
         void UpdateGrid() {
             this.orderBookControl1.Bids = Ticker.OrderBook.Bids;
-            this.orderBookControl1.Asks = Ticker.OrderBook.AsksInverted;
+            this.orderBookControl1.Asks = Ticker.OrderBook.Asks;
             this.gcTrades.DataSource = new SortedReadOnlyArray<TradeInfoItem>(Ticker.ShortTradeHistory);
             this.gcAccountTrades.DataSource = new SortedReadOnlyArray<TradeInfoItem>(Ticker.AccountShortTradeHistory);
             //this.gcOpenedOrders.DataSource = Ticker.OpenedOrders;
@@ -423,8 +425,10 @@ namespace CryptoMarketClient {
                 NotificationManager.Notify("Cancel Order", "Error canceling order. Check Log for last errors.");
                 return;
             }
+            UpdateBalances();
             Ticker.UpdateOpenedOrders();
             this.gvOpenedOrders.RefreshData();
+            NotificationManager.Notify("Cancel Order", "Order canceled.");
         }
 
         private void bbCancel_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
@@ -446,6 +450,8 @@ namespace CryptoMarketClient {
         }
 
         private void BuySettingsControl_Trade(object sender, TradeEventArgs e) {
+            NotificationManager.Notify("Order with id = " + e.Trade.OrderId + ". Status = " + e.Trade.OrderStatus);
+            UpdateBalances();
             UpdateOpenedOrders();
         }
 
@@ -464,6 +470,10 @@ namespace CryptoMarketClient {
                 return;
             }
             this.tickerChartViewer1.NavigateTo(cd.Time);
+        }
+
+        private void biUpdateOrders_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
+            Ticker.Exchange.UpdateOpenedOrders(Ticker.Exchange.DefaultAccount, Ticker);
         }
     }
 

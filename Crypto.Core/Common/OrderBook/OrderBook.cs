@@ -12,13 +12,10 @@ namespace Crypto.Core {
     public class OrderBook {
         public const int Depth = 20;
         public static bool AllowOrderBookHistory { get; set; } = false;
-        public static bool AllowInvertedAsks { get; set; } = false;
         public OrderBook(Ticker owner) {
             Owner = owner;
             Bids = CreateOrderBookEntries();
             Asks = CreateOrderBookEntries();
-            if(AllowInvertedAsks)
-                AsksInverted = CreateOrderBookEntries();
             IsDirty = true;
             EnableValidationOnRemove = true;
         }
@@ -38,13 +35,10 @@ namespace Crypto.Core {
         public Ticker Owner { get; private set; }
         public List<OrderBookEntry> Bids { get; private set; }
         public List<OrderBookEntry> Asks { get; private set; }
-        public List<OrderBookEntry> AsksInverted { get; private set; }
 
         public void Clear() {
             Bids.Clear();
             Asks.Clear();
-            if(AllowInvertedAsks)
-                AsksInverted.Clear();
         }
         protected internal void RaiseOnChanged(IncrementalUpdateInfo info) {
             OrderBookEventArgs e = new OrderBookEventArgs() { Update = info };
@@ -352,14 +346,6 @@ namespace Crypto.Core {
             }
             double mv = Asks.Count == 0 ? 0 : Asks.Last().VolumeTotal;
             vt = 0;
-            if(AllowInvertedAsks) {
-                for(int i = 0; i < AsksInverted.Count; i++) {
-                    OrderBookEntry e = AsksInverted[i];
-                    e.Volume = e.Value * e.Amount;
-                    vt += e.Volume;
-                    e.VolumeTotal = mv - vt;
-                }
-            }
             if(MaxVolume == 0)
                 return;
             MaxVolume = 1 / MaxVolume;
@@ -370,12 +356,6 @@ namespace Crypto.Core {
             for(int i = 0; i < Asks.Count; i++) {
                 OrderBookEntry e = Asks[i];
                 e.VolumePercent = e.Volume * MaxVolume;
-            }
-            if(AllowInvertedAsks) {
-                for(int i = 0; i < AsksInverted.Count; i++) {
-                    OrderBookEntry e = AsksInverted[i];
-                    e.VolumePercent = e.Volume * MaxVolume;
-                }
             }
         }
         public double BidEnergy { get; set; }
@@ -479,8 +459,6 @@ namespace Crypto.Core {
                 Save();
                 Bids = CreateOrderBookEntries();
                 Asks = CreateOrderBookEntries();
-                if(AllowInvertedAsks) 
-                    AsksInverted = CreateOrderBookEntries();
             }
         }
 
@@ -601,8 +579,6 @@ namespace Crypto.Core {
         public void ApplyIncrementalUpdate(OrderBookEntryType type, string rateString, string amountString) {
             if(type == OrderBookEntryType.Ask) {
                 ApplyIncrementalUpdate(rateString, amountString, Asks, true);
-                if(AllowInvertedAsks)
-                    ApplyIncrementalUpdate(rateString, amountString, AsksInverted, false);
             }
             else {
                 ApplyIncrementalUpdate(rateString, amountString, Bids, false);
@@ -617,11 +593,6 @@ namespace Crypto.Core {
             if(type == OrderBookEntryType.Ask) {
                 lock(Asks) {
                     ApplyIncrementalUpdate(id, updateType, rateString, amountString, Asks, true);
-                }
-                if(AllowInvertedAsks) {
-                    lock(AsksInverted) {
-                        ApplyIncrementalUpdate(id, updateType, rateString, amountString, AsksInverted, false);
-                    }
                 }
             }
             else {

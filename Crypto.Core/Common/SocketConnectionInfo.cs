@@ -195,7 +195,8 @@ namespace Crypto.Core.Common {
         }
 
         public void Subscribe(WebSocketSubscribeInfo info) {
-            WebSocketSubscribeInfo exist = Subscribtions.FirstOrDefault(s => s.Command.channel == info.Command.channel && s.Command.command == info.Command.command && s.Command.userID == info.Command.userID);
+            // s.Request.channel == info.Request.channel && s.Request.command == info.Request.command && s.Request.userID == info.Request.userID
+            WebSocketSubscribeInfo exist = Subscribtions.FirstOrDefault(s => s.GetRequestString().Equals(info.GetRequestString()));
             if(exist != null) {
                 exist.AddRef();
                 return;
@@ -204,10 +205,6 @@ namespace Crypto.Core.Common {
             Subscribtions.Add(info);
             info.AddRef();
             SubscribeCore(info);
-        }
-
-        protected virtual string SerializeCommand(WebSocketSubscribeInfo info) {
-            return JsonConvert.SerializeObject(info.Command);
         }
 
         string CheckResult(List<SocketResponse> result) {
@@ -248,17 +245,19 @@ namespace Crypto.Core.Common {
                     info.Ticker.CandleStickData.Clear();
                     LogManager.Default.Add(LogType.Log, logOwner, Convert.ToString(logOwner), "Kline channel subscibed", "");
                 }
-                string command = SerializeCommand(info);
+                string command = info.GetRequestString();
                 Socket.Send(command);
+                if(info.AfterConnect != null)
+                    info.AfterConnect();
             }
             else {
-                SubscribeSignal(info.channel, info.messageToHandle, info.OnMessage,
+                SubscribeSignal(info.Channel, info.MessageToHandle, info.OnMessage,
                     res => {
                         string error = CheckResult(res);
                         if(error != null)
-                            LogManager.Default.Add(LogType.Error, this, info.Type.ToString(), "SignalR Scribe Error", error);
+                            LogManager.Default.Add(LogType.Error, this, info.Type.ToString(), "SignalR scribe error", error);
                         else {
-                            LogManager.Default.Add(LogType.Log, Exchange, Exchange.Type.ToString(), "Channel subscribed", info.channel);
+                            LogManager.Default.Add(LogType.Log, Exchange, Exchange.Type.ToString(), "Channel subscribed", info.Channel);
                             if(info.AfterConnect != null)
                                 info.AfterConnect();
                         }
@@ -282,12 +281,12 @@ namespace Crypto.Core.Common {
             }
 
             if(SocketType == SocketType.WebSocket) {
-                string command = SerializeCommand(info); // JsonConvert.SerializeObject(info.Command);
-                Debug.WriteLine("send command = " + command);
+                string command = info.GetRequestString();
+                Debug.WriteLine("send request = " + command);
                 Socket.Send(command);
             }
             else {
-                UnsubscribeSignal(info.channel,
+                UnsubscribeSignal(info.Channel,
                     res => {
                         string error = CheckResult(res);
                         if(error != null)
@@ -320,7 +319,8 @@ namespace Crypto.Core.Common {
         public void Unsubscribe(WebSocketSubscribeInfo info) {
             if(Signal != null)
                 return;
-            WebSocketSubscribeInfo found = Subscribtions.FirstOrDefault(s => s.Command.channel == info.Command.channel && s.Command.userID == info.Command.userID);
+            //s.Request.channel == info.Request.channel && s.Request.userID == info.Request.userID
+            WebSocketSubscribeInfo found = Subscribtions.FirstOrDefault(s => s.Type == info.Type && s.Ticker == info.Ticker);
             if(found == null)
                 return;
             found.Release();
@@ -549,38 +549,51 @@ namespace Crypto.Core.Common {
         }
     }
 
-    public class WebSocketCommandInfo {
-        public string command { get; set; }
-        public string channel { get; set; }
-        public string userID { get; set; }
-        public string messageToHandle { get; set; }
-    }
+    //public class WebSocketCommandInfo {
+    //    public string command { get; set; }
+    //    public string channel { get; set; }
+    //    public string userID { get; set; }
+    //    public string messageToHandle { get; set; }
+    //}
 
     public class WebSocketSubscribeInfo {
         public WebSocketSubscribeInfo() { }
         public WebSocketSubscribeInfo(SocketSubscribeType type, Ticker ticker, string channelName, string messageToHandle) : 
             this(type, ticker) {
-            this.channel = channelName;
-            this.messageToHandle = messageToHandle;
+            Channel = channelName;
+            MessageToHandle = messageToHandle;
+            //this.channel = channelName;
+            //this.messageToHandle = messageToHandle;
         }
         public WebSocketSubscribeInfo(SocketSubscribeType type, Ticker ticker) {
             Type = type;
             Ticker = ticker;
-            Command = new WebSocketCommandInfo();
-            if(Ticker != null)
-                channel = Ticker.Name;
+            //Request = new WebSocketCommandInfo();
+            //if(Ticker != null)
+            //    channel = Ticker.Name;
         }
         public bool ShouldUpdateSubscribtion { get; set; }
         public Action AfterConnect { get; set; }
         public Action<string, object> OnMessage { get; set; }
         public Ticker Ticker { get; set; }
         public SocketSubscribeType Type { get; set; }
-        public WebSocketCommandInfo Command { get; set; }
+        public object Request { get; set; }
+        protected internal string RequestString { get; set; }
+        protected internal string GetRequestString() {
+            if(Request == null)
+                return null;
+            if(Request is string)
+                return (string)Request;
+            return JsonConvert.SerializeObject(Request);
+        }
 
-        public string command { get { return Command.command; } set { Command.command = value; } }
-        public string channel { get { return Command.channel; } set { Command.channel = value; } }
-        public string userID { get { return Command.userID; } set { Command.userID = value; } }
-        public string messageToHandle { get { return Command.messageToHandle; } set { Command.messageToHandle = value; } }
+        //public string command { get { return Request.command; } set { Request.command = value; } }
+        //public string channel { get { return Request.channel; } set { Request.channel = value; } }
+        //public string userID { get { return Request.userID; } set { Request.userID = value; } }
+        //public string messageToHandle { get { return Request.messageToHandle; } set { Request.messageToHandle = value; } }
+
+        public string Channel { get; set; }
+        public string MessageToHandle { get; set; }
 
         public int RefCount { get; private set; }
 
@@ -600,7 +613,8 @@ namespace Crypto.Core.Common {
         OrderBook,
         TradeHistory,
         Kline,
-        Hearthbeat
+        Hearthbeat,
+        Ticker
     }
 
     public enum SocketType {

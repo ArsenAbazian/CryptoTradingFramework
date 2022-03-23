@@ -8,14 +8,14 @@ using System.Threading.Tasks;
 
 namespace Crypto.Core.Common {
     public abstract class BalanceBase {
-        public BalanceBase(AccountInfo info, CurrencyInfoBase currency) {
+        public BalanceBase(AccountInfo info, CurrencyInfo currency) {
             Account = info;
             CurrencyInfo = currency;
         }
 
-        public CurrencyInfoBase CurrencyInfo { get; set; }
+        public CurrencyInfo CurrencyInfo { get; set; }
         public bool NonZero { get { return Available != 0; } }
-        public string Exchange { get { return Account.Exchange.Name; } }
+        public string Exchange { get { return Account == null? "": Account.Exchange.Name; } }
         public AccountInfo Account { get; set; }
         public Exchange ExchangeCore { get { return Account == null ? null : Account.Exchange; } }
         public string AccountName { get { return Account == null ? "undefined" : Account.Name; } }
@@ -30,17 +30,21 @@ namespace Crypto.Core.Common {
             get {
                 if(Currency == "BTC" || Currency == "XBT")
                     return Available + OnOrders;
-                return GetValueInf((Available + OnOrders), "BTC", "XBT");
+                return GetValueIn((Available + OnOrders), "BTC", "XBT");
             }
         }
 
-        private double GetValueInf(double value, params string[] curr) {
+        private double GetValueIn(double value, params string[] curr) {
             for(int i = 0; i < curr.Length; i++) {
-                Ticker tiker = GetTicker(curr[i]);
-                if(tiker != null)
-                    return tiker.HighestBid * (Available + OnOrders);
+                Ticker ticker = GetTicker(curr[i]);
+                if(ticker != null) {
+                    if(ticker.Last == 0)
+                        ticker.Exchange.UpdateTicker(ticker);
+                    double rate = ticker.HighestBid == 0 ? ticker.Last : ticker.HighestBid;
+                    return rate * value;
+                }
             }
-            return value;
+            return 0.0;
         }
 
         public double UsdtPrice {
@@ -49,7 +53,7 @@ namespace Crypto.Core.Common {
                     return double.NaN;
                 if(Currency == "USD" || Currency == "USDT" || Currency == "USDC")
                     return 1.0;
-                return GetValueInf(1.0, "USDT", "USDC", "USD");
+                return GetValueIn(1.0, "USDT", "USDC", "USD");
             }
         }
 
@@ -59,7 +63,7 @@ namespace Crypto.Core.Common {
                     return double.NaN;
                 if(Currency == "USD" || Currency == "USDT" || Currency == "USDC")
                     return (Available + OnOrders);
-                return GetValueInf((Available + OnOrders), "USDT", "USDC", "USD");
+                return GetValueIn((Available + OnOrders), "USDT", "USDC", "USD");
             }
         }
 

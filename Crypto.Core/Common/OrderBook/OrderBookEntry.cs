@@ -212,6 +212,17 @@ namespace Crypto.Core {
             int stIndex = 0;
             return ConvertPositiveLong(str, ref stIndex);
         }
+        public static long ConvertLong(string str) {
+            if(string.IsNullOrEmpty(str))
+                return 0;
+            int startIndex = 0;
+            int sign = 1;
+            if(str[0] == '-') {
+                sign = -1;
+                startIndex++;
+            }
+            return sign * ConvertPositiveLong(str, ref startIndex);
+        }
         public static long ConvertPositiveLong(string str, ref int startIndex) {
             long value = 0;
             try {

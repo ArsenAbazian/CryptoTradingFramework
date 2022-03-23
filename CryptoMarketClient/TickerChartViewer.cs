@@ -74,7 +74,8 @@ namespace CryptoMarketClient {
                 UpdateChart();
                 UpdateCandleStickMenu();
                 UpdateDataDromServerAsync().ContinueWith(t => {
-                    Ticker.StartListenKlineStream();
+                    if(Ticker.Exchange.SupportWebSocket(WebSocketType.Kline))
+                        Ticker.StartListenKlineStream();
                 });
                 //UpdateDataFromServer(false);
                 //UpdateCandleStickMenu();

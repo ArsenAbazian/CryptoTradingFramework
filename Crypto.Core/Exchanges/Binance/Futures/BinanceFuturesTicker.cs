@@ -13,7 +13,5 @@ namespace Crypto.Core.Exchanges.Binance.Futures {
             // Receiving an event that removes a price level that is not in your local order book can happen and is normal.
             OrderBook.EnableValidationOnRemove = false;
         }
-        
-        public override string HostName => "BinanceFutures";
     }
 }

@@ -25,6 +25,10 @@ namespace Crypto.Core.Exchanges.Kraken {
             }
         }
 
+        public override Ticker CreateTicker(string name) {
+            return new KrakenTicker(this) { CurrencyPair = name };
+        }
+
         public override BalanceBase CreateAccountBalance(AccountInfo info, string currency) {
             return new KrakenAccountBalanceInfo(info, GetOrCreateCurrency(currency));
         }
@@ -158,7 +162,7 @@ namespace Crypto.Core.Exchanges.Kraken {
             return UpdateBalances(info);
         }
 
-        public override bool GetDeposit(AccountInfo account, CurrencyInfoBase currency) {
+        public override bool GetDeposit(AccountInfo account, CurrencyInfo currency) {
             if(!GetDepositMethods(account, currency))
                 return false;
             try {
@@ -178,7 +182,7 @@ namespace Crypto.Core.Exchanges.Kraken {
 
         public override bool SupportMultipleDepositMethods { get { return true; } }
 
-        public override bool GetDepositMethods(AccountInfo account, CurrencyInfoBase currency) {
+        public override bool GetDepositMethods(AccountInfo account, CurrencyInfo currency) {
             try {
                 string currName = ((KrakenCurrencyInfo)currency).AltName;
                 return OnGetDepositMethods(account, (KrakenCurrencyInfo)currency, UploadPrivateData(account, DepositMethodsApiString, DepositMethodsApiPathString, "asset=" + currName));
@@ -187,7 +191,6 @@ namespace Crypto.Core.Exchanges.Kraken {
                 LogManager.Default.Log(e.ToString());
                 return false;
             }
-
         }
 
         protected bool HasError(AccountInfo account, JsonHelperToken root, string methodName, byte[] bytes) {
@@ -221,7 +224,7 @@ namespace Crypto.Core.Exchanges.Kraken {
             return false;
         }
 
-        public override CurrencyInfoBase CreateCurrency(string currency) {
+        public override CurrencyInfo CreateCurrency(string currency) {
             return new KrakenCurrencyInfo(this, currency);
         }
 
@@ -296,22 +299,24 @@ namespace Crypto.Core.Exchanges.Kraken {
                 if(tickers == null)
                     return true;
                 foreach(var item in tickers.Properties) {
-                    KrakenTicker ticker = new KrakenTicker(this);
-
                     string name = item.GetProperty("wsname").Value;
+                    string pair = item.GetProperty("altname").Value;
+                    KrakenTicker ticker = (KrakenTicker)GetOrCreateTicker(pair);
+
+                    
                     string[] items = name.Split('/');
                     ticker.WebSocketName = name;
                     ticker.BaseCurrency = item.GetProperty("quote").Value;
                     ticker.MarketCurrency = item.GetProperty("base").Value;
                     ticker.BaseCurrencyDisplayName = items[1];
                     ticker.MarketCurrencyDisplayName = items[0];
-                    ticker.CurrencyPair = item.GetProperty("altname").Value;
+                    ticker.CurrencyPair = pair;
 
                     JsonHelperToken fees = item.GetProperty("fees");
                     if(fees != null && fees.ItemsCount > 0)
                         ticker.Fee = fees.Items[0].ValueDouble;
 
-                    Tickers.Add(ticker);
+                    AddTicker(ticker);
                 }
                 IsInitialized = true;
                 return true;
@@ -372,11 +377,9 @@ namespace Crypto.Core.Exchanges.Kraken {
                 return true;
             if(type == WebSocketType.Trades)
                 return true;
+            if(type == WebSocketType.Kline)
+                return true;
             return false;
-        }
-
-        protected override SocketConnectionInfo CreateTickersSocket() {
-            return new KrakenSocketConnectionInfo(this, null, BaseWebSocketAdress, SocketType.WebSocket, SocketSubscribeType.Tickers);
         }
 
         protected override void StartListenOrderBookCore(Ticker ticker) {
@@ -385,14 +388,18 @@ namespace Crypto.Core.Exchanges.Kraken {
                 if(!WaitUntil(5000, () => { return TickersSocketState == SocketConnectionState.Connected; }))
                     return;
             }
-            TickersSocket.Subscribe(new WebSocketSubscribeInfo(SocketSubscribeType.OrderBook, ticker) { command = "{ \"event\":\"subscribe\", \"pair\": [ \"" + ((KrakenTicker)ticker).WebSocketName + "\" ], \"subscription\": { \"name\": \"book\", \"depth\": 1000 } }" });
+            TickersSocket.Subscribe(new WebSocketSubscribeInfo(SocketSubscribeType.OrderBook, ticker) { 
+                Request = "{ \"event\":\"subscribe\", \"pair\": [ \"" + ((KrakenTicker)ticker).WebSocketName + "\" ], \"subscription\": { \"name\": \"book\", \"depth\": 1000 } }" 
+            });
         }
 
-        public override void StopListenOrderBook(Ticker ticker) {
+        public override void StopListenOrderBook(Ticker ticker, bool force) {
             base.StopListenOrderBook(ticker);
             if(TickersSocket == null)
                 return;
-            TickersSocket.Unsubscribe(new WebSocketSubscribeInfo(SocketSubscribeType.OrderBook, ticker) { command = "{ \"event\":\"unsubscribe\", \"pair\": [ \"" + ((KrakenTicker)ticker).WebSocketName + "\" ], \"subscription\": { \"name\": \"book\", \"depth\": 1000 } }" });
+            TickersSocket.Unsubscribe(new WebSocketSubscribeInfo(SocketSubscribeType.OrderBook, ticker) { 
+                Request = "{ \"event\":\"unsubscribe\", \"pair\": [ \"" + ((KrakenTicker)ticker).WebSocketName + "\" ], \"subscription\": { \"name\": \"book\", \"depth\": 1000 } }" 
+            });
         }
 
         protected override void StartListenTradeHistoryCore(Ticker ticker) {
@@ -401,17 +408,25 @@ namespace Crypto.Core.Exchanges.Kraken {
                 if(!WaitUntil(5000, () => { return TickersSocketState == SocketConnectionState.Connected; }))
                     return;
             }
-            TickersSocket.Subscribe(new WebSocketSubscribeInfo(SocketSubscribeType.TradeHistory, ticker) { command = "{ \"event\":\"subscribe\", \"pair\": [ \"" + ((KrakenTicker)ticker).WebSocketName + "\" ], \"subscription\": { \"name\": \"ticker\" } }" });
-            TickersSocket.Subscribe(new WebSocketSubscribeInfo(SocketSubscribeType.TradeHistory, ticker) { command = "{ \"event\":\"subscribe\", \"pair\": [ \"" + ((KrakenTicker)ticker).WebSocketName + "\" ], \"subscription\": { \"name\": \"trade\" } }" });
+            TickersSocket.Subscribe(new WebSocketSubscribeInfo(SocketSubscribeType.TradeHistory, ticker) { 
+                Request = "{ \"event\":\"subscribe\", \"pair\": [ \"" + ((KrakenTicker)ticker).WebSocketName + "\" ], \"subscription\": { \"name\": \"ticker\" } }" 
+            });
+            TickersSocket.Subscribe(new WebSocketSubscribeInfo(SocketSubscribeType.TradeHistory, ticker) { 
+                Request = "{ \"event\":\"subscribe\", \"pair\": [ \"" + ((KrakenTicker)ticker).WebSocketName + "\" ], \"subscription\": { \"name\": \"trade\" } }" 
+            });
             UpdateTrades(ticker);
         }
 
-        public override void StopListenTradeHistory(Ticker ticker) {
+        public override void StopListenTradeHistory(Ticker ticker, bool force) {
             base.StopListenOrderBook(ticker);
             if(TickersSocket == null)
                 return;
-            TickersSocket.Unsubscribe(new WebSocketSubscribeInfo(SocketSubscribeType.TradeHistory, ticker) { command = "{ \"event\":\"unsubscribe\", \"pair\": [ \"" + ((KrakenTicker)ticker).WebSocketName + "\" ], \"subscription\": { \"name\": \"ticker\" } }" });
-            TickersSocket.Unsubscribe(new WebSocketSubscribeInfo(SocketSubscribeType.TradeHistory, ticker) { command = "{ \"event\":\"unsubscribe\", \"pair\": [ \"" + ((KrakenTicker)ticker).WebSocketName + "\" ], \"subscription\": { \"name\": \"trade\" } }" });
+            TickersSocket.Unsubscribe(new WebSocketSubscribeInfo(SocketSubscribeType.TradeHistory, ticker) { 
+                Request = "{ \"event\":\"unsubscribe\", \"pair\": [ \"" + ((KrakenTicker)ticker).WebSocketName + "\" ], \"subscription\": { \"name\": \"ticker\" } }" 
+            });
+            TickersSocket.Unsubscribe(new WebSocketSubscribeInfo(SocketSubscribeType.TradeHistory, ticker) { 
+                Request = "{ \"event\":\"unsubscribe\", \"pair\": [ \"" + ((KrakenTicker)ticker).WebSocketName + "\" ], \"subscription\": { \"name\": \"trade\" } }" 
+            });
         }
 
         protected internal override void OnTickersSocketOpened(object sender, EventArgs e) {
@@ -598,7 +613,7 @@ namespace Crypto.Core.Exchanges.Kraken {
             return Convert.ToBase64String(hash);
         }
 
-        protected virtual byte[] UploadPrivateData(AccountInfo info, string address, string path, string parameters) {
+        protected virtual byte[] UploadPrivateData(AccountInfo info, string address, string apiPath, string parameters) {
             MyWebClient client = GetWebClient();
 
             string nonce = GetNonce();
@@ -607,7 +622,7 @@ namespace Crypto.Core.Exchanges.Kraken {
                 queryString = string.Format("nonce={0}", nonce);
             else
                 queryString = string.Format("nonce={0}&{1}", nonce, parameters);
-            string signature = info.GetSign(path, queryString, nonce);
+            string signature = info.GetSign(apiPath, queryString, nonce);
 
             client.DefaultRequestHeaders.Clear();
             client.DefaultRequestHeaders.Add("API-Key", info.ApiKey);
@@ -751,7 +766,6 @@ namespace Crypto.Core.Exchanges.Kraken {
             ticker.SaveOpenedOrders();
             ticker.OpenedOrdersData = data;
 
-            string text = UTF8Encoding.Default.GetString(data);
             JsonHelperToken root = JsonHelper.Default.Deserialize(data);
             if(HasError(account, root, nameof(OnGetOpenedOrders), data))
                 return false;
@@ -831,13 +845,9 @@ namespace Crypto.Core.Exchanges.Kraken {
 
                 List<OrderBookEntry> bids = ticker.OrderBook.Bids;
                 List<OrderBookEntry> asks = ticker.OrderBook.Asks;
-                List<OrderBookEntry> iasks = ticker.OrderBook.AsksInverted;
 
                 bids.Clear();
                 asks.Clear();
-                if(iasks != null)
-                    iasks.Clear();
-
 
                 for(int i = 0; i < jbids.Count; i++) {
                     string[] item = jbids[i];
@@ -845,10 +855,7 @@ namespace Crypto.Core.Exchanges.Kraken {
                 }
                 for(int i = 0; i < jasks.Count; i++) {
                     string[] item = jasks[i];
-                    OrderBookEntry e = new OrderBookEntry() { ValueString = item[0], AmountString = item[1] };
-                    asks.Add(e);
-                    if(iasks != null)
-                        iasks.Insert(0, e);
+                    asks.Add(new OrderBookEntry() { ValueString = item[0], AmountString = item[1] });
                 }
 
                 return true;

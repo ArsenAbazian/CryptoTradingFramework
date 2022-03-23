@@ -9,6 +9,6 @@ using System.Threading.Tasks;
 
 namespace Crypto.Core.Exchanges.Binance {
     public class BinanceAccountBalanceInfo : BalanceBase {
-        public BinanceAccountBalanceInfo(AccountInfo info, CurrencyInfoBase currency) : base(info, currency) { }
+        public BinanceAccountBalanceInfo(AccountInfo info, CurrencyInfo currency) : base(info, currency) { }
     }
 }

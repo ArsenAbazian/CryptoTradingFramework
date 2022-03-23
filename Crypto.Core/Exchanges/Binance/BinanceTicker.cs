@@ -36,8 +36,6 @@ namespace Crypto.Core.Binance {
 
         public override double Fee { get { return 0.1f * 0.01f; } set { } }
         
-        public override string HostName => "Binance";
-
         public override string WebPageAddress => "https://www.binance.com/trade.html?symbol=" + MarketCurrency + "_" + BaseCurrency;
     }
 }

@@ -15,8 +15,6 @@ namespace Crypto.Core.Exchanges.Kraken {
 
         public override double Fee { get; set; }
 
-        public override string HostName => "Kraken";
-
         public override string WebPageAddress => "https://trade.kraken.com/charts/KRAKEN:" + CurrencyPair + "?period=1d";
 
         public override string BaseCurrencyDisplayName { get; set; }

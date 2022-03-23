@@ -23,6 +23,7 @@ using Crypto.Core.BitFinex;
 using System.Threading.Tasks;
 using Crypto.Core.Exchanges.Binance.Futures;
 using Crypto.Core.Exchanges.Kraken;
+using Crypto.Core.Exchanges.Exmo;
 
 namespace Crypto.Core {
     public abstract class Exchange : ISupportSerialization {
@@ -37,6 +38,8 @@ namespace Crypto.Core {
             Registered.Add(BitmexExchange.Default);
             Registered.Add(BinanceFuturesExchange.Default);
             Registered.Add(KrakenExchange.Default);
+            Registered.Add(BitFinexExchange.Default);
+            //Registered.Add(ExmoExchange.Default);
         }
 
         protected internal virtual void OnRequestCompleted(MyWebClient myWebClient) {
@@ -224,9 +227,9 @@ namespace Crypto.Core {
         public List<AccountInfo> Accounts { get; } = new List<AccountInfo>();
 
         [XmlIgnore]
-        public Dictionary<string, CurrencyInfoBase> Currencies { get; } = new Dictionary<string, CurrencyInfoBase>();
+        public Dictionary<string, CurrencyInfo> Currencies { get; } = new Dictionary<string, CurrencyInfo>();
 
-        public void AddCurrency(CurrencyInfoBase currency) {
+        public void AddCurrency(CurrencyInfo currency) {
             if(Currencies.ContainsKey(currency.Currency)) {
                 Currencies[currency.Currency] = currency;
                 return;
@@ -247,6 +250,16 @@ namespace Crypto.Core {
         public void ClearTickers() {
             TickerDictionary.Clear();
             Tickers.Clear();
+        }
+
+        public abstract Ticker CreateTicker(string name);
+        protected virtual Ticker GetOrCreateTicker(string name) {
+            Ticker t = Ticker(name);
+            if(t == null) {
+                t = CreateTicker(name);
+                AddTicker(t);
+            }
+            return t;
         }
 
         public event CancelOrderHandler OrderCanceled;
@@ -766,7 +779,7 @@ namespace Crypto.Core {
         public abstract bool UpdateOpenedOrders(AccountInfo account, Ticker ticker);
         public bool UpdateOpenedOrders(AccountInfo account) { return UpdateOpenedOrders(account, null); }
         public abstract bool UpdateCurrencies();
-        public virtual CurrencyInfoBase CreateCurrency(string currency) { return new CurrencyInfoBase(this, currency); }
+        public virtual CurrencyInfo CreateCurrency(string currency) { return new CurrencyInfo(this, currency); }
         public abstract BalanceBase CreateAccountBalance(AccountInfo info, string currency);
         public abstract bool UpdateBalances(AccountInfo info);
         public virtual bool UpdateAddresses(AccountInfo account) { return true; }
@@ -775,7 +788,7 @@ namespace Crypto.Core {
         public abstract bool CreateDeposit(AccountInfo account, string currency);
         public abstract bool GetDeposites(AccountInfo account);
         public bool GetDeposit(BalanceBase b) { return GetDeposit(b.Account, b.CurrencyInfo); }
-        public abstract bool GetDeposit(AccountInfo account, CurrencyInfoBase currency);
+        public abstract bool GetDeposit(AccountInfo account, CurrencyInfo currency);
         public TradingResult Buy(AccountInfo account, Ticker ticker, double rate, double amount) { return BuyLong(account, ticker, rate, amount); }
         public TradingResult Sell(AccountInfo account, Ticker ticker, double rate, double amount) { return SellLong(account, ticker, rate, amount); }
         public abstract TradingResult BuyLong(AccountInfo account, Ticker ticker, double rate, double amount);
@@ -783,9 +796,6 @@ namespace Crypto.Core {
 
         public abstract TradingResult BuyShort(AccountInfo account, Ticker ticker, double rate, double amount);
         public abstract TradingResult SellShort(AccountInfo account, Ticker ticker, double rate, double amount);
-        //public virtual TradingResult GetOrderStatus(AccountInfo account, TradingResult order) { 
-        //    return order;    
-        //}
         public virtual bool AllowCheckOrderStatus { get { return false; } }
         
         public abstract bool Cancel(AccountInfo account, Ticker ticker, string orderId);
@@ -1018,7 +1028,7 @@ namespace Crypto.Core {
             return condition();
         }
 
-        protected virtual SocketConnectionInfo CreateTickersSocket() {
+        protected virtual SocketConnectionInfo CreateTickersWebSocket() {
             return new SocketConnectionInfo(this, null, BaseWebSocketAdress, SocketType.WebSocket, SocketSubscribeType.Tickers);
         }
 
@@ -1027,7 +1037,7 @@ namespace Crypto.Core {
                 TickersSocket.AddRef();
                 return;
             }
-            TickersSocket = CreateTickersSocket();
+            TickersSocket = CreateTickersWebSocket();
             TickersSocket.StateChanged += OnTickersSocketStateChanged;
             if(!SimulationMode)
                 TickersSocket.Open();
@@ -1132,7 +1142,7 @@ namespace Crypto.Core {
             StopListenKline(ticker);
         }
 
-        public virtual void StopListenKline(Ticker ticker) {
+        public void StopListenKline(Ticker ticker) {
             StopListenKline(ticker, false);
         }
 
@@ -1140,7 +1150,7 @@ namespace Crypto.Core {
             ReleaseKline(ticker, force);
         }
 
-        public virtual void StopListenOrderBook(Ticker ticker) {
+        public void StopListenOrderBook(Ticker ticker) {
             StopListenOrderBook(ticker, false);
         }
 
@@ -1148,7 +1158,7 @@ namespace Crypto.Core {
             ReleaseOrderBook(ticker, force);
         }
 
-        public virtual void StopListenTradeHistory(Ticker ticker) {
+        public void StopListenTradeHistory(Ticker ticker) {
             StopListenTradeHistory(ticker, false);
         }
         public virtual void StopListenTradeHistory(Ticker ticker, bool force) {
@@ -1274,12 +1284,10 @@ namespace Crypto.Core {
         public static Exchange Get(ExchangeType exchange) {
             return Registered.FirstOrDefault(e => e.Type == exchange);
         }
-        public Ticker Ticker(string tickerName) {
-            for(int i = 0; i < Tickers.Count; i++) {
-                Ticker t = Tickers[i];
-                if(t.Name == tickerName) return t;
-            }
-            return null;
+        public Ticker Ticker(string ticker) {
+            Ticker t = null;
+            TickerDictionary.TryGetValue(ticker, out t);
+            return t;
         }
 
         public int GetRequestFillPercent() {
@@ -1456,8 +1464,8 @@ namespace Crypto.Core {
             }
             return markets.ToArray();
         }
-        public CurrencyInfoBase GetOrCreateCurrency(string currency) {
-            CurrencyInfoBase c = null;
+        public CurrencyInfo GetOrCreateCurrency(string currency) {
+            CurrencyInfo c = null;
             if(Currencies.TryGetValue(currency, out c))
                 return c;
             c = CreateCurrency(currency);
@@ -1465,7 +1473,7 @@ namespace Crypto.Core {
             return c;
         }
 
-        public virtual bool GetDepositMethods(AccountInfo account, CurrencyInfoBase currency) {
+        public virtual bool GetDepositMethods(AccountInfo account, CurrencyInfo currency) {
             return false;
         }
 
@@ -1503,7 +1511,8 @@ namespace Crypto.Core {
         Tickers,
         Ticker,
         Trades,
-        OrderBook
+        OrderBook,
+        Kline
     }
 
     public enum SocketConnectionState {

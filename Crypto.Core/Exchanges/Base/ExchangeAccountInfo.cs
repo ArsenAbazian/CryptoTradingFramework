@@ -282,6 +282,7 @@ namespace Crypto.Core {
         Yobit,
         Bitmex,
         BinanceFutures,
-        Kraken
+        Kraken,
+        EXMO
     }
 }

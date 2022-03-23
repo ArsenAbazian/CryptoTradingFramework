@@ -14,12 +14,19 @@ namespace Crypto.UI.Helpers {
         public NotificationProvider(Form ownerForm, Image icon) {
             AlertControl = new DevExpress.XtraBars.Alerter.AlertControl();
             AlertControl.GetDesiredAlertFormWidth += AlertControl_GetDesiredAlertFormWidth;
+            AlertControl.AlertClick += AlertControl_AlertClick;
             OwnerForm = ownerForm;
             Icon = icon;
         }
 
+        private void AlertControl_AlertClick(object sender, DevExpress.XtraBars.Alerter.AlertClickEventArgs e) {
+            ILogPanelOwner owner = OwnerForm as ILogPanelOwner;
+            if(owner != null)
+                owner.ShowLogPanel();
+        }
+
         private void AlertControl_GetDesiredAlertFormWidth(object sender, DevExpress.XtraBars.Alerter.AlertFormWidthEventArgs e) {
-            e.Width = (int)(Screen.GetWorkingArea(OwnerForm).Width * 0.2);
+            e.Width = (int)(Screen.GetWorkingArea(OwnerForm).Width * 0.3);
         }
 
         protected Image Icon { get; set; }
@@ -62,5 +69,9 @@ namespace Crypto.UI.Helpers {
                     }));
             }
         }
+    }
+
+    public interface ILogPanelOwner {
+        void ShowLogPanel();
     }
 }

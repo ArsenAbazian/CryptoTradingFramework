@@ -26,28 +26,29 @@ namespace CryptoMarketClient {
         /// </summary>
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
-            DevExpress.XtraGrid.GridFormatRule gridFormatRule4 = new DevExpress.XtraGrid.GridFormatRule();
-            DevExpress.XtraEditors.FormatConditionRuleIconSet formatConditionRuleIconSet4 = new DevExpress.XtraEditors.FormatConditionRuleIconSet();
-            DevExpress.XtraEditors.FormatConditionIconSet formatConditionIconSet4 = new DevExpress.XtraEditors.FormatConditionIconSet();
-            DevExpress.XtraEditors.FormatConditionIconSetIcon formatConditionIconSetIcon10 = new DevExpress.XtraEditors.FormatConditionIconSetIcon();
-            DevExpress.XtraEditors.FormatConditionIconSetIcon formatConditionIconSetIcon11 = new DevExpress.XtraEditors.FormatConditionIconSetIcon();
-            DevExpress.XtraEditors.FormatConditionIconSetIcon formatConditionIconSetIcon12 = new DevExpress.XtraEditors.FormatConditionIconSetIcon();
-            DevExpress.XtraGrid.GridFormatRule gridFormatRule5 = new DevExpress.XtraGrid.GridFormatRule();
-            DevExpress.XtraEditors.FormatConditionRuleIconSet formatConditionRuleIconSet5 = new DevExpress.XtraEditors.FormatConditionRuleIconSet();
-            DevExpress.XtraEditors.FormatConditionIconSet formatConditionIconSet5 = new DevExpress.XtraEditors.FormatConditionIconSet();
-            DevExpress.XtraEditors.FormatConditionIconSetIcon formatConditionIconSetIcon13 = new DevExpress.XtraEditors.FormatConditionIconSetIcon();
-            DevExpress.XtraEditors.FormatConditionIconSetIcon formatConditionIconSetIcon14 = new DevExpress.XtraEditors.FormatConditionIconSetIcon();
-            DevExpress.XtraEditors.FormatConditionIconSetIcon formatConditionIconSetIcon15 = new DevExpress.XtraEditors.FormatConditionIconSetIcon();
-            DevExpress.XtraGrid.GridFormatRule gridFormatRule6 = new DevExpress.XtraGrid.GridFormatRule();
-            DevExpress.XtraEditors.FormatConditionRuleIconSet formatConditionRuleIconSet6 = new DevExpress.XtraEditors.FormatConditionRuleIconSet();
-            DevExpress.XtraEditors.FormatConditionIconSet formatConditionIconSet6 = new DevExpress.XtraEditors.FormatConditionIconSet();
-            DevExpress.XtraEditors.FormatConditionIconSetIcon formatConditionIconSetIcon16 = new DevExpress.XtraEditors.FormatConditionIconSetIcon();
-            DevExpress.XtraEditors.FormatConditionIconSetIcon formatConditionIconSetIcon17 = new DevExpress.XtraEditors.FormatConditionIconSetIcon();
-            DevExpress.XtraEditors.FormatConditionIconSetIcon formatConditionIconSetIcon18 = new DevExpress.XtraEditors.FormatConditionIconSetIcon();
+            DevExpress.XtraGrid.GridFormatRule gridFormatRule1 = new DevExpress.XtraGrid.GridFormatRule();
+            DevExpress.XtraEditors.FormatConditionRuleIconSet formatConditionRuleIconSet1 = new DevExpress.XtraEditors.FormatConditionRuleIconSet();
+            DevExpress.XtraEditors.FormatConditionIconSet formatConditionIconSet1 = new DevExpress.XtraEditors.FormatConditionIconSet();
+            DevExpress.XtraEditors.FormatConditionIconSetIcon formatConditionIconSetIcon1 = new DevExpress.XtraEditors.FormatConditionIconSetIcon();
+            DevExpress.XtraEditors.FormatConditionIconSetIcon formatConditionIconSetIcon2 = new DevExpress.XtraEditors.FormatConditionIconSetIcon();
+            DevExpress.XtraEditors.FormatConditionIconSetIcon formatConditionIconSetIcon3 = new DevExpress.XtraEditors.FormatConditionIconSetIcon();
+            DevExpress.XtraGrid.GridFormatRule gridFormatRule2 = new DevExpress.XtraGrid.GridFormatRule();
+            DevExpress.XtraEditors.FormatConditionRuleIconSet formatConditionRuleIconSet2 = new DevExpress.XtraEditors.FormatConditionRuleIconSet();
+            DevExpress.XtraEditors.FormatConditionIconSet formatConditionIconSet2 = new DevExpress.XtraEditors.FormatConditionIconSet();
+            DevExpress.XtraEditors.FormatConditionIconSetIcon formatConditionIconSetIcon4 = new DevExpress.XtraEditors.FormatConditionIconSetIcon();
+            DevExpress.XtraEditors.FormatConditionIconSetIcon formatConditionIconSetIcon5 = new DevExpress.XtraEditors.FormatConditionIconSetIcon();
+            DevExpress.XtraEditors.FormatConditionIconSetIcon formatConditionIconSetIcon6 = new DevExpress.XtraEditors.FormatConditionIconSetIcon();
+            DevExpress.XtraGrid.GridFormatRule gridFormatRule3 = new DevExpress.XtraGrid.GridFormatRule();
+            DevExpress.XtraEditors.FormatConditionRuleIconSet formatConditionRuleIconSet3 = new DevExpress.XtraEditors.FormatConditionRuleIconSet();
+            DevExpress.XtraEditors.FormatConditionIconSet formatConditionIconSet3 = new DevExpress.XtraEditors.FormatConditionIconSet();
+            DevExpress.XtraEditors.FormatConditionIconSetIcon formatConditionIconSetIcon7 = new DevExpress.XtraEditors.FormatConditionIconSetIcon();
+            DevExpress.XtraEditors.FormatConditionIconSetIcon formatConditionIconSetIcon8 = new DevExpress.XtraEditors.FormatConditionIconSetIcon();
+            DevExpress.XtraEditors.FormatConditionIconSetIcon formatConditionIconSetIcon9 = new DevExpress.XtraEditors.FormatConditionIconSetIcon();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AccountCollectionForm));
             this.gridControl1 = new DevExpress.XtraGrid.GridControl();
             this.apiKeyInfoBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.gridView1 = new DevExpress.XtraGrid.Views.Grid.GridView();
+            this.colSecret = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colDefault = new DevExpress.XtraGrid.Columns.GridColumn();
             this.riDefaultCheckEdit = new DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit();
             this.colName = new DevExpress.XtraGrid.Columns.GridColumn();
@@ -56,7 +57,6 @@ namespace CryptoMarketClient {
             this.colActive = new DevExpress.XtraGrid.Columns.GridColumn();
             this.riActiveCheckEdit = new DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit();
             this.colApiKey = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.colSecret = new DevExpress.XtraGrid.Columns.GridColumn();
             this.layoutControl1 = new DevExpress.XtraLayout.LayoutControl();
             this.okButton = new DevExpress.XtraEditors.SimpleButton();
             this.cancelButton = new DevExpress.XtraEditors.SimpleButton();
@@ -97,8 +97,8 @@ namespace CryptoMarketClient {
             // gridControl1
             // 
             this.gridControl1.DataSource = this.apiKeyInfoBindingSource;
-            this.gridControl1.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(1);
-            this.gridControl1.Location = new System.Drawing.Point(8, 10);
+            this.gridControl1.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(1, 0, 1, 0);
+            this.gridControl1.Location = new System.Drawing.Point(12, 12);
             this.gridControl1.MainView = this.gridView1;
             this.gridControl1.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.gridControl1.Name = "gridControl1";
@@ -106,7 +106,7 @@ namespace CryptoMarketClient {
             this.riDefaultCheckEdit,
             this.riActiveCheckEdit,
             this.repositoryItemTextEdit1});
-            this.gridControl1.Size = new System.Drawing.Size(1260, 596);
+            this.gridControl1.Size = new System.Drawing.Size(1252, 592);
             this.gridControl1.TabIndex = 3;
             this.gridControl1.UseDirectXPaint = DevExpress.Utils.DefaultBoolean.True;
             this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
@@ -131,66 +131,66 @@ namespace CryptoMarketClient {
             this.colApiKey,
             this.colSecret});
             this.gridView1.DetailHeight = 228;
-            gridFormatRule4.Name = "FormatRulePercentChange";
-            formatConditionIconSet4.CategoryName = "Positive/Negative";
-            formatConditionIconSetIcon10.PredefinedName = "Arrows3_3.png";
-            formatConditionIconSetIcon10.Value = new decimal(new int[] {
+            gridFormatRule1.Name = "FormatRulePercentChange";
+            formatConditionIconSet1.CategoryName = "Positive/Negative";
+            formatConditionIconSetIcon1.PredefinedName = "Arrows3_3.png";
+            formatConditionIconSetIcon1.Value = new decimal(new int[] {
             -1,
             -1,
             -1,
             -2147483648});
-            formatConditionIconSetIcon10.ValueComparison = DevExpress.XtraEditors.FormatConditionComparisonType.GreaterOrEqual;
-            formatConditionIconSetIcon11.PredefinedName = "Arrows3_2.png";
-            formatConditionIconSetIcon11.ValueComparison = DevExpress.XtraEditors.FormatConditionComparisonType.GreaterOrEqual;
-            formatConditionIconSetIcon12.PredefinedName = "Arrows3_1.png";
-            formatConditionIconSet4.Icons.Add(formatConditionIconSetIcon10);
-            formatConditionIconSet4.Icons.Add(formatConditionIconSetIcon11);
-            formatConditionIconSet4.Icons.Add(formatConditionIconSetIcon12);
-            formatConditionIconSet4.Name = "PositiveNegativeArrows";
-            formatConditionIconSet4.ValueType = DevExpress.XtraEditors.FormatConditionValueType.Number;
-            formatConditionRuleIconSet4.IconSet = formatConditionIconSet4;
-            gridFormatRule4.Rule = formatConditionRuleIconSet4;
-            gridFormatRule5.Name = "FormatRuleBidDelta";
-            formatConditionIconSet5.CategoryName = "Positive/Negative";
-            formatConditionIconSetIcon13.PredefinedName = "Arrows3_3.png";
-            formatConditionIconSetIcon13.Value = new decimal(new int[] {
+            formatConditionIconSetIcon1.ValueComparison = DevExpress.XtraEditors.FormatConditionComparisonType.GreaterOrEqual;
+            formatConditionIconSetIcon2.PredefinedName = "Arrows3_2.png";
+            formatConditionIconSetIcon2.ValueComparison = DevExpress.XtraEditors.FormatConditionComparisonType.GreaterOrEqual;
+            formatConditionIconSetIcon3.PredefinedName = "Arrows3_1.png";
+            formatConditionIconSet1.Icons.Add(formatConditionIconSetIcon1);
+            formatConditionIconSet1.Icons.Add(formatConditionIconSetIcon2);
+            formatConditionIconSet1.Icons.Add(formatConditionIconSetIcon3);
+            formatConditionIconSet1.Name = "PositiveNegativeArrows";
+            formatConditionIconSet1.ValueType = DevExpress.XtraEditors.FormatConditionValueType.Number;
+            formatConditionRuleIconSet1.IconSet = formatConditionIconSet1;
+            gridFormatRule1.Rule = formatConditionRuleIconSet1;
+            gridFormatRule2.Name = "FormatRuleBidDelta";
+            formatConditionIconSet2.CategoryName = "Positive/Negative";
+            formatConditionIconSetIcon4.PredefinedName = "Arrows3_3.png";
+            formatConditionIconSetIcon4.Value = new decimal(new int[] {
             -1,
             -1,
             -1,
             -2147483648});
-            formatConditionIconSetIcon13.ValueComparison = DevExpress.XtraEditors.FormatConditionComparisonType.GreaterOrEqual;
-            formatConditionIconSetIcon14.PredefinedName = "Arrows3_2.png";
-            formatConditionIconSetIcon14.ValueComparison = DevExpress.XtraEditors.FormatConditionComparisonType.GreaterOrEqual;
-            formatConditionIconSetIcon15.PredefinedName = "Arrows3_1.png";
-            formatConditionIconSet5.Icons.Add(formatConditionIconSetIcon13);
-            formatConditionIconSet5.Icons.Add(formatConditionIconSetIcon14);
-            formatConditionIconSet5.Icons.Add(formatConditionIconSetIcon15);
-            formatConditionIconSet5.Name = "PositiveNegativeArrows";
-            formatConditionIconSet5.ValueType = DevExpress.XtraEditors.FormatConditionValueType.Number;
-            formatConditionRuleIconSet5.IconSet = formatConditionIconSet5;
-            gridFormatRule5.Rule = formatConditionRuleIconSet5;
-            gridFormatRule6.Name = "FormatRuleAskDelta";
-            formatConditionIconSet6.CategoryName = "Positive/Negative";
-            formatConditionIconSetIcon16.PredefinedName = "Arrows3_3.png";
-            formatConditionIconSetIcon16.Value = new decimal(new int[] {
+            formatConditionIconSetIcon4.ValueComparison = DevExpress.XtraEditors.FormatConditionComparisonType.GreaterOrEqual;
+            formatConditionIconSetIcon5.PredefinedName = "Arrows3_2.png";
+            formatConditionIconSetIcon5.ValueComparison = DevExpress.XtraEditors.FormatConditionComparisonType.GreaterOrEqual;
+            formatConditionIconSetIcon6.PredefinedName = "Arrows3_1.png";
+            formatConditionIconSet2.Icons.Add(formatConditionIconSetIcon4);
+            formatConditionIconSet2.Icons.Add(formatConditionIconSetIcon5);
+            formatConditionIconSet2.Icons.Add(formatConditionIconSetIcon6);
+            formatConditionIconSet2.Name = "PositiveNegativeArrows";
+            formatConditionIconSet2.ValueType = DevExpress.XtraEditors.FormatConditionValueType.Number;
+            formatConditionRuleIconSet2.IconSet = formatConditionIconSet2;
+            gridFormatRule2.Rule = formatConditionRuleIconSet2;
+            gridFormatRule3.Name = "FormatRuleAskDelta";
+            formatConditionIconSet3.CategoryName = "Positive/Negative";
+            formatConditionIconSetIcon7.PredefinedName = "Arrows3_3.png";
+            formatConditionIconSetIcon7.Value = new decimal(new int[] {
             -1,
             -1,
             -1,
             -2147483648});
-            formatConditionIconSetIcon16.ValueComparison = DevExpress.XtraEditors.FormatConditionComparisonType.GreaterOrEqual;
-            formatConditionIconSetIcon17.PredefinedName = "Arrows3_2.png";
-            formatConditionIconSetIcon17.ValueComparison = DevExpress.XtraEditors.FormatConditionComparisonType.GreaterOrEqual;
-            formatConditionIconSetIcon18.PredefinedName = "Arrows3_1.png";
-            formatConditionIconSet6.Icons.Add(formatConditionIconSetIcon16);
-            formatConditionIconSet6.Icons.Add(formatConditionIconSetIcon17);
-            formatConditionIconSet6.Icons.Add(formatConditionIconSetIcon18);
-            formatConditionIconSet6.Name = "PositiveNegativeArrows";
-            formatConditionIconSet6.ValueType = DevExpress.XtraEditors.FormatConditionValueType.Number;
-            formatConditionRuleIconSet6.IconSet = formatConditionIconSet6;
-            gridFormatRule6.Rule = formatConditionRuleIconSet6;
-            this.gridView1.FormatRules.Add(gridFormatRule4);
-            this.gridView1.FormatRules.Add(gridFormatRule5);
-            this.gridView1.FormatRules.Add(gridFormatRule6);
+            formatConditionIconSetIcon7.ValueComparison = DevExpress.XtraEditors.FormatConditionComparisonType.GreaterOrEqual;
+            formatConditionIconSetIcon8.PredefinedName = "Arrows3_2.png";
+            formatConditionIconSetIcon8.ValueComparison = DevExpress.XtraEditors.FormatConditionComparisonType.GreaterOrEqual;
+            formatConditionIconSetIcon9.PredefinedName = "Arrows3_1.png";
+            formatConditionIconSet3.Icons.Add(formatConditionIconSetIcon7);
+            formatConditionIconSet3.Icons.Add(formatConditionIconSetIcon8);
+            formatConditionIconSet3.Icons.Add(formatConditionIconSetIcon9);
+            formatConditionIconSet3.Name = "PositiveNegativeArrows";
+            formatConditionIconSet3.ValueType = DevExpress.XtraEditors.FormatConditionValueType.Number;
+            formatConditionRuleIconSet3.IconSet = formatConditionIconSet3;
+            gridFormatRule3.Rule = formatConditionRuleIconSet3;
+            this.gridView1.FormatRules.Add(gridFormatRule1);
+            this.gridView1.FormatRules.Add(gridFormatRule2);
+            this.gridView1.FormatRules.Add(gridFormatRule3);
             this.gridView1.GridControl = this.gridControl1;
             this.gridView1.GroupCount = 1;
             this.gridView1.Name = "gridView1";
@@ -202,6 +202,16 @@ namespace CryptoMarketClient {
             this.gridView1.OptionsView.ShowVerticalLines = DevExpress.Utils.DefaultBoolean.False;
             this.gridView1.SortInfo.AddRange(new DevExpress.XtraGrid.Columns.GridColumnSortInfo[] {
             new DevExpress.XtraGrid.Columns.GridColumnSortInfo(this.colMarket, DevExpress.Data.ColumnSortOrder.Ascending)});
+            // 
+            // colSecret
+            // 
+            this.colSecret.FieldName = "Secret";
+            this.colSecret.MinWidth = 18;
+            this.colSecret.Name = "colSecret";
+            this.colSecret.OptionsColumn.AllowEdit = false;
+            this.colSecret.Visible = true;
+            this.colSecret.VisibleIndex = 4;
+            this.colSecret.Width = 69;
             // 
             // colDefault
             // 
@@ -272,16 +282,6 @@ namespace CryptoMarketClient {
             this.colApiKey.VisibleIndex = 3;
             this.colApiKey.Width = 669;
             // 
-            // colSecret
-            // 
-            this.colSecret.FieldName = "Secret";
-            this.colSecret.MinWidth = 18;
-            this.colSecret.Name = "colSecret";
-            this.colSecret.OptionsColumn.AllowEdit = false;
-            this.colSecret.Visible = true;
-            this.colSecret.VisibleIndex = 4;
-            this.colSecret.Width = 69;
-            // 
             // layoutControl1
             // 
             this.layoutControl1.Controls.Add(this.gridControl1);
@@ -300,11 +300,11 @@ namespace CryptoMarketClient {
             // okButton
             // 
             this.okButton.AutoWidthInLayoutControl = true;
-            this.okButton.Location = new System.Drawing.Point(978, 625);
-            this.okButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.okButton.Location = new System.Drawing.Point(996, 623);
+            this.okButton.Margin = new System.Windows.Forms.Padding(2);
             this.okButton.Name = "okButton";
             this.okButton.Padding = new System.Windows.Forms.Padding(44, 0, 44, 0);
-            this.okButton.Size = new System.Drawing.Size(135, 44);
+            this.okButton.Size = new System.Drawing.Size(129, 44);
             this.okButton.StyleController = this.layoutControl1;
             this.okButton.TabIndex = 4;
             this.okButton.Text = "OK";
@@ -313,11 +313,11 @@ namespace CryptoMarketClient {
             // cancelButton
             // 
             this.cancelButton.AutoWidthInLayoutControl = true;
-            this.cancelButton.Location = new System.Drawing.Point(1130, 625);
-            this.cancelButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.cancelButton.Location = new System.Drawing.Point(1142, 623);
+            this.cancelButton.Margin = new System.Windows.Forms.Padding(2);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Padding = new System.Windows.Forms.Padding(24, 0, 24, 0);
-            this.cancelButton.Size = new System.Drawing.Size(138, 44);
+            this.cancelButton.Size = new System.Drawing.Size(123, 44);
             this.cancelButton.StyleController = this.layoutControl1;
             this.cancelButton.TabIndex = 5;
             this.cancelButton.Text = "Cancel";
@@ -342,36 +342,36 @@ namespace CryptoMarketClient {
             this.layoutControlItem1.Control = this.gridControl1;
             this.layoutControlItem1.Location = new System.Drawing.Point(0, 0);
             this.layoutControlItem1.Name = "layoutControlItem1";
-            this.layoutControlItem1.Size = new System.Drawing.Size(1262, 600);
+            this.layoutControlItem1.Size = new System.Drawing.Size(1256, 596);
             this.layoutControlItem1.TextSize = new System.Drawing.Size(0, 0);
             this.layoutControlItem1.TextVisible = false;
             // 
             // layoutControlItem2
             // 
             this.layoutControlItem2.Control = this.okButton;
-            this.layoutControlItem2.Location = new System.Drawing.Point(970, 600);
+            this.layoutControlItem2.Location = new System.Drawing.Point(985, 596);
             this.layoutControlItem2.Name = "layoutControlItem2";
             this.layoutControlItem2.Padding = new DevExpress.XtraLayout.Utils.Padding(1, 16, 17, 2);
-            this.layoutControlItem2.Size = new System.Drawing.Size(152, 63);
+            this.layoutControlItem2.Size = new System.Drawing.Size(146, 63);
             this.layoutControlItem2.TextSize = new System.Drawing.Size(0, 0);
             this.layoutControlItem2.TextVisible = false;
             // 
             // layoutControlItem3
             // 
             this.layoutControlItem3.Control = this.cancelButton;
-            this.layoutControlItem3.Location = new System.Drawing.Point(1122, 600);
+            this.layoutControlItem3.Location = new System.Drawing.Point(1131, 596);
             this.layoutControlItem3.Name = "layoutControlItem3";
             this.layoutControlItem3.Padding = new DevExpress.XtraLayout.Utils.Padding(1, 1, 17, 2);
-            this.layoutControlItem3.Size = new System.Drawing.Size(140, 63);
+            this.layoutControlItem3.Size = new System.Drawing.Size(125, 63);
             this.layoutControlItem3.TextSize = new System.Drawing.Size(0, 0);
             this.layoutControlItem3.TextVisible = false;
             // 
             // emptySpaceItem1
             // 
             this.emptySpaceItem1.AllowHotTrack = false;
-            this.emptySpaceItem1.Location = new System.Drawing.Point(0, 600);
+            this.emptySpaceItem1.Location = new System.Drawing.Point(0, 596);
             this.emptySpaceItem1.Name = "emptySpaceItem1";
-            this.emptySpaceItem1.Size = new System.Drawing.Size(970, 63);
+            this.emptySpaceItem1.Size = new System.Drawing.Size(985, 63);
             this.emptySpaceItem1.TextSize = new System.Drawing.Size(0, 0);
             // 
             // barManager1
@@ -508,7 +508,8 @@ namespace CryptoMarketClient {
             // 
             // AccountCollectionForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(20F, 50F);
+            this.Appearance.Options.UseFont = true;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(15F, 37F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1276, 749);
             this.Controls.Add(this.layoutControl1);

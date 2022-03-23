@@ -37,18 +37,7 @@ namespace CryptoMarketClient {
         protected int LastAskTopRowIndex { get; set; } = -1;
         public List<OrderBookEntry> Asks {
             get { return (List<OrderBookEntry>)this.askGridControl.DataSource; }
-            set {
-                this.askGridControl.DataSource = value;
-                OnAsksChanged();
-            }
-        }
-
-        private void OnAsksChanged() {
-            if(Asks == null)
-                return;
-            //SnapAsksToEnd = true;
-            //this.askGridView.FocusedRowHandle = this.askGridView.GetRowHandle(Asks.Count - 1);
-            //this.askGridView.MoveLast();
+            set { this.askGridControl.DataSource = value; }
         }
 
         public List<OrderBookEntry> Bids {
@@ -61,16 +50,8 @@ namespace CryptoMarketClient {
             view.RefreshData();
         }
 
-        void UpdateAsksVisibleRowIndex() {
-            //if(SnapAsksToEnd)
-            //    this.askGridView.MoveLast();
-            //else
-            //    this.askGridView.TopRowIndex = LastAskTopRowIndex;
-        }
-
         public void RefreshAsks() {
             UpdateView(this.askGridView, Asks);
-            UpdateAsksVisibleRowIndex();
         }
 
         public void RefreshBids() {
@@ -78,7 +59,6 @@ namespace CryptoMarketClient {
         }
 
         private void askGridControl_Resize(object sender, EventArgs e) {
-            UpdateAsksVisibleRowIndex();
         }
 
         private void OrderBookControl_Resize(object sender, EventArgs e) {
@@ -196,7 +176,6 @@ namespace CryptoMarketClient {
         }
 
         private void askGridView_DataSourceChanged(object sender, EventArgs e) {
-            UpdateAsksVisibleRowIndex();
         }
     }
 

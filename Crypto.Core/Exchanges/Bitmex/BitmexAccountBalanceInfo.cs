@@ -9,6 +9,6 @@ using System.Threading.Tasks;
 
 namespace Crypto.Core.Exchanges.Bitmex {
     public class BitmexAccountBalanceInfo : BalanceBase {
-        public BitmexAccountBalanceInfo(AccountInfo account, CurrencyInfoBase currency) : base(account, currency) { }
+        public BitmexAccountBalanceInfo(AccountInfo account, CurrencyInfo currency) : base(account, currency) { }
     }
 }

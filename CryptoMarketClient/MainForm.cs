@@ -27,11 +27,11 @@ using System.Windows.Forms;
 using Crypto.UI.Helpers;
 
 namespace CryptoMarketClient {
-    public partial class MainForm : DevExpress.XtraBars.Ribbon.RibbonForm {
+    public partial class MainForm : DevExpress.XtraBars.Ribbon.RibbonForm, ILogPanelOwner {
 
         public MainForm() {
             InitializeComponent();
-            var provider = new NotificationProvider(this, global::CryptoMarketClient.Properties.Resources.notification_image3);
+            var provider = new NotificationProvider(this, global::CryptoMarketClient.Properties.Resources.notification_image4);
             provider.StatusItem = this.bsiStatus;
             NotificationManager.Provider = provider;
             this.ribbonControl1.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonControlStyle.Office2019;

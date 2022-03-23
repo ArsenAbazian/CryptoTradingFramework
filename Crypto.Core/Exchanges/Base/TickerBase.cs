@@ -28,8 +28,17 @@ namespace Crypto.Core {
 
         public int Code { get; set; }
 
+        string fileName = null;
         public string FileName {
-            get { return Exchange == null? string.Empty : Exchange.TickersDirectory + "\\" + Name.ToLower() + ".xml"; }
+            get {
+                if(fileName == null && Exchange != null) {
+                    string file = Name.ToLower();
+                    if(file.Contains(':'))
+                        file = file.Replace(':', '_');
+                    fileName = Exchange.TickersDirectory + "\\" + file + ".xml";
+                }
+                return fileName;
+            }
             set { }
         }
 
@@ -214,7 +223,7 @@ namespace Crypto.Core {
         protected internal OpenedOrderInfo[] PrevOpenedOrders { get; set; }
         [XmlIgnore]
         public List<OpenedOrderInfo> OpenedOrders {
-            get { return Exchange.DefaultAccount.OpenedOrders; }
+            get { return Exchange.DefaultAccount?.OpenedOrders; }
         }
         [XmlIgnore]
         public LinkedList<TickerHistoryItem> History { get; } = new LinkedList<TickerHistoryItem>();
@@ -637,8 +646,8 @@ namespace Crypto.Core {
             return list;
         }
 
-        CurrencyInfoBase marketCurrencyInfo;
-        protected CurrencyInfoBase MarketCurrencyInfo {
+        CurrencyInfo marketCurrencyInfo;
+        protected CurrencyInfo MarketCurrencyInfo {
             get {
                 if(marketCurrencyInfo == null && Exchange != null)
                     marketCurrencyInfo = Exchange.GetOrCreateCurrency(MarketCurrency);
@@ -646,8 +655,8 @@ namespace Crypto.Core {
             }
         }
 
-        CurrencyInfoBase baseCurrencyInfo;
-        protected CurrencyInfoBase BaseCurrencyInfo {
+        CurrencyInfo baseCurrencyInfo;
+        protected CurrencyInfo BaseCurrencyInfo {
             get {
                 if(baseCurrencyInfo == null && Exchange != null)
                     baseCurrencyInfo = Exchange.GetOrCreateCurrency(BaseCurrency);
@@ -656,6 +665,8 @@ namespace Crypto.Core {
         }
 
         public CandleStickData GetCandleStickItem(DateTime dt) {
+            if(CandleStickData.Count == 0)
+                return null;
             if(dt < CandleStickData.First().Time)
                 return null;
             if(dt > CandleStickData.Last().Time)
@@ -686,7 +697,7 @@ namespace Crypto.Core {
         public virtual string BaseCurrencyDisplayName { get { return BaseCurrency; } set { } }
         public virtual string MarketCurrencyDisplayName { get { return MarketCurrency; } set { } }
 
-        public abstract string HostName { get; }
+        public virtual string HostName { get { return Exchange?.Type.ToString(); } }
         public DateTime Time { get; set; }
         public int CandleStickPeriodMin { get; set; } = 1;
         public DateTime LastTradeStatisticTime { get; set; }

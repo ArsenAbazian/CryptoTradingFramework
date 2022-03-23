@@ -660,13 +660,11 @@ namespace Crypto.Core.Helpers {
                 char c = message[index];
                 if(c == '{') {
                     token.Type = JsonObjectType.Object;
-                    index = DeserializeObjectContent(message, token, index);
-                    continue;
+                    return DeserializeObjectContent(message, token, index);
                 }
                 else if(c == '[') {
                     token.Type = JsonObjectType.Array;
-                    index = DeserializeArrayItems(message, token, index);
-                    continue;
+                    return DeserializeArrayItems(message, token, index);
                 }
                 return DeserializeValue(message, token, index);
             }
@@ -989,6 +987,15 @@ namespace Crypto.Core.Helpers {
                 if(valueInt == int.MinValue)
                     valueInt = FastValueConverter.ConvertInt(Value);
                 return valueInt;
+            }
+        }
+
+        long valueLong = long.MinValue;
+        public long ValueLong {
+            get {
+                if(valueLong == long.MinValue)
+                    valueLong = FastValueConverter.ConvertLong(Value);
+                return valueLong;
             }
         }
     }
