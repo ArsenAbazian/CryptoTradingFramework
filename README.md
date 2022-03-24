@@ -4,6 +4,8 @@
 
 ## Latest Updates 
 
+[Update From 23-03-2022](https://github.com/ArsenAbazian/CryptoTradingFramework/wiki/Update-From-23-03-2022)
+
 [Update From 24-02-2022](https://github.com/ArsenAbazian/CryptoTradingFramework/wiki/Update-From-24-02-2022)
 
 [Update From 09-02-2022](https://github.com/ArsenAbazian/CryptoTradingFramework/wiki/Update-From-09-02-2022)
@@ -27,6 +29,7 @@ It supports exchanges: (actively developing)
 * Binance futures (partially)
 * Bitmex
 * Kraken
+* BitFinex
 
 Based on this framework [CryptoTraderAuto](https://github.com/ArsenAbazian/CryptoTradingFramework/wiki/CryptoTraderAuto) application allows you to trade both manually or use a trading bot, based on different strategies. It also contains classic arbitrage monitoring, statistical arbitrage monitoring, different strategies. PoloniexClient allows you to grab and save historical data from exchanges and then apply them for strategies simulation. **This application is under development.**
 
