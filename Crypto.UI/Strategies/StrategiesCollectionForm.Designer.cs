@@ -68,7 +68,6 @@ namespace CryptoMarketClient.Strategies {
             this.colEnableNotifications = new DevExpress.XtraGrid.Columns.GridColumn();
             this.repositoryItemCheckEdit3 = new DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit();
             this.behaviorManager1 = new DevExpress.Utils.Behaviors.BehaviorManager(this.components);
-            this.toastNotificationsManager1 = new DevExpress.XtraBars.ToastNotifications.ToastNotificationsManager(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.barManager1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemProgressBar1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dockManager1)).BeginInit();
@@ -83,7 +82,6 @@ namespace CryptoMarketClient.Strategies {
             ((System.ComponentModel.ISupportInitialize)(this.riTextEditState)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.behaviorManager1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.toastNotificationsManager1)).BeginInit();
             this.SuspendLayout();
             // 
             // barManager1
@@ -527,12 +525,6 @@ namespace CryptoMarketClient.Strategies {
             this.repositoryItemCheckEdit3.Name = "repositoryItemCheckEdit3";
             this.repositoryItemCheckEdit3.EditValueChanged += new System.EventHandler(this.repositoryItemCheckEdit3_EditValueChanged);
             // 
-            // toastNotificationsManager1
-            // 
-            this.toastNotificationsManager1.ApplicationId = "ab6decea-81d2-4ad9-b8b7-45653fe59087";
-            this.toastNotificationsManager1.Notifications.AddRange(new DevExpress.XtraBars.ToastNotifications.IToastNotificationProperties[] {
-            new DevExpress.XtraBars.ToastNotifications.ToastNotification("404ef86f-183c-4fea-960b-86f54e52ea76", global::Crypto.UI.Properties.Resources.notification_image2, "Strategies Simulator", "Strategy simulation finished!", "", DevExpress.XtraBars.ToastNotifications.ToastNotificationSound.Default, DevExpress.XtraBars.ToastNotifications.ToastNotificationDuration.Long, DevExpress.XtraBars.ToastNotifications.ToastNotificationTemplate.ImageAndText01)});
-            // 
             // StrategiesCollectionForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
@@ -559,7 +551,6 @@ namespace CryptoMarketClient.Strategies {
             ((System.ComponentModel.ISupportInitialize)(this.riTextEditState)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.behaviorManager1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.toastNotificationsManager1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -607,6 +598,5 @@ namespace CryptoMarketClient.Strategies {
         private BarEditItem beSimulationProgress;
         private DevExpress.XtraEditors.Repository.RepositoryItemProgressBar repositoryItemProgressBar1;
         private BarButtonItem biSettings;
-        private DevExpress.XtraBars.ToastNotifications.ToastNotificationsManager toastNotificationsManager1;
     }
 }
