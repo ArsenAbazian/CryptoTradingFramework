@@ -26,17 +26,5 @@ namespace Crypto.UI.Strategies {
                 this.simulationSettingsBindingSource.DataSource = value;
             }
         }
-
-        private void IntervalTimeSpanEdit_EditValueChanged(object sender, EventArgs e) {
-            if(Settings == null)
-                return;
-            this.trackBarControl1.Value = Settings.KLineHistoryIntervalDays;
-        }
-
-        private void trackBarControl1_EditValueChanged(object sender, EventArgs e) {
-            if(Settings == null)
-                return;
-            Settings.KLineHistoryIntervalDays = this.trackBarControl1.Value;
-        }
     }
 }

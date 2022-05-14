@@ -52,6 +52,23 @@ namespace Crypto.Core.Strategies {
             return res;
         }
 
+        public Task<bool> InitializeAsync(IStrategyDataProvider dataProvider, CancellationTokenSource source) {
+            DataProvider = dataProvider;
+            DataProvider.Reset();
+            return Task<bool>.Run(() => {
+                bool res = true;
+                foreach(StrategyBase s in Strategies) {
+                    s.Manager = this;
+                    if(s.Enabled) {
+                        res &= DataProvider.InitializeDataFor(s);
+                        res &= s.Initialize();
+                    }
+                }
+                Initialized = res;
+                return res;
+            }, source.Token);
+        }
+
         public string FileName { get; set; }
 
         public static StrategiesManager FromFile(string fileName) {

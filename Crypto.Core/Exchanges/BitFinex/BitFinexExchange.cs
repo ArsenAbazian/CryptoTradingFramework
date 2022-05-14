@@ -33,7 +33,7 @@ namespace Crypto.Core.BitFinex {
             return new BitFinexAccountBalanceInfo(info, GetOrCreateCurrency(currency));
         }
 
-        protected override bool GetTradesCore(ResizeableArray<TradeInfoItem> list, Ticker ticker, DateTime start, DateTime end) {
+        protected override ResizeableArray<TradeInfoItem> GetTradesCore(Ticker ticker, DateTime start, DateTime end) {
             string address = string.Format("https://api-pub.bitfinex.com/v2/trades/{0}/hist", Uri.EscapeDataString(ticker.MarketName));
             byte[] bytes = null;
             try {
@@ -41,17 +41,17 @@ namespace Crypto.Core.BitFinex {
             }
             catch(Exception e) {
                 Telemetry.Default.TrackException(e);
-                return false;
+                return null;
             }
 
             if(bytes == null) {
                 LogManager.Default.Error(this, nameof(GetTradesCore), "No data received");
-                return false;
+                return null;
             }
 
             var root = JsonHelper.Default.Deserialize(bytes);
             int itemsCount = root.ItemsCount;
-
+            ResizeableArray<TradeInfoItem> list = new ResizeableArray<TradeInfoItem>(itemsCount);
             for(int i = 0; i < itemsCount; i++) {
                 var item = root.Items[i];
                 TradeInfoItem ti = new TradeInfoItem(DefaultAccount, ticker);
@@ -69,7 +69,7 @@ namespace Crypto.Core.BitFinex {
                 ticker.InsertTradeHistoryItem(ti);
                 list.Add(ti);
             }
-            return true;
+            return list;
         }
 
         protected override bool ShouldAddKlineListener => true;
@@ -172,26 +172,6 @@ namespace Crypto.Core.BitFinex {
                 //list.Add(data);
             }
             return list;
-            //int startIndex = 1;
-            //if(!JsonHelper.Default.SkipSymbol(bytes, ':', 3, ref startIndex))
-            //    return list;
-
-            //List<string[]> res = JsonHelper.Default.DeserializeArrayOfObjects(bytes, ref startIndex, new string[] { "O", "H", "L", "C", "V", "T", "BV" });
-            //if(res == null) return list;
-            //for(int i = 0; i < res.Count; i++) {
-            //    string[] item = res[i];
-            //    CandleStickData data = new CandleStickData();
-            //    data.Time = Convert.ToDateTime(item[5]);
-            //    data.High = FastValueConverter.Convert(item[1]);
-            //    data.Low = FastValueConverter.Convert(item[2]);
-            //    data.Open = FastValueConverter.Convert(item[0]);
-            //    data.Close = FastValueConverter.Convert(item[3]);
-            //    data.Volume = FastValueConverter.Convert(item[6]);
-            //    data.QuoteVolume = FastValueConverter.Convert(item[4]);
-            //    data.WeightedAverage = 0;
-            //    list.Add(data);
-            //}
-            //return list;
         }
 
         protected string TickersUpdateAddress { get; set; }
@@ -1071,7 +1051,12 @@ namespace Crypto.Core.BitFinex {
             return timestamp.ToString();
         }
         protected internal override void ApplyCapturedEvent(Ticker ticker, TickerCaptureDataInfo info) {
-            throw new NotImplementedException();
+            if(info.StreamType == CaptureStreamType.OrderBook)
+                OnOrderBookSocketMessageReceived(this, new MessageReceivedEventArgs(info.Message));
+            else if(info.StreamType == CaptureStreamType.TradeHistory)
+                OnTradeHistorySocketMessageReceived(this, new MessageReceivedEventArgs(info.Message));
+            else if(info.StreamType == CaptureStreamType.KLine)
+                OnKlineSocketMessageReceived(this, new MessageReceivedEventArgs(info.Message));
         }
     }
 }

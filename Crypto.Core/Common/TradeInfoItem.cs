@@ -25,6 +25,7 @@ namespace Crypto.Core {
         public Ticker Ticker { get; set; }
 
         DateTime? time;
+        [XmlElement("Tm")]
         public DateTime Time {
             get {
                 if(!time.HasValue)
@@ -36,12 +37,15 @@ namespace Crypto.Core {
                 TimeString = time.Value.ToString("g");
             }
         }
+        [XmlElement("Am")]
         public string AmountString { get; set; }
+        [XmlElement("Rt")]
         public string RateString { get; set; }
-        
+        [XmlElement("Tt")]
         public string TotalString { get; set; }
-        
+        [XmlElement("Fe")]
         public string FeeString { get; set; }
+
         double rate = 0;
         [XmlIgnore]
         public double Rate {
@@ -71,6 +75,7 @@ namespace Crypto.Core {
             }
         }
         double total = double.NaN;
+        [XmlIgnore]
         public double Total { 
             get { 
                 if(double.IsNaN(total)) {
@@ -100,8 +105,11 @@ namespace Crypto.Core {
                 return fee;
             }    
         }
+        [XmlElement("On")]
         public string OrderNumber { get; set; }
+        [XmlElement("Fl")]
         public TradeFillType Fill { get; set;}
+        [XmlElement("Tp")]
         public TradeType Type { get; set; }
         long id = -1;
         public long Id {
@@ -111,8 +119,11 @@ namespace Crypto.Core {
                 return id;
             }
         }
+        [XmlElement("Id")]
         public string IdString { get; set; }
+        [XmlElement("Gd")]
         public string GlobalId { get; set; }
+        [XmlIgnore]
         public string TimeString { get; set; }
     }
 }

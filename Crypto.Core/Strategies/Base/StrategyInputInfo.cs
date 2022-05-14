@@ -25,7 +25,9 @@ namespace Crypto.Core.Strategies {
             }
             for(int i = 0; i < info.Tickers.Count; i++) {
                 TickerInputInfo t = info.Tickers[i];
-                Tickers.Add((TickerInputInfo) t.Clone());
+                TickerInputInfo copy = (TickerInputInfo)t.Clone();
+                copy.Strategy = this;
+                Tickers.Add(copy);
             }
         }
     }
@@ -60,9 +62,10 @@ namespace Crypto.Core.Strategies {
         public int OrderBookDepth { get; set; }
         public bool UseTradeHistory { get; set; }
         public bool UseKline { get; set; }
-        public int KlineIntervalMin { get; set; }
+        public int KlineIntervalMin { get; set; } = 5;
         public DateTime StartDate { get; set; } = DateTime.MinValue;
         public DateTime EndDate { get; set; } = DateTime.MinValue;
+        public long SimulationTimeHours { get; set; }
         public string TickerSimulationDataFile { get; set; }
 
         public object Clone() {
@@ -77,15 +80,23 @@ namespace Crypto.Core.Strategies {
                 TickerSimulationDataFile = this.TickerSimulationDataFile,
                 OrderBookDepth = this.OrderBookDepth,
                 StartDate = this.StartDate,
-                EndDate = this.EndDate
+                EndDate = this.EndDate,
             };
         }
 
         public bool AutoUpdateEndTime { get; set; } = true;
+        [XmlIgnore]
+        public StrategyInputInfo Strategy { get; internal set; }
+
+        protected internal SimulationSettings GetSimulationSettings() {
+            if(Strategy?.Strategy?.SimulationSettings != null)
+                return Strategy.Strategy.SimulationSettings;
+            return SettingsStore.Default.SimulationSettings; 
+        }
         public void CheckUpdateTime() {
             if(StartDate == DateTime.MinValue) {
-                StartDate = DateTime.UtcNow.Date.AddDays(-SettingsStore.Default.SimulationSettings.KLineHistoryIntervalDays);
-                EndDate = DateTime.UtcNow.Date;
+                StartDate = GetSimulationSettings().StartTime;
+                EndDate = GetSimulationSettings().EndTime;
                 AutoUpdateEndTime = true;
             }
         }

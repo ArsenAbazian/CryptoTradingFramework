@@ -46,6 +46,7 @@
             this.cbExchangeTickers = new DevExpress.XtraEditors.Repository.RepositoryItemGridLookUpEdit();
             this.repositoryItemGridLookUpEdit1View = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.colMarketCurrency = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.repositoryItemTextEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemTextEdit();
             this.colBaseCurrency = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colMarketName = new DevExpress.XtraGrid.Columns.GridColumn();
             this.colUseOrderBook = new DevExpress.XtraGrid.Columns.GridColumn();
@@ -69,6 +70,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.rpiExchanges)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cbExchangeTickers)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemGridLookUpEdit1View)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemTextEdit1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemSpinEdit1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemLookUpEdit1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemButtonEdit1)).BeginInit();
@@ -149,7 +151,7 @@
             this.barDockControlTop.Location = new System.Drawing.Point(0, 0);
             this.barDockControlTop.Manager = this.barManager1;
             this.barDockControlTop.Margin = new System.Windows.Forms.Padding(4);
-            this.barDockControlTop.Size = new System.Drawing.Size(1314, 60);
+            this.barDockControlTop.Size = new System.Drawing.Size(1314, 46);
             // 
             // barDockControlBottom
             // 
@@ -164,19 +166,19 @@
             // 
             this.barDockControlLeft.CausesValidation = false;
             this.barDockControlLeft.Dock = System.Windows.Forms.DockStyle.Left;
-            this.barDockControlLeft.Location = new System.Drawing.Point(0, 60);
+            this.barDockControlLeft.Location = new System.Drawing.Point(0, 46);
             this.barDockControlLeft.Manager = this.barManager1;
             this.barDockControlLeft.Margin = new System.Windows.Forms.Padding(4);
-            this.barDockControlLeft.Size = new System.Drawing.Size(0, 773);
+            this.barDockControlLeft.Size = new System.Drawing.Size(0, 787);
             // 
             // barDockControlRight
             // 
             this.barDockControlRight.CausesValidation = false;
             this.barDockControlRight.Dock = System.Windows.Forms.DockStyle.Right;
-            this.barDockControlRight.Location = new System.Drawing.Point(1314, 60);
+            this.barDockControlRight.Location = new System.Drawing.Point(1314, 46);
             this.barDockControlRight.Manager = this.barManager1;
             this.barDockControlRight.Margin = new System.Windows.Forms.Padding(4);
-            this.barDockControlRight.Size = new System.Drawing.Size(0, 773);
+            this.barDockControlRight.Size = new System.Drawing.Size(0, 787);
             // 
             // tickerInputInfoBindingSource
             // 
@@ -195,7 +197,7 @@
             this.tickersGridControl.DataSource = this.tickerInputInfoBindingSource;
             this.tickersGridControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tickersGridControl.EmbeddedNavigator.Margin = new System.Windows.Forms.Padding(0);
-            this.tickersGridControl.Location = new System.Drawing.Point(0, 60);
+            this.tickersGridControl.Location = new System.Drawing.Point(0, 46);
             this.tickersGridControl.MainView = this.gridView1;
             this.tickersGridControl.Margin = new System.Windows.Forms.Padding(4);
             this.tickersGridControl.Name = "tickersGridControl";
@@ -205,7 +207,7 @@
             this.repositoryItemLookUpEdit1,
             this.repositoryItemButtonEdit1,
             this.repositoryItemSpinEdit1});
-            this.tickersGridControl.Size = new System.Drawing.Size(871, 773);
+            this.tickersGridControl.Size = new System.Drawing.Size(871, 787);
             this.tickersGridControl.TabIndex = 9;
             this.tickersGridControl.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridView1});
@@ -231,9 +233,13 @@
             this.gridView1.OptionsView.ShowVerticalLines = DevExpress.Utils.DefaultBoolean.False;
             this.gridView1.PreviewIndent = 0;
             this.gridView1.ShowingEditor += new System.ComponentModel.CancelEventHandler(this.gridView1_ShowingEditor);
+            this.gridView1.CellValueChanged += new DevExpress.XtraGrid.Views.Base.CellValueChangedEventHandler(this.gridView1_CellValueChanged);
+            this.gridView1.CustomColumnDisplayText += new DevExpress.XtraGrid.Views.Base.CustomColumnDisplayTextEventHandler(this.gridView1_CustomColumnDisplayText);
             // 
             // colExchange
             // 
+            this.colExchange.AppearanceCell.Options.UseTextOptions = true;
+            this.colExchange.AppearanceCell.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Near;
             this.colExchange.ColumnEdit = this.rpiExchanges;
             this.colExchange.FieldName = "Exchange";
             this.colExchange.MinWidth = 40;
@@ -249,9 +255,12 @@
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
             this.rpiExchanges.Name = "rpiExchanges";
             this.rpiExchanges.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+            this.rpiExchanges.EditValueChanged += new System.EventHandler(this.rpiExchanges_EditValueChanged);
             // 
             // colTicker
             // 
+            this.colTicker.AppearanceCell.Options.UseTextOptions = true;
+            this.colTicker.AppearanceCell.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Near;
             this.colTicker.ColumnEdit = this.cbExchangeTickers;
             this.colTicker.FieldName = "TickerName";
             this.colTicker.MinWidth = 40;
@@ -269,6 +278,8 @@
             this.cbExchangeTickers.DisplayMember = "MarketName";
             this.cbExchangeTickers.Name = "cbExchangeTickers";
             this.cbExchangeTickers.PopupView = this.repositoryItemGridLookUpEdit1View;
+            this.cbExchangeTickers.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
+            this.repositoryItemTextEdit1});
             this.cbExchangeTickers.ValueMember = "Name";
             // 
             // repositoryItemGridLookUpEdit1View
@@ -280,17 +291,31 @@
             this.repositoryItemGridLookUpEdit1View.FocusRectStyle = DevExpress.XtraGrid.Views.Grid.DrawFocusRectStyle.RowFocus;
             this.repositoryItemGridLookUpEdit1View.GroupCount = 1;
             this.repositoryItemGridLookUpEdit1View.Name = "repositoryItemGridLookUpEdit1View";
+            this.repositoryItemGridLookUpEdit1View.OptionsFilter.InHeaderSearchMode = DevExpress.XtraGrid.Views.Grid.GridInHeaderSearchMode.TextSearch;
+            this.repositoryItemGridLookUpEdit1View.OptionsFind.AlwaysVisible = true;
+            this.repositoryItemGridLookUpEdit1View.OptionsFind.FindPanelLocation = DevExpress.XtraGrid.Views.Grid.GridFindPanelLocation.Panel;
             this.repositoryItemGridLookUpEdit1View.OptionsSelection.EnableAppearanceFocusedCell = false;
             this.repositoryItemGridLookUpEdit1View.OptionsView.ShowGroupPanel = false;
+            this.repositoryItemGridLookUpEdit1View.OptionsView.ShowHorizontalLines = DevExpress.Utils.DefaultBoolean.False;
+            this.repositoryItemGridLookUpEdit1View.OptionsView.ShowIndicator = false;
+            this.repositoryItemGridLookUpEdit1View.OptionsView.ShowVerticalLines = DevExpress.Utils.DefaultBoolean.False;
             this.repositoryItemGridLookUpEdit1View.SortInfo.AddRange(new DevExpress.XtraGrid.Columns.GridColumnSortInfo[] {
             new DevExpress.XtraGrid.Columns.GridColumnSortInfo(this.colBaseCurrency, DevExpress.Data.ColumnSortOrder.Ascending)});
             // 
             // colMarketCurrency
             // 
+            this.colMarketCurrency.ColumnEdit = this.repositoryItemTextEdit1;
             this.colMarketCurrency.FieldName = "MarketCurrency";
             this.colMarketCurrency.Name = "colMarketCurrency";
+            this.colMarketCurrency.OptionsFilter.AllowInHeaderSearch = DevExpress.Utils.DefaultBoolean.True;
             this.colMarketCurrency.Visible = true;
             this.colMarketCurrency.VisibleIndex = 0;
+            // 
+            // repositoryItemTextEdit1
+            // 
+            this.repositoryItemTextEdit1.AutoHeight = false;
+            this.repositoryItemTextEdit1.Name = "repositoryItemTextEdit1";
+            this.repositoryItemTextEdit1.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
             // 
             // colBaseCurrency
             // 
@@ -349,6 +374,7 @@
             // 
             // colUseKline
             // 
+            this.colUseKline.Caption = "Use Candlesticks";
             this.colUseKline.FieldName = "UseKline";
             this.colUseKline.MinWidth = 40;
             this.colUseKline.Name = "colUseKline";
@@ -358,6 +384,7 @@
             // 
             // colKlineIntervalMin
             // 
+            this.colKlineIntervalMin.Caption = "Candlestick Interal Min";
             this.colKlineIntervalMin.ColumnEdit = this.repositoryItemLookUpEdit1;
             this.colKlineIntervalMin.FieldName = "KlineIntervalMin";
             this.colKlineIntervalMin.MinWidth = 40;
@@ -379,6 +406,7 @@
             this.repositoryItemLookUpEdit1.ShowHeader = false;
             this.repositoryItemLookUpEdit1.ShowLines = false;
             this.repositoryItemLookUpEdit1.ValueMember = "TotalMinutes";
+            this.repositoryItemLookUpEdit1.CustomDisplayText += new DevExpress.XtraEditors.Controls.CustomDisplayTextEventHandler(this.repositoryItemLookUpEdit1_CustomDisplayText);
             // 
             // colSimulationDataFile
             // 
@@ -404,9 +432,9 @@
             // 
             this.sidePanelWithGrid.Controls.Add(this.propertyGridControl1);
             this.sidePanelWithGrid.Dock = System.Windows.Forms.DockStyle.Right;
-            this.sidePanelWithGrid.Location = new System.Drawing.Point(871, 60);
+            this.sidePanelWithGrid.Location = new System.Drawing.Point(871, 46);
             this.sidePanelWithGrid.Name = "sidePanelWithGrid";
-            this.sidePanelWithGrid.Size = new System.Drawing.Size(443, 773);
+            this.sidePanelWithGrid.Size = new System.Drawing.Size(443, 787);
             this.sidePanelWithGrid.TabIndex = 14;
             this.sidePanelWithGrid.Text = "sidePanel1";
             // 
@@ -418,9 +446,10 @@
             this.propertyGridControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.propertyGridControl1.Location = new System.Drawing.Point(2, 0);
             this.propertyGridControl1.Name = "propertyGridControl1";
+            this.propertyGridControl1.OptionsView.AllowReadOnlyRowAppearance = DevExpress.Utils.DefaultBoolean.True;
             this.propertyGridControl1.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.reFileEditorButton});
-            this.propertyGridControl1.Size = new System.Drawing.Size(441, 773);
+            this.propertyGridControl1.Size = new System.Drawing.Size(441, 787);
             this.propertyGridControl1.TabIndex = 0;
             this.propertyGridControl1.UseDirectXPaint = DevExpress.Utils.DefaultBoolean.True;
             // 
@@ -456,6 +485,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.rpiExchanges)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cbExchangeTickers)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemGridLookUpEdit1View)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemTextEdit1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemSpinEdit1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemLookUpEdit1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemButtonEdit1)).EndInit();
@@ -504,5 +534,6 @@
         private DevExpress.XtraEditors.Repository.RepositoryItemButtonEdit reFileEditorButton;
         protected DevExpress.XtraEditors.SidePanel sidePanelWithGrid;
         protected DevExpress.XtraBars.Bar bar1;
+        private DevExpress.XtraEditors.Repository.RepositoryItemTextEdit repositoryItemTextEdit1;
     }
 }

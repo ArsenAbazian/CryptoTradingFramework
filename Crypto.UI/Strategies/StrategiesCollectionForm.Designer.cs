@@ -28,11 +28,15 @@ namespace CryptoMarketClient.Strategies {
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(StrategiesCollectionForm));
+            DevExpress.Utils.SuperToolTip superToolTip1 = new DevExpress.Utils.SuperToolTip();
+            DevExpress.Utils.ToolTipItem toolTipItem1 = new DevExpress.Utils.ToolTipItem();
             this.barManager1 = new DevExpress.XtraBars.BarManager(this.components);
             this.bar1 = new DevExpress.XtraBars.Bar();
             this.siAdd = new DevExpress.XtraBars.BarSubItem();
+            this.biCopy = new DevExpress.XtraBars.BarButtonItem();
             this.biRemove = new DevExpress.XtraBars.BarButtonItem();
             this.biEdit = new DevExpress.XtraBars.BarButtonItem();
+            this.biStrategyHelp = new DevExpress.XtraBars.BarButtonItem();
             this.biStart = new DevExpress.XtraBars.BarButtonItem();
             this.biStop = new DevExpress.XtraBars.BarButtonItem();
             this.biSimulation = new DevExpress.XtraBars.BarButtonItem();
@@ -40,6 +44,7 @@ namespace CryptoMarketClient.Strategies {
             this.btShowData = new DevExpress.XtraBars.BarButtonItem();
             this.bcShowLog = new DevExpress.XtraBars.BarCheckItem();
             this.biSettings = new DevExpress.XtraBars.BarButtonItem();
+            this.biCollectionFormHelp = new DevExpress.XtraBars.BarButtonItem();
             this.bar3 = new DevExpress.XtraBars.Bar();
             this.siStatus = new DevExpress.XtraBars.BarStaticItem();
             this.beSimulationProgress = new DevExpress.XtraBars.BarEditItem();
@@ -108,8 +113,11 @@ namespace CryptoMarketClient.Strategies {
             this.bcShowLog,
             this.biOptimizeParams,
             this.beSimulationProgress,
-            this.biSettings});
-            this.barManager1.MaxItemId = 15;
+            this.biSettings,
+            this.biCollectionFormHelp,
+            this.biStrategyHelp,
+            this.biCopy});
+            this.barManager1.MaxItemId = 18;
             this.barManager1.OptionsStubGlyphs.AllowStubGlyphs = DevExpress.Utils.DefaultBoolean.True;
             this.barManager1.OptionsStubGlyphs.CaseMode = DevExpress.Utils.Drawing.GlyphTextCaseMode.UpperCase;
             this.barManager1.OptionsStubGlyphs.CornerRadius = 3;
@@ -133,15 +141,18 @@ namespace CryptoMarketClient.Strategies {
             this.bar1.DockStyle = DevExpress.XtraBars.BarDockStyle.Top;
             this.bar1.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
             new DevExpress.XtraBars.LinkPersistInfo(this.siAdd),
+            new DevExpress.XtraBars.LinkPersistInfo(this.biCopy),
             new DevExpress.XtraBars.LinkPersistInfo(this.biRemove),
             new DevExpress.XtraBars.LinkPersistInfo(this.biEdit),
+            new DevExpress.XtraBars.LinkPersistInfo(this.biStrategyHelp),
             new DevExpress.XtraBars.LinkPersistInfo(this.biStart, true),
             new DevExpress.XtraBars.LinkPersistInfo(this.biStop),
             new DevExpress.XtraBars.LinkPersistInfo(this.biSimulation),
             new DevExpress.XtraBars.LinkPersistInfo(this.biOptimizeParams),
             new DevExpress.XtraBars.LinkPersistInfo(this.btShowData, true),
             new DevExpress.XtraBars.LinkPersistInfo(this.bcShowLog),
-            new DevExpress.XtraBars.LinkPersistInfo(this.biSettings)});
+            new DevExpress.XtraBars.LinkPersistInfo(this.biSettings),
+            new DevExpress.XtraBars.LinkPersistInfo(this.biCollectionFormHelp)});
             this.bar1.OptionsBar.DrawBorder = false;
             this.bar1.OptionsBar.UseWholeRow = true;
             this.bar1.Text = "Tools";
@@ -153,6 +164,15 @@ namespace CryptoMarketClient.Strategies {
             this.siAdd.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("siAdd.ImageOptions.SvgImage")));
             this.siAdd.Name = "siAdd";
             this.siAdd.PaintStyle = DevExpress.XtraBars.BarItemPaintStyle.CaptionGlyph;
+            // 
+            // biCopy
+            // 
+            this.biCopy.Caption = "Clone Selected";
+            this.biCopy.Id = 17;
+            this.biCopy.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("biCopy.ImageOptions.SvgImage")));
+            this.biCopy.Name = "biCopy";
+            this.biCopy.PaintStyle = DevExpress.XtraBars.BarItemPaintStyle.CaptionGlyph;
+            this.biCopy.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.biCopy_ItemClick);
             // 
             // biRemove
             // 
@@ -170,7 +190,18 @@ namespace CryptoMarketClient.Strategies {
             this.biEdit.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("biEdit.ImageOptions.SvgImage")));
             this.biEdit.Name = "biEdit";
             this.biEdit.PaintStyle = DevExpress.XtraBars.BarItemPaintStyle.CaptionGlyph;
+            toolTipItem1.Text = "Edit Strategy. Also can be invoked by doubleclick on row.";
+            superToolTip1.Items.Add(toolTipItem1);
+            this.biEdit.SuperTip = superToolTip1;
             this.biEdit.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.biEdit_ItemClick);
+            // 
+            // biStrategyHelp
+            // 
+            this.biStrategyHelp.Caption = "Strategy Help Topic";
+            this.biStrategyHelp.Id = 16;
+            this.biStrategyHelp.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("biStrategyHelp.ImageOptions.SvgImage")));
+            this.biStrategyHelp.Name = "biStrategyHelp";
+            this.biStrategyHelp.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItem2_ItemClick);
             // 
             // biStart
             // 
@@ -221,6 +252,7 @@ namespace CryptoMarketClient.Strategies {
             this.biOptimizeParams.ItemAppearance.Normal.Options.UseForeColor = true;
             this.biOptimizeParams.Name = "biOptimizeParams";
             this.biOptimizeParams.PaintStyle = DevExpress.XtraBars.BarItemPaintStyle.CaptionGlyph;
+            this.biOptimizeParams.Visibility = DevExpress.XtraBars.BarItemVisibility.Never;
             this.biOptimizeParams.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.biOptimizeParams_ItemClick);
             // 
             // btShowData
@@ -239,7 +271,6 @@ namespace CryptoMarketClient.Strategies {
             this.bcShowLog.Id = 10;
             this.bcShowLog.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("bcShowLog.ImageOptions.SvgImage")));
             this.bcShowLog.Name = "bcShowLog";
-            this.bcShowLog.PaintStyle = DevExpress.XtraBars.BarItemPaintStyle.CaptionGlyph;
             this.bcShowLog.CheckedChanged += new DevExpress.XtraBars.ItemClickEventHandler(this.bcShowLog_CheckedChanged);
             // 
             // biSettings
@@ -249,8 +280,16 @@ namespace CryptoMarketClient.Strategies {
             this.biSettings.Id = 14;
             this.biSettings.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("biSettings.ImageOptions.SvgImage")));
             this.biSettings.Name = "biSettings";
-            this.biSettings.PaintStyle = DevExpress.XtraBars.BarItemPaintStyle.CaptionGlyph;
             this.biSettings.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.biSettings_ItemClick);
+            // 
+            // biCollectionFormHelp
+            // 
+            this.biCollectionFormHelp.Alignment = DevExpress.XtraBars.BarItemLinkAlignment.Right;
+            this.biCollectionFormHelp.Caption = "Help on this window";
+            this.biCollectionFormHelp.Id = 15;
+            this.biCollectionFormHelp.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("biCollectionFormHelp.ImageOptions.SvgImage")));
+            this.biCollectionFormHelp.Name = "biCollectionFormHelp";
+            this.biCollectionFormHelp.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItem1_ItemClick);
             // 
             // bar3
             // 
@@ -298,31 +337,31 @@ namespace CryptoMarketClient.Strategies {
             this.barDockControlTop.Dock = System.Windows.Forms.DockStyle.Top;
             this.barDockControlTop.Location = new System.Drawing.Point(0, 0);
             this.barDockControlTop.Manager = this.barManager1;
-            this.barDockControlTop.Size = new System.Drawing.Size(1667, 60);
+            this.barDockControlTop.Size = new System.Drawing.Size(1904, 46);
             // 
             // barDockControlBottom
             // 
             this.barDockControlBottom.CausesValidation = false;
             this.barDockControlBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.barDockControlBottom.Location = new System.Drawing.Point(0, 974);
+            this.barDockControlBottom.Location = new System.Drawing.Point(0, 988);
             this.barDockControlBottom.Manager = this.barManager1;
-            this.barDockControlBottom.Size = new System.Drawing.Size(1667, 52);
+            this.barDockControlBottom.Size = new System.Drawing.Size(1904, 38);
             // 
             // barDockControlLeft
             // 
             this.barDockControlLeft.CausesValidation = false;
             this.barDockControlLeft.Dock = System.Windows.Forms.DockStyle.Left;
-            this.barDockControlLeft.Location = new System.Drawing.Point(0, 60);
+            this.barDockControlLeft.Location = new System.Drawing.Point(0, 46);
             this.barDockControlLeft.Manager = this.barManager1;
-            this.barDockControlLeft.Size = new System.Drawing.Size(0, 914);
+            this.barDockControlLeft.Size = new System.Drawing.Size(0, 942);
             // 
             // barDockControlRight
             // 
             this.barDockControlRight.CausesValidation = false;
             this.barDockControlRight.Dock = System.Windows.Forms.DockStyle.Right;
-            this.barDockControlRight.Location = new System.Drawing.Point(1667, 60);
+            this.barDockControlRight.Location = new System.Drawing.Point(1904, 46);
             this.barDockControlRight.Manager = this.barManager1;
-            this.barDockControlRight.Size = new System.Drawing.Size(0, 914);
+            this.barDockControlRight.Size = new System.Drawing.Size(0, 942);
             // 
             // dockManager1
             // 
@@ -378,7 +417,7 @@ namespace CryptoMarketClient.Strategies {
             // 
             this.gridControl1.DataSource = this.strategyBaseBindingSource;
             this.gridControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gridControl1.Location = new System.Drawing.Point(0, 60);
+            this.gridControl1.Location = new System.Drawing.Point(0, 46);
             this.gridControl1.MainView = this.gridView1;
             this.gridControl1.MenuManager = this.barManager1;
             this.gridControl1.Name = "gridControl1";
@@ -388,7 +427,7 @@ namespace CryptoMarketClient.Strategies {
             this.repositoryItemCheckEdit2,
             this.repositoryItemCheckEdit3,
             this.riTextEditState});
-            this.gridControl1.Size = new System.Drawing.Size(1667, 914);
+            this.gridControl1.Size = new System.Drawing.Size(1904, 942);
             this.gridControl1.TabIndex = 4;
             this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridView1});
@@ -417,6 +456,7 @@ namespace CryptoMarketClient.Strategies {
             this.gridView1.OptionsView.ShowHorizontalLines = DevExpress.Utils.DefaultBoolean.False;
             this.gridView1.OptionsView.ShowVerticalLines = DevExpress.Utils.DefaultBoolean.False;
             this.gridView1.RowStyle += new DevExpress.XtraGrid.Views.Grid.RowStyleEventHandler(this.gridView1_RowStyle);
+            this.gridView1.DoubleClick += new System.EventHandler(this.gridView1_DoubleClick);
             // 
             // colEnabled
             // 
@@ -529,7 +569,7 @@ namespace CryptoMarketClient.Strategies {
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1667, 1026);
+            this.ClientSize = new System.Drawing.Size(1904, 1026);
             this.Controls.Add(this.gridControl1);
             this.Controls.Add(this.barDockControlLeft);
             this.Controls.Add(this.barDockControlRight);
@@ -598,5 +638,8 @@ namespace CryptoMarketClient.Strategies {
         private BarEditItem beSimulationProgress;
         private DevExpress.XtraEditors.Repository.RepositoryItemProgressBar repositoryItemProgressBar1;
         private BarButtonItem biSettings;
+        private BarButtonItem biCollectionFormHelp;
+        private BarButtonItem biStrategyHelp;
+        private BarButtonItem biCopy;
     }
 }

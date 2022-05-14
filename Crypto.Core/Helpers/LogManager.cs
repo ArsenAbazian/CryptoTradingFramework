@@ -108,12 +108,16 @@ namespace Crypto.Core.Common {
         }
 
         public ILogVisualizer Visualiser { get; set; }
+        public ILogPanelOwner Viewer { get; set; }
         protected virtual void RefreshVisual() {
             if(Visualiser != null)
                 Visualiser.RefreshView();
         }
 
-        public virtual void ShowLogForm() { }
+        public virtual void ShowLogForm() {
+            if(Viewer != null)
+                Viewer.ShowLogPanel();
+        }
 
         public void Log(LogType log, object owner, string message, string description) {
             Add(LogType.Log, owner, null, message, description);
@@ -122,9 +126,17 @@ namespace Crypto.Core.Common {
         public void ShowNotification(LogType messageType, string owner, string message, string description) {
             
         }
+
+        public LogMessage GetLast(LogType type) {
+            return Messages.LastOrDefault(msg => msg.Type == type);
+        }
     }
 
     public interface ILogVisualizer {
         void RefreshView();
+    }
+
+    public interface ILogPanelOwner {
+        void ShowLogPanel();
     }
 }

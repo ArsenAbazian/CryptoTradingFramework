@@ -87,6 +87,15 @@ namespace Crypto.Core.Strategies.Custom {
             }
         }
 
+        [Browsable(false)]
+        public virtual bool AllowKline { get { return true; } }
+        [Browsable(false)]
+        public virtual bool AllowTradeHistory { get { return true; } }
+        [Browsable(false)]
+        public virtual bool AllowOrderBook { get { return true; } }
+        [Browsable(false)]
+        public virtual bool AllowSimulationFile { get { return true; } }
+
         protected virtual void OpenDelayedPosition(DelayedPositionInfo info) {
             DelayedPositions.Remove(info);
         }

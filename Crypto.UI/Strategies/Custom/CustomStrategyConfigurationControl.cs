@@ -17,6 +17,7 @@ using DevExpress.Utils.Behaviors;
 using DevExpress.XtraVerticalGrid.Rows;
 using Crypto.Core.Helpers;
 using Crypto.Core;
+using DevExpress.XtraGrid;
 
 namespace CryptoMarketClient.Strategies.Custom {
     public partial class CustomStrategyConfigurationControl : StrategySpecificConfigurationControlBase {
@@ -84,11 +85,29 @@ namespace CryptoMarketClient.Strategies.Custom {
 
         protected override void OnStrategyChanged() {
             base.OnStrategyChanged();
-            this.exchangeTickersBindingSource.DataSource = Exchange.GetTickersNameInfo();
-            this.tickerInputInfoBindingSource.DataSource = ((CustomTickerStrategy)Strategy).StrategyInfo.Tickers;
+            //this.exchangeTickersBindingSource.DataSource = Exchange.GetTickersNameInfo();
+            this.tickerInputInfoBindingSource.DataSource = Strategy.StrategyInfo.Tickers;
+            FilterGridColumns();
             InitializePropertyTabs();
             SubscribePropertyGridEvents();
             this.propertyGridControl1.SelectedObject = Strategy;
+        }
+
+        private void FilterGridColumns() {
+            if(!Strategy.AllowKline) {
+                this.colKlineIntervalMin.Visible = false;
+                this.colUseKline.Visible = false;
+            }
+            if(!Strategy.AllowSimulationFile) {
+                this.colSimulationDataFile.Visible = false;
+            }
+            if(!Strategy.AllowTradeHistory) {
+                this.colUseTradeHistory.Visible = false;
+            }
+            if(!Strategy.AllowOrderBook) {
+                this.colUseOrderBook.Visible = false;
+                this.colOrderBookDepth.Visible = false;
+            }
         }
 
         private void SubscribePropertyGridEvents() {
@@ -240,6 +259,35 @@ namespace CryptoMarketClient.Strategies.Custom {
                     return (FileNameAttribute)attr;
             }
             return null;
+        }
+
+        private void gridView1_CellValueChanged(object sender, DevExpress.XtraGrid.Views.Base.CellValueChangedEventArgs e) {
+            if(e.Column == this.colExchange) {
+                TickerInputInfo info = (TickerInputInfo)this.gridView1.GetRow(e.RowHandle);
+                if(info == null)
+                    return;
+                info.TickerName = "";
+                info.KlineIntervalMin = 0;
+                this.gridView1.RefreshRow(e.RowHandle);
+            }
+        }
+
+        private void repositoryItemLookUpEdit1_CustomDisplayText(object sender, DevExpress.XtraEditors.Controls.CustomDisplayTextEventArgs e) {
+            
+        }
+
+        private void gridView1_CustomColumnDisplayText(object sender, DevExpress.XtraGrid.Views.Base.CustomColumnDisplayTextEventArgs e) {
+            if(e.Column != this.colKlineIntervalMin || e.ListSourceRowIndex == GridControl.InvalidRowHandle)
+                return;
+            var ticker = Strategy.StrategyInfo.Tickers[e.ListSourceRowIndex];
+            var cdata = Exchange.Get(ticker.Exchange).GetAllowedCandleStickIntervals().FirstOrDefault(i => i.TotalMinutes == (int)e.Value);
+            if(cdata != null)
+                e.DisplayText = cdata.Text;
+        }
+
+        private void rpiExchanges_EditValueChanged(object sender, EventArgs e) {
+            if(this.gridView1.ActiveEditor != null)
+                this.gridView1.CloseEditor();
         }
     }
 }

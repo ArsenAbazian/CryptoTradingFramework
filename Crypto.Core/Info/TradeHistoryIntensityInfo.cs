@@ -92,7 +92,6 @@ namespace Crypto.Core.Helpers {
                 LogManager.Default.Success("Downloaded candlesticks for " + ticker.Name);
                 ticker.CandleStickData.AddRange(kline);
             }
-
             ResizeableArray<TradeInfoItem> trades = provider.DownloadTradeHistory(info, info.StartDate);
             if(trades == null) {
                 LogManager.Default.Error("Cannot download trade history for " + ticker.Name);

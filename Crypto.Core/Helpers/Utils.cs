@@ -60,4 +60,10 @@ namespace Crypto.Core.Helpers {
             return ticker.Exchange.GetTrades(ticker, time);
         }
     }
+
+    public static class CryptoStringFormatExtension {
+        public static string ToCryptoString(this double value) {
+            return value.ToString("0.00000000");
+        }
+    }
 }

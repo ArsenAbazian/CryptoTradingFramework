@@ -966,12 +966,17 @@ namespace Crypto.Core.Exchanges.Kraken {
             throw new NotImplementedException();
         }
 
-        protected override bool GetTradesCore(ResizeableArray<TradeInfoItem> list, Ticker ticker, DateTime start, DateTime end) {
-            throw new NotImplementedException();
+        protected override ResizeableArray<TradeInfoItem> GetTradesCore(Ticker ticker, DateTime starTime, DateTime endTime) {
+            return null;
         }
 
         protected internal override void ApplyCapturedEvent(Ticker ticker, TickerCaptureDataInfo info) {
-            throw new NotImplementedException();
+            if(info.StreamType == CaptureStreamType.OrderBook)
+                OnOrderBookSocketMessageReceived(this, new MessageReceivedEventArgs(info.Message));
+            else if(info.StreamType == CaptureStreamType.TradeHistory)
+                OnTradeHistorySocketMessageReceived(this, new MessageReceivedEventArgs(info.Message));
+            else if(info.StreamType == CaptureStreamType.KLine)
+                OnKlineSocketMessageReceived(this, new MessageReceivedEventArgs(info.Message));
         }
 
         protected internal override IIncrementalUpdateDataProvider CreateIncrementalUpdateDataProvider() {

@@ -41,6 +41,8 @@ namespace Crypto.Core.Strategies.Custom {
         [XmlIgnore]
         protected SupportResistanceIndicator SRIndicator2 { get; private set; }
 
+        public override string HelpWebPage => "https://github.com/ArsenAbazian/CryptoTradingFramework/wiki/TaSimpleStrategy";
+
         public override void Assign(StrategyBase from) {
             base.Assign(from);
             TaSimpleStrategy ss = from as TaSimpleStrategy;

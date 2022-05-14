@@ -34,6 +34,7 @@ namespace CryptoMarketClient {
             var provider = new NotificationProvider(this, global::CryptoMarketClient.Properties.Resources.notification_image4);
             provider.StatusItem = this.bsiStatus;
             NotificationManager.Provider = provider;
+            LogManager.Default.Viewer = this;
             this.ribbonControl1.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonControlStyle.Office2019;
             this.ribbonControl1.CommandLayout = DevExpress.XtraBars.Ribbon.CommandLayout.Simplified;
             this.ribbonControl1.GetController().PropertiesRibbon.DefaultSimplifiedRibbonGlyphSize = 22;
@@ -63,7 +64,7 @@ namespace CryptoMarketClient {
             //ExchangesForm.Show();
             //ExchangesForm.Activate();
 
-            NotificationManager.Notify("Application Started");
+            //NotificationManager.Notify("Application Started");
             AddExchangesForm();
         }
 

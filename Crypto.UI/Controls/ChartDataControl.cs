@@ -391,7 +391,7 @@ namespace Crypto.UI.Forms {
 
         protected List<AnnotationFilter> FilterValues { get; private set; }
         private void bsEvents_GetItemData(object sender, EventArgs e) {
-            if(this.bsEvents.ItemLinks.Count > 0 || Visual == null)
+            if(this.bsEvents.ItemLinks.Count > 0 || Visual == null || Visual.Items.Count == 0)
                 return;
             List<StrategyDataItemInfo> aItems = Visual.DataItemInfos.Where(i => i.ChartType == ChartType.Annotation).ToList();
             foreach(StrategyDataItemInfo info in aItems) {

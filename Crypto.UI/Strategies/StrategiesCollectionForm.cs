@@ -14,6 +14,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -158,6 +159,10 @@ namespace CryptoMarketClient.Strategies {
         }
 
         private void biEdit_ItemClick(object sender, ItemClickEventArgs e) {
+            OnEdit();
+        }
+
+        private void OnEdit() {
             StrategyBase strategy = (StrategyBase)this.gridView1.GetFocusedRow();
             if(strategy == null) {
                 XtraMessageBox.Show("No strategy selected for editing.");
@@ -170,6 +175,7 @@ namespace CryptoMarketClient.Strategies {
             Manager.Save();
             this.gridView1.RefreshData();
         }
+
         protected override void OnClosing(CancelEventArgs e) {
             if(Manager.Running) {
                 if(XtraMessageBox.Show("Do you really want to stop active strategies?", "Stopping", MessageBoxButtons.YesNoCancel) != DialogResult.Yes) {
@@ -213,7 +219,7 @@ namespace CryptoMarketClient.Strategies {
             e.HighPriority = true;
         }
 
-        private void biSimulation_ItemClick(object sender, ItemClickEventArgs e) {
+        private void Simulate() {
             Stopped = false;
             StrategyBase strategy = (StrategyBase)this.gridView1.GetFocusedRow();
             if(strategy == null) {
@@ -224,6 +230,10 @@ namespace CryptoMarketClient.Strategies {
                 XtraMessageBox.Show("This strategy does not support simulation.");
                 return;
             }
+            if(!strategy.Enabled) {
+                XtraMessageBox.Show("This strategy is disabled. Please enable it for simulation.");
+                return;
+            }
 
             StrategiesManager manager = new StrategiesManager();
             manager.FileName = "SimulationStrategiesManager.xml";
@@ -231,6 +241,7 @@ namespace CryptoMarketClient.Strategies {
             cloned.DemoMode = true;
             manager.Strategies.Add(cloned);
 
+            LogManager.Default.ShowLogForm();
             this.siStatus.Caption = "<b>Loading data from exchanges...</b>";
             IOverlaySplashScreenHandle handle = SplashScreenManager.ShowOverlayForm(gridControl1);
             Application.DoEvents();
@@ -241,13 +252,17 @@ namespace CryptoMarketClient.Strategies {
             this.beSimulationProgress.Visibility = BarItemVisibility.Always;
 
             if(!manager.Initialize(dataProvider)) {
-                XtraMessageBox.Show("Could not initialize data for strategy. Please check log", "Initialization");
                 SplashScreenManager.CloseOverlayForm(handle);
+                var msg = LogManager.Default.GetLast(LogType.Error);
+                string lastError = "" + msg?.Text + ": " + msg?.Description;
+                XtraMessageBox.Show("Could not initialize data for strategy. Please check log.\nThe last error is: " + lastError, "Initialization", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
             dataProvider.DownloadProgressChanged -= OnSimulationProviderDownloadProgressChanged;
             if(!manager.Start()) {
-                XtraMessageBox.Show("Error starting simulation! Please check log messages");
+                var msg = LogManager.Default.Messages.Last();
+                string lastError = "" + msg?.Text + ": " + msg?.Description;
+                XtraMessageBox.Show("Error starting simulation! Please check log messages.\n The last errror is: " + lastError, "Simulation", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 SplashScreenManager.CloseOverlayForm(handle);
                 return;
             }
@@ -264,7 +279,7 @@ namespace CryptoMarketClient.Strategies {
                 this.beSimulationProgress.EditValue = (int)(dataProvider.SimulationProgress * this.repositoryItemProgressBar1.Maximum);
                 if(timer.ElapsedMilliseconds / 1000 > elapsedSeconds) {
                     elapsedSeconds = (int)(timer.ElapsedMilliseconds / 1000);
-                    this.siStatus.Caption = string.Format("<b>Running simulation... {0} -> {1}</b>", 
+                    this.siStatus.Caption = string.Format("<b>Running simulation... {0} -> {1}</b>",
                         dataProvider.LastTime.ToString("dd.MM hh:mm:ss"),
                         dataProvider.EndTime.ToString("dd.MM hh:mm:ss"));
                     Application.DoEvents();
@@ -281,6 +296,98 @@ namespace CryptoMarketClient.Strategies {
             Application.DoEvents();
             //this.toastNotificationsManager1.ShowNotification("404ef86f-183c-4fea-960b-86f54e52ea76");
             StrategyConfigurationManager.Default.ShowData(cloned);
+        }
+
+        //protected CancellationTokenSource Cancellation { get; set; }
+        //private Task SimulateAsync() {
+        //    if(Cancellation != null) {
+        //        XtraMessageBox.Show("Simulation is already running.");
+        //        return Task.CompletedTask;
+        //    }
+        //    Stopped = false;
+        //    StrategyBase strategy = (StrategyBase)this.gridView1.GetFocusedRow();
+        //    if(strategy == null) {
+        //        XtraMessageBox.Show("No strategy selected.");
+        //        return Task.CompletedTask;
+        //    }
+        //    if(!strategy.SupportSimulation) {
+        //        XtraMessageBox.Show("This strategy does not support simulation.");
+        //        return Task.CompletedTask;
+        //    }
+        //    if(!strategy.Enabled) {
+        //        XtraMessageBox.Show("This strategy is disabled. Please enable it for simulation.");
+        //        return Task.CompletedTask;
+        //    }
+
+        //    StrategiesManager manager = new StrategiesManager();
+        //    manager.FileName = "SimulationStrategiesManager.xml";
+        //    StrategyBase cloned = strategy.Clone();
+        //    cloned.DemoMode = true;
+        //    manager.Strategies.Add(cloned);
+
+        //    LogManager.Default.ShowLogForm();
+        //    this.siStatus.Caption = "<b>Loading data from exchanges...</b>";
+        //    IOverlaySplashScreenHandle handle = SplashScreenManager.ShowOverlayForm(gridControl1);
+        //    Application.DoEvents();
+        //    SimulationStrategyDataProvider dataProvider = new SimulationStrategyDataProvider();
+        //    dataProvider.DownloadProgressChanged += OnSimulationProviderDownloadProgressChanged;
+
+        //    this.beSimulationProgress.EditValue = 0;
+        //    this.beSimulationProgress.Visibility = BarItemVisibility.Always;
+
+        //    Cancellation = new CancellationTokenSource();
+        //    Task<bool> t = manager.InitializeAsync(dataProvider, Cancellation);
+        //    return t;
+
+        //    //if(!manager.Initialize(dataProvider)) {
+        //    //    SplashScreenManager.CloseOverlayForm(handle);
+        //    //    var msg = LogManager.Default.GetLast(LogType.Error);
+        //    //    string lastError = "" + msg?.Text + ": " + msg?.Description;
+        //    //    XtraMessageBox.Show("Could not initialize data for strategy. Please check log.\nThe last error is: " + lastError, "Initialization", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        //    //    return;
+        //    //}
+        //    //dataProvider.DownloadProgressChanged -= OnSimulationProviderDownloadProgressChanged;
+        //    //if(!manager.Start()) {
+        //    //    var msg = LogManager.Default.Messages.Last();
+        //    //    string lastError = "" + msg?.Text + ": " + msg?.Description;
+        //    //    XtraMessageBox.Show("Error starting simulation! Please check log messages.\n The last errror is: " + lastError, "Simulation", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        //    //    SplashScreenManager.CloseOverlayForm(handle);
+        //    //    return;
+        //    //}
+        //    //this.beSimulationProgress.EditValue = 0;
+        //    //this.beSimulationProgress.Visibility = BarItemVisibility.Always;
+        //    //this.siStatus.Caption = "<b>Running simulation...</b>";
+        //    //Application.DoEvents();
+
+        //    //Stopwatch timer = new Stopwatch();
+        //    //timer.Start();
+        //    //int elapsedSeconds = 0;
+        //    //double progress = 0;
+        //    //while(manager.Running) {
+        //    //    this.beSimulationProgress.EditValue = (int)(dataProvider.SimulationProgress * this.repositoryItemProgressBar1.Maximum);
+        //    //    if(timer.ElapsedMilliseconds / 1000 > elapsedSeconds) {
+        //    //        elapsedSeconds = (int)(timer.ElapsedMilliseconds / 1000);
+        //    //        this.siStatus.Caption = string.Format("<b>Running simulation... {0} -> {1}</b>",
+        //    //            dataProvider.LastTime.ToString("dd.MM hh:mm:ss"),
+        //    //            dataProvider.EndTime.ToString("dd.MM hh:mm:ss"));
+        //    //        Application.DoEvents();
+        //    //    }
+        //    //    if((dataProvider.SimulationProgress - progress) >= 0.05) {
+        //    //        progress = dataProvider.SimulationProgress;
+        //    //        Application.DoEvents();
+        //    //    }
+        //    //}
+        //    //this.beSimulationProgress.Visibility = BarItemVisibility.Never;
+        //    //SplashScreenManager.CloseOverlayForm(handle);
+        //    //manager.Save();
+        //    //this.siStatus.Caption = "<b>Simulation done.</b>";
+        //    //Application.DoEvents();
+        //    ////this.toastNotificationsManager1.ShowNotification("404ef86f-183c-4fea-960b-86f54e52ea76");
+        //    //StrategyConfigurationManager.Default.ShowData(cloned);
+        //}
+
+        private void biSimulation_ItemClick(object sender, ItemClickEventArgs e) {
+            Simulate();
         }
 
         private void OnSimulationProviderDownloadProgressChanged(object sender, TickerDownloadProgressEventArgs e) {
@@ -392,6 +499,41 @@ namespace CryptoMarketClient.Strategies {
                 SettingsStore.Default.SimulationSettings.Assign(form.Settings);
                 SettingsStore.Default.Save();
             }
+        }
+
+        private void barButtonItem1_ItemClick(object sender, ItemClickEventArgs e) {
+            string helpAdress = "https://github.com/ArsenAbazian/CryptoTradingFramework/wiki/Strategies-Collection-Window";
+            System.Diagnostics.Process.Start(helpAdress);
+        }
+
+        private void barButtonItem2_ItemClick(object sender, ItemClickEventArgs e) {
+            var st = (StrategyBase)this.gridView1.GetFocusedRow();
+            if(st == null)
+                return;
+            string adress = st.HelpWebPage;
+            if(string.IsNullOrEmpty(adress)) {
+                XtraMessageBox.Show("This strategy does not have help topic. Sorry.", "Strategy Help");
+                return;
+            }
+            System.Diagnostics.Process.Start(adress);
+        }
+
+        private void biCopy_ItemClick(object sender, ItemClickEventArgs e) {
+            var st = (StrategyBase)this.gridView1.GetFocusedRow();
+            if(st == null)
+                return;
+            var st2 = st.Clone();
+            st2.Name += " Cloned";
+            Manager.Add(st2);
+            this.gridView1.RefreshData();
+            Manager.Save();
+        }
+
+        private void gridView1_DoubleClick(object sender, EventArgs e) {
+            var st = (StrategyBase)this.gridView1.GetFocusedRow();
+            if(st == null)
+                return;
+            OnEdit();
         }
     }
 

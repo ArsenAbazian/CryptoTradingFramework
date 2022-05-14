@@ -15,6 +15,13 @@ namespace Crypto.Core.Strategies.Arbitrages.Statistical {
             InitializeOrderGrid();
         }
 
+        public override bool AllowKline => false;
+        public override bool AllowOrderBook => false;
+        public override bool AllowSimulationFile => false;
+        public override bool AllowTradeHistory => false;
+
+        public override string HelpWebPage => "https://blog.bitmex.com/how-to-arbitrage-bitcoin-futures-vs-spot/";
+
         double maxAllowedShortDeposit;
         [StrategyProperty(true, TabName = "Common")]
         public double MaxAllowedShortDeposit {
@@ -104,7 +111,9 @@ namespace Crypto.Core.Strategies.Arbitrages.Statistical {
         protected string StateTextCore { get; set; }
         public override string StateText => StateTextCore;
 
+        [DisplayName("Spread For Open Position (In Base Currency)")]
         public double SpreadOpenPosition { get; set; }
+        [DisplayName("Spread For Close Position (In Base Currency)")]
         public double SpreadClosePosition { get; set; }
 
         protected override void OnTickCore() {
@@ -140,7 +149,7 @@ namespace Crypto.Core.Strategies.Arbitrages.Statistical {
                 LastItem.Earned = Earned;
                 LastItem.Index = StrategyData.Count;
                 StrategyData.Add(LastItem);
-                StateTextCore = "<b><color=green>long=" + LastItem.LongAsk.ToString("0.########") + "</color> <color=red> short=" + LastItem.ShortBid.ToString("0.########") + "</color>  spread = " + LastItem.OpenSpread.ToString("0.00000000") + "  order count = " + OpenedOrders.Count + "</b>";
+                StateTextCore = "<b><color=green>long=" + LastItem.LongAsk.ToCryptoString() + "</color> <color=red> short=" + LastItem.ShortBid.ToCryptoString() + "</color>  spread = " + LastItem.OpenSpread.ToCryptoString() + "  order count = " + OpenedOrders.Count + "</b>";
             }
 
             if(TryOpenMoreDeals(bottomAsk, topBid, spreadToOpen)) {
@@ -188,8 +197,8 @@ namespace Crypto.Core.Strategies.Arbitrages.Statistical {
                 order.LongAmount -= closeLong.Amount;
                 order.ShortAmount -= closeShort.Amount;
                 
-                //double eInc = (1 / order.LongValue - 1 / order.ShortValue) * finalBuyAmount;
-                //Earned += eInc;
+                double eInc = (1 / order.LongValue - 1 / order.ShortValue) * finalBuyAmount;
+                Earned += eInc;
 
                 LastItem = new StatisticalArbitrageHistoryItem();
                 LastItem.Time = DataProvider.CurrentTime;
@@ -356,19 +365,18 @@ namespace Crypto.Core.Strategies.Arbitrages.Statistical {
                 return false;
 
             var order = new StatisticalArbitrageOrderInfo() {
-                
                 ShortValue = topBid,
                 SpentDeposit = Long.HighestBidInBaseCurrency() * finalBuyAmount,
                 Spread = spreadToOpen
             };
 
             if(Long.SpentInBaseCurrency(bottomAsk, finalBuyAmount) * 1.05 > MaxAllowedDeposit) {
-                LogManager.Default.Add(LogType.Error, this, Name, "not enough deposit for open long position", "spent = " + Long.SpentInBaseCurrency(bottomAsk, finalBuyAmount) + " in " + Long.BaseCurrency + "; deposit = " + MaxAllowedDeposit);
+                //LogManager.Default.Add(LogType.Error, this, Name, "not enough deposit for open long position", "spent = " + Long.SpentInBaseCurrency(bottomAsk, finalBuyAmount) + " in " + Long.BaseCurrency + "; deposit = " + MaxAllowedDeposit);
                 return false;
             }
 
             if(Short.SpentInBaseCurrency(topBid, finalSellAmount) * 1.05 > GetMaxAllowedShortDeposit()) {
-                LogManager.Default.Add(LogType.Error, this, Name, "not enough deposit for open long position", "spent = " + Short.SpentInBaseCurrency(topBid, finalSellAmount) + " in " + Short.BaseCurrency + "; deposit = " + GetMaxAllowedShortDeposit());
+                //LogManager.Default.Add(LogType.Error, this, Name, "not enough deposit for open long position", "spent = " + Short.SpentInBaseCurrency(topBid, finalSellAmount) + " in " + Short.BaseCurrency + "; deposit = " + GetMaxAllowedShortDeposit());
                 return false;
             }
 
@@ -419,27 +427,27 @@ namespace Crypto.Core.Strategies.Arbitrages.Statistical {
         private void OnOrderOpened(StatisticalArbitrageHistoryItem lastItem) {
             string text = string.Empty;
             text += "<b>" + Name + "</b> open order:";
-            text += "<pre> buy:       " + lastItem.LongAsk.ToString("0.########") + " am = " + lastItem.LongAmount.ToString("0.########") + "</pre>";
-            text += "<pre> sell:      " + lastItem.ShortBid.ToString("0.########") + " am = " + lastItem.ShortAmount.ToString("0.########") + "</pre>";
+            text += "<pre> buy:       " + lastItem.LongAmount.ToCryptoString() + " price = " + lastItem.LongAsk.ToCryptoString() + "</pre>";
+            text += "<pre> sell:      " + lastItem.ShortAmount.ToCryptoString() + " price = " + lastItem.ShortBid.ToCryptoString() + "</pre>";
 
             TelegramBot.Default.SendNotification(text, ChatId);
-            LogManager.Default.Add(LogType.Success, this, null, "open order",
-                "buy " + lastItem.LongAsk.ToString("0.########") + " am = " + lastItem.LongAmount.ToString("0.########") +
-                "    sell" + lastItem.ShortBid.ToString("0.########") + " am = " + lastItem.ShortAmount.ToString("0.########"));
+            LogManager.Default.Add(LogType.Success, TypeName, null, "open order",
+                "buy " + lastItem.LongAmount.ToCryptoString() + " price = " + lastItem.LongAsk.ToCryptoString() +
+                "    sell " + lastItem.ShortAmount.ToCryptoString() + " price = " + lastItem.ShortBid.ToCryptoString());
         }
 
         private void OnOrderClosed(StatisticalArbitrageHistoryItem lastItem) {
             string text = string.Empty;
             text += "<b>" + Name + "</b> close order:";
-            text += "<pre> buy:       " + lastItem.LongAsk.ToString("0.########") + " am = " + lastItem.LongAmount.ToString("0.########") + "</pre>";
-            text += "<pre> sell:      " + lastItem.ShortBid.ToString("0.########") + " am = " + lastItem.ShortAmount.ToString("0.########") + "</pre>";
-            text += "<pre> earned:    " + lastItem.Earned.ToString("0.########") + "</pre>";
+            text += "<pre> buy:       " + lastItem.LongAmount.ToCryptoString() + " price = " + lastItem.LongAsk.ToCryptoString() + "</pre>";
+            text += "<pre> sell:      " + lastItem.ShortAmount.ToCryptoString() + " price = " + lastItem.ShortBid.ToCryptoString() + "</pre>";
+            text += "<pre> earned:    " + lastItem.Earned.ToCryptoString() + "</pre>";
 
             TelegramBot.Default.SendNotification(text, ChatId);
-            LogManager.Default.Add(LogType.Success, this, null, "open order",
-                "buy " + lastItem.LongAsk.ToString("0.########") + " am = " + lastItem.LongAmount.ToString("0.########") +
-                "    sell " + lastItem.ShortBid.ToString("0.########") + " am = " + lastItem.ShortAmount.ToString("0.########") + 
-                "    earned " + lastItem.Earned.ToString("0.########"));
+            LogManager.Default.Add(LogType.Success, TypeName, null, "close order",
+                "buy " + lastItem.LongAmount.ToCryptoString() + " price = " + lastItem.LongAsk.ToCryptoString() +
+                "    sell " + lastItem.ShortAmount.ToCryptoString() + " price = " + lastItem.ShortBid.ToCryptoString() + 
+                "    earned " + lastItem.Earned.ToCryptoString());
         }
 
         private double CalculateRequiredLongAmount(double sellAmount) {
@@ -510,7 +518,7 @@ namespace Crypto.Core.Strategies.Arbitrages.Statistical {
             DataItem("ShortBid").Color = Exchange.BidColor;
             DataItem("OpenSpread").PanelName = "Spread";
             StrategyDataItemInfo earned = DataItem("Earned");
-            earned.FormatString = "0.########";
+            earned.FormatString = "0.00000000";
             earned.PanelName = "Earned"; earned.Color = Color.FromArgb(0x20, Exchange.BidColor); earned.ChartType = ChartType.Area;
             var mark = AnnotationItem("Mark", null, Color.Green, "MiddleValue"); mark.AnnotationText = "{Mark}"; mark.Type = DataType.ListInString;
             //AnnotationItem("Open", "Open", Exchange.BidColor, "LongAsk");

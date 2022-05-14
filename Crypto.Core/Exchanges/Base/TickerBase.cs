@@ -1111,8 +1111,29 @@ namespace Crypto.Core {
             ShortTradeHistory.Add(item);
         }
 
-        protected internal void UpdateSimulationTradeData(TradeInfoItem tradeInfoItem) {
-            TradeHistory.AddLast(tradeInfoItem);
+        DateTime epoch = new DateTime(1970, 1, 1);
+        protected internal void UpdateSimulationTradeData(TradeInfoItem ti) {
+            TradeHistory.AddLast(ti);
+            CandleStickData last = CandleStickData.Last();
+            if(last == null || (ti.Time - last.Time).TotalMinutes > CandleStickPeriodMin) {
+                if(last != null && (ti.Time - last.Time).TotalMinutes > 60) {
+
+                }
+                DateTime newTime = epoch.AddMinutes((((int)(ti.Time - epoch).TotalMinutes) / CandleStickPeriodMin) * CandleStickPeriodMin);
+                last = new CandleStickData() {
+                    Time = newTime,
+                    Open = ti.Rate,
+                    Close = ti.Rate,
+                    High = ti.Rate,
+                    Low = ti.Rate
+                };
+                CandleStickData.Add(last);
+            }
+            else {
+                last.Close = ti.Rate;
+                last.High = Math.Max(last.High, ti.Rate);
+                last.Low = Math.Max(last.Low, ti.Rate);
+            }
         }
 
         protected event NotifyCollectionChangedEventHandler eventsChanged;

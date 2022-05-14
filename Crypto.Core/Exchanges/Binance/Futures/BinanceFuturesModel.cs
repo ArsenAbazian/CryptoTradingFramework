@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WebSocket4Net;
 
 namespace Crypto.Core.Exchanges.Binance.Futures {
     public class BinanceFuturesExchange : BinanceExchange {
@@ -323,7 +324,12 @@ namespace Crypto.Core.Exchanges.Binance.Futures {
         protected override string AggTradesApiString => "https://fapi.binance.com/fapi/v1/aggTrades";
 
         protected internal override void ApplyCapturedEvent(Ticker ticker, TickerCaptureDataInfo info) {
-            throw new NotImplementedException();
+            if(info.StreamType == CaptureStreamType.OrderBook)
+                OnOrderBookSocketMessageReceived(this, new MessageReceivedEventArgs(info.Message));
+            else if(info.StreamType == CaptureStreamType.TradeHistory)
+                OnTradeHistorySocketMessageReceived(this, new MessageReceivedEventArgs(info.Message));
+            else if(info.StreamType == CaptureStreamType.KLine)
+                OnKlineSocketMessageReceived(this, new MessageReceivedEventArgs(info.Message));
         }
 
         protected internal override IIncrementalUpdateDataProvider CreateIncrementalUpdateDataProvider() {

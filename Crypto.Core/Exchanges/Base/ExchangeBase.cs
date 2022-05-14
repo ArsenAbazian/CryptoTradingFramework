@@ -114,18 +114,26 @@ namespace Crypto.Core {
         protected internal abstract void ApplyCapturedEvent(Ticker ticker, TickerCaptureDataInfo info);
 
         public static Exchange CreateExchange(ExchangeType exchange) {
-            switch(exchange) {
-                case ExchangeType.Binance:
-                    return new BinanceExchange();
-                case ExchangeType.BitFinex:
-                    return new BitFinexExchange();
-                case ExchangeType.Bitmex:
-                    return new BitmexExchange();
-                case ExchangeType.Bittrex:
-                    return new BittrexExchange();
-                case ExchangeType.Poloniex:
-                    return new PoloniexExchange();
+            foreach(var e in Registered) {
+                if(e.Type == exchange) {
+                    ConstructorInfo info = e.GetType().GetConstructor(new Type[] { });
+                    if(info == null)
+                        return null;
+                    return (Exchange)info.Invoke(new object[] { });
+                }
             }
+            //switch(exchange) {
+            //    case ExchangeType.Binance:
+            //        return new BinanceExchange();
+            //    case ExchangeType.BitFinex:
+            //        return new BitFinexExchange();
+            //    case ExchangeType.Bitmex:
+            //        return new BitmexExchange();
+            //    case ExchangeType.Bittrex:
+            //        return new BittrexExchange();
+            //    case ExchangeType.Poloniex:
+            //        return new PoloniexExchange();
+            //}
             return null;
         }
 
@@ -144,19 +152,122 @@ namespace Crypto.Core {
                 return PositionSide.Both;
             return PositionSide.Long;
         }
-        public virtual ResizeableArray<TradeInfoItem> GetTrades(Ticker ticker, DateTime start, DateTime end) {
-            ResizeableArray<TradeInfoItem> res = new ResizeableArray<TradeInfoItem>();
-            while(res.Last() == null || res.Last().Time < end) {
-                DateTime lastTime = res.Last() == null ? DateTime.MinValue : res.Last().Time;
-                if(!GetTradesCore(res, ticker, start, GetTradesRangeEndTime(start, end)))
+        protected virtual ResizeableArray<TradeInfoItem> GetTradesInverted(Ticker ticker, DateTime start, DateTime end) {
+            List<ResizeableArray<TradeInfoItem>> lists = new List<ResizeableArray<TradeInfoItem>>(1000);
+            ResizeableArray<TradeInfoItem> last = null;
+            DateTime lastStart = start;
+            while(true) {
+                DateTime localEnd = GetTradesRangeEndTime(start, end);
+                last = GetTradesCore(ticker, start, localEnd);
+                if(last == null || last.Count == 0)
                     break;
-                if(res.Count == 0 || (res.Last() != null && res.Last().Time == lastTime))
-                    return res;
-                start = res.Last().Time.AddMilliseconds(1);
+                Debug.WriteLine(ticker.CurrencyPair + " trade history downloaded " + last.First().Time + "-" + last.Last().Time + " items count = " + last.Count);
+                DateTime newStart = last.First().Time.ToUniversalTime();
+                if(lastStart == newStart)
+                    break;
+                lists.Add(last);
+                if(last.Count == 0 || (last.Last() != null && newStart <= start))
+                    break;
+                lastStart = newStart;
+                end = last.First().Time.ToUniversalTime().AddMilliseconds(-1);
+            }
+            if(lists.Count == 0)
+                return new ResizeableArray<TradeInfoItem>();
+            int totalCount = lists.Sum(il => il.Count);
+            ResizeableArray<TradeInfoItem> res = new ResizeableArray<TradeInfoItem>(totalCount);
+            for(int i = lists.Count - 1; i >= 0; i--) {
+                if(res.Count == 0)
+                    res.AddRange(lists[i]);
+                else {
+                    DateTime lastTime = res.Last().Time;
+                    for(int j = 0; j < lists[i].Count; j++) {
+                        if(lastTime >= lists[i][j].Time)
+                            continue;
+                        res.Add(lists[i][j]);
+                    }
+                }
             }
             return res;
         }
-        protected abstract bool GetTradesCore(ResizeableArray<TradeInfoItem> list, Ticker ticker, DateTime start, DateTime end);
+        protected virtual ResizeableArray<TradeInfoItem> GetTradesForward(Ticker ticker, DateTime start, DateTime end) {
+            List<ResizeableArray<TradeInfoItem>> lists = new List<ResizeableArray<TradeInfoItem>>(1000);
+            ResizeableArray<TradeInfoItem> last = null;
+            DateTime regionalEnd = end.ToLocalTime();
+            DateTime initStart = start;
+            while(true) {
+                DateTime localEnd = GetTradesRangeEndTime(start, end);
+                last = GetTradesCore(ticker, start, localEnd);
+                if(last == null || last.Count == 0) {
+                    if(start == initStart) { // too early
+                        initStart = initStart.AddDays(1);
+                        start = initStart;
+                        if(start >= end)
+                            break;
+                        continue;
+                    }
+                    break;
+                }
+                DateTime ds = last.First().Time;
+                DateTime de = last.Last().Time;
+                Debug.WriteLine(ticker.CurrencyPair + " trade history downloaded " +  ds + "-" + de + " items count = " + last.Count);
+                lists.Add(last);
+                if(de >= regionalEnd)
+                    break;
+                start = last.Last().Time.ToUniversalTime().AddMilliseconds(1);
+                if(localEnd == end)
+                    break;
+            }
+            if(lists.Count == 0)
+                return new ResizeableArray<TradeInfoItem>();
+            int totalCount = lists.Sum(il => il.Count);
+            ResizeableArray<TradeInfoItem> res = new ResizeableArray<TradeInfoItem>(totalCount);
+            foreach(var list in lists) {
+                res.AddRange(list);
+            }
+            return res;
+        }
+        protected virtual bool HasDescendingTradesList { get { return false; } }
+        public virtual ResizeableArray<TradeInfoItem> GetTrades(Ticker ticker, DateTime start, DateTime end) {
+            if(HasDescendingTradesList)
+                return GetTradesInverted(ticker, start, end);
+            long delta = (long)((end - start).TotalSeconds / 3);
+            
+            DateTime m1 = start.AddSeconds(delta);
+            DateTime m2 = m1.AddSeconds(delta);
+
+            ResizeableArray<TradeInfoItem> l1 = null, l2 = null, l3 = null;
+            Parallel.Invoke(
+                () => l1 = GetTradesForward(ticker, start, m1),
+                () => l2 = GetTradesForward(ticker, m1.AddMilliseconds(1), m2),
+                () => l3 = GetTradesForward(ticker, m2.AddMilliseconds(1), end));
+            //var t1 = Task.Run(() => GetTradesForward(ticker, start, m1)).ConfigureAwait(false);
+            //var t2 = Task.Run( () => GetTradesForward(ticker, m1.AddMilliseconds(1), m2)).ConfigureAwait(false);
+            //var t3 = Task.Run(() => GetTradesForward(ticker, m2.AddMilliseconds(1), end)).ConfigureAwait(false);
+            //var l1 = await t1;
+            //var l2 = await t2;
+            //var l3 = await t3;
+            ResizeableArray<TradeInfoItem> res = new ResizeableArray<TradeInfoItem>(l1.Count + l2.Count + l3.Count);
+            res.AddRange(l1);
+            ConcatTradeHistory(res, l2, end.ToLocalTime());
+            ConcatTradeHistory(res, l3, end.ToLocalTime());
+            return res;
+        }
+        protected void ConcatTradeHistory(ResizeableArray<TradeInfoItem> l1, ResizeableArray<TradeInfoItem> l2, DateTime end) {
+            DateTime dateTime = l1.Count == 0? DateTime.MinValue: l1.Last().Time;
+            int startIndex = 0;
+            for (int i = 0; i < l2.Count; i++) {
+                if (l2[i].Time > dateTime) {
+                    startIndex = i;
+                    break;
+                }
+            }
+            for (int i = startIndex; i < l2.Count; i++) {
+                if (l2[i].Time > end)
+                    break;
+                l1.Add(l2[i]);
+            }
+        }
+        protected abstract ResizeableArray<TradeInfoItem> GetTradesCore(Ticker ticker, DateTime start, DateTime end);
 
         public DateTime LastWebSocketRecvTime { get; set; }
         public abstract bool AllowCandleStickIncrementalUpdate { get; }
@@ -452,7 +563,7 @@ namespace Crypto.Core {
                 return string.Empty;
             }
         }
-
+        protected internal bool BlockPrivateData { get; set; }
         protected int CurrentClientIndex { get; set; }
         public virtual MyWebClient GetWebClient() {
             MyWebClient cl = new MyWebClient(this);
@@ -712,6 +823,20 @@ namespace Crypto.Core {
             }
         }
 
+        protected internal byte[] UploadValues(string address, HttpRequestParamsCollection coll) {
+            try {
+                CheckRequestRateLimits();
+                return GetWebClient().UploadValues(address, coll);
+            }
+            catch(Exception e) {
+                WebException we = e as WebException;
+                if(we != null && (we.Message.Contains("418") || we.Message.Contains("429")))
+                    IsInitialized = false;
+                Telemetry.Default.TrackException(e);
+                return null;
+            }
+        }
+
         protected internal byte[] GetDownloadBytes(string address, MyWebClient client) {
             try {
                 CheckRequestRateLimits();
@@ -774,7 +899,7 @@ namespace Crypto.Core {
         public abstract bool UpdateTicker(Ticker tickerBase);
         public abstract bool UpdateTrades(Ticker tickerBase);
         public ResizeableArray<TradeInfoItem> GetTrades(Ticker ticker, DateTime startTime) { 
-            return GetTrades(ticker, startTime, DateTime.UtcNow); 
+            return GetTrades(ticker, startTime, DateTime.UtcNow);
         }
         public abstract bool UpdateOpenedOrders(AccountInfo account, Ticker ticker);
         public bool UpdateOpenedOrders(AccountInfo account) { return UpdateOpenedOrders(account, null); }
@@ -1421,8 +1546,8 @@ namespace Crypto.Core {
             if(info.UseTradeHistory) {
                 StartListenTradeHistory(info.Ticker);
             }
+            info.Ticker.CandleStickPeriodMin = info.KlineIntervalMin;
             if(info.UseKline) {
-                info.Ticker.CandleStickPeriodMin = info.KlineIntervalMin;
                 int seconds = info.KlineIntervalMin * 60 * 1000;
                 info.Ticker.CandleStickData = info.Ticker.GetCandleStickData(info.Ticker.CandleStickPeriodMin, DateTime.UtcNow.AddSeconds(-seconds), seconds);
                 StartListenKline(info.Ticker);
@@ -1443,6 +1568,7 @@ namespace Crypto.Core {
         }
         
         protected bool SimulationMode { get; set; }
+        public virtual bool SupportSimulation { get { return true; } }
         public virtual void EnterSimulationMode() {
             SimulationMode = true;
         }
@@ -1495,6 +1621,7 @@ namespace Crypto.Core {
         public virtual bool SupportBuySellVolume { get { return false; } }
 
         public bool AllowTickerHistory { get; set; } = false;
+        public virtual int TradesSimulationIntervalHr { get { return 24; } }
     }
 
     public class CandleStickIntervalInfo {

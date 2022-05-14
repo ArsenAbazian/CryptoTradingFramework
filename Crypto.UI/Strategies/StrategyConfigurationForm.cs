@@ -159,6 +159,14 @@ namespace CryptoMarketClient.Strategies {
                 XtraMessageBox.Show("Telegram Bot Registered!");
             }));
         }
+
+        private void biHelp_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
+            if(string.IsNullOrEmpty(Strategy.HelpWebPage)) {
+                XtraMessageBox.Show("This strategy does not have help topic. Sorry.", "Strategy Help");
+                return;
+            }
+            System.Diagnostics.Process.Start(Strategy.HelpWebPage);
+        }
     }
 
     public class MyLayoutControl : DataLayoutControl {

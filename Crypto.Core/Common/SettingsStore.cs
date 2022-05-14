@@ -75,7 +75,7 @@ namespace Crypto.Core.Common {
             BitFinex = false;
             Bitmex = false;
 
-            SimulationSettings = new SimulationSettings() { KLineHistoryIntervalDays = 30 };
+            SimulationSettings = new SimulationSettings();
 
             ClassicArbitrageLastFileName = ClassicArbitrageManager.DefaultFileName;
         }

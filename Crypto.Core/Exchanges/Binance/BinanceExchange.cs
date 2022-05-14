@@ -35,32 +35,37 @@ namespace Crypto.Core.Binance {
             return start.AddMinutes(59);
         }
 
-        protected virtual string AggTradesApiString => "https://api.binance.com/api/v1/aggTrades";
-
-        protected override bool GetTradesCore(ResizeableArray<TradeInfoItem> list, Ticker ticker, DateTime start, DateTime end) {
+        protected virtual string AggTradesApiString => "https://api.binance.com/api/v3/aggTrades";
+        
+        protected override ResizeableArray<TradeInfoItem> GetTradesCore(Ticker ticker, DateTime start, DateTime end) {
+            //string endpoint = "https://api.binance.com/api/v3/historicalTrades";
             string address = string.Format("{0}?symbol={1}&limit={2}&startTime={3}&endTime={4}", AggTradesApiString,
                 Uri.EscapeDataString(ticker.CurrencyPair), 1000, ToUnixTimestampMs(start), ToUnixTimestampMs(end));
             byte[] data = ticker.DownloadBytes(address);
             if(data == null || data.Length == 0)
-                return false;
+                return null;
 
-            int parseIndex = 0;
-            List<string[]> items = JsonHelper.Default.DeserializeArrayOfObjects(data, ref parseIndex, AggTradeItemString);
-            for(int i = 0; i < items.Count; i++) {
-                string[] item = items[i];
-                DateTime time = FromUnixTimestampMs(FastValueConverter.ConvertPositiveLong(item[5]));
+            var root = JsonHelper.Default.Deserialize(data);
+            if(root.ItemsCount == 0)
+                return null;
+            
+            ResizeableArray<TradeInfoItem> list = new ResizeableArray<TradeInfoItem>(root.ItemsCount);
+            for(int i = 0; i < root.Items.Length; i++) {
+                var item = root.Items[i];
+                DateTime time = FromUnixTimestampMs(item.Properties[5].ValueLong).ToLocalTime();
                 TradeInfoItem t = new TradeInfoItem(null, ticker);
-                bool isBuy = item[6][0] != 't';
-                t.AmountString = item[2];
+                bool isBuy = item.Properties[6].Value[0] != 't';
+                t.AmountString = item.Properties[2].Value;
                 t.Time = time;
                 t.Type = isBuy ? TradeType.Buy : TradeType.Sell;
-                t.RateString = item[1];
-                t.IdString = item[0];
-                if(list.Last() == null || list.Last().Time < time)
-                    list.Add(t);
+                t.RateString = item.Properties[1].Value;
+                t.IdString = item.Properties[0].Value;
+                list.Add(t);
             }
-            return true;
+            return list;
         }
+
+        public override int TradesSimulationIntervalHr => 1;
 
         protected override bool ShouldAddKlineListener => false;
 
@@ -1202,7 +1207,12 @@ namespace Crypto.Core.Binance {
         }
 
         protected internal override void ApplyCapturedEvent(Ticker ticker, TickerCaptureDataInfo info) {
-            throw new NotImplementedException();
+            if(info.StreamType == CaptureStreamType.OrderBook)
+                OnOrderBookSocketMessageReceived(this, new MessageReceivedEventArgs(info.Message));
+            else if(info.StreamType == CaptureStreamType.TradeHistory)
+                OnTradeHistorySocketMessageReceived(this, new MessageReceivedEventArgs(info.Message));
+            else if(info.StreamType == CaptureStreamType.KLine)
+                OnKlineSocketMessageReceived(this, new MessageReceivedEventArgs(info.Message));
         }
     }
 }

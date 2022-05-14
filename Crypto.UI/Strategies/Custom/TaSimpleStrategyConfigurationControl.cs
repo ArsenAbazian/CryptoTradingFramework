@@ -22,7 +22,7 @@ namespace Crypto.UI.Strategies.Custom {
         }
         protected override TickerInputInfo CreateDefaultTickerInputInfo() {
             TickerInputInfo res = base.CreateDefaultTickerInputInfo();
-            res.UseKline = true;
+            //res.UseKline = true;
             res.UseOrderBook = true;
             res.UseTradeHistory = true;
             return res;

@@ -7,6 +7,7 @@ using Crypto.Core.Helpers;
 using System.Windows.Forms;
 using System.Drawing;
 using DevExpress.XtraBars;
+using Crypto.Core.Common;
 
 namespace Crypto.UI.Helpers {
     public class NotificationProvider : INotificationProvider {
@@ -69,9 +70,5 @@ namespace Crypto.UI.Helpers {
                     }));
             }
         }
-    }
-
-    public interface ILogPanelOwner {
-        void ShowLogPanel();
     }
 }

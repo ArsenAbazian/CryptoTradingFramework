@@ -103,7 +103,14 @@ namespace Crypto.Core.Exchanges.Bitmex {
         }
 
         public override List<CandleStickIntervalInfo> GetAllowedCandleStickIntervals() {
-            return new List<CandleStickIntervalInfo>();
+            var list = new List<CandleStickIntervalInfo>();
+            list.Add(new CandleStickIntervalInfo() { Text = "1 min", Interval = TimeSpan.FromMinutes(1) });
+            list.Add(new CandleStickIntervalInfo() { Text = "5 min", Interval = TimeSpan.FromMinutes(5) });
+            list.Add(new CandleStickIntervalInfo() { Text = "15 min", Interval = TimeSpan.FromMinutes(15) });
+            list.Add(new CandleStickIntervalInfo() { Text = "30 min", Interval = TimeSpan.FromMinutes(30) });
+            list.Add(new CandleStickIntervalInfo() { Text = "1 hour", Interval = TimeSpan.FromMinutes(60) });
+            list.Add(new CandleStickIntervalInfo() { Text = "4 hours", Interval = TimeSpan.FromMinutes(240) });
+            return list;
         }
 
         public override bool GetBalance(AccountInfo info, string currency) {
@@ -118,36 +125,40 @@ namespace Crypto.Core.Exchanges.Bitmex {
             return true;
         }
 
-        protected bool IsError(byte[] data) {
+        protected bool IsAccessDeniedError(byte[] data) {
             if(data == null || data.Length == 0)
                 return true;
-            if(data.Length > 2 && data[0] == '<' && data[1] == 'h' && data[2] == 't')
+            if(data.Length > 2 && data[0] == '<' && data[1] == 'h' && data[2] == 't') {
+                LogManager.Default.Error("It seems that your IP blocked.", Encoding.UTF8.GetString(data));
                 return true;
+            }
             return false;
         }
 
-        protected bool IsError(string text) {
+        protected bool IsAccessDeniedError(string text) {
             if(string.IsNullOrEmpty(text))
                 return true;
-            if(text.StartsWith("<html>"))
+            if(text.StartsWith("<html>")) {
+                LogManager.Default.Error("It seems that your IP blocked.", text);
                 return true;
+            }
             return false;
         }
 
         public override bool GetTickersInfo() {
-            string address = "https://www.bitmex.com/api/v1/instrument?columns=typ,symbol,rootSymbol,quoteCurrency,highPrice,lowPrice,bidPrice,askPrice,lastChangePcnt,hasLiquidity,volume,tickSize,takerFee&start=0&count=500";
+            string address = "https://www.bitmex.com/api/v1/instrument/active?columns=typ,symbol,rootSymbol,quoteCurrency,highPrice,lowPrice,bidPrice,askPrice,lastChangePcnt,hasLiquidity,volume,tickSize,takerFee&start=0&count=500";
             string text = string.Empty;
             try {
                 text = GetDownloadString(address);
-                if(IsError(text))
+                if(IsAccessDeniedError(text))
                     return false;
                 ClearTickers();
                 JArray res = JsonConvert.DeserializeObject<JArray>(text);
                 int index = 0;
                 foreach(JObject obj in res.Children()) {
-                    if(!obj.Value<bool>("hasLiquidity"))
-                        continue;
                     string pair = obj.Value<string>("symbol");
+                    if(obj.Value<string>("state") != "Open")
+                        continue;
                     BitmexTicker t = (BitmexTicker)GetOrCreateTicker(pair);
                     t.Index = index;
                     t.ContractTicker = true;
@@ -169,7 +180,8 @@ namespace Crypto.Core.Exchanges.Bitmex {
                     index++;
                 }
             }
-            catch(Exception) {
+            catch(Exception e) {
+                LogManager.Default.Error(this, nameof(GetTickersInfo), e.ToString());
                 return false;
             }
             IsInitialized = true;
@@ -181,46 +193,50 @@ namespace Crypto.Core.Exchanges.Bitmex {
         }
 
         protected string DateToString(DateTime time) {
-            return string.Format("{0:D4}-{1:D2}-{2:D2} {3:D2}:{4:D2}:{5:D2}.{6:D3}Z", time.Year, time.Month, time.Day, time.Hour, time.Minute, time.Second, time.Millisecond);
+            return Uri.EscapeDataString(string.Format("{0:D4}-{1:D2}-{2:D2} {3:D2}:{4:D2}:{5:D2}.{6:D3}Z", time.Year, time.Month, time.Day, time.Hour, time.Minute, time.Second, time.Millisecond));
+        }
+        
+        protected bool HasError(JsonHelperToken root) {
+            return root.GetProperty("error") != null;
         }
 
-        protected override bool GetTradesCore(ResizeableArray<TradeInfoItem> list, Ticker ticker, DateTime startTime, DateTime endTime) {
-            string address = string.Format("https://www.bitmex.com/api/v1/trade?symbol={0}&count=1000&startTime={1}&endTime={2}", ticker.Name, DateToString(startTime), DateToString(endTime));
-            string text = string.Empty;
+        //protected override bool HasDescendingTradesList => true;
 
+        protected override ResizeableArray<TradeInfoItem> GetTradesCore(Ticker ticker, DateTime startTime, DateTime endTime) {
+            string address = string.Format("https://www.bitmex.com/api/v1/trade?symbol={0}&count=1000&startTime={1}&endTime={2}&reverse=false", ticker.Name, DateToString(startTime), DateToString(endTime));
+            byte[] data = null;
             try {
-                text = GetDownloadString(address);
-                if(IsError(text))
-                    return false;
-                if(text[0] == '{') {
-                    JObject obj = JsonConvert.DeserializeObject<JObject>(text);
-                    LogManager.Default.Add(LogType.Error, this, Type.ToString(), "error in GetTradesCore", obj.Value<string>("message"));
-                    return false;
-                }
-                JArray res = JsonConvert.DeserializeObject<JArray>(text);
-                foreach(JObject obj in res.Children()) {
+                data = GetDownloadBytes(address);
+                if(data == null)
+                    return null;
+                if(IsAccessDeniedError(data))
+                    return null;
+                var root = JsonHelper.Default.Deserialize(data);
+                if(CheckLogError(root, nameof(GetTradesCore)))
+                    return null;
+                ResizeableArray<TradeInfoItem> list = new ResizeableArray<TradeInfoItem>(root.ItemsCount);
+                for(int i = 0; i < root.ItemsCount; i++) {
+                    var ji = root.Items[i];
                     TradeInfoItem item = new TradeInfoItem();
                     item.Ticker = ticker;
-                    item.RateString = obj.Value<string>("price");
-                    item.AmountString = obj.Value<string>("size");
-                    item.Type = String2TradeType(obj.Value<string>("side"));
-                    item.TimeString = obj.Value<string>("timestamp");
-                    DateTime time = item.Time;
-                    if(list.Last() == null || list.Last().Time <= time)
-                        list.Add(item);
-                    else
-                        break;
+                    item.RateString = ji.Properties[4].Value;
+                    item.AmountString = ji.Properties[3].Value;
+                    item.Type = String2TradeType(ji.Properties[2].Value);
+                    item.TimeString = ji.Properties[0].Value;
+                    list.Add(item);
                 }
+                return list;
             }
-            catch(Exception) {
-                return false;
+            catch(Exception e) {
+                LogManager.Default.Error(this, nameof(GetTradesCore), e.ToString());
+                return null;
             }
-            return true;
         }
 
         public override bool ObtainExchangeSettings() {
             RequestRate = new List<RateLimit>();
-            RequestRate.Add(new RateLimit(this) { Interval = TimeSpan.TicksPerMinute, Limit = 60 });
+            RequestRate.Add(new RateLimit(this) { Interval = TimeSpan.TicksPerMinute, Limit = 120 });
+            RequestRate.Add(new RateLimit(this) { Interval = TimeSpan.TicksPerSecond, Limit = 10 });
             return true;
         }
 
@@ -245,7 +261,7 @@ namespace Crypto.Core.Exchanges.Bitmex {
         public override TradingResult SellLong(AccountInfo account, Ticker ticker, double rate, double amount) {
             string text = DownloadPrivateString(account, "POST",
                 string.Format("/api/v1/order?symbol={0}&orderQty={1}&price={2}&ordType=Market&side=Sell", ticker.MarketName, amount, rate));
-            if(IsError(text))
+            if(IsAccessDeniedError(text))
                 return null;
             return OnTradingResult(account, ticker, text);
         }
@@ -270,7 +286,7 @@ namespace Crypto.Core.Exchanges.Bitmex {
             string expires = GetExpires().ToString();
             MyWebClient client = GetWebClient();
 
-            client.Headers.Clear();
+            //client.Headers.Clear();
             client.Headers.Add("api-expires", expires);
             string textToSignature = verb + path + expires + data;
             client.Headers.Add("api-signature", account.GetSign(textToSignature));
@@ -290,7 +306,7 @@ namespace Crypto.Core.Exchanges.Bitmex {
             string expires = GetExpires().ToString();
             MyWebClient client = GetWebClient();
 
-            client.Headers.Clear();
+            //client.Headers.Clear();
             client.Headers.Add("api-expires", expires);
             string textToSignature = verb + path + expires;
             client.Headers.Add("api-signature", account.GetSign(textToSignature));
@@ -312,7 +328,6 @@ namespace Crypto.Core.Exchanges.Bitmex {
             if(XRateLimitLimit == 0) {
                 IEnumerable<string> limit = myWebClient.ResponseHeaders.GetValues("X-RateLimit-Limit");
                 XRateLimitLimit = Convert.ToInt32(limit.First());
-                return;
             }
             
             IEnumerable<string> remain = myWebClient.ResponseHeaders.GetValues("X-RateLimit-Remaining");
@@ -391,26 +406,45 @@ namespace Crypto.Core.Exchanges.Bitmex {
             return true;
         }
 
+        protected bool ShouldBlockPrivateData(string description) {
+            return description == "Your account has been disabled from using the API. Please contact support.";
+        }
+        
+        protected bool CheckLogError(JsonHelperToken root, string methodName) {
+            if(!HasError(root))
+                return false;
+            var err = LogManager.Default.GetLast(LogType.Error);
+            string desc = root.GetProperty("error").GetProperty("message").Value;
+            BlockPrivateData = ShouldBlockPrivateData(desc);
+            if(err != null && err.Description == desc)
+                return true;
+            LogManager.Default.Error(this, nameof(OnUpdateOpenedOrders), desc);
+            return true;
+        }
+
         private void OnUpdateOpenedOrders(AccountInfo account, Ticker ticker, byte[] data) {
-            string text = UTF8Encoding.Default.GetString(data);
-            JArray items = (JArray)JsonConvert.DeserializeObject(text);
-            List<OpenedOrderInfo> openedOrders = ticker == null ? account.OpenedOrders : ticker.OpenedOrders;
+            var root = JsonHelper.Default.Deserialize(data);
+            if(CheckLogError(root, nameof(OnUpdateOpenedOrders)))
+                return;
+            if(root.ItemsCount == 0)
+                return;
             if(ticker != null)
                 ticker.SaveOpenedOrders();
-            lock(openedOrders) {
-                openedOrders.Clear();
+            lock(ticker.OpenedOrders) {
+                ticker.OpenedOrders.Clear();
 
-                foreach(JObject item in items) {
-                    string symbol = item.Value<string>("symbol");
+                for(int i = 0; i < root.Items.Length; i++) {
+                    var item = root.Items[i];
+                    string symbol = item.GetProperty("symbol").Value;
                     OpenedOrderInfo info = new OpenedOrderInfo(account, ticker);
-                    info.OrderId = item.Value<string>("orderId");
-                    info.Type = item.Value<string>("side")[0] == 'B' ? OrderType.Buy : OrderType.Sell;
-                    info.ValueString = item.Value<string>("price");
-                    info.AmountString = item.Value<string>("orderQty");
+                    info.OrderId = item.GetProperty("orderId").Value;
+                    info.Type = item.GetProperty("side").Value[0] == 'B' ? OrderType.Buy : OrderType.Sell;
+                    info.ValueString = item.GetProperty("price").Value;
+                    info.AmountString = item.GetProperty("orderQty").Value;
                     info.TotalString = info.AmountString;
-                    info.DateString = item.Value<string>("transactTime");
+                    info.DateString = item.GetProperty("transactTime").Value;
                     info.TickerName = symbol;
-                    openedOrders.Add(info);
+                    ticker.OpenedOrders.Add(info);
                 }
             }
             if(ticker != null)
@@ -423,14 +457,14 @@ namespace Crypto.Core.Exchanges.Bitmex {
         public override bool UpdateOrderBook(Ticker ticker, int depth) {
             string address = GetOrderBookString(ticker, depth);
             byte[] data = GetDownloadBytes(address);
-            if(IsError(data))
+            if(IsAccessDeniedError(data))
                 return false;
             return OnUpdateOrderBook(ticker, data);
         }
         public override bool UpdateOrderBook(Ticker ticker) {
             string address = GetOrderBookString(ticker, OrderBook.Depth);
             byte[] data = GetDownloadBytes(address);
-            if(IsError(data))
+            if(IsAccessDeniedError(data))
                 return false;
             return OnUpdateOrderBook(ticker, data);
         }
@@ -445,7 +479,7 @@ namespace Crypto.Core.Exchanges.Bitmex {
         protected string[] OrderBookItems { get; } = new string[] { "symbol", "id", "side", "size", "price" };
 
         bool OnUpdateOrderBook(Ticker ticker, byte[] bytes) {
-            if(IsError(bytes))
+            if(IsAccessDeniedError(bytes))
                 return false;
 
             int startIndex = 0; // skip {
@@ -491,8 +525,45 @@ namespace Crypto.Core.Exchanges.Bitmex {
             return res;
         }
 
-        public override bool UpdateTrades(Ticker tickerBase) {
-            return true;
+        public override bool UpdateTrades(Ticker ticker) {
+            string address = string.Format("https://www.bitmex.com/api/v1/trade?symbol={0}&count=1000&reverse=false", ticker.Name);
+            byte[] data = null;
+            try {
+                data = GetDownloadBytes(address);
+                if(data == null) {
+                    LogManager.Default.Error(this, nameof(UpdateTrades), "No data received");
+                    return false;
+                }
+                if(IsAccessDeniedError(data))
+                    return false;
+                var root = JsonHelper.Default.Deserialize(data);
+                if(CheckLogError(root, nameof(UpdateTrades))) {
+                    LogManager.Default.Error(this, nameof(UpdateTrades), root.GetProperty("error").GetProperty("message").Value);
+                    return false;
+                }
+                lock(ticker) {
+                    ticker.LockTrades();
+                    ticker.ClearTradeHistory();
+                    for(int i = 0; i < root.ItemsCount; i++) {
+                        var ji = root.Items[i];
+                        TradeInfoItem item = new TradeInfoItem();
+                        item.Ticker = ticker;
+                        item.RateString = ji.Properties[4].Value;
+                        item.AmountString = ji.Properties[3].Value;
+                        item.Type = String2TradeType(ji.Properties[2].Value);
+                        item.TimeString = ji.Properties[0].Value;
+                        ticker.AddTradeHistoryItem(item);
+                    }
+                    ticker.UnlockTrades();
+                }
+                if(ticker.HasTradeHistorySubscribers)
+                    ticker.RaiseTradeHistoryChanged(new TradeHistoryChangedEventArgs() { NewItems = ticker.TradeHistory });
+                return true;
+            }
+            catch(Exception e) {
+                LogManager.Default.Error(this, nameof(UpdateTrades), e.ToString());
+                return false;
+            }
         }
 
         public override bool Withdraw(AccountInfo account, string currency, string adress, string paymentId, double amount) {
@@ -507,8 +578,6 @@ namespace Crypto.Core.Exchanges.Bitmex {
             base.StartListenTickerStream(ticker);
             StartListenOrderBook(ticker);
         }
-
-
 
         protected override string GetOrderBookSocketAddress(Ticker ticker) {
             return string.Format("wss://www.bitmex.com/realtime?subscribe=orderBookL2:{0}", ticker.CurrencyPair);

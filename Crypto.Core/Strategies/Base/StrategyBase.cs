@@ -87,6 +87,11 @@ namespace Crypto.Core.Strategies {
         [Browsable(false)]
         public abstract bool SupportSimulation { get; }
 
+        public SimulationSettings SimulationSettings { get; } = new SimulationSettings();
+
+        public DateTime SimulationStartDate { get { return SimulationSettings.StartTime; } set { SimulationSettings.StartTime = value; } }
+        public DateTime SimulationEndDate { get { return SimulationSettings.EndTime; } set { SimulationSettings.EndTime = value; } }
+
         [XmlIgnore]
         [Browsable(false)]
         public ResizeableArray<object> StrategyData { get; } = new ResizeableArray<object>();
@@ -115,6 +120,9 @@ namespace Crypto.Core.Strategies {
 
         int IStrategyDataItemInfoOwner.MeasureUnitMultiplier { get { return 30; } set { } }
         StrategyDateTimeMeasureUnit IStrategyDataItemInfoOwner.MeasureUnit { get { return StrategyDateTimeMeasureUnit.Minute; } set { } }
+
+        [XmlIgnore]
+        public virtual string HelpWebPage { get { return string.Empty; } }
 
         protected virtual void ApplyParametersToOptimize() {
             foreach(InputParameterInfo info in ParametersToOptimize) {

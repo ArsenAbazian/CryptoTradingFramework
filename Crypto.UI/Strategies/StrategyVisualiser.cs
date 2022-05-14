@@ -684,6 +684,8 @@ namespace CryptoMarketClient.Strategies {
         }
 
         private object GetArgumentValue(StrategyDataItemInfo info, object v) {
+            if(v == null)
+                return null;
             string name = info.ArgumentDataMember == null ? "Time" : info.ArgumentDataMember;
             PropertyInfo pi = v.GetType().GetProperty(name, BindingFlags.Public | BindingFlags.Instance);
             if(pi == null)

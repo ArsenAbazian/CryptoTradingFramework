@@ -570,38 +570,31 @@ namespace Crypto.Core {
             OnUpdateOrderBook(ticker, bytes);
             return true;
         }
-
-        protected override bool GetTradesCore(ResizeableArray<TradeInfoItem> list, Ticker ticker, DateTime starTime, DateTime endTime) {
+        protected override bool HasDescendingTradesList => true;
+        protected override ResizeableArray<TradeInfoItem> GetTradesCore(Ticker ticker, DateTime starTime, DateTime endTime) {
             string address = string.Format("https://poloniex.com/public?command=returnTradeHistory&currencyPair={0}&start={1}&end={2}", Uri.EscapeDataString(ticker.CurrencyPair), ToUnixTimestamp(starTime), ToUnixTimestamp(endTime));
-            string text = GetDownloadString(address);
-            if(string.IsNullOrEmpty(text))
-                return false;
-            JArray trades = JsonConvert.DeserializeObject<JArray>(text);
-            if(trades.Count == 0)
-                return false;
+            byte[] data = GetDownloadBytes(address);
+            if(data == null || data.Length == 0)
+                return null;
+            var root = JsonHelper.Default.Deserialize(data);
+            if(root.ItemsCount == 0)
+                return null;
 
-            ResizeableArray<TradeInfoItem> tmp = new ResizeableArray<TradeInfoItem>();
-
-            for(int i = 0; i < trades.Count; i++) {
-                JObject obj = (JObject)trades[i];
-                DateTime time = obj.Value<DateTime>("date");
-                if(time < starTime)
-                    break;
+            ResizeableArray<TradeInfoItem> list = new ResizeableArray<TradeInfoItem>(root.ItemsCount);
+            for(int i = root.ItemsCount - 1; i >= 0; i--) {
+                var ji = root.Items[i];
+                
                 TradeInfoItem item = new TradeInfoItem(null, ticker);
-                bool isBuy = obj.Value<string>("type").Length == 3;
-                item.AmountString = obj.Value<string>("amount");
-                item.Time = time;
+                item.IdString = ji.Properties[1].Value;
+                item.Time = Convert.ToDateTime(ji.Properties[2].Value).ToLocalTime();
+                bool isBuy = ji.Properties[3].Value.Length == 3;
+                
+                item.RateString = ji.Properties[4].Value;
+                item.AmountString = ji.Properties[5].Value;
                 item.Type = isBuy ? TradeType.Buy : TradeType.Sell;
-                item.RateString = obj.Value<string>("rate");
-                item.IdString = obj.Value<string>("tradeID");
-                if(list.Last() == null || list.Last().Time < item.Time)
-                    tmp.Add(item);
+                list.Add(item);
             }
-            if(tmp.Count > 0 && tmp.Last().Time < tmp[0].Time)
-                list.AddRangeReversed(tmp);
-            else
-                list.AddRange(tmp);
-            return true;
+            return list;
         }
 
         protected List<TradeInfoItem> UpdateList { get; } = new List<TradeInfoItem>(100);

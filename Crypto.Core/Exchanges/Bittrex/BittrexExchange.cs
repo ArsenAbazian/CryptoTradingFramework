@@ -12,6 +12,7 @@ using Crypto.Core.Helpers;
 using Crypto.Core.Exchanges.Base;
 using System.Security.Cryptography;
 using System.Net.Http;
+using WebSocket4Net;
 
 namespace Crypto.Core.Bittrex {
     public class BittrexExchange : Exchange {
@@ -32,8 +33,9 @@ namespace Crypto.Core.Bittrex {
             return new BittrexAccountBalanceInfo(info, GetOrCreateCurrency(currency));
         }
 
-        protected override bool GetTradesCore(ResizeableArray<TradeInfoItem>  list, Ticker ticker, DateTime start, DateTime end) {
-            throw new NotImplementedException();
+        public override bool SupportSimulation => false;
+        protected override ResizeableArray<TradeInfoItem> GetTradesCore(Ticker ticker, DateTime starTime, DateTime endTime) {
+            return new ResizeableArray<TradeInfoItem>();
         }
 
         public BittrexExchange() {
@@ -531,15 +533,7 @@ namespace Crypto.Core.Bittrex {
                     var info = array.Items[i];
                     string name = info.Properties[0].Value;
                     BittrexTicker m = (BittrexTicker)GetOrCreateTicker(name);
-
-                    /*
-                    "symbol": "string",
-                    "lastTradeRate": "number (double)",
-                    "bidRate": "number (double)",
-                    "askRate": "number (double)"
-                    */
-
-                    
+                                        
                     m.CurrencyPair = name;
                     string[] pairs = m.CurrencyPair.Split('-');
                     if(pairs.Length != 2)
@@ -551,27 +545,6 @@ namespace Crypto.Core.Bittrex {
                     m.LowestAskString = info.Properties[3].Value;
                     AddTicker(m);
                 }
-                
-                //int startIndex = 1;
-                //if(!JSonHelper.Default.SkipSymbol(bytes, ':', 3, ref startIndex))
-                //    return false;
-
-                //List<string[]> res = JSonHelper.Default.DeserializeArrayOfObjects(bytes, ref startIndex, new string[] { "MarketCurrency", "BaseCurrency", "MarketCurrencyLong", "BaseCurrencyLong", "MinTradeSize", "MarketName", "IsActive", "IsRestricted", "Created", "Notice", "IsSponsored", "LogoUrl" });
-                //for(int i = 0; i < res.Count; i++) {
-                //    string[] item = res[i];
-                //    BittrexTicker m = new BittrexTicker(this);
-                //    m.MarketCurrency = item[0];
-                //    m.BaseCurrency = item[1];
-                //    m.MarketCurrencyLong = item[2];
-                //    m.BaseCurrencyLong = item[3];
-                //    m.MinTradeSize = FastValueConverter.Convert(item[4]);
-                //    m.MarketName = item[5];
-                //    m.IsActive = item[6].Length == 4 ? true : false;
-                //    m.Created = Convert.ToDateTime(item[8]).ToLocalTime();
-                //    m.LogoUrl = item[11];
-                //    m.Index = Tickers.Count;
-                //    AddTicker(m);
-                //}
             }
             catch(Exception) {
                 return false;
@@ -961,7 +934,7 @@ namespace Crypto.Core.Bittrex {
             lock(ticker) {
                 ticker.LockTrades();
                 ticker.ClearTradeHistory();
-                for(int i = 0; i < root.ItemsCount; i++) {
+                for(int i = root.ItemsCount - 1; i >= 0; i--) {
                     JsonHelperToken obj = root.Items[i];
                     TradeInfoItem item = new TradeInfoItem(null, ticker);
                     item.IdString = obj.Properties[0].Value;
@@ -971,7 +944,7 @@ namespace Crypto.Core.Bittrex {
                     item.Total = item.Rate * item.Amount;
                     item.Type = obj.Properties[4].Value == "BUY" ? TradeType.Buy : TradeType.Sell;
                     item.Fill = TradeFillType.Fill;
-                    ticker.InsertTradeHistoryItem(item);
+                    ticker.AddTradeHistoryItem(item);
                 }
                 ticker.UnlockTrades();
             }
@@ -982,6 +955,7 @@ namespace Crypto.Core.Bittrex {
             return true;
         }
 
+        protected override bool HasDescendingTradesList => true;
 
         public override TradingResult BuyLong(AccountInfo account, Ticker ticker, double rate, double amount) {
             string format = "{{ " +
@@ -1316,7 +1290,12 @@ namespace Crypto.Core.Bittrex {
            return ((long)((DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds)).ToString();
         }
         protected internal override void ApplyCapturedEvent(Ticker ticker, TickerCaptureDataInfo info) {
-            throw new NotImplementedException();
+            if(info.StreamType == CaptureStreamType.OrderBook)
+                OnOrderBookSocketMessageReceived(this, new MessageReceivedEventArgs(info.Message));
+            else if(info.StreamType == CaptureStreamType.TradeHistory)
+                OnTradeHistorySocketMessageReceived(this, new MessageReceivedEventArgs(info.Message));
+            else if(info.StreamType == CaptureStreamType.KLine)
+                OnKlineSocketMessageReceived(this, new MessageReceivedEventArgs(info.Message));
         }
     }
 }

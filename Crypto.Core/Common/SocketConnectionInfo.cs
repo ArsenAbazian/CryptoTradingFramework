@@ -196,7 +196,7 @@ namespace Crypto.Core.Common {
 
         public void Subscribe(WebSocketSubscribeInfo info) {
             // s.Request.channel == info.Request.channel && s.Request.command == info.Request.command && s.Request.userID == info.Request.userID
-            WebSocketSubscribeInfo exist = Subscribtions.FirstOrDefault(s => s.GetRequestString().Equals(info.GetRequestString()));
+            WebSocketSubscribeInfo exist = Subscribtions.FirstOrDefault(s => s.RequestEquals(info));
             if(exist != null) {
                 exist.AddRef();
                 return;
@@ -605,6 +605,12 @@ namespace Crypto.Core.Common {
 
         public void ClearRef() {
             RefCount = 0;
+        }
+
+        internal bool RequestEquals(WebSocketSubscribeInfo info) {
+            string request = GetRequestString();
+            string irequest = info.GetRequestString();
+            return request == irequest;
         }
     }
 

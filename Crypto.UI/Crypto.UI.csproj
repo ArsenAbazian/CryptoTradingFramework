@@ -126,11 +126,11 @@
       <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.Xpo.v21.2, Version=21.2.0.0 ">
+    <Reference Include="DevExpress.XtraBars.v21.2, Version=21.2.0.0 ">
       <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
-    <Reference Include="DevExpress.XtraBars.v21.2, Version=21.2.0.0 ">
+    <Reference Include="DevExpress.Drawing.v21.2, Version=21.2.0.0 ">
       <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
