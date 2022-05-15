@@ -55,6 +55,7 @@ namespace Crypto.Core.Strategies {
         public Task<bool> InitializeAsync(IStrategyDataProvider dataProvider, CancellationTokenSource source) {
             DataProvider = dataProvider;
             DataProvider.Reset();
+            DataProvider.Cancellation = source.Token;
             return Task<bool>.Run(() => {
                 bool res = true;
                 foreach(StrategyBase s in Strategies) {
@@ -166,7 +167,22 @@ namespace Crypto.Core.Strategies {
         public bool Start() {
             return RunMultiThread();
         }
+        public bool StartSimulation(CancellationToken token) {
+            bool res = StartStrategies();
+            if(!res)
+                return false;
+            Running = true;
+            while(!token.IsCancellationRequested) {
+                OnTick();
+                if(DataProvider.IsFinished)
+                    break;
+            }
+            Stop();
+            return true;
+        }
         public bool Stop() {
+            if(Running == false)
+                return true;
             bool res = true;
             StopThread = true;
             foreach(StrategyBase s in Strategies)

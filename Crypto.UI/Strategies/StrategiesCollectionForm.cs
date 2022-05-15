@@ -2,6 +2,7 @@
 using Crypto.Core.Helpers;
 using Crypto.Core.Strategies;
 using Crypto.UI.Strategies;
+using DevExpress.Utils.Extensions;
 using DevExpress.XtraBars;
 using DevExpress.XtraEditors;
 using DevExpress.XtraSplashScreen;
@@ -298,99 +299,91 @@ namespace CryptoMarketClient.Strategies {
             StrategyConfigurationManager.Default.ShowData(cloned);
         }
 
-        //protected CancellationTokenSource Cancellation { get; set; }
-        //private Task SimulateAsync() {
-        //    if(Cancellation != null) {
-        //        XtraMessageBox.Show("Simulation is already running.");
-        //        return Task.CompletedTask;
-        //    }
-        //    Stopped = false;
-        //    StrategyBase strategy = (StrategyBase)this.gridView1.GetFocusedRow();
-        //    if(strategy == null) {
-        //        XtraMessageBox.Show("No strategy selected.");
-        //        return Task.CompletedTask;
-        //    }
-        //    if(!strategy.SupportSimulation) {
-        //        XtraMessageBox.Show("This strategy does not support simulation.");
-        //        return Task.CompletedTask;
-        //    }
-        //    if(!strategy.Enabled) {
-        //        XtraMessageBox.Show("This strategy is disabled. Please enable it for simulation.");
-        //        return Task.CompletedTask;
-        //    }
+        protected CancellationTokenSource Cancellation { get; set; }
+        private Task SimulateAsync() {
+            if(Cancellation != null) {
+                XtraMessageBox.Show("Simulation is already running.");
+                return Task.CompletedTask;
+            }
+            Stopped = false;
+            StrategyBase strategy = (StrategyBase)this.gridView1.GetFocusedRow();
+            if(strategy == null) {
+                XtraMessageBox.Show("No strategy selected.");
+                return Task.CompletedTask;
+            }
+            if(!strategy.SupportSimulation) {
+                XtraMessageBox.Show("This strategy does not support simulation.");
+                return Task.CompletedTask;
+            }
+            if(!strategy.Enabled) {
+                XtraMessageBox.Show("This strategy is disabled. Please enable it for simulation.");
+                return Task.CompletedTask;
+            }
 
-        //    StrategiesManager manager = new StrategiesManager();
-        //    manager.FileName = "SimulationStrategiesManager.xml";
-        //    StrategyBase cloned = strategy.Clone();
-        //    cloned.DemoMode = true;
-        //    manager.Strategies.Add(cloned);
+            StrategiesManager manager = new StrategiesManager();
+            manager.FileName = "SimulationStrategiesManager.xml";
+            StrategyBase cloned = strategy.Clone();
+            cloned.DemoMode = true;
+            manager.Strategies.Add(cloned);
 
-        //    LogManager.Default.ShowLogForm();
-        //    this.siStatus.Caption = "<b>Loading data from exchanges...</b>";
-        //    IOverlaySplashScreenHandle handle = SplashScreenManager.ShowOverlayForm(gridControl1);
-        //    Application.DoEvents();
-        //    SimulationStrategyDataProvider dataProvider = new SimulationStrategyDataProvider();
-        //    dataProvider.DownloadProgressChanged += OnSimulationProviderDownloadProgressChanged;
+            LogManager.Default.ShowLogForm();
+            this.siStatus.Caption = "<b>Loading data from exchanges...</b>";
+            this.bar1.ItemLinks.ForEach(l => l.Item.Enabled = false);
+            IOverlaySplashScreenHandle handle = SplashScreenManager.ShowOverlayForm(gridControl1);
+            Application.DoEvents();
+            SimulationStrategyDataProvider dataProvider = new SimulationStrategyDataProvider();
+            dataProvider.DownloadProgressChanged += OnSimulationProviderDownloadProgressChanged;
 
-        //    this.beSimulationProgress.EditValue = 0;
-        //    this.beSimulationProgress.Visibility = BarItemVisibility.Always;
+            this.beSimulationProgress.EditValue = 0;
+            this.beSimulationProgress.Visibility = BarItemVisibility.Always;
+            this.biCancel.Visibility = BarItemVisibility.Always;
 
-        //    Cancellation = new CancellationTokenSource();
-        //    Task<bool> t = manager.InitializeAsync(dataProvider, Cancellation);
-        //    return t;
+            Cancellation = new CancellationTokenSource();
+            Task<bool> t = manager.InitializeAsync(dataProvider, Cancellation)
+                .ContinueWith(tr => {
+                    dataProvider.DownloadProgressChanged -= OnSimulationProviderDownloadProgressChanged;
+                    if(Cancellation.IsCancellationRequested)
+                        return false;
 
-        //    //if(!manager.Initialize(dataProvider)) {
-        //    //    SplashScreenManager.CloseOverlayForm(handle);
-        //    //    var msg = LogManager.Default.GetLast(LogType.Error);
-        //    //    string lastError = "" + msg?.Text + ": " + msg?.Description;
-        //    //    XtraMessageBox.Show("Could not initialize data for strategy. Please check log.\nThe last error is: " + lastError, "Initialization", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        //    //    return;
-        //    //}
-        //    //dataProvider.DownloadProgressChanged -= OnSimulationProviderDownloadProgressChanged;
-        //    //if(!manager.Start()) {
-        //    //    var msg = LogManager.Default.Messages.Last();
-        //    //    string lastError = "" + msg?.Text + ": " + msg?.Description;
-        //    //    XtraMessageBox.Show("Error starting simulation! Please check log messages.\n The last errror is: " + lastError, "Simulation", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        //    //    SplashScreenManager.CloseOverlayForm(handle);
-        //    //    return;
-        //    //}
-        //    //this.beSimulationProgress.EditValue = 0;
-        //    //this.beSimulationProgress.Visibility = BarItemVisibility.Always;
-        //    //this.siStatus.Caption = "<b>Running simulation...</b>";
-        //    //Application.DoEvents();
-
-        //    //Stopwatch timer = new Stopwatch();
-        //    //timer.Start();
-        //    //int elapsedSeconds = 0;
-        //    //double progress = 0;
-        //    //while(manager.Running) {
-        //    //    this.beSimulationProgress.EditValue = (int)(dataProvider.SimulationProgress * this.repositoryItemProgressBar1.Maximum);
-        //    //    if(timer.ElapsedMilliseconds / 1000 > elapsedSeconds) {
-        //    //        elapsedSeconds = (int)(timer.ElapsedMilliseconds / 1000);
-        //    //        this.siStatus.Caption = string.Format("<b>Running simulation... {0} -> {1}</b>",
-        //    //            dataProvider.LastTime.ToString("dd.MM hh:mm:ss"),
-        //    //            dataProvider.EndTime.ToString("dd.MM hh:mm:ss"));
-        //    //        Application.DoEvents();
-        //    //    }
-        //    //    if((dataProvider.SimulationProgress - progress) >= 0.05) {
-        //    //        progress = dataProvider.SimulationProgress;
-        //    //        Application.DoEvents();
-        //    //    }
-        //    //}
-        //    //this.beSimulationProgress.Visibility = BarItemVisibility.Never;
-        //    //SplashScreenManager.CloseOverlayForm(handle);
-        //    //manager.Save();
-        //    //this.siStatus.Caption = "<b>Simulation done.</b>";
-        //    //Application.DoEvents();
-        //    ////this.toastNotificationsManager1.ShowNotification("404ef86f-183c-4fea-960b-86f54e52ea76");
-        //    //StrategyConfigurationManager.Default.ShowData(cloned);
-        //}
+                    if(!manager.StartSimulation(Cancellation.Token)) {
+                        var msg = LogManager.Default.Messages.Last();
+                        string lastError = "" + msg?.Text + ": " + msg?.Description;
+                        XtraMessageBox.Show("Error starting simulation! Please check log messages.\n The last errror is: " + lastError, "Simulation", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return false;
+                    }
+                    return true;
+                }).ContinueWith(tr => {
+                    Cancellation = null;
+                    this.beSimulationProgress.EditValue = 0;
+                    this.beSimulationProgress.Visibility = BarItemVisibility.Always;
+                    SplashScreenManager.CloseOverlayForm(handle);
+                    this.bar1.ItemLinks.ForEach(l => l.Item.Enabled = true);
+                    this.biCancel.Visibility = BarItemVisibility.Never;
+                    if(tr.Result) {
+                        manager.Save();
+                        this.siStatus.Caption = "<b>Simulation done.</b>";
+                        StrategyConfigurationManager.Default.ShowData(cloned);
+                    }
+                    return tr.Result;
+                });
+            return t;
+        }
 
         private void biSimulation_ItemClick(object sender, ItemClickEventArgs e) {
-            Simulate();
+            SimulateAsync();
         }
 
         private void OnSimulationProviderDownloadProgressChanged(object sender, TickerDownloadProgressEventArgs e) {
+            if(InvokeRequired) {
+                BeginInvoke(new Action<object>((s) => {
+                    OnSimulationProviderDownloadProgressChangedCore(s);
+                }), sender);
+                return;
+            }
+            OnSimulationProviderDownloadProgressChangedCore(sender);
+        }
+
+        void OnSimulationProviderDownloadProgressChangedCore(object sender) {
             this.beSimulationProgress.EditValue = (int)(((SimulationStrategyDataProvider)sender).DownloadProgress / 100.0 * this.repositoryItemProgressBar1.Maximum);
             Application.DoEvents();
         }
@@ -534,6 +527,11 @@ namespace CryptoMarketClient.Strategies {
             if(st == null)
                 return;
             OnEdit();
+        }
+
+        private void biCancel_ItemClick(object sender, ItemClickEventArgs e) {
+            if(Cancellation != null)
+                Cancellation.Cancel();
         }
     }
 

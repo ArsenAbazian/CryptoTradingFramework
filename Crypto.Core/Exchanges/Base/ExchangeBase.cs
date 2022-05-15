@@ -159,6 +159,8 @@ namespace Crypto.Core {
             while(true) {
                 DateTime localEnd = GetTradesRangeEndTime(start, end);
                 last = GetTradesCore(ticker, start, localEnd);
+                if(CancellationToken.IsCancellationRequested)
+                    return null;
                 if(last == null || last.Count == 0)
                     break;
                 Debug.WriteLine(ticker.CurrencyPair + " trade history downloaded " + last.First().Time + "-" + last.Last().Time + " items count = " + last.Count);
@@ -197,6 +199,8 @@ namespace Crypto.Core {
             while(true) {
                 DateTime localEnd = GetTradesRangeEndTime(start, end);
                 last = GetTradesCore(ticker, start, localEnd);
+                if(CancellationToken.IsCancellationRequested)
+                    return null;
                 if(last == null || last.Count == 0) {
                     if(start == initStart) { // too early
                         initStart = initStart.AddDays(1);
@@ -227,30 +231,31 @@ namespace Crypto.Core {
             return res;
         }
         protected virtual bool HasDescendingTradesList { get { return false; } }
-        public virtual ResizeableArray<TradeInfoItem> GetTrades(Ticker ticker, DateTime start, DateTime end) {
-            if(HasDescendingTradesList)
-                return GetTradesInverted(ticker, start, end);
-            long delta = (long)((end - start).TotalSeconds / 3);
-            
-            DateTime m1 = start.AddSeconds(delta);
-            DateTime m2 = m1.AddSeconds(delta);
+        protected CancellationToken CancellationToken { get; set; }
+        public virtual ResizeableArray<TradeInfoItem> GetTrades(Ticker ticker, DateTime start, DateTime end, CancellationToken token) {
+            try {
+                CancellationToken = token;
+                if(HasDescendingTradesList)
+                    return GetTradesInverted(ticker, start, end);
+                long delta = (long)((end - start).TotalSeconds / 3);
 
-            ResizeableArray<TradeInfoItem> l1 = null, l2 = null, l3 = null;
-            Parallel.Invoke(
-                () => l1 = GetTradesForward(ticker, start, m1),
-                () => l2 = GetTradesForward(ticker, m1.AddMilliseconds(1), m2),
-                () => l3 = GetTradesForward(ticker, m2.AddMilliseconds(1), end));
-            //var t1 = Task.Run(() => GetTradesForward(ticker, start, m1)).ConfigureAwait(false);
-            //var t2 = Task.Run( () => GetTradesForward(ticker, m1.AddMilliseconds(1), m2)).ConfigureAwait(false);
-            //var t3 = Task.Run(() => GetTradesForward(ticker, m2.AddMilliseconds(1), end)).ConfigureAwait(false);
-            //var l1 = await t1;
-            //var l2 = await t2;
-            //var l3 = await t3;
-            ResizeableArray<TradeInfoItem> res = new ResizeableArray<TradeInfoItem>(l1.Count + l2.Count + l3.Count);
-            res.AddRange(l1);
-            ConcatTradeHistory(res, l2, end.ToLocalTime());
-            ConcatTradeHistory(res, l3, end.ToLocalTime());
-            return res;
+                DateTime m1 = start.AddSeconds(delta);
+                DateTime m2 = m1.AddSeconds(delta);
+
+                ResizeableArray<TradeInfoItem> l1 = null, l2 = null, l3 = null;
+                Parallel.Invoke(
+                    () => l1 = GetTradesForward(ticker, start, m1),
+                    () => l2 = GetTradesForward(ticker, m1.AddMilliseconds(1), m2),
+                    () => l3 = GetTradesForward(ticker, m2.AddMilliseconds(1), end));
+                ResizeableArray<TradeInfoItem> res = new ResizeableArray<TradeInfoItem>(l1.Count + l2.Count + l3.Count);
+                res.AddRange(l1);
+                ConcatTradeHistory(res, l2, end.ToLocalTime());
+                ConcatTradeHistory(res, l3, end.ToLocalTime());
+                return res;
+            }
+            finally {
+                CancellationToken = CancellationToken.None;
+            }
         }
         protected void ConcatTradeHistory(ResizeableArray<TradeInfoItem> l1, ResizeableArray<TradeInfoItem> l2, DateTime end) {
             DateTime dateTime = l1.Count == 0? DateTime.MinValue: l1.Last().Time;
@@ -899,7 +904,7 @@ namespace Crypto.Core {
         public abstract bool UpdateTicker(Ticker tickerBase);
         public abstract bool UpdateTrades(Ticker tickerBase);
         public ResizeableArray<TradeInfoItem> GetTrades(Ticker ticker, DateTime startTime) { 
-            return GetTrades(ticker, startTime, DateTime.UtcNow);
+            return GetTrades(ticker, startTime, DateTime.UtcNow, CancellationToken.None);
         }
         public abstract bool UpdateOpenedOrders(AccountInfo account, Ticker ticker);
         public bool UpdateOpenedOrders(AccountInfo account) { return UpdateOpenedOrders(account, null); }

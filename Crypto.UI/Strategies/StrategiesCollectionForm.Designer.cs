@@ -49,6 +49,7 @@ namespace CryptoMarketClient.Strategies {
             this.siStatus = new DevExpress.XtraBars.BarStaticItem();
             this.beSimulationProgress = new DevExpress.XtraBars.BarEditItem();
             this.repositoryItemProgressBar1 = new DevExpress.XtraEditors.Repository.RepositoryItemProgressBar();
+            this.biCancel = new DevExpress.XtraBars.BarButtonItem();
             this.barDockControlTop = new DevExpress.XtraBars.BarDockControl();
             this.barDockControlBottom = new DevExpress.XtraBars.BarDockControl();
             this.barDockControlLeft = new DevExpress.XtraBars.BarDockControl();
@@ -116,8 +117,9 @@ namespace CryptoMarketClient.Strategies {
             this.biSettings,
             this.biCollectionFormHelp,
             this.biStrategyHelp,
-            this.biCopy});
-            this.barManager1.MaxItemId = 18;
+            this.biCopy,
+            this.biCancel});
+            this.barManager1.MaxItemId = 19;
             this.barManager1.OptionsStubGlyphs.AllowStubGlyphs = DevExpress.Utils.DefaultBoolean.True;
             this.barManager1.OptionsStubGlyphs.CaseMode = DevExpress.Utils.Drawing.GlyphTextCaseMode.UpperCase;
             this.barManager1.OptionsStubGlyphs.CornerRadius = 3;
@@ -300,7 +302,8 @@ namespace CryptoMarketClient.Strategies {
             this.bar3.DockStyle = DevExpress.XtraBars.BarDockStyle.Bottom;
             this.bar3.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
             new DevExpress.XtraBars.LinkPersistInfo(this.siStatus),
-            new DevExpress.XtraBars.LinkPersistInfo(DevExpress.XtraBars.BarLinkUserDefines.Width, this.beSimulationProgress, "", false, true, true, 210)});
+            new DevExpress.XtraBars.LinkPersistInfo(DevExpress.XtraBars.BarLinkUserDefines.Width, this.beSimulationProgress, "", false, true, true, 210),
+            new DevExpress.XtraBars.LinkPersistInfo(this.biCancel)});
             this.bar3.OptionsBar.AllowQuickCustomization = false;
             this.bar3.OptionsBar.DrawDragBorder = false;
             this.bar3.OptionsBar.UseWholeRow = true;
@@ -331,6 +334,16 @@ namespace CryptoMarketClient.Strategies {
             this.repositoryItemProgressBar1.Name = "repositoryItemProgressBar1";
             this.repositoryItemProgressBar1.ShowTitle = true;
             // 
+            // biCancel
+            // 
+            this.biCancel.Caption = "<b><color=@Danger>Cancel Operation</color></b>";
+            this.biCancel.Id = 18;
+            this.biCancel.ImageOptions.SvgImage = ((DevExpress.Utils.Svg.SvgImage)(resources.GetObject("biCancel.ImageOptions.SvgImage")));
+            this.biCancel.Name = "biCancel";
+            this.biCancel.PaintStyle = DevExpress.XtraBars.BarItemPaintStyle.CaptionGlyph;
+            this.biCancel.Visibility = DevExpress.XtraBars.BarItemVisibility.Never;
+            this.biCancel.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.biCancel_ItemClick);
+            // 
             // barDockControlTop
             // 
             this.barDockControlTop.CausesValidation = false;
@@ -343,9 +356,9 @@ namespace CryptoMarketClient.Strategies {
             // 
             this.barDockControlBottom.CausesValidation = false;
             this.barDockControlBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.barDockControlBottom.Location = new System.Drawing.Point(0, 988);
+            this.barDockControlBottom.Location = new System.Drawing.Point(0, 980);
             this.barDockControlBottom.Manager = this.barManager1;
-            this.barDockControlBottom.Size = new System.Drawing.Size(1904, 38);
+            this.barDockControlBottom.Size = new System.Drawing.Size(1904, 46);
             // 
             // barDockControlLeft
             // 
@@ -353,7 +366,7 @@ namespace CryptoMarketClient.Strategies {
             this.barDockControlLeft.Dock = System.Windows.Forms.DockStyle.Left;
             this.barDockControlLeft.Location = new System.Drawing.Point(0, 46);
             this.barDockControlLeft.Manager = this.barManager1;
-            this.barDockControlLeft.Size = new System.Drawing.Size(0, 942);
+            this.barDockControlLeft.Size = new System.Drawing.Size(0, 934);
             // 
             // barDockControlRight
             // 
@@ -361,7 +374,7 @@ namespace CryptoMarketClient.Strategies {
             this.barDockControlRight.Dock = System.Windows.Forms.DockStyle.Right;
             this.barDockControlRight.Location = new System.Drawing.Point(1904, 46);
             this.barDockControlRight.Manager = this.barManager1;
-            this.barDockControlRight.Size = new System.Drawing.Size(0, 942);
+            this.barDockControlRight.Size = new System.Drawing.Size(0, 934);
             // 
             // dockManager1
             // 
@@ -427,7 +440,7 @@ namespace CryptoMarketClient.Strategies {
             this.repositoryItemCheckEdit2,
             this.repositoryItemCheckEdit3,
             this.riTextEditState});
-            this.gridControl1.Size = new System.Drawing.Size(1904, 942);
+            this.gridControl1.Size = new System.Drawing.Size(1904, 934);
             this.gridControl1.TabIndex = 4;
             this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridView1});
@@ -641,5 +654,6 @@ namespace CryptoMarketClient.Strategies {
         private BarButtonItem biCollectionFormHelp;
         private BarButtonItem biStrategyHelp;
         private BarButtonItem biCopy;
+        private BarButtonItem biCancel;
     }
 }

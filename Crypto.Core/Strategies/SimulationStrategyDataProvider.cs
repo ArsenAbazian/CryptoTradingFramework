@@ -20,6 +20,7 @@ namespace Crypto.Core.Strategies {
             EndTime = DateTime.MinValue;
         }
 
+        public CancellationToken Cancellation { get; set; }
         bool IStrategyDataProvider.IsFinished { get { return FinishedCore; } }
         protected bool FinishedCore { get; set; }
         bool IStrategyDataProvider.Connect(StrategyInputInfo info) {
@@ -109,7 +110,9 @@ namespace Crypto.Core.Strategies {
                 DateTime localEnd = start.AddHours(info.Ticker.Exchange.TradesSimulationIntervalHr);
                 if(localEnd > end)
                     localEnd = end;
-                ResizeableArray<TradeInfoItem> data = info.Ticker.Exchange.GetTrades(info.Ticker, start, localEnd);
+                ResizeableArray<TradeInfoItem> data = info.Ticker.Exchange.GetTrades(info.Ticker, start, localEnd, Cancellation);
+                if(CheckCacnelOperation())
+                    return null;
                 if(data == null || data.Count == 0 && localEnd != end) {
                     LogManager.Default.Add(LogType.Warning, this, info.TickerName, "There is no trade history available for specified range.", "Range: " + start.ToLocalTime() + "-" + localEnd.ToLocalTime());
                     start = start.AddDays(1);
@@ -321,10 +324,14 @@ namespace Crypto.Core.Strategies {
                     LogManager.Default.Error("Simulation", e.Type.ToString() + " does not support simulation, because it does not allows to load ticker trade history");
                     return false;
                 }
+                if(CheckCacnelOperation())
+                    return false;
                 if(!e.Connect()) {
                     LogManager.Default.Error("Simulation", e.Type.ToString() + " cannot get tickers from exchange.");
                     return false;
                 }
+                if(CheckCacnelOperation())
+                    return false;
                 ti.Ticker = e.GetTicker(ti.TickerName);
                 if (ti.Ticker == null) {
                     LogManager.Default.Error("Simulation", e.Type.ToString() + " does not have ticker with name '" + ti.TickerName + "'");
@@ -346,19 +353,31 @@ namespace Crypto.Core.Strategies {
                     if(ti.UseTradeHistory) {
                         if(data.Trades == null) {
                             data.Trades = DownloadTrades(ti);
+                            if(CheckCacnelOperation())
+                                return false;
                             BuildCandlesticksFromTradeData(data, ti);
+                            if(CheckCacnelOperation())
+                                return false;
                             data.CopyCandleSticksFromLoaded();
+                            if(CheckCacnelOperation())
+                                return false;
                         }
                     }
-                    //if(ti.UseKline) {
-                    //    //if(data.CandleStickData == null)
-                    //    //    data.CandleStickData = DownloadCandleStickData(ti);
-                    //    data.CopyCandleSticksFromLoaded();
-                    //    //if(data.CandleStickData.Count == 0) {
-                    //    //    BuildCandlesticksFromTradeData(data, ti);
-                    //    //    return false;
-                    //    //}
-                    //}
+                    if(ti.UseKline) {
+                        if(data.CandleStickData == null)
+                            data.CandleStickData = DownloadCandleStickData(ti);
+                        if(CheckCacnelOperation())
+                            return false;
+                        data.CopyCandleSticksFromLoaded();
+                        if(CheckCacnelOperation())
+                            return false;
+                        if(data.CandleStickData.Count == 0) {
+                            BuildCandlesticksFromTradeData(data, ti);
+                            return true;
+                        }
+                        if(CheckCacnelOperation())
+                            return false;
+                    }
                     data.OrderBook = DownloadOrderBook(ti);
                     if(data.OrderBook == null)
                         return false;
@@ -367,6 +386,14 @@ namespace Crypto.Core.Strategies {
                     SimulationData.Add(ti.Ticker, data);
             }
             return true;
+        }
+
+        protected bool CheckCacnelOperation() {
+            if(Cancellation != CancellationToken.None && Cancellation.IsCancellationRequested) {
+                LogManager.Default.Error("Simulation", "Simulation was aborted by user.");
+                return true;
+            }
+            return false;
         }
 
         DateTime epox = new DateTime(1970, 1, 1);

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Crypto.Core.Strategies {
@@ -25,6 +26,8 @@ namespace Crypto.Core.Strategies {
             }
             return res;
         }
+
+        CancellationToken IStrategyDataProvider.Cancellation { get; set; }
 
         void IStrategyDataProvider.Reset() { }
 

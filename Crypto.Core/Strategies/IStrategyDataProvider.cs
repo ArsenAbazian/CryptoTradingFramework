@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Crypto.Core;
 
@@ -15,6 +16,8 @@ namespace Crypto.Core.Strategies {
         void OnTick();
         bool IsFinished { get; }
         DateTime CurrentTime { get; }
+        CancellationToken Cancellation { get; set; }
+
         void Reset();
     }
 }
