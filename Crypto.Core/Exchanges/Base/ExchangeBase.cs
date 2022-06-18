@@ -36,10 +36,10 @@ namespace Crypto.Core {
             Registered.Add(BittrexExchange.Default);
             Registered.Add(BinanceExchange.Default);
             Registered.Add(BitmexExchange.Default);
-            Registered.Add(BinanceFuturesExchange.Default);
+            //Registered.Add(BinanceFuturesExchange.Default);
             Registered.Add(KrakenExchange.Default);
             Registered.Add(BitFinexExchange.Default);
-            //Registered.Add(ExmoExchange.Default);
+            Registered.Add(ExmoExchange.Default);
         }
 
         protected internal virtual void OnRequestCompleted(MyWebClient myWebClient) {
@@ -574,9 +574,9 @@ namespace Crypto.Core {
             MyWebClient cl = new MyWebClient(this);
             return cl;
         }
-        protected virtual int WebSocketCheckTimerInterval { get { return 5000; } }
-        protected virtual int WebSocketAllowedDelayInterval { get { return 10000; } }
-        protected virtual int OrderBookAllowedDelayInterval { get { return 10000; } }
+        public virtual int WebSocketCheckTimerInterval { get { return 5000; } }
+        public virtual int WebSocketAllowedDelayInterval { get { return 10000; } }
+        public virtual int OrderBookAllowedDelayInterval { get { return 10000; } }
 
         System.Threading.Timer webSocketCheckTimer;
         protected System.Threading.Timer WebSocketCheckTimer {
@@ -1259,17 +1259,28 @@ namespace Crypto.Core {
         public virtual void StartListenTickerStream(Ticker ticker) {
             if(!SupportWebSocket(WebSocketType.Ticker))
                 return;
+            StartListenTickerInfo(ticker);
             StartListenOrderBook(ticker);
             StartListenTradeHistory(ticker);
             StartListenKline(ticker);
         }
+
+        protected virtual void StartListenTickerInfo(Ticker ticker) {
+            
+        }
+
         public override string ToString() {
             return Type.ToString();
         }
         public virtual void StopListenTickerStream(Ticker ticker) {
+            StopListenTickerInfo(ticker);
             StopListenOrderBook(ticker);
             StopListenTradeHistory(ticker);
             StopListenKline(ticker);
+        }
+
+        protected virtual void StopListenTickerInfo(Ticker ticker) {
+            
         }
 
         public void StopListenKline(Ticker ticker) {

@@ -1061,11 +1061,18 @@ namespace Crypto.Core {
             DataCacheManager.RemoveTask(this, nameof(Sparkline));
         }
 
-        public void QuerySparkline() {
-            DataCacheManager.GetData(this, nameof(Sparkline), TimeSpan.FromHours(1), this.sparklineNullValue, () => {
-                this.sparkline = GetSparkline();
-                return this.sparkline;
+        public bool HasSparkline => this.sparkline != null && this.sparkline.Length > 0;
+        public bool QuerySparkline() {
+            if(HasSparkline)
+                return false;
+            this.sparkline = (double[])DataCacheManager.GetData(this, nameof(Sparkline), TimeSpan.FromHours(1), this.sparklineNullValue, () => {
+                return GetSparkline();
             });
+            if(HasSparkline) {
+                RaiseChanged();
+                return true;
+            }
+            return false;
         }
 
         public void CancelTickerInfo() {

@@ -758,7 +758,7 @@ namespace Crypto.Core.Exchanges.Kraken {
             }
         }
 
-        protected override int WebSocketAllowedDelayInterval => 10000;
+        public override int WebSocketAllowedDelayInterval => 10000;
 
         protected virtual bool OnGetOpenedOrders(AccountInfo account, Ticker ticker, byte[] data) {
             if(!ticker.IsOpenedOrdersChanged(data))

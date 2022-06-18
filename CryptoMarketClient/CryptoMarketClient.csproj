@@ -398,9 +398,6 @@
     <Compile Include="ConnectionForm.Designer.cs">
       <DependentUpon>ConnectionForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="CustomControls\InvertedGridView.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="EventEditForm.cs">
       <SubType>Form</SubType>
     </Compile>

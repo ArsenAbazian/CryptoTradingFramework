@@ -360,15 +360,10 @@ namespace CryptoMarketClient {
             if(!LastChangeLeadsToUpdate && object.Equals(e.Axis.VisualRange.MinValue, e.Axis.WholeRange.MinValue)) {
                 LastChangeLeadsToUpdate = true;
                 await UpdateCandleSticksAsync((DateTime)e.Axis.VisualRange.MinValue);
-                //BackgroundUpdateCandleSticks((DateTime)e.Axis.VisualRange.MinValue);
                 return;
             }
             LastChangeLeadsToUpdate = false;
         }
-
-        //void BackgroundUpdateCandleSticks(DateTime date) {
-        //    BackgroundUpdateCandleSticks(date, true);
-        //}
 
         protected async Task UpdateCandleSticksAsync(DateTime date) {
             if(this.isCandleSticksUpdate)
@@ -390,71 +385,6 @@ namespace CryptoMarketClient {
                     }));
                 }
             });
-        }
-
-        void BackgroundUpdateCandleSticks(DateTime date, bool inBackgroundThread) {
-            if (this.isCandleSticksUpdate)
-                return;
-
-            this.isCandleSticksUpdate = true;
-            if(!inBackgroundThread) {
-                try {
-                    int seconds = CalculateTotalIntervalInSeconds();
-                    ResizeableArray<CandleStickData> data = null;
-                    if(date.Date == DateTime.UtcNow.Date)
-                        data = Ticker.GetRecentCandleStickData(Ticker.CandleStickPeriodMin);
-                    else 
-                        data = Ticker.GetCandleStickData(Ticker.CandleStickPeriodMin, date.AddSeconds(-seconds), seconds);
-                    if(data != null) {
-                        UpdateCandleStickData(data);
-                        UpdateChartSeries(data);
-                        this.isCandleSticksUpdate = false;
-                    }
-                }
-                catch(Exception e) {
-                    Telemetry.Default.TrackException(e, new string[,] { { "method", "update candlestick data from server" } });
-                    this.isCandleSticksUpdate = false;
-                }
-                return;
-            }
-
-            UpdateCandleStickThread = new Thread(() => {
-                try {
-                    int seconds = CalculateTotalIntervalInSeconds();
-                    ResizeableArray<CandleStickData> data = null;
-                    if(date.Date == DateTime.UtcNow.Date)
-                        data = Ticker.GetRecentCandleStickData(Ticker.CandleStickPeriodMin);
-                    else
-                        data = Ticker.GetCandleStickData(Ticker.CandleStickPeriodMin, date.AddSeconds(-seconds), seconds);
-                    if(data != null) {
-                        BeginInvoke(new Action<ResizeableArray<CandleStickData>>((d) => {
-                            UpdateCandleStickData(data);
-                            UpdateChartSeries(d);
-                            this.isCandleSticksUpdate = false;
-                        }), new object[] { data });
-                    }
-                    try {
-                        SplashScreenManager.CloseDefaultWaitForm();
-                    }
-                    catch(Exception) {
-                        this.isCandleSticksUpdate = false;
-                    }
-                }
-                catch(Exception e) {
-                    Telemetry.Default.TrackException(e, new string[,] { { "method", "update candlestick data from server" } });
-                }
-            });
-            try {
-                SplashScreenManager.ShowDefaultWaitForm("Loading chart from server...");
-            }
-            catch(Exception) {
-            }
-            try {
-                UpdateCandleStickThread.Start();
-            }
-            catch(Exception) {
-                XtraMessageBox.Show("error while running update thread. try again");
-            }
         }
 
         void UpdateChartSeries(ResizeableArray<CandleStickData> data) {

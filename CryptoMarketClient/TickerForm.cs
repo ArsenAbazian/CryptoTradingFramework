@@ -88,6 +88,7 @@ namespace CryptoMarketClient {
             //catch(Exception ee) {
             //    Telemetry.Default.TrackException(ee);
             //}
+
             if(Ticker == null)
                 return;
             Icon = CurrencyLogoProvider.GetFormIcon(Ticker.MarketCurrency);

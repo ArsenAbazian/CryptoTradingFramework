@@ -458,11 +458,11 @@ namespace Crypto.Core.BitFinex {
             if(ticker.OrderBook.Bids.Count == 0) {
                 provider.ApplySnapshot(root, ticker);
                 if(ticker.CaptureData)
-                    ticker.CaptureDataCore(CaptureStreamType.TradeHistory, CaptureMessageType.Snapshot, message);
+                    ticker.CaptureDataCore(CaptureStreamType.OrderBook, CaptureMessageType.Snapshot, message);
                 return;
             }
             if(ticker.CaptureData)
-                ticker.CaptureDataCore(CaptureStreamType.TradeHistory, CaptureMessageType.Incremental, message);
+                ticker.CaptureDataCore(CaptureStreamType.OrderBook, CaptureMessageType.Incremental, message);
             int ic = root.Items[1].ItemsCount;
             var items = root.Items[1].Items;
             List<string[]> bids = new List<string[]>();

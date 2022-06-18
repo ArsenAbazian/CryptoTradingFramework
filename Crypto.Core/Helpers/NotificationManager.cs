@@ -11,6 +11,7 @@ namespace Crypto.Core.Helpers {
         void Notify(string title, string message);
         void Notify(string title, string message, Action onClick);
         void NotifyStatus(string title, string message);
+        void NotifyStatus(string message, object image);
     }
 
     public static class NotificationManager {
@@ -18,6 +19,10 @@ namespace Crypto.Core.Helpers {
         public static void NotifyStatus(string title, string message) {
             if(Provider != null)
                 Provider.NotifyStatus(title, message);
+        }
+        public static void NotifyStatus(string message, object image) {
+            if(Provider != null)
+                Provider.NotifyStatus(message, image);
         }
         public static void Notify(string message) {
             if(Provider != null)

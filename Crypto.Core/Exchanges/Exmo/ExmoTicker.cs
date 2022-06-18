@@ -18,5 +18,11 @@ namespace Crypto.Core.Exchanges.Exmo {
         public override double Fee { get; set; }
 
         public override string WebPageAddress => string.Format("https://exmo.me/trade/{0}_{1}", MarketCurrency, BaseCurrency);
+
+        internal bool IsListeningOrderBookCore { get; set; }
+        internal bool IsListeningTradingHistoryCore { get; set; }
+
+        public override bool IsListeningOrderBook => IsListeningOrderBookCore;
+        public override bool IsListeningTradingHistory => IsListeningTradingHistoryCore;
     }
 }

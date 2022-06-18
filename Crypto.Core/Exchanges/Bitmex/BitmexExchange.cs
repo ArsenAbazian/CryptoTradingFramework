@@ -599,7 +599,7 @@ namespace Crypto.Core.Exchanges.Bitmex {
             return OrderBookUpdateType.Modify;
         }
 
-        protected override int WebSocketAllowedDelayInterval { get { return 15000; } }
+        public override int WebSocketAllowedDelayInterval { get { return 15000; } }
 
         protected internal override void OnTradeHistorySocketMessageReceived(object sender, MessageReceivedEventArgs e) {
             LastWebSocketRecvTime = DateTime.Now;

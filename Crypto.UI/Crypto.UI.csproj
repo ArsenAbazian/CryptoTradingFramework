@@ -247,6 +247,15 @@
     <Compile Include="Controls\ThreadSafeGridView.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="CustomControls\HtmlContentEdit.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="CustomControls\InteractiveGridView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="CustomControls\InvertedGridView.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Forms\AccountBalancesForm.cs">
       <SubType>Form</SubType>
     </Compile>

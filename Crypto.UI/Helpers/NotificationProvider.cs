@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using System.Drawing;
 using DevExpress.XtraBars;
 using Crypto.Core.Common;
+using DevExpress.Utils.Svg;
 
 namespace Crypto.UI.Helpers {
     public class NotificationProvider : INotificationProvider {
@@ -68,6 +69,26 @@ namespace Crypto.UI.Helpers {
                 form.BeginInvoke(new MethodInvoker(() => { 
                     StatusItem.Caption = message;
                     }));
+            }
+            else {
+                StatusItem.Caption = message;
+            }
+        }
+        public void NotifyStatus(string message, object image) {
+            if(StatusItem == null)
+                return;
+            Control form = StatusItem.Manager.Form;
+            if(form.InvokeRequired) {
+                form.BeginInvoke(new MethodInvoker(() => {
+                    if(image is SvgImage)
+                        StatusItem.ImageOptions.SvgImage = (SvgImage)image;
+                    StatusItem.Caption = message;
+                }));
+            }
+            else {
+                if(image is SvgImage)
+                    StatusItem.ImageOptions.SvgImage = (SvgImage)image;
+                StatusItem.Caption = message;
             }
         }
     }

@@ -7,6 +7,8 @@ using DevExpress.XtraEditors;
 using DevExpress.XtraGrid.Views.Base;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -55,54 +57,72 @@ namespace Crypto.Core.Common {
             if(InvokeRequired)
                 BeginInvoke(new MethodInvoker(() => this.bsiStatus.Caption = text));
         }
-        void UpdateBalances() {
-            foreach(Exchange e in Exchanges) {
-                SetStatus("<color=green><b>Updating "+ e.Name + "</color></b>");
-                if(!e.IsConnected) {
-                    if(!e.Connect()) {
-                        SetStatus("<color=red><b>Update failed.</color></b>");
-                        continue;
-                    }
+        bool isUpdatingBalances = false;
+        async Task UpdateBalances() {
+            if(this.isUpdatingBalances)
+                return;
+            this.isUpdatingBalances = true;
+            SetStatus("<color=blue><b>Updating balance...</color></b>");
+            var tasks = Exchanges.Select(e => new Task<bool>(() => {
+                if(!e.Connect()) {
+                    LogManager.Default.Error(e, "Could not connect exchange", "");
+                    return false;
                 }
                 if(!e.UpdateAllAccountsBalances()) {
-                    SetStatus("<color=red><b>UpdateBalances failed.</color></b>");
-                    continue;
+                    LogManager.Default.Error(e, "Failed update accounts balances", "");
+                    return false;
                 }
                 if(this.bcDeposites.Checked) {
                     if(!e.GetAllAccountsAddresses()) {
-                        SetStatus("<color=red><b>GetAddresses failed</color></b>");
+                        LogManager.Default.Error(e, "Failed to get deposit adresses", "");
+                        return false;
                     }
                     if(!e.GetAllAccountsDeposites()) {
-                        SetStatus("<color=red><b>GetDeposites failed</color></b>");
-                        //continue;
+                        LogManager.Default.Error(e, "Failed to get deposit adresses", "");
+                        return false;
                     }
                 }
-                SetStatus("");
+                return true;
+            }));
+            Task<bool>[] run = tasks.ToArray();
+            try {
+                foreach(var r in run)
+                    r.Start();
+                bool[] res = await Task.WhenAll(run).ConfigureAwait(false);
+            }
+            catch(Exception) {
+                SetStatus("<color=red><b>Update balance failed</color></b>");
+                isUpdatingBalances = false;
+                return;
+            }
+            SetStatus(string.Format("<color=green><b>Updated at {0}</color></b>", DateTime.Now.ToLongTimeString()));
+            Exchanges.ForEach(e => {
                 if(!this.balanceObtained.ContainsKey(e.Type)) {
                     this.balanceObtained.Add(e.Type, true);
                     total.AddRange(e.GetAllBalances());
                     this.shouldExpandGroups = true;
                 }
-                if(!IsHandleCreated || IsDisposed)
-                    continue;
-            
-                BeginInvoke(new MethodInvoker(() => {
-                    if(!this.gridControl1.IsHandleCreated || this.gridControl1.IsDisposed)
-                        return;
-                    total.RemoveAll(b => b.Account == null);
-                    if(this.poloniexAccountBalanceInfoBindingSource.DataSource is Type) {
-                        this.poloniexAccountBalanceInfoBindingSource.DataSource = total;
-                        UpdateFilter();
+            });
+            isUpdatingBalances = false;
+            if(!IsHandleCreated || IsDisposed)
+                return;
+
+            BeginInvoke(new MethodInvoker(() => {
+                if(!this.gridControl1.IsHandleCreated || this.gridControl1.IsDisposed)
+                    return;
+                total.RemoveAll(b => b.Account == null);
+                if(this.poloniexAccountBalanceInfoBindingSource.DataSource is Type) {
+                    this.poloniexAccountBalanceInfoBindingSource.DataSource = total;
+                    UpdateFilter();
+                    this.gridView1.ExpandAllGroups();
+                }
+                else {
+                    if(this.shouldExpandGroups)
                         this.gridView1.ExpandAllGroups();
-                    }
-                    else {
-                        if(this.shouldExpandGroups)
-                            this.gridView1.ExpandAllGroups();
-                        this.shouldExpandGroups = false;
-                        this.gridView1.RefreshData();
-                    }
-                }));    
-            }
+                    this.shouldExpandGroups = false;
+                    this.gridView1.RefreshData();
+                }
+            }));
         }
 
         protected void UpdateFilter() {

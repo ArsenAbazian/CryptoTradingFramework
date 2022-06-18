@@ -1,5 +1,6 @@
 ﻿using Crypto.Core;
 using Crypto.Core.Common;
+using Crypto.Core.Helpers;
 using Crypto.UI.Helpers;
 using CryptoMarketClient.Helpers;
 using CryptoMarketClient.Poloniex;
@@ -8,6 +9,7 @@ using DevExpress.Skins;
 using DevExpress.Sparkline;
 using DevExpress.Utils;
 using DevExpress.Utils.Drawing;
+using DevExpress.Utils.Paint;
 using DevExpress.XtraBars;
 using DevExpress.XtraBars.Navigation;
 using DevExpress.XtraEditors;
@@ -37,52 +39,66 @@ namespace CryptoMarketClient {
             this.ribbonPage1.Text = "Exchanges";
             this.ribbonPageGroup1.Text = exchange.Name;
             this.colIsSelected.MaxWidth = this.gvTikers.RowHeight;
+            this.repositoryItemHyperLinkEdit1.HtmlElementMouseDown += OnCommandEditMouseDown;
+            this.repositoryItemHyperLinkEdit1.HtmlElementMouseUp += OnCommandEditMouseUp;
+            this.repositoryItemHyperLinkEdit1.HtmlElementMouseClick += OnCommandEditClick;
             GridTransparentRowHelper.Apply(this.gvTikers);
+        }
+
+        private void gvTikers_CustomUnboundColumnData(object sender, DevExpress.XtraGrid.Views.Base.CustomColumnDataEventArgs e) {
+            if(e.Column == this.colEmpty && e.IsGetData)
+                e.Value = e.Row;
+        }
+
+        private void OnCommandEditMouseUp(object sender, Crypto.UI.CustomControls.HtmlContentEditElementHandledEventArgs e) {
+            if(e.ElementId == "dx-content")
+                e.Handled = true;
+        }
+
+        private void OnCommandEditMouseDown(object sender, Crypto.UI.CustomControls.HtmlContentEditElementHandledEventArgs e) {
+            if(e.ElementId == "dx-content")
+                e.Handled = true;
+        }
+
+        private void OnCommandEditClick(object sender, Crypto.UI.CustomControls.HtmlContentEditElementEventArgs e) {
+            if(e.ElementId == "dx-content") {
+                ShowDetailsForSelectedItemCore((Ticker)e.DataItem);
+            }
         }
 
         public Exchange Exchange { get; set; }
 
         private void UpdateConnectionStatus() {
-            if(!Exchange.SupportWebSocket(WebSocketType.Ticker))
+            if(!Exchange.SupportWebSocket(WebSocketType.Tickers))
                 return;
             if(Exchange.TickersSocketState == SocketConnectionState.None) {
-                this.bsiStatus.ImageOptions.SvgImage = this.svgImageCollection1["information"];
-                this.bsiStatus.Caption = "Initializing...";
+                NotificationManager.NotifyStatus("Initializing...", this.svgImageCollection1["information"]);
             }
             else if(Exchange.TickersSocketState == SocketConnectionState.Connecting) {
-                this.bsiStatus.ImageOptions.SvgImage = this.svgImageCollection1["connecting"];
-                this.bsiStatus.Caption = "Connecting...";
+                NotificationManager.NotifyStatus("Connecting...", this.svgImageCollection1["connecting"]);
             }
             else if(Exchange.TickersSocketState == SocketConnectionState.DelayRecv) {
-                this.bsiStatus.ImageOptions.SvgImage = this.svgImageCollection1["datadelay"];
-                this.bsiStatus.Caption = "No Data...";
+                NotificationManager.NotifyStatus("No Data...", this.svgImageCollection1["datadelay"]);
                 this.biReconnect.Visibility = BarItemVisibility.Always;
             }
             else if(Exchange.TickersSocketState == SocketConnectionState.Disconnected) {
-                this.bsiStatus.ImageOptions.SvgImage = this.svgImageCollection1["disconnected"];
-                this.bsiStatus.Caption = "Disconnected.";
+                NotificationManager.NotifyStatus("Disconnected.", this.svgImageCollection1["disconnected"]);
                 this.biReconnect.Visibility = BarItemVisibility.Always;
             }
             else if(Exchange.TickersSocketState == SocketConnectionState.Error) {
-                this.bsiStatus.ImageOptions.SvgImage = this.svgImageCollection1["disconnected"];
-                this.bsiStatus.Caption = "Socket Error.";
+                NotificationManager.NotifyStatus("Socket Error.", this.svgImageCollection1["disconnected"]);
                 this.biReconnect.Visibility = BarItemVisibility.Always;
             }
             else if(Exchange.TickersSocketState == SocketConnectionState.TooLongQue) {
-                this.bsiStatus.ImageOptions.SvgImage = this.svgImageCollection1["disconnected"];
-                this.bsiStatus.Caption = "Missing incremental update.";
+                NotificationManager.NotifyStatus("Missing incremental update.", this.svgImageCollection1["disconnected"]);
                 this.biReconnect.Visibility = BarItemVisibility.Always;
             }
-            else if((DateTime.Now - Exchange.LastWebSocketRecvTime).TotalSeconds > 5) {
-                if((DateTime.Now - Exchange.LastWebSocketRecvTime).TotalSeconds > 20) {
-                    this.bsiStatus.ImageOptions.SvgImage = this.svgImageCollection1["disconnected"];
-                    this.bsiStatus.Caption = "Connection Interrupted.";
-                    this.biReconnect.Visibility = BarItemVisibility.Always;
-                }
-                else {
-                    this.bsiStatus.ImageOptions.SvgImage = this.svgImageCollection1["datadelay"];
-                    this.bsiStatus.Caption = "Waiting...";
-                }
+            else if(Exchange.TickersSocketState == SocketConnectionState.Waiting) {
+                NotificationManager.NotifyStatus("Waiting for data...", this.svgImageCollection1["datadelay"]);
+            }
+            else if((DateTime.Now - Exchange.LastWebSocketRecvTime).TotalSeconds > Exchange.WebSocketAllowedDelayInterval) {
+                NotificationManager.NotifyStatus("Connection Interrupted!", this.svgImageCollection1["disconnected"]);
+                this.biReconnect.Visibility = BarItemVisibility.Always;
             }
             else
                 SetInfoConnected();
@@ -93,8 +109,7 @@ namespace CryptoMarketClient {
         }
 
         private void SetInfoConnected() {
-            this.bsiStatus.ImageOptions.SvgImage = this.biConnected.ImageOptions.SvgImage;
-            this.bsiStatus.Caption = "Connected.";
+            NotificationManager.NotifyStatus("Connected.", this.biConnected.ImageOptions.SvgImage);
             this.biReconnect.Visibility = BarItemVisibility.Never;
         }
 
@@ -105,30 +120,19 @@ namespace CryptoMarketClient {
 
         protected virtual void InitializeBaseCurrencies() {
             var groups = Exchange.Tickers.GroupBy(t => t.BaseCurrencyDisplayName);
-            AccordionControlElement groupElement = new AccordionControlElement() { Style = ElementStyle.Group };
-            groupElement.Text = "Markets";
-            this.accordionControl1.Elements.Add(groupElement);
-            groupElement.Expanded = true;
-            foreach(var group in groups) {
-                AccordionControlElement item = new AccordionControlElement() { Style = ElementStyle.Item };
-                item.Text = group.Key;
-                item.Click += OnBaseCurrencyItemClick;
-                if(group.Key == "BTC" || group.Key == "XBT")
-                    SelectedAccordionItem = item;
-                groupElement.Elements.Add(item);
-            }
-            if(SelectedAccordionItem == null)
-                SelectedAccordionItem = groupElement.Elements.Count > 0? groupElement.Elements[0]: null;
-            this.accordionControl1.SelectElement(SelectedAccordionItem);
+            this.gcMarketFilter.DataSource = groups;
             UpdateTickersAccordingBaseCurrency();
         }
 
-        protected AccordionControlElement SelectedAccordionItem { get; set; }
-        private void OnBaseCurrencyItemClick(object sender, EventArgs e) {
-            SelectedAccordionItem = (AccordionControlElement)sender;
-            this.accordionControl1.SelectElement(SelectedAccordionItem);
+        private void OnBaseCurrencyItemCheckedChanged(object sender, ItemClickEventArgs e) {
+            BarCheckItem ch = (BarCheckItem)e.Item;
+            if(!ch.Checked)
+                return;
+            SelectedCheckItem = ch;
             UpdateTickersAccordingBaseCurrency();
         }
+
+        protected BarCheckItem SelectedCheckItem { get; set; }
 
         private void OnBaseCurrencyCheckedChanged(object sender, ItemClickEventArgs e) {
             UpdateTickersAccordingBaseCurrency();
@@ -138,13 +142,15 @@ namespace CryptoMarketClient {
             string baseCurrency = GetSelectedBaseCurrency();
             List<Ticker> list = Exchange.Tickers.Where(t => t.BaseCurrencyDisplayName == baseCurrency).ToList();
             this.gcTickers.DataSource = list;
-            BestFitColumns();
+            if(IsHandleCreated)
+                BestFitColumns();
         }
 
         protected string GetSelectedBaseCurrency() {
-            if(SelectedAccordionItem == null)
-                return string.Empty;
-            return SelectedAccordionItem.Text;
+            return ((IGrouping<string, Ticker>)this.wevMarketFilter.GetFocusedRow()).Key;
+            //if(SelectedCheckItem == null)
+            //    return string.Empty;
+            //return SelectedCheckItem.Caption;
         }
 
         protected override void OnShown(EventArgs e) {
@@ -162,6 +168,7 @@ namespace CryptoMarketClient {
                 Exchange.TickersUpdate += OnWebSocketTickersUpdate;
                 SubscribeWebSocket();
             }
+            BestFitColumns();
         }
 
         private void OnWebSocketTickersUpdate(object sender, EventArgs e) {
@@ -198,10 +205,10 @@ namespace CryptoMarketClient {
             }
             if(IsHandleCreated) {
                 BeginInvoke(new Action(() => { 
-                    UpdateConnectionStatus();
+                    //UpdateConnectionStatus();
                     UpdateCachedDataCountInfo();
-                    if(!Exchange.SupportWebSocket(WebSocketType.Tickers))
-                        this.gvTikers.RefreshData();
+                    //if(!Exchange.SupportWebSocket(WebSocketType.Tickers))
+                    //    this.gvTikers.RefreshData();
                 }));
             }
         }
@@ -219,8 +226,8 @@ namespace CryptoMarketClient {
                 }
             }
             foreach(Ticker ticker in tickers) {
-                if(ticker.Sparkline == null)
-                    ticker.QuerySparkline();
+                if(!ticker.HasSparkline && ticker.QuerySparkline())
+                    BeginInvoke(new MethodInvoker(() => UpdateRowCell(ticker, this.colSparkline)));
                 if(!supportWebSocket && !Exchange.SupportCummulativeTickersUpdate)
                     ticker.QueryTickerInfo();
             }
@@ -239,11 +246,32 @@ namespace CryptoMarketClient {
             return res;
         }
         void UpdateRow(Ticker t) {
+            UpdateRowCell(t, null);
+        }
+        void UpdateRowCell(Ticker t, GridColumn column) {
             UpdateCachedDataCountInfo();
             int index = Exchange.Tickers.IndexOf(t);
-            int rowHandle = this.gvTikers.GetRowHandle(index);
-            this.gvTikers.RefreshRow(rowHandle);
+            int rowHandle = GetVisibleRowHandle(t); //this.gvTikers.GetRowHandle(index);
+            if(rowHandle == -1) {
+                this.gvTikers.RefreshData();
+                return;
+            }
+            if(column != null)
+                this.gvTikers.RefreshRowCell(rowHandle, column);
+            else
+                this.gvTikers.RefreshRow(rowHandle);
+            this.gcTickers.Update();
         }
+
+        private int GetVisibleRowHandle(Ticker t) {
+            var ri = ((GridViewInfo)this.gvTikers.GetViewInfo()).RowsInfo;
+            foreach(var row in ri) {
+                if(this.gvTikers.GetRow(row.RowHandle) == t)
+                    return row.RowHandle;
+            }
+            return -1;
+        }
+
         void UpdateGrid(Ticker info) {
             int rowHandle = this.gvTikers.GetRowHandle(info.Index);
             this.gvTikers.RefreshRow(rowHandle);
@@ -263,7 +291,7 @@ namespace CryptoMarketClient {
             ShowDetailsForSelectedItemCore((Ticker)this.gvTikers.GetRow(this.gvTikers.FocusedRowHandle));
         }
         void ShowDetailsForSelectedItemCore(Ticker t) {
-            if(this.gvTikers.FocusedRowHandle == GridControl.InvalidRowHandle)
+            if(t == null)
                 return;
             TickerForm form = new TickerForm();
             form.MarketName = t.HostName;
@@ -306,26 +334,73 @@ namespace CryptoMarketClient {
         }
 
         protected void UpdatePinnedItems() {
-            for(int i = 0; i < Exchange.PinnedTickers.Count; i++) {
-                PinnedTickerInfo info = Exchange.PinnedTickers[i];
-                Ticker t = Exchange.Tickers.FirstOrDefault(tt => tt.BaseCurrency == info.BaseCurrency && tt.MarketCurrency == info.MarketCurrency);
-                if(t != null)
-                    t.IsSelected = true;
-            }
+            this.gcPinned.DataSource = Exchange.PinnedTickers;
+            
+            //AccordionControlElement groupElement = new AccordionControlElement() { Style = ElementStyle.Group };
+            //groupElement.Text = "Quick Panel";
+            //this.accordionControl1.Elements.Add(groupElement);
+            //groupElement.Expanded = true;
+
+            //for(int i = 0; i < Exchange.PinnedTickers.Count; i++) {
+            //    PinnedTickerInfo info = Exchange.PinnedTickers[i];
+            //    Ticker t = Exchange.Tickers.FirstOrDefault(tt => tt.BaseCurrency == info.BaseCurrency && tt.MarketCurrency == info.MarketCurrency);
+            //    if(t != null)
+            //        t.IsSelected = true;
+
+            //    AddPinnedItem(t);
+            //}
+        }
+
+        //private void AddPinnedItem(Ticker t) {
+        //    AccordionControlElement groupElement = this.accordionControl1.Elements[0];
+
+        //    AccordionControlElement elem = new AccordionControlElement(ElementStyle.Item);
+        //    elem.Appearance.Normal.FontSizeDelta = 1;
+
+        //    elem.Appearance.Hovered.FontSizeDelta = 1;
+
+        //    elem.Appearance.Pressed.FontSizeDelta = 1;
+
+        //    elem.Text = t.MarketCurrency + " / " + t.BaseCurrency;
+        //    elem.Tag = t;
+        //    elem.Click += OnPinnedItemClick;
+        //    groupElement.Elements.Add(elem);
+        //}
+
+        //private void RemovePinnedItem(PinnedTickerInfo info) {
+        //    Ticker t = Exchange.Tickers.FirstOrDefault(tt => tt.BaseCurrency == info.BaseCurrency && tt.MarketCurrency == info.MarketCurrency);
+        //    if(t == null)
+        //        return;
+
+        //    var element = this.accordionControl1.GetElements().FirstOrDefault(e => e.Tag == t);
+        //    element.Click -= OnPinnedItemClick;
+
+        //    AccordionControlElement groupElement = this.accordionControl1.Elements[0];
+        //    groupElement.Elements.Remove(element);
+
+        //    element.Dispose();
+        //}
+
+        private void OnPinnedItemClick(object sender, EventArgs e) {
+            ShowDetailsForSelectedItemCore((Ticker)((AccordionControlElement)sender).Tag);
         }
 
         private void repositoryItemCheckEdit1_EditValueChanged(object sender, EventArgs e) {
             this.gvTikers.CloseEditor();
             Ticker ticker = (Ticker)this.gvTikers.GetFocusedRow();
-            if(ticker.IsSelected)
+            if(ticker.IsSelected) {
                 Exchange.PinnedTickers.Add(new PinnedTickerInfo() { BaseCurrency = ticker.BaseCurrency, MarketCurrency = ticker.MarketCurrency });
+                //AddPinnedItem(ticker);
+            }
             else {
                 PinnedTickerInfo info = Exchange.PinnedTickers.FirstOrDefault(p => p.BaseCurrency == ticker.BaseCurrency && p.MarketCurrency == ticker.MarketCurrency);
                 Exchange.PinnedTickers.Remove(info);
+
             }
+            this.wevPinned.RefreshData();
             Exchange.Save();
         }
-        
+
         bool IsTickerPinned(Ticker t) {
             return Exchange.PinnedTickers.FirstOrDefault(i => i.BaseCurrency == t.BaseCurrency && i.MarketCurrency == t.MarketCurrency) != null;
         }
@@ -397,32 +472,43 @@ namespace CryptoMarketClient {
 
         protected void BestFitColumns() {
             var cols = this.gvTikers.Columns.Where(c => c.VisibleIndex > -1).OrderBy(cc => cc.VisibleIndex).ToList();
-            //this.gvTikers.BeginUpdate();
+            this.gvTikers.BeginUpdate();
             try {
+                int total = 0;
                 foreach(GridColumn c in cols) {
-                    if(!c.Visible)
+                    if(!c.Visible || c == colLeft || c == colRight)
                         continue;
-                    c.Width = c.GetBestWidth();// CalcColumnBestWidth(this.gvTikers, c);
+                    c.Width = CalcColumnBestWidth(this.gvTikers, c);
+                    total += c.Width; 
                 }
+                //this.colLeft.Width = total / 2;
+                //this.colRight.Width = total / 2;
             }
             finally {
-                //this.gvTikers.EndUpdate();
+                this.gvTikers.EndUpdate();
             }
         }
 
         private int CalcColumnBestWidth(GridView view, GridColumn c) {
             var info = ((GridViewInfo)view.GetViewInfo()).RowsInfo;
-            int rowCount = info.Count;
+            int rowCount = view.DataRowCount;
+            if(c.ColumnEdit != null && !(c.ColumnEdit is RepositoryItemTextEdit))
+                return c.Width;
 
             int maxWidth = 0;
             using(GraphicsCache cache = this.gcTickers.CreateGraphicsCache()) {
-                foreach(var row in info) {
-                    string text = view.GetRowCellDisplayText(row.RowHandle, c);
-                    int width = (int)(cache.CalcTextSize(text, c.AppearanceCell.Font).Width) + 6;
+                cache.ScaleDPI = ScaleDPI;
+                cache.Paint.DeviceDpi = ScaleDPI.ScaleDpi;
+                StringFormat f = this.gvTikers.Appearance.Row.GetStringFormat();
+                var font = this.gvTikers.Appearance.Row.Font;
+                for(int i = 0; i < rowCount; i++) { 
+                    string text = view.GetRowCellDisplayText(i, c);
+                    int width = (int)(cache.Paint.CalcTextSize(cache.Graphics, text, font, f, -1).Width);
                     maxWidth = Math.Max(width, maxWidth);
                 }
+                cache.Paint.DeviceDpi = -1;
             }
-            return maxWidth;
+            return maxWidth + 22;
         }
 
         private void biVolumesMap_ItemClick(object sender, ItemClickEventArgs e) {
@@ -435,6 +521,44 @@ namespace CryptoMarketClient {
             ((MainForm)MdiParent).ShowLogPanel();
         }
 
+        private void gvTikers_MouseUp(object sender, MouseEventArgs e) {
+            if(e.Button != MouseButtons.Right)
+                return;
+            Ticker t = (Ticker)this.gvTikers.GetFocusedRow();
+            if(t == null)
+                return;
+            this.popupMenu1.Tag = t;
+            this.popupMenu1.ShowPopup(Control.MousePosition);
+        }
+
+        private void gvTikers_CustomColumnDisplayText(object sender, DevExpress.XtraGrid.Views.Base.CustomColumnDisplayTextEventArgs e) {
+            if(e.Column != this.colMarketName)
+                return;
+            Ticker t = (Ticker)this.gvTikers.GetRow(this.gvTikers.GetRowHandle(e.ListSourceRowIndex));
+            if(t == null)
+                return;
+            e.DisplayText = t.MarketCurrency + " / " + t.BaseCurrency;
+        }
+
+        private void gvTikers_CustomDrawCell(object sender, DevExpress.XtraGrid.Views.Base.RowCellCustomDrawEventArgs e) {
+            e.DefaultDraw();
+            if(e.Column == this.colEmpty)
+                return;
+            e.Cache.DrawLine(new Point(e.Bounds.X, e.Bounds.Bottom), new Point(e.Bounds.Right, e.Bounds.Bottom), Color.FromArgb(20, 0, 0, 0), 1);
+        }
+
+        private void wevMarketFilter_FocusedRowChanged(object sender, DevExpress.XtraGrid.Views.Base.FocusedRowChangedEventArgs e) {
+            UpdateTickersAccordingBaseCurrency();
+        }
+
+        private void wevPinned_HtmlElementMouseClick(object sender, DevExpress.XtraGrid.Views.WinExplorer.WinExplorerViewHtmlElementEventArgs e) {
+            if(e.ElementId == "dx-content") {
+                PinnedTickerInfo pi = (PinnedTickerInfo)e.DataItem;
+                Ticker t = Exchange.GetTicker(pi);
+                ShowDetailsForSelectedItemCore(t);
+            }
+        }
+
         private void GridView1_CustomRowCellEdit(object sender, DevExpress.XtraGrid.Views.Grid.CustomRowCellEditEventArgs e) {
             if(e.Column != this.colSparkline)
                 return;
@@ -444,13 +568,13 @@ namespace CryptoMarketClient {
             if(this.greenSparkline == null) {
                 this.greenSparkline = (RepositoryItemSparklineEdit)e.RepositoryItem.Clone();
                 this.greenSparkline.View.Color = Exchange.BidColor;
-                ((AreaSparklineView)this.greenSparkline.View).AreaOpacity = 0x20;
+                //((AreaSparklineView)this.greenSparkline.View).AreaOpacity = 0x20;
                 this.gcTickers.RepositoryItems.Add(this.greenSparkline);
             }
             if(this.redSparkline == null) {
                 this.redSparkline = (RepositoryItemSparklineEdit)e.RepositoryItem.Clone();
                 this.redSparkline.View.Color = Exchange.AskColor;
-                ((AreaSparklineView)this.redSparkline.View).AreaOpacity = 0x20;
+                //((AreaSparklineView)this.redSparkline.View).AreaOpacity = 0x20;
                 this.gcTickers.RepositoryItems.Add(this.redSparkline);
             }
             if(t.Sparkline == null || t.Sparkline.Length < 2)
@@ -462,5 +586,9 @@ namespace CryptoMarketClient {
                 e.RepositoryItem = this.redSparkline;
             }
         }
+    }
+
+    public class ForcedDpiFonts : DpiFonts {
+        public ForcedDpiFonts() : base() { AllowFontScale = true; }
     }
 }
