@@ -730,6 +730,9 @@
       <DependentUpon>TrailingSettinsForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.manifest" />
+    <Content Include="Images\ExchangeImages\Exmo.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="packages.config" />
     <None Include="Properties\DataSources\Crypto.Core.Common.TickerNameInfo.datasource" />
     <None Include="Properties\DataSources\Crypto.Core.Ticker.datasource" />

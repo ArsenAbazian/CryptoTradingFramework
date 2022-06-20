@@ -148,9 +148,6 @@ namespace CryptoMarketClient {
 
         protected string GetSelectedBaseCurrency() {
             return ((IGrouping<string, Ticker>)this.wevMarketFilter.GetFocusedRow()).Key;
-            //if(SelectedCheckItem == null)
-            //    return string.Empty;
-            //return SelectedCheckItem.Caption;
         }
 
         protected override void OnShown(EventArgs e) {

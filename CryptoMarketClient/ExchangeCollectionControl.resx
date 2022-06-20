@@ -117,4 +117,196 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="winExplorerView1.OptionsViewStyles.Medium.HtmlTemplate.Styles" xml:space="preserve">
+    <value>.container {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    width: 268px;
+}
+
+.item {
+    width: 268px;
+    height: auto;
+    background-color: @Window;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+	.item:hover {
+		box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1);		
+	}
+	
+	body:select .item {
+		border-width: 2px;
+		border-style: solid;
+		border-color: @HighlightAlternate;
+	}
+
+.price-label-container {
+	height: 32px;
+	width: 308px;
+	display: flex;
+	justify-content: flex-end;
+}
+
+.price-label {
+	font-family: 'Segoe UI';
+	font-weight: bold;
+	font-size: 18px;
+	padding: 4px 12px;
+	background-color: @HighlightAlternate;
+	border-radius: 3px;
+	color: White;
+}
+
+.image_container {
+    display: flex;
+	flex-direction: column;
+	width: 244px;
+    height: 142px;
+	padding: 8px 12px 12px;    
+	
+	align-items: flex-start;
+	border-radius: 8px 8px 0px 0px;
+	background-color: white;
+}
+
+.car-image {
+    width: 244px;
+    height: 124px;
+    margin-top: 16px;
+    object-fit: contain;
+}
+
+.item_block {
+    width: 100%;
+    background-color: white;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+.item_info_outer {
+	display: flex;
+	flex-direction: column;
+	padding: 16px 24px 24px;
+	border-radius: 0px 0px 8px 8px;
+	background-color: @WindowText/0.05;
+	justify-content: space-between;
+}
+
+	:root:select .item_info_outer {
+		background-color: @HighlightAlternate/0.1;
+	}
+	
+	:root:focus .item_info_outer {
+		background-color: @HighlightAlternate/0.1;
+	}	
+
+.item_info {
+	width: 100%;
+    display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+}
+
+.empty-space {
+	height: auto;
+}
+
+.name {
+    font-family: 'Segoe UI';
+    font-size: 16px;
+    font-weight: bold;
+    color: @WindowText;
+    margin-bottom: 3px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.category {
+	font-size: 10px;
+	font-weight: bold;
+	background-color: @WindowText/0.1;
+	color: @WindowText;
+	padding: 6px 8px 6px 8px;
+	border-radius: 2px;
+	margin-top: 11px;
+}
+
+.specs {
+    font-family: 'Segoe UI';
+	font-style: normal;
+	font-weight: normal;
+	font-size: 12px;
+	color: @WindowText;
+	margin: 1px 0;
+}
+
+
+.center-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.button {
+    width: 100%;
+    height: auto;
+    padding: 12px 0 12px 0;
+    margin: 24px 0 0 0;
+    border-radius: 6px;
+    color: @WindowText;
+    background-color: @Window;
+            
+    text-align: center;
+    
+    font-family: 'Segoe UI';
+    font-weight: bold;
+    font-size: 14px;
+    
+    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+	.button:hover {
+		background-color: @HighlightAlternate;
+		box-shadow: 0px 8px 16px @HighlightAlternate/0.5;
+		color: White;
+	}
+	.button:active {
+		color: rgba(255, 255, 255, 0.35);
+		box-shadow: initial;
+	}
+
+.item-container {
+	display: flex;
+	width: 320px;
+	height: 420px;
+}
+</value>
+  </data>
+  <data name="winExplorerView1.OptionsViewStyles.Medium.HtmlTemplate.Template" xml:space="preserve">
+    <value>&lt;div class="container"&gt;
+	&lt;div class="item" id="item"&gt;
+		&lt;div class="image_container" id="image-container"&gt;
+			&lt;img class="car-image" src="${Image}" id="car-image"&gt; 
+		&lt;/div&gt;
+		&lt;div class="item_info_outer"&gt;
+			&lt;div class="item_info" id="item_info"&gt;
+				&lt;div class="name" id="name-brand"&gt;${Caption}&lt;/div&gt;
+			&lt;/div&gt;
+			&lt;div class="item_info"&gt;
+				&lt;div id="detailButton" class="button" onclick="onEnterClick"&gt;
+					Enter
+				&lt;/div&gt;
+			&lt;/div&gt;
+		&lt;/div&gt;
+	&lt;/div&gt;
+&lt;/div&gt;</value>
+  </data>
 </root>

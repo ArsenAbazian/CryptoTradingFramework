@@ -191,7 +191,6 @@ namespace CryptoMarketClient {
             this.biBestFit = new DevExpress.XtraBars.BarButtonItem();
             this.biBestFitTable = new DevExpress.XtraBars.BarButtonItem();
             this.popupMenu1 = new DevExpress.XtraBars.PopupMenu(this.components);
-            this.accordionControl1 = new DevExpress.XtraBars.Navigation.AccordionControl();
             this.gcMarketFilter = new DevExpress.XtraGrid.GridControl();
             this.wevMarketFilter = new DevExpress.XtraGrid.Views.WinExplorer.WinExplorerView();
             this.gcPinned = new DevExpress.XtraGrid.GridControl();
@@ -221,7 +220,6 @@ namespace CryptoMarketClient {
             ((System.ComponentModel.ISupportInitialize)(this.barManager1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.barAndDockingController1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.popupMenu1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.accordionControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gcMarketFilter)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.wevMarketFilter)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gcPinned)).BeginInit();
@@ -1033,19 +1031,6 @@ namespace CryptoMarketClient {
             this.popupMenu1.Name = "popupMenu1";
             this.popupMenu1.Ribbon = this.ribbonControl1;
             // 
-            // accordionControl1
-            // 
-            this.accordionControl1.AllowItemSelection = true;
-            this.accordionControl1.Dock = System.Windows.Forms.DockStyle.Left;
-            this.accordionControl1.Location = new System.Drawing.Point(509, 292);
-            this.accordionControl1.Name = "accordionControl1";
-            this.accordionControl1.ScrollBarMode = DevExpress.XtraBars.Navigation.ScrollBarMode.Fluent;
-            this.accordionControl1.ShowGroupExpandButtons = false;
-            this.accordionControl1.ShowItemExpandButtons = false;
-            this.accordionControl1.Size = new System.Drawing.Size(309, 926);
-            this.accordionControl1.TabIndex = 7;
-            this.accordionControl1.ViewType = DevExpress.XtraBars.Navigation.AccordionControlViewType.HamburgerMenu;
-            // 
             // gcMarketFilter
             // 
             this.gcMarketFilter.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -1176,7 +1161,6 @@ namespace CryptoMarketClient {
             ((System.ComponentModel.ISupportInitialize)(this.barManager1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.barAndDockingController1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.popupMenu1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.accordionControl1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gcMarketFilter)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.wevMarketFilter)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gcPinned)).EndInit();
@@ -1251,7 +1235,6 @@ namespace CryptoMarketClient {
         private DevExpress.XtraBars.Ribbon.Internal.RepositoryItemRibbonSearchEdit repositoryItemRibbonSearchEdit8;
         private DevExpress.XtraBars.BarButtonItem biBestFit;
         private DevExpress.XtraBars.Ribbon.Internal.RepositoryItemRibbonSearchEdit repositoryItemRibbonSearchEdit9;
-        private DevExpress.XtraBars.Navigation.AccordionControl accordionControl1;
         private DevExpress.XtraBars.StandaloneBarDockControl standaloneBarDockControl2;
         private DevExpress.XtraEditors.Repository.RepositoryItemSparklineEdit riSparklineTrend;
         private DevExpress.XtraBars.BarButtonItem biBestFitTable;
