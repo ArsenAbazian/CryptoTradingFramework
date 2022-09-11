@@ -4,6 +4,7 @@ _Please note that according to DevExpress EULA, every person working with DevExp
 _Please refer [How To Install DevExpress WinForm Components](https://github.com/ArsenAbazian/CryptoTradingFramework/wiki/How-to-install-DevExpress-components.) article to know how to install this suite on your machine and update the project._ 
 
 ![CryptoTraderAuto](https://github.com/ArsenAbazian/CryptoTradingFramework/blob/master/Help/ExchangesForm.png)
+![CryptoTraderAuto](https://user-images.githubusercontent.com/18391055/186918434-a3970be3-173b-47f3-bf8e-d3f96dd09189.png)
 ![CryptoTraderAuto](https://github.com/ArsenAbazian/CryptoTradingFramework/blob/master/Help/CryptoTraderAuto-TickersScreen.png)
 ![CryptoTraderAuto](https://github.com/ArsenAbazian/CryptoTradingFramework/blob/master/Help/WhatsNew_01_25_2022.png)
 ![CryptoTraderAuto](https://github.com/ArsenAbazian/CryptoTradingFramework/blob/master/Help/CryptoTraderAuto-AtGlance.png)
