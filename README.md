@@ -15,6 +15,8 @@ _Please refer [How To Install DevExpress WinForm Components](https://github.com/
 
 ## Latest Updates 
 
+[Update From 11-09-2022](https://github.com/ArsenAbazian/CryptoTradingFramework/wiki/Update-From-11-09-2022)
+
 [Update From 23-03-2022](https://github.com/ArsenAbazian/CryptoTradingFramework/wiki/Update-From-23-03-2022)
 
 [Update From 24-02-2022](https://github.com/ArsenAbazian/CryptoTradingFramework/wiki/Update-From-24-02-2022)
