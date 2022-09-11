@@ -423,13 +423,13 @@ namespace CryptoMarketClient {
             if(info == null)
                 return;
             if(!Ticker.Cancel(info)) {
-                NotificationManager.Notify("Cancel Order", "Error canceling order. Check Log for last errors.");
+                NotificationManager.Notify(LogType.Error, "Cancel Order", "Error canceling order. Check Log for last errors.");
                 return;
             }
             UpdateBalances();
             Ticker.UpdateOpenedOrders();
             this.gvOpenedOrders.RefreshData();
-            NotificationManager.Notify("Cancel Order", "Order canceled.");
+            NotificationManager.Notify(LogType.Success, "Cancel Order", "Order canceled.");
         }
 
         private void bbCancel_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e) {
@@ -451,7 +451,7 @@ namespace CryptoMarketClient {
         }
 
         private void BuySettingsControl_Trade(object sender, TradeEventArgs e) {
-            NotificationManager.Notify("Order with id = " + e.Trade.OrderId + ". Status = " + e.Trade.OrderStatus);
+            NotificationManager.Notify(LogType.Log, "Trade", "Order with id = " + e.Trade.OrderId + ". Status = " + e.Trade.OrderStatus);
             UpdateBalances();
             UpdateOpenedOrders();
         }

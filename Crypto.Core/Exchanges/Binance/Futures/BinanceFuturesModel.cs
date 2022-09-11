@@ -57,6 +57,8 @@ namespace Crypto.Core.Exchanges.Binance.Futures {
         }
 
         public override bool UpdateBalances(AccountInfo account) {
+            if(account == null)
+                return false;
             string queryString = string.Format("timestamp={0}&recvWindow=50000", GetNonce());
             string signature = account.GetSign(queryString);
 

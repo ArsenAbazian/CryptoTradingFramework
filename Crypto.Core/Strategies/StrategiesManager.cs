@@ -9,8 +9,13 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using XmlSerialization;
+using System.ComponentModel;
 
 namespace Crypto.Core.Strategies {
+    [Serializable]
+    [XmlInclude(typeof(StrategyBase))]
+    [AllowDynamicTypes]
     public class StrategiesManager : ISupportSerialization {
         static StrategiesManager defaultManager;
         public static StrategiesManager Defaut {
@@ -73,23 +78,28 @@ namespace Crypto.Core.Strategies {
         public string FileName { get; set; }
 
         public static StrategiesManager FromFile(string fileName) {
-            StrategiesManager res = (StrategiesManager)SerializationHelper.FromFile(fileName, typeof(StrategiesManager));
+            StrategiesManager res = (StrategiesManager)SerializationHelper.Current.FromFile(fileName, typeof(StrategiesManager));
             return res;
         }
 
-        void ISupportSerialization.OnStartSerialize() { }
+        void ISupportSerialization.OnBeginSerialize() {
+        }
+        void ISupportSerialization.OnEndSerialize() { }
+        void ISupportSerialization.OnBeginDeserialize() { }
 
         public void OnEndDeserialize() {
-            foreach(var s in Strategies)
+            foreach(var s in Strategies) {
                 s.Manager = this;
+                s.OnEndDeserialize();
+            }
         }
 
         public bool Save(string path) {
-            return SerializationHelper.Save(this, GetType(), path);
+            return SerializationHelper.Current.Save(this, GetType(), path);
         }
 
         public bool Save() {
-            return SerializationHelper.Save(this, GetType(), null);
+            return SerializationHelper.Current.Save(this, GetType(), FileName);
         }
 
         public void Add(StrategyBase strategy) {

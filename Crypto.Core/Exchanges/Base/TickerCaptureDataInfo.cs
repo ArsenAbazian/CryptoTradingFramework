@@ -7,6 +7,7 @@ using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using XmlSerialization;
 
 namespace Crypto.Core.Exchanges.Base {
     public class TickerCaptureDataInfo {
@@ -37,17 +38,17 @@ namespace Crypto.Core.Exchanges.Base {
         
 
         public static TickerCaptureData FromFile(string fileName) {
-            TickerCaptureData res = (TickerCaptureData)SerializationHelper.FromFile(fileName, typeof(TickerCaptureData));
+            TickerCaptureData res = (TickerCaptureData)SerializationHelper.Current.FromFile(fileName, typeof(TickerCaptureData));
             return res;
         }
         public bool Save(string path) {
-            return SerializationHelper.Save(this, GetType(), path);
+            return SerializationHelper.Current.Save(this, GetType(), path);
         }
 
-        void ISupportSerialization.OnStartSerialize() { }
-
-        void ISupportSerialization.OnEndDeserialize() {
-        }
+        void ISupportSerialization.OnBeginSerialize() { }
+        void ISupportSerialization.OnEndSerialize() { }
+        void ISupportSerialization.OnBeginDeserialize() { }
+        void ISupportSerialization.OnEndDeserialize() { }
 
         public bool Load(string simulationDataFile) {
             string destDirectory = Path.GetDirectoryName(simulationDataFile);

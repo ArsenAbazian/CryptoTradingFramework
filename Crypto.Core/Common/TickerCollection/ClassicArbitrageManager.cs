@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using XmlSerialization;
 
 namespace Crypto.Core.Common {
     public class ClassicArbitrageManager : ISupportSerialization {
@@ -172,11 +173,11 @@ namespace Crypto.Core.Common {
         public string FileName { get; set; }
 
         public static ClassicArbitrageManager FromFile(string fileName) {
-            ClassicArbitrageManager res = (ClassicArbitrageManager)SerializationHelper.FromFile(fileName, typeof(ClassicArbitrageManager));
+            ClassicArbitrageManager res = (ClassicArbitrageManager)SerializationHelper.Current.FromFile(fileName, typeof(ClassicArbitrageManager));
             return res;
         }
 
-        void ISupportSerialization.OnStartSerialize() {
+        void ISupportSerialization.OnBeginSerialize() {
             ExchangeTypes.Clear();
             ExchangeTypes.AddRange(Exchanges.Select(e => e.Type));
         }
@@ -187,12 +188,15 @@ namespace Crypto.Core.Common {
                 Exchanges.Add(Exchange.Get(s));
         }
 
+        void ISupportSerialization.OnEndSerialize() { }
+        void ISupportSerialization.OnBeginDeserialize() { }
+
         public bool Save(string path) {
-            return SerializationHelper.Save(this, GetType(), path);
+            return SerializationHelper.Current.Save(this, GetType(), path);
         }
 
         public bool Save() {
-            if(SerializationHelper.Save(this, GetType(), null)) {
+            if(SerializationHelper.Current.Save(this, GetType(), null)) {
                 SettingsStore.Default.ClassicArbitrageLastFileName = FileName;
                 return true;
             }

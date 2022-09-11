@@ -761,6 +761,8 @@ namespace Crypto.Core.Binance {
         }
 
         public override bool UpdateBalances(AccountInfo account) {
+            if(account == null)
+                return false;
             string queryString = string.Format("timestamp={0}&recvWindow=50000", GetNonce());
             string signature = account.GetSign(queryString);
 
@@ -892,7 +894,7 @@ namespace Crypto.Core.Binance {
             LogMessage msg = null;
             if(scheme == null) {
                 msg = LogManager.Default.Error(Type.ToString(), "Cannot parse json data.");
-                NotificationManager.NotifyStatus(msg.Text, "<image=error;size=22,22>" + msg.Description);
+                NotificationManager.NotifyStatus(msg.Text, msg.Description);
                 return;
             }
             int parseIndex = 0;
@@ -901,7 +903,7 @@ namespace Crypto.Core.Binance {
                 msg = LogManager.Default.Error(scheme.Name, "Cannot parse json data.");
             else 
                 msg = LogManager.Default.Error(scheme.Name, items[0] + ": " + items[1]);
-            NotificationManager.NotifyStatus(msg.Text, "<image=error;size=22,22>" + msg.Description);
+            NotificationManager.NotifyStatus(msg.Text, msg.Description);
         }
 
         protected virtual TradeInfoItem InitializeAccountTradeInfoItem(string[] item, Ticker ticker) {

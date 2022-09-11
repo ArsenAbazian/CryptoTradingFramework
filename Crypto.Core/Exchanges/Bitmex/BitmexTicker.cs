@@ -22,7 +22,7 @@ namespace Crypto.Core.Exchanges.Bitmex {
 
         public override double Fee { get; set; } = 0.0075;
 
-        public override string WebPageAddress => throw new NotImplementedException();
+        public override string WebPageAddress => "www.bitmex.com";
 
         public override bool IsListeningOrderBook {
             get { return IsOrderBookSubscribed && Exchange.GetOrderBookSocketState(this) == SocketConnectionState.Connected; }

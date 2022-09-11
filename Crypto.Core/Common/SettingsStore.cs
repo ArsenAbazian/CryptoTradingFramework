@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using XmlSerialization;
 
 namespace Crypto.Core.Common {
     [Serializable]
@@ -23,14 +24,16 @@ namespace Crypto.Core.Common {
         }
 
         public static SettingsStore FromFile(string fileName) {
-            return (SettingsStore)SerializationHelper.FromFile(fileName, typeof(SettingsStore));
+            return (SettingsStore)SerializationHelper.Current.FromFile(fileName, typeof(SettingsStore));
         }
         public string FileName { get; set; }
         public bool Save() {
-            return SerializationHelper.Save(this, GetType(), null);
+            return SerializationHelper.Current.Save(this, GetType(), null);
         }
 
-        void ISupportSerialization.OnStartSerialize() { }
+        void ISupportSerialization.OnBeginSerialize() { }
+        void ISupportSerialization.OnEndSerialize() { }
+        void ISupportSerialization.OnBeginDeserialize() { }
 
         public void OnEndDeserialize() {
             TelegramBot.Default.TryAddClient(TelegramBotBroadcastId, TelegramBotActive, TelegramBotRegistrationCode, 0);

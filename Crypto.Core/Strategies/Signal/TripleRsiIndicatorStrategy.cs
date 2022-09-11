@@ -160,7 +160,7 @@ namespace Crypto.Core.Strategies.Signal {
             //}
         }
 
-        protected override void CloseLongPosition(OpenPositionInfo info) {
+        public override void CloseLongPosition(OpenPositionInfo info) {
             throw new NotImplementedException();
             //info.UpdateCurrentValue(DataProvider.CurrentTime, Ticker.OrderBook.Bids[0].Value);
             //TradingResult res = MarketSell(info.CurrentValue, info.Amount);

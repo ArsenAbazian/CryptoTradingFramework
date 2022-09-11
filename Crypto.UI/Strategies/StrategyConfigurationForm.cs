@@ -154,7 +154,7 @@ namespace CryptoMarketClient.Strategies {
 
         private void OnStrategyBotRegistered(object sender, TelegramClientInfoEventArgs e) {
             BeginInvoke(new MethodInvoker(() => {
-                Strategy.ChatId = e.Client.ChatId.Identifier;
+                Strategy.ChatId = e.Client.ChatId.Identifier.Value;
                 this.beTelegramChatId.EditValue = Strategy.ChatId;
                 XtraMessageBox.Show("Telegram Bot Registered!");
             }));

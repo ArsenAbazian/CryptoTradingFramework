@@ -31,7 +31,7 @@ namespace CryptoMarketClient {
 
         public MainForm() {
             InitializeComponent();
-            var provider = new NotificationProvider(this, global::CryptoMarketClient.Properties.Resources.notification_image4);
+            var provider = new NotificationProvider(this, this.alertControl1); // global::CryptoMarketClient.Properties.Resources.notification_image4);
             provider.StatusItem = this.bsiStatus;
             NotificationManager.Provider = provider;
             LogManager.Default.Viewer = this;
@@ -457,7 +457,7 @@ namespace CryptoMarketClient {
 
         private void OnStrategyBotRegistered(object sender, TelegramClientInfoEventArgs e) {
             BeginInvoke(new MethodInvoker(() => {
-                SettingsStore.Default.TelegramBotBroadcastId = e.Client.ChatId.Identifier;
+                SettingsStore.Default.TelegramBotBroadcastId = e.Client.ChatId.Identifier.Value;
                 SettingsStore.Default.TelegramBotActive = true;
                 SettingsStore.Default.Save();
                 XtraMessageBox.Show("Telegram Bot Registered!");
@@ -790,6 +790,12 @@ namespace CryptoMarketClient {
             ExchangeMarketCapacityForm form = new ExchangeMarketCapacityForm();
             form.Exchange = Exchange.Get(ExchangeType.Poloniex);
             form.Show();
+        }
+
+        private void alertControl1_HtmlElementMouseClick(object sender, DevExpress.XtraBars.Alerter.AlertHtmlElementMouseEventArgs e) {
+            if(e.ElementId == "closeButton") {
+                e.HtmlPopup.Close();
+            }
         }
     }
 }

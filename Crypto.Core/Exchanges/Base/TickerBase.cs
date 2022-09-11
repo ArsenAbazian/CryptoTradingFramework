@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using XmlSerialization;
 
 namespace Crypto.Core {
     [Serializable]
@@ -46,7 +47,7 @@ namespace Crypto.Core {
         public bool Load() {
             IsLoading = true;
             try {
-                return SerializationHelper.Load(this, GetType());
+                return SerializationHelper.Current.Load(this, GetType(), FileName);
             }
             finally {
                 IsLoading = false;
@@ -117,6 +118,7 @@ namespace Crypto.Core {
         public bool IsOrderBookSubscribed { get; set; }
         public bool IsTradeHistorySubscribed { get; set; }
         public bool IsKlineSubscribed { get; set; }
+        public bool IsTickerInfoSubscribed { get; set; }
 
         public CandleStickIntervalInfo GetCandleStickIntervalInfo() {
             TimeSpan interval = TimeSpan.FromMinutes(CandleStickPeriodMin);
@@ -124,12 +126,12 @@ namespace Crypto.Core {
         }
 
         public static Ticker FromFile(string fileName, Type tickerType) {
-            return (Ticker)SerializationHelper.FromFile(fileName, tickerType);
+            return (Ticker)SerializationHelper.Current.FromFile(fileName, tickerType);
         }
         public bool Save() {
             if(IsLoading)
                 return false;
-            return SerializationHelper.Save(this, GetType(), null);
+            return SerializationHelper.Current.Save(this, GetType(), null);
         }
 
         public bool SelectedInDependencyArbitrage { get; set; }
@@ -160,6 +162,7 @@ namespace Crypto.Core {
         public int Index { get; set; }
         public virtual string MarketName { get; set; }
         public abstract string CurrencyPair { get; set; }
+        public virtual string SubscriptionName { get { return CurrencyPair; } }
         public bool IsSelected { get; set; }
         public bool IsOpened { get; set; }
         //Image logo;
@@ -1230,7 +1233,9 @@ namespace Crypto.Core {
             Exchange.StopListenTradeHistory(this);
         }
 
-        void ISupportSerialization.OnStartSerialize() { }
+        void ISupportSerialization.OnBeginSerialize() { }
+        void ISupportSerialization.OnEndSerialize() { }
+        void ISupportSerialization.OnBeginDeserialize() { }
 
         public virtual void OnEndDeserialize() {
             foreach(var s in Trailings) {

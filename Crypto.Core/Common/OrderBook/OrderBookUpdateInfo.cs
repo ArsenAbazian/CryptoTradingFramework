@@ -62,8 +62,8 @@ namespace Crypto.Core {
 
     public class IncrementalUpdateQueue {
         public IncrementalUpdateQueue(IIncrementalUpdateDataProvider provider) {
-            Queue = new IncrementalUpdateInfo[200];
-            for(int i = 0; i < 200; i++)
+            Queue = new IncrementalUpdateInfo[10];
+            for(int i = 0; i < 10; i++)
                 Queue[i] = new IncrementalUpdateInfo() { Provider = provider };
         }
         public long SeqNumber { get; private set; }

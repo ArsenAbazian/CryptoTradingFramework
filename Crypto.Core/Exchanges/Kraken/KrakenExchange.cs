@@ -638,6 +638,8 @@ namespace Crypto.Core.Exchanges.Kraken {
         }
 
         public override bool UpdateBalances(AccountInfo info) {
+            if(info == null)
+                return false;
             try {
                 InitializeDefaultBalances(info);
                 return OnGetBalances(info, UploadPrivateData(info, BalanceApiString, BalanceApiPathString, null));

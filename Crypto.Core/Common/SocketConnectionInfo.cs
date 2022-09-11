@@ -500,7 +500,7 @@ namespace Crypto.Core.Common {
             if(Reconnecting)
                 return;
             ConnectionLostCount++;
-            LogManager.Default.Add(LogType.Warning, LogObject, Exchange.Type.ToString(), "Reconnecting", Type.ToString());
+            LogManager.Default.Add(LogType.Warning, LogObject, Exchange.Type.ToString(), "Reconnecting", Type.ToString(), false);;
             Reconnecting = true;
             try {
                 Close();
@@ -524,7 +524,7 @@ namespace Crypto.Core.Common {
             for(int i = 0; i < Subscribtions.Count; i++) {
                 WebSocketSubscribeInfo info = Subscribtions[i];
                 info.ShouldUpdateSubscribtion = true;
-                LogManager.Default.Add(LogType.Warning, LogObject, Exchange.ToString(), "Updating subscribtion", info.Type.ToString());
+                LogManager.Default.Add(LogType.Log, LogObject, Exchange.ToString(), "Updating subscribtion", info.Type.ToString());
                 SubscribeCore(info);
             }
         }

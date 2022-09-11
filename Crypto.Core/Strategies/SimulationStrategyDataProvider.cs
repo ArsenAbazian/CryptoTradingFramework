@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using XmlSerialization;
 
 namespace Crypto.Core.Strategies {
     public class SimulationStrategyDataProvider : IStrategyDataProvider {
@@ -686,17 +687,16 @@ namespace Crypto.Core.Strategies {
     public class CachedCandleStickData : ISupportSerialization {
         public static string Directory { get { return "SimulationData\\CandleStickData"; } }
         public static CachedCandleStickData FromFile(string fileName) {
-            return (CachedCandleStickData)SerializationHelper.FromFile(fileName, typeof(CachedCandleStickData));
+            return (CachedCandleStickData)SerializationHelper.Current.FromFile(fileName, typeof(CachedCandleStickData));
         }
 
-        void ISupportSerialization.OnStartSerialize() { }
-
-        void ISupportSerialization.OnEndDeserialize() {
-            
-        }
+        void ISupportSerialization.OnBeginSerialize() { }
+        void ISupportSerialization.OnEndSerialize() { }
+        void ISupportSerialization.OnBeginDeserialize() { }
+        void ISupportSerialization.OnEndDeserialize() { }
 
         public bool Save() {
-            return SerializationHelper.Save(this, typeof(CachedCandleStickData), Directory);
+            return SerializationHelper.Current.Save(this, typeof(CachedCandleStickData), Directory);
         }
 
         string ISupportSerialization.FileName { get {
@@ -765,17 +765,16 @@ namespace Crypto.Core.Strategies {
     public class CachedTradeHistory : ISupportSerialization {
         public static string Directory { get { return "SimulationData\\TradeHistory"; } }
         public static CachedTradeHistory FromFile(string fileName) {
-            return (CachedTradeHistory)SerializationHelper.FromFile(fileName, typeof(CachedTradeHistory));
+            return (CachedTradeHistory)SerializationHelper.Current.FromFile(fileName, typeof(CachedTradeHistory));
         }
 
-        void ISupportSerialization.OnStartSerialize() { }
-
-        void ISupportSerialization.OnEndDeserialize() {
-
-        }
+        void ISupportSerialization.OnBeginSerialize() { }
+        void ISupportSerialization.OnEndSerialize() { }
+        void ISupportSerialization.OnBeginDeserialize() { }
+        void ISupportSerialization.OnEndDeserialize() { }
 
         public bool Save() {
-            return SerializationHelper.Save(this, typeof(CachedTradeHistory), Directory);
+            return SerializationHelper.Current.Save(this, typeof(CachedTradeHistory), Directory);
         }
 
         string ISupportSerialization.FileName {

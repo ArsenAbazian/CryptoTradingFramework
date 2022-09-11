@@ -896,6 +896,8 @@ namespace Crypto.Core.BitFinex {
         }
         
         public override bool UpdateBalances(AccountInfo account) {
+            if(account == null)
+                return false;
             if(Currencies.Count == 0) {
                 if(!GetCurrenciesInfo())
                     return false;

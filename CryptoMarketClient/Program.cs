@@ -14,6 +14,7 @@ using System.Windows.Forms;
 using Crypto.Core.Common;
 using Crypto.Core;
 using DevExpress.Utils;
+using Crypto.Strategies;
 
 namespace CryptoMarketClient {
     static class Program {
@@ -48,6 +49,7 @@ namespace CryptoMarketClient {
 
             //Settings
             Ticker.UseHtmlString = false;
+            ExtendedStrategies.Register();
 
             Application.Run(new MainForm());
         }

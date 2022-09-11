@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using XmlSerialization;
 
 namespace Crypto.Core.Strategies.Listeners {
     public class TickerDataCaptureStrategy : Custom.CustomTickerStrategy, ISupportSerialization {
@@ -20,10 +21,13 @@ namespace Crypto.Core.Strategies.Listeners {
         public bool CaptureData { get; set; } = true;
 
         public static TickerDataCaptureStrategy LoadFromFile(string fileName) {
-                return (TickerDataCaptureStrategy)SerializationHelper.FromFile(fileName, typeof(TickerDataCaptureStrategy));
+                return (TickerDataCaptureStrategy)SerializationHelper.Current.FromFile(fileName, typeof(TickerDataCaptureStrategy));
         }
 
-        void ISupportSerialization.OnStartSerialize() { }
+        void ISupportSerialization.OnBeginSerialize() { }
+        void ISupportSerialization.OnEndSerialize() { }
+        void ISupportSerialization.OnBeginDeserialize() { }
+        void ISupportSerialization.OnEndDeserialize() { }
 
         public override void Assign(StrategyBase from) {
             base.Assign(from);
@@ -48,7 +52,7 @@ namespace Crypto.Core.Strategies.Listeners {
         }
 
         public bool Save(string path) {
-            return SerializationHelper.Save(this, typeof(TickerDataCaptureStrategy), path);
+            return SerializationHelper.Current.Save(this, typeof(TickerDataCaptureStrategy), path);
         }
     }
 }

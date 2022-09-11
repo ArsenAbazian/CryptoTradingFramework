@@ -92,30 +92,26 @@ namespace Crypto.Core.Strategies {
 
         protected void Buy() {
             OrderBookEntry e = GetAvailableToBuy(BuyLevel);
-            TradingResult res = MarketBuy(e.Value, e.Amount);
+            TradingResult res = MarketBuy(Ticker, e.Value, e.Amount);
             if(res == null)
                 return;
 
             BoughtTotal += res.Total;
-            Earned -= res.Total + CalcFee(res.Total);
-            MaxActualBuyDeposit -= res.Total + CalcFee(res.Total);
+            Earned -= res.Total + CalcFee(Ticker, res.Total);
+            MaxActualBuyDeposit -= res.Total + CalcFee(Ticker, res.Total);
             MaxActualSellDeposit += res.Amount;
-        }
-
-        protected double CalcFee(double total) {
-            return total * Ticker.Fee / 100.0;
         }
 
         protected void Sell() {
             OrderBookEntry e = GetAvailableToSell(SellLevel);
-            TradingResult res = MarketSell(e.Value, e.Amount);
+            TradingResult res = MarketSell(Ticker, e.Value, e.Amount);
             if(res == null)
                 return;
 
             SoldTotal += res.Amount;
-            Earned += res.Total - CalcFee(res.Total);
+            Earned += res.Total - CalcFee(Ticker, res.Total);
             MaxActualBuyDeposit += res.Total;
-            MaxActualSellDeposit -= res.Amount + CalcFee(res.Total);
+            MaxActualSellDeposit -= res.Amount + CalcFee(Ticker, res.Total);
         }
 
         Ticker ticker;
@@ -255,110 +251,6 @@ namespace Crypto.Core.Strategies {
             return DataProvider.Disconnect(CreateInputInfo());
         }
 
-        protected TradingResult AddDemoTradingResult(double rate, double amount, OrderType type) {
-            TradingResult res = new TradingResult() { Amount = amount, Type = type, Date = DateTime.Now, OrderId = "demo", Total = rate * amount };
-            res.Value = rate;
-            res.Trades.Add(new TradeEntry() { Amount = amount, Date = DateTime.Now, Id = "demo", Rate = rate, Total = rate * amount, Type = type });
-            return res;
-        }
-
-        protected TradingResult AddDemoTradingResult(Ticker ticker, double rate, double amount, OrderType type) {
-            TradingResult res = new TradingResult() { Amount = amount, Type = type, Date = DateTime.Now, OrderId = "demo", Total = ticker.SpentInBaseCurrency(rate, amount) };
-            res.Value = rate;
-            res.Trades.Add(new TradeEntry() {Ticker = ticker,  Amount = amount, Date = DateTime.Now, Id = "demo", Rate = rate, Total = ticker.SpentInBaseCurrency(rate, amount), Type = type });
-            return res;
-        }
-
-        protected virtual TradingResult MarketBuy(double rate, double amount) {
-            TradingResult res = null;
-            if(!DemoMode) {
-                res = Ticker.Buy(rate, amount);
-                if(res == null)
-                    Log(LogType.Error, "", rate, amount, StrategyOperation.MarketBuy);
-                return res;
-            }
-            else {
-                res = AddDemoTradingResult(rate, amount, OrderType.Buy);
-            }
-            TradeHistory.Add(res);
-            Log(LogType.Success, "", rate, amount, StrategyOperation.MarketBuy);
-            return res;
-        }
-
-        protected virtual TradingResult MarketBuy(Ticker ticker, double rate, double amount) {
-            TradingResult res = null;
-            if(!DemoMode) {
-                res = ticker.Buy(rate, amount);
-                if(res == null)
-                    Log(LogType.Error, "", rate, amount, StrategyOperation.MarketBuy);
-                return res;
-            }
-            else {
-                res = AddDemoTradingResult(ticker, rate, amount, OrderType.Buy);
-            }
-            TradeHistory.Add(res);
-            Log(LogType.Success, ticker.Name, rate, amount, StrategyOperation.MarketBuy);
-            return res;
-        }
-
-        protected virtual TradingResult MarketSell(Ticker ticker, double rate, double amount) {
-            TradingResult res = null;
-            if(!DemoMode) {
-                res = ticker.Sell(rate, amount);
-                if(res == null)
-                    Log(LogType.Error, "", rate, amount, StrategyOperation.MarketSell);
-                return res;
-            }
-            else {
-                res = AddDemoTradingResult(ticker, rate, amount, OrderType.Sell);
-            }
-            TradeHistory.Add(res);
-            Log(LogType.Success, ticker.Name, rate, amount, StrategyOperation.MarketSell);
-            return res;
-        }
-
-        protected virtual TradingResult MarketSell(double rate, double amount) {
-            TradingResult res = null;
-            if(!DemoMode) {
-                res = Ticker.Sell(rate, amount);
-                if(res == null)
-                    Log(LogType.Error, "", rate, amount, StrategyOperation.MarketSell);
-                return res;
-            }
-            else {
-                res = AddDemoTradingResult(rate, amount, OrderType.Sell);
-            }
-            TradeHistory.Add(res);
-            Log(LogType.Success, "", rate, amount, StrategyOperation.MarketSell);
-            return res;
-        }
-        protected virtual TradingResult PlaceBid(double rate, double amount) {
-            TradingResult res = null;
-            if(!DemoMode) {
-                res = Ticker.Buy(rate, amount);
-                if(res == null) 
-                    Log(LogType.Error, "", rate, amount, StrategyOperation.LimitBuy);
-                return res;
-            }
-            else {
-                res = AddDemoTradingResult(rate, amount, OrderType.Buy);
-            }
-            Log(LogType.Success, "", rate, amount, StrategyOperation.LimitBuy);
-            return res;
-        }
-        protected virtual TradingResult PlaceAsk(double rate, double amount) {
-            TradingResult res = null;
-            if(!DemoMode) {
-                res = Ticker.Sell(rate, amount);
-                if(res == null)
-                    Log(LogType.Error, "", rate, amount, StrategyOperation.LimitSell);
-                return res;
-            }
-            else
-                res = AddDemoTradingResult(rate, amount, OrderType.Sell);
-            Log(LogType.Error, "", rate, amount, StrategyOperation.LimitSell);
-            return res;
-        }
         public override List<StrategyValidationError> Validate() {
             List<StrategyValidationError> list = base.Validate();
             CheckTickerSpecified(list);

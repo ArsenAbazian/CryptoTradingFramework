@@ -235,7 +235,7 @@ namespace Crypto.Core.Strategies.Arbitrages.Statistical {
             if(res == null)
                 return;
 
-            double earned = res.Total - CalcFee(res.Total);
+            double earned = res.Total - CalcFee(info.Ticker, res.Total);
             MaxAllowedShortDeposit += earned;
 
             info.UpdateCurrentValue(DataProvider.CurrentTime, res.Value);
@@ -274,7 +274,7 @@ namespace Crypto.Core.Strategies.Arbitrages.Statistical {
             if(res == null)
                 return;
 
-            double earned = res.Total - CalcFee(res.Total);
+            double earned = res.Total - CalcFee(info.Ticker, res.Total);
             MaxAllowedDeposit += earned;
 
             info.UpdateCurrentValue(DataProvider.CurrentTime, res.Value);

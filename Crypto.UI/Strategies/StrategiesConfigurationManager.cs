@@ -4,6 +4,7 @@ using Crypto.Core.Strategies.Arbitrages.Statistical;
 using Crypto.Core.Strategies.Custom;
 using Crypto.Core.Strategies.Signal;
 using Crypto.Core.Strategies.Stupid;
+using Crypto.Core.Strategies.VisualStrategy;
 using Crypto.UI.Strategies.Arbitrages;
 using Crypto.UI.Strategies.Custom;
 using Crypto.UI.Strategies.Custom.RedWaterfall;
@@ -42,6 +43,17 @@ namespace CryptoMarketClient.Strategies {
             Items.Add(new StrategyConfigurationInfo() { StrategyType = typeof(TaSimpleStrategy), ConfigurationFormType = typeof(TaSimpleStrategyConfigurationControl), DataFormType = typeof(RedWaterfallStrategyDataForm) });
             Items.Add(new StrategyConfigurationInfo() { StrategyType = typeof(HipeBasedStrategy), ConfigurationFormType = typeof(HipeStrategyConfigurationControl), DataFormType = typeof(HipeBasedStrategyDataForm) });
 
+            Assembly entry = Assembly.GetEntryAssembly();
+            AssemblyName[] name = entry.GetReferencedAssemblies();
+            AssemblyName cryptoStrategies = name.FirstOrDefault(nm => nm.Name == "Crypto.Strategies");
+            if(cryptoStrategies != null) {
+                List<Type> infos = Assembly.Load(cryptoStrategies).GetTypes().Where(t => typeof(StrategyConfigurationInfo).IsAssignableFrom(t)).ToList();
+                foreach(Type infoType in infos) {
+                    StrategyConfigurationInfo info = (StrategyConfigurationInfo)infoType.GetConstructor(new Type[] { }).Invoke(new object[] { });
+                    Add(info);
+                }
+            }
+
             //Items.Add(new StrategyConfigurationInfo() { StrategyType = typeof(WalletInvestorForecastStrategy), ConfigurationFormType = typeof(WalletInvestorStrategyConfigControl), DataFormType = typeof(WalletInvestorDataForm) });
         }
         public void Add(StrategyConfigurationInfo info) {
@@ -79,15 +91,25 @@ namespace CryptoMarketClient.Strategies {
             }
             try {
                 ConstructorInfo ci = info.ConfigurationFormType.GetConstructor(new Type[] { });
-                StrategySpecificConfigurationControlBase specificControl = (StrategySpecificConfigurationControlBase)ci.Invoke(new object[] { });
-                StrategyConfigurationForm form = new StrategyConfigurationForm();
-                form.Text = strategy.Name + " - Configuration";
-                form.StrategySpecificSettingsControl = specificControl;
-                form.Strategy = strategy;
-                if(form.ShowDialog() != DialogResult.OK)
-                    return false;
-                if(strategy != form.Strategy)
-                    strategy.Assign(form.Strategy);
+                object configurator = ci.Invoke(new object[] { });
+                if(configurator is StrategySpecificConfigurationControlBase) {
+                    StrategySpecificConfigurationControlBase specificControl = (StrategySpecificConfigurationControlBase)configurator;
+                    StrategyConfigurationForm form = new StrategyConfigurationForm();
+                    form.Text = strategy.Name + " - Configuration";
+                    form.StrategySpecificSettingsControl = specificControl;
+                    form.Strategy = strategy;
+                    if(form.ShowDialog() != DialogResult.OK)
+                        return false;
+                    if(strategy != form.Strategy)
+                        strategy.Assign(form.Strategy);
+                }
+                else if(configurator is Form) {
+                    Form form = (Form)configurator;
+                    PropertyInfo pInfo = form.GetType().GetProperty("Strategy", BindingFlags.Instance | BindingFlags.Public);
+                    if(pInfo != null)
+                        pInfo.SetValue(form, strategy);
+                    form.ShowDialog();
+                }
             }
             catch(Exception e) {
                 XtraMessageBox.Show("Invalid configuration form for strategy " + type.Name + " " + e.ToString());
@@ -95,11 +117,5 @@ namespace CryptoMarketClient.Strategies {
             }
             return true;
         }
-    }
-
-    public class StrategyConfigurationInfo {
-        public Type StrategyType { get; set; }
-        public Type ConfigurationFormType { get; set; }
-        public Type DataFormType { get; set; }
     }
 }

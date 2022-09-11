@@ -19,6 +19,14 @@ namespace Crypto.Core {
         }
 
         public int Id { get; set; }
+        string subscriptionName = null;
+        public override string SubscriptionName {
+            get {
+                if(subscriptionName == null)
+                    subscriptionName = string.Format("{0}_{1}", MarketCurrency, BaseCurrency);
+                return subscriptionName;
+            }
+        }
 
         string currensyPair;
         public override string CurrencyPair {

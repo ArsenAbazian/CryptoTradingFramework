@@ -358,6 +358,8 @@ namespace Crypto.Core.Exchanges.Bitmex {
         }
 
         public override bool UpdateBalances(AccountInfo account) {
+            if(account == null)
+                return false;
             byte[] data = DownloadPrivateData(account, "GET", "/api/v1/user/wallet");
             if(data == null)
                 return false;

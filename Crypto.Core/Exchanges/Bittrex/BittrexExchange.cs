@@ -1179,6 +1179,8 @@ namespace Crypto.Core.Bittrex {
         }
         
         public override bool UpdateBalances(AccountInfo account) {
+            if(account == null)
+                return false;
             if(Currencies.Count == 0) {
                 if(!GetCurrenciesInfo())
                     return false;
@@ -1265,7 +1267,7 @@ namespace Crypto.Core.Bittrex {
             JsonHelperToken root = JsonHelper.Default.Deserialize(bytes);
             if(root.GetProperty("status") != null) {
                 LogManager.Default.ShowNotification(LogType.Success, Type.ToString(), "Create Deposit", root.GetProperty("stauts").Value);
-                NotificationManager.Notify(Type.ToString(), "Create Deposit\n" + root.GetProperty("stauts").Value);
+                NotificationManager.Notify(LogType.Success, Type.ToString(), "Create Deposit\n" + root.GetProperty("stauts").Value);
                 return true;
             }
 

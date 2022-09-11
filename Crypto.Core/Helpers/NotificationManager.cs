@@ -10,6 +10,7 @@ namespace Crypto.Core.Helpers {
         void Notify(string message);
         void Notify(string title, string message);
         void Notify(string title, string message, Action onClick);
+        void Notify(string title, string message, LogType type);
         void NotifyStatus(string title, string message);
         void NotifyStatus(string message, object image);
     }
@@ -32,6 +33,11 @@ namespace Crypto.Core.Helpers {
         public static void Notify(string title, string message) {
             if(Provider != null)
                 Provider.Notify(title, message);
+        }
+
+        public static void Notify(LogType type, string title, string message) {
+            if(Provider != null)
+                Provider.Notify(title, message, type);
         }
 
         public static void Notify(string title, string message, Action onClick) {

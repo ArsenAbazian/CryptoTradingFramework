@@ -4,6 +4,7 @@ using Crypto.Core.Strategies.Custom;
 using Crypto.Core.Strategies.Signal;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace Crypto.Core.Strategies {
@@ -28,20 +29,23 @@ namespace Crypto.Core.Strategies {
             list.Add(new StrategyRegistrationInfo() { Type = typeof(TriplePairStrategy), Group = StrategyGroup.Arbitrage, Name = "Triple Pair Strategy", Description = "Strategy based on tripe pair arbitrage" });
             list.Add(new StrategyRegistrationInfo() { Type = typeof(TaSimpleStrategy), Group = StrategyGroup.TecnicalAnylysis, Name = "Ta Simple Strategy", Description = "Strategy based on simple technical analysis" });
             list.Add(new StrategyRegistrationInfo() { Type = typeof(HipeBasedStrategy), Group = StrategyGroup.TecnicalAnylysis, Name = "Hipe Based Strategy", Description = "Strategy based on classic arbitrage detection, which happens on hipe" });
+
+            Assembly entry = Assembly.GetEntryAssembly();
+            AssemblyName[] name = entry.GetReferencedAssemblies();
+            AssemblyName cryptoStrategies = name.FirstOrDefault(nm => nm.Name == "Crypto.Strategies");
+            if(cryptoStrategies != null) {
+                List<Type> infos = Assembly.Load(cryptoStrategies).GetTypes().Where(t => typeof(StrategyRegistrationInfo).IsAssignableFrom(t)).ToList();
+                foreach(Type infoType in infos) {
+                    StrategyRegistrationInfo info = (StrategyRegistrationInfo)infoType.GetConstructor(new Type[] { }).Invoke(new object[] { });
+                    list.Add(info);
+                }
+            }
+
             return list;
         }
     }
 
-    public class StrategyRegistrationInfo {
-        public Type Type { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public string Group { get; set; }
-        public StrategyBase Create() {
-            ConstructorInfo info = Type.GetConstructor(new Type[] { });
-            return (StrategyBase)info.Invoke(new object[] { });
-        }
-    }
+    
 
     public static class StrategyGroup {
         public static string Simple = "Simple",
@@ -50,6 +54,7 @@ namespace Crypto.Core.Strategies {
         Grid = "Grid",
         Signal = "Signal Notificators",
         Custom = "Custom",
-        TecnicalAnylysis = "Technical Analysis";
+        TecnicalAnylysis = "Technical Analysis",
+        UserDefined = "User Defined";
     }
 }

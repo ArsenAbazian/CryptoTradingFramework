@@ -403,6 +403,10 @@ namespace Crypto.Core.Helpers {
             
             RaiseListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
         }
+
+        public override string ToString() {
+            return string.Format("Array [{0}]", Count);
+        }
     }
 
     public class StackEnumerator<T> : IEnumerator<T> {

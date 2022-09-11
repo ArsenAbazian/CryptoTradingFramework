@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using XmlSerialization;
 
 namespace Crypto.Core.Common {
     [Serializable]
@@ -15,18 +16,19 @@ namespace Crypto.Core.Common {
         static readonly string Name = "Log.xml";
         public static LogManager FromFile(string fileName) {
             Type type = typeof(LogManager);
-            LogManager res = (LogManager)SerializationHelper.FromFile(fileName, type);
+            LogManager res = (LogManager)SerializationHelper.Current.FromFile(fileName, type);
             if(res != null) res.FileName = Name;
             return res;
         }
 
         protected bool Saving { get; set; }
 
-        void ISupportSerialization.OnStartSerialize() { }
-
+        void ISupportSerialization.OnBeginSerialize() { }
+        void ISupportSerialization.OnEndSerialize() { }
+        void ISupportSerialization.OnBeginDeserialize() { }
+        
         public virtual void OnEndDeserialize() { }
         public string FileName { get; set; }
-
 
         static LogManager defaultManager;
         public static LogManager Default {
@@ -45,7 +47,7 @@ namespace Crypto.Core.Common {
                 return;
             Saving = true;
             try {
-                SerializationHelper.Save(this, typeof(LogManager), null);
+                SerializationHelper.Current.Save(this, typeof(LogManager), null);
             }
             finally {
                 Saving = false;
@@ -103,7 +105,28 @@ namespace Crypto.Core.Common {
             }
             RefreshVisual();
             if(type == LogType.Error || type == LogType.Warning)
-                NotificationManager.Notify(name, string.Format("{0}\n{1}", message, description));
+                NotificationManager.Notify(type, name, string.Format("{0}\n{1}", message, description));
+            return Messages[Messages.Count - 1];
+        }
+
+        public LogMessage Add(LogType type, object owner, string name, string message, string description, bool allowNotify) {
+            lock(Messages) {
+                Messages.Add(new LogMessage() {
+                    Type = type,
+                    Owner = owner,
+                    Name = name,
+                    Text = message,
+                    Description = description,
+                    Time = DateTime.Now
+                });
+                //Debug.WriteLine(DateTime.UtcNow.ToLongTimeString() + ": " + message);
+            }
+            lock(this) {
+                Save();
+            }
+            RefreshVisual();
+            if((type == LogType.Error || type == LogType.Warning) && allowNotify)
+                NotificationManager.Notify(type, name, string.Format("{0}\n{1}", message, description));
             return Messages[Messages.Count - 1];
         }
 

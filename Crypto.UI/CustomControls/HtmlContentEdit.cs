@@ -2,6 +2,7 @@
 using DevExpress.Utils;
 using DevExpress.Utils.Drawing;
 using DevExpress.Utils.Html;
+using DevExpress.Utils.Html.Dom;
 using DevExpress.Utils.Html.ViewInfo;
 using DevExpress.XtraEditors;
 using DevExpress.XtraEditors.Drawing;
@@ -150,8 +151,8 @@ namespace Crypto.UI.CustomControls {
     }
 
     public class HtmlContentEditViewInfo : BaseEditViewInfo , IDxHtmlClient, IInteractiveEdit {
-        static Dictionary<HtmlTemplate, DxHtmlRootElement> HtmlTemplateCache { get; } = new Dictionary<HtmlTemplate, DxHtmlRootElement>();
-        static Dictionary<HtmlTemplate, LinkedList<DxHtmlRootElement>> HtmlTemplateElementCache { get; } = new Dictionary<HtmlTemplate, LinkedList<DxHtmlRootElement>>();
+        static Dictionary<HtmlTemplate, DxHtmlDocumentRootNode> HtmlTemplateCache { get; } = new Dictionary<HtmlTemplate, DxHtmlDocumentRootNode>();
+        static Dictionary<HtmlTemplate, LinkedList<DxHtmlDocumentRootNode>> HtmlTemplateElementCache { get; } = new Dictionary<HtmlTemplate, LinkedList<DxHtmlDocumentRootNode>>();
 
         public HtmlContentEditViewInfo(RepositoryItem item) : base(item) {
             htmlContextCore = new HtmlContentEditContext(this);
@@ -162,21 +163,20 @@ namespace Crypto.UI.CustomControls {
         protected virtual void CheckCreateHtmlTemplateInfo() {
             if(HtmlItem.Template.IsEmpty)
                 return;
-            if(TemplateElementInfo != null)
+            if(TemplateElement != null)
                 return;
-            if(TemplateElement == null)
-                TemplateElement = GetCachedTemplate(HtmlItem.Template);
-            TemplateElementInfo = CreateHtmlTemplateElementInfo(TemplateElement, this);
+            var elem = GetCachedTemplate(HtmlItem.Template);
+            TemplateElement = CreateHtmlTemplateElement(elem, this);
         }
 
-        protected internal DxHtmlRootElement CreateHtmlTemplate(HtmlTemplate template) {
+        protected internal DxHtmlDocumentRootNode CreateHtmlTemplate(HtmlTemplate template) {
             CssParser parser = new CssParser();
             CssStyleSheet styles = parser.Parse(template.Styles);
             return DxHtmlParser.Default.Parse(template.Template, styles);
         }
 
-        protected internal DxHtmlRootElement GetCachedTemplate(HtmlTemplate template) {
-            DxHtmlRootElement elem = null;
+        protected internal DxHtmlDocumentRootNode GetCachedTemplate(HtmlTemplate template) {
+            DxHtmlDocumentRootNode elem = null;
             if(HtmlTemplateCache.TryGetValue(template, out elem))
                 return elem;
             elem = CreateHtmlTemplate(template);
@@ -184,7 +184,7 @@ namespace Crypto.UI.CustomControls {
             return elem;
         }
 
-        protected internal virtual DxHtmlRootElementInfo CreateHtmlTemplateElementInfo(DxHtmlRootElement element, IDxHtmlClient itemInfo) {
+        protected internal virtual DxHtmlRootElement CreateHtmlTemplateElement(DxHtmlDocumentRootNode element, IDxHtmlClient itemInfo) {
             return HtmlContext.Get(element, itemInfo);
         }
 
@@ -201,10 +201,10 @@ namespace Crypto.UI.CustomControls {
             bool shouldRelease = CheckCreateHtmlCache(GInfo.Cache);
             try {
                 int height = CalcHtmlTemplate(new Rectangle(0, 0, 10000, 10000));
-                var client = TemplateElementInfo.FindElementById("dx-content");
+                var client = TemplateElement.FindElementById("dx-content");
                 if(client != null)
                     return client.Size;
-                int width = TemplateElementInfo.Root.Size.Width < 10000 ? TemplateElementInfo.Root.Size.Width : 10;
+                int width = TemplateElement.Size.Width < 10000 ? TemplateElement.Size.Width : 10;
                 height = height < 10000 ? height : 10;
                 return new Size(width, height);
             }
@@ -213,41 +213,44 @@ namespace Crypto.UI.CustomControls {
             }
         }
 
-        object IDxHtmlClient.GetImage(string imageId, bool field) {
+        object IDxHtmlClient.GetImage(string imageId, bool field, DxHtmlElementBase element) {
             if(!field)
                 return ImageCollection.GetImageListImage(HtmlItem.HtmlImages, imageId);
             return null;
         }
 
-        string IDxHtmlClient.GetDisplayValue(string fieldName) {
+        string IDxHtmlClient.GetDisplayValue(string fieldName, DxHtmlElementBase element) {
             if(fieldName == "Text" || fieldName == "DisplayText")
                 return DisplayText;
             return string.Empty;
         }
 
+        object IDxHtmlClient.GetValue(string fieldName, DxHtmlElementBase element) {
+            return null;
+        }
+
         HtmlContentEditContext htmlContextCore;
         internal HtmlContentEditContext HtmlContext => htmlContextCore;
         
-        protected DxHtmlRootElement TemplateElement { get; private set; }
-        protected internal DxHtmlRootElementInfo TemplateElementInfo { get; private set; }
+        protected internal DxHtmlRootElement TemplateElement { get; private set; }
         public bool TemplateInfoCalculated { get; internal set; }
 
-        DxHtmlRootElementInfo IDxHtmlClient.ElementInfo => TemplateElementInfo;
+        DxHtmlRootElement IDxHtmlClient.Element => TemplateElement;
 
         protected internal virtual int CalcHtmlTemplate(Rectangle rect) {
             if(HtmlItem.Template.IsEmpty)
                 return 10;
             AppearanceObject app = PaintAppearance;
 
-            if(TemplateInfoCalculated && TemplateElementInfo.Font == app.GetFont() && TemplateElementInfo.ForeColor == app.GetForeColor() && TemplateElementInfo.Size.Width == rect.Width) {
-                TemplateElementInfo.Location = rect.Location;
-                return TemplateElementInfo.Root.Size.Height;
+            if(TemplateInfoCalculated && TemplateElement.ViewInfo.Font == app.GetFont() && TemplateElement.ViewInfo.ForeColor == app.GetForeColor() && TemplateElement.ViewInfo.Size.Width == rect.Width) {
+                TemplateElement.Location = rect.Location;
+                return TemplateElement.RootElement.Size.Height;
             }
             bool shouldRelease = CheckCreateHtmlCache(GInfo.Cache);
             try {
-                TemplateElementInfo.Calc(HtmlCache, rect, app.GetFont(), app.GetForeColor());
+                TemplateElement.Calc(HtmlCache, rect, app.GetFont(), app.GetForeColor());
                 TemplateInfoCalculated = true;
-                return TemplateElementInfo.Root.Size.Height;
+                return TemplateElement.RootElement.Size.Height;
             }
             finally {
                 ReleaseHtmlCache(shouldRelease);
@@ -284,8 +287,8 @@ namespace Crypto.UI.CustomControls {
         }
         public override void Offset(int x, int y) {
             base.Offset(x, y);
-            if(TemplateElementInfo != null)
-                TemplateElementInfo.Location = Bounds.Location;
+            if(TemplateElement != null)
+                TemplateElement.Location = Bounds.Location;
         }
 
         protected override void Assign(BaseControlViewInfo info) {
@@ -295,27 +298,27 @@ namespace Crypto.UI.CustomControls {
         }
 
         void IInteractiveEdit.OnMouseMove(MouseEventArgs e) {
-            if(TemplateElementInfo != null) {
-                TemplateElementInfo.Location = Bounds.Location;
-                HtmlContext.OnMouseMove(TemplateElementInfo, e);
+            if(TemplateElement != null) {
+                TemplateElement.Location = Bounds.Location;
+                HtmlContext.OnMouseMove(TemplateElement, e);
             }
         }
         void IInteractiveEdit.OnMouseLeave() {
-            if(TemplateElementInfo != null) {
-                TemplateElementInfo.Location = Bounds.Location;
+            if(TemplateElement != null) {
+                TemplateElement.Location = Bounds.Location;
                 HtmlContext.OnMouseLeave();
             }
         }
         void IInteractiveEdit.OnMouseDown(MouseEventArgs e) {
-            if(TemplateElementInfo != null) {
-                TemplateElementInfo.Location = Bounds.Location;
-                HtmlContext.OnMouseDown(TemplateElementInfo, e);
+            if(TemplateElement != null) {
+                TemplateElement.Location = Bounds.Location;
+                HtmlContext.OnMouseDown(TemplateElement, e);
             }
         }
         void IInteractiveEdit.OnMouseUp(MouseEventArgs e) {
-            if(TemplateElementInfo != null) {
-                TemplateElementInfo.Location = Bounds.Location;
-                HtmlContext.OnMouseUp(TemplateElementInfo, e);
+            if(TemplateElement != null) {
+                TemplateElement.Location = Bounds.Location;
+                HtmlContext.OnMouseUp(TemplateElement, e);
             }
         }
         protected override void OnEditValueChanged() {
@@ -329,7 +332,7 @@ namespace Crypto.UI.CustomControls {
             HtmlContentEditViewInfo vi = info.ViewInfo as HtmlContentEditViewInfo;
             if(vi.OwnerEdit != null)
                 base.DrawContent(info);
-            if(vi.TemplateElementInfo == null) {
+            if(vi.TemplateElement == null) {
                 info.Cache.DrawString("There is no html template.", vi.PaintAppearance.Font, vi.PaintAppearance.GetForeBrush(info.Cache), vi.ContentRect);
                 return;
             }
@@ -337,7 +340,7 @@ namespace Crypto.UI.CustomControls {
                 vi.CalcHtmlTemplate(info.Bounds);
             bool shouldRelease = vi.CheckCreateHtmlCache(info.Cache);
             try {
-                vi.TemplateElementInfo.Draw(vi.HtmlCache);
+                vi.TemplateElement.Draw(vi.HtmlCache);
             }
             finally {
                 vi.ReleaseHtmlCache(shouldRelease);
@@ -400,15 +403,14 @@ namespace Crypto.UI.CustomControls {
                 return OwnerInfo.InplaceType == DevExpress.XtraEditors.Controls.InplaceType.Standalone ? OwnerInfo.OwnerEdit : OwnerInfo.InplaceOwnerControl;
             }
         }
-        protected override void SetCursor(DxHtmlElementInfo element) {
+        protected override void SetCursor(DxHtmlElementBase element) {
             if(OwnerControl == null) 
                 return;
             OwnerControl.Cursor = GetCursor(element);
         }
 
-        protected override void OnInvalidatedCallback(DxHtmlRootElementInfo root) {
+        protected override void OnInvalidatedCallback(DxHtmlRootElement root) {
             base.OnInvalidatedCallback(root);
-            
             OwnerInfo.TemplateInfoCalculated = false;
             ForceRedraw(OwnerInfo.Bounds);
         }

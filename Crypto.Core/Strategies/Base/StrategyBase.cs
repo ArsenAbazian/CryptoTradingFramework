@@ -10,28 +10,17 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Xml.Serialization;
+using XmlSerialization;
 
 namespace Crypto.Core.Strategies {
-    [XmlInclude(typeof(SimpleBuyLowSellHighStrategy))]
-    [XmlInclude(typeof(GridStrategyBase))]
-    [XmlInclude(typeof(StaticGridStrategy))]
-    [XmlInclude(typeof(Signal.SignalNotificationStrategy))]
-    [XmlInclude(typeof(Signal.TripleRsiIndicatorStrategy))]
-    [XmlInclude(typeof(Signal.MacdTrendStrategy))]
-    [XmlInclude(typeof(CustomTickerStrategy))]
-    [XmlInclude(typeof(WalletInvestorForecastStrategy))]
-    [XmlInclude(typeof(TriplePairStrategy))]
-    [XmlInclude(typeof(TickerDataCaptureStrategy))]
-    [XmlInclude(typeof(MarketMakingStrategy))]
-    [XmlInclude(typeof(StatisticalArbitrageStrategy))]
-    [XmlInclude(typeof(TaSimpleStrategy))]
-    [XmlInclude(typeof(HipeBasedStrategy))]
     [Serializable]
     [ParameterObject]
-    public abstract class StrategyBase : IStrategyDataItemInfoOwner {
+    [AllowDynamicTypes]
+    public abstract class StrategyBase : IStrategyDataItemInfoOwner, ISupportSerialization {
         public StrategyBase() {
             Id = Guid.NewGuid();
             FileName = Id.ToString();
@@ -77,7 +66,7 @@ namespace Crypto.Core.Strategies {
         [Browsable(false)]
         public abstract string TypeName { get; }
         [StrategyProperty(false)]
-        public string Name { get; set; }
+        public virtual string Name { get; set; }
         [Browsable(false)]
         public IStrategyDataProvider DataProvider { get { return Manager == null? null: Manager.DataProvider; } }
         [Browsable(false)]
@@ -86,6 +75,14 @@ namespace Crypto.Core.Strategies {
         public List<TradingResult> TradeHistory { get; } = new List<TradingResult>();
         [Browsable(false)]
         public abstract bool SupportSimulation { get; }
+
+        internal static string GetFileName(Guid id) { return id.ToString() + ".xml"; }
+        internal static string GetFullPathName(Guid id) {
+            string directory = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + "\\Strategies";
+            if(!Directory.Exists(directory))
+                Directory.CreateDirectory(directory);
+            return directory + "\\" + GetFileName(id); 
+        }
 
         public SimulationSettings SimulationSettings { get; } = new SimulationSettings();
 
@@ -271,8 +268,19 @@ namespace Crypto.Core.Strategies {
 
         [Browsable(false)]
         public string FileName { get; set; }
-        public bool Load() { throw new NotImplementedException(); }
+
+        [XmlIgnore, Browsable(false), EditorBrowsable(EditorBrowsableState.Never)]
+        public string FullPath { get; set; }
+
+        public bool Load() {
+            FileName = GetFileName(Id);
+            FullPath = GetFullPathName(Id);
+            return SerializationHelper.Current.Load(this, GetType(), FullPath);
+        }
         public bool Save() {
+            FileName = GetFileName(Id);
+            FullPath = GetFullPathName(Id);
+            SerializationHelper.Current.Save(this, GetType(), FullPath);
             if(Manager.DataProvider is SimulationStrategyDataProvider)
                 return true;
             return Manager.Save();
@@ -387,6 +395,18 @@ namespace Crypto.Core.Strategies {
                 list.Add(new StrategyValidationError() { DataObject = this, Description = "Max allowed deposit not specified.", PropertyName = "MaxAllowedDeposit", Value = "0" });
         }
 
+        void ISupportSerialization.OnBeginDeserialize() {
+        }
+
+        void ISupportSerialization.OnEndDeserialize() {
+        }
+
+        void ISupportSerialization.OnBeginSerialize() {
+        }
+
+        void ISupportSerialization.OnEndSerialize() {
+        }
+
         [Browsable(false)]
         [TypeConverter(typeof(ExpandableObjectConverter))]
         public List<InputParameterInfo> ParametersToOptimize { get; } = new List<InputParameterInfo>();
@@ -394,6 +414,253 @@ namespace Crypto.Core.Strategies {
         [Browsable(false)]
         [TypeConverter(typeof(ExpandableObjectConverter))]
         public OutputParameterInfo OutputParameter { get; set; }
+
+        protected TradingResult AddDemoTradingResult(double rate, double amount, OrderType type) {
+            TradingResult res = new TradingResult() { Amount = amount, Type = type, Date = DateTime.Now, OrderId = "demo", Total = rate * amount };
+            res.Value = rate;
+            res.Trades.Add(new TradeEntry() { Amount = amount, Date = DateTime.Now, Id = "demo", Rate = rate, Total = rate * amount, Type = type });
+            return res;
+        }
+
+        protected TradingResult AddDemoTradingResult(Ticker ticker, double rate, double amount, OrderType type) {
+            TradingResult res = new TradingResult() { Amount = amount, Type = type, Date = DateTime.Now, OrderId = "demo", Total = ticker.SpentInBaseCurrency(rate, amount) };
+            res.Value = rate;
+            res.Trades.Add(new TradeEntry() { Ticker = ticker, Amount = amount, Date = DateTime.Now, Id = "demo", Rate = rate, Total = ticker.SpentInBaseCurrency(rate, amount), Type = type });
+            return res;
+        }
+
+        public virtual OpenPositionInfo OpenLongPosition(Ticker ticker, string mark, double value, double amount, double minProfitPc) {
+            OpenPositionInfo info = OpenLongPosition(ticker, mark, value, amount, false, 0, minProfitPc);
+            if(info != null)
+                info.AllowHistory = true; // DataProvider is SimulationStrategyDataProvider;
+            Save();
+            return info;
+        }
+
+        public virtual OpenPositionInfo OpenShortPosition(Ticker ticker, string mark, double value, double amount, double minProfitPc) {
+            OpenPositionInfo info = OpenShortPosition(ticker, mark, value, amount, false, 0, minProfitPc);
+            if(info != null)
+                info.AllowHistory = true; // DataProvider is SimulationStrategyDataProvider;
+            Save();
+            return info;
+        }
+
+        public virtual OpenPositionInfo OpenLongPosition(Ticker ticker, string mark, double value, double amount, bool allowTrailing, double trailingStopLossPc, double minProfitPc) {
+            return OpenLongPosition(ticker, mark, value, amount, allowTrailing, true, trailingStopLossPc, minProfitPc);
+        }
+
+        public virtual OpenPositionInfo OpenShortPosition(Ticker ticker, string mark, double value, double amount, bool allowTrailing, double trailingStopLossPc, double minProfitPc) {
+            return OpenShortPosition(ticker, mark, value, amount, allowTrailing, true, trailingStopLossPc, minProfitPc);
+        }
+
+        protected virtual DelayedPositionInfo AddDelayedPosition(string mark, double value, double amount, double closeValue, int liveTimeLength) {
+            if(1.05 * value * amount > MaxAllowedDeposit)
+                return null;
+            DelayedPositionInfo info = new DelayedPositionInfo() { Time = DataProvider.CurrentTime, Type = OrderType.Buy, Mark = mark, Amount = amount, Price = value, LiveTimeLength = liveTimeLength, DataItemIndex = StrategyData.Count - 1, CloseValue = closeValue };
+            DelayedPositions.Add(info);
+            return info;
+        }
+
+        public virtual double MinDepositForOpenPosition { get; set; } = 100;
+
+        protected double CalcFee(Ticker ticker, double total) {
+            return total * ticker.Fee / 100.0;
+        }
+
+        public virtual OpenPositionInfo OpenLongPosition(Ticker ticker, string mark, double value, double amount, bool allowTrailing, bool checkForMinValue, double trailingStopLossPc, double minProfitPc) {
+            if(1.05 * value * amount > MaxAllowedDeposit)
+                return null;
+            if(checkForMinValue && value * amount < MinDepositForOpenPosition)
+                return null;
+            TradingResult res = MarketBuy(ticker, value, amount);
+            if(res == null)
+                return null;
+            OpenPositionInfo info = new OpenPositionInfo() {
+                Ticker = ticker,
+                DataItemIndex = StrategyData.Count - 1,
+                Time = DataProvider.CurrentTime,
+                Type = OrderType.Buy,
+                Spent = res.Total + CalcFee(ticker, res.Total),
+                AllowTrailing = allowTrailing,
+                StopLossPercent = trailingStopLossPc,
+                OpenValue = res.Value,
+                OpenAmount = res.Amount,
+                Amount = res.Amount,
+                Mark = mark,
+                AllowHistory = (DataProvider is SimulationStrategyDataProvider),
+                Total = res.Total,
+                MinProfitPercent = minProfitPc,
+                CloseValue = value * (1 + minProfitPc * 0.01),
+            };
+            info.UpdateCurrentValue(DataProvider.CurrentTime, res.Value);
+
+            OpenedOrders.Add(info);
+            OrdersHistory.Add(info);
+
+            OnOpenLongPosition(info);
+            MaxAllowedDeposit -= info.Spent;
+
+            IOpenedPositionsProvider provider = (IOpenedPositionsProvider)StrategyData.Last();
+            if(provider != null) {
+                provider.OpenedPositions.Add(info);
+                provider.AddMark(mark);
+            }
+
+            Save();
+            return info;
+        }
+
+        public virtual TradingResult MarketBuy(Ticker ticker, double rate, double amount) {
+            TradingResult res = null;
+            if(!DemoMode) {
+                res = ticker.MarketBuy(amount);
+                if(res == null)
+                    Log(LogType.Error, "", rate, amount, StrategyOperation.MarketBuy);
+                return res;
+            }
+            else {
+                res = AddDemoTradingResult(ticker, rate, amount, OrderType.Buy);
+            }
+            TradeHistory.Add(res);
+            Log(LogType.Success, ticker.Name, rate, amount, StrategyOperation.MarketBuy);
+            return res;
+        }
+
+        public virtual TradingResult MarketSell(Ticker ticker, double rate, double amount) {
+            TradingResult res = null;
+            if(!DemoMode) {
+                res = ticker.MarketSell(amount);
+                if(res == null)
+                    Log(LogType.Error, "", rate, amount, StrategyOperation.MarketSell);
+                return res;
+            }
+            else {
+                res = AddDemoTradingResult(ticker, rate, amount, OrderType.Sell);
+            }
+            TradeHistory.Add(res);
+            Log(LogType.Success, ticker.Name, rate, amount, StrategyOperation.MarketSell);
+            return res;
+        }
+        
+        public virtual TradingResult PlaceBid(Ticker ticker, double rate, double amount) {
+            TradingResult res = null;
+            if(!DemoMode) {
+                res = ticker.Buy(rate, amount);
+                if(res == null)
+                    Log(LogType.Error, "", rate, amount, StrategyOperation.LimitBuy);
+                return res;
+            }
+            else {
+                res = AddDemoTradingResult(rate, amount, OrderType.Buy);
+            }
+            Log(LogType.Success, ticker.Name, rate, amount, StrategyOperation.LimitBuy);
+            return res;
+        }
+        public virtual TradingResult PlaceAsk(Ticker ticker, double rate, double amount) {
+            TradingResult res = null;
+            if(!DemoMode) {
+                res = ticker.Sell(rate, amount);
+                if(res == null)
+                    Log(LogType.Error, "", rate, amount, StrategyOperation.LimitSell);
+                return res;
+            }
+            else
+                res = AddDemoTradingResult(rate, amount, OrderType.Sell);
+            Log(LogType.Error, ticker.Name, rate, amount, StrategyOperation.LimitSell);
+            return res;
+        }
+
+        protected virtual double GetMaxAllowedShortDeposit() { return MaxAllowedDeposit; }
+        public virtual OpenPositionInfo OpenShortPosition(Ticker ticker, string mark, double value, double amount, bool allowTrailing, bool checkForMinValue, double trailingStopLossPc, double minProfitPc) {
+            double spent = ticker.SpentInBaseCurrency(value, amount);
+
+            if(1.05 * spent > GetMaxAllowedShortDeposit())
+                return null;
+            if(checkForMinValue && spent < MinDepositForOpenPosition)
+                return null;
+            TradingResult res = MarketSell(ticker, value, amount);
+            if(res == null)
+                return null;
+            OpenPositionInfo info = new OpenPositionInfo() {
+                Ticker = ticker,
+                DataItemIndex = StrategyData.Count - 1,
+                Time = DataProvider.CurrentTime,
+                Type = OrderType.Sell,
+                Spent = spent + CalcFee(ticker, res.Total),
+                AllowTrailing = allowTrailing,
+                StopLossPercent = trailingStopLossPc,
+                OpenValue = res.Value,
+                OpenAmount = res.Amount,
+                Amount = res.Amount,
+                Mark = mark,
+                AllowHistory = (DataProvider is SimulationStrategyDataProvider),
+                Total = res.Total,
+                MinProfitPercent = minProfitPc,
+                CloseValue = value * (1 + minProfitPc * 0.01),
+            };
+            info.UpdateCurrentValue(DataProvider.CurrentTime, res.Value);
+
+            OpenedOrders.Add(info);
+            OrdersHistory.Add(info);
+
+            OnOpenShortPosition(info);
+            UpdateMaxAllowedShortDeposit(-info.Spent);
+
+            IOpenedPositionsProvider provider = (IOpenedPositionsProvider)StrategyData.Last();
+            if(provider != null) {
+                provider.OpenedPositions.Add(info);
+                provider.AddMark(mark);
+            }
+
+            Save();
+            return info;
+        }
+
+        protected virtual void UpdateMaxAllowedShortDeposit(double delta) {
+            MaxAllowedDeposit += delta;
+        }
+
+        protected virtual void OnOpenLongPosition(OpenPositionInfo info) {
+            if(EnableNotifications) {
+                SendNotification("long open " + info.Mark + " rate: " + info.OpenValue.ToString("0.00000000") + " amount: " + info.OpenAmount.ToString("0.00000000") + " web: " + info.Ticker.WebPageAddress);
+            }
+        }
+
+        protected virtual void OnOpenShortPosition(OpenPositionInfo info) {
+            if(EnableNotifications) {
+                SendNotification("long short " + info.Mark + " rate: " + info.OpenValue.ToString("0.00000000") + " amount: " + info.OpenAmount.ToString("0.00000000") + " web: " + info.Ticker.WebPageAddress);
+            }
+        }
+
+        public virtual void CloseShortPosition(OpenPositionInfo info) {
+            if(EnableNotifications) {
+                SendNotification("short close " + info.Mark + " rate: " + info.CloseValue.ToString("0.00000000") + " web: " + info.Ticker.WebPageAddress);
+            }
+        }
+
+        public virtual void CloseLongPosition(OpenPositionInfo info) {
+            if(EnableNotifications) {
+                SendNotification("long close " + info.Mark + " rate: " + info.CloseValue.ToString("0.00000000") + " web: " + info.Ticker.WebPageAddress);
+            }
+            //TradingResult res = MarketSell(Ticker.OrderBook.Bids[0].Value, info.Amount);
+            //if(res != null) {
+            //    double earned = res.Total - CalcFee(res.Total);
+            //    MaxAllowedDeposit += earned;
+            //    info.Earned += earned;
+            //    info.Amount -= res.Amount;
+            //    info.Total -= res.Total;
+            //    RedWaterfallDataItem item = (RedWaterfallDataItem)info.Tag;
+            //    item.Closed = true;
+            //    item.CloseLength = ((RedWaterfallDataItem)StrategyData.Last()).Index - item.Index;
+            //    RedWaterfallDataItem last = (RedWaterfallDataItem)StrategyData.Last();
+            //    if(info.Amount < 0.000001) {
+            //        OpenedOrders.Remove(info);
+            //        Earned += info.Earned - info.Spent;
+            //    }
+            //    last.ClosedOrder = true;
+            //    last.Value = Ticker.OrderBook.Bids[0].Value;
+            //}
+        }
     }
 
     public class InputParameterAttribute : Attribute {

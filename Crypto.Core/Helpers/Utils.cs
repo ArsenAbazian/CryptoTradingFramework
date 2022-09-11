@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using XmlSerialization;
 
 namespace Crypto.Core.Helpers {
     public static class Utils {

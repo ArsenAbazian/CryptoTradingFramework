@@ -147,11 +147,14 @@ namespace Crypto.Core.Helpers {
             if(!FindChar(bytes, '{', ref index))
                 return null;
             int propIndex = 0;
-            index++;
+            while(!char.IsLetter((char)bytes[index]))
+                index++;
             while(bytes[index] != '}') {
                 int nameStart = index;
-                if(!FindChar(bytes, ':', ref index))
-                    return null;
+                //if(!FindChar(bytes, ':', ref index))
+                //    return null;
+                while(char.IsLetter((char)bytes[index]))
+                    index++;
                 JsonPropertyInfo info = new JsonPropertyInfo();
                 info.Length = index - nameStart;
                 info.Index = propIndex;
@@ -163,7 +166,10 @@ namespace Crypto.Core.Helpers {
                 else
                     info.Name = ByteArray2String(bytes, nameStart, info.Length);
                 items.Add(info);
-                index++;
+                if(bytes[index] == '"' || bytes[index] == '\'')
+                    index++;
+                if(!FindChar(bytes, ':', ref index))
+                    return null;
                 FindChar(bytes, '}', ',', ref index);
                 if(bytes[index] == '}') 
                     break;
@@ -606,10 +612,20 @@ namespace Crypto.Core.Helpers {
             if(bytes == null || bytes.Length < 3)
                 return null;
             int index = 0;
-            while(index < bytes.Length && bytes[index] == '[' || bytes[index] == '{')
+            while(!char.IsLetter((char)bytes[index]))
                 index++;
+            //while(index < bytes.Length && bytes[index] == '[' || 
+            //    bytes[index] == '{' || 
+            //    bytes[index] == '\n' ||
+            //    bytes[index] == ' ')
+            //    index++;
             int start = index;
-            FindChar(bytes, ':', ref index);
+            //FindChar(bytes, ':', ref index);
+            //index--;
+            //while(index >=0 && bytes[index] == ' ')
+            //    index--;
+            while(char.IsLetter((char)bytes[index]))
+                index++;
             return ByteArray2String(bytes, start, index - start);
         }
         public bool ContainsString(string message, int indexOfName, string str) {
@@ -640,6 +656,10 @@ namespace Crypto.Core.Helpers {
         protected int Deserialize(byte[] message, JsonHelperToken token, int index) {
             while(index < message.Length) {
                 byte c = message[index];
+                if(c == ' ' || c == '\n') {
+                    index++;
+                    continue;
+                }
                 if(c == '{') {
                     token.Type = JsonObjectType.Object;
                     index = DeserializeObjectContent(message, token, index);
@@ -658,6 +678,10 @@ namespace Crypto.Core.Helpers {
         protected int Deserialize(string message, JsonHelperToken token, int index) {
             while(index < message.Length) {
                 char c = message[index];
+                if(c == ' ' || c == '\n') {
+                    index++;
+                    continue;
+                }
                 if(c == '{') {
                     token.Type = JsonObjectType.Object;
                     return DeserializeObjectContent(message, token, index);
@@ -676,6 +700,11 @@ namespace Crypto.Core.Helpers {
             LinkedList<JsonHelperToken> list = new LinkedList<JsonHelperToken>();
             //token.Properties = new List<JSonHelperToken>(20);
             while(index < message.Length) {
+                char c = message[index];
+                if(c == ' ' || c == '\n') {
+                    index++;
+                    continue;
+                }
                 if(message[index] == ',') {
                     index++;
                     continue;
@@ -700,11 +729,16 @@ namespace Crypto.Core.Helpers {
             LinkedList<JsonHelperToken> list = new LinkedList<JsonHelperToken>();
             //token.Properties = new List<JSonHelperToken>(20);
             while(index < message.Length) {
-                if(message[index] == ',') {
+                byte c = message[index];
+                if(c == ' ' || c == '\n') {
                     index++;
                     continue;
                 }
-                if(message[index] == '}') {
+                if(c == ',') {
+                    index++;
+                    continue;
+                }
+                if(c == '}') {
                     index++;
                     break;
                 }
@@ -719,6 +753,8 @@ namespace Crypto.Core.Helpers {
         }
 
         private int DeserializeName(string message, JsonHelperToken item, int index) {
+            while(message[index] == ' ' || message[index] == '\n')
+                index++;
             if(message[index] == '"')
                 index++;
             int start = index;
@@ -728,6 +764,8 @@ namespace Crypto.Core.Helpers {
                 if(c == ':' || c == '"') {
                     item.Name = b.ToString();
                     index++;
+                    if(c == '"')
+                        index = SkipSpaces(message, index);
                     if(message[index] == ':')
                         index++;
                     break;
@@ -738,7 +776,29 @@ namespace Crypto.Core.Helpers {
             return index;
         }
 
+        private int SkipSpaces(string message, int index) {
+            while(index < message.Length) {
+                char c = message[index];
+                if(c != ' ' && c != '\n')
+                    break;
+                index++;
+            }
+            return index;
+        }
+
+        private int SkipSpaces(byte[] message, int index) {
+            while(index < message.Length) {
+                byte c = message[index];
+                if(c != ' ' && c != '\n')
+                    break;
+                index++;
+            }
+            return index;
+        }
+
         private int DeserializeName(byte[] message, JsonHelperToken item, int index) {
+            while(message[index] == ' ' || message[index] == '\n')
+                index++;
             if(message[index] == '"')
                 index++;
             int start = index;
@@ -748,6 +808,8 @@ namespace Crypto.Core.Helpers {
                 if(c == ':' || c == '"') {
                     item.Name = b.ToString();
                     index++;
+                    if(c == '"')
+                        index = SkipSpaces(message, index);
                     if(message[index] == ':')
                         index++;
                     break;
@@ -759,6 +821,9 @@ namespace Crypto.Core.Helpers {
         }
 
         private int DeserializeValue(string message, JsonHelperToken item, int index) {
+            while(message[index] == ' ' || message[index] == '\n')
+                index++;
+
             item.Type = JsonObjectType.Value;
             bool hasQuotes = message[index] == '"';
             if(hasQuotes)
@@ -767,6 +832,10 @@ namespace Crypto.Core.Helpers {
             StringBuilder b = new StringBuilder(200);
             while(index < message.Length) {
                 char c = message[index];
+                if(!hasQuotes && (c == ' ' || c == '\n')) {
+                    index++;
+                    continue;
+                }   
                 if((c == ',' || c == ']' || c == '}') && !hasQuotes) {
                     item.Value = b.ToString();
                     break;
@@ -785,6 +854,9 @@ namespace Crypto.Core.Helpers {
         }
 
         private int DeserializeValue(byte[] message, JsonHelperToken item, int index) {
+            while(message[index] == ' ' || message[index] == '\n')
+                index++;
+
             item.Type = JsonObjectType.Value;
             bool hasQuotes = message[index] == '"';
             if(hasQuotes)
@@ -793,6 +865,10 @@ namespace Crypto.Core.Helpers {
             StringBuilder b = new StringBuilder(200);
             while(index < message.Length) {
                 byte c = message[index];
+                if(!hasQuotes && (c == ' ' || c == '\n')) {
+                    index++;
+                    continue;
+                }
                 if((c == ',' || c == ']' || c == '}') && !hasQuotes) {
                     item.Value = b.ToString();
                     break;
@@ -814,6 +890,11 @@ namespace Crypto.Core.Helpers {
             index++; // skip [
             LinkedList<JsonHelperToken> list = new LinkedList<JsonHelperToken>();
             while(index < message.Length) {
+                char c = message[index];
+                if(c == ' ' || c == '\n') {
+                    index++;
+                    continue;
+                }
                 if(message[index] == ',') {
                     index++;
                     continue;
@@ -835,6 +916,10 @@ namespace Crypto.Core.Helpers {
             index++; // skip [
             LinkedList<JsonHelperToken> list = new LinkedList<JsonHelperToken>();
             while(index < message.Length) {
+                if(message[index] == ' ' || message[index] == '\n') {
+                    index++;
+                    continue;
+                }
                 if(message[index] == ',') {
                     index++;
                     continue;

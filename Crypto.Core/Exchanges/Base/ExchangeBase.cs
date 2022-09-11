@@ -24,6 +24,7 @@ using System.Threading.Tasks;
 using Crypto.Core.Exchanges.Binance.Futures;
 using Crypto.Core.Exchanges.Kraken;
 using Crypto.Core.Exchanges.Exmo;
+using XmlSerialization;
 
 namespace Crypto.Core {
     public abstract class Exchange : ISupportSerialization {
@@ -40,6 +41,14 @@ namespace Crypto.Core {
             Registered.Add(KrakenExchange.Default);
             Registered.Add(BitFinexExchange.Default);
             Registered.Add(ExmoExchange.Default);
+        }
+
+        public static List<AccountInfo> GetAccounts() {
+            List<AccountInfo> res = new List<AccountInfo>();
+            foreach(Exchange e in Registered) {
+                res.AddRange(e.Accounts);
+            }
+            return res;
         }
 
         protected internal virtual void OnRequestCompleted(MyWebClient myWebClient) {
@@ -340,6 +349,11 @@ namespace Crypto.Core {
             return info?.Command;
         }
 
+        public string GetCandleStickSubscribeChannel(int candleStickPeriodMin) {
+            var info = AllowedCandleStickIntervals.FirstOrDefault(i => i.TotalMinutes == candleStickPeriodMin);
+            return info?.SubscribeChannel;
+        }
+
         public List<AccountInfo> Accounts { get; } = new List<AccountInfo>();
 
         [XmlIgnore]
@@ -439,7 +453,7 @@ namespace Crypto.Core {
         public string CaptureDataDirectory { get { return SettingsStore.ApplicationDirectory + "\\CapturedData\\" + Name; } }
 
         public static Exchange FromFile(ExchangeType type, Type t) {
-            Exchange res = (Exchange)SerializationHelper.FromFile(type.ToString() + ".xml", t);
+            Exchange res = (Exchange)SerializationHelper.Current.FromFile(type.ToString() + ".xml", t);
             if(res == null) {
                 ConstructorInfo ci = t.GetConstructor(new Type[] { });
                 res = (Exchange)ci.Invoke(new object[] { });
@@ -458,10 +472,12 @@ namespace Crypto.Core {
 
         public string FileName { get; set; }
         public bool Save() {
-            return SerializationHelper.Save(this, GetType(), null);
+            return SerializationHelper.Current.Save(this, GetType(), null);
         }
 
-        void ISupportSerialization.OnStartSerialize() { }
+        void ISupportSerialization.OnBeginSerialize() { }
+        void ISupportSerialization.OnEndSerialize() { }
+        void ISupportSerialization.OnBeginDeserialize() { }
 
         public virtual void OnEndDeserialize() {
             foreach(AccountInfo info in Accounts) {
@@ -937,10 +953,18 @@ namespace Crypto.Core {
         }
         public abstract bool Withdraw(AccountInfo account, string currency, string adress, string paymentId, double amount);
         public abstract bool UpdateAccountTrades(AccountInfo account, Ticker ticker);
-        public bool UpdateAccountTrades(Ticker ticker) { return UpdateAccountTrades(DefaultAccount, ticker); }
+        public bool UpdateAccountTrades(Ticker ticker) {
+            if(DefaultAccount == null)
+                return true;
+            return UpdateAccountTrades(DefaultAccount, ticker); 
+        }
         public bool UpdateAccountTrades(AccountInfo account) { return UpdateAccountTrades(account, null); }
 
-        public bool UpdateDefaultAccountBalances() { return UpdateBalances(DefaultAccount); }
+        public bool UpdateDefaultAccountBalances() {
+            if(DefaultAccount == null)
+                return true;
+            return UpdateBalances(DefaultAccount); 
+        }
         public bool UpdateAllAccountsBalances() {
             bool res = true;
             foreach(AccountInfo account in Accounts) {
@@ -1646,6 +1670,7 @@ namespace Crypto.Core {
         }
         public string Text { get; set; }
         public string Command { get; set; }
+        public string SubscribeChannel { get; set; }
         public int TotalMinutes { get { return (int)Interval.TotalMinutes; } set { Interval = TimeSpan.FromMinutes(value); } }
         public TimeSpan Interval { get; set; }
     }

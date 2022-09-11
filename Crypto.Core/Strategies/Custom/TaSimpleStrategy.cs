@@ -420,10 +420,10 @@ namespace Crypto.Core.Strategies.Custom {
             return false;
         }
 
-        protected override void CloseLongPosition(OpenPositionInfo info) {
-            TradingResult res = MarketSell(Ticker.OrderBook.Bids[0].Value, info.Amount);
+        public override void CloseLongPosition(OpenPositionInfo info) {
+            TradingResult res = MarketSell(Ticker, Ticker.OrderBook.Bids[0].Value, info.Amount);
             if(res != null) {
-                double earned = res.Total - CalcFee(res.Total);
+                double earned = res.Total - CalcFee(Ticker, res.Total);
                 MaxAllowedDeposit += earned;
                 info.UpdateCurrentValue(DataProvider.CurrentTime, res.Value);
                 info.Earned += earned;

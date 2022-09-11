@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using XmlSerialization;
 
 namespace Crypto.Core.Common {
     [Serializable]
@@ -41,14 +42,14 @@ namespace Crypto.Core.Common {
                 return;
             Saving = true;
             try {
-                SerializationHelper.Save(this, typeof(ArbitrageHistoryHelper), null);
+                SerializationHelper.Current.Save(this, typeof(ArbitrageHistoryHelper), null);
             }
             finally {
                 Saving = false;
             }
         }
         public static ArbitrageHistoryHelper FromFile(string fileName) {
-            ArbitrageHistoryHelper res = (ArbitrageHistoryHelper) SerializationHelper.FromFile(fileName, typeof(ArbitrageHistoryHelper));
+            ArbitrageHistoryHelper res = (ArbitrageHistoryHelper) SerializationHelper.Current.FromFile(fileName, typeof(ArbitrageHistoryHelper));
             if(res != null) res.FileName = Name;
             return res;
         }
@@ -64,8 +65,10 @@ namespace Crypto.Core.Common {
         }
         #endregion
 
-        void ISupportSerialization.OnStartSerialize() { }
-
+        void ISupportSerialization.OnBeginSerialize() { }
+        void ISupportSerialization.OnEndSerialize() { }
+        void ISupportSerialization.OnBeginDeserialize() { }
+        
         public BindingList<ArbitrageStatisticsItem> History { get; } = new BindingList<ArbitrageStatisticsItem>();
     }
 

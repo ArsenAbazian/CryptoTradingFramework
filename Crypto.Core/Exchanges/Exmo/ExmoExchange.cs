@@ -303,6 +303,8 @@ namespace Crypto.Core.Exchanges.Exmo {
         }
 
         public override bool UpdateBalances(AccountInfo account) {
+            if(account == null)
+                return false;
             const string address = "https://api.exmo.com/v1.1/user_info";
             try {
                 return OnGetBalances(account, UploadPrivateData(account, address, ""));

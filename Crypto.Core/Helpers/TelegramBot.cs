@@ -39,7 +39,7 @@ namespace Crypto.Core.Helpers {
 
             //proxy.ResolveHostnamesLocally = true;
             //InnerClient = new Telegram.Bot.TelegramBotClient("410447550:AAGz1QRPgdoh5tuddcMleFYI9Ttw-Ytn9Fs", proxy);
-            InnerClient = new Telegram.Bot.TelegramBotClient("410447550:AAGz1QRPgdoh5tuddcMleFYI9Ttw-Ytn9Fs", (HttpClient)null);
+            InnerClient = new Telegram.Bot.TelegramBotClient("410447550:AAGz1QRPgdoh5tuddcMleFYI9Ttw-Ytn9Fs");
         }
         bool RegisterNewUsers(Update[] result) {
             bool registered = false;
@@ -107,9 +107,11 @@ namespace Crypto.Core.Helpers {
             SendNotification(text, Clients.Values.First().ChatId.Identifier);
         }
 
-        public void SendNotification(string text, long chatId) {
+        public void SendNotification(string text, long? chatId) {
+            if(chatId == null)
+                return;
             TelegramClientInfo client = null;
-            Clients.TryGetValue(chatId, out client);
+            Clients.TryGetValue(chatId.Value, out client);
             if(client == null || !client.Enabled)
                 return;
 
