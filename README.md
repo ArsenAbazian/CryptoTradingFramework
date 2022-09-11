@@ -1,3 +1,6 @@
+### **Roadmap.** 
+Currently I am working on adding LOW CODE platform support for customizing strategy. Please see https://github.com/ArsenAbazian/WorkflowDiagram for greater details.
+
 ### **The project actively uses DevExpress WinForms Components.** 
 _Please note that according to DevExpress EULA, every person working with DevExpress components should have a separate license. To properly register their components on your machine, use the DevExpress installer as described in the How to activate my DevExpress license article. Working with DevExpress components using libraries got from NuGet without proper registration may result in licensing violation._
 
