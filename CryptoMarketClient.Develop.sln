@@ -30,13 +30,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Crypto.Strategies.Develop",
 		{5C2EC487-3E30-4274-8263-DBACFA5319C6} = {5C2EC487-3E30-4274-8263-DBACFA5319C6}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkflowDiagram.Develop", "..\WorkflowDiagram\WorkflowDiagram\WorkflowDiagram\WorkflowDiagram.Develop.csproj", "{5C2EC487-3E30-4274-8263-DBACFA5319C6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkflowDiagram.Develop", "..\WorkflowDiagram\WorkflowDiagram\WorkflowDiagram.Develop.csproj", "{5C2EC487-3E30-4274-8263-DBACFA5319C6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkflowDiagram.Nodes.Base.Develop", "..\WorkflowDiagram\WorkflowDiagram\WorkflowDiagram.Nodes.Base\WorkflowDiagram.Nodes.Base.Develop.csproj", "{FDE9EA71-C293-47F5-981A-D56E9505114A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkflowDiagram.Nodes.Base.Develop", "..\WorkflowDiagram\WorkflowDiagram.Nodes.Base\WorkflowDiagram.Nodes.Base.Develop.csproj", "{FDE9EA71-C293-47F5-981A-D56E9505114A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkflowDiagram.UI.Win.Develop", "..\WorkflowDiagram\WorkflowDiagram\WorkflowDiagram.UI.Win\WorkflowDiagram.UI.Win.Develop.csproj", "{DCCF4253-22A8-4F04-BE71-13F0DA60CE1D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkflowDiagram.UI.Win.Develop", "..\WorkflowDiagram\WorkflowDiagram.UI.Win\WorkflowDiagram.UI.Win.Develop.csproj", "{DCCF4253-22A8-4F04-BE71-13F0DA60CE1D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WokflowDiagram.Nodes.Visualization.Win.Develop", "..\WorkflowDiagram\WorkflowDiagram\WorkflowDiagram.Nodes.Visualization\WokflowDiagram.Nodes.Visualization.Win.Develop.csproj", "{B17D2EF7-5C40-4A49-BEEC-750763C6281D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WokflowDiagram.Nodes.Visualization.Win.Develop", "..\WorkflowDiagram\WorkflowDiagram.Nodes.Visualization\WokflowDiagram.Nodes.Visualization.Win.Develop.csproj", "{B17D2EF7-5C40-4A49-BEEC-750763C6281D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
