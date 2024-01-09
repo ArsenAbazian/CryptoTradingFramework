@@ -1,3 +1,5 @@
+**CryptoTradingFramework © 2024 by Abazian Arsen is licensed under CC BY-NC 4.0 **
+
 ### **Roadmap.** 
 Currently I am working on adding LOW CODE platform support for customizing strategy. Please see https://github.com/ArsenAbazian/WorkflowDiagram for greater details.
 
