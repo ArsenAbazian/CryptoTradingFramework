@@ -66,7 +66,6 @@ namespace Crypto.Core.Strategies {
         }
 
         public override bool InitializeCore() {
-            StrategyData.ThreadManager = Manager.ThreadManager;
             InitializeTicker();
             return true;
         }

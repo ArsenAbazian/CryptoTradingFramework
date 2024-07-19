@@ -1,0 +1,52 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <Nullable>disable</Nullable>
+        <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+        <ApplicationManifest>app.manifest</ApplicationManifest>
+        <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+        <AvaloniaVersion>11.0.10</AvaloniaVersion>
+        <EremexVersion>[1.0.28,)</EremexVersion>
+        <RootNamespace>Crypto.Strategies.Net</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <AvaloniaResource Include="Assets\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Avalonia" Version="$(AvaloniaVersion)" />
+        <PackageReference Include="Avalonia.Desktop" Version="$(AvaloniaVersion)" />
+        <!--<PackageReference Include="Avalonia.Themes.Fluent" Version="$(AvaloniaVersion)" />-->
+        <PackageReference Include="Avalonia.Fonts.Inter" Version="$(AvaloniaVersion)" />
+        <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
+        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="$(AvaloniaVersion)" />
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
+        <PackageReference Include="Eremex.Avalonia.Controls" Version="$(EremexVersion)" />
+        <PackageReference Include="Eremex.Avalonia.Themes.DeltaDesign" Version="$(EremexVersion)" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <UpToDateCheckInput Remove="Assets\EMXControls.ico" />
+      <UpToDateCheckInput Remove="Views\MainWindow.axaml" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\WorkflowDiagram\WorkflowDiagram.Nodes.Base\WorkflowDiagram.Nodes.Base.Core.Develop.csproj" />
+      <ProjectReference Include="..\Crypto.Core\Crypto.Net.Core.csproj" />
+      <ProjectReference Include="..\Workflow.Nodes.Crypto\Workflow.Nodes.Crypto.Net.Develop.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="VisualStrategy\VisualStrategyConfigurationForm.cs" />
+      <Compile Remove="VisualStrategy\VisualStrategyConfigurationForm.Designer.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="VisualStrategy\VisualStrategyConfigurationForm.resx" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="VisualStrategy\VisualStrategyConfigurationForm.resx.bak" />
+    </ItemGroup>
+</Project>

@@ -1,12 +1,8 @@
-﻿using Crypto.Core.Indicators;
-using Crypto.Core;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 namespace Crypto.Core.Helpers {
@@ -15,9 +11,15 @@ namespace Crypto.Core.Helpers {
         int Count { get; }
     }
 
+    public static class ThreadUtils
+    {
+        public static IThreadManager ThreadManager { get; set; } 
+    }
+    
     public interface IThreadManager {
         bool IsMultiThread { get; }
         void Invoke(Action<object, ListChangedEventArgs> a, object sender, ListChangedEventArgs e);
+        void Invoke(Action a);
     }
 
     public class ResizeableArray<T> : IEnumerable<T>, IList<T>, IResizeableArray, IListSource, IList, IBindingList {
@@ -29,8 +31,7 @@ namespace Crypto.Core.Helpers {
             Items = new T[count];
         }
 
-        [XmlIgnore]
-        public IThreadManager ThreadManager { get; set; }
+        [XmlIgnore] public static IThreadManager ThreadManager => ThreadUtils.ThreadManager;
         
         object IResizeableArray.GetItem(int index) {
             if(index >= Count)

@@ -18,12 +18,11 @@ namespace Crypto.Core {
             get { return Poloniex != null && Poloniex.TickersSocketState == SocketConnectionState.Connected && IsKlineSubscribed; }
         }
 
-        public int Id { get; set; }
         string subscriptionName = null;
         public override string SubscriptionName {
             get {
                 if(subscriptionName == null)
-                    subscriptionName = string.Format("{0}_{1}", MarketCurrency, BaseCurrency);
+                    subscriptionName = string.Format("{0}_{1}", BaseCurrency, MarketCurrency);
                 return subscriptionName;
             }
         }

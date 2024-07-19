@@ -1,11 +1,7 @@
 ﻿using Crypto.Core.Helpers;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 namespace Crypto.Core {
@@ -344,18 +340,16 @@ namespace Crypto.Core {
                 e.VolumeTotal = vt;
                 MaxVolume = Math.Max(MaxVolume, e.Volume);
             }
-            double mv = Asks.Count == 0 ? 0 : Asks.Last().VolumeTotal;
-            vt = 0;
             if(MaxVolume == 0)
                 return;
-            MaxVolume = 1 / MaxVolume;
+            double k = 1 / MaxVolume;
             for(int i = 0; i < Bids.Count; i++) {
                 OrderBookEntry e = Bids[i];
-                e.VolumePercent = e.Volume * MaxVolume;
+                e.VolumePercent = e.Volume * k;
             }
             for(int i = 0; i < Asks.Count; i++) {
                 OrderBookEntry e = Asks[i];
-                e.VolumePercent = e.Volume * MaxVolume;
+                e.VolumePercent = e.Volume * k;
             }
         }
         public double BidEnergy { get; set; }

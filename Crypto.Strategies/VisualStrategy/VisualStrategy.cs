@@ -1,14 +1,8 @@
-﻿using Crypto.Core.Common;
-using Crypto.Core.WorkflowDiagram;
-using Crypto.Strategies.Forms;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 using System.Xml.Serialization;
-using Workflow.Nodes.Crypto;
+using Crypto.Core.Common;
 using WorkflowDiagram;
+using Crypto.Core.WorkflowDiagram;
 using XmlSerialization;
 
 namespace Crypto.Core.Strategies.VisualStrategy {
@@ -109,15 +103,15 @@ namespace Crypto.Core.Strategies.VisualStrategy {
             Document.Owner = this;
         }
 
-        void IWfDocumentOwner.BeforeDocumentInitialize(WfRunner runner, WfDocument document) {
+        void IWfDocumentOwner.BeforeDocumentInitialize(WfRunner runner, WfDocument doc) {
             InitializeNodes();
         }
 
-        void IWfDocumentOwner.AfterDocumentInitialize(WfRunner runner, WfDocument document) {
+        void IWfDocumentOwner.AfterDocumentInitialize(WfRunner runner, WfDocument doc) {
             
         }
 
-        void IWfDocumentOwner.OnReset(WfDocument document) {
+        void IWfDocumentOwner.OnReset(WfDocument doc) {
             
         }
 
@@ -128,21 +122,27 @@ namespace Crypto.Core.Strategies.VisualStrategy {
         WfRunner IWfDocumentOwner.CreateRunner(WfDocument document) {
             return new WfStrategyDocumentRunner((WfStrategyDocument)document);
         }
-    }
 
-    public class VisualStrategyRegistrationInfo : StrategyRegistrationInfo {
-        public VisualStrategyRegistrationInfo() {
-            Type = typeof(VisualStrategy);
-            Name = "Your Custom Strategy Based On Workflow";
-            Description = "You can define your own strategy based on workflow diagram, using visual editor";
-            Group = StrategyGroup.UserDefined;
+        WfDocument IWfDocumentOwner.LoadDocumentById(Guid id)
+        {
+            throw new NotImplementedException("Not Implemented");
         }
     }
 
-    public class VisualStrategyConfigurationInfo : StrategyConfigurationInfo {
-        public VisualStrategyConfigurationInfo() {
-            StrategyType = typeof(VisualStrategy);
-            ConfigurationFormType = typeof(VisualStrategyConfigurationForm);
-        }
-    }
+    // TODO Implement later.
+    // public class VisualStrategyRegistrationInfo : StrategyRegistrationInfo {
+    //     public VisualStrategyRegistrationInfo() {
+    //         Type = typeof(VisualStrategy);
+    //         Name = "Your Custom Strategy Based On Workflow";
+    //         Description = "You can define your own strategy based on workflow diagram, using visual editor";
+    //         Group = StrategyGroup.UserDefined;
+    //     }
+    // }
+    //
+    // public class VisualStrategyConfigurationInfo : StrategyConfigurationInfo {
+    //     public VisualStrategyConfigurationInfo() {
+    //         StrategyType = typeof(VisualStrategy);
+    //         ConfigurationFormType = typeof(VisualStrategyConfigurationForm);
+    //     }
+    // }
 }

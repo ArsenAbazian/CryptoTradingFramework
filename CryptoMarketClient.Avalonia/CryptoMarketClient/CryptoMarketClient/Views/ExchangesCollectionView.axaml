@@ -1,0 +1,75 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:mx="https://schemas.eremexcontrols.net/avalonia"
+             xmlns:viewModels="clr-namespace:CryptoMarketClient.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="CryptoMarketClient.Views.ExchangesCollectionView">
+    <UserControl.Styles>
+        <Style Selector="mx|ListViewItemControl/template/ContentPresenter#PART_Content">
+            <Setter Property="Margin" Value="0"/>
+            <Setter Property="CornerRadius" Value="7"/>
+        </Style>
+        <Style Selector="mx|ListViewItemControl:pointerover/template/Rectangle#PART_Border">
+            <Setter Property="Fill" Value="{DynamicResource Fill/Accent/Highlighting/Row/Enabled}"/>
+        </Style>
+        <Style Selector="mx|ListViewItemControl:focused/template/Rectangle#PART_Border">
+            <Setter Property="Fill" Value="{DynamicResource Fill/Accent/Highlighting/Row/Enabled}"/>
+        </Style>
+        <Style Selector="mx|ListViewItemControl">
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <mx:ShadowControl CornerRadius="7">
+                            <Grid>
+                                <Rectangle x:Name="PART_Border"/>
+                                <ContentPresenter x:Name="PART_Content" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}"/>
+                            </Grid>
+                        </mx:ShadowControl>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style Selector="TextBlock.ExchangeName">
+            <Setter Property="FontWeight" Value="Bold"/>
+        </Style>
+        <Style Selector="Border.ExchangeCardUpperPart">
+            <Setter Property="CornerRadius" Value="7, 7, 0, 0"/>
+            <Setter Property="Padding" Value="16"/>
+        </Style>
+        <Style Selector="Grid.ExchangeCardLowerPartInner">
+            <Setter Property="Margin" Value="16"/>
+        </Style>
+        <Style Selector="Border.ExchangeCardLowerPartBackground">
+            <Setter Property="CornerRadius" Value="0, 0, 7, 7"/>
+            <Setter Property="Background" Value="{DynamicResource Fill/Accent/Highlighting/Row/Enabled}"/>
+            <Setter Property="Opacity" Value="0.6"/>
+        </Style>
+        <Style Selector="Button.ExchangeButton">
+            <Setter Property="Background" Value="{DynamicResource Fill/Neutral/Primary/Enabled}"/>
+            <Setter Property="Padding" Value="8"/>
+        </Style>
+    </UserControl.Styles>
+    <mx:ListViewControl 
+        ItemsSource="{CompiledBinding Exchanges, DataType=viewModels:ExchangesCollectionViewModel}"
+        ItemWidth="224" ItemHeight="256">
+        <mx:ListViewControl.DataTemplates>
+            <DataTemplate DataType="viewModels:ExchangeViewModel">
+                <Grid RowDefinitions="50*, 50*">
+                    <Border Classes="ExchangeCardUpperPart">
+                        <Image Source="{CompiledBinding Image}"/>    
+                    </Border>
+                    <Grid Grid.Row="1">
+                        <Border Grid.RowSpan="3" Classes="ExchangeCardLowerPartBackground"/>
+                        <Grid RowDefinitions="Auto, *, Auto" Classes="ExchangeCardLowerPartInner">
+                            <TextBlock Classes="ExchangeName" Text="{CompiledBinding Name}"/>
+                            <Button Classes="ExchangeButton" Grid.Row="2" Content="Enter" HorizontalAlignment="Stretch" Command="{Binding EnterMarketCommand}"/>
+                        </Grid>    
+                    </Grid>
+                </Grid>
+            </DataTemplate>
+        </mx:ListViewControl.DataTemplates>
+    </mx:ListViewControl>
+</UserControl>

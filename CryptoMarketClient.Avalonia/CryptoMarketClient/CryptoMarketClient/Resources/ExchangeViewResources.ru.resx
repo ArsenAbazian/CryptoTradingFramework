@@ -1,0 +1,86 @@
+<root>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="AccountBalancesCaption" xml:space="preserve">
+        <value>Кошелек</value>
+    </data>
+    <data name="EnterMarketCaption" xml:space="preserve">
+        <value>Торговля</value>
+    </data>
+    <data name="OrderListCaption" xml:space="preserve">
+        <value>Список активных ордеров</value>
+    </data>
+    <data name="TradeHistoryCaption" xml:space="preserve">
+        <value>История торговли</value>
+    </data>
+    <data name="ShowOnlyFavoritesCaption" xml:space="preserve">
+        <value>Показать избраные</value>
+    </data>
+    <data name="StatusText_Initializing" xml:space="preserve">
+        <value>Инициализация...</value>
+    </data>
+    <data name="StatusText_Connecting" xml:space="preserve">
+        <value>Соединение...</value>
+    </data>
+    <data name="StatusText_NoData" xml:space="preserve">
+        <value>Нет данных</value>
+    </data>
+    <data name="StatusText_Disconnected" xml:space="preserve">
+        <value>Соединение закрыто</value>
+    </data>
+    <data name="StatusText_SocketError" xml:space="preserve">
+        <value>Ошибка сокета</value>
+    </data>
+    <data name="StatusText_MissingIncrementalUpdate" xml:space="preserve">
+        <value>Данные не обновляются</value>
+    </data>
+    <data name="StatusText_ConnectionInterrupted" xml:space="preserve">
+        <value>Разрыв соединения</value>
+    </data>
+    <data name="StatusText_Waiting" xml:space="preserve">
+        <value>Ожидание...</value>
+    </data>
+    <data name="StatusText_Connected" xml:space="preserve">
+        <value>Соединено</value>
+    </data>
+    <data name="StatusText_Reconnect" xml:space="preserve">
+        <value>Повторное подключение</value>
+    </data>
+    <data name="Column.BaseCurrency" xml:space="preserve">
+        <value>Валюта</value>
+    </data>
+    <data name="Column.HighestBid" xml:space="preserve">
+        <value>Макс. цена покупки</value>
+    </data>
+    <data name="Column.LowestAsk" xml:space="preserve">
+        <value>Мин. цена продажи</value>
+    </data>
+    <data name="Column.Hr24High" xml:space="preserve">
+        <value>Высшаяя цена за 24ч.</value>
+    </data>
+    <data name="Column.Hr24Low" xml:space="preserve">
+        <value>Низшая цена за 24ч.</value>
+    </data>
+    <data name="Column.Volume" xml:space="preserve">
+        <value>Объем торговли</value>
+    </data>
+    <data name="Column_Last" xml:space="preserve">
+        <value>Текущая цена</value>
+    </data>
+    <data name="Column_Trend" xml:space="preserve">
+        <value>Тренд</value>
+    </data>
+    <data name="DataCountQueStatusFormatString" xml:space="preserve">
+        <value>{0} объектов в очереди</value>
+    </data>
+</root>

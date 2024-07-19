@@ -1,0 +1,40 @@
+<mx:MxWindow xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:CryptoMarketClient.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:mx="https://schemas.eremexcontrols.net/avalonia"
+        xmlns:mxb="https://schemas.eremexcontrols.net/avalonia/bars"
+        xmlns:res="clr-namespace:CryptoMarketClient.Resources"
+        xmlns:icons="https://schemas.eremexcontrols.net/avalonia/icons"
+        xmlns:crypto="clr-namespace:Crypto.Core;assembly=Crypto.Net.Core"
+        xmlns:mxd="https://schemas.eremexcontrols.net/avalonia/docking"
+        xmlns:utils="clr-namespace:CryptoMarketClient.Utils"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="CryptoMarketClient.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Icon="/Assets/EMXControls.ico"
+        Title="CryptoMarketClient">
+    <Design.DataContext>
+        <!-- This only sets the DataContext for the previewer in an IDE,
+             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+    <mxb:ToolbarManager IsWindowManager="True">
+        <mxb:ToolbarManager.DataTemplates>
+            <utils:DataTemplateSource Source="/Resources/SharedTemplates.axaml"/>
+        </mxb:ToolbarManager.DataTemplates>
+        <Grid RowDefinitions="Auto, *, Auto">
+            <mxb:ToolbarContainerControl DockType="Top" Classes="Filled" ItemsSource="{CompiledBinding ToolbarController.TopToolbars, DataType=vm:MainWindowViewModel}"/>
+            <mxb:ToolbarContainerControl Grid.Row="2" DockType="Bottom" Classes="Filled"
+                                         AllowCustomizationMenu="False"
+                                         ItemsSource="{CompiledBinding ToolbarController.BottomToolbars, DataType=vm:MainWindowViewModel}"/>
+            <mxd:DockManager x:Name="dockManager" Grid.Row="1" BorderThickness="0">
+                <mxd:DockGroup>
+                    <mxd:DocumentGroup x:Name="MainDocumentGroup"/>    
+                </mxd:DockGroup>
+            </mxd:DockManager>
+        </Grid>
+    </mxb:ToolbarManager>
+    
+</mx:MxWindow>

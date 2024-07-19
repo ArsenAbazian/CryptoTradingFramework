@@ -54,6 +54,7 @@ namespace Crypto.Core {
             set {
                 valueCore = value;
                 valueString = null;
+                volumeString = null;
             }
         }
         public double Amount {
@@ -69,6 +70,7 @@ namespace Crypto.Core {
             set {
                 amount = value;
                 amountString = null;
+                volumeString = null;
                 //AmountString = amount.ToString("0.00000000");
             }
         }
@@ -103,6 +105,7 @@ namespace Crypto.Core {
         public void Clear() {
             this.valueCore = 0;
             this.amount = 0;
+            this.volumeString = null;
         }
     }
 

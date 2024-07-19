@@ -1,10 +1,6 @@
-﻿using Crypto.Core;
-using Crypto.Core.Strategies;
-using System.Collections.Generic;
+﻿using Crypto.Core.Strategies;
 using System.ComponentModel;
-using System.Linq;
 using System.Xml.Serialization;
-using Workflow.Nodes.Crypto.Editors;
 using WorkflowDiagram;
 using WorkflowDiagram.Nodes.Base;
 
@@ -31,7 +27,8 @@ namespace Crypto.Core.WorkflowDiagram {
 
         string ticker = string.Empty;
         [Category("Ticker")]
-        [PropertyEditor(typeof(RepositoryItemTickerCollectionEditor))]
+        //TODO do something with editors
+        // [PropertyEditor(typeof(RepositoryItemTickerCollectionEditor))]
         public string Ticker {
             get { return ticker; }
             set {
@@ -45,7 +42,8 @@ namespace Crypto.Core.WorkflowDiagram {
 
         int candlestickInterval = 30;
         [Category("Ticker")]
-        [PropertyEditor(typeof(RepositoryItemCandlestickCollectionEditor))]
+        //TODO do something with editors
+        // [PropertyEditor(typeof(RepositoryItemCandlestickCollectionEditor))]
         public int CandlestickIntervalMin {
             get { return candlestickInterval; }
             set {

@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
 using System.Xml.Serialization;
-using Workflow.Nodes.Crypto.Editors;
 using WorkflowDiagram;
 using WorkflowDiagram.Nodes.Base;
 
@@ -40,7 +34,9 @@ namespace Crypto.Core.WorkflowDiagram {
         }
 
         Guid accountId;
-        [DisplayName("Account"), PropertyEditor(typeof(RepositoryItemAccountCollectionEditor))]
+        [DisplayName("Account")]
+        //TODO do something with editors
+        //[PropertyEditor(typeof(RepositoryItemAccountCollectionEditor))]
         public Guid AccountId {
             get { return accountId; }
             set {

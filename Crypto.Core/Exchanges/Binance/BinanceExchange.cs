@@ -488,7 +488,7 @@ namespace Crypto.Core.Binance {
             ticker.UpdateTrailings();
 
             lock(ticker) {
-                RaiseTickerChanged(ticker);
+                ticker.RaiseChanged();
             }
         }
 

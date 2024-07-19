@@ -1,0 +1,25 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:CryptoMarketClient.ViewModels"
+             xmlns:mxdg="https://schemas.eremexcontrols.net/avalonia/datagrid"
+             xmlns:mxe="https://schemas.eremexcontrols.net/avalonia/editors"
+             xmlns:res="clr-namespace:CryptoMarketClient.Resources"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="CryptoMarketClient.Views.LogView">
+    <Design.DataContext>
+        <!-- This only sets the DataContext for the previewer in an IDE,
+             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+        <viewModels:LogViewModel/>
+    </Design.DataContext>
+    <mxdg:DataGridControl ShowGroupPanel="False" AllowEditing="False" ItemsSource="{CompiledBinding Items, DataType=viewModels:LogViewModel}">
+        <mxdg:GridColumn FieldName="Time" Header="{x:Static res:Resources.LogView_Column_Time}" Width="Auto">
+            <mxdg:GridColumn.EditorProperties>
+                <mxe:TextEditorProperties DisplayFormatString="yyyy.MM.dd:HH.mm.ss.ffff"/>
+            </mxdg:GridColumn.EditorProperties>
+        </mxdg:GridColumn>
+        <mxdg:GridColumn FieldName="Text" Header="{x:Static res:Resources.LogView_Column_Text}" Width="Auto" />
+        <mxdg:GridColumn FieldName="Description" Header="{x:Static res:Resources.LogView_Column_Description}" />
+    </mxdg:DataGridControl>
+</UserControl>

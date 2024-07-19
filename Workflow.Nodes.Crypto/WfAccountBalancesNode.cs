@@ -1,12 +1,6 @@
 ﻿using Crypto.Core.Common;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
-using Workflow.Nodes.Crypto.Editors;
 using WorkflowDiagram;
 using WorkflowDiagram.Nodes.Base;
 
@@ -20,11 +14,9 @@ namespace Crypto.Core.WorkflowDiagram {
 
         protected override void OnVisitCore(WfRunner runner) {
             AccountInfo account = Inputs["Account"].Value as AccountInfo;
-            double balance = 0.0;
             if(account != null) {
                 if(!account.Exchange.UpdateBalances(account)) { 
                     DiagnosticHelper.Add(WfDiagnosticSeverity.Error, "Error updating account balances");
-                    HasErrors = true;
                 }
             }
             DataContext = account.Balances;

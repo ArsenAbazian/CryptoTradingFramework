@@ -1,0 +1,19 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="CryptoMarketClient.App"
+             xmlns:local="using:CryptoMarketClient"
+             xmlns:theme="clr-namespace:Eremex.AvaloniaUI.Themes.DeltaDesign;assembly=Eremex.Avalonia.Themes.DeltaDesign"
+             xmlns:utils="clr-namespace:CryptoMarketClient.Utils"
+             RequestedThemeVariant="Default">
+             <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
+
+    <Application.DataTemplates>
+        <local:ViewLocator/>
+        <utils:DataTemplateSource Source="/Resources/SharedTemplates.axaml"/>
+    </Application.DataTemplates>
+  
+    <Application.Styles>
+        <StyleInclude Source="Resources/SharedStyles.axaml"/>
+        <theme:DeltaDesignTheme/>
+    </Application.Styles>
+</Application>

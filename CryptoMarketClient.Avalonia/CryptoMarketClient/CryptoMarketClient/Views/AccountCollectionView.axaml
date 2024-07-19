@@ -1,0 +1,71 @@
+<mx:MxWindow xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:CryptoMarketClient.ViewModels"
+        xmlns:mxb="https://schemas.eremexcontrols.net/avalonia/bars"
+        xmlns:res="clr-namespace:CryptoMarketClient.Resources"
+        xmlns:icons="https://schemas.eremexcontrols.net/avalonia/icons"
+        xmlns:mx="https://schemas.eremexcontrols.net/avalonia"
+        xmlns:mxdg="https://schemas.eremexcontrols.net/avalonia/datagrid"
+        xmlns:mxe="https://schemas.eremexcontrols.net/avalonia/editors"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        Width="600" Height="400"
+        WindowStartupLocation="CenterScreen"
+        x:Class="CryptoMarketClient.Views.AccountCollectionView"
+        Title="{x:Static res:AccountCollectionFormResources.Title}">
+        
+    <Design.DataContext>
+                <!-- This only sets the DataContext for the previewer in an IDE,
+             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+        <vm:AccountCollectionViewModel/>
+    </Design.DataContext>
+    <Window.Styles>
+        <Style Selector="mxe|CheckEditor.DoNotShowNextStartupCheck">
+            <Setter Property="Margin" Value="12, 0, 12, 0"/>
+        </Style>
+    </Window.Styles>
+    <mxb:ToolbarManager>
+        <Grid RowDefinitions="Auto, *, Auto">
+            <mxb:ToolbarContainerControl>
+                <mxb:Toolbar AllowDragToolbar="False" StretchToolbar="True" ShowCustomizationButton="False">
+                    <mxb:ToolbarButtonItem Header="{x:Static res:AccountCollectionFormResources.AddCaption}" 
+                                           Glyph="{x:Static icons:Basic.Add}" DisplayMode="Both"
+                                           Command="{CompiledBinding NewCommand, DataType=vm:AccountCollectionViewModel}"/>
+                    <mxb:ToolbarButtonItem Header="{x:Static res:AccountCollectionFormResources.EditCaption}" 
+                                           Glyph="{x:Static icons:Basic.Edit}" DisplayMode="Both"
+                                           Command="{CompiledBinding EditCommand, DataType=vm:AccountCollectionViewModel}"/>
+                    <mxb:ToolbarButtonItem Header="{x:Static res:AccountCollectionFormResources.RemoveCaption}" 
+                                           Glyph="{x:Static icons:Basic.Remove}" DisplayMode="Both"
+                                           Command="{CompiledBinding RemoveCommand, DataType=vm:AccountCollectionViewModel}"/>
+                    
+                    <mxb:ToolbarButtonItem Header="{x:Static res:AccountCollectionFormResources.ImportCaption}" 
+                                           Glyph="{x:Static icons:Basic.Docs_Import}" DisplayMode="Both" Alignment="Far"
+                                           Command="{CompiledBinding ImportCommand, DataType=vm:AccountCollectionViewModel}"/>
+                    <mxb:ToolbarButtonItem Header="{x:Static res:AccountCollectionFormResources.ExportCaption}" 
+                                           Glyph="{x:Static icons:Basic.Docs_Export}" DisplayMode="Both" Alignment="Far"
+                                           Command="{CompiledBinding ExportCommand, DataType=vm:AccountCollectionViewModel}"/>
+                </mxb:Toolbar>
+            </mxb:ToolbarContainerControl>
+            <mxdg:DataGridControl Grid.Row="1" 
+                                  ItemsSource="{CompiledBinding Accounts, DataType=vm:AccountCollectionViewModel}"
+                                  FocusedItem="{CompiledBinding FocusedAccount, DataType=vm:AccountCollectionViewModel}"
+                                  ShowGroupPanel="False">
+                <mxdg:DataGridControl.Columns>
+                    <mxdg:GridColumn FieldName="Default" Width="Auto" Header="{x:Static res:AccountCollectionFormResources.DefaultColumn}"/>
+                    <mxdg:GridColumn FieldName="Name" Width="Auto" Header="{x:Static res:AccountCollectionFormResources.NameColumn}" AllowEditing="False"/>
+                    <mxdg:GridColumn FieldName="Active" Width="Auto" Header="{x:Static res:AccountCollectionFormResources.ActiveColumn}" />
+                    <mxdg:GridColumn FieldName="ApiKey" Width="*" Header="{x:Static res:AccountCollectionFormResources.ApiKeyColumn}" AllowEditing="False"/>
+                    <mxdg:GridColumn FieldName="Secret" Width="*" Header="{x:Static res:AccountCollectionFormResources.SecretColumn}" AllowEditing="False"/>
+                </mxdg:DataGridControl.Columns>
+            </mxdg:DataGridControl>
+            <Border Grid.Row="2" Classes="BottomPane">
+                <Grid ColumnDefinitions="*, Auto, Auto">
+                    <mxe:CheckEditor Classes="DoNotShowNextStartupCheck" Content="Do Not Show On Next Startup" IsChecked="{CompiledBinding DoNotShowOnNextStartup, DataType=vm:AccountCollectionViewModel}"/>
+                    <Button Grid.Column="2" Width="100" Content="{x:Static res:AccountCollectionFormResources.OkCaption}"
+                            Command="{CompiledBinding OkCommand, DataType=vm:AccountCollectionViewModel}"/>
+                </Grid>
+            </Border>
+        </Grid>
+    </mxb:ToolbarManager>
+</mx:MxWindow>

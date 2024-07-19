@@ -42,7 +42,7 @@ namespace Crypto.Core.Common {
                 return;
             Saving = true;
             try {
-                SerializationHelper.Current.Save(this, typeof(ArbitrageHistoryHelper), null);
+                SerializationHelper.Current.Save(this, typeof(ArbitrageHistoryHelper), (string)null);
             }
             finally {
                 Saving = false;

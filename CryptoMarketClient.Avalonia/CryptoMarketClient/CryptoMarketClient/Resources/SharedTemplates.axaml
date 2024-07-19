@@ -1,0 +1,200 @@
+﻿<DataTemplates xmlns="https://github.com/avaloniaui"
+               xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+               xmlns:bars="clr-namespace:Eremex.AvaloniaUI.Controls.Bars;assembly=Eremex.Avalonia.Controls"
+               xmlns:mxe="clr-namespace:Eremex.AvaloniaUI.Controls.Editors;assembly=Eremex.Avalonia.Controls"
+               xmlns:actions="clr-namespace:CryptoMarketClient.ViewModels.Actions"
+               xmlns:viewModels="clr-namespace:CryptoMarketClient.ViewModels"
+               xmlns:utils="clr-namespace:CryptoMarketClient.Utils">
+
+	  <DataTemplate DataType="actions:ToolbarCheckItemGroupViewModel">
+        <bars:ToolbarCheckItemGroup IsVisible="{Binding Visible}"
+                               IsEnabled="{Binding Enabled}"
+                               CheckType="{Binding CheckType}"
+                               ItemsSource="{Binding Items}" />
+    </DataTemplate>
+    
+    <DataTemplate DataType="viewModels:MainMenuViewModel">
+        <bars:Toolbar ShowCustomizationButton="{Binding ShowCustomizationButton}"
+                      AllowVisibilityCustomization="{Binding AllowCustomizationMenu}"
+                      AllowDragToolbar="{Binding AllowDrag}" StretchToolbar="{Binding StretchToolbar}"
+                      IsVisible="{Binding Visible}" DisplayMode="MainMenu" Name="{Binding Name}"
+                      ItemsSource="{Binding Items}">
+        </bars:Toolbar>
+    </DataTemplate>
+
+    <DataTemplate DataType="viewModels:ToolbarViewModel">
+        <bars:Toolbar ShowCustomizationButton="{Binding ShowCustomizationButton}"
+                      AllowVisibilityCustomization="{Binding AllowCustomizationMenu}"
+                      AllowDragToolbar="{Binding AllowDrag}"
+                      StretchToolbar="{Binding StretchToolbar}"
+                      IsVisible="{Binding Visible}"
+                      ItemsSource="{Binding Items}"
+                      Name="{Binding Name}" />
+    </DataTemplate>
+    
+    <DataTemplate DataType="viewModels:StatusBarViewModel">
+        <bars:Toolbar ShowCustomizationButton="{Binding ShowCustomizationButton}"
+                      AllowVisibilityCustomization="{Binding AllowCustomizationMenu}"
+                      AllowDragToolbar="{Binding AllowDrag}" StretchToolbar="{Binding StretchToolbar}"
+                      IsVisible="{Binding Visible}" DisplayMode="StatusBar" ItemsSource="{Binding Items}"
+                      Name="{Binding Name}">
+        </bars:Toolbar>
+    </DataTemplate>
+    <DataTemplate DataType="actions:ToolbarMenuItemViewModel">
+        <bars:ToolbarMenuItem Header="{Binding Header}"
+                              Glyph="{Binding Glyph}"
+                              IsVisible="{Binding Visible}"
+                              IsEnabled="{Binding Enabled}"
+                              ShowSeparator="{Binding ShowSeparator}"
+                              Alignment="{Binding ItemAlignment}"
+                              ItemsSource="{Binding Items}"
+                              Command="{Binding Command}"
+                              CommandParameter="{Binding CommandParameter}"
+                              Hint="{Binding Hint}"
+                              GlyphSizeMode="{Binding GlyphSizeMode}"
+                              GlyphSize="{Binding GlyphSize}"
+                              GlyphAlignment="{Binding GlyphAlignment}"
+                              HotKey="{Binding KeyGesture}"
+                              HotKeyDisplayString="{Binding KeyGestureDisplayString}"
+                              Tag="{Binding Tag}"/>
+    </DataTemplate>
+    <DataTemplate DataType="actions:ToolbarCheckItemViewModel">
+        <bars:ToolbarCheckItem Header="{Binding Header}"
+                               Glyph="{Binding Glyph}"
+                               IsVisible="{Binding Visible}"
+                               IsEnabled="{Binding Enabled}"
+                               IsChecked="{Binding IsChecked, Mode=TwoWay}"
+                               ShowSeparator="{Binding ShowSeparator}"
+                               Alignment="{Binding ItemAlignment}"
+                               DisplayMode="{Binding DisplayMode}"
+                               Command="{Binding Command}"
+                               CommandParameter="{Binding CommandParameter}"
+                               Hint="{Binding Hint}"
+                               DropDownArrowVisibility="{Binding ArrowVisibility}"
+                               DropDownControl="{Binding DropDownControl, Converter={x:Static utils:DropDownControlConverter.Instance}}"
+                               DropDownOpenMode="{Binding DropDownOpenMode}"
+                               GlyphSizeMode="{Binding GlyphSizeMode}"
+                               GlyphSize="{Binding GlyphSize}"
+                               GlyphAlignment="{Binding GlyphAlignment}"
+                               HotKey="{Binding KeyGesture}"
+                               HotKeyDisplayString="{Binding KeyGestureDisplayString}"
+                               Classes.IsDefault="{Binding IsDefault}"
+                               Tag="{Binding Tag}"/>
+    </DataTemplate>
+    <DataTemplate DataType="actions:ToolbarTextItemViewModel">
+        <bars:ToolbarTextItem Header="{Binding Header}"
+                              Glyph="{Binding Glyph}"
+                              IsVisible="{Binding Visible}"
+                              IsEnabled="{Binding Enabled}"
+                              ShowSeparator="{Binding ShowSeparator}"
+                              Alignment="{Binding ItemAlignment}"
+                              ShowBorder="{Binding ShowBorder}"
+                              DisplayMode="{Binding DisplayMode}"
+                              Command="{Binding Command}"
+                              CommandParameter="{Binding CommandParameter}"
+                              Hint="{Binding Hint}"
+                              GlyphSizeMode="{Binding GlyphSizeMode}"
+                              GlyphSize="{Binding GlyphSize}"
+                              GlyphAlignment="{Binding GlyphAlignment}"
+                              HotKey="{Binding KeyGesture}"
+                              HotKeyDisplayString="{Binding KeyGestureDisplayString}"
+                              Tag="{Binding Tag}"/>
+    </DataTemplate>
+    <DataTemplate DataType="actions:ToolbarButtonItemViewModel">
+        <bars:ToolbarButtonItem Header="{Binding Header}"
+                                Glyph="{Binding Glyph}"
+                                IsVisible="{Binding Visible}"
+                                IsEnabled="{Binding Enabled}"
+                                ShowSeparator="{Binding ShowSeparator}"
+                                Alignment="{Binding ItemAlignment}"
+                                DisplayMode="{Binding DisplayMode}"
+                                Command="{Binding Command}"
+                                CommandParameter="{Binding CommandParameter}"
+                                Hint="{Binding Hint}"
+                                DropDownArrowVisibility="{Binding ArrowVisibility}"
+                                DropDownControl="{Binding DropDownControl, Converter={x:Static utils:DropDownControlConverter.Instance}}"
+                                GlyphSizeMode="{Binding GlyphSizeMode}"
+                                DropDownOpenMode="{Binding DropDownOpenMode}"
+                                GlyphSize="{Binding GlyphSize}"
+                                GlyphAlignment="{Binding GlyphAlignment}"
+                                HotKey="{Binding KeyGesture}"
+                                HotKeyDisplayString="{Binding KeyGestureDisplayString}"
+                                Classes.IsDefault="{Binding IsDefault}"
+                                Classes.IsCurrent="{Binding IsCurrent}"
+                                Tag="{Binding Tag}"/>
+    </DataTemplate>
+
+    <DataTemplate DataType="actions:ToolbarComboBoxItemViewModel">
+        <bars:ToolbarEditorItem Header="{Binding Header}"
+                                Glyph="{Binding Glyph}"
+                                IsVisible="{Binding Visible}"
+                                IsEnabled="{Binding Enabled}"
+                                ShowSeparator="{Binding ShowSeparator}"
+                                Alignment="{Binding ItemAlignment}"
+                                Hint="{Binding Hint}"
+                                GlyphSizeMode="{Binding GlyphSizeMode}"
+                                GlyphSize="{Binding GlyphSize}"
+                                GlyphAlignment="{Binding GlyphAlignment}"
+                                HotKey="{Binding KeyGesture}"
+                                HotKeyDisplayString="{Binding KeyGestureDisplayString}"
+                                DisplayMode="{Binding DisplayMode}"
+                                EditorValue="{Binding Path=EditorValue, Mode=TwoWay}"
+                                Tag="{Binding Tag}">
+            <bars:ToolbarEditorItem.EditorTemplate>
+	            <DataTemplate DataType="actions:ToolbarComboBoxItemViewModel">
+		            <ee:ComboBoxEditor x:Name="PART_Editor"
+		                               ItemsSource="{Binding Path=Items}"
+		                               DisplayMember="{Binding DisplayMember}"
+		                               MinWidth="{Binding Path=EditorMinWidth}"
+		                               MaxWidth="{Binding EditorMaxWidth}"
+		                               HorizontalContentAlignment="{Binding Path=HorizontalContentAlignment}"
+		                               SelectionMode="{Binding SelectionMode}"
+		                               SelectedItems="{Binding SelectedItems, Mode=TwoWay}"
+		                               DisplayTextConverter="{Binding DisplayTextConverter}"/>
+	            </DataTemplate>
+						</bars:ToolbarEditorItem.EditorTemplate>
+        </bars:ToolbarEditorItem>
+    </DataTemplate>
+
+    <DataTemplate DataType="actions:ToolbarSpinEditorItemViewModel">
+        <bars:ToolbarEditorItem Header="{Binding Header}"
+                                Glyph="{Binding Glyph}"
+                                IsVisible="{Binding Visible}"
+                                IsEnabled="{Binding Enabled}"
+                                ShowSeparator="{Binding ShowSeparator}"
+                                Alignment="{Binding ItemAlignment}"
+                                Hint="{Binding Hint}"
+                                GlyphSizeMode="{Binding GlyphSizeMode}"
+                                GlyphSize="{Binding GlyphSize}"
+                                GlyphAlignment="{Binding GlyphAlignment}"
+                                HotKey="{Binding KeyGesture}"
+                                HotKeyDisplayString="{Binding KeyGestureDisplayString}"
+                                Tag="{Binding Tag}">
+            <bars:ToolbarEditorItem.EditorTemplate>
+	            <DataTemplate DataType="actions:ToolbarSpinEditorItemViewModel">
+		            <ee:SpinEditor x:Name="PART_Editor" Minimum="{Binding Path=Minimum}" Maximum="{Binding Path=Maximum}" EditorValue="{Binding Path=EditorValue, Mode=TwoWay}"
+		                           ReadOnly="{Binding Path=IsReadonly}" HorizontalContentAlignment="{Binding Path=HorizontalContentAlignment}"
+		                           EditorValuePostMode="{Binding Path=PostMode}" EditorValuePostDelay="{Binding Path=PostDelay}"/>
+							</DataTemplate>
+            </bars:ToolbarEditorItem.EditorTemplate>
+        </bars:ToolbarEditorItem>
+    </DataTemplate>
+	<DataTemplate DataType="viewModels:ExchangeViewModel">
+                <bars:ToolbarCheckItem Header="{Binding Name}"
+                                      Glyph="{Binding Icon}"
+                                      GlyphSize="32,32"
+                                      Tag="{Binding }"
+                                      IsChecked="{Binding IsConnected}"/>
+	</DataTemplate>
+	
+	<DataTemplate x:Key="UltraCompactCellTemplate">
+		<mxe:TextEditor Classes="UltraCompact" x:Name="PART_Editor"/>
+	</DataTemplate>
+	<DataTemplate x:Key="UltraCompactBidCellTemplate">
+		<mxe:TextEditor Classes="UltraCompact" x:Name="PART_Editor" Foreground="{StaticResource BidColor}"/>
+	</DataTemplate>
+	<DataTemplate x:Key="UltraCompactAskCellTemplate">
+		<mxe:TextEditor Classes="UltraCompact" x:Name="PART_Editor" Foreground="{StaticResource AskColor}"/>
+	</DataTemplate>
+	
+</DataTemplates>

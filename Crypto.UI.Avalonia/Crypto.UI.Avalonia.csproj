@@ -1,0 +1,50 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>disable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Avalonia" Version="11.0.10" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Crypto.Core\Crypto.Net.Core.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Images\Exchanges\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Images\Exchanges\Binance.jpg" />
+      <AvaloniaResource Include="Images\Exchanges\Binance.jpg" />
+      <None Remove="Images\Exchanges\BinanceIcon.png" />
+      <AvaloniaResource Include="Images\Exchanges\BinanceIcon.png" />
+      <None Remove="Images\Exchanges\BitFinex.jpg" />
+      <AvaloniaResource Include="Images\Exchanges\BitFinex.jpg" />
+      <None Remove="Images\Exchanges\BitFinexIcon.png" />
+      <AvaloniaResource Include="Images\Exchanges\BitFinexIcon.png" />
+      <None Remove="Images\Exchanges\Bitmex.jpg" />
+      <AvaloniaResource Include="Images\Exchanges\Bitmex.jpg" />
+      <None Remove="Images\Exchanges\BitmexIcon.png" />
+      <AvaloniaResource Include="Images\Exchanges\BitmexIcon.png" />
+      <None Remove="Images\Exchanges\Bittrex.jpg" />
+      <AvaloniaResource Include="Images\Exchanges\Bittrex.jpg" />
+      <None Remove="Images\Exchanges\BittrexIcon.png" />
+      <AvaloniaResource Include="Images\Exchanges\BittrexIcon.png" />
+      <None Remove="Images\Exchanges\Exmo.png" />
+      <AvaloniaResource Include="Images\Exchanges\Exmo.png" />
+      <None Remove="Images\Exchanges\Kraken.jpg" />
+      <AvaloniaResource Include="Images\Exchanges\Kraken.jpg" />
+      <None Remove="Images\Exchanges\Poloniex.jpg" />
+      <AvaloniaResource Include="Images\Exchanges\Poloniex.jpg" />
+      <None Remove="Images\Exchanges\Poloniex.png" />
+      <AvaloniaResource Include="Images\Exchanges\Poloniex.png" />
+      <None Remove="Images\Exchanges\PoloniexIcon.png" />
+      <AvaloniaResource Include="Images\Exchanges\PoloniexIcon.png" />
+    </ItemGroup>
+
+</Project>

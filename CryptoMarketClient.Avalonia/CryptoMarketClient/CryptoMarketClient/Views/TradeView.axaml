@@ -1,0 +1,22 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:mxdg="https://schemas.eremexcontrols.net/avalonia/datagrid"
+             xmlns:viewModels="clr-namespace:CryptoMarketClient.ViewModels"
+             xmlns:res="clr-namespace:CryptoMarketClient.Resources"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="CryptoMarketClient.Views.TradeView">
+    <mxdg:DataGridControl 
+                              x:Name="TradeGrid"
+                              AllowEditing="False"
+                              ShowGroupPanel="False"
+                              ShowHorizontalLines="False"
+                              ShowVerticalLines="False"
+                              RowMinHeight="16"
+                              ItemsSource="{CompiledBinding Trades, DataType=viewModels:TradeViewModel}">
+            <mxdg:GridColumn FieldName="ValueString" Width="*" Header="{x:Static res:Resources.Column_Rate}" CellTemplate="{StaticResource UltraCompactCellTemplate}"/>
+            <mxdg:GridColumn FieldName="AmountString" Width="*" Header="{x:Static res:Resources.Column_Amount}" CellTemplate="{StaticResource UltraCompactCellTemplate}"/>
+            <mxdg:GridColumn FieldName="VolumeString" Width="*" Header="{x:Static res:Resources.Column_Volume}" CellTemplate="{StaticResource UltraCompactCellTemplate}"/>
+        </mxdg:DataGridControl>
+</UserControl>

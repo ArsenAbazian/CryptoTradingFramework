@@ -806,7 +806,7 @@ namespace Crypto.Core.Exchanges.Bitmex {
                 }
                 t.UpdateTrailings();
                 lock(t) {
-                    RaiseTickerChanged(t);
+                    t.RaiseChanged();
                 }
             }
         }

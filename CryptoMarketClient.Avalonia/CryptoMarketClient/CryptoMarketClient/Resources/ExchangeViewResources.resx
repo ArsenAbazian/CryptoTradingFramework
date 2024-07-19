@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:element name="root" msdata:IsDataSet="true">
+            
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="EnterMarketCaption" xml:space="preserve">
+        <value>Enter Market</value>
+    </data>
+    <data name="AccountBalancesCaption" xml:space="preserve">
+        <value>Account Balances</value>
+    </data>
+    <data name="OrderListCaption" xml:space="preserve">
+        <value>Order List</value>
+    </data>
+    <data name="TradeHistoryCaption" xml:space="preserve">
+        <value>Trade History</value>
+    </data>
+    <data name="ShowOnlyFavoritesCaption" xml:space="preserve">
+        <value>Show Only Favorites</value>
+    </data>
+    <data name="StatusText_Initializing" xml:space="preserve">
+        <value>Initializing...</value>
+    </data>
+    <data name="StatusText_Connecting" xml:space="preserve">
+        <value>Connecting...</value>
+    </data>
+    <data name="StatusText_NoData" xml:space="preserve">
+        <value>No Data</value>
+    </data>
+    <data name="StatusText_Disconnected" xml:space="preserve">
+        <value>Disconnected</value>
+    </data>
+    <data name="StatusText_SocketError" xml:space="preserve">
+        <value>Socket Error</value>
+    </data>
+    <data name="StatusText_MissingIncrementalUpdate" xml:space="preserve">
+        <value>Missing Incremental Update</value>
+    </data>
+    <data name="StatusText_ConnectionInterrupted" xml:space="preserve">
+        <value>Connection Interrupted</value>
+    </data>
+    <data name="StatusText_Waiting" xml:space="preserve">
+        <value>Waiting...</value>
+    </data>
+    <data name="StatusText_Connected" xml:space="preserve">
+        <value>Connected</value>
+    </data>
+    <data name="StatusText_Reconnect" xml:space="preserve">
+        <value>Reconnect</value>
+    </data>
+    <data name="Column.BaseCurrency" xml:space="preserve">
+        <value>Base</value>
+    </data>
+    <data name="Column_Last" xml:space="preserve">
+        <value>Last</value>
+    </data>
+    <data name="Column.HighestBid" xml:space="preserve">
+        <value>Highest Bid</value>
+    </data>
+    <data name="Column.LowestAsk" xml:space="preserve">
+        <value>Lowest Ask</value>
+    </data>
+    <data name="Column.Hr24High" xml:space="preserve">
+        <value>Hr 24 High</value>
+    </data>
+    <data name="Column.Hr24Low" xml:space="preserve">
+        <value>Hr 24 Low</value>
+    </data>
+    <data name="Column.Volume" xml:space="preserve">
+        <value>Base Volume</value>
+    </data>
+    <data name="Column_Trend" xml:space="preserve">
+        <value>Trend</value>
+    </data>
+    <data name="DataCountQueStatusFormatString" xml:space="preserve">
+        <value>{0} in a data-queue</value>
+    </data>
+</root>

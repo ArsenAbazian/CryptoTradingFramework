@@ -111,14 +111,17 @@ namespace Crypto.Core.Common {
         public bool IsOpened { get; private set; }
         public bool IsOpening { get; private set; }
         protected DateTime OpenTime { get; set; }
-        public void Open() {
+        public void Open()
+        {
+            if(State == SocketConnectionState.Connected || State == SocketConnectionState.Connecting)
+                return;
             IsOpening = true;
             CreateSocket();
             SubscribeEvents();
 
             //LastActiveTime = DateTime.Now;
             State = SocketConnectionState.Connecting;
-            if(Socket != null)
+            if(Socket != null && Socket.State != WebSocketState.Open)
                 Socket.Open();
             else if(Signal != null)
                 Signal.Connect();
@@ -165,7 +168,7 @@ namespace Crypto.Core.Common {
                     Signal.Shutdown();
             }
             catch(Exception e) {
-                Telemetry.Default.TrackEvent(LogType.Error, Ticker, "error closing socket", e.Message.ToString());
+                Telemetry.Default.TrackEvent(LogType.Error, Ticker, "Error while closing socket", e.Message.ToString());
             }
             State = SocketConnectionState.Disconnecting;
             IsOpened = false;
@@ -282,7 +285,6 @@ namespace Crypto.Core.Common {
 
             if(SocketType == SocketType.WebSocket) {
                 string command = info.GetRequestString();
-                Debug.WriteLine("send request = " + command);
                 Socket.Send(command);
             }
             else {
@@ -546,6 +548,12 @@ namespace Crypto.Core.Common {
         public void Simulate() {
             CreateSocket();
             State = SocketConnectionState.Connected;
+        }
+
+        public void SendCommand(string command)
+        {
+            if(Socket != null)
+                Socket.Send(command);
         }
     }
 

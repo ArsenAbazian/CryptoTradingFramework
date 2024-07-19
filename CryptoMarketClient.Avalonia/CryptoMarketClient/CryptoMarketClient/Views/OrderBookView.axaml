@@ -1,0 +1,101 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:mxdg="https://schemas.eremexcontrols.net/avalonia/datagrid"
+             xmlns:viewModels="clr-namespace:CryptoMarketClient.ViewModels"
+             xmlns:mxe="https://schemas.eremexcontrols.net/avalonia/editors"
+             xmlns:visuals="clr-namespace:Eremex.AvaloniaUI.Controls.DataGrid.Visuals;assembly=Eremex.Avalonia.Controls"
+             xmlns:visuals1="clr-namespace:Eremex.AvaloniaUI.Controls.DataControl.Visuals;assembly=Eremex.Avalonia.Controls"
+             xmlns:res="clr-namespace:CryptoMarketClient.Resources"
+             xmlns:controls="clr-namespace:CryptoMarketClient.Controls"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="CryptoMarketClient.Views.OrderBookView">
+    <Design.DataContext>
+        <!-- This only sets the DataContext for the previewer in an IDE,
+             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+        <viewModels:OrderBookViewModel/>
+    </Design.DataContext>
+    <UserControl.Styles>
+        <Style Selector="visuals1|CellEditor">
+            <Setter Property="FocusAdorner" Value="{x:Null}"/>
+        </Style>
+        <Style Selector="Border.SeparatorBorder">
+            <Setter Property="Height" Value="1"/>
+            <Setter Property="Background" Value="{DynamicResource Outline/Neutral/Transparent/Light}"/>
+        </Style>
+    </UserControl.Styles>
+    <Grid RowDefinitions="*, Auto, *">
+        <mxdg:DataGridControl Grid.Row="0"
+                              x:Name="AskGrid"
+                              AllowEditing="False"
+                              ShowGroupPanel="False"
+                              ShowHorizontalLines="False"
+                              ShowVerticalLines="False"
+                              RowMinHeight="16"
+                              ItemsSource="{CompiledBinding Asks, DataType=viewModels:OrderBookViewModel}">
+            <mxdg:DataGridControl.Styles>
+                <Style Selector="visuals|DataGridRowControl">
+                    <Setter Property="FocusAdorner" Value="{x:Null}"/>
+                    <Setter Property="Template">
+                        <ControlTemplate>
+                            <Grid Margin="{TemplateBinding Padding}" Background="{TemplateBinding Background}">
+                                <controls:ProgressLineControl Classes="AskProgressLine" Value="{Binding VolumePercent}"/>
+                                <Border x:Name="RowBorder" BorderBrush="{TemplateBinding BorderBrush}">
+                                    <visuals1:CellsPanel x:Name="PART_CellsPanel">
+                                        <visuals1:CellsPanel.Margin>
+                                            <MultiBinding Converter="{visuals:LevelAndIndentToThicknessConverter}">
+                                                <Binding Path="Level" RelativeSource="{RelativeSource TemplatedParent}" />
+                                                <Binding Path="LevelIndent" RelativeSource="{RelativeSource TemplatedParent}" />
+                                            </MultiBinding>
+                                        </visuals1:CellsPanel.Margin>
+                                    </visuals1:CellsPanel>
+                                </Border>
+                                <Border x:Name="FocusBorder" />
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter>
+                </Style>
+            </mxdg:DataGridControl.Styles>
+            <mxdg:GridColumn FieldName="ValueString" Width="*" Header="{x:Static res:Resources.Column_Rate}" CellTemplate="{StaticResource UltraCompactAskCellTemplate}"/>
+            <mxdg:GridColumn FieldName="AmountString" Width="*" Header="{x:Static res:Resources.Column_Amount}" CellTemplate="{StaticResource UltraCompactCellTemplate}"/>
+            <mxdg:GridColumn FieldName="VolumeString" Width="*" Header="{x:Static res:Resources.Column_Volume}" CellTemplate="{StaticResource UltraCompactCellTemplate}"/>
+        </mxdg:DataGridControl>
+        <Border Classes="SeparatorBorder" Grid.Row="1" />
+        <mxdg:DataGridControl Grid.Row="2"
+                              x:Name="BidGrid"
+                              AllowEditing="False"
+                              ShowGroupPanel="False"
+                              ShowHorizontalLines="False"
+                              ShowVerticalLines="False"
+                              RowMinHeight="16"
+                              ItemsSource="{CompiledBinding Bids, DataType=viewModels:OrderBookViewModel}">
+            <mxdg:DataGridControl.Styles>
+                <Style Selector="visuals|DataGridRowControl">
+                    <Setter Property="FocusAdorner" Value="{x:Null}"/>
+                    <Setter Property="Template">
+                        <ControlTemplate>
+                            <Grid Margin="{TemplateBinding Padding}" Background="{TemplateBinding Background}">
+                                <controls:ProgressLineControl Classes="BidProgressLine" Value="{Binding VolumePercent}"/>
+                                <Border x:Name="RowBorder" BorderBrush="{TemplateBinding BorderBrush}">
+                                    <visuals1:CellsPanel x:Name="PART_CellsPanel">
+                                        <visuals1:CellsPanel.Margin>
+                                            <MultiBinding Converter="{visuals:LevelAndIndentToThicknessConverter}">
+                                                <Binding Path="Level" RelativeSource="{RelativeSource TemplatedParent}" />
+                                                <Binding Path="LevelIndent" RelativeSource="{RelativeSource TemplatedParent}" />
+                                            </MultiBinding>
+                                        </visuals1:CellsPanel.Margin>
+                                    </visuals1:CellsPanel>
+                                </Border>
+                                <Border x:Name="FocusBorder" />
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter>
+                </Style>
+            </mxdg:DataGridControl.Styles>
+            <mxdg:GridColumn FieldName="ValueString" Width="*" Header="{x:Static res:Resources.Column_Rate}" CellTemplate="{StaticResource UltraCompactBidCellTemplate}"/>
+            <mxdg:GridColumn FieldName="AmountString" Width="*" Header="{x:Static res:Resources.Column_Amount}" CellTemplate="{StaticResource UltraCompactCellTemplate}"/>
+            <mxdg:GridColumn FieldName="VolumeString" Width="*" Header="{x:Static res:Resources.Column_Volume}" CellTemplate="{StaticResource UltraCompactCellTemplate}"/>
+        </mxdg:DataGridControl>
+    </Grid>
+</UserControl>

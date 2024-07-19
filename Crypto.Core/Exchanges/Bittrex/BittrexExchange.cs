@@ -213,7 +213,7 @@ namespace Crypto.Core.Bittrex {
                 ticker.LastString = t.Properties[1].Value;
                 ticker.HighestBidString = t.Properties[2].Value;
                 ticker.LowestAskString = t.Properties[3].Value;
-                RaiseTickerChanged(ticker);
+                ticker.RaiseChanged();
             }
         }
 

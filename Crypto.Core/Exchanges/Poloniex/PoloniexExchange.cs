@@ -53,9 +53,16 @@ namespace Crypto.Core {
         public override string BaseWebSocketAdress { get { return "wss://ws.poloniex.com/ws/public"; } }
         public override int WebSocketAllowedDelayInterval => 5000; 
 
+        protected DateTime LastSendPingTime { get; set; }
         protected internal override void OnTickersSocketMessageReceived(object sender, MessageReceivedEventArgs e) {
             base.OnTickersSocketMessageReceived(sender, e);
 
+            if((DateTime.Now - LastSendPingTime).TotalSeconds > 5)
+            {
+                LastSendPingTime = DateTime.Now;
+                SendPingEvent();
+            }
+            
             JsonHelperToken root = JsonHelper.Default.Deserialize(e.Message);
             if(root.Type == JsonObjectType.Object) {
                 if(root.GetProperty("event") != null) {
@@ -68,6 +75,11 @@ namespace Crypto.Core {
                     return;
                 }
             }
+        }
+
+        private void SendPingEvent()
+        {
+            TickersSocket.SendCommand("{\"event\": \"ping\"}");
         }
 
         protected bool ProcessChannel(JsonHelperToken root, string message) {
@@ -196,17 +208,20 @@ namespace Crypto.Core {
             }
         }
 
-        protected void OnProcessTickerInfo(JsonHelperToken data) {
+        protected void OnProcessTickerInfo(JsonHelperToken data)
+        {
             foreach(var item in data.Items) {
                 string name = item.GetProperty("symbol").Value;
                 Ticker t = Tickers.FirstOrDefault(tt => tt.SubscriptionName == name);
                 if(t == null)
                     continue;
+                t.LastString = item.GetProperty("markPrice").Value;
                 t.Change = item.GetProperty("dailyChange").ValueDouble;
                 t.Hr24HighString = item.GetProperty("high").Value;
                 t.Hr24LowString = item.GetProperty("low").Value;
                 t.BaseVolumeString = item.GetProperty("quantity").Value;
                 t.VolumeString = item.GetProperty("amount").Value;
+                t.RaiseChanged();
             }
         }
 
@@ -216,6 +231,10 @@ namespace Crypto.Core {
                 if(root.GetProperty("message").Value.StartsWith("Not Subscribed"))
                     return true;
                 LogManager.Default.Add(LogType.Error, this, GetType().Name, root.GetProperty("message").Value, "");
+                return true;
+            }
+            else if(evt.Value == "pong")
+            {
                 return true;
             }
             JsonHelperToken channel = root.GetProperty("channel");
@@ -250,25 +269,20 @@ namespace Crypto.Core {
 
         public override bool SupportCummulativeTickersUpdate => false;
 
-        protected internal override void OnTickersSocketOpened(object sender, EventArgs e) {
-            base.OnTickersSocketOpened(sender, e);
-            //TickersSocket.State = SocketConnectionState.Connecting;
-            //TickersSocket.Subscribe(new WebSocketSubscribeInfo(SocketSubscribeType.Hearthbeat, null) {
-            //    Request = new PoloniexWebSocketRequest() { channel = "1010", command = "subscribe" }
-            //});
-            //TickersSocket.Subscribe(new WebSocketSubscribeInfo(SocketSubscribeType.Tickers, null) {
-            //    Request = new PoloniexWebSocketRequest() { channel = "1002", command = "subscribe" }
-            //});
-            //TickersSocket.State = SocketConnectionState.Connected;
+        protected override void OnTickersSocketStateChanged(object sender, ConnectionInfoChangedEventArgs e)
+        {
+            base.OnTickersSocketStateChanged(sender, e);
+            if(e.NewState == SocketConnectionState.Connected)
+            {
+                TickersSocket.Subscribe(new WebSocketSubscribeInfo(SocketSubscribeType.Tickers, null) {
+                    Request = "{\"event\": \"subscribe\", \"channel\": [\"ticker\"], \"symbols\": [\"all\"]}"
+                });
+            }
         }
         
         public override void StartListenTickerStream(Ticker ticker) {
             base.StartListenTickerStream(ticker);
             StartListenOrderBookCore(ticker);
-        }
-
-        protected override void OnWebSocketCheckTimer(object state) {
-            base.OnWebSocketCheckTimer(state);
         }
 
         protected override void StartListenTickerInfo(Ticker ticker) {
@@ -279,7 +293,7 @@ namespace Crypto.Core {
             }
             if(!SimulationMode) {
                 string name = ticker.SubscriptionName;
-                string request = string.Format("{{ \"event\": \"subscribe\", \"channel\": [\"ticker\"], \"symbols\": [\"{0}\"] }}", name);
+                string request = string.Format("{{\"event\": \"subscribe\", \"channel\": [\"symbols\"], \"symbols\": [\"{0}\"]}}", name);
                 TickersSocket.Subscribe(new WebSocketSubscribeInfo(SocketSubscribeType.Ticker, ticker) {
                     Request = request
                 }) ;
@@ -291,7 +305,7 @@ namespace Crypto.Core {
                 return;
             if(!SimulationMode) {
                 string name = ticker.SubscriptionName;
-                string request = string.Format("{{ \"event\": \"unsubscribe\", \"channel\": [\"ticker\"], \"symbols\": [\"{0}\"] }}", name);
+                string request = string.Format("{{\"event\": \"unsubscribe\", \"channel\": [\"symbols\"], \"symbols\": [\"{0}\"]}}", name);
                 TickersSocket.Subscribe(new WebSocketSubscribeInfo(SocketSubscribeType.Ticker, ticker) {
                     Request = request
                 });
@@ -380,7 +394,7 @@ namespace Crypto.Core {
             ticker.IsTradeHistorySubscribed = false;
             ticker.IsKlineSubscribed = false;
             TickersSocket.Unsubscribe(new WebSocketSubscribeInfo(SocketSubscribeType.OrderBook, ticker) {
-                Request = new PoloniexWebSocketRequest { channel = ticker.CurrencyPair, command = "unsubscribe" }
+                Request = new PoloniexWebSocketRequest { channel = ticker.CurrencyPair, @event = "unsubscribe" }
             });
         }
 
@@ -392,12 +406,24 @@ namespace Crypto.Core {
 
         public override List<CandleStickIntervalInfo> GetAllowedCandleStickIntervals() {
             List<CandleStickIntervalInfo> list = new List<CandleStickIntervalInfo>();
-            list.Add(new CandleStickIntervalInfo() { Text = "5 Minutes", Interval = TimeSpan.FromSeconds(300), SubscribeChannel = "candles_minute_5" });
-            list.Add(new CandleStickIntervalInfo() { Text = "15 Minutes", Interval = TimeSpan.FromSeconds(300), SubscribeChannel = "candles_minute_15" });
-            list.Add(new CandleStickIntervalInfo() { Text = "30 Minutes", Interval = TimeSpan.FromSeconds(1800), SubscribeChannel = "candles_minute_30" });
-            list.Add(new CandleStickIntervalInfo() { Text = "2 Hours", Interval = TimeSpan.FromSeconds(7200), SubscribeChannel = "candles_hour_2" });
-            list.Add(new CandleStickIntervalInfo() { Text = "4 Hours", Interval = TimeSpan.FromSeconds(14400), SubscribeChannel = "candles_hour_4" });
-            list.Add(new CandleStickIntervalInfo() { Text = "1 Day", Interval = TimeSpan.FromSeconds(86400), SubscribeChannel = "candles_day_1" });
+            list.Add(new CandleStickIntervalInfo() { Text = "1 Minute", Command = "MINUTE_1", Interval = TimeSpan.FromMinutes(1), SubscribeChannel = "candles_minute_1" });
+            list.Add(new CandleStickIntervalInfo() { Text = "5 Minute", Command = "MINUTE_5", Interval = TimeSpan.FromMinutes(5), SubscribeChannel = "candles_minute_5" });
+            list.Add(new CandleStickIntervalInfo() { Text = "10 Minute", Command = "MINUTE_10", Interval = TimeSpan.FromMinutes(10), SubscribeChannel = "candles_minute_10" });
+            list.Add(new CandleStickIntervalInfo() { Text = "15 Minute", Command = "MINUTE_15", Interval = TimeSpan.FromMinutes(15), SubscribeChannel = "candles_minute_15" });
+            list.Add(new CandleStickIntervalInfo() { Text = "30 Minute", Command = "MINUTE_30", Interval = TimeSpan.FromMinutes(30), SubscribeChannel = "candles_minute_30" });
+            
+            list.Add(new CandleStickIntervalInfo() { Text = "1 Hour", Command = "HOUR_1", Interval = TimeSpan.FromHours(1), SubscribeChannel = "candles_hour_1" });
+            list.Add(new CandleStickIntervalInfo() { Text = "2 Hours", Command = "HOUR_2", Interval = TimeSpan.FromHours(2), SubscribeChannel = "candles_hour_2" });
+            list.Add(new CandleStickIntervalInfo() { Text = "4 Hours", Command = "HOUR_4", Interval = TimeSpan.FromHours(4), SubscribeChannel = "candles_hour_4" });
+            list.Add(new CandleStickIntervalInfo() { Text = "6 Hours", Command = "HOUR_6", Interval = TimeSpan.FromHours(6), SubscribeChannel = "candles_hour_6" });
+            list.Add(new CandleStickIntervalInfo() { Text = "12 Hours", Command = "HOUR_12", Interval = TimeSpan.FromHours(12), SubscribeChannel = "candles_hour_12" });
+            
+            list.Add(new CandleStickIntervalInfo() { Text = "1 Day", Command = "DAY_1", Interval = TimeSpan.FromDays(1), SubscribeChannel = "candles_day_1" });
+            list.Add(new CandleStickIntervalInfo() { Text = "3 Days", Command = "DAY_3", Interval = TimeSpan.FromDays(3), SubscribeChannel = "candles_day_3" });
+            
+            list.Add(new CandleStickIntervalInfo() { Text = "1 Week", Command = "WEEK_1", Interval = TimeSpan.FromDays(7), SubscribeChannel = "candles_week_1" });
+            
+            list.Add(new CandleStickIntervalInfo() { Text = "1 Month", Command = "MONTH_1", Interval = TimeSpan.FromDays(30), SubscribeChannel = "candles_month_1" });
 
             return list;
         }
@@ -413,56 +439,65 @@ namespace Crypto.Core {
         }
 
         public override ResizeableArray<CandleStickData> GetCandleStickData(Ticker ticker, int candleStickPeriodMin, DateTime start, long periodInSeconds) {
-            long startSec = (long)(start.Subtract(epoch)).TotalSeconds;
-            long end = startSec + periodInSeconds;
+            long startMs = (long)(start.Subtract(epoch)).TotalMilliseconds;
+            long endMs = startMs + periodInSeconds * 1000;
 
-            string address = string.Format("https://poloniex.com/public?command=returnChartData&currencyPair={0}&period={1}&start={2}&end={3}",
-                Uri.EscapeDataString(ticker.CurrencyPair), candleStickPeriodMin * 60, startSec, end);
+            long periodMin = periodInSeconds / 60;
+            string symbol = Uri.EscapeDataString(ticker.CurrencyPair);
+            string interval = AllowedCandleStickIntervals
+                .FirstOrDefault(i => i.TotalMinutes == candleStickPeriodMin)?.Command;
+            string address = $"https://api.poloniex.com/markets/{symbol}/candles?interval={interval}&startTime={startMs}&endTime={endMs}";
             byte[] bytes = null;
             try {
                 bytes = GetDownloadBytes(address);
             }
             catch(Exception) {
+                LogManager.Default.Error(this, "GetCandleStickData", "No data returned");
                 return null;
             }
+
             if(bytes == null || bytes.Length == 0)
+            {
+                LogManager.Default.Error(this, "GetCandleStickData", "No data returned");
                 return null;
+            }
 
             JsonHelperToken root = JsonHelper.Default.Deserialize(bytes);
+            if(root.Properties != null && root.Properties.Length == 2 && root.Properties[0].Value == "404")
+            {
+                LogManager.Default.Error(this, "GetCandleStickData", root.Properties[1].Value);
+                return null;
+            }
+
+            //root = root.Items[0];
 
             DateTime startTime = new DateTime(1970, 1, 1);
 
             ResizeableArray<CandleStickData> list = new ResizeableArray<CandleStickData>(root.ItemsCount);
-
-            //new string[] { "date", "high", "low", "open", "close", "volume", "quoteVolume", "weightedAverage" }
-            int i_date = root.Items[0].GetPropertyIndex("date");
-            int i_high = root.Items[0].GetPropertyIndex("high");
-            int i_low = root.Items[0].GetPropertyIndex("low");
-            int i_open = root.Items[0].GetPropertyIndex("open");
-            int i_close = root.Items[0].GetPropertyIndex("close");
-            int i_volume = root.Items[0].GetPropertyIndex("volume");
-            int i_quoteVolume = root.Items[0].GetPropertyIndex("quoteVolume");
-            int i_wa = root.Items[0].GetPropertyIndex("weightedAverage");
-
+            
             for(int i = 0; i < root.ItemsCount; i++) {
-                JsonHelperToken[] item = root.Items[i].Properties;
+                JsonHelperToken[] item = root.Items[i].Items;
+                
+                long sec = FastValueConverter.ConvertPositiveLong(item[12].Value);
+                DateTime time = startTime.AddMilliseconds(sec);
+                if(time.Minute % candleStickPeriodMin != 0)
+                    continue;
+                if(list.Count > 0 && list.Last().Time == time)
+                    continue;
+                
                 CandleStickData data = new CandleStickData();
-                long sec = FastValueConverter.ConvertPositiveLong(item[0].Value);
-                data.Time = startTime.AddMilliseconds(sec);
-                if(data.Time.Minute % candleStickPeriodMin != 0)
-                    continue;
-                if(list.Count > 0 && list.Last().Time == data.Time)
-                    continue;
-                data.High = FastValueConverter.Convert(item[i_high].Value);
-                data.Low = FastValueConverter.Convert(item[i_low].Value);
-                data.Open = FastValueConverter.Convert(item[i_open].Value);
-                data.Close = FastValueConverter.Convert(item[i_close].Value);
-                data.Volume = FastValueConverter.Convert(item[i_volume].Value);
-                data.QuoteVolume = FastValueConverter.Convert(item[i_quoteVolume].Value);
-                data.WeightedAverage = FastValueConverter.Convert(item[i_wa].Value);
+                data.Time = time;
+                data.Low = item[0].ValueDouble;
+                data.High = item[1].ValueDouble;
+                data.Open = item[2].ValueDouble;
+                data.Close = item[3].ValueDouble;
+                data.QuoteVolume = item[4].ValueDouble;
+                data.Volume = item[5].ValueDouble;
+                data.WeightedAverage = item[10].ValueDouble;
+                
                 list.Add(data);
             }
-            List<TradeInfoItem> trades = GetTradeVolumesForCandleStick(ticker, startSec, end);
+            List<TradeInfoItem> trades = GetTradeVolumesForCandleStick(ticker, startMs, endMs);
             CandleStickChartHelper.InitializeVolumes(list, trades, ticker.CandleStickPeriodMin);
             return list;
         }
@@ -491,7 +526,7 @@ namespace Crypto.Core {
             return true;
         }
         public override bool GetTickersInfo() {
-            string address = "https://poloniex.com/public?command=returnTicker";
+            string address = "https://api.poloniex.com/markets";
             string text = string.Empty;
             try {
                 text = GetDownloadString(address);
@@ -502,25 +537,23 @@ namespace Crypto.Core {
             if(HasError(text))
                 return false;
             ClearTickers();
-            JObject res = JsonConvert.DeserializeObject<JObject>(text);
+            var res = JsonHelper.Default.Deserialize(text);
+            //JArray res = JsonConvert.DeserializeObject<JArray>(text);
             int index = 0;
-            foreach(JProperty prop in res.Children()) {
-                PoloniexTicker t = (PoloniexTicker)GetOrCreateTicker(prop.Name);
+            foreach(var item in res.Items) {
+                PoloniexTicker t = (PoloniexTicker)GetOrCreateTicker(item.GetProperty("symbol").Value);
                 t.Index = index;
-                t.CurrencyPair = prop.Name;
                 if(PoloniexTickerCodesProvider.Codes.ContainsKey(t.CurrencyPair))
                     t.Code = PoloniexTickerCodesProvider.Codes[t.CurrencyPair];
-                JObject obj = (JObject)prop.Value;
-                t.Id = obj.Value<int>("id");
-                t.LastString = obj.Value<string>("last");
-                t.LowestAskString = obj.Value<string>("lowestAsk");
-                t.HighestBidString = obj.Value<string>("highestBid");
-                //t.Change = obj.Value<double>("percentChange");
-                t.BaseVolumeString = obj.Value<string>("baseVolume");
-                t.VolumeString = obj.Value<string>("quoteVolume");
-                t.IsFrozen = obj.Value<int>("isFrozen") != 0;
-                t.Hr24HighString = obj.Value<string>("high24hr");
-                t.Hr24LowString = obj.Value<string>("low24hr");
+                
+                // t.LowestAskString = obj.Value<string>("lowestAsk");
+                // t.HighestBidString = obj.Value<string>("highestBid");
+                // //t.Change = obj.Value<double>("percentChange");
+                // t.BaseVolumeString = obj.Value<string>("baseVolume");
+                // t.VolumeString = obj.Value<string>("quoteVolume");
+                // t.IsFrozen = obj.Value<int>("isFrozen") != 0;
+                // t.Hr24HighString = obj.Value<string>("high24hr");
+                // t.Hr24LowString = obj.Value<string>("low24hr");
                 AddTicker(t);
                 index++;
             }
@@ -539,7 +572,7 @@ namespace Crypto.Core {
         public override bool UpdateTickersInfo() {
             if(Tickers.Count == 0)
                 return false;
-            string address = "https://poloniex.com/public?command=returnTicker";
+            string address = "https://api.poloniex.com/markets/ticker24h";
             string text = string.Empty;
             try {
                 text = GetDownloadString(address);
@@ -547,23 +580,22 @@ namespace Crypto.Core {
             catch(Exception) {
                 return false;
             }
-            if(string.IsNullOrEmpty(text))
+            if(HasError(text))
                 return false;
-            JObject res = JsonConvert.DeserializeObject<JObject>(text);
-            foreach(JProperty prop in res.Children()) {
-                PoloniexTicker t = (PoloniexTicker)Tickers.FirstOrDefault((i) => i.CurrencyPair == prop.Name);
+            var res = JsonHelper.Default.Deserialize(text);
+            //JArray res = JsonConvert.DeserializeObject<JArray>(text);
+            foreach(var item in res.Items) {
+                PoloniexTicker t = (PoloniexTicker)GetTicker(item.GetProperty("symbol").Value);
                 if(t == null)
                     continue;
-                JObject obj = (JObject)prop.Value;
-                t.Last = obj.Value<double>("last");
-                t.LowestAsk = obj.Value<double>("lowestAsk");
-                t.HighestBid = obj.Value<double>("highestBid");
-                //t.Change = obj.Value<double>("percentChange");
-                t.BaseVolume = obj.Value<double>("baseVolume");
-                t.Volume = obj.Value<double>("quoteVolume");
-                t.IsFrozen = obj.Value<int>("isFrozen") != 0;
-                t.Hr24High = obj.Value<double>("high24hr");
-                t.Hr24Low = obj.Value<double>("low24hr");
+                
+                t.LowestAskString = item.GetProperty("ask").Value;
+                t.HighestBidString = item.GetProperty("bid").Value;
+                //t.Change = item.GetProperty("dailyChange");
+                t.BaseVolumeString = item.GetProperty("quantity").Value;
+                t.VolumeString = item.GetProperty("amount").Value;
+                t.Hr24HighString = item.GetProperty("high").Value;
+                t.Hr24LowString = item.GetProperty("low").Value;
             }
             return true;
         }

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29209.62
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33530.505
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CryptoMarketClient.Develop", "CryptoMarketClient\CryptoMarketClient.Develop.csproj", "{544E62E5-DC81-410C-9F75-F914A0B711C1}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -30,13 +30,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Crypto.Strategies.Develop",
 		{5C2EC487-3E30-4274-8263-DBACFA5319C6} = {5C2EC487-3E30-4274-8263-DBACFA5319C6}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkflowDiagram.Develop", "..\WorkflowDiagram\WorkflowDiagram\WorkflowDiagram.Develop.csproj", "{5C2EC487-3E30-4274-8263-DBACFA5319C6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkflowDiagram.Develop", "..\..\WorkflowDiagram\WorkflowDiagram\WorkflowDiagram.Develop.csproj", "{5C2EC487-3E30-4274-8263-DBACFA5319C6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkflowDiagram.Nodes.Base.Develop", "..\WorkflowDiagram\WorkflowDiagram.Nodes.Base\WorkflowDiagram.Nodes.Base.Develop.csproj", "{FDE9EA71-C293-47F5-981A-D56E9505114A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkflowDiagram.Nodes.Base.Develop", "..\..\WorkflowDiagram\WorkflowDiagram.Nodes.Base\WorkflowDiagram.Nodes.Base.Develop.csproj", "{FDE9EA71-C293-47F5-981A-D56E9505114A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkflowDiagram.UI.Win.Develop", "..\WorkflowDiagram\WorkflowDiagram.UI.Win\WorkflowDiagram.UI.Win.Develop.csproj", "{DCCF4253-22A8-4F04-BE71-13F0DA60CE1D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkflowDiagram.UI.Win.Develop", "..\..\WorkflowDiagram\WorkflowDiagram.UI.Win\WorkflowDiagram.UI.Win.Develop.csproj", "{DCCF4253-22A8-4F04-BE71-13F0DA60CE1D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WokflowDiagram.Nodes.Visualization.Win.Develop", "..\WorkflowDiagram\WorkflowDiagram.Nodes.Visualization\WokflowDiagram.Nodes.Visualization.Win.Develop.csproj", "{B17D2EF7-5C40-4A49-BEEC-750763C6281D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkflowDiagram.Nodes.Visualization.Win.Develop", "..\..\WorkflowDiagram\WorkflowDiagram.Nodes.Visualization\WorkflowDiagram.Nodes.Visualization.Win.Develop.csproj", "{9A515FFE-548A-4B4A-B615-76EAA83512F5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XmlSerialization", "..\..\XmlSerialization\XmlSerialization\XmlSerialization.csproj", "{4AF0943A-DA67-4A85-B594-3DBC3C79217A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -195,24 +197,42 @@ Global
 		{DCCF4253-22A8-4F04-BE71-13F0DA60CE1D}.Release|x64.Build.0 = Release|Any CPU
 		{DCCF4253-22A8-4F04-BE71-13F0DA60CE1D}.Release|x86.ActiveCfg = Release|Any CPU
 		{DCCF4253-22A8-4F04-BE71-13F0DA60CE1D}.Release|x86.Build.0 = Release|Any CPU
-		{B17D2EF7-5C40-4A49-BEEC-750763C6281D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B17D2EF7-5C40-4A49-BEEC-750763C6281D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B17D2EF7-5C40-4A49-BEEC-750763C6281D}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{B17D2EF7-5C40-4A49-BEEC-750763C6281D}.Debug|x64.Build.0 = Debug|Any CPU
-		{B17D2EF7-5C40-4A49-BEEC-750763C6281D}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{B17D2EF7-5C40-4A49-BEEC-750763C6281D}.Debug|x86.Build.0 = Debug|Any CPU
-		{B17D2EF7-5C40-4A49-BEEC-750763C6281D}.DebugCopy|Any CPU.ActiveCfg = Debug|Any CPU
-		{B17D2EF7-5C40-4A49-BEEC-750763C6281D}.DebugCopy|Any CPU.Build.0 = Debug|Any CPU
-		{B17D2EF7-5C40-4A49-BEEC-750763C6281D}.DebugCopy|x64.ActiveCfg = Debug|Any CPU
-		{B17D2EF7-5C40-4A49-BEEC-750763C6281D}.DebugCopy|x64.Build.0 = Debug|Any CPU
-		{B17D2EF7-5C40-4A49-BEEC-750763C6281D}.DebugCopy|x86.ActiveCfg = Debug|Any CPU
-		{B17D2EF7-5C40-4A49-BEEC-750763C6281D}.DebugCopy|x86.Build.0 = Debug|Any CPU
-		{B17D2EF7-5C40-4A49-BEEC-750763C6281D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B17D2EF7-5C40-4A49-BEEC-750763C6281D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B17D2EF7-5C40-4A49-BEEC-750763C6281D}.Release|x64.ActiveCfg = Release|Any CPU
-		{B17D2EF7-5C40-4A49-BEEC-750763C6281D}.Release|x64.Build.0 = Release|Any CPU
-		{B17D2EF7-5C40-4A49-BEEC-750763C6281D}.Release|x86.ActiveCfg = Release|Any CPU
-		{B17D2EF7-5C40-4A49-BEEC-750763C6281D}.Release|x86.Build.0 = Release|Any CPU
+		{9A515FFE-548A-4B4A-B615-76EAA83512F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A515FFE-548A-4B4A-B615-76EAA83512F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A515FFE-548A-4B4A-B615-76EAA83512F5}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{9A515FFE-548A-4B4A-B615-76EAA83512F5}.Debug|x64.Build.0 = Debug|Any CPU
+		{9A515FFE-548A-4B4A-B615-76EAA83512F5}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{9A515FFE-548A-4B4A-B615-76EAA83512F5}.Debug|x86.Build.0 = Debug|Any CPU
+		{9A515FFE-548A-4B4A-B615-76EAA83512F5}.DebugCopy|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A515FFE-548A-4B4A-B615-76EAA83512F5}.DebugCopy|Any CPU.Build.0 = Debug|Any CPU
+		{9A515FFE-548A-4B4A-B615-76EAA83512F5}.DebugCopy|x64.ActiveCfg = Debug|Any CPU
+		{9A515FFE-548A-4B4A-B615-76EAA83512F5}.DebugCopy|x64.Build.0 = Debug|Any CPU
+		{9A515FFE-548A-4B4A-B615-76EAA83512F5}.DebugCopy|x86.ActiveCfg = Debug|Any CPU
+		{9A515FFE-548A-4B4A-B615-76EAA83512F5}.DebugCopy|x86.Build.0 = Debug|Any CPU
+		{9A515FFE-548A-4B4A-B615-76EAA83512F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A515FFE-548A-4B4A-B615-76EAA83512F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9A515FFE-548A-4B4A-B615-76EAA83512F5}.Release|x64.ActiveCfg = Release|Any CPU
+		{9A515FFE-548A-4B4A-B615-76EAA83512F5}.Release|x64.Build.0 = Release|Any CPU
+		{9A515FFE-548A-4B4A-B615-76EAA83512F5}.Release|x86.ActiveCfg = Release|Any CPU
+		{9A515FFE-548A-4B4A-B615-76EAA83512F5}.Release|x86.Build.0 = Release|Any CPU
+		{4AF0943A-DA67-4A85-B594-3DBC3C79217A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4AF0943A-DA67-4A85-B594-3DBC3C79217A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4AF0943A-DA67-4A85-B594-3DBC3C79217A}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{4AF0943A-DA67-4A85-B594-3DBC3C79217A}.Debug|x64.Build.0 = Debug|Any CPU
+		{4AF0943A-DA67-4A85-B594-3DBC3C79217A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4AF0943A-DA67-4A85-B594-3DBC3C79217A}.Debug|x86.Build.0 = Debug|Any CPU
+		{4AF0943A-DA67-4A85-B594-3DBC3C79217A}.DebugCopy|Any CPU.ActiveCfg = DebugCopy|Any CPU
+		{4AF0943A-DA67-4A85-B594-3DBC3C79217A}.DebugCopy|Any CPU.Build.0 = DebugCopy|Any CPU
+		{4AF0943A-DA67-4A85-B594-3DBC3C79217A}.DebugCopy|x64.ActiveCfg = DebugCopy|Any CPU
+		{4AF0943A-DA67-4A85-B594-3DBC3C79217A}.DebugCopy|x64.Build.0 = DebugCopy|Any CPU
+		{4AF0943A-DA67-4A85-B594-3DBC3C79217A}.DebugCopy|x86.ActiveCfg = DebugCopy|Any CPU
+		{4AF0943A-DA67-4A85-B594-3DBC3C79217A}.DebugCopy|x86.Build.0 = DebugCopy|Any CPU
+		{4AF0943A-DA67-4A85-B594-3DBC3C79217A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4AF0943A-DA67-4A85-B594-3DBC3C79217A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4AF0943A-DA67-4A85-B594-3DBC3C79217A}.Release|x64.ActiveCfg = Release|Any CPU
+		{4AF0943A-DA67-4A85-B594-3DBC3C79217A}.Release|x64.Build.0 = Release|Any CPU
+		{4AF0943A-DA67-4A85-B594-3DBC3C79217A}.Release|x86.ActiveCfg = Release|Any CPU
+		{4AF0943A-DA67-4A85-B594-3DBC3C79217A}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

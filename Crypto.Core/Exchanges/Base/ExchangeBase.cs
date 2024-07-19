@@ -283,6 +283,7 @@ namespace Crypto.Core {
         }
         protected abstract ResizeableArray<TradeInfoItem> GetTradesCore(Ticker ticker, DateTime start, DateTime end);
 
+        [XmlIgnore]
         public DateTime LastWebSocketRecvTime { get; set; }
         public abstract bool AllowCandleStickIncrementalUpdate { get; }
         public abstract bool ObtainExchangeSettings();
@@ -400,11 +401,23 @@ namespace Crypto.Core {
 
         public event TickerUpdateEventHandler TickerChanged;
         public event EventHandler TickersUpdate;
-        protected internal void RaiseTickerChanged(Ticker t) {
-            TickerUpdateEventArgs e = new TickerUpdateEventArgs() { Ticker = t };
-            if(TickerChanged != null)
-                TickerChanged(this, e);
-            t.RaiseChanged();
+        private bool _inRaiseTickerChanged;
+        protected internal void RaiseTickerChanged(Ticker t)
+        {
+            if(_inRaiseTickerChanged)
+                return;
+            _inRaiseTickerChanged = true;
+            try
+            {
+                TickerUpdateEventArgs e = new TickerUpdateEventArgs() { Ticker = t };
+                if(TickerChanged != null)
+                    TickerChanged(this, e);
+            }
+            finally
+            {
+                _inRaiseTickerChanged = false;
+            }
+
         }
         protected void RaiseTickersUpdate() {
             if(TickersUpdate != null)
@@ -449,6 +462,8 @@ namespace Crypto.Core {
 
         public abstract ExchangeType Type { get; }
         public string Name { get { return Type.ToString(); } }
+        [XmlIgnore]
+        public object Icon { get; set; }
         public string TickersDirectory { get { return SettingsStore.ApplicationDirectory + "\\Tickers\\" + Name; } }
         public string CaptureDataDirectory { get { return SettingsStore.ApplicationDirectory + "\\CapturedData\\" + Name; } }
 
@@ -472,7 +487,7 @@ namespace Crypto.Core {
 
         public string FileName { get; set; }
         public bool Save() {
-            return SerializationHelper.Current.Save(this, GetType(), null);
+            return SerializationHelper.Current.Save(this, GetType(), (string)null);
         }
 
         void ISupportSerialization.OnBeginSerialize() { }
@@ -492,7 +507,7 @@ namespace Crypto.Core {
                 return null;
 
             byte[] keyArray;
-            byte[] toEncryptArray = UTF8Encoding.UTF8.GetBytes(toEncrypt);
+            byte[] toEncryptArray = Encoding.UTF8.GetBytes(toEncrypt);
 
             //System.Configuration.AppSettingsReader settingsReader = new AppSettingsReader();
             // Get the key from config file
@@ -501,17 +516,17 @@ namespace Crypto.Core {
             //System.Windows.Forms.MessageBox.Show(key);
             //If hashing use get hashcode regards to your key
             if(useHashing) {
-                MD5CryptoServiceProvider hashmd5 = new MD5CryptoServiceProvider();
-                keyArray = hashmd5.ComputeHash(UTF8Encoding.UTF8.GetBytes(key));
+                var hashmd5 = MD5.Create();
+                keyArray = hashmd5.ComputeHash(Encoding.UTF8.GetBytes(key));
                 //Always release the resources and flush data
                 // of the Cryptographic service provide. Best Practice
 
                 hashmd5.Clear();
             }
             else
-                keyArray = UTF8Encoding.UTF8.GetBytes(key);
+                keyArray = Encoding.UTF8.GetBytes(key);
 
-            TripleDESCryptoServiceProvider tdes = new TripleDESCryptoServiceProvider();
+            var tdes = TripleDES.Create();
             //set the secret key for the tripleDES algorithm
             tdes.Key = keyArray;
             //mode of operation. there are other 4 modes.
@@ -544,18 +559,18 @@ namespace Crypto.Core {
 
             if(useHashing) {
                 //if hashing was used get the hash code with regards to your key
-                MD5CryptoServiceProvider hashmd5 = new MD5CryptoServiceProvider();
-                keyArray = hashmd5.ComputeHash(UTF8Encoding.UTF8.GetBytes(key));
+                var hashmd5 = MD5.Create();
+                keyArray = hashmd5.ComputeHash(Encoding.UTF8.GetBytes(key));
                 //release any resource held by the MD5CryptoServiceProvider
 
                 hashmd5.Clear();
             }
             else {
                 //if hashing was not implemented get the byte code of the key
-                keyArray = UTF8Encoding.UTF8.GetBytes(key);
+                keyArray = Encoding.UTF8.GetBytes(key);
             }
 
-            TripleDESCryptoServiceProvider tdes = new TripleDESCryptoServiceProvider();
+            var tdes = TripleDES.Create();
             //set the secret key for the tripleDES algorithm
             tdes.Key = keyArray;
             //mode of operation. there are other 4 modes. 
@@ -1191,6 +1206,7 @@ namespace Crypto.Core {
                 TickersSocket.AddRef();
                 return;
             }
+            LastWebSocketRecvTime = DateTime.Now;
             TickersSocket = CreateTickersWebSocket();
             TickersSocket.StateChanged += OnTickersSocketStateChanged;
             if(!SimulationMode)
@@ -1200,7 +1216,9 @@ namespace Crypto.Core {
             TickersSocket.AddRef();
         }
 
-        private void OnTickersSocketStateChanged(object sender, ConnectionInfoChangedEventArgs e) {
+        protected virtual void OnTickersSocketStateChanged(object sender, ConnectionInfoChangedEventArgs e) {
+            if(e.NewState == SocketConnectionState.Connected)
+                LastWebSocketRecvTime = DateTime.Now;
             if (TickersSocketStateChanged != null)
                 TickersSocketStateChanged(this, e);
         }
@@ -1211,7 +1229,7 @@ namespace Crypto.Core {
             StopListenTickersStream(false);
         }
         public virtual void StopListenTickersStream(bool force) {
-            LogManager.Default.Log(LogType.Log, this, "stop listening tickers stream", "");
+            LogManager.Default.Log(LogType.Log, this, "Stop listening tickers stream", "");
             if(TickersSocket == null)
                 return;
             if(force)
@@ -1230,17 +1248,17 @@ namespace Crypto.Core {
         protected internal virtual void OnTickersSocketClosed(object sender, EventArgs e) {
             if(TickersSocket == null)
                 return;
-            LogManager.Default.Log(LogType.Log, this, "tickers socket closed", "");
+            LogManager.Default.Log(LogType.Log, this, "Tickers socket closed", "");
         }
 
         protected internal virtual void OnTickersSocketOpened(object sender, EventArgs e) {
-            LogManager.Default.Log(LogType.Success, this, "tickers socket opened", "");
+            LogManager.Default.Log(LogType.Success, this, "Tickers socket opened", "");
         }
 
         protected internal virtual void OnTickersSocketError(object sender, SuperSocket.ClientEngine.ErrorEventArgs e) {
             bool isReconnecting = TickersSocket.Reconnecting;
             TickersSocket.Reconnecting = false;
-            LogManager.Default.Log(LogType.Error, this, "tickers socket error", e.Exception.Message);
+            LogManager.Default.Log(LogType.Error, this, "Tickers socket error", e.Exception.Message);
             if(!isReconnecting)
                 TickersSocket.Reconnect();
             else
@@ -1671,8 +1689,20 @@ namespace Crypto.Core {
         public string Text { get; set; }
         public string Command { get; set; }
         public string SubscribeChannel { get; set; }
-        public int TotalMinutes { get { return (int)Interval.TotalMinutes; } set { Interval = TimeSpan.FromMinutes(value); } }
-        public TimeSpan Interval { get; set; }
+        private int _totalMinutes;
+        public int TotalMinutes => _totalMinutes;
+
+        private TimeSpan _interval;
+
+        public TimeSpan Interval
+        {
+            get => _interval;
+            set
+            {
+                _interval = value;
+                _totalMinutes = (int)Interval.TotalMinutes;
+            }
+        }
     }
 
     public enum WebSocketType {

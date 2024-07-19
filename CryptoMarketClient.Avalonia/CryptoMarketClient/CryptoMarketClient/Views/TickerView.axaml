@@ -1,0 +1,46 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:CryptoMarketClient.ViewModels"
+             xmlns:mxd="https://schemas.eremexcontrols.net/avalonia/docking"
+             xmlns:mxb="https://schemas.eremexcontrols.net/avalonia/bars"
+             xmlns:views="clr-namespace:CryptoMarketClient.Views"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="CryptoMarketClient.Views.TickerView">
+    <Design.DataContext>
+        <!-- This only sets the DataContext for the previewer in an IDE,
+             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+        <viewModels:TickerViewModel/>
+    </Design.DataContext>
+    <Grid RowDefinitions="Auto, *">
+        <mxb:ToolbarContainerControl ItemsSource="{CompiledBinding Toolbars, DataType=viewModels:TickerViewModel}">
+                
+        </mxb:ToolbarContainerControl>
+        <mxd:DockManager Grid.Row="1">
+            <mxd:DockGroup Orientation="Horizontal">
+                <mxd:DockGroup DockWidth="80*" Orientation="Vertical">
+                    <mxd:DockGroup DockHeight="60*">
+                        <mxd:DockPane Header="Chart"></mxd:DockPane>
+                    </mxd:DockGroup>
+                    <mxd:TabbedGroup DockHeight="40*">
+                        <mxd:DockPane Header="Opened Orders"></mxd:DockPane>
+                        <mxd:DockPane Header="My Trades"></mxd:DockPane>
+                        <mxd:DockPane Header="Active Trailings"></mxd:DockPane>                
+                    </mxd:TabbedGroup>
+                </mxd:DockGroup>
+                <mxd:DockGroup DockWidth="20*" Orientation="Vertical">
+                    <mxd:TabbedGroup DockHeight="60*">
+                        <mxd:DockPane Header="OrderBook">
+                            <views:OrderBookView DataContext="{Binding OrderBook}"/>
+                        </mxd:DockPane>                
+                        <mxd:DockPane Header="Trades"></mxd:DockPane>
+                    </mxd:TabbedGroup>
+                    <mxd:DockGroup DockHeight="40*">
+                        <mxd:DockPane Header="Buy/Sell"></mxd:DockPane>
+                    </mxd:DockGroup>
+                </mxd:DockGroup>
+            </mxd:DockGroup>
+        </mxd:DockManager>
+    </Grid>
+</UserControl>

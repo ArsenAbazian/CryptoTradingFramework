@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -131,7 +132,7 @@ namespace Crypto.Core {
         public bool Save() {
             if(IsLoading)
                 return false;
-            return SerializationHelper.Current.Save(this, GetType(), null);
+            return SerializationHelper.Current.Save(this, GetType(), (string)null);
         }
 
         public bool SelectedInDependencyArbitrage { get; set; }
@@ -908,9 +909,22 @@ namespace Crypto.Core {
             AccountShortTradeHistory.Add(item);
         }
 
-        protected internal void RaiseChanged() {
-            if(Changed != null)
-                Changed(this, EventArgs.Empty);
+        private bool _inRaiseTickerChanged;
+        protected internal void RaiseChanged()
+        {
+            if(_inRaiseTickerChanged)
+                return;
+            _inRaiseTickerChanged = true;
+            try
+            {
+                if(Changed != null)
+                    Changed(this, EventArgs.Empty);
+                Exchange?.RaiseTickerChanged(this);
+            }
+            finally
+            {
+                _inRaiseTickerChanged = false;
+            }
         }
 
         public bool HasTradeHistorySubscribers { get { return TradeHistoryChanged != null; } }
@@ -1035,27 +1049,50 @@ namespace Crypto.Core {
 
         void ICachedDataOwner.OnDataUpdated() {
             RaiseChanged();
-            Exchange?.RaiseTickerChanged(this);
         }
 
         protected virtual int DefaultCandlestickInterval => 60;
         public double[] GetSparkline() {
             ResizeableArray<CandleStickData> dt = GetRecentCandleStickData(DefaultCandlestickInterval);
             if(dt == null)
-                return this.sparklineNullValue;
+                return this._sparklineNullValue;
             double[] data = new double[dt.Count];
             for(int i = 0; i < dt.Count; i++)
                 data[i] = (dt[i].Open + dt[i].Close + dt[i].High + dt[i].Low) / 4;
             return data;
         }
 
-        double[] sparklineNullValue = new double[0];
-        double[] sparkline;
+        double[] _sparklineNullValue = new double[0];
+        double[] _sparkline;
         [XmlIgnore]
         public double[] Sparkline { 
-            get { return sparkline; }
+            get => _sparkline;
             set {
-                sparkline = value;
+                _sparkline = value;
+                OnSparklineChanged();
+                
+            }
+        }
+
+        private void OnSparklineChanged()
+        {
+            if(Sparkline == null || Sparkline.Length == 0)
+                return;
+            isTrendUp = Sparkline[^1] >= Sparkline[0];
+            RaiseChanged();
+        }
+
+        private bool isTrendUp;
+
+        [XmlIgnore]
+        public bool IsTrendUp
+        {
+            get => isTrendUp;
+            set
+            {
+                if(IsTrendUp == value)
+                    return;
+                isTrendUp = value;
                 RaiseChanged();
             }
         }
@@ -1064,13 +1101,14 @@ namespace Crypto.Core {
             DataCacheManager.RemoveTask(this, nameof(Sparkline));
         }
 
-        public bool HasSparkline => this.sparkline != null && this.sparkline.Length > 0;
+        public bool HasSparkline => this._sparkline != null && this._sparkline.Length > 0;
         public bool QuerySparkline() {
             if(HasSparkline)
                 return false;
-            this.sparkline = (double[])DataCacheManager.GetData(this, nameof(Sparkline), TimeSpan.FromHours(1), this.sparklineNullValue, () => {
+            _sparkline = (double[])DataCacheManager.GetData(this, nameof(Sparkline), TimeSpan.FromHours(1), this._sparklineNullValue, () => {
                 return GetSparkline();
             });
+            OnSparklineChanged();
             if(HasSparkline) {
                 RaiseChanged();
                 return true;

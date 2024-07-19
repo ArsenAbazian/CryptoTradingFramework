@@ -14,7 +14,7 @@ namespace Crypto.Core.Common {
         #region Encryption
         public static string Encrypt(string toEncrypt, bool useHashing) {
             byte[] keyArray;
-            byte[] toEncryptArray = UTF8Encoding.UTF8.GetBytes(toEncrypt);
+            byte[] toEncryptArray = Encoding.UTF8.GetBytes(toEncrypt);
 
             //System.Configuration.AppSettingsReader settingsReader = new AppSettingsReader();
             // Get the key from config file
@@ -23,17 +23,17 @@ namespace Crypto.Core.Common {
             //System.Windows.Forms.MessageBox.Show(key);
             //If hashing use get hashcode regards to your key
             if(useHashing) {
-                MD5CryptoServiceProvider hashmd5 = new MD5CryptoServiceProvider();
-                keyArray = hashmd5.ComputeHash(UTF8Encoding.UTF8.GetBytes(key));
+                var hashmd5 = MD5.Create();
+                keyArray = hashmd5.ComputeHash(Encoding.UTF8.GetBytes(key));
                 //Always release the resources and flush data
                 // of the Cryptographic service provide. Best Practice
 
                 hashmd5.Clear();
             }
             else
-                keyArray = UTF8Encoding.UTF8.GetBytes(key);
+                keyArray = Encoding.UTF8.GetBytes(key);
 
-            TripleDESCryptoServiceProvider tdes = new TripleDESCryptoServiceProvider();
+            var tdes = TripleDES.Create();
             //set the secret key for the tripleDES algorithm
             tdes.Key = keyArray;
             //mode of operation. there are other 4 modes.
@@ -66,18 +66,18 @@ namespace Crypto.Core.Common {
 
             if(useHashing) {
                 //if hashing was used get the hash code with regards to your key
-                MD5CryptoServiceProvider hashmd5 = new MD5CryptoServiceProvider();
-                keyArray = hashmd5.ComputeHash(UTF8Encoding.UTF8.GetBytes(key));
+                var hashmd5 = MD5.Create();
+                keyArray = hashmd5.ComputeHash(Encoding.UTF8.GetBytes(key));
                 //release any resource held by the MD5CryptoServiceProvider
 
                 hashmd5.Clear();
             }
             else {
                 //if hashing was not implemented get the byte code of the key
-                keyArray = UTF8Encoding.UTF8.GetBytes(key);
+                keyArray = Encoding.UTF8.GetBytes(key);
             }
 
-            TripleDESCryptoServiceProvider tdes = new TripleDESCryptoServiceProvider();
+            var tdes = TripleDES.Create();
             //set the secret key for the tripleDES algorithm
             tdes.Key = keyArray;
             //mode of operation. there are other 4 modes. 
@@ -93,7 +93,7 @@ namespace Crypto.Core.Common {
             //Release resources held by TripleDes Encryptor                
             tdes.Clear();
             //return the Clear decrypted TEXT
-            return UTF8Encoding.UTF8.GetString(resultArray);
+            return Encoding.UTF8.GetString(resultArray);
         }
         #endregion
 

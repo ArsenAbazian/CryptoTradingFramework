@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:element name="root" msdata:IsDataSet="true">
+            
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="AddCaption" xml:space="preserve">
+        <value>Добавить</value>
+    </data>
+    <data name="CancelCaption" xml:space="preserve">
+        <value>Отмена</value>
+    </data>
+    <data name="EditCaption" xml:space="preserve">
+        <value>Редактировать</value>
+    </data>
+    <data name="OkCaption" xml:space="preserve">
+        <value>OK</value>
+    </data>
+    <data name="RemoveCaption" xml:space="preserve">
+        <value>Удалить</value>
+    </data>
+    <data name="ExportCaption" xml:space="preserve">
+        <value>Экспорт</value>
+    </data>
+    <data name="ImportCaption" xml:space="preserve">
+        <value>Импорт</value>
+    </data>
+    <data name="Title" xml:space="preserve">
+        <value>Ваши аккаунты</value>
+    </data>
+    <data name="ActiveColumn" xml:space="preserve">
+        <value>Активный</value>
+    </data>
+    <data name="ApiKeyColumn" xml:space="preserve">
+        <value>Api ключ</value>
+    </data>
+    <data name="DefaultColumn" xml:space="preserve">
+        <value>Основной</value>
+    </data>
+    <data name="NameColumn" xml:space="preserve">
+        <value>Название</value>
+    </data>
+    <data name="SecretColumn" xml:space="preserve">
+        <value>Секретный код</value>
+    </data>
+    <data name="RemoveQuestionText" xml:space="preserve">
+        <value>Вы действительно хотите удалить выбранный аккаунт?</value>
+    </data>
+    <data name="RemoveMessageTitle" xml:space="preserve">
+        <value>Удалить аккаунт</value>
+    </data>
+    <data name="NotEmptyValidationString" xml:space="preserve">
+        <value>Поле {0} не должно быть пустым</value>
+    </data>
+    <data name="ApiKeysImportedWithLimitationMessage" xml:space="preserve">
+        <value>Api ключи успешно импортированы. Однако некоторые ключи были пропущены, поскольку они были добавлены ранее.</value>
+    </data>
+    <data name="ApiKeysImportedMessage" xml:space="preserve">
+        <value>Api ключи успешно импортированы.</value>
+    </data>
+    <data name="DoNotShowAccountCollectionFormOnNextStartup" xml:space="preserve">
+        <value>Не показывать при следующем запуске</value>
+    </data>
+</root>

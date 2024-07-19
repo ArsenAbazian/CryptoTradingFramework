@@ -1,0 +1,109 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:mxb="https://schemas.eremexcontrols.net/avalonia/bars"
+             xmlns:res="clr-namespace:CryptoMarketClient.Resources"
+             xmlns:icons="https://schemas.eremexcontrols.net/avalonia/icons"
+             xmlns:mxe="https://schemas.eremexcontrols.net/avalonia/editors"
+             xmlns:mxdg="https://schemas.eremexcontrols.net/avalonia/datagrid"
+             xmlns:mx="https://schemas.eremexcontrols.net/avalonia"
+             xmlns:vm="clr-namespace:CryptoMarketClient.ViewModels"
+             xmlns:controls="clr-namespace:Crypto.UI.Avalonia.Controls;assembly=Crypto.UI.Avalonia"
+             xmlns:core="clr-namespace:Crypto.Core;assembly=Crypto.Net.Core"
+             xmlns:visuals="clr-namespace:Eremex.AvaloniaUI.Controls.DataControl.Visuals;assembly=Eremex.Avalonia.Controls"
+             xmlns:system="clr-namespace:System;assembly=System.Runtime"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="CryptoMarketClient.Views.ExchangeView">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <controls:TickerTrendColorConverter x:Key="TrendToColor">
+                <controls:TickerTrendColorConverter.Color>
+                    <Color>DarkCyan</Color>
+                </controls:TickerTrendColorConverter.Color>
+                <controls:TickerTrendColorConverter.ReductionColor>
+                    <Color>Crimson</Color>
+                </controls:TickerTrendColorConverter.ReductionColor>
+            </controls:TickerTrendColorConverter>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <UserControl.Styles>
+        <Style Selector="mx|ListViewItemControl/template/Rectangle#PART_Border">
+            <Setter Property="StrokeThickness" Value="1"/>
+            <Setter Property="Stroke" Value="Transparent"/>
+            <Setter Property="RadiusX" Value="2"/>
+            <Setter Property="RadiusY" Value="2"/>
+            <Setter Property="Fill" Value="Transparent"/>
+        </Style>
+        <Style Selector="Button.TradeButton">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Margin" Value="24,0"/>
+            <Setter Property="Padding" Value="24, 8"/>
+        </Style>
+    </UserControl.Styles>
+    <Design.DataContext>
+        <!-- This only sets the DataContext for the previewer in an IDE,
+             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+        <vm:DesignTimeExchangeViewModel/>
+    </Design.DataContext>
+    <mxb:ToolbarManager>
+        <Grid RowDefinitions="Auto, *">
+            <mxe:SplitContainerControl Grid.Row="1" Panel1Length="20*" Panel2Length="80*" Orientation="Horizontal">
+                <mxe:SplitContainerControl.Panel1>
+                    <mx:ListViewControl ItemsSource="{CompiledBinding Markets, DataType=vm:ExchangeViewModel}"
+                                        FocusedItem="{CompiledBinding SelectedMarket, DataType=vm:ExchangeViewModel, Mode=TwoWay}"
+                                        ItemHeight="26"
+                                        ItemClass="Detail"
+                                        ItemLayoutMode="Stack"/>
+                </mxe:SplitContainerControl.Panel1>
+                <mxe:SplitContainerControl.Panel2>
+                    <Grid RowDefinitions="Auto, *">
+                        <mxb:ToolbarContainerControl>
+                            <mxb:Toolbar StretchToolbar="True" AllowDragToolbar="False" ShowCustomizationButton="False">
+                                <mxb:ToolbarButtonItem Header="{x:Static res:ExchangeViewResources.EnterMarketCaption}" Glyph="{x:Static icons:Basic.Access}"/>
+                                <mxb:ToolbarButtonItem Header="{x:Static res:ExchangeViewResources.AccountBalancesCaption}" Glyph="{x:Static icons:Basic.Calculator}"/>
+                                <mxb:ToolbarButtonItem Header="{x:Static res:ExchangeViewResources.OrderListCaption}" Glyph="{x:Static icons:Basic.List_Expand}"/>
+                                <mxb:ToolbarButtonItem Header="{x:Static res:ExchangeViewResources.TradeHistoryCaption}" Glyph="{x:Static icons:Basic.History}"/>
+                                <mxb:ToolbarCheckItem Header="{x:Static res:ExchangeViewResources.ShowOnlyFavoritesCaption}"
+                                                      Alignment="Far"
+                                                      IsChecked="{CompiledBinding ShowOnlyFavorites, DataType=vm:ExchangeViewModel}"/>
+                            </mxb:Toolbar>
+                        </mxb:ToolbarContainerControl>
+                        <mxdg:DataGridControl x:Name="TickersGrid" Grid.Row="1" ItemsSource="{CompiledBinding Tickers, DataType=vm:ExchangeViewModel}"
+                                              FocusedItem="{CompiledBinding SelectedTicker, DataType=vm:ExchangeViewModel, Mode=TwoWay}"
+                                              ShowVerticalLines="False"
+                                              RowMinHeight="48"
+                                              DoubleTapped="TickersGrid_OnDoubleTapped">
+                        <mxdg:GridColumn FieldName="IsSelected" Header=" " Width="Auto"/>
+                        <mxdg:GridColumn FieldName="BaseCurrency" Header="{x:Static res:ExchangeViewResources.Column_BaseCurrency}" AllowEditing="False" Width="Auto"/>
+                        <mxdg:GridColumn FieldName="LastString" Header="{x:Static res:ExchangeViewResources.Column_Last}" AllowEditing="False"/>
+                        <mxdg:GridColumn FieldName="Hr24HighString" Header="{x:Static res:ExchangeViewResources.Column_Hr24High}" AllowEditing="False"/>
+                        <mxdg:GridColumn FieldName="Hr24LowString" Header="{x:Static res:ExchangeViewResources.Column_Hr24Low}" AllowEditing="False"/>
+                        <mxdg:GridColumn FieldName="BaseVolumeString" Header="{x:Static res:ExchangeViewResources.Column_Volume}" AllowEditing="False"/>
+                        <mxdg:GridColumn FieldName="Sparkline" Header="{x:Static res:ExchangeViewResources.Column_Trend}" Width="180" AllowEditing="False">
+                            <mxdg:GridColumn.CellTemplate>
+                                <DataTemplate>
+                                    <controls:SparklineControl DataSource="{CompiledBinding Value, DataType=visuals:CellData}"
+                                                               Opacity="0.8"
+                                                               Color="{CompiledBinding Row, Converter={StaticResource TrendToColor}, DataType=visuals:CellData}"
+                                                               EdgePointColor="{CompiledBinding Row, Converter={StaticResource TrendToColor}, DataType=visuals:CellData}"/>
+                                </DataTemplate>
+                            </mxdg:GridColumn.CellTemplate>
+                        </mxdg:GridColumn>
+                        <mxdg:GridColumn FieldName="Trade" UnboundDataType="{x:Type system:String}" Header=" " AllowEditing="False" Width="Auto">
+                            <mxdg:GridColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Classes="TradeButton"
+                                            Content="{x:Static res:Resources.Trade}"
+                                            Command="{Binding $parent[mxdg:DataGridControl].DataContext.TradeCommand}"
+                                            CommandParameter="{Binding Row}"/>
+                                </DataTemplate>
+                            </mxdg:GridColumn.CellTemplate>
+                        </mxdg:GridColumn>
+                    </mxdg:DataGridControl>
+                    </Grid>
+                </mxe:SplitContainerControl.Panel2>
+            </mxe:SplitContainerControl>
+        </Grid>    
+    </mxb:ToolbarManager>
+</UserControl>

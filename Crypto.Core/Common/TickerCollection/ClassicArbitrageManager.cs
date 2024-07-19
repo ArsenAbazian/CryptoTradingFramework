@@ -196,7 +196,7 @@ namespace Crypto.Core.Common {
         }
 
         public bool Save() {
-            if(SerializationHelper.Current.Save(this, GetType(), null)) {
+            if(SerializationHelper.Current.Save(this, GetType(), (string)null)) {
                 SettingsStore.Default.ClassicArbitrageLastFileName = FileName;
                 return true;
             }

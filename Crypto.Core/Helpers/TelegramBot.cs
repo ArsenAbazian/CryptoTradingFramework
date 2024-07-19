@@ -34,7 +34,7 @@ namespace Crypto.Core.Helpers {
         public TelegramBot() {
             //var proxy = new HttpToSocks5Proxy("142.93.108.135", 1080, "sockuser", "boogieperets");
 
-            WebClient cl = new WebClient();
+            HttpClient cl = new HttpClient();
             //cl.Proxy = proxy;
 
             //proxy.ResolveHostnamesLocally = true;

@@ -1,22 +1,18 @@
-﻿using Crypto.Core;
-using Crypto.Core.Helpers;
+﻿using Crypto.Core.Helpers;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using WorkflowDiagram;
 using WorkflowDiagram.Nodes.Base;
-using WorkflowDiagram.Nodes.Base.Editors;
 
 namespace Crypto.Core.WorkflowDiagram {
     [WfToolboxVisible(false)]
-    public class WfTimeSeriesProcess : WfVisualNodeBase, IGlobalsTypeProvider {
+    public class WfTimeSeriesProcess : WfVisualNodeBase
+        // TODO: Do not remembery why is this needed
+        //, IGlobalsTypeProvider 
+    {
         public override string VisualTemplateName => "TimeSeriesOperation";
 
         public override string Type => "Time Series Op";
@@ -111,9 +107,9 @@ namespace Crypto.Core.WorkflowDiagram {
             return (Script.RunAsync(info).Result.ReturnValue);
         }
 
-        Type IGlobalsTypeProvider.GetGlobalsType() {
-            return typeof(WfTimeSeriesItemInfo);
-        }
+        // Type IGlobalsTypeProvider.GetGlobalsType() {
+        //     return typeof(WfTimeSeriesItemInfo);
+        // }
 
         private int Compare(object arg1, object arg2) {
             if(arg1 is DateTime) {
@@ -175,7 +171,9 @@ namespace Crypto.Core.WorkflowDiagram {
         }
 
         string expression = "0";
-        [Category("Expression"), PropertyEditor(typeof(RepositoryItemExpressionEditor))]
+        [Category("Expression")]
+        // TODO do something with editors.. 
+        //[PropertyEditor(typeof(RepositoryItemExpressionEditor))]
         public string Expression {
             get { return expression; }
             set {

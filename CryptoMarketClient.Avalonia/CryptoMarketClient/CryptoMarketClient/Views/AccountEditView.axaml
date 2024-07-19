@@ -1,0 +1,49 @@
+<mx:MxWindow xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:mx="https://schemas.eremexcontrols.net/avalonia"
+        xmlns:res="clr-namespace:CryptoMarketClient.Resources"
+        xmlns:mxe="https://schemas.eremexcontrols.net/avalonia/editors"
+        xmlns:vm="clr-namespace:CryptoMarketClient.ViewModels"
+        mc:Ignorable="d" d:DesignWidth="450" d:DesignHeight="300"
+        x:Class="CryptoMarketClient.Views.AccountEditView"
+        Width="450"
+        Height="300"
+        ShowMaximizeButton="False"
+        ShowMinimizeButton="False"
+        WindowStartupLocation="CenterScreen"
+        Title="{x:Static res:AccountEditViewResources.Title}">
+    <Design.DataContext>
+        <!-- This only sets the DataContext for the previewer in an IDE,
+             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+        <vm:AccountEditViewModel/>
+    </Design.DataContext>
+    
+    <Grid RowDefinitions="*, Auto">
+        <Border Classes="Client" Grid.Row="0">
+            <Grid ColumnDefinitions="Auto, *" RowDefinitions="Auto, Auto, Auto, Auto">
+                <Label Classes="EditorLabel" Content="{x:Static res:AccountEditViewResources.Type}"/>
+                <mxe:ComboBoxEditor Classes="LayoutItem" Grid.Column="1" ItemsSource="{CompiledBinding Types, DataType=vm:AccountEditViewModel}" DisplayMember="Name" ValueMember="Type" 
+                                    EditorValue="{CompiledBinding SelectedType, DataType=vm:AccountEditViewModel, Mode=TwoWay}"/>
+                <Label Grid.Row="1" Classes="EditorLabel" Content="{x:Static res:AccountEditViewResources.Name}"/>
+                <mxe:TextEditor Classes="LayoutItem" Grid.Column="1" Grid.Row="1" EditorValue="{CompiledBinding Name, DataType=vm:AccountEditViewModel}" 
+                                ValidationInfo="{CompiledBinding NameValidationInfo, DataType=vm:AccountEditViewModel}"/>
+                <Label Grid.Row="2" Classes="EditorLabel" Content="{x:Static res:AccountEditViewResources.ApiKey}"/>
+                <mxe:TextEditor Classes="LayoutItem" Grid.Column="1" Grid.Row="2" EditorValue="{CompiledBinding ApiKey, DataType=vm:AccountEditViewModel}"
+                                ValidationInfo="{CompiledBinding ApiKeyValidationInfo, DataType=vm:AccountEditViewModel}"/>
+                <Label Grid.Row="3" Classes="EditorLabel" Content="{x:Static res:AccountEditViewResources.Secret}"/>
+                <mxe:TextEditor Classes="LayoutItem" Grid.Column="1" Grid.Row="3" EditorValue="{CompiledBinding Secret, DataType=vm:AccountEditViewModel}"
+                                ValidationInfo="{CompiledBinding SecretValidationInfo, DataType=vm:AccountEditViewModel}"/>
+            </Grid>
+        </Border>
+        <Border Grid.Row="2" Classes="BottomPane">
+                <Grid ColumnDefinitions="*, Auto, Auto">
+                    <Button Classes="LayoutItemRight" Grid.Column="1" Width="100" Content="{x:Static res:Resources.OkCaption}" 
+                            Command="{CompiledBinding OkCommand, DataType=vm:AccountEditViewModel}"/>
+                    <Button Grid.Column="2" Width="100" Content="{x:Static res:Resources.CancelCaption}"
+                            Command="{CompiledBinding CancelCommand, DataType=vm:AccountEditViewModel}"/>
+                </Grid>
+            </Border>
+    </Grid>
+</mx:MxWindow>
