@@ -8,6 +8,7 @@ namespace CryptoMarketClient.ViewModels;
 public partial class LogViewModel : ViewModelBase, IViewDocument
 {
     [ObservableProperty] private ResizeableArray<LogMessage> items;
+
     public LogViewModel(DocumentManager documentManager, IToolbarController toolbarController) : base(documentManager, toolbarController)
     {
         items = LogManager.Default.Messages;
@@ -19,4 +20,8 @@ public partial class LogViewModel : ViewModelBase, IViewDocument
     }
 
     public string Name => Resources.Resources.LogView_Title;
+
+    string IViewDocument.DocumentName => Name;
+
+    ToolbarManagerViewModel IViewDocument.ViewToolbars => Toolbars;
 }

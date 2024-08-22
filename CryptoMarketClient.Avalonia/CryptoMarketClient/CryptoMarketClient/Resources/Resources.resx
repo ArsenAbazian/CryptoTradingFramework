@@ -60,4 +60,7 @@
     <data name="Column_Volume" xml:space="preserve">
         <value>Volume</value>
     </data>
+    <data name="Column_Time" xml:space="preserve">
+        <value>Time</value>
+    </data>
 </root>

@@ -399,6 +399,9 @@ public partial class ExchangeViewModel : ViewModelBase, IViewDocument
     {
         OpenTicker((Ticker)param);
     }
+    
+    string IViewDocument.DocumentName => Name;
+    ToolbarManagerViewModel IViewDocument.ViewToolbars => Toolbars;
 }
 
 public partial class DesignTimeExchangeViewModel : ExchangeViewModel

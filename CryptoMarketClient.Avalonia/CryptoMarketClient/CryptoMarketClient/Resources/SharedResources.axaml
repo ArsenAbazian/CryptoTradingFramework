@@ -1,0 +1,17 @@
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:mxe="https://schemas.eremexcontrols.net/avalonia/editors">
+    <DataTemplate x:Key="UltraCompactCellTemplate">
+        <mxe:TextEditor Classes="UltraCompact" x:Name="PART_Editor"/>
+    </DataTemplate>
+    <DataTemplate x:Key="UltraCompactBidCellTemplate">
+        <mxe:TextEditor Classes="UltraCompact" x:Name="PART_Editor" Foreground="{StaticResource BidColor}"/>
+    </DataTemplate>
+    <DataTemplate x:Key="UltraCompactAskCellTemplate">
+        <mxe:TextEditor Classes="UltraCompact" x:Name="PART_Editor" Foreground="{StaticResource AskColor}"/>
+    </DataTemplate>
+    
+    <DataTemplate x:Key="UltraCompactTimeCellTemplate">
+        <mxe:TextEditor Classes="UltraCompact" x:Name="PART_Editor" DisplayFormatString="hh:mm:ss.fff"/>
+    </DataTemplate>
+</ResourceDictionary>

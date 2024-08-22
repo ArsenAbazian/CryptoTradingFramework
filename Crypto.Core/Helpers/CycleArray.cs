@@ -321,7 +321,7 @@ namespace Crypto.Core.Helpers {
         }
 
         void ICollection.CopyTo(Array array, int index) {
-            for(int i = 0; i < Count; i++)
+            for(int i = 0; i < Count && i < array.Length; i++)
                 array.SetValue(this[i], index + i);
         }
 
@@ -360,6 +360,20 @@ namespace Crypto.Core.Helpers {
             this.updateCount--;
             if(this.updateCount == 0)
                 RaiseListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
+        }
+
+        public void AddBefore(T item)
+        {
+            Start--;
+            if(Start < 0)
+                Start = Items.Length - 1;
+            if(Count == Items.Length && End == Start)
+                End--;
+            if(End < 0)
+                End = Items.Length - 1;
+            Count = Math.Min(Count + 1, Items.Length);
+            Items[Start] = item;
+            OnInsert(item, Start);
         }
     }
 

@@ -31,4 +31,8 @@ public partial class ExchangesCollectionViewModel : ViewModelBase, IViewDocument
     }
 
     public string Name => Resources.Resources.Exchanges;
+    
+    string IViewDocument.DocumentName => Name;
+
+    ToolbarManagerViewModel IViewDocument.ViewToolbars => Toolbars;
 }

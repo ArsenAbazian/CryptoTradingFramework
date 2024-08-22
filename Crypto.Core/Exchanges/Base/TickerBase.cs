@@ -1156,7 +1156,8 @@ namespace Crypto.Core {
 
         protected internal virtual void AddTradeHistoryItem(TradeInfoItem item) {
             TradeHistory.AddLast(item);
-            ShortTradeHistory.Add(item);
+            ShortTradeHistory.AddBefore(item);
+            //ShortTradeHistory.Add(item);
         }
 
         DateTime epoch = new DateTime(1970, 1, 1);

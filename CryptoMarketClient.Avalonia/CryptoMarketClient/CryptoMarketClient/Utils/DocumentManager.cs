@@ -27,11 +27,11 @@ public partial class DocumentManager : ObservableObject
         var curr = GetDocument(e.NewItem);
         if(prev != null)
         {
-            _toolbarController.RemoveClient(prev.Toolbars);
+            _toolbarController.RemoveClient(prev.ViewToolbars);
         }   
         if(curr != null)
         {
-            _toolbarController.AddClient(curr.Toolbars);
+            _toolbarController.AddClient(curr.ViewToolbars);
             DocumentActivated?.Invoke(curr);
         }
     }
@@ -81,7 +81,7 @@ public partial class DocumentManager : ObservableObject
     {
         Control control = new ViewLocator().Build(item);
         control.DataContext = item;
-        DocumentPane pane = new DocumentPane() { Header = item.Name };
+        DocumentPane pane = new DocumentPane() { Header = item.DocumentName };
         pane.Content = control;
         var group = _manager.GetItems().OfType<DocumentGroup>().FirstOrDefault(dg => dg.Name == "MainDocumentGroup");
         group?.Add(pane);
@@ -104,8 +104,8 @@ public partial class DocumentManager : ObservableObject
 
 public interface IViewDocument
 {
-    string Name { get; }
+    string DocumentName { get; }
     void OnAttached(object view);
     void OnDetached();
-    ToolbarManagerViewModel Toolbars { get; }
+    ToolbarManagerViewModel ViewToolbars { get; }
 }

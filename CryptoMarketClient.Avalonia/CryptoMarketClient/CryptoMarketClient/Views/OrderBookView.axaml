@@ -57,9 +57,9 @@
                     </Setter>
                 </Style>
             </mxdg:DataGridControl.Styles>
-            <mxdg:GridColumn FieldName="ValueString" Width="*" Header="{x:Static res:Resources.Column_Rate}" CellTemplate="{StaticResource UltraCompactAskCellTemplate}"/>
-            <mxdg:GridColumn FieldName="AmountString" Width="*" Header="{x:Static res:Resources.Column_Amount}" CellTemplate="{StaticResource UltraCompactCellTemplate}"/>
-            <mxdg:GridColumn FieldName="VolumeString" Width="*" Header="{x:Static res:Resources.Column_Volume}" CellTemplate="{StaticResource UltraCompactCellTemplate}"/>
+            <mxdg:GridColumn FieldName="ValueString" AllowSorting="False" Width="*" Header="{x:Static res:Resources.Column_Rate}" CellTemplate="{StaticResource UltraCompactAskCellTemplate}"/>
+            <mxdg:GridColumn FieldName="AmountString" AllowSorting="False" Width="*" Header="{x:Static res:Resources.Column_Amount}" CellTemplate="{StaticResource UltraCompactCellTemplate}"/>
+            <mxdg:GridColumn FieldName="VolumeString" AllowSorting="False" Width="*" Header="{x:Static res:Resources.Column_Volume}" CellTemplate="{StaticResource UltraCompactCellTemplate}"/>
         </mxdg:DataGridControl>
         <Border Classes="SeparatorBorder" Grid.Row="1" />
         <mxdg:DataGridControl Grid.Row="2"
@@ -93,9 +93,9 @@
                     </Setter>
                 </Style>
             </mxdg:DataGridControl.Styles>
-            <mxdg:GridColumn FieldName="ValueString" Width="*" Header="{x:Static res:Resources.Column_Rate}" CellTemplate="{StaticResource UltraCompactBidCellTemplate}"/>
-            <mxdg:GridColumn FieldName="AmountString" Width="*" Header="{x:Static res:Resources.Column_Amount}" CellTemplate="{StaticResource UltraCompactCellTemplate}"/>
-            <mxdg:GridColumn FieldName="VolumeString" Width="*" Header="{x:Static res:Resources.Column_Volume}" CellTemplate="{StaticResource UltraCompactCellTemplate}"/>
+            <mxdg:GridColumn FieldName="ValueString" AllowSorting="False" Width="*" Header="{x:Static res:Resources.Column_Rate}" CellTemplate="{StaticResource UltraCompactBidCellTemplate}"/>
+            <mxdg:GridColumn FieldName="AmountString" AllowSorting="False" Width="*" Header="{x:Static res:Resources.Column_Amount}" CellTemplate="{StaticResource UltraCompactCellTemplate}"/>
+            <mxdg:GridColumn FieldName="VolumeString" AllowSorting="False" Width="*" Header="{x:Static res:Resources.Column_Volume}" CellTemplate="{StaticResource UltraCompactCellTemplate}"/>
         </mxdg:DataGridControl>
     </Grid>
 </UserControl>

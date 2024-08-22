@@ -7,6 +7,14 @@
              RequestedThemeVariant="Default">
              <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
 
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceInclude Source="Resources/SharedResources.axaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>                 
+    </Application.Resources>
+             
     <Application.DataTemplates>
         <local:ViewLocator/>
         <utils:DataTemplateSource Source="/Resources/SharedTemplates.axaml"/>

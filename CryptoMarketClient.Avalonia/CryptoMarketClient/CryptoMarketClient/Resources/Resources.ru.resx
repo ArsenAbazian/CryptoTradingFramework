@@ -53,4 +53,7 @@
     <data name="Column_Volume" xml:space="preserve">
         <value>Объем</value>
     </data>
+    <data name="Column_Time" xml:space="preserve">
+        <value>Время</value>
+    </data>
 </root>

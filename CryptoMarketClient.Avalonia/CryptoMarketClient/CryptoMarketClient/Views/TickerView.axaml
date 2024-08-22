@@ -34,7 +34,9 @@
                         <mxd:DockPane Header="OrderBook">
                             <views:OrderBookView DataContext="{Binding OrderBook}"/>
                         </mxd:DockPane>                
-                        <mxd:DockPane Header="Trades"></mxd:DockPane>
+                        <mxd:DockPane Header="Trades">
+                            <views:TradeView DataContext="{Binding Trades}"/>
+                        </mxd:DockPane>
                     </mxd:TabbedGroup>
                     <mxd:DockGroup DockHeight="40*">
                         <mxd:DockPane Header="Buy/Sell"></mxd:DockPane>

@@ -47,7 +47,7 @@ namespace Crypto.Core {
 
         public override bool SupportWebSocket(WebSocketType type) {
             return type == WebSocketType.Tickers ||
-                type == WebSocketType.Ticker || type == WebSocketType.OrderBook || type == WebSocketType.Kline;
+                type == WebSocketType.Ticker || type == WebSocketType.OrderBook || type == WebSocketType.Kline || type == WebSocketType.Trades;
         }
 
         public override string BaseWebSocketAdress { get { return "wss://ws.poloniex.com/ws/public"; } }
@@ -283,6 +283,7 @@ namespace Crypto.Core {
         public override void StartListenTickerStream(Ticker ticker) {
             base.StartListenTickerStream(ticker);
             StartListenOrderBookCore(ticker);
+            StartListenTradeHistoryCore(ticker);
         }
 
         protected override void StartListenTickerInfo(Ticker ticker) {
@@ -326,7 +327,7 @@ namespace Crypto.Core {
             if(TickersSocket == null)
                 return;
             string name = ticker.SubscriptionName;
-            string request = string.Format("{{ \"event\": \"unsubscribe\", \"channel\": [\"trades\"], \"symbols\": [\"{0}\"] }}", name);
+            string request = $"{{ \"event\": \"unsubscribe\", \"channel\": [\"trades\"], \"symbols\": [\"{name}\"] }}";
             TickersSocket.Subscribe(new WebSocketSubscribeInfo(SocketSubscribeType.TradeHistory, ticker) {
                 Request = request,
             });
@@ -349,7 +350,7 @@ namespace Crypto.Core {
                     return;
             }
             string name = ticker.SubscriptionName;
-            string request = string.Format("{{ \"event\": \"subscribe\", \"channel\": [\"trades\"], \"symbols\": [\"{0}\"] }}", name);
+            string request = $"{{ \"event\": \"subscribe\", \"channel\": [\"trades\"], \"symbols\": [\"{name}\"] }}";
             TickersSocket.Subscribe(new WebSocketSubscribeInfo(SocketSubscribeType.TradeHistory, ticker) {
                 Request = request,
             });
@@ -362,7 +363,8 @@ namespace Crypto.Core {
                     return;
             }
             string name = ticker.SubscriptionName;
-            string request = string.Format("{{ \"event\": \"subscribe\", \"channel\": [\"{1}\"], \"symbols\": [\"{0}\"] }}", name, GetCandleStickSubscribeChannel(ticker.CandleStickPeriodMin));
+            string request =
+                $"{{ \"event\": \"subscribe\", \"channel\": [\"{GetCandleStickSubscribeChannel(ticker.CandleStickPeriodMin)}\"], \"symbols\": [\"{name}\"] }}";
             TickersSocket.Subscribe(new WebSocketSubscribeInfo(SocketSubscribeType.Kline, ticker) {
                 Request = request,
             });
@@ -377,7 +379,8 @@ namespace Crypto.Core {
             if(!SimulationMode) {
                 string name = ticker.SubscriptionName;
 
-                string request = string.Format("{{ \"event\": \"subscribe\", \"channel\": [\"book_lv2\"], \"symbols\": [\"{0}\"] }}", name);
+                string request =
+                    $"{{ \"event\": \"subscribe\", \"channel\": [\"book_lv2\"], \"symbols\": [\"{name}\"] }}";
                 TickersSocket.Subscribe(new WebSocketSubscribeInfo(SocketSubscribeType.OrderBook, ticker) {
                     Request = request,
                 });
@@ -393,8 +396,15 @@ namespace Crypto.Core {
             ticker.IsOrderBookSubscribed = false;
             ticker.IsTradeHistorySubscribed = false;
             ticker.IsKlineSubscribed = false;
+            string requestOb =
+                $"{{ \"event\": \"unsubscribe\", \"channel\": [\"book_lv2\"], \"symbols\": [\"{ticker.CurrencyPair}\"] }}";
+            string requestTrades =
+                $"{{ \"event\": \"unsubscribe\", \"channel\": [\"trades\"], \"symbols\": [\"{ticker.CurrencyPair}\"] }}";
             TickersSocket.Unsubscribe(new WebSocketSubscribeInfo(SocketSubscribeType.OrderBook, ticker) {
-                Request = new PoloniexWebSocketRequest { channel = ticker.CurrencyPair, @event = "unsubscribe" }
+                Request = requestOb
+            });
+            TickersSocket.Unsubscribe(new WebSocketSubscribeInfo(SocketSubscribeType.TradeHistory, ticker) {
+                Request = requestTrades
             });
         }
 

@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Timers;
 using Avalonia;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Crypto.Core;
 using Crypto.UI.Avalonia.Utils;
-using CryptoMarketClient.Svc.Implementation;
 using CryptoMarketClient.Utils;
 using CryptoMarketClient.ViewModels.Actions;
 using Eremex.AvaloniaUI.Controls.Bars;
@@ -13,6 +13,7 @@ namespace CryptoMarketClient.ViewModels;
 public partial class TickerViewModel : ViewModelBase, IViewDocument
 {
     [ObservableProperty] private OrderBookViewModel orderBook;
+    [ObservableProperty] private TradeViewModel trades;
     [ObservableProperty] private Ticker ticker;
     [ObservableProperty] private string name;
 
@@ -20,6 +21,7 @@ public partial class TickerViewModel : ViewModelBase, IViewDocument
     {
         this.ticker = ticker;
         orderBook = new OrderBookViewModel(documentManager, toolbarController, ticker);
+        trades = new TradeViewModel(documentManager, toolbarController, ticker);
     }
 
     private void UpdateInfoBar()
@@ -28,6 +30,9 @@ public partial class TickerViewModel : ViewModelBase, IViewDocument
         tiCurrencyIcon.Glyph = CurrencyLogoProvider.GetLogo32Image(this.Ticker.MarketCurrency);
     }
 
+    string IViewDocument.DocumentName => Name;
+    ToolbarManagerViewModel IViewDocument.ViewToolbars => Toolbars;
+
     public override void OnAttached(object view)
     {
         base.OnAttached(view);
@@ -35,16 +40,51 @@ public partial class TickerViewModel : ViewModelBase, IViewDocument
         UpdateInfoBar();
         Name = Ticker.HostName + " - " + Ticker.Name;
         
-        this.Ticker.IsOpened = true;
-        this.Ticker.UpdateBalance(this.Ticker.MarketCurrency);
+        Ticker.IsOpened = true;
+        Ticker.UpdateBalance(Ticker.MarketCurrency);
+
+        if(!Ticker.Exchange.SupportWebSocket(WebSocketType.Trades))
+            Trades.UpdateTrades();
+
+        Trades.Attach();
         SubscribeEvents();
+        
+        UpdateTimer.Start();
     }
 
     public override void OnDetached()
     {
         base.OnDetached();
+        UpdateTimer.Stop();
+        Trades.Detach();
         UnsubscribeEvents();
         Ticker.IsOpened = false;
+    }
+
+    Timer _updateTimer;
+
+    private Timer UpdateTimer
+    {
+        get
+        {
+            if(_updateTimer == null)
+            {
+                _updateTimer = new Timer();
+                _updateTimer.Interval = 2000;
+                _updateTimer.Elapsed += OnUpdateTimerOnElapsed;
+            }
+
+            return _updateTimer;
+        }
+    }
+
+    private void OnUpdateTimerOnElapsed(object sender, ElapsedEventArgs e)
+    {
+        if(Ticker == null)
+            return;
+        Ticker.UpdateOpenedOrders();
+        if(!Ticker.Exchange.SupportWebSocket(WebSocketType.Trades))
+            Trades.UpdateTradesLight();
     }
 
     private void UnsubscribeEvents()
@@ -55,7 +95,6 @@ public partial class TickerViewModel : ViewModelBase, IViewDocument
         Ticker.OrderBook.Changed -= OnTickerOrderBookChanged;
         Ticker.Changed -= OnTickerChanged;
         Ticker.HistoryChanged -= OnTickerHistoryItemAdded;
-        Ticker.TradeHistoryChanged -= OnTickerTradeHistoryAdd;
         Ticker.OpenedOrdersChanged -= OnTickerOpenedOrdersChanged;
         Ticker.OrderBook.SubscribeUpdateEntries(true);
     }
@@ -69,16 +108,11 @@ public partial class TickerViewModel : ViewModelBase, IViewDocument
         Ticker.OrderBook.Changed += OnTickerOrderBookChanged;
         Ticker.Changed += OnTickerChanged;
         Ticker.HistoryChanged += OnTickerHistoryItemAdded;
-        Ticker.TradeHistoryChanged += OnTickerTradeHistoryAdd;
         Ticker.OpenedOrdersChanged += OnTickerOpenedOrdersChanged;
         Ticker.OrderBook.SubscribeUpdateEntries(true);
     }
 
     private void OnTickerOpenedOrdersChanged(object sender, EventArgs e)
-    {
-    }
-
-    private void OnTickerTradeHistoryAdd(object sender, TradeHistoryChangedEventArgs e)
     {
     }
 

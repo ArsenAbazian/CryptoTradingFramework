@@ -19,6 +19,8 @@ public class AvaloniaThreadManager : IThreadManager
     }
     public void Invoke(Action a)
     {
+        if(a == null)
+            return;
         if(IsMultiThread)
             Dispatcher.UIThread.InvokeAsync(a);
         else

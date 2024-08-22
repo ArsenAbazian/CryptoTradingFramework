@@ -87,6 +87,15 @@ namespace CryptoMarketClient.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Time.
+        /// </summary>
+        public static string Column_Time {
+            get {
+                return ResourceManager.GetString("Column_Time", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Volume.
         /// </summary>
         public static string Column_Volume {

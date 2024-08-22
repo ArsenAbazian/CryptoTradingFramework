@@ -142,7 +142,7 @@
                                 Tag="{Binding Tag}">
             <bars:ToolbarEditorItem.EditorTemplate>
 	            <DataTemplate DataType="actions:ToolbarComboBoxItemViewModel">
-		            <ee:ComboBoxEditor x:Name="PART_Editor"
+		            <mxe:ComboBoxEditor x:Name="PART_Editor"
 		                               ItemsSource="{Binding Path=Items}"
 		                               DisplayMember="{Binding DisplayMember}"
 		                               MinWidth="{Binding Path=EditorMinWidth}"
@@ -172,7 +172,7 @@
                                 Tag="{Binding Tag}">
             <bars:ToolbarEditorItem.EditorTemplate>
 	            <DataTemplate DataType="actions:ToolbarSpinEditorItemViewModel">
-		            <ee:SpinEditor x:Name="PART_Editor" Minimum="{Binding Path=Minimum}" Maximum="{Binding Path=Maximum}" EditorValue="{Binding Path=EditorValue, Mode=TwoWay}"
+		            <mxe:SpinEditor x:Name="PART_Editor" Minimum="{Binding Path=Minimum}" Maximum="{Binding Path=Maximum}" EditorValue="{Binding Path=EditorValue, Mode=TwoWay}"
 		                           ReadOnly="{Binding Path=IsReadonly}" HorizontalContentAlignment="{Binding Path=HorizontalContentAlignment}"
 		                           EditorValuePostMode="{Binding Path=PostMode}" EditorValuePostDelay="{Binding Path=PostDelay}"/>
 							</DataTemplate>
@@ -186,15 +186,4 @@
                                       Tag="{Binding }"
                                       IsChecked="{Binding IsConnected}"/>
 	</DataTemplate>
-	
-	<DataTemplate x:Key="UltraCompactCellTemplate">
-		<mxe:TextEditor Classes="UltraCompact" x:Name="PART_Editor"/>
-	</DataTemplate>
-	<DataTemplate x:Key="UltraCompactBidCellTemplate">
-		<mxe:TextEditor Classes="UltraCompact" x:Name="PART_Editor" Foreground="{StaticResource BidColor}"/>
-	</DataTemplate>
-	<DataTemplate x:Key="UltraCompactAskCellTemplate">
-		<mxe:TextEditor Classes="UltraCompact" x:Name="PART_Editor" Foreground="{StaticResource AskColor}"/>
-	</DataTemplate>
-	
 </DataTemplates>
