@@ -3,9 +3,7 @@ using Crypto.Core.Indicators;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Crypto.Core.Common;
 
 namespace Crypto.Core {
     public class CandleStickData : TimeBaseValue, INotifyPropertyChanged {
@@ -181,7 +179,7 @@ namespace Crypto.Core {
         public static void UpdateCandle(CandleStickData candle, TradeInfoItem trade) {
             if(candle == null)
                 return;
-            if(trade.Type == TradeType.Buy)
+            if(trade.Type == OrderType.Buy)
                 candle.BuyVolume += trade.Amount;
             else
                 candle.SellVolume += trade.Amount;

@@ -1,14 +1,9 @@
-﻿using Crypto.Core.Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 using System.Xml.Serialization;
+using Crypto.Core.Common;
 
 namespace Crypto.Core {
     public enum TradeFillType { Fill, PartialFill }
-    public enum TradeType { Buy, Sell }
 
     [Serializable]
     public class TradeInfoItem {
@@ -110,7 +105,7 @@ namespace Crypto.Core {
         [XmlElement("Fl")]
         public TradeFillType Fill { get; set;}
         [XmlElement("Tp")]
-        public TradeType Type { get; set; }
+        public OrderType Type { get; set; }
         long id = -1;
         public long Id {
             get { 

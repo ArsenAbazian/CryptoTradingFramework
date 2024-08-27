@@ -259,7 +259,7 @@ namespace Crypto.Core.Exchanges.Exmo {
                         info.AmountString = order.GetProperty("quantity").Value;
                         info.FeeString = order.GetProperty("commission_amount").Value;
 
-                        info.Type = order.GetProperty("type").Value.EndsWith("buy") ? TradeType.Buy : TradeType.Sell;
+                        info.Type = order.GetProperty("type").Value.EndsWith("buy") ? OrderType.Buy : OrderType.Sell;
 
                         account.MyTrades.Add(info);
                     }
@@ -508,7 +508,7 @@ namespace Crypto.Core.Exchanges.Exmo {
                     TradeInfoItem ti = new TradeInfoItem(DefaultAccount, ticker);
                     ti.IdString = item.Properties[0].Value;
                     ti.Time = FromUnixTimestamp(item.Properties[1].ValueLong).ToLocalTime();
-                    ti.Type = item.Properties[2].Value[0] == 's'? TradeType.Sell: TradeType.Buy;
+                    ti.Type = item.Properties[2].Value[0] == 's'? OrderType.Sell: OrderType.Buy;
                     ti.RateString = item.Properties[4].Value;
                     ti.AmountString = item.Properties[3].Value;
                     ticker.AddTradeHistoryItem(ti);
@@ -706,7 +706,7 @@ namespace Crypto.Core.Exchanges.Exmo {
             info.RateString = item.GetProperty("price").Value;
             info.AmountString = item.GetProperty("quantity").Value;
 
-            info.Type = item.GetProperty("type").Value.EndsWith("buy") ? TradeType.Buy : TradeType.Sell;
+            info.Type = item.GetProperty("type").Value.EndsWith("buy") ? OrderType.Buy : OrderType.Sell;
 
             return info;
         }

@@ -149,10 +149,10 @@ namespace Crypto.Core {
         protected virtual DateTime GetTradesRangeEndTime(DateTime start, DateTime end) {
             return end;
         }
-        protected TradeType String2TradeType(string s) {
+        protected OrderType String2TradeType(string s) {
             if(s[0] == 'S' || s[0] == 's' || s[0] == 'f') // isBuyer
-                return TradeType.Sell;
-            return TradeType.Buy;
+                return OrderType.Sell;
+            return OrderType.Buy;
         }
         protected PositionSide String2PositionSide(string s) {
             if(s[0] == 'S' || s[0] == 's')

@@ -509,7 +509,7 @@ namespace Crypto.Core.Exchanges.Kraken {
                 item.RateString = s[0];
                 double sec = FastValueConverter.Convert(s[2]);
                 item.Time = epoch.AddSeconds(sec).ToLocalTime();
-                item.Type = s[3][0] == 'b' ? TradeType.Buy : TradeType.Sell;
+                item.Type = s[3][0] == 'b' ? OrderType.Buy : OrderType.Sell;
                 newItems.Add(item);
                 ticker.AddTradeHistoryItem(item);
             }
@@ -952,7 +952,7 @@ namespace Crypto.Core.Exchanges.Kraken {
                 item.AmountString = obj[1].Value;
                 item.Time = epoch.AddSeconds(obj[2].ValueDouble).ToLocalTime();
                 item.Total = item.Rate * item.Amount;
-                item.Type = obj[3].Value[0] == 'b' ? TradeType.Buy : TradeType.Sell;
+                item.Type = obj[3].Value[0] == 'b' ? OrderType.Buy : OrderType.Sell;
                 item.Fill = TradeFillType.Fill;
                 ticker.AddTradeHistoryItem(item);
             }

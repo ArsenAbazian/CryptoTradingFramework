@@ -218,7 +218,7 @@ namespace Crypto.Core.Helpers {
                 item.TradeCount++;
                 item.TradeVolume += trade.Amount;
 
-                if(tradeHistory[i].Type == TradeType.Sell) {
+                if(tradeHistory[i].Type == OrderType.Sell) {
                     item.SellCount++;
                     item.SellVolume += trade.Amount;
                 }

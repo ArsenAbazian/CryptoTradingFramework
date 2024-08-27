@@ -262,7 +262,7 @@ namespace Crypto.Core.Bittrex {
                 item.Time = Convert.ToDateTime(item.TimeString).ToLocalTime();
                 item.AmountString = items[i].Properties[2].Value;
                 item.RateString = items[i].Properties[3].Value;
-                item.Type = items[i].Properties[4].Value[0] == 'B' ? TradeType.Buy : TradeType.Sell;
+                item.Type = items[i].Properties[4].Value[0] == 'B' ? OrderType.Buy : OrderType.Sell;
                 t.AddTradeHistoryItem(item);
             }
         }
@@ -900,7 +900,7 @@ namespace Crypto.Core.Bittrex {
                     
                     TradeInfoItem ti = new TradeInfoItem(account, t);
                     ti.IdString = item[0].Value;
-                    ti.Type = item[2].Value[0] == 'B' ? TradeType.Buy : TradeType.Sell;
+                    ti.Type = item[2].Value[0] == 'B' ? OrderType.Buy : OrderType.Sell;
                     ti.AmountString = item[4].Value;
                     ti.RateString = item[5].Value;
                     ti.FeeString = item[10].Value;
@@ -942,7 +942,7 @@ namespace Crypto.Core.Bittrex {
                     item.AmountString = obj.Properties[2].Value;
                     item.RateString = obj.Properties[3].Value;
                     item.Total = item.Rate * item.Amount;
-                    item.Type = obj.Properties[4].Value == "BUY" ? TradeType.Buy : TradeType.Sell;
+                    item.Type = obj.Properties[4].Value == "BUY" ? OrderType.Buy : OrderType.Sell;
                     item.Fill = TradeFillType.Fill;
                     ticker.AddTradeHistoryItem(item);
                 }

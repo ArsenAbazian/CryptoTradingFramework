@@ -57,7 +57,7 @@ namespace Crypto.Core.Binance {
                 bool isBuy = item.Properties[6].Value[0] != 't';
                 t.AmountString = item.Properties[2].Value;
                 t.Time = time;
-                t.Type = isBuy ? TradeType.Buy : TradeType.Sell;
+                t.Type = isBuy ? OrderType.Buy : OrderType.Sell;
                 t.RateString = item.Properties[1].Value;
                 t.IdString = item.Properties[0].Value;
                 list.Add(t);
@@ -420,7 +420,7 @@ namespace Crypto.Core.Binance {
             item.RateString = str[4];
             item.AmountString = str[5];
             item.Time = FromUnixTime(FastValueConverter.ConvertPositiveLong(str[8]));
-            item.Type = str[9][0] == 't' ? TradeType.Sell : TradeType.Buy;
+            item.Type = str[9][0] == 't' ? OrderType.Sell : OrderType.Buy;
 
             ticker.AddTradeHistoryItem(item);
             if(ticker.HasTradeHistorySubscribers) {
@@ -730,7 +730,7 @@ namespace Crypto.Core.Binance {
                 bool isBuy = item[6][0] != 't';
                 t.AmountString = item[2];
                 t.Time = time;
-                t.Type = isBuy ? TradeType.Buy : TradeType.Sell;
+                t.Type = isBuy ? OrderType.Buy : OrderType.Sell;
                 trades.Add(t);
             }
             return trades;
@@ -914,7 +914,7 @@ namespace Crypto.Core.Binance {
             bool isBuy = item[10][0] != 't';
             t.AmountString = item[5];
             t.Time = time;
-            t.Type = isBuy ? TradeType.Buy : TradeType.Sell;
+            t.Type = isBuy ? OrderType.Buy : OrderType.Sell;
             t.RateString = item[4];
             t.IdString = item[1];
 
@@ -1201,7 +1201,7 @@ namespace Crypto.Core.Binance {
             bool isBuy = item[4][0] != 't';
             t.AmountString = item[2];
             t.Time = time;
-            t.Type = isBuy ? TradeType.Buy : TradeType.Sell;
+            t.Type = isBuy ? OrderType.Buy : OrderType.Sell;
             t.RateString = item[1];
             t.IdString = item[0];
 

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Crypto.Core.Common;
 
 namespace Crypto.Core.Exchanges.Bittrex {
     public class BittrexIncrementalUpdateDataProvider : IIncrementalUpdateDataProvider {
@@ -25,7 +26,7 @@ namespace Crypto.Core.Exchanges.Bittrex {
                 for(int i = 0; i < info.TradeUpdates.Count; i++) {
                     string[] item = info.TradeUpdates[i];
                     TradeInfoItem trade = new TradeInfoItem(null, ticker) {
-                        Type = item[1][0] == 'S' ? TradeType.Sell : TradeType.Buy,
+                        Type = item[1][0] == 'S' ? OrderType.Sell : OrderType.Buy,
                         RateString = item[2],
                         AmountString = item[3],
                         Time = new DateTime(Convert.ToInt64(item[4])).ToLocalTime()
@@ -69,7 +70,7 @@ namespace Crypto.Core.Exchanges.Bittrex {
                 t.RateString = item.Value<string>("P");
                 t.Time = new DateTime(Convert.ToInt64(item.Value<string>("T"))).ToLocalTime();
                 t.TimeString = t.Time.ToLongTimeString();
-                t.Type = (item.Value<string>("OT")) == "BUY" ? TradeType.Buy : TradeType.Sell;
+                t.Type = (item.Value<string>("OT")) == "BUY" ? OrderType.Buy : OrderType.Sell;
                 ticker.AddTradeHistoryItem(t);
             }
 

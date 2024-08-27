@@ -15,7 +15,7 @@
                               ShowVerticalLines="False"
                               RowMinHeight="16"
                               ItemsSource="{CompiledBinding Trades, DataType=viewModels:TradeViewModel}">
-            <mxdg:GridColumn FieldName="RateString" AllowSorting="False" Width="*" Header="{x:Static res:Resources.Column_Rate}" CellTemplate="{StaticResource UltraCompactCellTemplate}"/>
+            <mxdg:GridColumn FieldName="RateString" AllowSorting="False" Width="*" Header="{x:Static res:Resources.Column_Rate}" CellTemplate="{StaticResource UltraCompactBuySellCellTemplate}"/>
             <mxdg:GridColumn FieldName="AmountString" AllowSorting="False" Width="*" Header="{x:Static res:Resources.Column_Amount}" CellTemplate="{StaticResource UltraCompactCellTemplate}"/>
             <mxdg:GridColumn FieldName="Time" Width="*" AllowSorting="False" Header="{x:Static res:Resources.Column_Time}" CellTemplate="{StaticResource UltraCompactTimeCellTemplate}"/>
         </mxdg:DataGridControl>

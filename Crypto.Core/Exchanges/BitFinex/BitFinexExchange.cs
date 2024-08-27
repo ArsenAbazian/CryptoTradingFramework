@@ -59,11 +59,11 @@ namespace Crypto.Core.BitFinex {
                 ti.Time = BitFinexTime(item.Items[1]);
                 if(item.Items[2].Value[0] == '-') {
                     ti.AmountString = item.Items[2].Value.Substring(1);
-                    ti.Type = TradeType.Sell;
+                    ti.Type = OrderType.Sell;
                 }
                 else {
                     ti.AmountString = item.Items[2].Value;
-                    ti.Type = TradeType.Buy;
+                    ti.Type = OrderType.Buy;
                 }
                 ti.RateString = item.Items[3].Value;
                 ticker.InsertTradeHistoryItem(ti);
@@ -485,8 +485,8 @@ namespace Crypto.Core.BitFinex {
         protected TradeInfoItem ProcessTradeInfoItem(Ticker ticker, JsonHelperToken[] item) {
             TradeInfoItem t = new TradeInfoItem(null, ticker);
             t.Time = BitFinexTime(item[1]);
-            TradeType type = item[2].Value[0] == '-' ? TradeType.Sell : TradeType.Buy;
-            t.AmountString = type == TradeType.Sell ? item[2].Value.Substring(1) : item[2].Value;
+            OrderType type = item[2].Value[0] == '-' ? OrderType.Sell : OrderType.Buy;
+            t.AmountString = type == OrderType.Sell ? item[2].Value.Substring(1) : item[2].Value;
             t.Type = type;
             t.RateString = item[3].Value;
             return t;
@@ -679,12 +679,12 @@ namespace Crypto.Core.BitFinex {
                     ti.IdString = trade.Items[0].Value;
                     ti.Time = BitFinexTime(trade.Items[2]);
                     ti.RateString = trade.Items[5].Value;
-                    ti.Type = TradeType.Buy;
+                    ti.Type = OrderType.Buy;
                     ti.Fill = TradeFillType.Fill;
                     ti.FeeString = trade.Items[9].Value;
                     if(trade.Items[4].Value[0] == '-') {
                         ti.AmountString = trade.Items[4].Value.Substring(1);
-                        ti.Type = TradeType.Sell;
+                        ti.Type = OrderType.Sell;
                     }
                     ticker.AddAccountTradeHistoryItem(ti);
                 }
@@ -726,11 +726,11 @@ namespace Crypto.Core.BitFinex {
                     ti.Time = BitFinexTime(item.Items[1]);
                     if(item.Items[2].Value[0] == '-') {
                         ti.AmountString = item.Items[2].Value.Substring(1);
-                        ti.Type = TradeType.Sell;
+                        ti.Type = OrderType.Sell;
                     }
                     else {
                         ti.AmountString = item.Items[2].Value;
-                        ti.Type = TradeType.Buy;
+                        ti.Type = OrderType.Buy;
                     }
                     ti.RateString = item.Items[3].Value;
                     ticker.InsertTradeHistoryItem(ti);

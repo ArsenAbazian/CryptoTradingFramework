@@ -149,7 +149,7 @@ namespace Crypto.Core {
                 ti.AmountString = item.GetProperty("quantity").Value;
                 ti.RateString = item.GetProperty("price").Value;
                 ti.Time = PoloniexTime(item.GetProperty("createTime"));
-                ti.Type = item.GetProperty("takerSide").Value[0] == 'b' ? TradeType.Buy : TradeType.Sell;
+                ti.Type = item.GetProperty("takerSide").Value[0] == 'b' ? OrderType.Buy : OrderType.Sell;
                 t.AddTradeHistoryItem(ti);
 
                 if(t.HasTradeHistorySubscribers) {
@@ -215,7 +215,8 @@ namespace Crypto.Core {
                 Ticker t = Tickers.FirstOrDefault(tt => tt.SubscriptionName == name);
                 if(t == null)
                     continue;
-                t.LastString = item.GetProperty("markPrice").Value;
+                //TODO markPrice - disappears...
+                //t.LastString = item.GetProperty("markPrice").Value;
                 t.Change = item.GetProperty("dailyChange").ValueDouble;
                 t.Hr24HighString = item.GetProperty("high").Value;
                 t.Hr24LowString = item.GetProperty("low").Value;
@@ -742,7 +743,7 @@ namespace Crypto.Core {
                 
                 item.RateString = ji.Properties[4].Value;
                 item.AmountString = ji.Properties[5].Value;
-                item.Type = isBuy ? TradeType.Buy : TradeType.Sell;
+                item.Type = isBuy ? OrderType.Buy : OrderType.Sell;
                 list.Add(item);
             }
             return list;
@@ -766,7 +767,7 @@ namespace Crypto.Core {
                 TradeInfoItem item = new TradeInfoItem(null, ticker);
                 item.TimeString = obj[2].Value;
                 item.AmountString = obj[5].Value;
-                item.Type = obj[3].Value.Length == 3 ? TradeType.Buy : TradeType.Sell;
+                item.Type = obj[3].Value.Length == 3 ? OrderType.Buy : OrderType.Sell;
                 newTrades.Add(item);
             }
             return newTrades;
@@ -807,7 +808,7 @@ namespace Crypto.Core {
                     item.IdString = obj[i_tradeId];
                     item.TimeString = obj[i_date];
                     bool isBuy = obj[i_type].Length == 3;
-                    item.Type = isBuy ? TradeType.Buy : TradeType.Sell;
+                    item.Type = isBuy ? OrderType.Buy : OrderType.Sell;
                     item.AmountString = obj[i_amount];
                     item.RateString = obj[i_rate];
                     item.TotalString = obj[i_total];
@@ -899,7 +900,7 @@ namespace Crypto.Core {
                     item.OrderNumber = obj[i_orderNumber];
 
                     bool isBuy = obj[i_type].Length == 3;
-                    item.Type = isBuy ? TradeType.Buy : TradeType.Sell;
+                    item.Type = isBuy ? OrderType.Buy : OrderType.Sell;
                     item.AmountString = obj[i_amount];
                     item.RateString = obj[i_rate];
                     item.TotalString = obj[i_total];

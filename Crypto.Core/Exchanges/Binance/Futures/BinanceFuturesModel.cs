@@ -223,7 +223,7 @@ namespace Crypto.Core.Exchanges.Binance.Futures {
             bool isBuy = item[4][0] != 't';
             t.AmountString = item[2];
             t.Time = time;
-            t.Type = isBuy ? TradeType.Buy : TradeType.Sell;
+            t.Type = isBuy ? OrderType.Buy : OrderType.Sell;
             t.RateString = item[1];
             t.IdString = item[0];
 
