@@ -1,8 +1,10 @@
 ﻿using System;
 using Avalonia.Controls;
+using Crypto.Core;
 using CryptoMarketClient.Utils;
 using CryptoMarketClient.ViewModels;
 using Eremex.AvaloniaUI.Controls.DataControl.Visuals;
+using Eremex.AvaloniaUI.Controls.DataGrid;
 
 namespace CryptoMarketClient.Views;
 
@@ -84,4 +86,14 @@ public partial class OrderBookView : UserControl
     }
 
     public OrderBookViewModel ViewModel { get; private set; }
+
+    private void AskGrid_OnRowClick(object sender, DataGridRowClickEventArgs e)
+    {
+        ViewModel.OnAskClick((OrderBookEntry)AskGrid.GetSourceItemByRowIndex(e.RowIndex));
+    }
+
+    private void BidGrid_OnRowClick(object sender, DataGridRowClickEventArgs e)
+    {
+        ViewModel.OnBidClick((OrderBookEntry)BidGrid.GetSourceItemByRowIndex(e.RowIndex));
+    }
 }

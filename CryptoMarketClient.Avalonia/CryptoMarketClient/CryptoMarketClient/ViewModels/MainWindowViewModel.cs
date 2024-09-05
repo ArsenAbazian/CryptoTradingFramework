@@ -44,7 +44,8 @@ public partial class MainWindowViewModel : ViewModelBase
         {
             Glyph = Basic.Cloud,
             Header = Resources.Resources.Exchanges,
-            GlyphSize = new Size(32, 32),
+            GlyphSize = new Size(16, 16),
+            DisplayMode = ToolbarItemDisplayMode.Both
         };
 
         evm.Items.AddRange(Exchanges);

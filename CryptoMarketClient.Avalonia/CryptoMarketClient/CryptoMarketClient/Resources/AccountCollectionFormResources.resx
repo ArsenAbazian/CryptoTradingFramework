@@ -75,4 +75,7 @@
     <data name="DoNotShowAccountCollectionFormOnNextStartup" xml:space="preserve">
         <value>Do Not Show On Next Startup</value>
     </data>
+    <data name="Exchange" xml:space="preserve">
+        <value>Exchange</value>
+    </data>
 </root>

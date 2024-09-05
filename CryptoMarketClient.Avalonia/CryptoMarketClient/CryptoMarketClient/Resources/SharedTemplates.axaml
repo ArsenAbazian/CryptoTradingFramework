@@ -45,6 +45,7 @@
                               Glyph="{Binding Glyph}"
                               IsVisible="{Binding Visible}"
                               IsEnabled="{Binding Enabled}"
+                              DisplayMode="{Binding DisplayMode}"
                               ShowSeparator="{Binding ShowSeparator}"
                               Alignment="{Binding ItemAlignment}"
                               ItemsSource="{Binding Items}"
@@ -182,7 +183,7 @@
 	<DataTemplate DataType="viewModels:ExchangeViewModel">
                 <bars:ToolbarCheckItem Header="{Binding Name}"
                                       Glyph="{Binding Icon}"
-                                      GlyphSize="32,32"
+                                      GlyphSize="16,16"
                                       Tag="{Binding }"
                                       IsChecked="{Binding IsConnected}"/>
 	</DataTemplate>

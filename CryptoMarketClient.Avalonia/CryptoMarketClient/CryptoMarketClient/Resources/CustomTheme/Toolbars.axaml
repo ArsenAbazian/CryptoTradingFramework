@@ -1,0 +1,519 @@
+﻿<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mxti="clr-namespace:Eremex.AvaloniaUI.Controls.Bars.Internal;assembly=Eremex.Avalonia.Controls"
+        xmlns:mxt="https://schemas.eremexcontrols.net/avalonia/bars"
+        xmlns:controls="https://schemas.eremexcontrols.net/avalonia">
+    <Design.PreviewWith>
+        <Border Padding="20">
+            <!-- Add Controls for Previewer Here -->
+        </Border>
+    </Design.PreviewWith>
+
+    <Styles.Resources>
+        <ResourceDictionary>
+            <x:Double x:Key="ToolbarFontSize">11</x:Double>
+            <CornerRadius x:Key="ToolbarCornerRadius">0</CornerRadius>
+            <CornerRadius x:Key="ToolbarCornerRadiusLeft">0</CornerRadius>
+            <CornerRadius x:Key="ToolbarCornerRadiusRight">0</CornerRadius>
+            <CornerRadius x:Key="ToolbarCornerRadiusTop">0</CornerRadius>
+            <CornerRadius x:Key="ToolbarCornerRadiusBottom">0</CornerRadius>
+
+            <CornerRadius x:Key="ToolbarOuterCornerRadius">0</CornerRadius>
+            <CornerRadius x:Key="ToolbarOuterCornerRadiusLeft">0</CornerRadius>
+            <CornerRadius x:Key="ToolbarOuterCornerRadiusRight">0</CornerRadius>
+            <CornerRadius x:Key="ToolbarOuterCornerRadiusTop">0</CornerRadius>
+            <CornerRadius x:Key="ToolbarOuterCornerRadiusBottom">0</CornerRadius>
+
+            <CornerRadius x:Key="ToolbarItemCornerRadius">0</CornerRadius>
+            <CornerRadius x:Key="ToolbarItemCornerRadiusLeft">0</CornerRadius>
+            <CornerRadius x:Key="ToolbarItemCornerRadiusRight">0</CornerRadius>
+            <CornerRadius x:Key="ToolbarItemCornerRadiusTop">0</CornerRadius>
+            <CornerRadius x:Key="ToolbarItemCornerRadiusBottom">0</CornerRadius>
+
+            <Thickness x:Key="ToolbarItemBorderThickness">1</Thickness>
+            <Thickness x:Key="ToolbarItemBorderThicknessLeft">1,1,0,1</Thickness>
+            <Thickness x:Key="ToolbarItemBorderThicknessRight">0,1,1,1</Thickness>
+            <Thickness x:Key="ToolbarItemBorderThicknessTop">1,1,1,0</Thickness>
+            <Thickness x:Key="ToolbarItemBorderThicknessBottom">1,0,1,1</Thickness>
+
+            <Thickness x:Key="ToolbarContainerBorderThickness">1</Thickness>
+            <Thickness x:Key="ToolbarContainerBorderThicknessLeft">1,0,0,0</Thickness>
+            <Thickness x:Key="ToolbarContainerBorderThicknessRight">0,0,1,0</Thickness>
+            <Thickness x:Key="ToolbarContainerBorderThicknessTop">0,1,0,0</Thickness>
+            <Thickness x:Key="ToolbarContainerBorderThicknessBottom">0,0,0,1</Thickness>
+
+            <Thickness x:Key="ToolbarSeparatorMarginHorizontal">4,5,4,5</Thickness>
+            <Thickness x:Key="ToolbarSeparatorMarginVertical">5,4,5,4</Thickness>
+            <Thickness x:Key="ToolbarSeparatorMarginInMenu">2</Thickness>
+
+            <Thickness x:Key="PopupMenuHeaderPadding">7,4,7,4</Thickness>
+            <Thickness x:Key="ToolbarItemGlyphMargin">5</Thickness>
+            <Thickness x:Key="ToolbarItemContentMargin">7,5,7,5</Thickness>
+            <Thickness x:Key="ToolbarItemArrowMargin">5</Thickness>
+            <Thickness x:Key="PopupMenuScrollButtonPadding">3</Thickness>
+
+            <Thickness x:Key="ToolbarItemLeftContentMargin">7,5,5,5</Thickness>
+            <Thickness x:Key="ToolbarItemRightContentMargin">0,5,7,5</Thickness>
+            <Thickness x:Key="ToolbarItemBottomContentMargin">7,0,7,5</Thickness>
+
+            <Thickness x:Key="ToolbarItemLeftContentArrowMargin">5,5,1,5</Thickness>
+            <Thickness x:Key="ToolbarItemRightContentArrowMargin">1,5,5,5</Thickness>
+            <Thickness x:Key="ToolbarItemBottomContentArrowMargin">5,1,5,5</Thickness>
+            <Thickness x:Key="ToolbarItemTopContentArrowMargin">5,5,5,1</Thickness>
+
+            <Thickness x:Key="ToolbarItemContentCenterArrowBottomMargin">5,0,5,1</Thickness>
+            <Thickness x:Key="ToolbarItemContentCenterArrowLeftMargin">0,5,5,5</Thickness>
+            <Thickness x:Key="ToolbarItemArrowLeftContentBottomMargin">1,0,5,5</Thickness>
+            <Thickness x:Key="ToolbarItemContentRightArrowBottomMargin">0,5,5,1</Thickness>
+            <Thickness x:Key="ToolbarItemContentCenterArrowRightMargin">0,5,1,5</Thickness>
+            <Thickness x:Key="ToolbarItemContentBottomArrowRightMargin">5,0,1,5</Thickness>
+
+            <Thickness x:Key="ToolbarItemGlyphInMenuMargin">5</Thickness>
+            <Thickness x:Key="ToolbarItemContentInMenuMargin">5</Thickness>
+            <Thickness x:Key="ToolbarItemContentNoGlyphInMenuMargin">12,5,12,5</Thickness>
+            <Thickness x:Key="ToolbarItemArrowInMenuMargin">5</Thickness>
+            <Thickness x:Key="ToolbarItemShortcutInMenuMargin">5</Thickness>
+
+            <Thickness x:Key="ToolbarContainerPadding">2,1,2,1</Thickness>
+            <Thickness x:Key="ToolbarContainerPaddingTop">2,1,2,1</Thickness>
+            <Thickness x:Key="ToolbarContainerPaddingBottom">0,2,0,1</Thickness>
+            <Thickness x:Key="ToolbarContainerPaddingLeft">1,0,2,0</Thickness>
+            <Thickness x:Key="ToolbarContainerPaddingRight">2,0,1,0</Thickness>
+            <Thickness x:Key="ToolbarContainerPaddingFloating">1,2,1,2</Thickness>
+
+            <Thickness x:Key="ToolbarItemDragPopupPadding">4,3,4,3</Thickness>
+
+            <Thickness x:Key="PopupMenuHeaderControlBorderThickness">0</Thickness>
+
+            <Thickness x:Key="PopupContentPadding">3,2,3,2</Thickness>
+            <Thickness x:Key="EditorContentPaddingInPopupMenu">6,1,6,1</Thickness>
+
+            <Thickness x:Key="MxPopupShadowMargin">10,10,10,10</Thickness>
+            <Thickness x:Key="MxCustomizationLayoutItemVerticalFirst">12,12,12,0</Thickness>
+            <Thickness x:Key="MxCustomizationLayoutItemVerticalCenter">12,12,12,0</Thickness>
+            <Thickness x:Key="MxCustomizationLayoutItemVerticalLast">12</Thickness>
+
+            <Thickness x:Key="MxCustomizationLayoutItemHorizontalFirst">12,12,0,12</Thickness>
+            <Thickness x:Key="MxCustomizationLayoutItemHorizontalCenter">12,12,0,12</Thickness>
+            <Thickness x:Key="MxCustomizationLayoutItemHorizontalLast">12</Thickness>
+
+            <Thickness x:Key="MxCustomizationLayoutItem">12</Thickness>
+            <Thickness x:Key="MxPopupMenuBorderThickness">0</Thickness>
+        </ResourceDictionary>
+    </Styles.Resources>
+
+    <!-- Add Styles Here -->
+    <!-- Only Content -->
+    <Style Selector="mxti|ToolbarItemLayoutPanel.LayoutContent,mxti|ToolbarCheckItemLayoutPanel.LayoutContent">
+        <Setter Property="ContentMargin" Value="{DynamicResource ToolbarItemContentMargin}" />
+    </Style>
+
+    <!-- Only Glyph -->
+    <Style Selector="mxti|ToolbarItemLayoutPanel.LayoutGlyph,mxti|ToolbarCheckItemLayoutPanel.LayoutGlyph">
+        <Setter Property="GlyphMargin" Value="{DynamicResource ToolbarItemGlyphMargin}" />
+    </Style>
+
+    <!-- Glyph <> Content -->
+    <Style
+        Selector="mxti|ToolbarItemLayoutPanel.LayoutGlyphLeftContentRight,mxti|ToolbarCheckItemLayoutPanel.LayoutGlyphLeftContentRight">
+        <Setter Property="GlyphMargin" Value="{DynamicResource ToolbarItemLeftContentMargin}" />
+        <Setter Property="ContentMargin" Value="{DynamicResource ToolbarItemRightContentMargin}" />
+    </Style>
+
+    <Style
+        Selector="mxti|ToolbarItemLayoutPanel.LayoutContentLeftGlyphRight,mxti|ToolbarCheckItemLayoutPanel.LayoutContentLeftGlyphRight">
+        <Setter Property="ContentMargin" Value="{DynamicResource ToolbarItemLeftContentMargin}" />
+        <Setter Property="GlyphMargin" Value="{DynamicResource ToolbarItemRightContentMargin}" />
+    </Style>
+
+    <Style
+        Selector="mxti|ToolbarItemLayoutPanel.LayoutGlyphTopContentBottom,mxti|ToolbarCheckItemLayoutPanel.LayoutGlyphTopContentBottom">
+        <Setter Property="GlyphHorizontalAlignment" Value="Center" />
+        <Setter Property="ContentHorizontalAlignment" Value="Center" />
+        <Setter Property="GlyphMargin" Value="{DynamicResource ToolbarItemContentMargin}" />
+        <Setter Property="ContentMargin" Value="{DynamicResource ToolbarItemBottomContentMargin}" />
+    </Style>
+
+    <Style
+        Selector="mxti|ToolbarItemLayoutPanel.LayoutContentTopGlyphBottom,mxti|ToolbarCheckItemLayoutPanel.LayoutContentTopGlyphBottom">
+        <Setter Property="GlyphHorizontalAlignment" Value="Center" />
+        <Setter Property="ContentHorizontalAlignment" Value="Center" />
+        <Setter Property="ContentMargin" Value="{DynamicResource ToolbarItemContentMargin}" />
+        <Setter Property="GlyphMargin" Value="{DynamicResource ToolbarItemBottomContentMargin}" />
+    </Style>
+
+    <!-- Glyph Split Arrow -->
+    <Style
+        Selector="mxti|ToolbarItemLayoutPanel.LayoutGlyphLeftSplitArrowRight,mxti|ToolbarCheckItemLayoutPanel.LayoutGlyphLeftSplitArrowRight">
+        <Setter Property="GlyphMargin" Value="{DynamicResource ToolbarItemLeftContentArrowMargin}" />
+        <Setter Property="DropDownArrowMargin" Value="{DynamicResource ToolbarItemArrowMargin}" />
+    </Style>
+
+    <Style
+        Selector="mxti|ToolbarItemLayoutPanel.LayoutGlyphTopSplitArrowBottom,mxti|ToolbarCheckItemLayoutPanel.LayoutGlyphTopSplitArrowBottom">
+        <Setter Property="GlyphMargin" Value="{DynamicResource ToolbarItemTopContentArrowMargin}" />
+        <Setter Property="DropDownArrowMargin" Value="{DynamicResource ToolbarItemArrowMargin}" />
+    </Style>
+
+    <Style
+        Selector="mxti|ToolbarItemLayoutPanel.LayoutSplitArrowLeftGlyphRight,mxti|ToolbarCheckItemLayoutPanel.LayoutSplitArrowLeftGlyphRight">
+        <Setter Property="GlyphMargin" Value="{DynamicResource ToolbarItemRightContentArrowMargin}" />
+        <Setter Property="DropDownArrowMargin" Value="{DynamicResource ToolbarItemArrowMargin}" />
+    </Style>
+
+    <!-- Content SplitArrow -->
+    <Style
+        Selector="mxti|ToolbarItemLayoutPanel.LayoutContentLeftSplitArrowRight,mxti|ToolbarCheckItemLayoutPanel.LayoutContentLeftSplitArrowRight">
+        <Setter Property="ContentMargin" Value="{DynamicResource ToolbarItemLeftContentArrowMargin}" />
+        <Setter Property="DropDownArrowMargin" Value="{DynamicResource ToolbarItemArrowMargin}" />
+    </Style>
+
+    <Style
+        Selector="mxti|ToolbarItemLayoutPanel.LayoutContentTopSplitArrowBottom,mxti|ToolbarCheckItemLayoutPanel.LayoutContentTopSplitArrowBottom">
+        <Setter Property="ContentMargin" Value="{DynamicResource ToolbarItemTopContentArrowMargin}" />
+        <Setter Property="DropDownArrowMargin" Value="{DynamicResource ToolbarItemArrowMargin}" />
+    </Style>
+
+    <Style
+        Selector="mxti|ToolbarItemLayoutPanel.LayoutSplitArrowLeftContentRight,mxti|ToolbarCheckItemLayoutPanel.LayoutSplitArrowLeftContentRight">
+        <Setter Property="ContentMargin" Value="{DynamicResource ToolbarItemRightContentArrowMargin}" />
+        <Setter Property="DropDownArrowMargin" Value="{DynamicResource ToolbarItemArrowMargin}" />
+    </Style>
+
+    <!-- Glyph Arrow -->
+    <Style
+        Selector="mxti|ToolbarItemLayoutPanel.LayoutGlyphLeftArrowRight,mxti|ToolbarCheckItemLayoutPanel.LayoutGlyphLeftArrowRight">
+        <Setter Property="GlyphMargin" Value="{DynamicResource ToolbarItemGlyphMargin}" />
+        <Setter Property="DropDownArrowMargin" Value="{DynamicResource ToolbarItemRightContentArrowMargin}" />
+    </Style>
+
+    <Style
+        Selector="mxti|ToolbarItemLayoutPanel.LayoutGlyphTopArrowBottom,mxti|ToolbarCheckItemLayoutPanel.LayoutGlyphTopArrowBottom">
+        <Setter Property="GlyphMargin" Value="{DynamicResource ToolbarItemGlyphMargin}" />
+        <Setter Property="DropDownArrowMargin" Value="{DynamicResource ToolbarItemBottomContentArrowMargin}" />
+    </Style>
+
+    <Style
+        Selector="mxti|ToolbarItemLayoutPanel.LayoutArrowLeftGlyphRight,mxti|ToolbarCheckItemLayoutPanel.LayoutArrowLeftGlyphRight">
+        <Setter Property="GlyphMargin" Value="{DynamicResource ToolbarItemRightContentArrowMargin}" />
+        <Setter Property="DropDownArrowMargin" Value="{DynamicResource ToolbarItemArrowMargin}" />
+    </Style>
+
+    <!-- Content Arrow -->
+    <Style
+        Selector="mxti|ToolbarItemLayoutPanel.LayoutContentLeftArrowRight,mxti|ToolbarCheckItemLayoutPanel.LayoutContentLeftArrowRight">
+        <Setter Property="ContentMargin" Value="{DynamicResource ToolbarItemGlyphMargin}" />
+        <Setter Property="DropDownArrowMargin" Value="{DynamicResource ToolbarItemRightContentArrowMargin}" />
+    </Style>
+
+    <Style
+        Selector="mxti|ToolbarItemLayoutPanel.LayoutContentTopArrowBottom,mxti|ToolbarCheckItemLayoutPanel.LayoutContentTopArrowBottom">
+        <Setter Property="ContentMargin" Value="{DynamicResource ToolbarItemGlyphMargin}" />
+        <Setter Property="DropDownArrowMargin" Value="{DynamicResource ToolbarItemBottomContentArrowMargin}" />
+    </Style>
+
+    <Style
+        Selector="mxti|ToolbarItemLayoutPanel.LayoutArrowLeftContentRight,mxti|ToolbarCheckItemLayoutPanel.LayoutArrowLeftContentRight">
+        <Setter Property="DropDownArrowMargin" Value="{DynamicResource ToolbarItemArrowMargin}" />
+        <Setter Property="ContentMargin" Value="{DynamicResource ToolbarItemRightContentArrowMargin}" />
+    </Style>
+
+    <!-- Glyph <> Content Split Arrow -->
+    <Style
+        Selector="mxti|ToolbarItemLayoutPanel.LayoutGlyphLeftContentCenterSplitArrowRight,mxti|ToolbarCheckItemLayoutPanel.LayoutGlyphLeftContentCenterSplitArrowRight">
+        <Setter Property="GlyphMargin" Value="{DynamicResource ToolbarItemGlyphMargin}" />
+        <Setter Property="ContentMargin" Value="{DynamicResource ToolbarItemContentCenterArrowRightMargin}" />
+        <Setter Property="DropDownArrowMargin" Value="{DynamicResource ToolbarItemArrowMargin}" />
+    </Style>
+
+    <Style
+        Selector="mxti|ToolbarItemLayoutPanel.LayoutContentLeftGlyphCenterSplitArrowRight,mxti|ToolbarCheckItemLayoutPanel.LayoutContentLeftGlyphCenterSplitArrowRight">
+        <Setter Property="ContentMargin" Value="{DynamicResource ToolbarItemGlyphMargin}" />
+        <Setter Property="GlyphMargin" Value="{DynamicResource ToolbarItemContentCenterArrowRightMargin}" />
+        <Setter Property="DropDownArrowMargin" Value="{DynamicResource ToolbarItemArrowMargin}" />
+    </Style>
+
+    <Style
+        Selector="mxti|ToolbarItemLayoutPanel.LayoutGlyphTopContentBottomSplitArrowRight,mxti|ToolbarCheckItemLayoutPanel.LayoutGlyphTopContentBottomSplitArrowRight">
+        <Setter Property="GlyphHorizontalAlignment" Value="Center" />
+        <Setter Property="ContentHorizontalAlignment" Value="Center" />
+        <Setter Property="GlyphMargin" Value="{DynamicResource ToolbarItemLeftContentArrowMargin}" />
+        <Setter Property="ContentMargin" Value="{DynamicResource ToolbarItemContentBottomArrowRightMargin}" />
+        <Setter Property="DropDownArrowMargin" Value="{DynamicResource ToolbarItemArrowMargin}" />
+    </Style>
+
+    <Style
+        Selector="mxti|ToolbarItemLayoutPanel.LayoutContentTopGlyphBottomSplitArrowRight,mxti|ToolbarCheckItemLayoutPanel.LayoutContentTopGlyphBottomSplitArrowRight">
+        <Setter Property="GlyphHorizontalAlignment" Value="Center" />
+        <Setter Property="ContentHorizontalAlignment" Value="Center" />
+        <Setter Property="ContentMargin" Value="{DynamicResource ToolbarItemLeftContentArrowMargin}" />
+        <Setter Property="GlyphMargin" Value="{DynamicResource ToolbarItemContentBottomArrowRightMargin}" />
+        <Setter Property="DropDownArrowMargin" Value="{DynamicResource ToolbarItemArrowMargin}" />
+    </Style>
+
+    <!-- SplitArrow Glyph <> Content -->
+    <Style
+        Selector="mxti|ToolbarItemLayoutPanel.LayoutSplitArrowLeftGlyphCenterContentRight,mxti|ToolbarCheckItemLayoutPanel.LayoutSplitArrowLeftGlyphCenterContentRight">
+        <Setter Property="DropDownArrowMargin" Value="{DynamicResource ToolbarItemArrowMargin}" />
+        <Setter Property="GlyphMargin" Value="{DynamicResource ToolbarItemRightContentArrowMargin}" />
+        <Setter Property="ContentMargin" Value="{DynamicResource ToolbarItemContentCenterArrowLeftMargin}" />
+    </Style>
+
+    <Style
+        Selector="mxti|ToolbarItemLayoutPanel.LayoutSplitArrowLeftContentCenterGlyphRight,mxti|ToolbarCheckItemLayoutPanel.LayoutSplitArrowLeftContentCenterGlyphRight">
+        <Setter Property="DropDownArrowMargin" Value="{DynamicResource ToolbarItemArrowMargin}" />
+        <Setter Property="ContentMargin" Value="{DynamicResource ToolbarItemRightContentArrowMargin}" />
+        <Setter Property="GlyphMargin" Value="{DynamicResource ToolbarItemContentCenterArrowLeftMargin}" />
+    </Style>
+
+    <Style
+        Selector="mxti|ToolbarItemLayoutPanel.LayoutSplitArrowLeftGlyphTopContentBottom,mxti|ToolbarCheckItemLayoutPanel.LayoutSplitArrowLeftGlyphTopContentBottom">
+        <Setter Property="GlyphHorizontalAlignment" Value="Center" />
+        <Setter Property="ContentHorizontalAlignment" Value="Center" />
+        <Setter Property="DropDownArrowMargin" Value="{DynamicResource ToolbarItemArrowMargin}" />
+        <Setter Property="GlyphMargin" Value="{DynamicResource ToolbarItemRightContentArrowMargin}" />
+        <Setter Property="ContentMargin" Value="{DynamicResource ToolbarItemArrowLeftContentBottomMargin}" />
+    </Style>
+
+    <Style
+        Selector="mxti|ToolbarItemLayoutPanel.LayoutSplitArrowLeftContentTopGlyphBottom,mxti|ToolbarCheckItemLayoutPanel.LayoutSplitArrowLeftContentTopGlyphBottom">
+        <Setter Property="GlyphHorizontalAlignment" Value="Center" />
+        <Setter Property="ContentHorizontalAlignment" Value="Center" />
+        <Setter Property="DropDownArrowMargin" Value="{DynamicResource ToolbarItemArrowMargin}" />
+        <Setter Property="ContentMargin" Value="{DynamicResource ToolbarItemRightContentArrowMargin}" />
+        <Setter Property="GlyphMargin" Value="{DynamicResource ToolbarItemArrowLeftContentBottomMargin}" />
+    </Style>
+
+    <!-- Glyph <> Content -->
+    <!--  SplitArrow -->
+    <Style
+        Selector="mxti|ToolbarItemLayoutPanel.LayoutGlyphLeftContentRightSplitArrowBottom,mxti|ToolbarCheckItemLayoutPanel.LayoutGlyphLeftContentRightSplitArrowBottom">
+        <Setter Property="GlyphMargin" Value="{DynamicResource ToolbarItemTopContentArrowMargin}" />
+        <Setter Property="ContentMargin" Value="{DynamicResource ToolbarItemContentRightArrowBottomMargin}" />
+        <Setter Property="DropDownArrowMargin" Value="{DynamicResource ToolbarItemArrowMargin}" />
+    </Style>
+
+    <Style
+        Selector="mxti|ToolbarItemLayoutPanel.LayoutContentLeftGlyphRightSplitArrowBottom,mxti|ToolbarCheckItemLayoutPanel.LayoutContentLeftGlyphRightSplitArrowBottom">
+        <Setter Property="ContentMargin" Value="{DynamicResource ToolbarItemTopContentArrowMargin}" />
+        <Setter Property="GlyphMargin" Value="{DynamicResource ToolbarItemContentRightArrowBottomMargin}" />
+        <Setter Property="DropDownArrowMargin" Value="{DynamicResource ToolbarItemArrowMargin}" />
+    </Style>
+
+    <Style
+        Selector="mxti|ToolbarItemLayoutPanel.LayoutGlyphTopContentCenterSplitArrowBottom,mxti|ToolbarCheckItemLayoutPanel.LayoutGlyphTopContentCenterSplitArrowBottom">
+        <Setter Property="GlyphHorizontalAlignment" Value="Center" />
+        <Setter Property="ContentHorizontalAlignment" Value="Center" />
+        <Setter Property="GlyphMargin" Value="{DynamicResource ToolbarItemGlyphMargin}" />
+        <Setter Property="ContentMargin" Value="{DynamicResource ToolbarItemContentCenterArrowBottomMargin}" />
+        <Setter Property="DropDownArrowMargin" Value="{DynamicResource ToolbarItemArrowMargin}" />
+    </Style>
+
+    <Style
+        Selector="mxti|ToolbarItemLayoutPanel.LayoutContentTopGlyphCenterSplitArrowBottom,mxti|ToolbarCheckItemLayoutPanel.LayoutContentTopGlyphCenterSplitArrowBottom">
+        <Setter Property="GlyphHorizontalAlignment" Value="Center" />
+        <Setter Property="ContentHorizontalAlignment" Value="Center" />
+        <Setter Property="ContentMargin" Value="{DynamicResource ToolbarItemGlyphMargin}" />
+        <Setter Property="GlyphMargin" Value="{DynamicResource ToolbarItemContentCenterArrowBottomMargin}" />
+        <Setter Property="DropDownArrowMargin" Value="{DynamicResource ToolbarItemArrowMargin}" />
+    </Style>
+
+    <!-- Glyph <> Content Arrow -->
+    <Style
+        Selector="mxti|ToolbarItemLayoutPanel.LayoutGlyphLeftContentCenterArrowRight,mxti|ToolbarCheckItemLayoutPanel.LayoutGlyphLeftContentCenterArrowRight">
+        <Setter Property="GlyphMargin" Value="{DynamicResource ToolbarItemGlyphMargin}" />
+        <Setter Property="ContentMargin" Value="{DynamicResource ToolbarItemContentCenterArrowRightMargin}" />
+        <Setter Property="DropDownArrowMargin" Value="{DynamicResource ToolbarItemArrowMargin}" />
+    </Style>
+
+    <Style
+        Selector="mxti|ToolbarItemLayoutPanel.LayoutContentLeftGlyphCenterArrowRight,mxti|ToolbarCheckItemLayoutPanel.LayoutContentLeftGlyphCenterArrowRight">
+        <Setter Property="ContentMargin" Value="{DynamicResource ToolbarItemGlyphMargin}" />
+        <Setter Property="GlyphMargin" Value="{DynamicResource ToolbarItemContentCenterArrowRightMargin}" />
+        <Setter Property="DropDownArrowMargin" Value="{DynamicResource ToolbarItemArrowMargin}" />
+    </Style>
+
+    <Style
+        Selector="mxti|ToolbarItemLayoutPanel.LayoutGlyphTopContentBottomArrowRight,mxti|ToolbarCheckItemLayoutPanel.LayoutGlyphTopContentBottomArrowRight">
+        <Setter Property="GlyphHorizontalAlignment" Value="Center" />
+        <Setter Property="ContentHorizontalAlignment" Value="Center" />
+        <Setter Property="GlyphMargin" Value="{DynamicResource ToolbarItemLeftContentArrowMargin}" />
+        <Setter Property="ContentMargin" Value="{DynamicResource ToolbarItemContentBottomArrowRightMargin}" />
+        <Setter Property="DropDownArrowMargin" Value="{DynamicResource ToolbarItemArrowMargin}" />
+    </Style>
+
+    <Style
+        Selector="mxti|ToolbarItemLayoutPanel.LayoutContentTopGlyphBottomArrowRight,mxti|ToolbarCheckItemLayoutPanel.LayoutContentTopGlyphBottomArrowRight">
+        <Setter Property="GlyphHorizontalAlignment" Value="Center" />
+        <Setter Property="ContentHorizontalAlignment" Value="Center" />
+        <Setter Property="ContentMargin" Value="{DynamicResource ToolbarItemLeftContentArrowMargin}" />
+        <Setter Property="GlyphMargin" Value="{DynamicResource ToolbarItemContentBottomArrowRightMargin}" />
+        <Setter Property="DropDownArrowMargin" Value="{DynamicResource ToolbarItemArrowMargin}" />
+    </Style>
+
+    <!-- Arrow Glyph <> Content -->
+    <Style
+        Selector="mxti|ToolbarItemLayoutPanel.LayoutArrowLeftGlyphCenterContentRight,mxti|ToolbarCheckItemLayoutPanel.LayoutArrowLeftGlyphCenterContentRight">
+        <Setter Property="DropDownArrowMargin" Value="{DynamicResource ToolbarItemArrowMargin}" />
+        <Setter Property="GlyphMargin" Value="{DynamicResource ToolbarItemRightContentArrowMargin}" />
+        <Setter Property="ContentMargin" Value="{DynamicResource ToolbarItemContentCenterArrowLeftMargin}" />
+    </Style>
+
+    <Style
+        Selector="mxti|ToolbarItemLayoutPanel.LayoutArrowLeftContentCenterGlyphRight,mxti|ToolbarCheckItemLayoutPanel.LayoutArrowLeftContentCenterGlyphRight">
+        <Setter Property="DropDownArrowMargin" Value="{DynamicResource ToolbarItemArrowMargin}" />
+        <Setter Property="ContentMargin" Value="{DynamicResource ToolbarItemRightContentArrowMargin}" />
+        <Setter Property="GlyphMargin" Value="{DynamicResource ToolbarItemContentCenterArrowLeftMargin}" />
+    </Style>
+
+    <Style
+        Selector="mxti|ToolbarItemLayoutPanel.LayoutArrowLeftGlyphTopContentBottom,mxti|ToolbarCheckItemLayoutPanel.LayoutArrowLeftGlyphTopContentBottom">
+        <Setter Property="GlyphHorizontalAlignment" Value="Center" />
+        <Setter Property="ContentHorizontalAlignment" Value="Center" />
+        <Setter Property="DropDownArrowMargin" Value="{DynamicResource ToolbarItemArrowMargin}" />
+        <Setter Property="GlyphMargin" Value="{DynamicResource ToolbarItemRightContentArrowMargin}" />
+        <Setter Property="ContentMargin" Value="{DynamicResource ToolbarItemArrowLeftContentBottomMargin}" />
+    </Style>
+
+    <Style
+        Selector="mxti|ToolbarItemLayoutPanel.LayoutArrowLeftContentTopGlyphBottom,mxti|ToolbarCheckItemLayoutPanel.LayoutArrowLeftContentTopGlyphBottom">
+        <Setter Property="GlyphHorizontalAlignment" Value="Center" />
+        <Setter Property="ContentHorizontalAlignment" Value="Center" />
+        <Setter Property="DropDownArrowMargin" Value="{DynamicResource ToolbarItemArrowMargin}" />
+        <Setter Property="ContentMargin" Value="{DynamicResource ToolbarItemRightContentArrowMargin}" />
+        <Setter Property="GlyphMargin" Value="{DynamicResource ToolbarItemArrowLeftContentBottomMargin}" />
+    </Style>
+
+    <!-- Glyph <> Content -->
+    <!--  Arrow -->
+    <Style
+        Selector="mxti|ToolbarItemLayoutPanel.LayoutGlyphLeftContentRightArrowBottom,mxti|ToolbarCheckItemLayoutPanel.LayoutGlyphLeftContentRightArrowBottom">
+        <Setter Property="GlyphMargin" Value="{DynamicResource ToolbarItemTopContentArrowMargin}" />
+        <Setter Property="ContentMargin" Value="{DynamicResource ToolbarItemContentRightArrowBottomMargin}" />
+        <Setter Property="DropDownArrowMargin" Value="{DynamicResource ToolbarItemArrowMargin}" />
+    </Style>
+
+    <Style
+        Selector="mxti|ToolbarItemLayoutPanel.LayoutContentLeftGlyphRightArrowBottom,mxti|ToolbarCheckItemLayoutPanel.LayoutContentLeftGlyphRightArrowBottom">
+        <Setter Property="ContentMargin" Value="{DynamicResource ToolbarItemTopContentArrowMargin}" />
+        <Setter Property="GlyphMargin" Value="{DynamicResource ToolbarItemContentRightArrowBottomMargin}" />
+        <Setter Property="DropDownArrowMargin" Value="{DynamicResource ToolbarItemArrowMargin}" />
+    </Style>
+
+    <Style
+        Selector="mxti|ToolbarItemLayoutPanel.LayoutGlyphTopContentCenterArrowBottom,mxti|ToolbarCheckItemLayoutPanel.LayoutGlyphTopContentCenterArrowBottom">
+        <Setter Property="GlyphHorizontalAlignment" Value="Center" />
+        <Setter Property="ContentHorizontalAlignment" Value="Center" />
+        <Setter Property="GlyphMargin" Value="{DynamicResource ToolbarItemGlyphMargin}" />
+        <Setter Property="ContentMargin" Value="{DynamicResource ToolbarItemContentCenterArrowBottomMargin}" />
+        <Setter Property="DropDownArrowMargin" Value="{DynamicResource ToolbarItemArrowMargin}" />
+    </Style>
+
+    <Style
+        Selector="mxti|ToolbarItemLayoutPanel.LayoutContentTopGlyphCenterArrowBottom,mxti|ToolbarCheckItemLayoutPanel.LayoutContentTopGlyphCenterArrowBottom">
+        <Setter Property="GlyphHorizontalAlignment" Value="Center" />
+        <Setter Property="ContentHorizontalAlignment" Value="Center" />
+        <Setter Property="ContentMargin" Value="{DynamicResource ToolbarItemGlyphMargin}" />
+        <Setter Property="GlyphMargin" Value="{DynamicResource ToolbarItemContentCenterArrowBottomMargin}" />
+        <Setter Property="DropDownArrowMargin" Value="{DynamicResource ToolbarItemArrowMargin}" />
+    </Style>
+
+    <Style Selector="mxti|ToolbarItemLayoutPanel.LayoutInMenu,mxti|ToolbarCheckItemLayoutPanel.LayoutInMenu">
+        <Setter Property="GlyphMargin" Value="{DynamicResource ToolbarItemGlyphInMenuMargin}" />
+        <Setter Property="ContentMargin" Value="{DynamicResource ToolbarItemContentInMenuMargin}" />
+        <Setter Property="DropDownArrowMargin" Value="{DynamicResource ToolbarItemArrowInMenuMargin}" />
+        <Setter Property="ItemShortcutMargin" Value="{DynamicResource ToolbarItemShortcutInMenuMargin}" />
+    </Style>
+
+    <Style
+        Selector="mxti|ToolbarItemLayoutPanel.LayoutInMenuNoGlyph,mxti|ToolbarCheckItemLayoutPanel.LayoutInMenuNoGlyph">
+        <Setter Property="GlyphMargin" Value="0" />
+        <Setter Property="ContentMargin" Value="{DynamicResource ToolbarItemContentNoGlyphInMenuMargin}" />
+        <Setter Property="DropDownArrowMargin" Value="{DynamicResource ToolbarItemArrowInMenuMargin}" />
+        <Setter Property="ItemShortcutMargin" Value="{DynamicResource ToolbarItemShortcutInMenuMargin}" />
+    </Style>
+
+    <Style Selector="mxti|ToolbarItemLayoutPanel,mxti|ToolbarCheckItemLayoutPanel">
+        <Setter Property="GlyphHorizontalAlignment" Value="Left" />
+        <Setter Property="GlyphVerticalAlignment" Value="Center" />
+        <Setter Property="ContentHorizontalAlignment" Value="Left" />
+        <Setter Property="ContentVerticalAlignment" Value="Center" />
+        <Setter Property="DropDownArrowHorizontalAlignment" Value="Center" />
+        <Setter Property="DropDownArrowVerticalAlignment" Value="Center" />
+        <Setter Property="ItemShortcutVerticalAlignment" Value="Center" />
+        <Setter Property="ItemShortcutHorizontalAlignment" Value="Right" />
+        <Setter Property="GlyphMargin" Value="{DynamicResource ToolbarItemGlyphMargin}" />
+        <Setter Property="ContentMargin" Value="{DynamicResource ToolbarItemGlyphMargin}" />
+        <Setter Property="DropDownArrowMargin" Value="{DynamicResource ToolbarItemArrowMargin}" />
+        <Setter Property="EditorMargin" Value="1" />
+    </Style>
+
+    <Style Selector="mxt|PopupMenu/template/ItemsPresenter">
+        <Setter Property="Margin" Value="{DynamicResource PopupContentPadding}" />
+    </Style>
+
+    <Style Selector="TemplatedControl.MxMenuStrip">
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Border Background="Transparent" CornerRadius="{DynamicResource ToolbarCornerRadiusLeft}"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style Selector="mxti|PopupMenuHeaderControl">
+        <Setter Property="FontSize" Value="{DynamicResource ToolbarFontSize}" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="Foreground" Value="{DynamicResource Text/Neutral/Secondary}" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Border x:Name="PART_Border" HorizontalAlignment="Stretch">
+                        <ContentPresenter Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style Selector="mxt|PopupMenu/template/Border#PART_Border">
+        <Setter Property="BorderThickness" Value="{DynamicResource MxPopupMenuBorderThickness}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource Outline/Neutral/Transparent/Strong}" />
+        <Setter Property="Background" Value="{DynamicResource Fill/Neutral/Primary/Enabled}" />
+        <Setter Property="CornerRadius" Value="{DynamicResource ToolbarOuterCornerRadius}" />
+    </Style>
+
+    <Style Selector="mxt|PopupMenu:no-shadow/template/Border#PART_Border">
+        <Setter Property="BorderThickness" Value="{DynamicResource MxPopupMenuBorderThickness/NoShadow}" />
+        <Setter Property="CornerRadius" Value="0" />
+    </Style>
+
+    <Style Selector="mxt|PopupMenu/template/controls|ShadowControl#PART_PopupShadow">
+        <Setter Property="CornerRadius" Value="{DynamicResource ToolbarCornerRadius}" />
+    </Style>
+
+    <Style Selector="mxt|PopupContainer/template/controls|ShadowControl#PART_PopupShadow">
+        <Setter Property="CornerRadius" Value="{DynamicResource ToolbarCornerRadius}" />
+    </Style>
+
+    <Style Selector="mxt|PopupContainer/template/ContentPresenter">
+        <Setter Property="Margin" Value="{DynamicResource PopupContentPadding}" />
+    </Style>
+
+    <Style Selector="mxt|PopupContainer/template/Button/template/Border">
+        <Setter Property="Padding" Value="4" />
+        <Setter Property="CornerRadius" Value="{DynamicResource ToolbarItemCornerRadius}" />
+        <Setter Property="Background" Value="Transparent" />
+    </Style>
+
+</Styles>

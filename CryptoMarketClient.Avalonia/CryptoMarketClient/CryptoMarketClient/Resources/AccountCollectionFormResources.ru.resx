@@ -75,4 +75,7 @@
     <data name="DoNotShowAccountCollectionFormOnNextStartup" xml:space="preserve">
         <value>Не показывать при следующем запуске</value>
     </data>
+    <data name="Exchange" xml:space="preserve">
+        <value>Биржа</value>
+    </data>
 </root>

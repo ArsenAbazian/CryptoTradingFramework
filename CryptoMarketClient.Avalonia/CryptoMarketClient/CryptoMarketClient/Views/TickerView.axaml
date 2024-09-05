@@ -39,7 +39,9 @@
                         </mxd:DockPane>
                     </mxd:TabbedGroup>
                     <mxd:DockGroup DockHeight="40*">
-                        <mxd:DockPane Header="Buy/Sell"></mxd:DockPane>
+                        <mxd:DockPane Header="Buy/Sell">
+                            <views:BidAskSettingsView DataContext="{Binding BidAskSettings}"/>
+                        </mxd:DockPane>
                     </mxd:DockGroup>
                 </mxd:DockGroup>
             </mxd:DockGroup>

@@ -52,6 +52,7 @@
                                   FocusedItem="{CompiledBinding FocusedAccount, DataType=vm:AccountCollectionViewModel}"
                                   ShowGroupPanel="False">
                 <mxdg:DataGridControl.Columns>
+                    <mxdg:GridColumn FieldName="Type" Width="Auto" Header="{x:Static res:AccountCollectionFormResources.NameColumn}" AllowEditing="False"/>
                     <mxdg:GridColumn FieldName="Default" Width="Auto" Header="{x:Static res:AccountCollectionFormResources.DefaultColumn}"/>
                     <mxdg:GridColumn FieldName="Name" Width="Auto" Header="{x:Static res:AccountCollectionFormResources.NameColumn}" AllowEditing="False"/>
                     <mxdg:GridColumn FieldName="Active" Width="Auto" Header="{x:Static res:AccountCollectionFormResources.ActiveColumn}" />

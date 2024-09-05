@@ -14,6 +14,7 @@ public partial class TickerViewModel : ViewModelBase, IViewDocument
 {
     [ObservableProperty] private OrderBookViewModel orderBook;
     [ObservableProperty] private TradeViewModel trades;
+    [ObservableProperty] private BidAskSettingsViewModel bidAskSettings;
     [ObservableProperty] private Ticker ticker;
     [ObservableProperty] private string name;
 
@@ -22,6 +23,10 @@ public partial class TickerViewModel : ViewModelBase, IViewDocument
         this.ticker = ticker;
         orderBook = new OrderBookViewModel(documentManager, toolbarController, ticker);
         trades = new TradeViewModel(documentManager, toolbarController, ticker);
+        bidAskSettings = new BidAskSettingsViewModel(documentManager, toolbarController, ticker);
+        orderBook.AskClicked += bidAskSettings.OnAskClicked;
+        orderBook.BidClicked += bidAskSettings.OnBidClicked;
+        Name = Ticker.HostName + " - " + Ticker.Name;
     }
 
     private void UpdateInfoBar()
@@ -38,7 +43,6 @@ public partial class TickerViewModel : ViewModelBase, IViewDocument
         base.OnAttached(view);
         
         UpdateInfoBar();
-        Name = Ticker.HostName + " - " + Ticker.Name;
         
         Ticker.IsOpened = true;
         Ticker.UpdateBalance(Ticker.MarketCurrency);

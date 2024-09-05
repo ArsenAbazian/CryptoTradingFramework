@@ -33,7 +33,8 @@
                               ShowHorizontalLines="False"
                               ShowVerticalLines="False"
                               RowMinHeight="16"
-                              ItemsSource="{CompiledBinding Asks, DataType=viewModels:OrderBookViewModel}">
+                              ItemsSource="{CompiledBinding Asks, DataType=viewModels:OrderBookViewModel}"
+                              RowClick="AskGrid_OnRowClick">
             <mxdg:DataGridControl.Styles>
                 <Style Selector="visuals|DataGridRowControl">
                     <Setter Property="FocusAdorner" Value="{x:Null}"/>
@@ -69,7 +70,8 @@
                               ShowHorizontalLines="False"
                               ShowVerticalLines="False"
                               RowMinHeight="16"
-                              ItemsSource="{CompiledBinding Bids, DataType=viewModels:OrderBookViewModel}">
+                              ItemsSource="{CompiledBinding Bids, DataType=viewModels:OrderBookViewModel}"
+                              RowClick="BidGrid_OnRowClick">
             <mxdg:DataGridControl.Styles>
                 <Style Selector="visuals|DataGridRowControl">
                     <Setter Property="FocusAdorner" Value="{x:Null}"/>

@@ -955,7 +955,7 @@ namespace Crypto.Core {
         }
         public bool OnGetBalances(AccountInfo account, byte[] data) {
             string text = System.Text.Encoding.ASCII.GetString(data);
-            if(string.IsNullOrEmpty(text))
+            if(string.IsNullOrEmpty(text) || text.StartsWith("<!DOCTYPE html>"))
                 return false;
             JObject res = JsonConvert.DeserializeObject<JObject>(text);
             lock(account.Balances) {

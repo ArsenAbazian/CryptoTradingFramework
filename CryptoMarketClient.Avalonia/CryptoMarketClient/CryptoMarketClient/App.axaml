@@ -11,6 +11,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceInclude Source="Resources/SharedResources.axaml"/>
+                <ResourceInclude Source="Resources/CustomTheme/CustomTheme.axaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>                 
     </Application.Resources>
@@ -23,5 +24,6 @@
     <Application.Styles>
         <StyleInclude Source="Resources/SharedStyles.axaml"/>
         <theme:DeltaDesignTheme/>
+        <StyleInclude Source="Resources/CustomTheme/CustomThemeStyles.axaml"/>
     </Application.Styles>
 </Application>

@@ -29,4 +29,17 @@ public partial class OrderBookViewModel : ViewModelBase
     }
 
     public event Action RequestRefreshData;
+
+    public event Action<OrderBookEntry> AskClicked;
+    public event Action<OrderBookEntry> BidClicked;
+
+    public void OnAskClick(OrderBookEntry value)
+    {
+        AskClicked?.Invoke(value);
+    }
+
+    public void OnBidClick(OrderBookEntry value)
+    {
+        BidClicked?.Invoke(value);
+    }
 }

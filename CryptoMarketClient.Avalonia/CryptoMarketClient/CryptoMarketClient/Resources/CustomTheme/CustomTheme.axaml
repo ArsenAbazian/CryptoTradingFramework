@@ -1,0 +1,166 @@
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:system="clr-namespace:System;assembly=System.Runtime">
+    <!-- Add Resources Here -->
+    <ResourceDictionary.ThemeDictionaries>
+        <ResourceDictionary x:Key='Light'>
+            <!-- <ResourceDictionary.MergedDictionaries> -->
+            <!--     <ResourceInclude Source="CustomThemeToolbars.axaml"/> -->
+            <!-- </ResourceDictionary.MergedDictionaries> -->
+
+            <Thickness x:Key="DockPanePadding">0</Thickness>
+            <system:Double x:Key="TabItemButtonSize">18</system:Double>
+            <system:Double x:Key="TabControlButtonSize">18</system:Double>
+            <system:Double x:Key="MxTabItemMinHeight">22</system:Double>
+            <system:Double x:Key="MxTabItemFontSize">11</system:Double>
+            <x:Double x:Key="ColumnHeaderFontSize">11</x:Double>
+            <x:Double x:Key="EditorFontSize">11</x:Double>
+            <CornerRadius x:Key="EditorCornerRadius">0</CornerRadius>
+            <x:Double x:Key="EditorMinHeight">22</x:Double>
+            <Thickness x:Key="CheckBoxPadding">6,0,0,0</Thickness>
+            <CornerRadius x:Key="CheckEditorGlyphCornerRadius">0</CornerRadius>
+            <Thickness x:Key="ButtonPadding">12,6,12,6</Thickness>
+            <Thickness x:Key="FocusAdornerBorderThickness">1</Thickness>
+            <Thickness x:Key="EditorBorderThickness">1</Thickness>
+
+            <StaticResource x:Key="CheckBoxForeground" ResourceKey="Text/Neutral/Primary" />
+            <StaticResource x:Key="CheckBoxRectBorderBrush" ResourceKey="Outline/Neutral/Transparent/Medium" />
+            <StaticResource x:Key="CheckBoxRectBackground" ResourceKey="Fill/Neutral/Secondary/Enabled" />
+            <StaticResource x:Key="CheckBoxStroke" ResourceKey="TransparentBrush" />
+            <StaticResource x:Key="CheckBoxSecondaryRectBackground" ResourceKey="Fill/Neutral/Primary/Enabled" />
+            <StaticResource x:Key="CheckBoxWarningRectBorderBrush" ResourceKey="Outline/Accent/Error" />
+
+            <StaticResource x:Key="CheckBoxForegroundPointerOver" ResourceKey="Text/Neutral/Primary" />
+            <StaticResource x:Key="CheckBoxRectBorderBrushPointerOver" ResourceKey="Outline/Neutral/Transparent/Medium" />
+            <StaticResource x:Key="CheckBoxRectBackgroundPointerOver" ResourceKey="Fill/Neutral/Secondary/Hover" />
+            <StaticResource x:Key="CheckBoxStrokePointerOver" ResourceKey="TransparentBrush" />
+            <StaticResource x:Key="CheckBoxSecondaryRectBackgroundPointerOver" ResourceKey="Fill/Neutral/Primary/Hover" />
+            <StaticResource x:Key="CheckBoxWarningRectBorderBrushPointerOver"
+                            ResourceKey="Fill/Neutral/Secondary/Hover" />
+
+            <StaticResource x:Key="CheckBoxForegroundPressed" ResourceKey="Text/Neutral/Primary" />
+            <StaticResource x:Key="CheckBoxRectBorderBrushPressed" ResourceKey="Outline/Neutral/Transparent/Medium" />
+            <StaticResource x:Key="CheckBoxRectBackgroundPressed" ResourceKey="Fill/Neutral/Secondary/Pressed" />
+            <StaticResource x:Key="CheckBoxStrokePressed" ResourceKey="Icons/Outline/Disabled" />
+            <StaticResource x:Key="CheckBoxSecondaryRectBackgroundPressed" ResourceKey="Fill/Neutral/Primary/Pressed" />
+            <StaticResource x:Key="CheckBoxWarningRectBorderBrushPressed" ResourceKey="Fill/Neutral/Secondary/Pressed" />
+
+            <StaticResource x:Key="CheckBoxForegroundDisabled" ResourceKey="Text/Neutral/Disabled" />
+            <StaticResource x:Key="CheckBoxRectBorderBrushDisabled" ResourceKey="Outline/Neutral/Transparent/Medium" />
+            <StaticResource x:Key="CheckBoxRectBackgroundDisabled" ResourceKey="Fill/Neutral/Secondary/Disabled" />
+            <StaticResource x:Key="CheckBoxStrokeDisabled" ResourceKey="TransparentBrush" />
+            <StaticResource x:Key="CheckBoxSecondaryRectBackgroundDisabled" ResourceKey="Fill/Neutral/Primary/Disabled" />
+
+            <StaticResource x:Key="CheckBoxCheckedForeground" ResourceKey="Text/Neutral/Primary" />
+            <StaticResource x:Key="CheckBoxCheckedRectBorderBrush" ResourceKey="Outline/Neutral/Transparent/Medium" />
+            <StaticResource x:Key="CheckBoxCheckedRectBackground" ResourceKey="Fill/Neutral/Secondary/Enabled" />
+            <StaticResource x:Key="CheckBoxCheckedStroke" ResourceKey="Fill/Accent/Primary/Enabled" />
+            <StaticResource x:Key="CheckBoxCheckedWarningRectBackground" ResourceKey="Fill/Neutral/Primary/Enabled" />
+
+            <StaticResource x:Key="CheckBoxCheckedForegroundPointerOver" ResourceKey="Text/Neutral/Primary" />
+            <StaticResource x:Key="CheckBoxCheckedRectBorderBrushPointerOver"
+                            ResourceKey="Outline/Neutral/Transparent/Medium" />
+            <StaticResource x:Key="CheckBoxCheckedRectBackgroundPointerOver" ResourceKey="Fill/Neutral/Secondary/Hover" />
+            <StaticResource x:Key="CheckBoxCheckedStrokePointerOver" ResourceKey="Fill/Accent/Primary/Enabled" />
+            <StaticResource x:Key="CheckBoxCheckedWarningRectBackgroundPointerOver"
+                            ResourceKey="Fill/Neutral/Secondary/Hover" />
+
+            <StaticResource x:Key="CheckBoxCheckedForegroundPressed" ResourceKey="Text/Neutral/Primary" />
+            <StaticResource x:Key="CheckBoxCheckedRectBorderBrushPressed"
+                            ResourceKey="Outline/Neutral/Transparent/Medium" />
+            <StaticResource x:Key="CheckBoxCheckedRectBackgroundPressed" ResourceKey="Fill/Neutral/Secondary/Pressed" />
+            <StaticResource x:Key="CheckBoxCheckedStrokePressed" ResourceKey="Icons/Outline/Disabled" />
+            <StaticResource x:Key="CheckBoxCheckedWarningRectBackgroundPressed"
+                            ResourceKey="Fill/Neutral/Secondary/Pressed" />
+
+            <StaticResource x:Key="CheckBoxCheckedForegroundDisabled" ResourceKey="Text/Neutral/Disabled" />
+            <StaticResource x:Key="CheckBoxCheckedRectBorderBrushDisabled"
+                            ResourceKey="Outline/Neutral/Transparent/Medium" />
+            <StaticResource x:Key="CheckBoxCheckedRectBackgroundDisabled" ResourceKey="Fill/Accent/Primary/Disabled" />
+            <StaticResource x:Key="CheckBoxCheckedStrokeDisabled" ResourceKey="Icons/Outline/On Accent" />
+
+            <StaticResource x:Key="CheckBoxIndeterminateForeground" ResourceKey="Text/Neutral/Primary" />
+            <StaticResource x:Key="CheckBoxIndeterminateRectBorderBrush"
+                            ResourceKey="Outline/Neutral/Transparent/Medium" />
+            <StaticResource x:Key="CheckBoxIndeterminateRectBackground" ResourceKey="TransparentBrush" />
+            <StaticResource x:Key="CheckBoxIndeterminateStroke" ResourceKey="Fill/Accent/Primary/Enabled" />
+            <StaticResource x:Key="CheckBoxIndeterminateWarningRectBackground"
+                            ResourceKey="Fill/Neutral/Primary/Enabled" />
+
+            <StaticResource x:Key="CheckBoxIndeterminateForegroundPointerOver" ResourceKey="Text/Neutral/Primary" />
+            <StaticResource x:Key="CheckBoxIndeterminateRectBorderBrushPointerOver"
+                            ResourceKey="Outline/Neutral/Transparent/Medium" />
+            <StaticResource x:Key="CheckBoxIndeterminateRectBackgroundPointerOver"
+                            ResourceKey="Fill/Neutral/Secondary/Hover" />
+            <StaticResource x:Key="CheckBoxIndeterminateStrokePointerOver" ResourceKey="Fill/Accent/Primary/Enabled" />
+            <StaticResource x:Key="CheckBoxIndeterminateWarningRectBackgroundPointerOver"
+                            ResourceKey="Fill/Neutral/Secondary/Hover" />
+
+            <StaticResource x:Key="CheckBoxIndeterminateForegroundPressed" ResourceKey="Text/Neutral/Primary" />
+            <StaticResource x:Key="CheckBoxIndeterminateRectBorderBrushPressed"
+                            ResourceKey="Outline/Neutral/Transparent/Medium" />
+            <StaticResource x:Key="CheckBoxIndeterminateRectBackgroundPressed"
+                            ResourceKey="Fill/Neutral/Secondary/Pressed" />
+            <StaticResource x:Key="CheckBoxIndeterminateStrokePressed" ResourceKey="Icons/Outline/Disabled" />
+            <StaticResource x:Key="CheckBoxIndeterminateWarningRectBackgroundPressed"
+                            ResourceKey="Fill/Neutral/Secondary/Pressed" />
+
+            <StaticResource x:Key="CheckBoxIndeterminateForegroundDisabled" ResourceKey="Text/Neutral/Disabled" />
+            <StaticResource x:Key="CheckBoxIndeterminateRectBorderBrushDisabled"
+                            ResourceKey="Outline/Neutral/Transparent/Medium" />
+            <StaticResource x:Key="CheckBoxIndeterminateRectBackgroundDisabled"
+                            ResourceKey="Fill/Accent/Primary/Disabled" />
+            <StaticResource x:Key="CheckBoxIndeterminateStrokeDisabled" ResourceKey="Icons/Outline/On Accent" />
+
+            <StaticResource x:Key="CheckBoxFocusBorderBrush" ResourceKey="Outline/Neutral/Transparent/Medium" />
+
+            <CornerRadius x:Key="TabItem/Selected/Top/CornerRadius">0</CornerRadius>
+            <CornerRadius x:Key="TabItem/Selected/Left/CornerRadius">0</CornerRadius>
+            <CornerRadius x:Key="TabItem/Selected/Bottom/CornerRadius">0</CornerRadius>
+            <CornerRadius x:Key="TabItem/Selected/Right/CornerRadius">0</CornerRadius>
+
+            <CornerRadius x:Key="TabItem/PointerOver/Top/CornerRadius">0</CornerRadius>
+            <CornerRadius x:Key="TabItem/PointerOver/Left/CornerRadius">0</CornerRadius>
+            <CornerRadius x:Key="TabItem/PointerOver/Bottom/CornerRadius">0</CornerRadius>
+            <CornerRadius x:Key="TabItem/PointerOver/Right/CornerRadius">0</CornerRadius>
+
+            <Thickness x:Key="DockPanelInnerBorderThickness">0,1,0,0</Thickness>
+            <Thickness x:Key="DockPanelHeaderAreaPadding">6,3,6,3</Thickness>
+            <StaticResource x:Key="DockPanelHeaderBackground" ResourceKey="Fill/Neutral/Secondary/Enabled" />
+            <StaticResource x:Key="DockPanelInnterBorderColor" ResourceKey="Outline/Neutral/Transparent/Medium" />
+            <CornerRadius x:Key="MxTabControlSelectedContentCornerRadius">0</CornerRadius>
+            <system:Double x:Key="SliderTrackHeight">1</system:Double>
+            <system:Double x:Key="SliderThumbWidth">6</system:Double>
+            <system:Double x:Key="SliderThumbHeight">16</system:Double>
+
+            <GridLength x:Key="SliderPreContentMargin">6</GridLength>
+            <GridLength x:Key="SliderPostContentMargin">6</GridLength>
+            <x:Double x:Key="SliderHorizontalHeight">26</x:Double>
+            <x:Double x:Key="SliderVerticalWidth">26</x:Double>
+            <x:Double x:Key="SliderOutsideTickBarHeight">4</x:Double>
+            <x:Double x:Key="SliderTrackHeight_Secondary">1</x:Double>
+            <CornerRadius x:Key="SliderButtonCornerRadius">0</CornerRadius>
+            <CornerRadius x:Key="SliderRailCornerRadius">0</CornerRadius>
+            <x:Double x:Key="ThumbEllipseDefaultSize">12</x:Double>
+            <x:Double x:Key="ThumbEllipseHoverSize">14</x:Double>
+            <x:Double x:Key="ThumbEllipsePressedSize">10</x:Double>
+            <x:Double x:Key="SliderStrokeThickness">1</x:Double>
+            <Thickness x:Key="SliderFocusTargetMargin">0</Thickness>
+            <Thickness x:Key="SliderHorizontalIncreaseButtonMargin">0</Thickness>
+            <Thickness x:Key="SliderHorizontalDecreaseButtonMargin">0</Thickness>
+            <Thickness x:Key="SliderVerticalIncreaseButtonMargin">0</Thickness>
+            <Thickness x:Key="SliderVerticalDecreaseButtonMargin">0</Thickness>
+            <Thickness x:Key="SliderHorizontalRailBackgroundMargin">0</Thickness>
+            <Thickness x:Key="SliderVerticalRailBackgroundMargin">0</Thickness>
+            <Thickness x:Key="SliderHorizontalRailBackground_SecondaryMargin">0</Thickness>
+            <Thickness x:Key="SliderVerticalRailBackground_SecondaryMargin">0</Thickness>
+            <x:Double x:Key="SliderMinLength">100</x:Double>
+
+            <StaticResource x:Key="SliderThumbInnerFill" ResourceKey="Fill/Accent/Primary/Enabled" />
+            <StaticResource x:Key="SliderRailBackground" ResourceKey="Outline/Neutral/Transparent/Strong" />
+        </ResourceDictionary>
+        <ResourceDictionary x:Key='Dark'>
+
+        </ResourceDictionary>
+    </ResourceDictionary.ThemeDictionaries>
+</ResourceDictionary>

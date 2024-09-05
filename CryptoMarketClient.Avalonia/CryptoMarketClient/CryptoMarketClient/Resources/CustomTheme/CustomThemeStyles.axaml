@@ -1,0 +1,1075 @@
+﻿<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mx="https://schemas.eremexcontrols.net/avalonia"
+        xmlns:mxdcv="clr-namespace:Eremex.AvaloniaUI.Controls.DataControl.Visuals;assembly=Eremex.Avalonia.Controls"
+        xmlns:mxdg="https://schemas.eremexcontrols.net/avalonia/datagrid"
+        xmlns:mxe="https://schemas.eremexcontrols.net/avalonia/editors"
+        xmlns:do="https://schemas.eremexcontrols.net/avalonia/docking"
+        xmlns:internal="clr-namespace:Eremex.AvaloniaUI.Controls.Internal;assembly=Eremex.Avalonia.Controls"
+        xmlns:internal1="clr-namespace:Eremex.AvaloniaUI.Controls.Docking.Internal;assembly=Eremex.Avalonia.Controls"
+        xmlns:mxt="https://schemas.eremexcontrols.net/avalonia/bars"
+        xmlns:mxti="clr-namespace:Eremex.AvaloniaUI.Controls.Bars.Internal;assembly=Eremex.Avalonia.Controls">
+    <Design.PreviewWith>
+        <Border Padding="20">
+            <Slider Width="200"></Slider>
+            <!-- Add Controls for Previewer Here -->
+        </Border>
+    </Design.PreviewWith>
+    <StyleInclude Source="Toolbars.axaml"/>
+    <StyleInclude Source="ScrollBar.axaml"/>
+    <Styles.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceInclude Source="CustomTheme.axaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <ControlTemplate TargetType="do:DockPane" x:Key="DockPaneTemplate">
+                <Border x:Name="PART_LayoutRoot"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        Background="{TemplateBinding Background}">
+
+                    <Grid Background="Transparent"
+                          RowDefinitions="Auto,*">
+                        <Border Background="{DynamicResource DockPanelHeaderBackground}"> 
+                            <internal1:DockItemDragControl IsVisible="{TemplateBinding IsHeaderVisible}"
+                                                           Margin="{DynamicResource DockPanelHeaderAreaPadding}">
+                                <Grid Background="Transparent" ColumnDefinitions="Auto,*,Auto">
+                                    <internal1:DockPaneHeaderControl Header="{TemplateBinding Header}"
+                                                                     HeaderTemplate="{TemplateBinding HeaderTemplate}"
+                                                                     Glyph="{TemplateBinding Glyph}"
+                                                                     GlyphSize="{TemplateBinding GlyphSize}"
+                                                                     ShowGlyphMode="{TemplateBinding ShowGlyphMode}" />
+                                    <internal1:ControlBox Grid.Column="2"></internal1:ControlBox>
+                                </Grid>
+                            </internal1:DockItemDragControl>
+                        </Border>
+                        <Border Grid.Row="1" BorderThickness="{DynamicResource DockPanelInnerBorderThickness}" 
+                                BorderBrush="{DynamicResource DockPanelInnterBorderColor}">
+                            <ContentPresenter 
+                                              Content="{TemplateBinding Content}"
+                                              ContentTemplate="{TemplateBinding ContentTemplate}"
+                                              Margin="{TemplateBinding Padding}"
+                                              ClipToBounds="True" />
+                        </Border>
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </ResourceDictionary>
+    </Styles.Resources>
+
+    <!-- Add Styles Here -->
+    <Style Selector="RepeatButton.TabControlButton, Button.TabControlButton">
+        <Setter Property="Height" Value="{DynamicResource TabControlButtonSize}" />
+        <Setter Property="Width" Value="{DynamicResource TabControlButtonSize}" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="CornerRadius" Value="0" />
+        <Setter Property="Background" Value="Transparent" />
+    </Style>
+
+    <Style Selector="mxdcv|ColumnHeaderControl">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="6,0" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="BorderBrush" Value="{DynamicResource Outline/Neutral/Transparent/Medium}" />
+        <Setter Property="Foreground" Value="{DynamicResource	Text/Neutral/Secondary}" />
+        <Setter Property="FontSize" Value="{DynamicResource ColumnHeaderFontSize}" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border x:Name="HeaderBorder"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        Background="{TemplateBinding Background}">
+                    <Grid>
+                        <Grid ColumnDefinitions="Auto,Auto,*,Auto" Margin="{TemplateBinding Padding}"
+                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                            <CheckBox x:Name="PART_CheckBox" Focusable="False" Grid.Column="1"
+                                      IsVisible="{TemplateBinding IsCheckBoxVisible}"
+                                      IsChecked="{Binding IsChecked, RelativeSource={RelativeSource TemplatedParent}}" />
+                            <ContentPresenter Grid.Column="2" Content="{TemplateBinding Content}"
+                                              ContentTemplate="{Binding Column.HeaderTemplate, RelativeSource={RelativeSource TemplatedParent}}"
+                                              VerticalAlignment="Center">
+                                <ContentPresenter.DataTemplates>
+                                    <DataTemplate DataType="x:String">
+                                        <TextBlock Classes="ColumnHeaderControlCaption"
+                                                   mx:TextBlockHelper.ShowTooltipWhenTrimming="True" />
+                                    </DataTemplate>
+                                </ContentPresenter.DataTemplates>
+                            </ContentPresenter>
+                            <Path x:Name="SortIndicator" VerticalAlignment="Center" />
+                        </Grid>
+                        <Thumb Name="PART_ColumnResizeGrip" HorizontalAlignment="Right" />
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+
+    <Style Selector="mxdg|DataGridControl">
+        <Setter Property="HeaderPanelMinHeight" Value="24" />
+        <Setter Property="RowMinHeight" Value="24" />
+    </Style>
+
+    <Style Selector=":is(mxe|BaseEditor)">
+        <Setter Property="FontSize" Value="11" />
+        <Setter Property="Padding" Value="4,2,4,2" />
+        <Setter Property="MinHeight" Value="22" />
+    </Style>
+
+    <Style Selector=":is(mxe|BaseEditor):activeMode">
+        <Setter Property="CornerRadius" Value="0" />
+    </Style>
+
+    <Style Selector="CheckBox">
+        <Setter Property="Padding" Value="{DynamicResource CheckBoxPadding}" />
+        <Setter Property="FontSize" Value="{DynamicResource EditorFontSize}" />
+        <Setter Property="CornerRadius" Value="{DynamicResource EditorCornerRadius}" />
+        <Setter Property="MinHeight" Value="{DynamicResource EditorMinHeight}" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Panel Background="Transparent">
+                    <Grid x:Name="RootGrid" ColumnDefinitions="Auto,*">
+                        <Border x:Name="PART_Border"
+                                Grid.ColumnSpan="2"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="{TemplateBinding CornerRadius}" />
+                        <Grid VerticalAlignment="Center">
+                            <Rectangle x:Name="FocusRectangle"
+                                       StrokeThickness="1"
+                                       StrokeDashArray="1,1">
+                            </Rectangle>
+                            <Border x:Name="NormalRectangle"
+                                    Margin="2"
+                                    UseLayoutRounding="False"
+                                    Height="16"
+                                    Width="16" />
+                            <Path x:Name="CheckGlyph" Stretch="None" VerticalAlignment="Center"
+                                  HorizontalAlignment="Center" />
+                        </Grid>
+                        <ContentPresenter x:Name="ContentPresenter"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          Content="{TemplateBinding Content}"
+                                          Margin="{TemplateBinding Padding}"
+                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                          Grid.Column="1" />
+                    </Grid>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+
+    <Style Selector="CheckBox /template/ Border#NormalRectangle">
+        <Setter Property="BorderBrush" Value="{DynamicResource CheckBoxRectBorderBrush}" />
+        <Setter Property="Background" Value="{DynamicResource CheckBoxRectBackground}" />
+        <Setter Property="BorderThickness" Value="{DynamicResource EditorBorderThickness}" />
+        <Setter Property="CornerRadius" Value="{DynamicResource CheckEditorGlyphCornerRadius}" />
+    </Style>
+
+    <Style Selector="CheckBox /template/ Rectangle#FocusRectangle">
+        <Setter Property="RadiusX" Value="0" />
+        <Setter Property="RadiusY" Value="0" />
+    </Style>
+
+    <!-- Unchecked Normal State -->
+    <Style Selector="CheckBox">
+        <Setter Property="Foreground" Value="{DynamicResource CheckBoxForeground}" />
+    </Style>
+    <Style Selector="CheckBox">
+        <Setter Property="Background" Value="{DynamicResource TransparentBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource TransparentBrush}" />
+    </Style>
+    <Style Selector="CheckBox /template/ ContentPresenter#ContentPresenter">
+        <Setter Property="TextBlock.Foreground" Value="{DynamicResource CheckBoxForeground}" />
+        <Setter Property="RecognizesAccessKey" Value="True" />
+    </Style>
+    <Style Selector="CheckBox /template/ Border#NormalRectangle">
+        <Setter Property="BorderBrush" Value="{DynamicResource CheckBoxRectBorderBrush}" />
+        <Setter Property="Background" Value="{DynamicResource CheckBoxRectBackground}" />
+        <Setter Property="BorderThickness" Value="{DynamicResource EditorBorderThickness}" />
+        <Setter Property="CornerRadius" Value="{DynamicResource CheckEditorGlyphCornerRadius}" />
+    </Style>
+    <Style Selector="CheckBox /template/ Path#CheckGlyph">
+        <Setter Property="Fill" Value="{DynamicResource CheckBoxStroke}" />
+        <Setter Property="Data" Value="{StaticResource CheckBoxCheckIcon}" />
+        <Setter Property="Margin" Value="0,0,0,1" />
+        <Setter Property="Width" Value="10" />
+        <Setter Property="Height" Value="9" />
+        <Setter Property="Opacity" Value="1" />
+    </Style>
+    <Style Selector="CheckBox.secondary /template/ Border#NormalRectangle">
+        <Setter Property="Background" Value="{DynamicResource CheckBoxSecondaryRectBackground}" />
+    </Style>
+    <Style Selector="CheckBox.warning /template/ Border#NormalRectangle">
+        <Setter Property="BorderBrush" Value="{DynamicResource CheckBoxWarningRectBorderBrush}" />
+    </Style>
+
+    <!-- Unchecked PointerOver, Focused State -->
+    <Style
+        Selector="CheckBox:pointerover /template/ ContentPresenter#ContentPresenter,
+					 CheckBox:focus /template/ ContentPresenter#ContentPresenter">
+        <Setter Property="TextBlock.Foreground" Value="{DynamicResource CheckBoxForegroundPointerOver}" />
+    </Style>
+    <Style
+        Selector="CheckBox:pointerover /template/ Border#PART_Border,
+					 CheckBox:focus /template/ Border#PART_Border">
+        <Setter Property="Background" Value="{DynamicResource TransparentBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource TransparentBrush}" />
+    </Style>
+    <Style Selector="CheckBox:pointerover /template/ Border#NormalRectangle">
+        <Setter Property="BorderBrush" Value="{DynamicResource CheckBoxRectBorderBrushPointerOver}" />
+        <Setter Property="Background" Value="{DynamicResource CheckBoxRectBackgroundPointerOver}" />
+    </Style>
+    <Style Selector="CheckBox:pointerover /template/ Path#CheckGlyph,
+					 CheckBox:focus /template/ Path#CheckGlyph">
+        <Setter Property="Fill" Value="{DynamicResource CheckBoxStrokePointerOver}" />
+    </Style>
+    <Style
+        Selector="CheckBox.secondary:pointerover /template/ Border#NormalRectangle,
+					 CheckBox.secondary:focus /template/ Border#NormalRectangle">
+        <Setter Property="Background" Value="{DynamicResource CheckBoxSecondaryRectBackgroundPointerOver}" />
+    </Style>
+    <Style Selector="CheckBox.warning:pointerover /template/ Border#NormalRectangle">
+        <Setter Property="BorderBrush" Value="{DynamicResource CheckBoxWarningRectBorderBrushPointerOver}" />
+    </Style>
+    <!-- Unchecked Pressed State -->
+    <Style Selector="CheckBox:pressed /template/ ContentPresenter#ContentPresenter">
+        <Setter Property="TextBlock.Foreground" Value="{DynamicResource CheckBoxForegroundPressed}" />
+    </Style>
+    <Style Selector="CheckBox:pressed /template/ Border#PART_Border">
+        <Setter Property="Background" Value="{DynamicResource TransparentBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource TransparentBrush}" />
+    </Style>
+    <Style Selector="CheckBox:pressed /template/ Border#NormalRectangle">
+        <Setter Property="BorderBrush" Value="{DynamicResource CheckBoxRectBorderBrushPressed}" />
+        <Setter Property="Background" Value="{DynamicResource CheckBoxRectBackgroundPressed}" />
+    </Style>
+    <Style Selector="CheckBox:pressed /template/ Path#CheckGlyph">
+        <Setter Property="Fill" Value="{DynamicResource CheckBoxStrokePressed}" />
+    </Style>
+    <Style Selector="CheckBox.secondary:pressed /template/ Border#NormalRectangle">
+        <Setter Property="Background" Value="{DynamicResource CheckBoxSecondaryRectBackgroundPressed}" />
+    </Style>
+    <Style Selector="CheckBox.warning:pressed /template/ Border#NormalRectangle">
+        <Setter Property="BorderBrush" Value="{DynamicResource CheckBoxWarningRectBorderBrushPressed}" />
+    </Style>
+    <!-- Unchecked Disabled state -->
+    <Style Selector="CheckBox:disabled /template/ ContentPresenter#ContentPresenter">
+        <Setter Property="TextBlock.Foreground" Value="{DynamicResource CheckBoxForegroundDisabled}" />
+    </Style>
+    <Style Selector="CheckBox:disabled /template/ Border#PART_Border">
+        <Setter Property="Background" Value="{DynamicResource TransparentBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource TransparentBrush}" />
+    </Style>
+    <Style Selector="CheckBox:disabled /template/ Border#NormalRectangle">
+        <Setter Property="BorderBrush" Value="{DynamicResource CheckBoxRectBorderBrushDisabled}" />
+        <Setter Property="Background" Value="{DynamicResource CheckBoxRectBackgroundDisabled}" />
+    </Style>
+    <Style Selector="CheckBox:disabled /template/ Path#CheckGlyph">
+        <Setter Property="Fill" Value="{DynamicResource CheckBoxStrokeDisabled}" />
+    </Style>
+    <Style Selector="CheckBox.secondary:disabled /template/ Border#NormalRectangle">
+        <Setter Property="Background" Value="{DynamicResource CheckBoxSecondaryRectBackgroundDisabled}" />
+    </Style>
+
+    <!-- Checked Normal State -->
+    <Style Selector="CheckBox:checked">
+        <Setter Property="Foreground" Value="{DynamicResource CheckBoxCheckedForeground}" />
+    </Style>
+    <Style Selector="CheckBox:checked">
+        <Setter Property="Background" Value="{DynamicResource TransparentBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource TransparentBrush}" />
+    </Style>
+    <Style Selector="CheckBox:checked /template/ Border#NormalRectangle">
+        <Setter Property="BorderThickness" Value="{DynamicResource EditorBorderThickness}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource CheckBoxCheckedRectBorderBrush}" />
+        <Setter Property="Background" Value="{DynamicResource CheckBoxCheckedRectBackground}" />
+    </Style>
+    <Style Selector="CheckBox:checked /template/ Path#CheckGlyph">
+        <Setter Property="Fill" Value="{DynamicResource CheckBoxCheckedStroke}" />
+        <Setter Property="Data" Value="{StaticResource CheckBoxCheckIcon}" />
+        <Setter Property="Width" Value="10" />
+        <Setter Property="Height" Value="9" />
+    </Style>
+    <Style Selector="CheckBox.warning:checked /template/ Border#NormalRectangle">
+        <Setter Property="Background" Value="{DynamicResource CheckBoxCheckedWarningRectBackground}" />
+    </Style>
+    <!-- Checked PointerOver, KeyboardFocused State -->
+    <Style
+        Selector="CheckBox:checked:pointerover /template/ ContentPresenter#ContentPresenter,
+					 CheckBox:checked:focus /template/ ContentPresenter#ContentPresenter">
+        <Setter Property="TextBlock.Foreground" Value="{DynamicResource CheckBoxCheckedForegroundPointerOver}" />
+    </Style>
+    <Style
+        Selector="CheckBox:checked:pointerover /template/ Border#PART_Border,
+					 CheckBox:checked:focus /template/ Border#PART_Border">
+        <Setter Property="Background" Value="{DynamicResource TransparentBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource TransparentBrush}" />
+    </Style>
+    <Style
+        Selector="CheckBox:checked:pointerover /template/ Border#NormalRectangle,
+					 CheckBox:checked:focus /template/ Border#NormalRectangle">
+        <Setter Property="BorderBrush" Value="{DynamicResource CheckBoxCheckedRectBorderBrushPointerOver}" />
+        <Setter Property="Background" Value="{DynamicResource CheckBoxCheckedRectBackgroundPointerOver}" />
+    </Style>
+    <Style
+        Selector="CheckBox:checked:pointerover /template/ Path#CheckGlyph,
+					 CheckBox:checked:focus /template/ Path#CheckGlyph">
+        <Setter Property="Fill" Value="{DynamicResource CheckBoxCheckedStrokePointerOver}" />
+    </Style>
+    <Style
+        Selector="CheckBox.warning:checked:pointerover /template/ Border#NormalRectangle,
+					 CheckBox.warning:checked:focus /template/ Border#NormalRectangle">
+        <Setter Property="Background" Value="{DynamicResource CheckBoxCheckedWarningRectBackgroundPointerOver}" />
+    </Style>
+    <!-- Checked Pressed State -->
+    <Style Selector="CheckBox:checked:pressed /template/ ContentPresenter#ContentPresenter">
+        <Setter Property="TextBlock.Foreground" Value="{DynamicResource CheckBoxCheckedForegroundPressed}" />
+    </Style>
+    <Style Selector="CheckBox:checked:pressed /template/ Border#PART_Border">
+        <Setter Property="Background" Value="{DynamicResource TransparentBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource TransparentBrush}" />
+    </Style>
+    <Style Selector="CheckBox:checked:pressed /template/ Border#NormalRectangle">
+        <Setter Property="BorderBrush" Value="{DynamicResource CheckBoxCheckedRectBorderBrushPressed}" />
+        <Setter Property="Background" Value="{DynamicResource CheckBoxCheckedRectBackgroundPressed}" />
+    </Style>
+    <Style Selector="CheckBox:checked:pressed /template/ Path#CheckGlyph">
+        <Setter Property="Fill" Value="{DynamicResource CheckBoxCheckedStrokePressed}" />
+        <Setter Property="Opacity" Value="0.8" />
+    </Style>
+    <Style Selector="CheckBox.warning:checked:pressed /template/ Border#NormalRectangle">
+        <Setter Property="Background" Value="{DynamicResource CheckBoxCheckedWarningRectBackgroundPressed}" />
+    </Style>
+    <!-- Checked Disabled State -->
+    <Style Selector="CheckBox:checked:disabled /template/ ContentPresenter#ContentPresenter">
+        <Setter Property="TextBlock.Foreground" Value="{DynamicResource CheckBoxCheckedForegroundDisabled}" />
+    </Style>
+    <Style Selector="CheckBox:checked:disabled /template/ Border#PART_Border">
+        <Setter Property="Background" Value="{DynamicResource TransparentBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource TransparentBrush}" />
+    </Style>
+    <Style Selector="CheckBox:checked:disabled /template/ Border#NormalRectangle">
+        <Setter Property="BorderBrush" Value="{DynamicResource CheckBoxCheckedRectBorderBrushDisabled}" />
+        <Setter Property="Background" Value="{DynamicResource CheckBoxCheckedRectBackgroundDisabled}" />
+    </Style>
+    <Style Selector="CheckBox:checked:disabled /template/ Path#CheckGlyph">
+        <Setter Property="Fill" Value="{DynamicResource CheckBoxCheckedStrokeDisabled}" />
+    </Style>
+
+    <!-- Indeterminate Normal State -->
+    <Style Selector="CheckBox:indeterminate">
+        <Setter Property="Foreground" Value="{DynamicResource CheckBoxIndeterminateForeground}" />
+    </Style>
+    <Style Selector="CheckBox:indeterminate">
+        <Setter Property="Background" Value="{DynamicResource TransparentBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource TransparentBrush}" />
+    </Style>
+    <Style Selector="CheckBox:indeterminate /template/ Border#NormalRectangle">
+        <Setter Property="BorderBrush" Value="{DynamicResource CheckBoxIndeterminateRectBorderBrush}" />
+        <Setter Property="Background" Value="{DynamicResource CheckBoxIndeterminateRectBackground}" />
+    </Style>
+    <Style Selector="CheckBox:indeterminate /template/ Path#CheckGlyph">
+        <Setter Property="Fill" Value="{DynamicResource CheckBoxIndeterminateStroke}" />
+    </Style>
+    <Style Selector="CheckBox.warning:indeterminate /template/ Border#NormalRectangle">
+        <Setter Property="Background" Value="{DynamicResource CheckBoxIndeterminateWarningRectBackground}" />
+    </Style>
+    <!-- Indeterminate PointerOver, KeyboardFocused State -->
+    <Style
+        Selector="CheckBox:indeterminate:pointerover /template/ ContentPresenter#ContentPresenter,
+					 CheckBox:indeterminate:focus /template/ ContentPresenter#ContentPresenter">
+        <Setter Property="TextBlock.Foreground" Value="{DynamicResource CheckBoxIndeterminateForegroundPointerOver}" />
+    </Style>
+    <Style
+        Selector="CheckBox:indeterminate:pointerover /template/ Border#PART_Border,
+					 CheckBox:indeterminate:focus /template/ Border#PART_Border">
+        <Setter Property="Background" Value="{DynamicResource TransparentBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource TransparentBrush}" />
+    </Style>
+    <Style
+        Selector="CheckBox:indeterminate:pointerover /template/ Border#NormalRectangle,
+					 CheckBox:indeterminate:focus /template/ Border#NormalRectangle">
+        <Setter Property="BorderBrush" Value="{DynamicResource CheckBoxIndeterminateRectBorderBrushPointerOver}" />
+        <Setter Property="Background" Value="{DynamicResource CheckBoxIndeterminateRectBackgroundPointerOver}" />
+    </Style>
+    <Style
+        Selector="CheckBox:indeterminate:pointerover /template/ Path#CheckGlyph,
+					 CheckBox:indeterminate:focus /template/ Path#CheckGlyph">
+        <Setter Property="Fill" Value="{DynamicResource CheckBoxIndeterminateStrokePointerOver}" />
+    </Style>
+    <Style
+        Selector="CheckBox.warning:indeterminate:pointerover /template/ Border#NormalRectangle,
+					 CheckBox.warning:indeterminate:focus /template/ Border#NormalRectangle">
+        <Setter Property="Background" Value="{DynamicResource CheckBoxIndeterminateWarningRectBackgroundPointerOver}" />
+    </Style>
+    <!-- Indeterminate Pressed State -->
+    <Style Selector="CheckBox:indeterminate:pressed /template/ ContentPresenter#ContentPresenter">
+        <Setter Property="TextBlock.Foreground" Value="{DynamicResource CheckBoxIndeterminateForegroundPressed}" />
+    </Style>
+    <Style Selector="CheckBox:indeterminate:pressed /template/ Border#PART_Border">
+        <Setter Property="Background" Value="{DynamicResource TransparentBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource TransparentBrush}" />
+    </Style>
+    <Style Selector="CheckBox:indeterminate:pressed /template/ Border#NormalRectangle">
+        <Setter Property="BorderBrush" Value="{DynamicResource CheckBoxIndeterminateRectBorderBrushPressed}" />
+        <Setter Property="Background" Value="{DynamicResource CheckBoxIndeterminateRectBackgroundPressed}" />
+    </Style>
+    <Style Selector="CheckBox:indeterminate:pressed /template/ Path#CheckGlyph">
+        <Setter Property="Fill" Value="{DynamicResource CheckBoxIndeterminateStrokePressed}" />
+    </Style>
+    <Style Selector="CheckBox.warning:indeterminate:pressed /template/ Border#NormalRectangle">
+        <Setter Property="Background" Value="{DynamicResource CheckBoxIndeterminateWarningRectBackgroundPressed}" />
+    </Style>
+    <!-- Indeterminate Disabled State -->
+    <Style Selector="CheckBox:indeterminate:disabled /template/ ContentPresenter#ContentPresenter">
+        <Setter Property="TextBlock.Foreground" Value="{DynamicResource CheckBoxIndeterminateForegroundDisabled}" />
+    </Style>
+    <Style Selector="CheckBox:indeterminate:disabled /template/ Border#PART_Border">
+        <Setter Property="Background" Value="{DynamicResource TransparentBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource TransparentBrush}" />
+    </Style>
+    <Style Selector="CheckBox:indeterminate:disabled /template/ Border#NormalRectangle">
+        <Setter Property="BorderBrush" Value="{DynamicResource CheckBoxIndeterminateRectBorderBrushDisabled}" />
+        <Setter Property="Background" Value="{DynamicResource CheckBoxIndeterminateRectBackgroundDisabled}" />
+    </Style>
+    <Style Selector="CheckBox:indeterminate:disabled /template/ Path#CheckGlyph">
+        <Setter Property="Fill" Value="{DynamicResource CheckBoxIndeterminateStrokeDisabled}" />
+    </Style>
+
+    <!--Focus Border-->
+    <Style Selector="CheckBox:focus /template/ Border#NormalRectangle">
+        <Setter Property="BorderBrush" Value="{DynamicResource CheckBoxFocusBorderBrush}" />
+    </Style>
+
+    <Style
+        Selector="CheckBox:checked:focus /template/ Rectangle#FocusRectangle,
+					 CheckBox:indeterminate:focus /template/ Rectangle#FocusRectangle">
+        <Setter Property="Stroke" Value="{DynamicResource CheckBoxFocusBorderBrush}" />
+    </Style>
+
+    <Style Selector="do|DockPane">
+        <Setter Property="Background" Value="{DynamicResource Fill/Neutral/Primary/Enabled}" />
+        <Setter Property="Template" Value="{DynamicResource DockPaneTemplate}" />
+        <Setter Property="Padding" Value="{DynamicResource DockPanePadding}" />
+    </Style>
+
+    <Style Selector="do|DocumentPane">
+        <Setter Property="Background" Value="{DynamicResource Fill/Neutral/Primary/Enabled}" />
+        <Setter Property="Template" Value="{DynamicResource DockPaneTemplate}" />
+        <Setter Property="Padding" Value="{DynamicResource DockPanePadding}" />
+    </Style>
+
+    <Style Selector="Button.DockWidgetButton">
+        <Setter Property="CornerRadius" Value="{DynamicResource EditorCornerRadius}" />
+        <Setter Property="Width" Value="18" />
+        <Setter Property="Height" Value="18" />
+    </Style>
+
+    <Style Selector="Button.ControlBoxButton">
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Width" Value="18" />
+        <Setter Property="Height" Value="18" />
+    </Style>
+
+    <Style Selector="Button, RepeatButton">
+        <Setter Property="CornerRadius" Value="{DynamicResource EditorCornerRadius}" />
+        <Setter Property="Padding" Value="{DynamicResource ButtonPadding}" />
+        <Setter Property="FontSize" Value="{DynamicResource EditorFontSize}" />
+    </Style>
+
+    <Style Selector="mx|MxTabItem">
+        <Setter Property="CornerRadius" Value="0" />
+    </Style>
+
+    <Style Selector="mx|MxTabItem /template/ internal|TabItemOuterCorner">
+        <Setter Property="Radius" Value="0" />
+    </Style>
+
+    <Style Selector="mx|MxTabControl">
+        <Setter Property="Background" Value="Transparent"/>
+    </Style>
+    
+    <Style Selector="mx|MxTabControl.TabbedGroupItemsControl[TabStripPlacement=Top] /template/ Border#PART_SelectedContentBorder">
+        <Setter Property="BorderThickness" Value="0"></Setter>
+    </Style>
+    <Style Selector="mx|MxTabControl.TabbedGroupItemsControl[TabStripPlacement=Bottom] /template/ Border#PART_SelectedContentBorder">
+        <Setter Property="BorderThickness" Value="0,0,0,1"></Setter>
+    </Style>
+    <Style Selector="mx|MxTabControl.TabbedGroupItemsControl[TabStripPlacement=Left] /template/ Border#PART_SelectedContentBorder">
+        <Setter Property="BorderThickness" Value="1,0,0,0"></Setter>
+    </Style>
+    <Style Selector="mx|MxTabControl.TabbedGroupItemsControl[TabStripPlacement=Right] /template/ Border#PART_SelectedContentBorder">
+        <Setter Property="BorderThickness" Value="0,0,1,0"></Setter>
+    </Style>
+    
+    <Style Selector="Label.LayoutItem">
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+    
+    <Style Selector="RepeatButton.FluentSliderHorizontalRepeatButton /template/ Border#PART_TrackBackground">
+        <Setter Property="Height" Value="{DynamicResource SliderTrackHeight}"/>
+    </Style>
+
+    <Style Selector="RepeatButton.FluentSliderVerticalRepeatButton /template/ Border#PART_TrackBackground">
+        <Setter Property="Width" Value="{DynamicResource SliderTrackHeight}"/>
+    </Style>
+    
+    <Style Selector="RepeatButton.FluentSliderHorizontalRepeatButton">
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Grid>
+                    <Border Name="FocusTarget" Margin="{StaticResource SliderFocusTargetMargin}" Background="Transparent" />
+                    <Border Name="PART_TrackBackground" VerticalAlignment="Center"/>
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+    <Style Selector="RepeatButton.FluentSliderVerticalRepeatButton">
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Grid>
+                    <Border Name="FocusTarget" Margin="{StaticResource SliderFocusTargetMargin}" Background="Transparent" />
+                    <Border Name="PART_TrackBackground" HorizontalAlignment="Center"/>
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+    
+    <Style Selector="Slider /template/ Thumb /template/ Rectangle#PART_Thumb">
+        <Setter Property="Fill" Value="{DynamicResource SliderThumbInnerFill}" />
+        <Setter Property="StrokeThickness" Value="0"/>
+    </Style>
+    
+    <Style Selector="Thumb.FluentSliderThumbTheme">
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Grid>
+                        <Rectangle Name="PART_Thumb"
+                                 Width="{TemplateBinding Width}"
+                                 Height="{TemplateBinding Height}"/>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+    <Style Selector="Slider">
+        <Setter Property="Background" Value="{DynamicResource Fill/Neutral/Secondary/Enabled}"/>
+    </Style>
+    
+    <Style Selector="Slider /template/ Border#PART_RailBackground">
+        <Setter Property="Background" Value="{DynamicResource SliderRailBackground}"/>
+        <Setter Property="BorderThickness" Value="0"/>
+    </Style>
+    
+    <Style Selector="Slider:horizontal">
+		<Setter Property="Template">
+			<ControlTemplate>
+				<DataValidationErrors>
+					<Border BorderThickness="{TemplateBinding BorderThickness}"
+									BorderBrush="{TemplateBinding BorderBrush}"
+									CornerRadius="{TemplateBinding CornerRadius}">
+						<Grid x:Name="SliderContainer"
+									Margin="{TemplateBinding Padding}">
+							<Grid.Styles>
+								<Style Selector="TickBar">
+									<Setter Property="ReservedSpace" Value="{Binding #PART_Track.Thumb.Bounds}" />
+								</Style>
+							</Grid.Styles>
+							<Grid x:Name="HorizontalTemplate" ColumnDefinitions="Auto,Auto,*" MinHeight="{DynamicResource SliderHorizontalHeight}">
+								<Grid.RowDefinitions>
+									<RowDefinition Height="{DynamicResource SliderPreContentMargin}" />
+									<RowDefinition Height="Auto" />
+									<RowDefinition Height="{DynamicResource SliderPostContentMargin}" />
+								</Grid.RowDefinitions>
+								<TickBar Name="TopTickBar"
+												 Grid.ColumnSpan="3"
+												 Ticks="{TemplateBinding Ticks}"
+												 TickFrequency="{TemplateBinding Slider.TickFrequency}"
+												 Orientation="{TemplateBinding Slider.Orientation}"
+												 Minimum="{TemplateBinding Slider.Minimum}"
+												 Maximum="{TemplateBinding Slider.Maximum}"
+												 Height="{DynamicResource SliderOutsideTickBarHeight}"
+												 Margin="0,0,0,2"
+												 VerticalAlignment="Bottom"
+												 Placement="Top"
+												 IsVisible="False"
+												 Fill="{DynamicResource SliderTickStroke}"/>
+								<TickBar Name="BottomTickBar"
+												 Grid.Row="2"
+												 Grid.ColumnSpan="3"
+												 Ticks="{TemplateBinding Ticks}"
+												 TickFrequency="{TemplateBinding Slider.TickFrequency}"
+												 Orientation="{TemplateBinding Slider.Orientation}"
+												 Minimum="{TemplateBinding Slider.Minimum}"
+												 Maximum="{TemplateBinding Slider.Maximum}"
+												 Height="{DynamicResource SliderOutsideTickBarHeight}"
+												 Margin="0,2,0,0"
+												 VerticalAlignment="Top"
+												 Placement="Bottom"
+												 IsVisible="False"
+												 Fill="{DynamicResource SliderTickStroke}"/>
+								<Border Name="PART_RailBackground"
+												Grid.Row="1"
+												Grid.ColumnSpan="3"
+												CornerRadius="{DynamicResource SliderRailCornerRadius}"
+												VerticalAlignment="Center"/>
+								<Track Name="PART_Track"
+											 Grid.Row="1"
+											 Grid.ColumnSpan="3"
+											 Minimum="{TemplateBinding Minimum}"
+											 Maximum="{TemplateBinding Maximum}"
+											 Value="{TemplateBinding Value, Mode=TwoWay}"
+											 IsDirectionReversed="{TemplateBinding IsDirectionReversed}"
+											 Orientation="Horizontal">
+									<Track.DecreaseButton>
+										<RepeatButton Name="PART_DecreaseButton"
+																	Background="{TemplateBinding Foreground}"
+																	Focusable="False"
+																	HorizontalAlignment="Stretch"
+																	VerticalAlignment="Stretch"
+																	Classes="FluentSliderHorizontalRepeatButton"
+																	Margin="{DynamicResource SliderHorizontalDecreaseButtonMargin}"/>
+									</Track.DecreaseButton>
+									<Track.IncreaseButton>
+										<RepeatButton Name="PART_IncreaseButton"
+																	Background="{DynamicResource Fill/Neutral/Secondary/Enabled}"
+																	Focusable="False"
+																	HorizontalAlignment="Stretch"
+																	VerticalAlignment="Stretch"
+																	Classes="FluentSliderHorizontalRepeatButton"
+																	Margin="{DynamicResource SliderHorizontalIncreaseButtonMargin}"/>
+									</Track.IncreaseButton>
+									<Thumb Name="thumb"
+												 Height="{DynamicResource SliderThumbHeight}"
+												 Width="{DynamicResource SliderThumbWidth}"
+												 Margin="0"
+												 Padding="0"
+												 BorderThickness="0"
+												 Classes="FluentSliderThumbTheme"
+												 DataContext="{TemplateBinding Value}"/>
+								</Track>
+							</Grid>
+						</Grid>
+					</Border>
+				</DataValidationErrors>
+			</ControlTemplate>
+		</Setter>
+	</Style>
+    
+    <Style Selector="Slider /template/ Border#PART_RailBackground">
+        <Setter Property="Background" Value="{DynamicResource SliderRailBackground}"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource SliderRailBorderBrush}"/>
+    </Style>
+	
+    <Style Selector="Slider:horizontal /template/ Border#PART_RailBackground">
+        <Setter Property="Height" Value="{DynamicResource SliderTrackHeight}"/>
+        <Setter Property="Margin" Value="{DynamicResource SliderHorizontalRailBackgroundMargin}"/>
+    </Style>
+	
+    <Style Selector="Slider:vertical /template/ Border#PART_RailBackground">
+        <Setter Property="Width" Value="{DynamicResource SliderTrackHeight}"/>
+        <Setter Property="Margin" Value="{DynamicResource SliderVerticalRailBackgroundMargin}"/>
+    </Style>
+    
+    <!-- ToolbarItemLayoutPanel -->
+    
+    <!-- Toolbars -->
+    <!-- ToolbarItemBorderControl Button -->
+    <Style Selector="mxti|ToolbarItemBorderControl.Button/template/Border#PART_Border">
+        <Setter Property="BorderThickness" Value="{DynamicResource ToolbarItemBorderThickness}" />
+        <Setter Property="CornerRadius" Value="{DynamicResource ToolbarCornerRadius}" />
+        <Setter Property="Background" Value="Transparent" />
+    </Style>
+
+    <Style Selector="mxti|ToolbarItemBorderControl.Button:main-menu/template/Border#PART_Border">
+        <Setter Property="BorderThickness" Value="{DynamicResource ToolbarItemBorderThickness}" />
+        <Setter Property="CornerRadius" Value="{DynamicResource ToolbarCornerRadius}" />
+        <Setter Property="Background" Value="Transparent" />
+    </Style>
+
+    <Style Selector="mxti|ToolbarItemBorderControl.Button:menu/template/Border#PART_Border">
+        <Setter Property="BorderThickness" Value="{DynamicResource ToolbarItemBorderThickness}" />
+        <Setter Property="CornerRadius" Value="{DynamicResource ToolbarCornerRadius}" />
+        <Setter Property="Background" Value="Transparent" />
+    </Style>
+
+    <Style Selector="mxti|ToolbarItemBorderControl.StaticText/template/Border#PART_Border">
+        <Setter Property="Margin" Value="1" />
+        <Setter Property="BorderThickness" Value="{DynamicResource ToolbarItemBorderThickness}" />
+        <Setter Property="CornerRadius" Value="{DynamicResource ToolbarCornerRadius}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource Outline/Neutral/Transparent/Medium}" />
+    </Style>
+
+    <Style Selector="mxti|ToolbarItemBorderControl.StaticText:main-menu/template/Border#PART_Border">
+        <Setter Property="Margin" Value="1" />
+        <Setter Property="BorderThickness" Value="{DynamicResource ToolbarItemBorderThickness}" />
+        <Setter Property="CornerRadius" Value="{DynamicResource ToolbarCornerRadius}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource Outline/Neutral/Transparent/Medium}" />
+    </Style>
+
+    <Style Selector="mxti|ToolbarItemBorderControl.StaticText:menu/template/Border#PART_Border">
+        <Setter Property="Margin" Value="1" />
+        <Setter Property="BorderThickness" Value="{DynamicResource ToolbarItemBorderThickness}" />
+        <Setter Property="CornerRadius" Value="{DynamicResource ToolbarCornerRadius}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource Outline/Neutral/Transparent/Medium}" />
+    </Style>
+
+    <!-- Border For Dock = Top | Bottom -->
+    <Style Selector="mxti|ToolbarItemBorderControl.Button:right/template/Border#PART_Border">
+        <Setter Property="BorderThickness" Value="{DynamicResource ToolbarItemBorderThicknessRight}" />
+        <Setter Property="CornerRadius" Value="{DynamicResource ToolbarItemCornerRadiusRight}" />
+    </Style>
+
+    <Style Selector="mxti|ToolbarItemBorderControl.Button:left/template/Border#PART_Border">
+        <Setter Property="BorderThickness" Value="{DynamicResource ToolbarItemBorderThicknessLeft}" />
+        <Setter Property="CornerRadius" Value="{DynamicResource ToolbarItemCornerRadiusLeft}" />
+    </Style>
+
+    <Style Selector="mxti|ToolbarItemBorderControl.Button:bottom/template/Border#PART_Border">
+        <Setter Property="BorderThickness" Value="{DynamicResource ToolbarItemBorderThicknessBottom}" />
+        <Setter Property="CornerRadius" Value="{DynamicResource ToolbarItemCornerRadiusBottom}" />
+    </Style>
+
+    <Style Selector="mxti|ToolbarItemBorderControl.Button:top/template/Border#PART_Border">
+        <Setter Property="BorderThickness" Value="{DynamicResource ToolbarItemBorderThicknessTop}" />
+        <Setter Property="CornerRadius" Value="{DynamicResource ToolbarItemCornerRadiusTop}" />
+    </Style>
+    <!-- End Border For Dock = Top | Bottom -->
+
+    <!-- Border For Dock = Left -->
+    <Style Selector="mxti|ToolbarItemBorderControl.Button.DockLeft:right/template/Border#PART_Border">
+        <Setter Property="BorderThickness" Value="{DynamicResource ToolbarItemBorderThicknessBottom}" />
+        <Setter Property="CornerRadius" Value="{DynamicResource ToolbarItemCornerRadiusBottom}" />
+    </Style>
+
+    <Style Selector="mxti|ToolbarItemBorderControl.Button.DockLeft:left/template/Border#PART_Border">
+        <Setter Property="BorderThickness" Value="{DynamicResource ToolbarItemBorderThicknessTop}" />
+        <Setter Property="CornerRadius" Value="{DynamicResource ToolbarItemCornerRadiusTop}" />
+    </Style>
+
+    <Style Selector="mxti|ToolbarItemBorderControl.Button.DockLeft:bottom/template/Border#PART_Border">
+        <Setter Property="BorderThickness" Value="{DynamicResource ToolbarItemBorderThicknessLeft}" />
+        <Setter Property="CornerRadius" Value="{DynamicResource ToolbarItemCornerRadiusLeft}" />
+    </Style>
+
+    <Style Selector="mxti|ToolbarItemBorderControl.Button.DockLeft:top/template/Border#PART_Border">
+        <Setter Property="BorderThickness" Value="{DynamicResource ToolbarItemBorderThicknessRight}" />
+        <Setter Property="CornerRadius" Value="{DynamicResource ToolbarItemCornerRadiusRight}" />
+    </Style>
+    <!-- End Border For Dock = Left -->
+
+    <!-- Border For Dock = Right -->
+    <Style Selector="mxti|ToolbarItemBorderControl.Button.DockRight:right/template/Border#PART_Border">
+        <Setter Property="BorderThickness" Value="{DynamicResource ToolbarItemBorderThicknessBottom}" />
+        <Setter Property="CornerRadius" Value="{DynamicResource ToolbarItemCornerRadiusBottom}" />
+    </Style>
+
+    <Style Selector="mxti|ToolbarItemBorderControl.Button.DockRight:left/template/Border#PART_Border">
+        <Setter Property="BorderThickness" Value="{DynamicResource ToolbarItemBorderThicknessTop}" />
+        <Setter Property="CornerRadius" Value="{DynamicResource ToolbarItemCornerRadiusTop}" />
+    </Style>
+
+    <Style Selector="mxti|ToolbarItemBorderControl.Button.DockRight:bottom/template/Border#PART_Border">
+        <Setter Property="BorderThickness" Value="{DynamicResource ToolbarItemBorderThicknessLeft}" />
+        <Setter Property="CornerRadius" Value="{DynamicResource ToolbarItemCornerRadiusLeft}" />
+    </Style>
+
+    <Style Selector="mxti|ToolbarItemBorderControl.Button.DockRight:top/template/Border#PART_Border">
+        <Setter Property="BorderThickness" Value="{DynamicResource ToolbarItemBorderThicknessRight}" />
+        <Setter Property="CornerRadius" Value="{DynamicResource ToolbarItemCornerRadiusRight}" />
+    </Style>
+    <!-- End Border For Dock = Right -->
+
+    <!-- For Toolbar -->
+    <!-- ToolbarItemBorder Hovered -->
+    <Style Selector="mxti|ToolbarItemBorderControl.Button:pointerover /template/Border#PART_Border">
+        <Setter Property="Background" Value="{DynamicResource Fill/Neutral/Secondary/Enabled}" />
+    </Style>
+
+    <!-- ToolbarItemBorder Other Part Hovered -->
+    <Style Selector="mxti|ToolbarItemBorderControl.Button:attached-pointerover /template/Border#PART_Border">
+        <Setter Property="Background" Value="{DynamicResource Fill/Neutral/Secondary/Enabled}" />
+        <Setter Property="Opacity" Value="0.8" />
+    </Style>
+
+    <!-- ToolbarItemBorder Pressed -->
+    <Style Selector="mxti|ToolbarItemBorderControl.Button:pressed /template/Border#PART_Border">
+        <Setter Property="Background" Value="{DynamicResource Fill/Neutral/Secondary/Hover}" />
+    </Style>
+
+    <!-- ToolbarItemBorder Selected -->
+    <Style Selector="mxti|ToolbarItemBorderControl.Button:selected /template/Border#PART_Border">
+        <Setter Property="Background" Value="{DynamicResource Fill/Neutral/Secondary/Enabled}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource Outline/Accent/Focus}" />
+    </Style>
+
+    <!-- ToolbarItemBorder Focus -->
+    <Style Selector="mxti|ToolbarItemBorderControl.Button:focus /template/Border#PART_Border">
+        <Setter Property="Background" Value="{DynamicResource Fill/Neutral/Secondary/Enabled}" />
+    </Style>
+
+    <!-- ToolbarItemBorder Focus -->
+    <Style Selector="mxti|ToolbarItemBorderControl.Button:focus-visible /template/Border#PART_Border">
+        <Setter Property="Background" Value="{DynamicResource Fill/Neutral/Secondary/Enabled}" />
+    </Style>
+
+    <!-- ToolbarCheckItemBorder -->
+    <Style Selector="mxti|ToolbarItemBorderControl.Check:checked /template/Border#PART_Border">
+        <Setter Property="Background" Value="{DynamicResource Fill/Accent/Highlighting/Item/Enabled}" />
+    </Style>
+
+    <Style Selector="mxti|ToolbarItemBorderControl.Check.Menu:checked /template/Border#PART_Border">
+        <Setter Property="Background" Value="Transparent" />
+    </Style>
+
+    <Style Selector="mxti|ToolbarItemBorderControl.Check.Menu:checked:pointerover /template/Border#PART_Border">
+        <Setter Property="Background" Value="{DynamicResource Fill/Neutral/Secondary/Enabled}" />
+    </Style>
+
+    <Style Selector="mxti|ToolbarItemBorderControl.Check.Menu:checked:pressed /template/Border#PART_Border">
+        <Setter Property="Background" Value="{DynamicResource Fill/Neutral/Secondary/Hover}" />
+    </Style>
+
+    <Style Selector="mxti|ToolbarItemBorderControl.Button:dropdown-open /template/Border#PART_Border">
+        <Setter Property="Background" Value="{DynamicResource Fill/Neutral/Secondary/Hover}" />
+    </Style>
+
+    <Style Selector="mxti|ToolbarItemBorderControl.Check:checked:dropdown-open /template/Border#PART_Border">
+        <Setter Property="Background" Value="{DynamicResource Fill/Accent/Highlighting/Item/Enabled}" />
+    </Style>
+
+    <Style Selector="mxti|ToolbarItemBorderControl.Button:attached-dropdown-open /template/Border#PART_Border">
+        <Setter Property="Background" Value="{DynamicResource Fill/Neutral/Secondary/Enabled}" />
+    </Style>
+
+    <Style Selector="mxti|ToolbarItemBorderControl.Button:checked:attached-dropdown-open /template/Border#PART_Border">
+        <Setter Property="Background" Value="{DynamicResource Fill/Accent/Highlighting/Item/Enabled}" />
+    </Style>
+
+    <Style Selector="mxti|ToolbarItemBorderControl.Check:selected /template/Border#PART_Border">
+        <Setter Property="Background" Value="{DynamicResource Fill/Neutral/Secondary/Enabled}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource Outline/Accent/Focus}" />
+    </Style>
+
+    <!-- ToolbarItemBorder Selected -->
+    <Style Selector="mxti|ToolbarItemBorderControl.Editor:selected /template/Border#PART_Border">
+        <Setter Property="BorderBrush" Value="{DynamicResource Outline/Accent/Focus}" />
+    </Style>
+
+    <Style Selector="mxti|ToolbarItemBorderControl.StaticText:selected /template/Border#PART_Border">
+        <Setter Property="BorderBrush" Value="{DynamicResource Outline/Accent/Focus}" />
+    </Style>
+
+    <!-- For Toolbar -->
+
+    <!-- For MainMenu -->
+    <!-- ToolbarItemBorder Hovered -->
+    <Style Selector="mxti|ToolbarItemBorderControl.Button:main-menu:pointerover /template/Border#PART_Border">
+        <Setter Property="Background" Value="{DynamicResource Fill/Neutral/Secondary/Hover}" />
+    </Style>
+
+    <!-- ToolbarItemBorder Other Part Hovered -->
+    <Style Selector="mxti|ToolbarItemBorderControl.Button:main-menu:attached-pointerover /template/Border#PART_Border">
+        <Setter Property="Background" Value="{DynamicResource Fill/Neutral/Secondary/Hover}" />
+    </Style>
+
+    <!-- ToolbarItemBorder Pressed -->
+    <Style Selector="mxti|ToolbarItemBorderControl.Button:main-menu:pressed /template/Border#PART_Border">
+        <Setter Property="Background" Value="{DynamicResource Fill/Neutral/Secondary/Pressed}" />
+    </Style>
+
+    <!-- ToolbarItemBorder Selected -->
+    <Style Selector="mxti|ToolbarItemBorderControl.Button:main-menu:selected /template/Border#PART_Border">
+        <Setter Property="Background" Value="{DynamicResource Fill/Neutral/Secondary/Pressed}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource Outline/Accent/Focus}" />
+    </Style>
+
+    <!-- ToolbarItemBorder Focus -->
+    <Style Selector="mxti|ToolbarItemBorderControl.Button:main-menu:focus /template/Border#PART_Border">
+        <Setter Property="Background" Value="{DynamicResource Fill/Neutral/Secondary/Hover}" />
+    </Style>
+
+    <!-- ToolbarItemBorder Focus -->
+    <Style Selector="mxti|ToolbarItemBorderControl.Button:main-menu:focus-visible /template/Border#PART_Border">
+        <Setter Property="Background" Value="{DynamicResource Fill/Neutral/Secondary/Hover}" />
+    </Style>
+
+    <!-- ToolbarCheckItemBorder -->
+    <Style Selector="mxti|ToolbarItemBorderControl.Check:main-menu:checked /template/Border#PART_Border">
+        <Setter Property="Background" Value="{DynamicResource Fill/Accent/Highlighting/Item/Hover}" />
+    </Style>
+
+    <Style Selector="mxti|ToolbarItemBorderControl.Button:main-menu:dropdown-open /template/Border#PART_Border">
+        <Setter Property="Background" Value="{DynamicResource Fill/Neutral/Secondary/Pressed}" />
+    </Style>
+
+    <Style Selector="mxti|ToolbarItemBorderControl.Check:main-menu:checked:dropdown-open /template/Border#PART_Border">
+        <Setter Property="Background" Value="{DynamicResource Fill/Accent/Highlighting/Item/Hover}" />
+    </Style>
+
+    <Style
+        Selector="mxti|ToolbarItemBorderControl.Button:main-menu:attached-dropdown-open /template/Border#PART_Border">
+        <Setter Property="Background" Value="{DynamicResource Fill/Neutral/Secondary/Hover}" />
+        <Setter Property="Opacity" Value="0.8" />
+    </Style>
+
+    <Style
+        Selector="mxti|ToolbarItemBorderControl.Check:main-menu:checked:attached-dropdown-open /template/Border#PART_Border">
+        <Setter Property="Background" Value="{DynamicResource Fill/Accent/Highlighting/Item/Enabled}" />
+        <Setter Property="Opacity" Value="0.8" />
+    </Style>
+
+    <Style Selector="mxti|ToolbarItemBorderControl.Check:main-menu:selected /template/Border#PART_Border">
+        <Setter Property="Background" Value="{DynamicResource Fill/Neutral/Secondary/Hover}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource Outline/Accent/Focus}" />
+    </Style>
+    <!-- For MainMenu -->
+
+    <!-- ToolbarCustomizationButton -->
+    <Style Selector="mxt|Toolbar/template/mxti|ToolbarCustomizationButton/template/Border#PART_Border">
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="Padding" Value="{DynamicResource ToolbarItemGlyphMargin}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="CornerRadius" Value="{DynamicResource ToolbarItemCornerRadius}" />
+    </Style>
+    
+    <Style Selector="mxt|ToolbarContainerControl/template/Border#ToolbarContainerBorder">
+        <Setter Property="BorderThickness" Value="{DynamicResource ToolbarContainerBorderThicknessBottom}"/>
+        <Setter Property="Padding" Value="{DynamicResource ToolbarContainerPaddingTop}"/>
+    </Style>
+    
+    <!-- ToolbarContainerControl -->
+    <!-- <Style Selector="mxt|ToolbarContainerControl"> -->
+    <!--     <Setter Property="BorderThickness" Value="{DynamicResource ToolbarContainerBorderThicknessBottom}" /> -->
+    <!--     <Setter Property="Padding" Value="{DynamicResource ToolbarContainerPaddingTop}" /> -->
+    <!--     <Setter Property="Template"> -->
+    <!--         <ControlTemplate> -->
+    <!--             <Border x:Name="ToolbarContainerBorder" Padding="{TemplateBinding Padding}"> -->
+    <!--                 <ItemsPresenter ItemsPanel="{TemplateBinding ItemsPanel}" /> -->
+    <!--             </Border> -->
+    <!--         </ControlTemplate> -->
+    <!--     </Setter> -->
+    <!-- </Style> -->
+    <!-- -->
+    <!-- <Style Selector="mxt|ToolbarContainerControl:left"> -->
+    <!--     <Setter Property="BorderThickness" Value="{DynamicResource ToolbarContainerBorderThicknessRight}" /> -->
+    <!--     <Setter Property="Padding" Value="{DynamicResource ToolbarContainerPaddingLeft}" /> -->
+    <!-- </Style> -->
+    
+    <Style Selector="mxt|ToolbarContainerControl:left/template/Border#ToolbarContainerBorder">
+        <Setter Property="BorderThickness" Value="{DynamicResource ToolbarContainerBorderThicknessRight}"/>
+        <Setter Property="Padding" Value="{DynamicResource ToolbarContainerPaddingLeft}"/>
+    </Style>
+    
+    <!-- <Style Selector="mxt|ToolbarContainerControl:right"> -->
+    <!--     <Setter Property="BorderThickness" Value="{DynamicResource ToolbarContainerBorderThicknessLeft}" /> -->
+    <!--     <Setter Property="Padding" Value="{DynamicResource ToolbarContainerPaddingRight}" /> -->
+    <!-- </Style> -->
+    
+    <Style Selector="mxt|ToolbarContainerControl:right/template/Border#ToolbarContainerBorder">
+        <Setter Property="BorderThickness" Value="{DynamicResource ToolbarContainerBorderThicknessLeft}"/>
+        <Setter Property="Padding" Value="{DynamicResource ToolbarContainerPaddingRight}"/>
+    </Style>
+    
+    <!-- <Style Selector="mxt|ToolbarContainerControl:bottom"> -->
+    <!--     <Setter Property="BorderThickness" Value="{DynamicResource ToolbarContainerBorderThicknessTop}" /> -->
+    <!--     <Setter Property="Padding" Value="{DynamicResource ToolbarContainerPaddingBottom}" /> -->
+    <!-- </Style> -->
+    
+    <Style Selector="mxt|ToolbarContainerControl:bottom/template/Border#ToolbarContainerBorder">
+        <Setter Property="BorderThickness" Value="{DynamicResource ToolbarContainerBorderThicknessTop}"/>
+        <Setter Property="Padding" Value="{DynamicResource ToolbarContainerPaddingBottom}"/>
+    </Style>
+    
+    <!-- <Style Selector="mxt|ToolbarContainerControl:standalone"> -->
+    <!--     <Setter Property="BorderThickness" Value="0" /> -->
+    <!--     <Setter Property="Padding" Value="{DynamicResource ToolbarContainerPadding}" /> -->
+    <!--     <Setter Property="CornerRadius" Value="{DynamicResource ToolbarCornerRadius}" /> -->
+    <!-- </Style> -->
+    
+    <Style Selector="mxt|ToolbarContainerControl:standalone/template/Border#ToolbarContainerBorder">
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Padding" Value="{DynamicResource ToolbarContainerPadding}"/>
+    </Style>
+    
+    <!-- <Style Selector="mxt|ToolbarContainerControl:floating"> -->
+    <!--     <Setter Property="BorderThickness" Value="0" /> -->
+    <!--     <Setter Property="Padding" Value="{DynamicResource ToolbarContainerPaddingFloating}" /> -->
+    <!--     <Setter Property="CornerRadius" Value="{DynamicResource ToolbarCornerRadiusBottom}" /> -->
+    <!-- </Style> -->
+    
+    <Style Selector="mxt|ToolbarContainerControl:floating/template/Border#ToolbarContainerBorder">
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Padding" Value="{DynamicResource ToolbarContainerPaddingFloating}"/>
+        <Setter Property="CornerRadius" Value="{DynamicResource ToolbarCornerRadiusBottom}" />
+    </Style>
+
+    <!-- <Style Selector="mxt|ToolbarContainerControl:floating:not(:no-shadow)"> -->
+    <!--     <Setter Property="CornerRadius" Value="{DynamicResource ToolbarCornerRadiusBottom}" /> -->
+    <!-- </Style> -->
+    
+    <Style Selector="mx|MxWindow/template/Border#PART_CaptionArea">
+        <Setter Property="BorderBrush" Value="{DynamicResource Stroke Color/Surface Strok/Default}"/>
+        <Setter Property="Background" Value="{DynamicResource Fill/Neutral/Secondary/Enabled}"/>
+        <Setter Property="CornerRadius" Value="0"/>
+        <Setter Property="BorderThickness" Value="1,1,1,0"/>
+        <Setter Property="IsHitTestVisible" Value="True"/>
+    </Style>
+    
+    <Style Selector="mx|MxWindow/template/Border#PART_CaptionTransparentBack">
+        <Setter Property="Background" Value="{DynamicResource Fill/Neutral/Primary/Enabled}"/>
+        <Setter Property="CornerRadius" Value="0"/>
+        <Setter Property="ClipToBounds" Value="True"/>
+    </Style>
+    
+    <Style Selector="mx|MxWindow/template/Border#PART_Content">
+        <Setter Property="BorderBrush" Value="{DynamicResource Stroke Color/Surface Strok/Default}"/>
+        <Setter Property="Background" Value="{DynamicResource Fill/Neutral/Primary/Enabled}"/>
+        <Setter Property="CornerRadius" Value="0"/>
+        <Setter Property="BorderThickness" Value="1,0,1,1"/>
+        <Setter Property="ClipToBounds" Value="True"/>
+    </Style>
+    
+    <Style Selector="mx|MxWindow/template/Border#PART_ContentBack">
+        <Setter Property="Background" Value="{DynamicResource Fill/Neutral/Primary/Enabled}"/>
+        <Setter Property="CornerRadius" Value="0"/>
+        <Setter Property="ClipToBounds" Value="True"/>
+    </Style>
+    
+    <Style Selector="mx|MxWindow/template/Border#PART_ContentInner">
+        <Setter Property="Background" Value="{DynamicResource Fill/Neutral/Primary/Enabled}"/>
+        <Setter Property="CornerRadius" Value="0"/>
+        <Setter Property="ClipToBounds" Value="True"/>
+    </Style>
+    
+    <Style Selector="mx|MxWindow/template/Button#PART_MinimizeButton">
+        <Setter Property="CornerRadius" Value="0"/>
+        <Setter Property="Padding" Value="5"/>
+    </Style>
+    
+    <Style Selector="mx|MxWindow/template/Button#PART_MaximizeButton">
+        <Setter Property="CornerRadius" Value="0"/>
+        <Setter Property="Padding" Value="5"/>
+    </Style>
+    
+    <Style Selector="mx|MxWindow/template/Button#PART_CloseButton">
+        <Setter Property="CornerRadius" Value="0"/>
+        <Setter Property="Padding" Value="5"/>
+    </Style>
+    
+</Styles>

@@ -1,0 +1,68 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:mx="https://schemas.eremexcontrols.net/avalonia"
+             xmlns:mxe="https://schemas.eremexcontrols.net/avalonia/editors"
+             xmlns:viewModels="clr-namespace:CryptoMarketClient.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="CryptoMarketClient.Views.BidAskSettingsView">
+    <Design.DataContext>
+        <viewModels:BidAskSettingsViewModel/>
+    </Design.DataContext>
+    
+    <mx:MxTabControl SelectedIndex="{Binding Path= Mode, Mode=TwoWay}">
+        <mx:MxTabControl.Items>
+            <mx:MxTabItem Header="Buy">
+                <Grid RowDefinitions="Auto, Auto, Auto, Auto, Auto, *" ColumnDefinitions="Auto, *">
+                    <Label Classes="LayoutItem" Content="You Have:"/>
+                    <mxe:TextEditor ReadOnly="True" DisplayFormatString="0.00000000" Classes="LayoutItem" Grid.Row="0" Grid.Column="1" 
+                                    EditorValue="{Binding Buy.AvailableDeposit}"/>
+                    
+                    <Label Grid.Row="1" Grid.Column="0" Classes="LayoutItem" Content="Price:"/>
+                    <mxe:TextEditor DisplayFormatString="0.00000000" MaskType="Numeric" Classes="LayoutItem" Grid.Row="1" Grid.Column="1"
+                                    EditorValue="{Binding Buy.Price}"/>
+                    
+                    <Label Grid.Row="2" Grid.Column="0" Classes="LayoutItem" Content="Amount:"/>
+                    <mxe:TextEditor DisplayFormatString="0.00000000" MaskType="Numeric" Classes="LayoutItem" Grid.Row="2" Grid.Column="1"
+                                    EditorValue="{Binding Buy.Amount}"/>
+                    
+                    <Label Grid.Row="3" Grid.Column="0" Classes="LayoutItem" Content="% Of Deposit:"/>
+                    <Slider Classes="LayoutItem" Grid.Row="3" Grid.Column="1" Minimum="1" Maximum="100"
+                            Value="{Binding Buy.PercentOfDeposit}"/>
+                    
+                    <Label Grid.Row="4" Grid.Column="0" Classes="LayoutItem" Content="Total Spent:"/>
+                    <mxe:TextEditor ReadOnly="True" DisplayFormatString="0.00000000" Classes="LayoutItem" Grid.Row="4" Grid.Column="1" 
+                                    EditorValue="{Binding Buy.Total}"/>
+                    
+                    <Button Grid.Row="5" Grid.Column="1" Content="BUY" Width="100" VerticalAlignment="Top" HorizontalAlignment="Right"/>
+                </Grid>
+            </mx:MxTabItem>
+            <mx:MxTabItem Header="Sell">
+                <Grid RowDefinitions="Auto, Auto, Auto, Auto, Auto, *" ColumnDefinitions="Auto, *">
+                    <Label Classes="LayoutItem" Content="You Have:"/>
+                    <mxe:TextEditor ReadOnly="True" DisplayFormatString="0.00000000" Classes="LayoutItem" Grid.Row="0" Grid.Column="1" 
+                                    EditorValue="{Binding Sell.AvailableDeposit}"/>
+                    
+                    <Label Grid.Row="1" Grid.Column="0" Classes="LayoutItem" Content="Price:"/>
+                    <mxe:TextEditor DisplayFormatString="0.00000000" MaskType="Numeric" Classes="LayoutItem" Grid.Row="1" Grid.Column="1"
+                                    EditorValue="{Binding Sell.Price}"/>
+                    
+                    <Label Grid.Row="2" Grid.Column="0" Classes="LayoutItem" Content="Amount:"/>
+                    <mxe:TextEditor DisplayFormatString="0.00000000" MaskType="Numeric" Classes="LayoutItem" Grid.Row="2" Grid.Column="1"
+                                    EditorValue="{Binding Sell.Amount}"/>
+                    
+                    <Label Grid.Row="3" Grid.Column="0" Classes="LayoutItem" Content="% Of Deposit:"/>
+                    <Slider Classes="LayoutItem" Grid.Row="3" Grid.Column="1" Minimum="1" Maximum="100"
+                            Value="{Binding Sell.PercentOfDeposit}"/>
+                    
+                    <Label Grid.Row="4" Grid.Column="0" Classes="LayoutItem" Content="You Will Get:"/>
+                    <mxe:TextEditor ReadOnly="True" DisplayFormatString="0.00000000" Classes="LayoutItem" Grid.Row="4" Grid.Column="1" 
+                                    EditorValue="{Binding Sell.Total}"/>
+                    
+                    <Button Grid.Row="5" Grid.Column="1" Content="SELL" Width="100" VerticalAlignment="Top" HorizontalAlignment="Right"/>
+                </Grid>
+            </mx:MxTabItem>
+        </mx:MxTabControl.Items>
+    </mx:MxTabControl>
+</UserControl>
