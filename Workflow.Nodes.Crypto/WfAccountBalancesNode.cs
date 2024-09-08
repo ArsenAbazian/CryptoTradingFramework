@@ -20,11 +20,9 @@ namespace Crypto.Core.WorkflowDiagram {
 
         protected override void OnVisitCore(WfRunner runner) {
             AccountInfo account = Inputs["Account"].Value as AccountInfo;
-            double balance = 0.0;
             if(account != null) {
                 if(!account.Exchange.UpdateBalances(account)) { 
                     DiagnosticHelper.Add(WfDiagnosticSeverity.Error, "Error updating account balances");
-                    HasErrors = true;
                 }
             }
             DataContext = account.Balances;

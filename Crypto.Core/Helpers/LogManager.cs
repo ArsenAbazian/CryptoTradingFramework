@@ -47,7 +47,7 @@ namespace Crypto.Core.Common {
                 return;
             Saving = true;
             try {
-                SerializationHelper.Current.Save(this, typeof(LogManager), null);
+                SerializationHelper.Current.Save(this, typeof(LogManager), (string)null);
             }
             finally {
                 Saving = false;

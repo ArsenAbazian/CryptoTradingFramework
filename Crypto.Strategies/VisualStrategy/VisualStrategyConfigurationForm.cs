@@ -1,23 +1,16 @@
 ﻿using Crypto.Core.Strategies.VisualStrategy;
 using Crypto.Core.WorkflowDiagram;
-using DevExpress.LookAndFeel;
 using DevExpress.XtraBars.Ribbon;
 using DevExpress.XtraEditors;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using WorkflowDiagram;
 using WorkflowDiagram.UI.Win;
 using XmlSerialization;
 
-namespace Crypto.Strategies.Forms {
+namespace Crypto.Strategies.Forms
+{
     public partial class VisualStrategyConfigurationForm : RibbonForm {
         public VisualStrategyConfigurationForm() {
             InitializeComponent();

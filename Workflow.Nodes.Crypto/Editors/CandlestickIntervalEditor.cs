@@ -1,14 +1,11 @@
 ﻿using Crypto.Core;
 using DevExpress.XtraEditors.Repository;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using WorkflowDiagram.Editors;
 
-namespace Workflow.Nodes.Crypto.Editors {
+namespace Workflow.Nodes.Crypto.Editors
+{
     public class RepositoryItemCandlestickCollectionEditor : RepositoryItemGridLookUpEdit, IPropertyEditor {
         protected virtual void InitItems() {
             PropertyInfo pInfo = Owner.GetType().GetProperties().FirstOrDefault(p => p.PropertyType == typeof(ExchangeType));

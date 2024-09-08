@@ -2,16 +2,12 @@
 using Crypto.Core.WorkflowDiagram;
 using Crypto.Strategies.Forms;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
-using Workflow.Nodes.Crypto;
 using WorkflowDiagram;
 using XmlSerialization;
 
-namespace Crypto.Core.Strategies.VisualStrategy {
+namespace Crypto.Core.Strategies.VisualStrategy
+{
     [XmlInclude(typeof(WfStrategyDocument))]
     [XmlInclude(typeof(WfNode))]
     [XmlInclude(typeof(WfConnector))]
@@ -127,6 +123,11 @@ namespace Crypto.Core.Strategies.VisualStrategy {
 
         WfRunner IWfDocumentOwner.CreateRunner(WfDocument document) {
             return new WfStrategyDocumentRunner((WfStrategyDocument)document);
+        }
+
+        WfDocument IWfDocumentOwner.LoadDocumentById(Guid id)
+        {
+            throw new NotImplementedException();
         }
     }
 

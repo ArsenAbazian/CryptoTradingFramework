@@ -35,54 +35,42 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DevExpress.Data.Desktop.v22.1, Version=22.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4, processorArchitecture=MSIL">
+    <Reference Include="DevExpress.Data.Desktop.v22.2, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Development\2022.1\Bin\Framework4\DevExpress.Data.Desktop.v22.1.dll</HintPath>
     </Reference>
-    <Reference Include="DevExpress.Data.v22.1, Version=22.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4, processorArchitecture=MSIL">
+    <Reference Include="DevExpress.Data.v22.2, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Development\2022.1\Bin\Framework4\DevExpress.Data.v22.1.dll</HintPath>
     </Reference>
-    <Reference Include="DevExpress.Diagram.v22.1.Core, Version=22.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4, processorArchitecture=MSIL">
+    <Reference Include="DevExpress.Diagram.v22.2.Core, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Development\2022.1\Bin\Framework4\DevExpress.Diagram.v22.1.Core.dll</HintPath>
     </Reference>
-    <Reference Include="DevExpress.Dialogs.v22.1.Core, Version=22.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4, processorArchitecture=MSIL">
+    <Reference Include="DevExpress.Dialogs.v22.2.Core, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Development\2022.1\Bin\Framework4\DevExpress.Dialogs.v22.1.Core.dll</HintPath>
     </Reference>
-    <Reference Include="DevExpress.Drawing.v22.1, Version=22.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4, processorArchitecture=MSIL">
+    <Reference Include="DevExpress.Drawing.v22.2, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Development\2022.1\Bin\Framework4\DevExpress.Drawing.v22.1.dll</HintPath>
     </Reference>
-    <Reference Include="DevExpress.Printing.v22.1.Core, Version=22.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4, processorArchitecture=MSIL">
+    <Reference Include="DevExpress.Printing.v22.2.Core, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Development\2022.1\Bin\Framework4\DevExpress.Printing.v22.1.Core.dll</HintPath>
     </Reference>
-    <Reference Include="DevExpress.Sparkline.v22.1.Core, Version=22.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4, processorArchitecture=MSIL" />
-    <Reference Include="DevExpress.Utils.v22.1, Version=22.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4, processorArchitecture=MSIL">
+    <Reference Include="DevExpress.Sparkline.v22.2.Core, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Utils.v22.2, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Development\2022.1\Bin\Framework4\DevExpress.Utils.v22.1.dll</HintPath>
     </Reference>
-    <Reference Include="DevExpress.XtraBars.v22.1, Version=22.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4, processorArchitecture=MSIL">
+    <Reference Include="DevExpress.XtraBars.v22.2, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Development\2022.1\Bin\Framework4\DevExpress.XtraBars.v22.1.dll</HintPath>
     </Reference>
-    <Reference Include="DevExpress.XtraDialogs.v22.1, Version=22.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4, processorArchitecture=MSIL">
+    <Reference Include="DevExpress.XtraDialogs.v22.2, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Development\2022.1\Bin\Framework4\DevExpress.XtraDialogs.v22.1.dll</HintPath>
     </Reference>
-    <Reference Include="DevExpress.XtraEditors.v22.1, Version=22.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4, processorArchitecture=MSIL">
+    <Reference Include="DevExpress.XtraEditors.v22.2, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Development\2022.1\Bin\Framework4\DevExpress.XtraEditors.v22.1.dll</HintPath>
     </Reference>
-    <Reference Include="DevExpress.XtraGrid.v22.1, Version=22.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4, processorArchitecture=MSIL">
+    <Reference Include="DevExpress.XtraGrid.v22.2, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Development\2022.1\Bin\Framework4\DevExpress.XtraGrid.v22.1.dll</HintPath>
     </Reference>
-    <Reference Include="DevExpress.XtraVerticalGrid.v22.1, Version=22.1.0.0, Culture=neutral, PublicKeyToken=79868b8147b5eae4, processorArchitecture=MSIL">
+    <Reference Include="DevExpress.XtraVerticalGrid.v22.2, Version=22.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Bin\DevExpress.XtraVerticalGrid.v22.1.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CodeAnalysis, Version=4.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CodeAnalysis.Common.4.2.0\lib\netstandard2.0\Microsoft.CodeAnalysis.dll</HintPath>
@@ -100,13 +88,13 @@
     <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
     </Reference>
-    <Reference Include="System.Collections.Immutable, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Collections.Immutable.5.0.0\lib\net461\System.Collections.Immutable.dll</HintPath>
+    <Reference Include="System.Collections.Immutable, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Collections.Immutable.8.0.0\lib\net462\System.Collections.Immutable.dll</HintPath>
     </Reference>
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
+    <Reference Include="System.Memory, Version=4.0.1.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Memory.4.5.5\lib\net461\System.Memory.dll</HintPath>
     </Reference>
     <Reference Include="System.Numerics" />
     <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -131,22 +119,6 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="WorkflowDiagram, Version=1.0.6.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Bin\WorkflowDiagram.dll</HintPath>
-    </Reference>
-    <Reference Include="WorkflowDiagram.Nodes.Base, Version=1.0.7.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Bin\WorkflowDiagram.Nodes.Base.dll</HintPath>
-    </Reference>
-    <Reference Include="WorkflowDiagram.UI.Win, Version=1.0.8.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Bin\WorkflowDiagram.UI.Win.dll</HintPath>
-    </Reference>
-    <Reference Include="XmlSerialization, Version=1.0.7.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Bin\XmlSerialization.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ExtendedStrategies.cs" />
@@ -173,21 +145,25 @@
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.3.3.3\analyzers\dotnet\cs\Microsoft.CodeAnalysis.CSharp.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\WorkflowDiagram\WorkflowDiagram\WorkflowDiagram.Nodes.Base\WorkflowDiagram.Nodes.Base.Develop.csproj">
-      <Project>{fde9ea71-c293-47f5-981a-d56e9505114a}</Project>
+    <ProjectReference Include="..\..\WorkflowDiagram\WorkflowDiagram.Nodes.Base\WorkflowDiagram.Nodes.Base.Develop.csproj">
+      <Project>{FDE9EA71-C293-47F5-981A-D56E9505114A}</Project>
       <Name>WorkflowDiagram.Nodes.Base.Develop</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\WorkflowDiagram\WorkflowDiagram\WorkflowDiagram.Nodes.Visualization\WokflowDiagram.Nodes.Visualization.Win.Develop.csproj">
-      <Project>{b17d2ef7-5c40-4a49-beec-750763c6281d}</Project>
-      <Name>WokflowDiagram.Nodes.Visualization.Win.Develop</Name>
+    <ProjectReference Include="..\..\WorkflowDiagram\WorkflowDiagram.Nodes.Visualization\WorkflowDiagram.Nodes.Visualization.Develop.csproj">
+      <Project>{B17D2EF7-5C40-4A49-BEEC-750763C6281D}</Project>
+      <Name>WorkflowDiagram.Nodes.Visualization.Develop</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\WorkflowDiagram\WorkflowDiagram\WorkflowDiagram.UI.Win\WorkflowDiagram.UI.Win.Develop.csproj">
-      <Project>{dccf4253-22a8-4f04-be71-13f0da60ce1d}</Project>
+    <ProjectReference Include="..\..\WorkflowDiagram\WorkflowDiagram.UI.Win\WorkflowDiagram.UI.Win.Develop.csproj">
+      <Project>{DCCF4253-22A8-4F04-BE71-13F0DA60CE1D}</Project>
       <Name>WorkflowDiagram.UI.Win.Develop</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\WorkflowDiagram\WorkflowDiagram\WorkflowDiagram\WorkflowDiagram.Develop.csproj">
+    <ProjectReference Include="..\..\WorkflowDiagram\WorkflowDiagram\WorkflowDiagram.Develop.csproj">
       <Project>{5c2ec487-3e30-4274-8263-dbacfa5319c6}</Project>
       <Name>WorkflowDiagram.Develop</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\XmlSerialization\XmlSerialization\XmlSerialization.csproj">
+      <Project>{4af0943a-da67-4a85-b594-3dbc3c79217a}</Project>
+      <Name>XmlSerialization</Name>
     </ProjectReference>
     <ProjectReference Include="..\Crypto.Core\Crypto.Core.csproj">
       <Project>{4a5b7ab2-b8ce-4c47-aa5e-7ce8bed74249}</Project>

@@ -28,7 +28,7 @@ namespace Crypto.Core.Common {
         }
         public string FileName { get; set; }
         public bool Save() {
-            return SerializationHelper.Current.Save(this, GetType(), null);
+            return SerializationHelper.Current.Save(this, GetType(), (string)null);
         }
 
         void ISupportSerialization.OnBeginSerialize() { }

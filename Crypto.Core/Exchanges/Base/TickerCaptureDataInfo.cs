@@ -1,15 +1,11 @@
-﻿using Crypto.Core.Helpers;
-using Crypto.Core;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using XmlSerialization;
 
-namespace Crypto.Core.Exchanges.Base {
+namespace Crypto.Core.Exchanges.Base
+{
     public class TickerCaptureDataInfo {
         public CaptureStreamType StreamType { get; set; }
         public CaptureMessageType MessageType { get; set; }

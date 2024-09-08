@@ -1,5 +1,4 @@
-﻿using Crypto.Core;
-using Crypto.Core.Helpers;
+﻿using Crypto.Core.Helpers;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
 using System;
@@ -8,13 +7,12 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using WorkflowDiagram;
 using WorkflowDiagram.Nodes.Base;
-using WorkflowDiagram.Nodes.Base.Editors;
+using WorkflowDiagram.UI.Win.Editors;
 
-namespace Crypto.Core.WorkflowDiagram {
+namespace Crypto.Core.WorkflowDiagram
+{
     [WfToolboxVisible(false)]
     public class WfTimeSeriesProcess : WfVisualNodeBase, IGlobalsTypeProvider {
         public override string VisualTemplateName => "TimeSeriesOperation";

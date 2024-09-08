@@ -131,7 +131,7 @@ namespace Crypto.Core {
         public bool Save() {
             if(IsLoading)
                 return false;
-            return SerializationHelper.Current.Save(this, GetType(), null);
+            return SerializationHelper.Current.Save(this, GetType(), (string)null);
         }
 
         public bool SelectedInDependencyArbitrage { get; set; }

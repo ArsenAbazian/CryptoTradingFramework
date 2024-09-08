@@ -472,7 +472,7 @@ namespace Crypto.Core {
 
         public string FileName { get; set; }
         public bool Save() {
-            return SerializationHelper.Current.Save(this, GetType(), null);
+            return SerializationHelper.Current.Save(this, GetType(), (string)null);
         }
 
         void ISupportSerialization.OnBeginSerialize() { }
@@ -1200,7 +1200,7 @@ namespace Crypto.Core {
             TickersSocket.AddRef();
         }
 
-        private void OnTickersSocketStateChanged(object sender, ConnectionInfoChangedEventArgs e) {
+        protected virtual void OnTickersSocketStateChanged(object sender, ConnectionInfoChangedEventArgs e) {
             if (TickersSocketStateChanged != null)
                 TickersSocketStateChanged(this, e);
         }

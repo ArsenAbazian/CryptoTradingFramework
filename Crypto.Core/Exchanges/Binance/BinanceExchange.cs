@@ -79,6 +79,10 @@ namespace Crypto.Core.Binance {
 
         protected virtual string BalanceApiString { get { return "https://binance.com/api/v3/account"; } }
         public override bool GetBalance(AccountInfo account, string currency) {
+            if(account == null)
+            {
+                return true;
+            }
             string queryString = string.Format("timestamp={0}", GetNonce());
             string signature = account.GetSign(queryString);
 
@@ -395,7 +399,7 @@ namespace Crypto.Core.Binance {
         protected string[] TradeItems {
             get {
                 if(tradeItems == null)
-                    tradeItems = new string[] { "e", "E", "s", "t", "p", "q", "b", "a", "T", "m", "M" };
+                    tradeItems = new string[] { "e", "E", "s", "t", "p", "q", "T", "m", "M" };
                 return tradeItems;
             }
         }
@@ -419,8 +423,8 @@ namespace Crypto.Core.Binance {
             item.IdString = str[3];
             item.RateString = str[4];
             item.AmountString = str[5];
-            item.Time = FromUnixTime(FastValueConverter.ConvertPositiveLong(str[8]));
-            item.Type = str[9][0] == 't' ? TradeType.Sell : TradeType.Buy;
+            item.Time = FromUnixTime(FastValueConverter.ConvertPositiveLong(str[6]));
+            item.Type = str[7][0] == 't' ? TradeType.Sell : TradeType.Buy;
 
             ticker.AddTradeHistoryItem(item);
             if(ticker.HasTradeHistorySubscribers) {
@@ -488,7 +492,7 @@ namespace Crypto.Core.Binance {
             ticker.UpdateTrailings();
 
             lock(ticker) {
-                RaiseTickerChanged(ticker);
+                ticker.RaiseChanged();
             }
         }
 
@@ -557,8 +561,8 @@ namespace Crypto.Core.Binance {
                 JObject s = (JObject)symbols[i];
                 BinanceTicker t = (BinanceTicker)GetOrCreateTicker(s.Value<string>("symbol"));
                 t.CurrencyPair = s.Value<string>("symbol");
-                t.MarketCurrency = s.Value<string>("baseAsset");
-                t.BaseCurrency = s.Value<string>("quoteAsset");
+                t.MarketCurrency = s.Value<string>("quoteAsset");
+                t.BaseCurrency = s.Value<string>("baseAsset");
                 if(Tickers.FirstOrDefault(tt => tt.CurrencyPair == t.CurrencyPair) != null)
                     continue;
                 AddTicker(t);

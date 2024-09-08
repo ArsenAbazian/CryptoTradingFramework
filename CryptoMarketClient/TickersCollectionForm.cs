@@ -118,10 +118,10 @@ namespace CryptoMarketClient {
             this.gvTikers.OptionsBehavior.AllowSortAnimation = DevExpress.Utils.DefaultBoolean.True;
         }
 
-        protected virtual void InitializeBaseCurrencies() {
-            var groups = Exchange.Tickers.GroupBy(t => t.BaseCurrencyDisplayName);
+        protected virtual void InitializeMarketCurrencies() {
+            var groups = Exchange.Tickers.GroupBy(t => t.MarketCurrencyDisplayName);
             this.gcMarketFilter.DataSource = groups;
-            UpdateTickersAccordingBaseCurrency();
+            UpdateTickersAccordingMarketCurrency();
         }
 
         private void OnBaseCurrencyItemCheckedChanged(object sender, ItemClickEventArgs e) {
@@ -129,18 +129,18 @@ namespace CryptoMarketClient {
             if(!ch.Checked)
                 return;
             SelectedCheckItem = ch;
-            UpdateTickersAccordingBaseCurrency();
+            UpdateTickersAccordingMarketCurrency();
         }
 
         protected BarCheckItem SelectedCheckItem { get; set; }
 
         private void OnBaseCurrencyCheckedChanged(object sender, ItemClickEventArgs e) {
-            UpdateTickersAccordingBaseCurrency();
+            UpdateTickersAccordingMarketCurrency();
         }
 
-        protected virtual void UpdateTickersAccordingBaseCurrency() {
+        protected virtual void UpdateTickersAccordingMarketCurrency() {
             string baseCurrency = GetSelectedBaseCurrency();
-            List<Ticker> list = Exchange.Tickers.Where(t => t.BaseCurrencyDisplayName == baseCurrency).ToList();
+            List<Ticker> list = Exchange.Tickers.Where(t => t.MarketCurrencyDisplayName == baseCurrency).ToList();
             this.gcTickers.DataSource = list;
             if(IsHandleCreated)
                 BestFitColumns();
@@ -153,8 +153,8 @@ namespace CryptoMarketClient {
         protected override void OnShown(EventArgs e) {
             base.OnShown(e);
             Exchange.Connect();
-            InitializeBaseCurrencies();
-            UpdateTickersAccordingBaseCurrency();
+            InitializeMarketCurrencies();
+            UpdateTickersAccordingMarketCurrency();
             HasShown = true;
             UpdateSelectedTickersFromExchange();
             if(!Exchange.SupportWebSocket(WebSocketType.Tickers)) {
@@ -545,7 +545,7 @@ namespace CryptoMarketClient {
         }
 
         private void wevMarketFilter_FocusedRowChanged(object sender, DevExpress.XtraGrid.Views.Base.FocusedRowChangedEventArgs e) {
-            UpdateTickersAccordingBaseCurrency();
+            UpdateTickersAccordingMarketCurrency();
         }
 
         private void wevPinned_HtmlElementMouseClick(object sender, DevExpress.XtraGrid.Views.WinExplorer.WinExplorerViewHtmlElementEventArgs e) {
