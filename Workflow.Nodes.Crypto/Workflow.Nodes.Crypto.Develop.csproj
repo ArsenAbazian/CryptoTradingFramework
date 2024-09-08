@@ -121,18 +121,6 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="WorkflowDiagram, Version=1.0.6.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Bin\WorkflowDiagram.dll</HintPath>
-    </Reference>
-    <Reference Include="WorkflowDiagram.Nodes.Base, Version=1.0.7.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Bin\WorkflowDiagram.Nodes.Base.dll</HintPath>
-    </Reference>
-    <Reference Include="XmlSerialization, Version=1.0.7.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Bin\XmlSerialization.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Editors\CandlestickIntervalEditor.cs">
@@ -190,6 +178,10 @@
     <ProjectReference Include="..\..\WorkflowDiagram\WorkflowDiagram\WorkflowDiagram.Develop.csproj">
       <Project>{5c2ec487-3e30-4274-8263-dbacfa5319c6}</Project>
       <Name>WorkflowDiagram.Develop</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\XmlSerialization\XmlSerialization\XmlSerialization.csproj">
+      <Project>{4af0943a-da67-4a85-b594-3dbc3c79217a}</Project>
+      <Name>XmlSerialization</Name>
     </ProjectReference>
     <ProjectReference Include="..\Crypto.Core\Crypto.Core.csproj">
       <Project>{4a5b7ab2-b8ce-4c47-aa5e-7ce8bed74249}</Project>
