@@ -24,7 +24,7 @@
         <value>История торговли</value>
     </data>
     <data name="ShowOnlyFavoritesCaption" xml:space="preserve">
-        <value>Показать избраные</value>
+        <value>Показать избранные</value>
     </data>
     <data name="StatusText_Initializing" xml:space="preserve">
         <value>Инициализация...</value>
