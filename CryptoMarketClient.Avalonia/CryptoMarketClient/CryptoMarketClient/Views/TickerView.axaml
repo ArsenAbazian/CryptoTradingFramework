@@ -17,7 +17,7 @@
         <mxb:ToolbarContainerControl ItemsSource="{CompiledBinding Toolbars, DataType=viewModels:TickerViewModel}">
                 
         </mxb:ToolbarContainerControl>
-        <mxd:DockManager Grid.Row="1">
+        <mxd:DockManager Grid.Row="1" BorderThickness="0">
             <mxd:DockGroup Orientation="Horizontal">
                 <mxd:DockGroup DockWidth="80*" Orientation="Vertical">
                     <mxd:DockGroup DockHeight="60*">

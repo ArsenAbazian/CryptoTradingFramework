@@ -463,8 +463,8 @@
     </Style>
 
     <Style Selector="do|DocumentPane">
-        <Setter Property="Background" Value="{DynamicResource Fill/Neutral/Primary/Enabled}" />
-        <Setter Property="Template" Value="{DynamicResource DockPaneTemplate}" />
+        <!-- <Setter Property="Background" Value="{DynamicResource Fill/Neutral/Primary/Enabled}" /> -->
+        <!-- <Setter Property="Template" Value="{DynamicResource DockPaneTemplate}" /> -->
         <Setter Property="Padding" Value="{DynamicResource DockPanePadding}" />
     </Style>
 
