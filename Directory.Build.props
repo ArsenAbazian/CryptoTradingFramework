@@ -1,0 +1,10 @@
+<Project>
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <AvaloniaVersion>11.2.8</AvaloniaVersion>
+    <EremexVersion>1.1.130</EremexVersion>
+  </PropertyGroup>
+</Project>

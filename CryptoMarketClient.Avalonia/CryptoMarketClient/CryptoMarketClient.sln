@@ -18,6 +18,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Workflow.Nodes.Crypto.Net.D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Crypto.UI.Avalonia", "..\..\Crypto.UI.Avalonia\Crypto.UI.Avalonia.csproj", "{FD206D24-743C-420A-82EC-F4298F47D7CB}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionFolder1", "SolutionFolder1", "{E6661E94-0819-4C27-9411-FDA514224756}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\Directory.Build.props = ..\..\Directory.Build.props
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

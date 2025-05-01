@@ -7,12 +7,11 @@
              xmlns:icons="https://schemas.eremexcontrols.net/avalonia/icons"
              xmlns:mxe="https://schemas.eremexcontrols.net/avalonia/editors"
              xmlns:mxdg="https://schemas.eremexcontrols.net/avalonia/datagrid"
-             xmlns:mx="https://schemas.eremexcontrols.net/avalonia"
              xmlns:vm="clr-namespace:CryptoMarketClient.ViewModels"
              xmlns:controls="clr-namespace:Crypto.UI.Avalonia.Controls;assembly=Crypto.UI.Avalonia"
-             xmlns:core="clr-namespace:Crypto.Core;assembly=Crypto.Net.Core"
              xmlns:visuals="clr-namespace:Eremex.AvaloniaUI.Controls.DataControl.Visuals;assembly=Eremex.Avalonia.Controls"
              xmlns:system="clr-namespace:System;assembly=System.Runtime"
+             xmlns:mxlv="https://schemas.eremexcontrols.net/avalonia/listview"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="CryptoMarketClient.Views.ExchangeView">
     <UserControl.Resources>
@@ -28,7 +27,7 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <UserControl.Styles>
-        <Style Selector="mx|ListViewItemControl/template/Rectangle#PART_Border">
+        <Style Selector="mxlv|ListViewItemControl/template/Rectangle#PART_Border">
             <Setter Property="StrokeThickness" Value="1"/>
             <Setter Property="Stroke" Value="Transparent"/>
             <Setter Property="RadiusX" Value="2"/>
@@ -50,7 +49,7 @@
         <Grid RowDefinitions="Auto, *">
             <mxe:SplitContainerControl Grid.Row="1" Panel1Length="20*" Panel2Length="80*" Orientation="Horizontal">
                 <mxe:SplitContainerControl.Panel1>
-                    <mx:ListViewControl ItemsSource="{CompiledBinding Markets, DataType=vm:ExchangeViewModel}"
+                    <mxlv:ListViewControl ItemsSource="{CompiledBinding Markets, DataType=vm:ExchangeViewModel}"
                                         FocusedItem="{CompiledBinding SelectedMarket, DataType=vm:ExchangeViewModel, Mode=TwoWay}"
                                         ItemHeight="26"
                                         ItemClass="Detail"
