@@ -10,8 +10,18 @@
     <Design.DataContext>
         <viewModels:BidAskSettingsViewModel/>
     </Design.DataContext>
+    <UserControl.Styles>
+        <Style Selector="mx|MxTabControl.BidAskSettingsTabControl">
+            <Style Selector="^ /template/ Border#PART_SelectedContentBorder">
+                <Setter Property="BorderThickness" Value="0,1,0,0"></Setter>
+            </Style>
+        </Style>
+        <Style Selector="mx|MxTabItem:selected">
+            <Setter Property="BorderThickness" Value="1,0"></Setter>
+        </Style>
+    </UserControl.Styles>
     
-    <mx:MxTabControl SelectedIndex="{Binding Path= Mode, Mode=TwoWay}">
+    <mx:MxTabControl SelectedIndex="{Binding Path= Mode, Mode=TwoWay}" Classes="BidAskSettingsTabControl">
         <mx:MxTabControl.Items>
             <mx:MxTabItem Header="Buy">
                 <Grid RowDefinitions="Auto, Auto, Auto, Auto, Auto, *" ColumnDefinitions="Auto, *">

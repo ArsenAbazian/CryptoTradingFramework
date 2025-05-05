@@ -4,20 +4,21 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:mx="https://schemas.eremexcontrols.net/avalonia"
              xmlns:viewModels="clr-namespace:CryptoMarketClient.ViewModels"
+             xmlns:mxlv="https://schemas.eremexcontrols.net/avalonia/listview"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="CryptoMarketClient.Views.ExchangesCollectionView">
     <UserControl.Styles>
-        <Style Selector="mx|ListViewItemControl/template/ContentPresenter#PART_Content">
+        <Style Selector="mxlv|ListViewItemControl/template/ContentPresenter#PART_Content">
             <Setter Property="Margin" Value="0"/>
             <Setter Property="CornerRadius" Value="7"/>
         </Style>
-        <Style Selector="mx|ListViewItemControl:pointerover/template/Rectangle#PART_Border">
+        <Style Selector="mxlv|ListViewItemControl:pointerover/template/Rectangle#PART_Border">
             <Setter Property="Fill" Value="{DynamicResource Fill/Accent/Highlighting/Row/Enabled}"/>
         </Style>
-        <Style Selector="mx|ListViewItemControl:focused/template/Rectangle#PART_Border">
+        <Style Selector="mxlv|ListViewItemControl:focused/template/Rectangle#PART_Border">
             <Setter Property="Fill" Value="{DynamicResource Fill/Accent/Highlighting/Row/Enabled}"/>
         </Style>
-        <Style Selector="mx|ListViewItemControl">
+        <Style Selector="mxlv|ListViewItemControl">
             <Setter Property="Padding" Value="0"/>
             <Setter Property="Template">
                 <Setter.Value>
@@ -52,10 +53,10 @@
             <Setter Property="Padding" Value="8"/>
         </Style>
     </UserControl.Styles>
-    <mx:ListViewControl 
+    <mxlv:ListViewControl 
         ItemsSource="{CompiledBinding Exchanges, DataType=viewModels:ExchangesCollectionViewModel}"
         ItemWidth="224" ItemHeight="256">
-        <mx:ListViewControl.DataTemplates>
+        <mxlv:ListViewControl.DataTemplates>
             <DataTemplate DataType="viewModels:ExchangeViewModel">
                 <Grid RowDefinitions="50*, 50*">
                     <Border Classes="ExchangeCardUpperPart">
@@ -70,6 +71,6 @@
                     </Grid>
                 </Grid>
             </DataTemplate>
-        </mx:ListViewControl.DataTemplates>
-    </mx:ListViewControl>
+        </mxlv:ListViewControl.DataTemplates>
+    </mxlv:ListViewControl>
 </UserControl>
