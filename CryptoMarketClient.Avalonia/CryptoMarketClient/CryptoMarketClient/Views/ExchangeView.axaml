@@ -89,7 +89,7 @@
                                 </DataTemplate>
                             </mxdg:GridColumn.CellTemplate>
                         </mxdg:GridColumn>
-                        <mxdg:GridColumn FieldName="Trade" UnboundDataType="{x:Type system:String}" Header=" " AllowEditing="False" Width="Auto">
+                        <mxdg:GridColumn FieldName="Trade" UnboundDataType="{x:Type system:String}" Header=" " AllowEditing="True" Width="Auto">
                             <mxdg:GridColumn.CellTemplate>
                                 <DataTemplate>
                                     <Button Classes="TradeButton"
