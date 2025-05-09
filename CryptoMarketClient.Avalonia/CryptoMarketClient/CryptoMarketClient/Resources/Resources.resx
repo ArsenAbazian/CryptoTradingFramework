@@ -63,4 +63,7 @@
     <data name="Column_Time" xml:space="preserve">
         <value>Time</value>
     </data>
+    <data name="EnterButton" xml:space="preserve">
+        <value>Enter</value>
+    </data>
 </root>
