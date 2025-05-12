@@ -62,7 +62,7 @@
             </mxdg:DataGridControl>
             <Border Grid.Row="2" Classes="BottomPane">
                 <Grid ColumnDefinitions="*, Auto, Auto">
-                    <mxe:CheckEditor Classes="DoNotShowNextStartupCheck" Content="Do Not Show On Next Startup" IsChecked="{CompiledBinding DoNotShowOnNextStartup, DataType=vm:AccountCollectionViewModel}"/>
+                    <mxe:CheckEditor Classes="DoNotShowNextStartupCheck" Content="{x:Static res:AccountCollectionFormResources.DoNotShowAccountCollectionFormOnNextStartup}" IsChecked="{CompiledBinding DoNotShowOnNextStartup, DataType=vm:AccountCollectionViewModel}"/>
                     <Button Grid.Column="2" Width="100" Content="{x:Static res:AccountCollectionFormResources.OkCaption}"
                             Command="{CompiledBinding OkCommand, DataType=vm:AccountCollectionViewModel}"/>
                 </Grid>

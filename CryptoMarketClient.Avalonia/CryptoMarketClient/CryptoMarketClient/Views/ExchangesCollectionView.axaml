@@ -5,6 +5,7 @@
              xmlns:mx="https://schemas.eremexcontrols.net/avalonia"
              xmlns:viewModels="clr-namespace:CryptoMarketClient.ViewModels"
              xmlns:mxlv="https://schemas.eremexcontrols.net/avalonia/listview"
+             xmlns:res="clr-namespace:CryptoMarketClient.Resources"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="CryptoMarketClient.Views.ExchangesCollectionView">
     <UserControl.Styles>
@@ -66,7 +67,7 @@
                         <Border Grid.RowSpan="3" Classes="ExchangeCardLowerPartBackground"/>
                         <Grid RowDefinitions="Auto, *, Auto" Classes="ExchangeCardLowerPartInner">
                             <TextBlock Classes="ExchangeName" Text="{CompiledBinding Name}"/>
-                            <Button Classes="ExchangeButton" Grid.Row="2" Content="Enter" HorizontalAlignment="Stretch" Command="{Binding EnterMarketCommand}"/>
+                            <Button Classes="ExchangeButton" Grid.Row="2" Content="{x:Static res:Resources.EnterButton}" HorizontalAlignment="Stretch" Command="{Binding EnterMarketCommand}"/>
                         </Grid>    
                     </Grid>
                 </Grid>
